@@ -1,0 +1,24 @@
+# Read the documentation: https://symfony.com/doc/master/bundles/FOSRestBundle/index.html
+fos_rest:
+    disable_csrf_role:    null
+    param_fetcher_listener:  true
+    allowed_methods_listener: true
+    routing_loader: false
+    exception:
+        enabled: true
+    view:
+        formats:
+            json: true
+        mime_types:
+            json: ['application/json']
+        view_response_listener: 'force'
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.jsontoform
+    format_listener:
+        rules:
+            - { path: '^/', priorities: ['json'], fallback_format: json, prefer_extension: false }
+    service:
+        serializer: fos_rest.serializer.jms
+    serializer:
+        serialize_null: true

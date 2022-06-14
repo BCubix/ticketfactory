@@ -22,3 +22,20 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Event Subscribers / Event Listeners
+    App\EventSubscriber\Admin\ApiExceptionSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments: []
+
+    App\EventSubscriber\Admin\JmsSerializerSubscriber:
+        tags:
+            - { name: jms_serializer.event_subscriber }
+        arguments:
+            $metadata: '@vich_uploader.metadata_reader'
+            $remoteFileUrl: '%env(resolve:REMOTE_FILE_URL)%'
+
+    App\EventSubscriber\Admin\UserSubscriber:
+        tags:
+            - { name: kernel.event_subscriber, event: tf.object.validated }
