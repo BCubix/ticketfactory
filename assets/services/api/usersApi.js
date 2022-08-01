@@ -13,7 +13,7 @@ const usersApi = {
 
     createUser: async (data) => {
         try {
-            const result = await axios.post('/users', { data });
+            const result = await axios.post('/users', data);
 
             console.log(result);
 

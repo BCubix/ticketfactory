@@ -33,6 +33,7 @@ export const ListTable = ({ table, list }) => {
                         {table.map((element, index) => (
                             <TableCell key={index}>{element.label}</TableCell>
                         ))}
+                        <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

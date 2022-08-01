@@ -2,37 +2,38 @@ import { Button, Container, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
+import * as Yup from 'yup';
+import usersApi from '../../../services/api/usersApi';
 
 export const CreateUser = () => {
-    const handleSubmit = (data) => {};
-
-    const checkErrors = (values) => {
-        const errors = {};
-
-        if (!values.firstName) {
-            errors.firstName = 'Veuillez renseigner le prénom.';
-        }
-
-        if (!values.lastName) {
-            errors.lastName = 'Veuillez renseigner le nom.';
-        }
-
-        if (!values.email) {
-            errors.email = "Veuillez renseigner l'adresse email.";
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-            errors.email = 'Adresse email invalide';
-        }
-
-        if (!values.password) {
-            errors.password = 'Veuillez renseigner le mot de passe.';
-        }
-
-        if (!values.confirmPassword) {
-            errors.confirmPassword = 'Veuillez confirmer le mot de passe.';
-        } else if (values.confirmPassword !== values.password) {
-            errors.confirmPassword = 'Le mot de passe ne correspond pas.';
-        }
+    const handleSubmit = (values) => {
+        const { firstName, lastName, password, email } = values;
+        usersApi.createUser({
+            firstName,
+            lastName,
+            plainPassword: password,
+            email,
+        });
     };
+
+    const userSchema = Yup.object().shape({
+        firstName: Yup.string().required('Veuillez renseigner le prénom.'),
+        lastName: Yup.string().required('Veuillez renseigner le nom.'),
+        email: Yup.string()
+            .email('Email invalide.')
+            .required("Veuillez renseigner l'adresse email."),
+        password: Yup.string()
+            .min(9, 'Votre mot de passe doit contenir au moins 9 caractères.')
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,}$/,
+                'Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spéciale.'
+            )
+            .required('Veuillez renseigner un mot de passe.'),
+        confirmPassword: Yup.string().oneOf(
+            [Yup.ref('password'), null],
+            'Le mot de passe ne correspond pas.'
+        ),
+    });
 
     return (
         <Formik
@@ -43,10 +44,10 @@ export const CreateUser = () => {
                 password: '',
                 confirmPassword: '',
             }}
-            validate={(values) => checkErrors(values)}
+            validationSchema={userSchema}
             onSubmit={async (values, { setSubmitting }) => {
                 console.log(values);
-                // Call to create user
+                handleSubmit(values);
                 setSubmitting(false);
             }}
         >
@@ -106,6 +107,7 @@ export const CreateUser = () => {
                         <TextField
                             margin="normal"
                             value={values.password}
+                            type="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             required
@@ -119,6 +121,7 @@ export const CreateUser = () => {
                         />
                         <TextField
                             margin="normal"
+                            type="password"
                             value={values.confirmPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
