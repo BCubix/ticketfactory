@@ -134,12 +134,12 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
         return $this;
     }
 
-    public function getPlainPassword(): string
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(string $plainPassword): self
+    public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
 
