@@ -5,4 +5,6 @@ export const REDIRECTION_TIME = 5000;
 export const HOME_PATH = '/admin';
 export const LOGIN_PATH = '/admin/connexion';
 export const USER_LIST_PATH = '/admin/utilisateurs';
+export const USER_BASE_PATH = '/admin/utilisateurs';
 export const CREATE_USER_PATH = '/admin/utilisateurs/nouveau';
+export const EDIT_PATH = '/modifier';

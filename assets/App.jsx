@@ -2,15 +2,25 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { CREATE_USER_PATH, HOME_PATH, LOGIN_PATH, USER_LIST_PATH } from './Constant';
+import {
+    CREATE_USER_PATH,
+    EDIT_PATH,
+    HOME_PATH,
+    LOGIN_PATH,
+    USER_BASE_PATH,
+    USER_LIST_PATH,
+} from './Constant';
 import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
 import '@Style/index.scss';
+import 'react-notifications/lib/notifications.css';
 
 import { Layout } from '@Components/Layout/Layout';
 import { Home } from '@Apps/Home/Home';
 import { Login } from '@Apps/Login/Login';
 import { UserList } from '@Apps/Users/UserList/UserList';
 import { CreateUser } from '@Apps/Users/CreateUser/CreateUser';
+import { NotificationContainer } from 'react-notifications';
+import { EditUser } from './Apps/Users/EditUser/EditUser';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -76,7 +86,17 @@ export const App = () => {
                         </AuthenticatedLayout>
                     }
                 />
+
+                <Route
+                    path={`${USER_BASE_PATH}/:id${EDIT_PATH}`}
+                    element={
+                        <AuthenticatedLayout>
+                            <EditUser />
+                        </AuthenticatedLayout>
+                    }
+                />
             </Routes>
+            <NotificationContainer />
         </BrowserRouter>
     );
 };

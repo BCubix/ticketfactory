@@ -11,13 +11,41 @@ const usersApi = {
         }
     },
 
+    getOneUser: async (id) => {
+        try {
+            const result = await axios.get(`/users/${id}`);
+
+            return { result: true, user: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     createUser: async (data) => {
         try {
             const result = await axios.post('/users', data);
 
-            console.log(result);
+            return { result: true, users: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    editUser: async (id, data) => {
+        try {
+            const result = await axios.post(`/users/${id}`, data);
 
             return { result: true, users: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    deleteUser: async (id) => {
+        try {
+            await axios.delete(`/users/${id}`);
+
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
