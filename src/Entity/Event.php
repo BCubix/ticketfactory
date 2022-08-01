@@ -36,10 +36,19 @@ class Event extends Datable
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDate::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $eventDates;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private $eventPrices;
+
+    #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'events')]
+    private $eventCategory;
+
 
     public function __construct()
     {
-        $this->eventDates = new ArrayCollection();
+        $this->eventDates  = new ArrayCollection();
+        $this->eventPrices = new ArrayCollection();
     }
 
 
@@ -98,6 +107,48 @@ class Event extends Datable
                 $eventDate->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventPrice>
+     */
+    public function getEventPrices(): Collection
+    {
+        return $this->eventPrices;
+    }
+
+    public function addEventPrice(EventPrice $eventPrice): self
+    {
+        if (!$this->eventPrices->contains($eventPrice)) {
+            $this->eventPrices[] = $eventPrice;
+            $eventPrice->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventPrice(EventPrice $eventPrice): self
+    {
+        if ($this->eventPrices->removeElement($eventPrice)) {
+            // set the owning side to null (unless already changed)
+            if ($eventPrice->getEvent() === $this) {
+                $eventPrice->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEventCategory(): ?EventCategory
+    {
+        return $this->eventCategory;
+    }
+
+    public function setEventCategory(?EventCategory $eventCategory): self
+    {
+        $this->eventCategory = $eventCategory;
 
         return $this;
     }
