@@ -41,8 +41,20 @@ class Event extends Datable
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $eventPrices;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'events')]
     private $eventCategory;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'events')]
+    private $room;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(targetEntity: Season::class, inversedBy: 'events')]
+    private $season;
 
 
     public function __construct()
@@ -149,6 +161,30 @@ class Event extends Datable
     public function setEventCategory(?EventCategory $eventCategory): self
     {
         $this->eventCategory = $eventCategory;
+
+        return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
+    public function getSeason(): ?Season
+    {
+        return $this->season;
+    }
+
+    public function setSeason(?Season $season): self
+    {
+        $this->season = $season;
 
         return $this;
     }
