@@ -27,11 +27,11 @@ class EventController extends CrudController
         return parent::getAll($request, $paramFetcher);
     }
 
-    #[Rest\Get('/events/{userId}', requirements: ['eventId' => '\d+'])]
+    #[Rest\Get('/events/{eventId}', requirements: ['eventId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getOne(Request $request, int $userId): View
+    public function getOne(Request $request, int $eventId): View
     {
-        return parent::getOne($request, $userId);
+        return parent::getOne($request, $eventId);
     }
 
     #[Rest\Post('/events')]
@@ -41,17 +41,17 @@ class EventController extends CrudController
         return parent::add($request);
     }
 
-    #[Rest\Post('/events/{userId}', requirements: ['eventId' => '\d+'])]
+    #[Rest\Post('/events/{eventId}', requirements: ['eventId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function edit(Request $request, int $userId): View
+    public function edit(Request $request, int $eventId): View
     {
-        return parent::edit($request, $userId);
+        return parent::edit($request, $eventId);
     }
 
-    #[Rest\Delete('/events/{userId}', requirements: ['eventId' => '\d+'])]
+    #[Rest\Delete('/events/{eventId}', requirements: ['eventId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function delete(Request $request, int $userId): View
+    public function delete(Request $request, int $eventId): View
     {
-        return parent::delete($request, $userId);
+        return parent::delete($request, $eventId);
     }
 }
