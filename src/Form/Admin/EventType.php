@@ -4,7 +4,11 @@ namespace App\Form\Admin;
 
 use App\Entity\Event;
 use App\Entity\EventCategory;
+use App\Entity\Room;
+use App\Entity\Season;
 use App\Repository\EventCategoryRepository;
+use App\Repository\RoomRepository;
+use App\Repository\SeasonRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -46,6 +50,30 @@ class EventType extends AbstractType
                     return $ecr
                         ->createQueryBuilder('ec')
                         ->orderBy('ec.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('room',                 EntityType::class,          [
+                'class'         => Room::class,
+                'choice_label'  => 'name',
+                'expanded'      => false,
+                'multiple'      => false,
+                'query_builder' => function (RoomRepository $rr) {
+                    return $rr
+                        ->createQueryBuilder('r')
+                        ->orderBy('r.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('season',               EntityType::class,          [
+                'class'         => Season::class,
+                'choice_label'  => 'name',
+                'expanded'      => false,
+                'multiple'      => false,
+                'query_builder' => function (SeasonRepository $sr) {
+                    return $sr
+                        ->createQueryBuilder('s')
+                        ->orderBy('s.name', 'ASC')
                     ;
                 }
             ])
