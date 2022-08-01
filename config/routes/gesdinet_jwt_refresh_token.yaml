@@ -1,5 +1,0 @@
-admin_api_login_check:
-    path: /admin/login_check
-
-admin_api_refresh_token:
-    path: /admin/token/refresh

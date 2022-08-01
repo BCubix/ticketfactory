@@ -19,7 +19,7 @@ security:
             security: false
 
         admin_login:
-            pattern: ^/admin/login
+            pattern: ^/admin/api/login
             stateless: true
             json_login:
                 check_path: admin_api_login_check
@@ -27,7 +27,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         admin:
-            pattern:   ^/admin
+            pattern: ^/admin/api
             stateless: true
             entry_point: jwt
             json_login:
@@ -43,8 +43,8 @@ security:
             provider: tf_user_provider
 
     access_control:
-        - { path: ^/admin/(login|token/refresh), roles: PUBLIC_ACCESS }
-        - { path: ^/admin,                       roles: ROLE_ADMIN }
+        - { path: ^/admin/api/(login|token/refresh), roles: PUBLIC_ACCESS }
+        - { path: ^/admin/api, roles: ROLE_ADMIN }
 
 when@test:
     security:

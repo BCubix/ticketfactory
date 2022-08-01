@@ -1,8 +1,18 @@
+kernel:
+    resource: ../../src/Kernel.php
+    type: annotation
+
+admin_api_login_check:
+    path: /admin/api/login_check
+
+admin_api_refresh_token:
+    path: /admin/api/token/refresh
+
 admin:
     resource: ../../src/Controller/Admin
     type: annotation
-    prefix: admin
+    prefix: admin/api
 
-kernel:
-    resource: ../../src/Kernel.php
+controllers:
+    resource: ../../src/Controller/Website
     type: annotation
