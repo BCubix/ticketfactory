@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
+use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,9 +28,9 @@ abstract class CrudController extends AdminController
     protected $entityClass;
     protected $typeClass;
 
-    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec)
+    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec, Logger $log)
     {
-        parent::__construct($ed, $em, $se, $fec);
+        parent::__construct($ed, $em, $se, $fec, $log);
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;
@@ -39,7 +40,7 @@ abstract class CrudController extends AdminController
     {
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
-        $objects = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters, $filters);
+        $objects = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters);
 
         return $this->view($objects, Response::HTTP_OK);
     }
@@ -77,6 +78,8 @@ abstract class CrudController extends AdminController
         $this->em->persist($object);
         $this->em->flush();
 
+        $this->log->log(0, 0, 'Created object.', $this->entityClass, $object->getId());
+
         return $this->view($object, Response::HTTP_CREATED);
     }
 
@@ -106,6 +109,8 @@ abstract class CrudController extends AdminController
         $this->em->persist($object);
         $this->em->flush();
 
+        $this->log->log(0, 0, 'Updated object.', $this->entityClass, $object->getId());
+
         return $this->view($object, Response::HTTP_OK);
     }
 
@@ -119,8 +124,12 @@ abstract class CrudController extends AdminController
         $event = new CrudObjectInstantiatedEvent($object, 'delete');
         $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
+        $objectId = $object->getId();
+
         $this->em->remove($object);
         $this->em->flush();
+
+        $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
         return $this->view(null, Response::HTTP_OK);
     }
