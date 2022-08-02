@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { MenuTitle } from './sc.SideMenu';
-import { USER_LIST_PATH } from '../../Constant';
+import { EVENTS_BASE_PATH, USER_BASE_PATH } from '../../Constant';
 import { useNavigate } from 'react-router-dom';
 
 export const SideMenu = () => {
@@ -36,7 +36,7 @@ export const SideMenu = () => {
             </MenuTitle>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => navigate(EVENTS_BASE_PATH)}>
                         <ListItemIcon>
                             <SettingsIcon />
                         </ListItemIcon>
@@ -50,7 +50,7 @@ export const SideMenu = () => {
             </MenuTitle>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigate(USER_LIST_PATH)}>
+                    <ListItemButton onClick={() => navigate(USER_BASE_PATH)}>
                         <ListItemIcon>
                             <SettingsIcon />
                         </ListItemIcon>

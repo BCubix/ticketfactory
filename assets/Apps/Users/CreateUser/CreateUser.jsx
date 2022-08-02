@@ -1,6 +1,6 @@
 import React from 'react';
 import { NotificationManager } from 'react-notifications';
-import { REDIRECTION_TIME, USER_LIST_PATH } from '../../../Constant';
+import { REDIRECTION_TIME, USER_BASE_PATH } from '../../../Constant';
 import usersApi from '../../../services/api/usersApi';
 import { getUsersAction } from '@Redux/users/usersSlice';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +29,7 @@ export const CreateUser = () => {
 
             dispatch(getUsersAction());
 
-            navigate(USER_LIST_PATH);
+            navigate(USER_BASE_PATH);
         }
     };
 

@@ -25,7 +25,7 @@ const usersApi = {
         try {
             const result = await axios.post('/users', data);
 
-            return { result: true, users: result.data };
+            return { result: true, user: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -35,7 +35,7 @@ const usersApi = {
         try {
             const result = await axios.post(`/users/${id}`, data);
 
-            return { result: true, users: result.data };
+            return { result: true, user: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
