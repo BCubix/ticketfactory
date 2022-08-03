@@ -6,7 +6,7 @@ use App\Entity\Room;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class RoomRepository extends AbstractRepository
+class RoomRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

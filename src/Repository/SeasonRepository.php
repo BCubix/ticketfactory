@@ -6,7 +6,7 @@ use App\Entity\Season;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class SeasonRepository extends AbstractRepository
+class SeasonRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -6,7 +6,7 @@ use App\Entity\User;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class UserRepository extends AbstractRepository
+class UserRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
