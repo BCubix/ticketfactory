@@ -7,7 +7,7 @@ import { usersSelector } from '@Redux/users/usersSlice';
 import { getUsersAction } from '@Redux/users/usersSlice';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
-import { CREATE_USER_PATH, EDIT_PATH, USER_BASE_PATH } from '../../../Constant';
+import { CREATE_PATH, EDIT_PATH, USER_BASE_PATH } from '../../../Constant';
 import { useNavigate } from 'react-router-dom';
 import usersApi from '../../../services/api/usersApi';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
@@ -49,7 +49,10 @@ export const UserList = () => {
                             <Typography component="h2" variant="h5" fontSize={20}>
                                 Employés ({users?.length})
                             </Typography>
-                            <Button variant="contained" onClick={() => navigate(CREATE_USER_PATH)}>
+                            <Button
+                                variant="contained"
+                                onClick={() => navigate(USER_BASE_PATH + CREATE_PATH)}
+                            >
                                 Nouveau
                             </Button>
                         </Box>

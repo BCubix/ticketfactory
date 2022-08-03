@@ -3,13 +3,15 @@ import authApi from '../../services/api/authApi';
 import usersApi from '../../services/api/usersApi';
 import { loginFailure } from '../profile/profileSlice';
 
+const initialState = {
+    loading: false,
+    error: null,
+    users: null,
+};
+
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {
-        loading: false,
-        error: null,
-        users: null,
-    },
+    initialState: initialState,
     reducers: {
         getUsers: (state) => {
             state.loading = true;
@@ -25,6 +27,10 @@ const usersSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
             state.users = null;
+        },
+
+        resetUsers: (state) => {
+            state = { ...initialState };
         },
     },
 });
@@ -57,6 +63,6 @@ export function getUsersAction(data) {
     };
 }
 
-export const { getUsers, getUsersSuccess, getUsersFailure } = usersSlice.actions;
+export const { getUsers, getUsersSuccess, getUsersFailure, resetUsers } = usersSlice.actions;
 export const usersSelector = (state) => state.users;
 export default usersSlice.reducer;

@@ -3,13 +3,15 @@ import authApi from '../../services/api/authApi';
 import categoriesApi from '../../services/api/categoriesApi';
 import { loginFailure } from '../profile/profileSlice';
 
+const initialState = {
+    loading: false,
+    error: null,
+    categories: null,
+};
+
 const categoriesSlice = createSlice({
     name: 'categories',
-    initialState: {
-        loading: false,
-        error: null,
-        categories: null,
-    },
+    initialState: initialState,
     reducers: {
         getCategories: (state) => {
             state.loading = true;
@@ -25,6 +27,10 @@ const categoriesSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
             state.categories = null;
+        },
+
+        resetCategories: (state) => {
+            state = { ...initialState };
         },
     },
 });
@@ -57,7 +63,7 @@ export function getCategoriesAction(data) {
     };
 }
 
-export const { getCategories, getCategoriesSuccess, getCategoriesFailure } =
+export const { getCategories, getCategoriesSuccess, getCategoriesFailure, resetCategories } =
     categoriesSlice.actions;
 export const categoriesSelector = (state) => state.categories;
 export default categoriesSlice.reducer;

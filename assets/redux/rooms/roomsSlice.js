@@ -3,13 +3,15 @@ import authApi from '../../services/api/authApi';
 import roomsApi from '../../services/api/roomsApi';
 import { loginFailure } from '../profile/profileSlice';
 
+const initialState = {
+    loading: false,
+    error: null,
+    rooms: null,
+};
+
 const roomsSlice = createSlice({
     name: 'rooms',
-    initialState: {
-        loading: false,
-        error: null,
-        rooms: null,
-    },
+    initialState: initialState,
     reducers: {
         getRooms: (state) => {
             state.loading = true;
@@ -25,6 +27,10 @@ const roomsSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
             state.rooms = null;
+        },
+
+        resetRooms: (state) => {
+            state = { ...initialState };
         },
     },
 });
@@ -57,6 +63,6 @@ export function getRoomsAction(data) {
     };
 }
 
-export const { getRooms, getRoomsSuccess, getRoomsFailure } = roomsSlice.actions;
+export const { getRooms, getRoomsSuccess, getRoomsFailure, resetRooms } = roomsSlice.actions;
 export const roomsSelector = (state) => state.rooms;
 export default roomsSlice.reducer;

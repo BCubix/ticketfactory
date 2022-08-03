@@ -74,6 +74,14 @@ const authApi = {
 
         return { result: true };
     },
+
+    logout: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('time_token');
+
+        axios.defaults.headers.common['Authorization'] = '';
+    },
 };
 
 export default authApi;

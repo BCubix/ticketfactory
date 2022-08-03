@@ -3,13 +3,15 @@ import authApi from '../../services/api/authApi';
 import eventsApi from '../../services/api/eventsApi';
 import { loginFailure } from '../profile/profileSlice';
 
+const initialState = {
+    loading: false,
+    error: null,
+    events: null,
+};
+
 const eventsSlice = createSlice({
     name: 'events',
-    initialState: {
-        loading: false,
-        error: null,
-        events: null,
-    },
+    initialState: initialState,
     reducers: {
         getEvents: (state) => {
             state.loading = true;
@@ -25,6 +27,10 @@ const eventsSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
             state.events = null;
+        },
+
+        resetEvents: (state) => {
+            state = { ...initialState };
         },
     },
 });
@@ -57,6 +63,6 @@ export function getEventsAction(data) {
     };
 }
 
-export const { getEvents, getEventsSuccess, getEventsFailure } = eventsSlice.actions;
+export const { getEvents, getEventsSuccess, getEventsFailure, resetEvents } = eventsSlice.actions;
 export const eventsSelector = (state) => state.events;
 export default eventsSlice.reducer;

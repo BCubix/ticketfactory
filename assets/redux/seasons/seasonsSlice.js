@@ -3,13 +3,15 @@ import authApi from '../../services/api/authApi';
 import seasonsApi from '../../services/api/seasonsApi';
 import { loginFailure } from '../profile/profileSlice';
 
+const initialState = {
+    loading: false,
+    error: null,
+    seasons: null,
+};
+
 const seasonsSlice = createSlice({
     name: 'seasons',
-    initialState: {
-        loading: false,
-        error: null,
-        seasons: null,
-    },
+    initialState: initialState,
     reducers: {
         getSeasons: (state) => {
             state.loading = true;
@@ -25,6 +27,10 @@ const seasonsSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
             state.seasons = null;
+        },
+
+        resetSeasons: (state) => {
+            state = { ...initialState };
         },
     },
 });
@@ -57,6 +63,7 @@ export function getSeasonsAction(data) {
     };
 }
 
-export const { getSeasons, getSeasonsSuccess, getSeasonsFailure } = seasonsSlice.actions;
+export const { getSeasons, getSeasonsSuccess, getSeasonsFailure, resetSeasons } =
+    seasonsSlice.actions;
 export const seasonsSelector = (state) => state.seasons;
 export default seasonsSlice.reducer;

@@ -1,15 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 import authApi from '../../services/api/authApi';
 import profileApi from '../../services/api/profileApi';
+import { resetCategories } from '../categories/categoriesSlice';
+import { resetEvents } from '../events/eventsSlice';
+import { resetRooms } from '../rooms/roomsSlice';
+import { resetSeasons } from '../seasons/seasonsSlice';
+import { resetUsers } from '../users/usersSlice';
+
+const initialState = {
+    connected: null,
+    loading: false,
+    error: null,
+    user: null,
+};
 
 const profileSlice = createSlice({
     name: 'profile',
-    initialState: {
-        connected: null,
-        loading: false,
-        error: null,
-        user: null,
-    },
+    initialState: initialState,
     reducers: {
         login: (state) => {
             state.loading = true;
@@ -28,6 +36,13 @@ const profileSlice = createSlice({
             state.error = action.payload.error;
             state.user = null;
         },
+
+        logout: (state) => {
+            state.connected = false;
+            state.loading = false;
+            state.error = null;
+            state.user = null;
+        },
     },
 });
 
@@ -38,6 +53,7 @@ export function loginAction(data) {
 
             const response = await authApi.login(data);
 
+            console.log(response);
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
 
@@ -85,6 +101,25 @@ export function profileInitAction(data) {
     };
 }
 
-export const { login, loginSuccess, loginFailure } = profileSlice.actions;
+export function logoutAction() {
+    return async (dispatch) => {
+        try {
+            authApi.logout();
+
+            dispatch(logout());
+            dispatch(resetCategories());
+            dispatch(resetEvents());
+            dispatch(resetRooms());
+            dispatch(resetSeasons());
+            dispatch(resetUsers());
+
+            return;
+        } catch (error) {
+            console.error(error);
+        }
+    };
+}
+
+export const { login, loginSuccess, loginFailure, logout } = profileSlice.actions;
 export const profileSelector = (state) => state.profile;
 export default profileSlice.reducer;

@@ -6,6 +6,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -31,7 +32,7 @@ import { objectResolver } from '../../services/utils/objectResolver';
  *
  * @returns
  */
-export const ListTable = ({ table, list, onDelete, onEdit }) => {
+export const ListTable = ({ table, list, onDelete = null, onEdit = null }) => {
     if (!table || table?.length === 0 || !list || list.length === 0) {
         return <></>;
     }
@@ -42,9 +43,11 @@ export const ListTable = ({ table, list, onDelete, onEdit }) => {
                 <TableHead>
                     <TableRow>
                         {table.map((element, index) => (
-                            <TableCell key={index}>{element.label}</TableCell>
+                            <TableCell key={index} sx={{ width: element.width || 'auto' }}>
+                                {element.label}
+                            </TableCell>
                         ))}
-                        <TableCell>Actions</TableCell>
+                        {(onDelete !== null || onEdit !== null) && <TableCell>Actions</TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -52,42 +55,66 @@ export const ListTable = ({ table, list, onDelete, onEdit }) => {
                         <TableRow key={index}>
                             {table.map((tableItem, ind) => (
                                 <TableCell component="th" scope="row" key={ind}>
-                                    {tableItem.type === 'bool'
-                                        ? item[tableItem.name]
-                                            ? 'Oui'
-                                            : 'Non'
-                                        : objectResolver(tableItem.name, item)}
+                                    <RenderFunction item={item} tableItem={tableItem} />
                                 </TableCell>
                             ))}
-                            <TableCell component="th" scope="row">
-                                <Fab
-                                    sx={{ marginInline: 1 }}
-                                    color="primary"
-                                    size="small"
-                                    aria-label="Modifier"
-                                    onClick={() => {
-                                        onEdit(item.id);
-                                    }}
-                                >
-                                    <EditIcon />
-                                </Fab>
+                            {(onDelete !== null || onEdit !== null) && (
+                                <TableCell component="th" scope="row">
+                                    <Fab
+                                        sx={{ marginInline: 1 }}
+                                        color="primary"
+                                        size="small"
+                                        aria-label="Modifier"
+                                        onClick={() => {
+                                            onEdit(item.id);
+                                        }}
+                                    >
+                                        <EditIcon />
+                                    </Fab>
 
-                                <Fab
-                                    sx={{ marginInline: 1 }}
-                                    color="error"
-                                    size="small"
-                                    aria-label="Supprimer"
-                                    onClick={() => {
-                                        onDelete(item.id);
-                                    }}
-                                >
-                                    <DeleteIcon />
-                                </Fab>
-                            </TableCell>
+                                    <Fab
+                                        sx={{ marginInline: 1 }}
+                                        color="error"
+                                        size="small"
+                                        aria-label="Supprimer"
+                                        onClick={() => {
+                                            onDelete(item.id);
+                                        }}
+                                    >
+                                        <DeleteIcon />
+                                    </Fab>
+                                </TableCell>
+                            )}
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </TableContainer>
+    );
+};
+
+const RenderFunction = ({ item, tableItem }) => {
+    if (tableItem.renderFunction) {
+        return tableItem.renderFunction(item);
+    }
+
+    if (tableItem.type === 'bool') {
+        let result = objectResolver(tableItem.name, item);
+
+        if (result === null) {
+            return '';
+        }
+
+        return (
+            <Typography component="p" variant="body1">
+                {result ? 'Oui' : 'Non'}
+            </Typography>
+        );
+    }
+
+    return (
+        <Typography component="p" variant="body1">
+            {objectResolver(tableItem.name, item)}
+        </Typography>
     );
 };

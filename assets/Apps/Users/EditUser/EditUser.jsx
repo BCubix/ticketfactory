@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import usersApi from '../../../services/api/usersApi';
 import { EditUserForm } from '../UserForm/EditUserForm';
 import { getUsersAction } from '@Redux/users/usersSlice';
-import { REDIRECTION_TIME, USER_LIST_PATH } from '../../../Constant';
+import { REDIRECTION_TIME, USER_BASE_PATH } from '../../../Constant';
 
 export const EditUser = () => {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export const EditUser = () => {
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
 
-            navigate(USER_LIST_PATH);
+            navigate(USER_BASE_PATH);
 
             return;
         }
@@ -30,7 +30,7 @@ export const EditUser = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(USER_LIST_PATH);
+            navigate(USER_BASE_PATH);
             return;
         }
 
@@ -63,7 +63,7 @@ export const EditUser = () => {
 
             dispatch(getUsersAction());
 
-            navigate(USER_LIST_PATH);
+            navigate(USER_BASE_PATH);
         }
     };
 

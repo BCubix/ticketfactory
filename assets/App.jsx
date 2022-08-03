@@ -9,6 +9,7 @@ import {
     EVENTS_BASE_PATH,
     HOME_PATH,
     LOGIN_PATH,
+    LOGS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
     USER_BASE_PATH,
@@ -36,6 +37,7 @@ import { SeasonsList } from './Apps/Seasons/SeasonsList/SeasonsList';
 import { CreateSeason } from './Apps/Seasons/CreateSeason/CreateSeason';
 import { EditSeason } from './Apps/Seasons/EditSeason/EditSeason';
 import { EditEvent } from './Apps/Events/EditEvent/EditEvent';
+import { LogsList } from './Apps/Logs/LogsList/LogsList';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -215,6 +217,15 @@ export const App = () => {
                     element={
                         <AuthenticatedLayout>
                             <EditSeason />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={LOGS_BASE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <LogsList />
                         </AuthenticatedLayout>
                     }
                 />
