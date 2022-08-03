@@ -3,18 +3,26 @@
 namespace App\Entity;
 
 use App\Repository\RoomRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room extends Datable
 {
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 

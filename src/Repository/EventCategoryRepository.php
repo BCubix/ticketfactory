@@ -6,7 +6,7 @@ use App\Entity\EventCategory;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class EventCategoryRepository extends AbstractRepository
+class EventCategoryRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -6,7 +6,7 @@ use App\Entity\EventDate;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class EventDateRepository extends AbstractRepository
+class EventDateRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
