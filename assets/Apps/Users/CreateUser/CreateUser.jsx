@@ -12,13 +12,7 @@ export const CreateUser = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const { firstName, lastName, password, email } = values;
-        const result = await usersApi.createUser({
-            firstName,
-            lastName,
-            plainPassword: password,
-            email,
-        });
+        const result = await usersApi.createUser(values);
 
         if (result.result) {
             NotificationManager.success(

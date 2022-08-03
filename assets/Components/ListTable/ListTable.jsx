@@ -10,6 +10,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
+import { objectResolver } from '../../services/utils/objectResolver';
 
 /**
  *
@@ -51,7 +52,11 @@ export const ListTable = ({ table, list, onDelete, onEdit }) => {
                         <TableRow key={index}>
                             {table.map((tableItem, ind) => (
                                 <TableCell component="th" scope="row" key={ind}>
-                                    {item[tableItem.name]}
+                                    {tableItem.type === 'bool'
+                                        ? item[tableItem.name]
+                                            ? 'Oui'
+                                            : 'Non'
+                                        : objectResolver(tableItem.name, item)}
                                 </TableCell>
                             ))}
                             <TableCell component="th" scope="row">

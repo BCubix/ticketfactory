@@ -3,11 +3,14 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import {
+    CATEGORIES_BASE_PATH,
     CREATE_PATH,
     EDIT_PATH,
     EVENTS_BASE_PATH,
     HOME_PATH,
     LOGIN_PATH,
+    ROOMS_BASE_PATH,
+    SEASONS_BASE_PATH,
     USER_BASE_PATH,
 } from './Constant';
 import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
@@ -23,6 +26,16 @@ import { NotificationContainer } from 'react-notifications';
 import { EditUser } from './Apps/Users/EditUser/EditUser';
 import { EventsList } from './Apps/Events/EventsList/EventsList';
 import { CreateEvent } from './Apps/Events/CreateEvent/CreateEvent';
+import { CategoriesList } from './Apps/Categories/CategoriesList/CategoriesList';
+import { CreateCategory } from './Apps/Categories/CreateCategory/CreateCategory';
+import { EditCategory } from './Apps/Categories/EditCategory/EditCategory';
+import { RoomsList } from './Apps/Rooms/RoomsList/RoomsList';
+import { CreateRoom } from './Apps/Rooms/CreateRoom/CreateRoom';
+import { EditRoom } from './Apps/Rooms/EditRoom/EditRoom';
+import { SeasonsList } from './Apps/Seasons/SeasonsList/SeasonsList';
+import { CreateSeason } from './Apps/Seasons/CreateSeason/CreateSeason';
+import { EditSeason } from './Apps/Seasons/EditSeason/EditSeason';
+import { EditEvent } from './Apps/Events/EditEvent/EditEvent';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -112,6 +125,96 @@ export const App = () => {
                     element={
                         <AuthenticatedLayout>
                             <CreateEvent />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={`${EVENTS_BASE_PATH}/:id${EDIT_PATH}`}
+                    element={
+                        <AuthenticatedLayout>
+                            <EditEvent />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={CATEGORIES_BASE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <CategoriesList />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={CATEGORIES_BASE_PATH + CREATE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <CreateCategory />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={`${CATEGORIES_BASE_PATH}/:id${EDIT_PATH}`}
+                    element={
+                        <AuthenticatedLayout>
+                            <EditCategory />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={ROOMS_BASE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <RoomsList />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={ROOMS_BASE_PATH + CREATE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <CreateRoom />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={`${ROOMS_BASE_PATH}/:id${EDIT_PATH}`}
+                    element={
+                        <AuthenticatedLayout>
+                            <EditRoom />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={SEASONS_BASE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <SeasonsList />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={SEASONS_BASE_PATH + CREATE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <CreateSeason />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={`${SEASONS_BASE_PATH}/:id${EDIT_PATH}`}
+                    element={
+                        <AuthenticatedLayout>
+                            <EditSeason />
                         </AuthenticatedLayout>
                     }
                 />

@@ -1,15 +1,48 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { EVENTS_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
+import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
+import { getRoomsAction, roomsSelector } from '../../../redux/rooms/roomsSlice';
+import { getSeasonsAction, seasonsSelector } from '../../../redux/seasons/seasonsSlice';
+import { getEventsAction } from '../../../redux/events/eventsSlice';
+import eventsApi from '../../../services/api/eventsApi';
 import { EventsForm } from '../EventsForm/EventsForm';
 
 export const CreateEvent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const categoriesData = useSelector(categoriesSelector);
+    const roomsData = useSelector(roomsSelector);
+    const seasonsData = useSelector(seasonsSelector);
+
+    useEffect(() => {
+        if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
+            dispatch(getCategoriesAction());
+        }
+
+        if (!roomsData.loading && !roomsData.categories && !roomsData.error) {
+            dispatch(getRoomsAction());
+        }
+
+        if (!seasonsData.loading && !seasonsData.categories && !seasonsData.error) {
+            dispatch(getSeasonsAction());
+        }
+    }, []);
+
+    useEffect(() => {
+        if (categoriesData.error || roomsData.error || seasonsData.error) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+
+            navigate(EVENTS_BASE_PATH);
+
+            return;
+        }
+    }, [categoriesData, roomsData, seasonsData]);
 
     const handlesubmit = async (values) => {
-        const result = await usersApi.createUser(values);
+        const result = await eventsApi.createEvent(values);
 
         if (result.result) {
             NotificationManager.success("L'évènement à bien été crée.", 'Succès', REDIRECTION_TIME);
@@ -20,5 +53,12 @@ export const CreateEvent = () => {
         }
     };
 
-    return <EventsForm handleSubmit={handlesubmit} />;
+    return (
+        <EventsForm
+            handleSubmit={handlesubmit}
+            categoriesList={categoriesData?.categories}
+            roomsList={roomsData.rooms}
+            seasonsList={seasonsData.seasons}
+        />
+    );
 };

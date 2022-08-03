@@ -39,7 +39,6 @@ export const CreateUserForm = ({ handleSubmit, initialValues = null }) => {
             }
             validationSchema={userSchema}
             onSubmit={async (values, { setSubmitting }) => {
-                console.log(values);
                 handleSubmit(values);
                 setSubmitting(false);
             }}

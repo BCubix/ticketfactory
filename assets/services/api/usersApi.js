@@ -23,7 +23,14 @@ const usersApi = {
 
     createUser: async (data) => {
         try {
-            const result = await axios.post('/users', data);
+            let formData = new FormData();
+
+            formData.append('email', data.email);
+            formData.append('firstName', data.firstName);
+            formData.append('lastName', data.lastName);
+            formData.append('plainPassword', data.password);
+
+            const result = await axios.post('/users', formData);
 
             return { result: true, user: result.data };
         } catch (error) {
@@ -33,7 +40,17 @@ const usersApi = {
 
     editUser: async (id, data) => {
         try {
-            const result = await axios.post(`/users/${id}`, data);
+            let formData = new FormData();
+
+            formData.append('email', data.email);
+            formData.append('firstName', data.firstName);
+            formData.append('lastName', data.lastName);
+
+            if (data.password) {
+                formData.append('plainPassword', data.password);
+            }
+
+            const result = await axios.post(`/users/${id}`, formData);
 
             return { result: true, user: result.data };
         } catch (error) {

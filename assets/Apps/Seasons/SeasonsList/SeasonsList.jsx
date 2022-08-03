@@ -1,43 +1,39 @@
-import { eventsSelector } from '@Redux/events/eventsSlice';
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
-import { PageWrapper } from '@Components/Page/PageWrapper/sc.PageWrapper';
-import { getEventsAction } from '@Redux/events/eventsSlice';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { Box } from '@mui/system';
+import { seasonsSelector } from '@Redux/seasons/seasonsSlice';
 import { useNavigate } from 'react-router-dom';
-import eventsApi from '@Services/api/eventsApi';
+import { useEffect } from 'react';
+import seasonsApi from '../../../services/api/seasonsApi';
+import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
+import { PageWrapper } from '../../../Components/Page/PageWrapper/sc.PageWrapper';
+import { Box, Button, Card, CardContent, Typography } from '@mui/material';
+import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
+import { CREATE_PATH, EDIT_PATH, SEASONS_BASE_PATH } from '../../../Constant';
+import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import { useState } from 'react';
-import { CREATE_PATH, EVENTS_BASE_PATH, EDIT_PATH } from '../../../Constant';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Actif ?', type: 'bool' },
-    { name: 'name', label: 'Nom' },
-    { name: 'eventCategory.name', label: 'Catégorie' },
-    { name: 'room.name', label: 'Salle' },
-    { name: 'season.name', label: 'Saison' },
+    { name: 'active', label: 'Activé ?', type: 'bool' },
+    { name: 'name', label: 'Nom de la catégorie' },
 ];
 
-export const EventsList = () => {
-    const { loading, events, error } = useSelector(eventsSelector);
+export const SeasonsList = () => {
+    const { loading, seasons, error } = useSelector(seasonsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
-        if (!loading && !events && !error) {
-            dispatch(getEventsAction());
+        if (!loading && !seasons && !error) {
+            dispatch(getSeasonsAction());
         }
     }, []);
 
     const handleDelete = async (id) => {
-        await eventsApi.deleteEvent(id);
+        await seasonsApi.deleteSeason(id);
 
-        dispatch(getEventsAction());
+        dispatch(getSeasonsAction());
 
         setDeleteDialog(null);
     };
@@ -45,16 +41,16 @@ export const EventsList = () => {
     return (
         <>
             <PageWrapper>
-                <PageTitle>Evènements</PageTitle>
+                <PageTitle>Saisons</PageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Evènements ({events?.length})
+                                Saisons ({seasons?.length})
                             </Typography>
                             <Button
                                 variant="contained"
-                                onClick={() => navigate(EVENTS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(SEASONS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
                             </Button>
@@ -62,9 +58,9 @@ export const EventsList = () => {
 
                         <ListTable
                             table={TABLE_COLUMN}
-                            list={events}
+                            list={seasons}
                             onEdit={(id) => {
-                                navigate(`${EVENTS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${SEASONS_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
@@ -78,7 +74,7 @@ export const EventsList = () => {
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                        Êtes-vous sûr de vouloir supprimer cette salle ?
                     </Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>

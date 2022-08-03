@@ -1,43 +1,40 @@
-import { eventsSelector } from '@Redux/events/eventsSlice';
+import { categoriesSelector } from '@Redux/categories/categoriesSlice';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
 import { PageWrapper } from '@Components/Page/PageWrapper/sc.PageWrapper';
-import { getEventsAction } from '@Redux/events/eventsSlice';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
-import eventsApi from '@Services/api/eventsApi';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { useState } from 'react';
-import { CREATE_PATH, EVENTS_BASE_PATH, EDIT_PATH } from '../../../Constant';
+import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH } from '../../../Constant';
+import categoriesApi from '../../../services/api/categoriesApi';
+import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Actif ?', type: 'bool' },
-    { name: 'name', label: 'Nom' },
-    { name: 'eventCategory.name', label: 'Catégorie' },
-    { name: 'room.name', label: 'Salle' },
-    { name: 'season.name', label: 'Saison' },
+    { name: 'active', label: 'Activé ?', type: 'bool' },
+    { name: 'name', label: 'Nom de la catégorie' },
 ];
 
-export const EventsList = () => {
-    const { loading, events, error } = useSelector(eventsSelector);
+export const CategoriesList = () => {
+    const { loading, categories, error } = useSelector(categoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
-        if (!loading && !events && !error) {
-            dispatch(getEventsAction());
+        if (!loading && !categories && !error) {
+            dispatch(getCategoriesAction());
         }
     }, []);
 
     const handleDelete = async (id) => {
-        await eventsApi.deleteEvent(id);
+        await categoriesApi.deleteCategory(id);
 
-        dispatch(getEventsAction());
+        dispatch(getCategoriesAction());
 
         setDeleteDialog(null);
     };
@@ -45,16 +42,16 @@ export const EventsList = () => {
     return (
         <>
             <PageWrapper>
-                <PageTitle>Evènements</PageTitle>
+                <PageTitle>Catégories</PageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Evènements ({events?.length})
+                                Catégories ({categories?.length})
                             </Typography>
                             <Button
                                 variant="contained"
-                                onClick={() => navigate(EVENTS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(CATEGORIES_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
                             </Button>
@@ -62,9 +59,9 @@ export const EventsList = () => {
 
                         <ListTable
                             table={TABLE_COLUMN}
-                            list={events}
+                            list={categories}
                             onEdit={(id) => {
-                                navigate(`${EVENTS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${CATEGORIES_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />

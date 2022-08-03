@@ -10,7 +10,13 @@ import {
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { MenuTitle } from './sc.SideMenu';
-import { EVENTS_BASE_PATH, USER_BASE_PATH } from '../../Constant';
+import {
+    CATEGORIES_BASE_PATH,
+    EVENTS_BASE_PATH,
+    ROOMS_BASE_PATH,
+    SEASONS_BASE_PATH,
+    USER_BASE_PATH,
+} from '../../Constant';
 import { useNavigate } from 'react-router-dom';
 
 export const SideMenu = () => {
@@ -41,6 +47,33 @@ export const SideMenu = () => {
                             <SettingsIcon />
                         </ListItemIcon>
                         <ListItemText primary={'Evènements'} />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate(CATEGORIES_BASE_PATH)}>
+                        <ListItemIcon>
+                            <SettingsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Catégories'} />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate(ROOMS_BASE_PATH)}>
+                        <ListItemIcon>
+                            <SettingsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Salles'} />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => navigate(SEASONS_BASE_PATH)}>
+                        <ListItemIcon>
+                            <SettingsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Saisons'} />
                     </ListItemButton>
                 </ListItem>
             </List>

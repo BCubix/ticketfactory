@@ -52,14 +52,7 @@ export const EditUser = () => {
     }, [user]);
 
     const handleSubmit = async (values) => {
-        const { firstName, lastName, password, email } = values;
-        const data = { firstName, lastName, email };
-
-        if (password !== null && password !== '') {
-            data.plainPassword = password;
-        }
-
-        const result = await usersApi.editUser(id, data);
+        const result = await usersApi.editUser(id, values);
 
         if (result.result) {
             NotificationManager.success(

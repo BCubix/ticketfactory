@@ -1,3 +1,4 @@
+import moment from 'moment';
 import axios from './config';
 
 const eventsApi = {
@@ -23,7 +24,26 @@ const eventsApi = {
 
     createEvent: async (data) => {
         try {
-            const result = await axios.post('/events', data);
+            let formData = new FormData();
+
+            formData.append('active', data.active ? 1 : 0);
+            formData.append('name', data.name);
+            formData.append('description', data.description);
+            formData.append('eventCategory', data.eventCategory);
+            formData.append('room', data.room);
+            formData.append('season', data.season);
+
+            data.eventDates.forEach((date, index) => {
+                formData.append(`eventDates[${index}][eventDate]`, date.eventDate);
+            });
+
+            data.eventPrices.forEach((price, index) => {
+                formData.append(`eventPrices[${index}][name]`, price.name);
+                formData.append(`eventPrices[${index}][annotation]`, price.annotation);
+                formData.append(`eventPrices[${index}][price]`, price.price);
+            });
+
+            const result = await axios.post('/events', formData);
 
             return { result: true, event: result.data };
         } catch (error) {
@@ -33,7 +53,29 @@ const eventsApi = {
 
     editEvent: async (id, data) => {
         try {
-            const result = await axios.post(`/events/${id}`, data);
+            let formData = new FormData();
+
+            formData.append('active', data.active ? 1 : 0);
+            formData.append('name', data.name);
+            formData.append('description', data.description);
+            formData.append('eventCategory', data.eventCategory);
+            formData.append('room', data.room);
+            formData.append('season', data.season);
+
+            data.eventDates.forEach((date, index) => {
+                formData.append(
+                    `eventDates[${index}][eventDate]`,
+                    moment(date.eventDate).format('YYYY-MM-DD HH:mm')
+                );
+            });
+
+            data.eventPrices.forEach((price, index) => {
+                formData.append(`eventPrices[${index}][name]`, price.name);
+                formData.append(`eventPrices[${index}][annotation]`, price.annotation);
+                formData.append(`eventPrices[${index}][price]`, price.price);
+            });
+
+            const result = await axios.post(`/events/${id}`, formData);
 
             return { result: true, event: result.data };
         } catch (error) {

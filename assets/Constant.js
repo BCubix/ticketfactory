@@ -13,3 +13,9 @@ export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';
 
 export const EVENTS_BASE_PATH = '/admin/evenements';
+
+export const CATEGORIES_BASE_PATH = '/admin/categories';
+
+export const ROOMS_BASE_PATH = '/admin/salles';
+
+export const SEASONS_BASE_PATH = '/admin/saisons';
