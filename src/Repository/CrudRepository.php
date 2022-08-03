@@ -31,7 +31,9 @@ abstract class CrudRepository extends AbstractRepository
         }
 
         return $results
-            ->orderBy($sortField, $limit)
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->orderBy($sortField, $sortOrder)
             ->getQuery()
             ->getResult()
         ;

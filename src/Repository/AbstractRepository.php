@@ -8,7 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 abstract class AbstractRepository extends ServiceEntityRepository
 {
     protected const FILTERS = [];
-    protected const SORTS = [];
+    protected const SORTS = ['id' => 'o.id'];
 
     private const OPERATOR_MAPPING = [
         'equals' => ['='],
