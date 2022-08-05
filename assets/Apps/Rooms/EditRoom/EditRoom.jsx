@@ -12,7 +12,6 @@ export const EditRoom = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [room, setRoom] = useState(null);
-    const [initialValues, setInitialValues] = useState(null);
 
     const getRoom = async (id) => {
         const result = await roomsApi.getOneRoom(id);
@@ -37,17 +36,6 @@ export const EditRoom = () => {
         getRoom(id);
     }, [id]);
 
-    useEffect(() => {
-        if (!room) {
-            return;
-        }
-
-        setInitialValues({
-            name: room.name,
-            active: room.active,
-        });
-    }, [room]);
-
     const handleSubmit = async (values) => {
         const result = await roomsApi.editRoom(id, values);
 
@@ -60,9 +48,9 @@ export const EditRoom = () => {
         }
     };
 
-    if (!initialValues) {
+    if (!room) {
         return <></>;
     }
 
-    return <RoomsForm handleSubmit={handleSubmit} initialValues={initialValues} />;
+    return <RoomsForm handleSubmit={handleSubmit} initialValues={room} />;
 };

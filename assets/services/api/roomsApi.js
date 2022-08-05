@@ -30,6 +30,10 @@ const roomsApi = {
             formData.append('area', data.area);
             formData.append('seatsNb', data.seatsNb);
 
+            data.seatingPlans.forEach((plan, index) => {
+                formData.append(`seatingPlans[${index}][name]`, plan.name);
+            });
+
             const result = await axios.post('/rooms', formData);
 
             return { result: true, room: result.data };
@@ -46,6 +50,10 @@ const roomsApi = {
             formData.append('name', data.name);
             formData.append('area', data.area);
             formData.append('seatsNb', data.seatsNb);
+
+            data.seatingPlans.forEach((plan, index) => {
+                formData.append(`seatingPlans[${index}][name]`, plan.name);
+            });
 
             const result = await axios.post(`/rooms/${id}`, formData);
 

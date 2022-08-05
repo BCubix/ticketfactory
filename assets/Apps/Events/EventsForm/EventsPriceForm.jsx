@@ -5,15 +5,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, Card, CardContent, Fab, TextField, Typography } from '@mui/material';
 
-export const EventsPriceForm = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    touched,
-    errors,
-    handleChange,
-    handleBlur,
-}) => {
+export const EventsPriceForm = ({ values, touched, errors, handleChange, handleBlur }) => {
     return (
         <FieldArray name="eventPrices">
             {({ remove, push }) => (
