@@ -17,6 +17,8 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                     : {
                           name: '',
                           active: false,
+                          seatsNb: '',
+                          area: '',
                       }
             }
             validationSchema={roomsSchema}

@@ -2,6 +2,7 @@
 
 namespace App\Event\Admin;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventCategoryController extends CrudController
@@ -19,19 +20,16 @@ class EventCategoryController extends CrudController
 
     protected const NOT_FOUND_MESSAGE = "Cette catégorie n'existe pas.";
 
-    #[Rest\Get('/event-categories')]
+    #[Rest\Get('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getAll(Request $request, ParamFetcher $paramFetcher): View
+    public function getAll(Request $request, ParamFetcher $paramFetcher, int $categoryId = null): View
     {
-        return parent::getAll($request, $paramFetcher);
-    }
+        $filters = $paramFetcher->get('filters');
+        $filters = empty($filters) ? [] : $filters;
+        $objects = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters, $categoryId);
 
-    #[Rest\Get('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getOne(Request $request, int $categoryId): View
-    {
-        return parent::getOne($request, $categoryId);
+        return $this->view($objects, Response::HTTP_OK);
     }
 
     #[Rest\Post('/event-categories')]
