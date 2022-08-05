@@ -27,6 +27,8 @@ const roomsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('area', data.area);
+            formData.append('seatsNb', data.seatsNb);
 
             const result = await axios.post('/rooms', formData);
 
@@ -42,6 +44,8 @@ const roomsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('area', data.area);
+            formData.append('seatsNb', data.seatsNb);
 
             const result = await axios.post(`/rooms/${id}`, formData);
 

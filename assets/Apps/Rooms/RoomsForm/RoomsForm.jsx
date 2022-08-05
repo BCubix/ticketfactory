@@ -58,6 +58,37 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                             error={touched.name && Boolean(errors.name)}
                             helperText={touched.name && errors.name}
                         />
+
+                        <TextField
+                            margin="normal"
+                            size="small"
+                            value={values.seatsNb}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            required
+                            fullWidth
+                            id="seatsNb"
+                            label="Nombre de places"
+                            name="seatsNb"
+                            error={touched.seatsNb && Boolean(errors.seatsNb)}
+                            helperText={touched.seatsNb && errors.seatsNb}
+                        />
+
+                        <TextField
+                            margin="normal"
+                            size="small"
+                            value={values.area}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            required
+                            fullWidth
+                            id="area"
+                            label="Superficie"
+                            name="area"
+                            error={touched.area && Boolean(errors.area)}
+                            helperText={touched.area && errors.area}
+                        />
+
                         <FormControlLabel
                             sx={{ marginLeft: 'auto' }}
                             control={

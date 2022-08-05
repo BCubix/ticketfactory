@@ -16,6 +16,8 @@ const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
     { name: 'active', label: 'Activé ?', type: 'bool' },
     { name: 'name', label: 'Nom de la catégorie' },
+    { name: 'seatsNb', label: 'Nombre de places' },
+    { name: 'area', label: 'Superficie' },
 ];
 
 export const RoomsList = () => {
