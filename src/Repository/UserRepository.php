@@ -18,12 +18,17 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
     {
         $email = strtolower($email);
 
-        return $this->createQueryBuilder('o')
+        return $this->createQueryBuilder('u')
             ->where('u.email LIKE :email')
             ->andWhere('u.active = 1')
             ->setParameter('email', $email)
             ->getQuery()
             ->getOneOrNullResult()
         ;
-   }
+    }
+
+    public function loadUserByUsername(string $email): ?User
+    {
+        return $this->loadUserByIdentifier($email);
+    }
 }

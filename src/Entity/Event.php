@@ -33,13 +33,13 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDate::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private $eventDates;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDateBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private $eventDateBlocks;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private $eventPrices;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private $eventPriceBlocks;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -56,11 +56,19 @@ class Event extends Datable
     #[ORM\ManyToOne(targetEntity: Season::class, inversedBy: 'events')]
     private $season;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'events')]
+    private $tags;
+
+
+
 
     public function __construct()
     {
-        $this->eventDates  = new ArrayCollection();
-        $this->eventPrices = new ArrayCollection();
+        $this->eventDateBlocks  = new ArrayCollection();
+        $this->eventPriceBlocks = new ArrayCollection();
+        $this->tags             = new ArrayCollection();
     }
 
 
@@ -94,29 +102,29 @@ class Event extends Datable
     }
 
     /**
-     * @return Collection<int, EventDate>
+     * @return Collection<int, EventDateBlock>
      */
-    public function getEventDates(): Collection
+    public function getEventDateBlocks(): Collection
     {
-        return $this->eventDates;
+        return $this->eventDateBlocks;
     }
 
-    public function addEventDate(EventDate $eventDate): self
+    public function addEventDateBlock(EventDateBlock $eventDateBlock): self
     {
-        if (!$this->eventDates->contains($eventDate)) {
-            $this->eventDates[] = $eventDate;
-            $eventDate->setEvent($this);
+        if (!$this->eventDateBlocks->contains($eventDateBlock)) {
+            $this->eventDateBlocks[] = $eventDateBlock;
+            $eventDateBlock->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeEventDate(EventDate $eventDate): self
+    public function removeEventDateBlock(EventDateBlock $eventDateBlock): self
     {
-        if ($this->eventDates->removeElement($eventDate)) {
+        if ($this->eventDateBlocks->removeElement($eventDateBlock)) {
             // set the owning side to null (unless already changed)
-            if ($eventDate->getEvent() === $this) {
-                $eventDate->setEvent(null);
+            if ($eventDateBlock->getEvent() === $this) {
+                $eventDateBlock->setEvent(null);
             }
         }
 
@@ -124,29 +132,29 @@ class Event extends Datable
     }
 
     /**
-     * @return Collection<int, EventPrice>
+     * @return Collection<int, EventPriceBlock>
      */
-    public function getEventPrices(): Collection
+    public function getEventPriceBlocks(): Collection
     {
-        return $this->eventPrices;
+        return $this->eventPriceBlocks;
     }
 
-    public function addEventPrice(EventPrice $eventPrice): self
+    public function addEventPriceBlock(EventPriceBlock $eventPriceBlock): self
     {
-        if (!$this->eventPrices->contains($eventPrice)) {
-            $this->eventPrices[] = $eventPrice;
-            $eventPrice->setEvent($this);
+        if (!$this->eventPriceBlocks->contains($eventPriceBlock)) {
+            $this->eventPriceBlocks[] = $eventPriceBlock;
+            $eventPriceBlock->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeEventPrice(EventPrice $eventPrice): self
+    public function removeEventPriceBlock(EventPriceBlock $eventPriceBlock): self
     {
-        if ($this->eventPrices->removeElement($eventPrice)) {
+        if ($this->eventPriceBlocks->removeElement($eventPriceBlock)) {
             // set the owning side to null (unless already changed)
-            if ($eventPrice->getEvent() === $this) {
-                $eventPrice->setEvent(null);
+            if ($eventPriceBlock->getEvent() === $this) {
+                $eventPriceBlock->setEvent(null);
             }
         }
 
@@ -185,6 +193,33 @@ class Event extends Datable
     public function setSeason(?Season $season): self
     {
         $this->season = $season;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            $tag->removeEvent($this);
+        }
 
         return $this;
     }

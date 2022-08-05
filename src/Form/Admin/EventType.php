@@ -6,9 +6,11 @@ use App\Entity\Event;
 use App\Entity\EventCategory;
 use App\Entity\Room;
 use App\Entity\Season;
+use App\Entity\Tag;
 use App\Repository\EventCategoryRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SeasonRepository;
+use App\Repository\TagRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -27,15 +29,15 @@ class EventType extends AbstractType
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
             ->add('description',          TextareaType::class,        [])
-            ->add('eventDates',           CollectionType::class,      [
-                'entry_type'   => EventDateType::class,
+            ->add('eventDateBlocks',      CollectionType::class,      [
+                'entry_type'   => EventDateBlockType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'by_reference' => false
             ])
-            ->add('eventPrices',          CollectionType::class,      [
-                'entry_type'   => EventPriceType::class,
+            ->add('eventPriceBlocks',     CollectionType::class,      [
+                'entry_type'   => EventPriceBlockType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
@@ -44,7 +46,6 @@ class EventType extends AbstractType
             ->add('eventCategory',        EntityType::class,          [
                 'class'         => EventCategory::class,
                 'choice_label'  => 'name',
-                'expanded'      => false,
                 'multiple'      => false,
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
@@ -56,7 +57,6 @@ class EventType extends AbstractType
             ->add('room',                 EntityType::class,          [
                 'class'         => Room::class,
                 'choice_label'  => 'name',
-                'expanded'      => false,
                 'multiple'      => false,
                 'query_builder' => function (RoomRepository $rr) {
                     return $rr
@@ -68,12 +68,22 @@ class EventType extends AbstractType
             ->add('season',               EntityType::class,          [
                 'class'         => Season::class,
                 'choice_label'  => 'name',
-                'expanded'      => false,
                 'multiple'      => false,
                 'query_builder' => function (SeasonRepository $sr) {
                     return $sr
                         ->createQueryBuilder('s')
                         ->orderBy('s.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('tags',                 EntityType::class,          [
+                'class'         => Tag::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function (TagRepository $tr) {
+                    return $tr
+                        ->createQueryBuilder('t')
+                        ->orderBy('t.name', 'ASC')
                     ;
                 }
             ])
