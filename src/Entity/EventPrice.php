@@ -32,9 +32,9 @@ class EventPrice
     #[ORM\Column(type: 'float')]
     private $price;
 
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPrices')]
+    #[ORM\ManyToOne(targetEntity: EventPriceBlock::class, inversedBy: 'eventPrices')]
     #[ORM\JoinColumn(nullable: false)]
-    private $event;
+    private $eventPriceBlock;
 
 
     public function getId(): ?int
@@ -78,14 +78,14 @@ class EventPrice
         return $this;
     }
 
-    public function getEvent(): ?Event
+    public function getEventPriceBlock(): ?EventPriceBlock
     {
-        return $this->event;
+        return $this->eventPriceBlock;
     }
 
-    public function setEvent(?Event $event): self
+    public function setEventPriceBlock(?EventPriceBlock $eventPriceBlock): self
     {
-        $this->event = $event;
+        $this->eventPriceBlock = $eventPriceBlock;
 
         return $this;
     }

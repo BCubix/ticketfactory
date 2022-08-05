@@ -71,7 +71,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
 
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = strtolower($email);
 
         return $this;
     }
