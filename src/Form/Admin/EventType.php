@@ -43,10 +43,21 @@ class EventType extends AbstractType
                 'delete_empty' => true,
                 'by_reference' => false
             ])
-            ->add('eventCategory',        EntityType::class,          [
+            ->add('mainCategory',         EntityType::class,          [
                 'class'         => EventCategory::class,
                 'choice_label'  => 'name',
                 'multiple'      => false,
+                'query_builder' => function (EventCategoryRepository $ecr) {
+                    return $ecr
+                        ->createQueryBuilder('ec')
+                        ->orderBy('ec.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('eventCategories',      EntityType::class,          [
+                'class'         => EventCategory::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
                         ->createQueryBuilder('ec')

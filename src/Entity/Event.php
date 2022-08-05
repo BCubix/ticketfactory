@@ -43,8 +43,13 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'events')]
-    private $eventCategory;
+    #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'mainEvents')]
+    private $mainCategory;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToMany(targetEntity: EventCategory::class, inversedBy: 'events')]
+    private $eventCategories;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -62,10 +67,9 @@ class Event extends Datable
     private $tags;
 
 
-
-
     public function __construct()
     {
+        $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
         $this->tags             = new ArrayCollection();
@@ -161,14 +165,38 @@ class Event extends Datable
         return $this;
     }
 
-    public function getEventCategory(): ?EventCategory
+    public function getMainCategory(): ?EventCategory
     {
-        return $this->eventCategory;
+        return $this->mainCategory;
     }
 
-    public function setEventCategory(?EventCategory $eventCategory): self
+    public function setMainCategory(?EventCategory $mainCategory): self
     {
-        $this->eventCategory = $eventCategory;
+        $this->mainCategory = $mainCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventCategory>
+     */
+    public function getEventCategories(): Collection
+    {
+        return $this->eventCategories;
+    }
+
+    public function addEventCategory(EventCategory $eventCategory): self
+    {
+        if (!$this->eventCategories->contains($eventCategory)) {
+            $this->eventCategories[] = $eventCategory;
+        }
+
+        return $this;
+    }
+
+    public function removeEventCategory(EventCategory $eventCategory): self
+    {
+        $this->eventCategories->removeElement($eventCategory);
 
         return $this;
     }

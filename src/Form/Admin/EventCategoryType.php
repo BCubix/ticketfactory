@@ -3,7 +3,9 @@
 namespace App\Form\Admin;
 
 use App\Entity\EventCategory;
+use App\Repository\EventCategoryRepository;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,6 +19,17 @@ class EventCategoryType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
+            ->add('parent',               EntityType::class,          [
+                'class'         => EventCategory::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (EventCategoryRepository $ecr) {
+                    return $ecr
+                        ->createQueryBuilder('ec')
+                        ->orderBy('ec.name', 'ASC')
+                    ;
+                }
+            ])
         ;
     }
 
