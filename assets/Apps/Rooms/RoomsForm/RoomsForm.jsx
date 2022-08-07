@@ -9,6 +9,11 @@ import { RoomsSeatingPlanPartForm } from './RoomsSeatingPlansPartForm';
 export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
     const roomsSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la salle.'),
+        seatingPlans: Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().required('Veuillez renseigner le nom du plan'),
+            })
+        ),
     });
 
     return (

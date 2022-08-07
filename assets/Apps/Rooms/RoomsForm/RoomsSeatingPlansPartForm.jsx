@@ -24,9 +24,9 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                         name={`seatingPlans.${index}.name`}
                                         error={
                                             touched.seatingPlans &&
-                                            touched.seatingPlans[index].name &&
+                                            touched.seatingPlans[index]?.name &&
                                             errors.seatingPlans &&
-                                            errors.seatingPlans[index].name
+                                            errors.seatingPlans[index]?.name
                                         }
                                         sx={{ marginInline: 1 }}
                                     />
