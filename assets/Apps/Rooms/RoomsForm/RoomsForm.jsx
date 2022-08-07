@@ -1,20 +1,10 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    Container,
-    Fab,
-    FormControlLabel,
-    Switch,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { FieldArray, Formik } from 'formik';
+import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PostAddIcon from '@mui/icons-material/PostAdd';
+import { RoomsMainPartForm } from './RoomsMainPartForm';
+import { RoomsSeatingPlanPartForm } from './RoomsSeatingPlansPartForm';
 
 export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
     const roomsSchema = Yup.object().shape({
@@ -46,124 +36,29 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <Container maxWidth="sm">
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit}
-                        sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
-                    >
-                        <TextField
-                            margin="normal"
-                            size="small"
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="name"
-                            label="Nom"
-                            name="name"
-                            autoComplete="name"
-                            error={touched.name && Boolean(errors.name)}
-                            helperText={touched.name && errors.name}
-                        />
+                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
+                    <Typography component="h1" variant={'h5'}>
+                        {initialValues ? 'Modification' : 'Création'} d'une salle
+                    </Typography>
+                    <RoomsMainPartForm
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                    />
 
-                        <TextField
-                            margin="normal"
-                            size="small"
-                            value={values.seatsNb}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="seatsNb"
-                            label="Nombre de places"
-                            name="seatsNb"
-                            error={touched.seatsNb && Boolean(errors.seatsNb)}
-                            helperText={touched.seatsNb && errors.seatsNb}
-                        />
+                    <RoomsSeatingPlanPartForm
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                    />
 
-                        <TextField
-                            margin="normal"
-                            size="small"
-                            value={values.area}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="area"
-                            label="Superficie"
-                            name="area"
-                            error={touched.area && Boolean(errors.area)}
-                            helperText={touched.area && errors.area}
-                        />
-
-                        {console.log(values.seatingPlans)}
-                        <FieldArray name="seatingPlans">
-                            {({ remove, push }) => (
-                                <Box>
-                                    {values.seatingPlans?.map((item, index) => (
-                                        <Card sx={{ marginBlock: 2 }} key={index}>
-                                            <CardContent sx={{ display: 'flex' }}>
-                                                <TextField
-                                                    margin="normal"
-                                                    size="small"
-                                                    value={item.name}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    required
-                                                    fullWidth
-                                                    id={`seatingPlans.${index}.name`}
-                                                    label="Nom"
-                                                    name={`seatingPlans.${index}.name`}
-                                                    error={
-                                                        touched.seatingPlans &&
-                                                        touched.seatingPlans[index].name &&
-                                                        errors.seatingPlans &&
-                                                        Boolean(errors.seatingPlans[index].name)
-                                                    }
-                                                    helperText={
-                                                        touched.seatingPlans &&
-                                                        touched.seatingPlans[index].name &&
-                                                        errors.seatingPlans &&
-                                                        errors.seatingPlans[index].name
-                                                    }
-                                                    sx={{ marginInline: 1 }}
-                                                />
-                                                <Fab
-                                                    sx={{ marginLeft: 2, flexShrink: 0 }}
-                                                    pt="2px"
-                                                    className="pointer"
-                                                    size="small"
-                                                    onClick={() => {
-                                                        remove(index);
-                                                    }}
-                                                >
-                                                    <DeleteIcon color="error" />
-                                                </Fab>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
-                                    <Box pt={2} pl={4}>
-                                        <Button
-                                            size="small"
-                                            color="primary"
-                                            onClick={() => {
-                                                push({ name: '', annotation: '', price: 0 });
-                                            }}
-                                        >
-                                            <PostAddIcon />
-                                            <Typography mt={1} component="p" variant="body1">
-                                                Ajouter un plan de salle
-                                            </Typography>
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            )}
-                        </FieldArray>
-
+                    <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
-                            sx={{ marginLeft: 'auto' }}
+                            sx={{ marginRight: 2, marginTop: 1 }}
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
@@ -177,7 +72,6 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                         />
                         <Button
                             type="submit"
-                            fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
@@ -185,7 +79,7 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Container>
+                </Box>
             )}
         </Formik>
     );

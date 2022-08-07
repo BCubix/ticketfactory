@@ -6,6 +6,7 @@ import roomsApi from '../../../services/api/roomsApi';
 import { REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
 import { RoomsForm } from '../RoomsForm/RoomsForm';
 import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
+import authApi from '../../../services/api/authApi';
 
 export const EditRoom = () => {
     const dispatch = useDispatch();
@@ -14,6 +15,14 @@ export const EditRoom = () => {
     const [room, setRoom] = useState(null);
 
     const getRoom = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         const result = await roomsApi.getOneRoom(id);
 
         if (!result.result) {
