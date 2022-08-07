@@ -6,13 +6,14 @@ import seasonsApi from '../../../services/api/seasonsApi';
 import { REDIRECTION_TIME, SEASONS_BASE_PATH } from '../../../Constant';
 import { SeasonsForm } from '../SeasonsForm/SeasonsForm';
 import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
+import authApi from '../../../services/api/authApi';
+import { loginFailure } from '../../../redux/profile/profileSlice';
 
 export const EditSeason = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
     const [season, setSeason] = useState(null);
-    const [initialValues, setInitialValues] = useState(null);
 
     const getSeason = async (id) => {
         const result = await seasonsApi.getOneSeason(id);
@@ -37,19 +38,15 @@ export const EditSeason = () => {
         getSeason(id);
     }, [id]);
 
-    useEffect(() => {
-        if (!season) {
+    const handleSubmit = async (values) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
             return;
         }
 
-        setInitialValues({
-            name: season.name,
-            active: season.active,
-            beginYear: season.beginYear,
-        });
-    }, [season]);
-
-    const handleSubmit = async (values) => {
         const result = await seasonsApi.editSeason(id, values);
 
         if (result.result) {
@@ -65,9 +62,9 @@ export const EditSeason = () => {
         }
     };
 
-    if (!initialValues) {
+    if (!season) {
         return <></>;
     }
 
-    return <SeasonsForm handleSubmit={handleSubmit} initialValues={initialValues} />;
+    return <SeasonsForm handleSubmit={handleSubmit} initialValues={season} />;
 };
