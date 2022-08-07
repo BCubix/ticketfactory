@@ -16,6 +16,14 @@ export const EditSeason = () => {
     const [season, setSeason] = useState(null);
 
     const getSeason = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         const result = await seasonsApi.getOneSeason(id);
 
         if (!result.result) {

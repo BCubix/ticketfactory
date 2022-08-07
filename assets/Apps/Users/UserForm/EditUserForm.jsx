@@ -3,6 +3,8 @@ import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
+import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
+import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
     const userSchema = Yup.object().shape({
@@ -29,17 +31,13 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
 
     return (
         <Formik
-            initialValues={
-                initialValues
-                    ? initialValues
-                    : {
-                          firstName: '',
-                          lastName: '',
-                          email: '',
-                          password: '',
-                          confirmPassword: '',
-                      }
-            }
+            initialValues={{
+                firstName: initialValues?.firstName || '',
+                lastName: initialValues?.lastName || '',
+                email: initialValues?.email || '',
+                password: '',
+                confirmPassword: '',
+            }}
             validationSchema={userSchema}
             onSubmit={async (values, { setSubmitting }) => {
                 handleSubmit(values);
@@ -55,89 +53,67 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <Container maxWidth="sm">
-                    <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
-                        <TextField
-                            margin="normal"
+                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
+                    <CmtFormBlock title={'Informations générales'}>
+                        <CmtTextField
                             value={values.email}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="email"
                             label="Email"
                             name="email"
-                            autoComplete="email"
-                            error={touched.email && Boolean(errors.email)}
-                            helperText={touched.email && errors.email}
+                            error={touched.email && errors.email}
+                            required
                         />
-                        <TextField
-                            margin="normal"
+                        <CmtTextField
                             value={values.firstName}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="firstName"
                             label="Prénom"
                             name="firstName"
-                            autoComplete="firstName"
-                            error={touched.firstName && Boolean(errors.firstName)}
-                            helperText={touched.firstName && errors.firstName}
+                            error={touched.firstName && errors.firstName}
+                            required
                         />
-                        <TextField
-                            margin="normal"
+                        <CmtTextField
                             value={values.lastName}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="lastName"
                             label="Nom"
                             name="lastName"
-                            autoComplete="lastName"
-                            error={touched.lastName && Boolean(errors.lastName)}
-                            helperText={touched.lastName && errors.lastName}
+                            error={touched.lastName && errors.lastName}
+                            required
                         />
-                        <TextField
-                            margin="normal"
+                    </CmtFormBlock>
+
+                    <CmtFormBlock title="Sécurité">
+                        <CmtTextField
                             value={values.password}
                             type="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            fullWidth
-                            id="password"
                             label="Mot de passe"
                             name="password"
-                            autoComplete="password"
-                            error={touched.password && Boolean(errors.password)}
-                            helperText={touched.password && errors.password}
+                            error={touched.password && errors.password}
                         />
-                        <TextField
-                            margin="normal"
+                        <CmtTextField
                             type="password"
                             value={values.confirmPassword}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            fullWidth
-                            id="confirmPassword"
                             label="Confirmer le mot de passe"
                             name="confirmPassword"
-                            autoComplete="confirmPassword"
-                            error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-                            helperText={touched.confirmPassword && errors.confirmPassword}
+                            error={touched.confirmPassword && errors.confirmPassword}
                         />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
-                            Modifier
-                        </Button>
-                    </Box>
-                </Container>
+                    </CmtFormBlock>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        disabled={isSubmitting}
+                    >
+                        Créer
+                    </Button>
+                </Box>
             )}
         </Formik>
     );
