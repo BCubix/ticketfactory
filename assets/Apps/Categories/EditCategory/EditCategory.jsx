@@ -6,15 +6,24 @@ import categoriesApi from '../../../services/api/categoriesApi';
 import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { CategoriesForm } from '../CategoriesForm/CategoriesForm';
+import { loginFailure } from '../../../redux/profile/profileSlice';
+import authApi from '../../../services/api/authApi';
 
 export const EditCategory = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
     const [category, setCategory] = useState(null);
-    const [initialValues, setInitialValues] = useState(null);
 
     const getCategory = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         const result = await categoriesApi.getOneCategory(id);
 
         if (!result.result) {
@@ -36,17 +45,6 @@ export const EditCategory = () => {
 
         getCategory(id);
     }, [id]);
-
-    useEffect(() => {
-        if (!category) {
-            return;
-        }
-
-        setInitialValues({
-            name: category.name,
-            active: category.active,
-        });
-    }, [category]);
 
     const handleSubmit = async (values) => {
         let { active, ...data } = values;
@@ -72,9 +70,9 @@ export const EditCategory = () => {
         }
     };
 
-    if (!initialValues) {
+    if (!category) {
         return <></>;
     }
 
-    return <CategoriesForm handleSubmit={handleSubmit} initialValues={initialValues} />;
+    return <CategoriesForm handleSubmit={handleSubmit} initialValues={category} />;
 };

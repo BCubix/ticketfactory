@@ -7,6 +7,7 @@ import { REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
 import { RoomsForm } from '../RoomsForm/RoomsForm';
 import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import authApi from '../../../services/api/authApi';
+import { loginFailure } from '../../../redux/profile/profileSlice';
 
 export const EditRoom = () => {
     const dispatch = useDispatch();

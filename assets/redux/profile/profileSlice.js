@@ -53,7 +53,6 @@ export function loginAction(data) {
 
             const response = await authApi.login(data);
 
-            console.log(response);
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
 

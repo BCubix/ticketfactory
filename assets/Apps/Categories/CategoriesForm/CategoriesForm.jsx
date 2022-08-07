@@ -3,6 +3,8 @@ import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
+import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
+import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
     const categorySchema = Yup.object().shape({
@@ -11,14 +13,10 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
 
     return (
         <Formik
-            initialValues={
-                initialValues
-                    ? initialValues
-                    : {
-                          name: '',
-                          active: false,
-                      }
-            }
+            initialValues={{
+                name: initialValues?.name || '',
+                active: initialValues?.active || false,
+            }}
             validationSchema={categorySchema}
             onSubmit={async (values, { setSubmitting }) => {
                 handleSubmit(values);
@@ -35,29 +33,24 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <Container maxWidth="sm">
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit}
-                        sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
-                    >
-                        <TextField
-                            margin="normal"
-                            size="small"
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit}
+                    sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
+                >
+                    <CmtFormBlock title="Informations générales">
+                        <CmtTextField
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            required
-                            fullWidth
-                            id="name"
                             label="Nom"
                             name="name"
-                            autoComplete="name"
-                            error={touched.name && Boolean(errors.name)}
-                            helperText={touched.name && errors.name}
+                            error={touched.name && errors.name}
                         />
+                    </CmtFormBlock>
+                    <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
-                            sx={{ marginLeft: 'auto' }}
+                            sx={{ marginRight: 2, marginTop: 1 }}
                             control={
                                 <Switch
                                     checked={values.active}
@@ -71,7 +64,6 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
                         />
                         <Button
                             type="submit"
-                            fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
@@ -79,7 +71,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Container>
+                </Box>
             )}
         </Formik>
     );
