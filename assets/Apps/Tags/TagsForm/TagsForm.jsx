@@ -1,14 +1,16 @@
-import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
+import { Button, FormControlLabel, FormHelperText, InputLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+import LightEditor from '../../../Components/Editors/LightEditor/LightEditor';
+import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
 
-export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
-    const categorySchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom de la categorie.'),
+export const TagsForm = ({ handleSubmit, initialValues = null }) => {
+    const tagSchema = Yup.object().shape({
+        name: Yup.string().required('Veuillez renseigner le nom du tag.'),
     });
 
     return (
@@ -16,8 +18,9 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
             initialValues={{
                 name: initialValues?.name || '',
                 active: initialValues?.active || false,
+                description: initialValues?.description || '',
             }}
-            validationSchema={categorySchema}
+            validationSchema={tagSchema}
             onSubmit={async (values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
@@ -31,6 +34,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
                 handleBlur,
                 handleSubmit,
                 setFieldValue,
+                setFieldTouched,
                 isSubmitting,
             }) => (
                 <Box
@@ -38,9 +42,6 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
                     onSubmit={handleSubmit}
                     sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
                 >
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'une catégorie
-                    </Typography>
                     <CmtFormBlock title="Informations générales">
                         <CmtTextField
                             value={values.name}
@@ -49,7 +50,23 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null }) => {
                             label="Nom"
                             name="name"
                             error={touched.name && errors.name}
+                            sx={{ marginBottom: 3 }}
                         />
+                        <InputLabel id="description">Description</InputLabel>
+
+                        <LightEditorFormControl>
+                            <LightEditor
+                                labelId="description"
+                                value={values.description}
+                                onBlur={() => setFieldTouched('description', true, false)}
+                                onChange={(val) => {
+                                    setFieldValue('description', val);
+                                }}
+                            />
+                            <FormHelperText error>
+                                {touched.description && errors.description}
+                            </FormHelperText>
+                        </LightEditorFormControl>
                     </CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel

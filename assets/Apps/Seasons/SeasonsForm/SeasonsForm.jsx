@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
+import { Button, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
@@ -40,6 +40,9 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                     onSubmit={handleSubmit}
                     sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
                 >
+                    <Typography component="h1" variant={'h5'}>
+                        {initialValues ? 'Modification' : 'Création'} d'une saison
+                    </Typography>
                     <CmtFormBlock title={'Informations générales'}>
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6}>

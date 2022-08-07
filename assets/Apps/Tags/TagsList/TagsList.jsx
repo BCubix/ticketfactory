@@ -1,4 +1,4 @@
-import { categoriesSelector } from '@Redux/categories/categoriesSlice';
+import { tagsSelector } from '@Redux/tags/tagsSlice';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,9 +9,9 @@ import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { useState } from 'react';
-import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH } from '../../../Constant';
-import categoriesApi from '../../../services/api/categoriesApi';
-import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
+import { CREATE_PATH, EDIT_PATH, TAGS_BASE_PATH } from '../../../Constant';
+import tagsApi from '../../../services/api/tagsApi';
+import { getTagsAction } from '../../../redux/tags/tagsSlice';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -19,22 +19,22 @@ const TABLE_COLUMN = [
     { name: 'name', label: 'Nom de la catégorie' },
 ];
 
-export const CategoriesList = () => {
-    const { loading, categories, error } = useSelector(categoriesSelector);
+export const TagsList = () => {
+    const { loading, tags, error } = useSelector(tagsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
-        if (!loading && !categories && !error) {
-            dispatch(getCategoriesAction());
+        if (!loading && !tags && !error) {
+            dispatch(getTagsAction());
         }
     }, []);
 
     const handleDelete = async (id) => {
-        await categoriesApi.deleteCategory(id);
+        await tagsApi.deleteTag(id);
 
-        dispatch(getCategoriesAction());
+        dispatch(getTagsAction());
 
         setDeleteDialog(null);
     };
@@ -42,16 +42,16 @@ export const CategoriesList = () => {
     return (
         <>
             <PageWrapper>
-                <PageTitle>Catégories</PageTitle>
+                <PageTitle>Tags</PageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Catégories ({categories?.length})
+                                Tags ({tags?.length})
                             </Typography>
                             <Button
                                 variant="contained"
-                                onClick={() => navigate(CATEGORIES_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(TAGS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
                             </Button>
@@ -59,9 +59,9 @@ export const CategoriesList = () => {
 
                         <ListTable
                             table={TABLE_COLUMN}
-                            list={categories}
+                            list={tags}
                             onEdit={(id) => {
-                                navigate(`${CATEGORIES_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${TAGS_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
@@ -75,7 +75,7 @@ export const CategoriesList = () => {
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette catégorie ?
+                        Êtes-vous sûr de vouloir supprimer ce tag ?
                     </Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>

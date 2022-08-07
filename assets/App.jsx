@@ -12,6 +12,7 @@ import {
     LOGS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
+    TAGS_BASE_PATH,
     USER_BASE_PATH,
 } from './Constant';
 import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
@@ -27,7 +28,6 @@ import { NotificationContainer } from 'react-notifications';
 import { EditUser } from './Apps/Users/EditUser/EditUser';
 import { EventsList } from './Apps/Events/EventsList/EventsList';
 import { CreateEvent } from './Apps/Events/CreateEvent/CreateEvent';
-import { CategoriesList } from './Apps/Categories/CategoriesList/CategoriesList';
 import { CreateCategory } from './Apps/Categories/CreateCategory/CreateCategory';
 import { EditCategory } from './Apps/Categories/EditCategory/EditCategory';
 import { RoomsList } from './Apps/Rooms/RoomsList/RoomsList';
@@ -38,6 +38,9 @@ import { CreateSeason } from './Apps/Seasons/CreateSeason/CreateSeason';
 import { EditSeason } from './Apps/Seasons/EditSeason/EditSeason';
 import { EditEvent } from './Apps/Events/EditEvent/EditEvent';
 import { LogsList } from './Apps/Logs/LogsList/LogsList';
+import { CategoriesMenu } from './Apps/Categories/CategoriesMenu/CategoriesMenu';
+import { CreateTag } from './Apps/Tags/CreateTag/CreateTag';
+import { EditTag } from './Apps/Tags/EditTag/EditTag';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -144,7 +147,7 @@ export const App = () => {
                     path={CATEGORIES_BASE_PATH}
                     element={
                         <AuthenticatedLayout>
-                            <CategoriesList />
+                            <CategoriesMenu tabValue={0} />
                         </AuthenticatedLayout>
                     }
                 />
@@ -159,10 +162,37 @@ export const App = () => {
                 />
 
                 <Route
+                    path={TAGS_BASE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <CategoriesMenu tabValue={1} />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
                     path={`${CATEGORIES_BASE_PATH}/:id${EDIT_PATH}`}
                     element={
                         <AuthenticatedLayout>
                             <EditCategory />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={TAGS_BASE_PATH + CREATE_PATH}
+                    element={
+                        <AuthenticatedLayout>
+                            <CreateTag />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
+                    path={`${TAGS_BASE_PATH}/:id${EDIT_PATH}`}
+                    element={
+                        <AuthenticatedLayout>
+                            <EditTag />
                         </AuthenticatedLayout>
                     }
                 />

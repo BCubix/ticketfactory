@@ -1,4 +1,4 @@
-import { Button, Container, TextField } from '@mui/material';
+import { Button, Container, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
@@ -51,6 +51,9 @@ export const CreateUserForm = ({ handleSubmit }) => {
                 isSubmitting,
             }) => (
                 <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
+                    <Typography component="h1" variant={'h5'}>
+                        Création d'un utilisateur
+                    </Typography>
                     <CmtFormBlock title={'Informations générales'}>
                         <CmtTextField
                             value={values.email}

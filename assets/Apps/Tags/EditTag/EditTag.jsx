@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import categoriesApi from '../../../services/api/categoriesApi';
-import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
-import { CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { CategoriesForm } from '../CategoriesForm/CategoriesForm';
+import tagsApi from '../../../services/api/tagsApi';
+import { getTagsAction } from '@Redux/tags/tagsSlice';
+import { CATEGORIES_BASE_PATH, REDIRECTION_TIME, TAGS_BASE_PATH } from '../../../Constant';
+import { TagsForm } from '../TagsForm/TagsForm';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 
-export const EditCategory = () => {
+export const EditTag = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [category, setCategory] = useState(null);
+    const [tag, setTag] = useState(null);
 
-    const getCategory = async (id) => {
+    const getTag = async (id) => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -24,7 +24,7 @@ export const EditCategory = () => {
             return;
         }
 
-        const result = await categoriesApi.getOneCategory(id);
+        const result = await tagsApi.getOneTag(id);
 
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
@@ -34,7 +34,7 @@ export const EditCategory = () => {
             return;
         }
 
-        setCategory(result.category);
+        setTag(result.tag);
     };
 
     useEffect(() => {
@@ -43,11 +43,11 @@ export const EditCategory = () => {
             return;
         }
 
-        getCategory(id);
+        getTag(id);
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const result = await categoriesApi.editCategory(id, values);
+        const result = await tagsApi.editTag(id, values);
 
         if (result.result) {
             NotificationManager.success(
@@ -56,15 +56,15 @@ export const EditCategory = () => {
                 REDIRECTION_TIME
             );
 
-            dispatch(getCategoriesAction());
+            dispatch(getTagsAction());
 
-            navigate(CATEGORIES_BASE_PATH);
+            navigate(TAGS_BASE_PATH);
         }
     };
 
-    if (!category) {
+    if (!tag) {
         return <></>;
     }
 
-    return <CategoriesForm handleSubmit={handleSubmit} initialValues={category} />;
+    return <TagsForm handleSubmit={handleSubmit} initialValues={tag} />;
 };
