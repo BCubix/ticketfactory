@@ -5,8 +5,6 @@ import { PageWrapper } from '../../../Components/Page/PageWrapper/sc.PageWrapper
 import * as Yup from 'yup';
 import { EventMainPartForm } from './EventMainPartForm';
 import { CmtTabs } from '../../../Components/CmtTabs/CmtTabs';
-import { EventsDateForm } from './EventsDateForm';
-import { EventsPriceForm } from './EventsPriceForm';
 import { EventsDateBlockForm } from './EventsDateBlockForm';
 import { EventsPriceBlockForm } from './EventPriceBlockForm';
 
@@ -18,7 +16,7 @@ export const EventsForm = ({
     seasonsList,
     tagsList,
 }) => {
-    if (!categoriesList || !roomsList || !seasonsList) {
+    if (!categoriesList || !roomsList || !seasonsList || !tagsList) {
         return <></>;
     }
 
@@ -29,22 +27,24 @@ export const EventsForm = ({
 
     return (
         <Formik
-            initialValues={
-                initialValues
-                    ? initialValues
-                    : {
-                          active: true,
-                          name: '',
-                          description: '',
-                          eventDateBlocks: [{ name: 'Dates', eventDates: [] }],
-                          eventPriceBlocks: [{ name: 'Prix', eventPrices: [] }],
-                          eventCategories: [],
-                          room: '',
-                          season: '',
-                          tags: [],
-                          mainCategory: '',
-                      }
-            }
+            initialValues={{
+                active: initialValues?.active || false,
+                name: initialValues?.name || '',
+                description: initialValues?.description || '',
+                eventDateBlocks: initialValues?.eventDateBlocks || [
+                    { name: 'Dates', eventDates: [] },
+                ],
+                eventPriceBlocks: initialValues?.eventPriceBlocks || [
+                    { name: 'Prix', eventPrices: [] },
+                ],
+                eventCategories: initialValues?.eventCategories
+                    ? initialValues?.eventCategories?.map((el) => el.id)
+                    : [],
+                room: initialValues?.room?.id || '',
+                season: initialValues?.season?.id || '',
+                tags: initialValues?.tags ? initialValues?.tags?.map((el) => el.id) : [],
+                mainCategory: initialValues?.mainCategory || '',
+            }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
                 console.log(values);

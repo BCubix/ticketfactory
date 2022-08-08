@@ -24,8 +24,6 @@ const eventsApi = {
 
     createEvent: async (data) => {
         try {
-            console.log(data);
-
             let formData = new FormData();
 
             formData.append('active', data.active ? 1 : 0);
@@ -41,7 +39,7 @@ const eventsApi = {
                 dateBlock?.eventDates?.forEach((date, ind) => {
                     formData.append(
                         `eventDateBlocks[${index}][eventDates][${ind}][eventDate]`,
-                        date.eventDate
+                        moment(date.eventDate).format('YYYY-MM-DD HH:mm')
                     );
                     formData.append(
                         `eventDateBlocks[${index}][eventDates][${ind}][annotation]`,
@@ -53,7 +51,7 @@ const eventsApi = {
                     );
                     formData.append(
                         `eventDateBlocks[${index}][eventDates][${ind}][reportDate]`,
-                        date.reportDate
+                        moment(date.reportDate).format('YYYY-MM-DD HH:mm')
                     );
                 });
             });
@@ -100,21 +98,61 @@ const eventsApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('description', data.description);
-            formData.append('eventCategory', data.eventCategory);
             formData.append('room', data.room);
             formData.append('season', data.season);
+            formData.append('mainCategory', data.mainCategory);
 
-            data.eventDates.forEach((date, index) => {
-                formData.append(
-                    `eventDates[${index}][eventDate]`,
-                    moment(date.eventDate).format('YYYY-MM-DD HH:mm')
-                );
+            data?.eventDateBlocks?.forEach((dateBlock, index) => {
+                formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
+
+                dateBlock?.eventDates?.forEach((date, ind) => {
+                    formData.append(
+                        `eventDateBlocks[${index}][eventDates][${ind}][eventDate]`,
+                        moment(date.eventDate).format('YYYY-MM-DD HH:mm')
+                    );
+                    formData.append(
+                        `eventDateBlocks[${index}][eventDates][${ind}][annotation]`,
+                        date.annotation
+                    );
+                    formData.append(
+                        `eventDateBlocks[${index}][eventDates][${ind}][state]`,
+                        date.state
+                    );
+
+                    if (date.reportDate) {
+                        formData.append(
+                            `eventDateBlocks[${index}][eventDates][${ind}][reportDate]`,
+                            moment(date.reportDate).format('YYYY-MM-DD HH:mm')
+                        );
+                    }
+                });
             });
 
-            data.eventPrices.forEach((price, index) => {
-                formData.append(`eventPrices[${index}][name]`, price.name);
-                formData.append(`eventPrices[${index}][annotation]`, price.annotation);
-                formData.append(`eventPrices[${index}][price]`, price.price);
+            data?.eventPriceBlocks?.forEach((priceBlock, index) => {
+                formData.append(`eventPriceBlocks[${index}][name]`, priceBlock.name);
+
+                priceBlock?.eventPrices.forEach((price, ind) => {
+                    formData.append(
+                        `eventPriceBlocks[${index}][eventPrices][${ind}][name]`,
+                        price.name
+                    );
+                    formData.append(
+                        `eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`,
+                        price.annotation
+                    );
+                    formData.append(
+                        `eventPriceBlocks[${index}][eventPrices][${ind}][price]`,
+                        price.price
+                    );
+                });
+            });
+
+            data?.eventCategories?.forEach((category, index) => {
+                formData.append(`eventCategories[${index}]`, category);
+            });
+
+            data?.tags?.forEach((tag, index) => {
+                formData.append(`tags[${index}]`, tag);
             });
 
             const result = await axios.post(`/events/${id}`, formData);

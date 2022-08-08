@@ -9,16 +9,19 @@ import { EventsForm } from '../EventsForm/EventsForm';
 import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import { getRoomsAction, roomsSelector } from '../../../redux/rooms/roomsSlice';
 import { getSeasonsAction, seasonsSelector } from '../../../redux/seasons/seasonsSlice';
+import { getTagsAction, tagsSelector } from '../../../redux/tags/tagsSlice';
+import authApi from '../../../services/api/authApi';
+import { loginFailure } from '../../../redux/profile/profileSlice';
 
 export const EditEvent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
     const [event, setEvent] = useState(null);
-    const [initialValues, setInitialValues] = useState(null);
     const categoriesData = useSelector(categoriesSelector);
     const roomsData = useSelector(roomsSelector);
     const seasonsData = useSelector(seasonsSelector);
+    const tagsData = useSelector(tagsSelector);
 
     useEffect(() => {
         if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
@@ -31,6 +34,10 @@ export const EditEvent = () => {
 
         if (!seasonsData.loading && !seasonsData.categories && !seasonsData.error) {
             dispatch(getSeasonsAction());
+        }
+
+        if (!tagsData.loading && !tagsData.categories && !tagsData.error) {
+            dispatch(getTagsAction());
         }
     }, []);
 
@@ -45,6 +52,14 @@ export const EditEvent = () => {
     }, [categoriesData, roomsData, seasonsData]);
 
     const getEvent = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         const result = await eventsApi.getOneEvent(id);
 
         if (!result.result) {
@@ -66,23 +81,6 @@ export const EditEvent = () => {
 
         getEvent(id);
     }, [id]);
-
-    useEffect(() => {
-        if (!event) {
-            return;
-        }
-
-        setInitialValues({
-            name: event.name,
-            active: event.active,
-            description: event.description,
-            eventDates: event.eventDates,
-            eventPrices: event.eventPrices,
-            eventCategory: event.eventCategory?.id || '',
-            room: event.room?.id || '',
-            season: event.season?.id || '',
-        });
-    }, [event]);
 
     const handleSubmit = async (values) => {
         let { active, ...data } = values;
@@ -108,17 +106,18 @@ export const EditEvent = () => {
         }
     };
 
-    if (!initialValues) {
+    if (!event) {
         return <></>;
     }
 
     return (
         <EventsForm
             handleSubmit={handleSubmit}
-            initialValues={initialValues}
+            initialValues={event}
             categoriesList={categoriesData?.categories}
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
+            tagsList={tagsData.tags}
         />
     );
 };

@@ -121,9 +121,9 @@ export const EventMainPartForm = ({
                                     let renderName = [];
 
                                     selected.forEach((elem) => {
-                                        const name = categoriesList.find(
+                                        const name = categoriesList?.find(
                                             (el) => el.id === elem
-                                        ).name;
+                                        )?.name;
 
                                         if (name) {
                                             renderName.push(name);
