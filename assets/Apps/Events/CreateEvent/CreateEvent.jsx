@@ -6,9 +6,12 @@ import { EVENTS_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import { getRoomsAction, roomsSelector } from '../../../redux/rooms/roomsSlice';
 import { getSeasonsAction, seasonsSelector } from '../../../redux/seasons/seasonsSlice';
+import { getTagsAction, tagsSelector } from '../../../redux/tags/tagsSlice';
 import { getEventsAction } from '../../../redux/events/eventsSlice';
 import eventsApi from '../../../services/api/eventsApi';
 import { EventsForm } from '../EventsForm/EventsForm';
+import authApi from '../../../services/api/authApi';
+import { loginFailure } from '../../../redux/profile/profileSlice';
 
 export const CreateEvent = () => {
     const dispatch = useDispatch();
@@ -16,6 +19,7 @@ export const CreateEvent = () => {
     const categoriesData = useSelector(categoriesSelector);
     const roomsData = useSelector(roomsSelector);
     const seasonsData = useSelector(seasonsSelector);
+    const tagsData = useSelector(tagsSelector);
 
     useEffect(() => {
         if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
@@ -29,10 +33,14 @@ export const CreateEvent = () => {
         if (!seasonsData.loading && !seasonsData.categories && !seasonsData.error) {
             dispatch(getSeasonsAction());
         }
+
+        if (!tagsData.loading && !tagsData.categories && !tagsData.error) {
+            dispatch(getTagsAction());
+        }
     }, []);
 
     useEffect(() => {
-        if (categoriesData.error || roomsData.error || seasonsData.error) {
+        if (categoriesData.error || roomsData.error || seasonsData.error || tagsData.error) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
 
             navigate(EVENTS_BASE_PATH);
@@ -42,6 +50,14 @@ export const CreateEvent = () => {
     }, [categoriesData, roomsData, seasonsData]);
 
     const handlesubmit = async (values) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         const result = await eventsApi.createEvent(values);
 
         if (result.result) {
@@ -59,6 +75,7 @@ export const CreateEvent = () => {
             categoriesList={categoriesData?.categories}
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
+            tagsList={tagsData.tags}
         />
     );
 };

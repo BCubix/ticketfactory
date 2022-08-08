@@ -20,7 +20,7 @@ export const Layout = ({ children }) => {
 
     return (
         <Box>
-            <AppBar position="fixed" sx={{ width: `100%` }}>
+            <AppBar position="fixed" sx={{ width: `100%`, zIndex: 1201 }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div">
                         Ticket Factory

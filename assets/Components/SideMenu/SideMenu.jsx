@@ -17,15 +17,25 @@ import {
     SEASONS_BASE_PATH,
     USER_BASE_PATH,
 } from '../../Constant';
+import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import CategoryIcon from '@mui/icons-material/Category';
 import BusinessIcon from '@mui/icons-material/Business';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 import TocIcon from '@mui/icons-material/Toc';
-import { Settings } from '@mui/icons-material';
-import { Box } from '@mui/system';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import MenuIcon from '@mui/icons-material/Menu';
+import DescriptionIcon from '@mui/icons-material/Description';
+import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
+import SourceIcon from '@mui/icons-material/Source';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import SettingsIcon from '@mui/icons-material/Settings';
+import EmailIcon from '@mui/icons-material/Email';
 
 const MENU = [
     {
@@ -33,7 +43,7 @@ const MENU = [
         menu: [
             { name: 'Evènement', link: EVENTS_BASE_PATH, icon: <ConfirmationNumberIcon /> },
             { name: 'Catégories', link: CATEGORIES_BASE_PATH, icon: <CategoryIcon /> },
-            { name: 'Caractéristiques', link: null, icon: <Settings /> },
+            { name: 'Caractéristiques', link: null, icon: <GridOnIcon /> },
             { name: 'Salles', link: ROOMS_BASE_PATH, icon: <BusinessIcon /> },
             { name: 'Saisons', link: SEASONS_BASE_PATH, icon: <AccessTimeIcon /> },
         ],
@@ -41,24 +51,20 @@ const MENU = [
     {
         title: 'PERSONNALISATION',
         menu: [
-            { name: 'Menus', link: null, icon: <Settings /> },
-            { name: 'Pages', link: null, icon: <Settings /> },
-            { name: 'Redirections', link: null, icon: <Settings /> },
-            { name: 'Modules', link: null, icon: <Settings /> },
-            { name: 'Bibliothèque médias', link: null, icon: <Settings /> },
-            { name: 'Contenus', link: null, icon: <Settings /> },
-            { name: 'Types de contenus', link: null, icon: <Settings /> },
+            { name: 'Menus', link: null, icon: <MenuIcon /> },
+            { name: 'Pages', link: null, icon: <DescriptionIcon /> },
+            { name: 'Redirections', link: null, icon: <CallMissedOutgoingIcon /> },
+            { name: 'Modules', link: null, icon: <ViewModuleIcon /> },
+            { name: 'Bibliothèque médias', link: null, icon: <PermMediaIcon /> },
+            { name: 'Contenus', link: null, icon: <SourceIcon /> },
+            { name: 'Types de contenus', link: null, icon: <WidgetsIcon /> },
         ],
-    },
-    {
-        title: 'ANALYSE',
-        menu: [{ name: 'Statistiques', link: null, icon: <Settings /> }],
     },
     {
         title: 'ADMINISTRATION',
         menu: [
-            { name: 'Paramètres', link: null, icon: <Settings /> },
-            { name: 'Contacts', link: null, icon: <Settings /> },
+            { name: 'Paramètres', link: null, icon: <SettingsIcon /> },
+            { name: 'Contacts', link: null, icon: <EmailIcon /> },
             { name: 'Utilisateurs', link: USER_BASE_PATH, icon: <PersonIcon /> },
             { name: 'Logs', link: LOGS_BASE_PATH, icon: <TocIcon /> },
         ],
@@ -73,14 +79,14 @@ export const SideMenu = () => {
             sx={{
                 width: drawerWidth,
                 flexShrink: 0,
+                overflow: 'auto',
+
                 '& .MuiDrawer-paper': {
                     width: drawerWidth,
-                    boxSizing: 'border-box',
-                    mt: 8,
+                    paddingTop: 8,
                 },
             }}
             variant="permanent"
-            anchor="left"
         >
             {MENU.map((menu, index) => (
                 <Box key={index}>

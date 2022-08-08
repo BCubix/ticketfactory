@@ -3,9 +3,8 @@ import { FieldArray } from 'formik';
 import React from 'react';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import AddIcon from '@mui/icons-material/Add';
+import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange, handleBlur }) => {
     return (
@@ -49,7 +48,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 color="primary"
                                 variant="contained"
                                 onClick={() => {
-                                    push({ name: '', annotation: '', price: 0 });
+                                    push({ name: '' });
                                 }}
                             >
                                 <AddIcon />

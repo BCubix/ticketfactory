@@ -13,12 +13,12 @@ function TabPanel(props) {
     );
 }
 
-export const CmtTabs = ({ list, tabValue = 0 }) => {
+export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
     const [value, setValue] = useState(tabValue);
     const navigate = useNavigate();
 
     return (
-        <Box>
+        <Box sx={containerStyle}>
             <Box sx={{ borderBottom: 1, borderColor: '#E8E8E8' }}>
                 <Tabs
                     value={value}
