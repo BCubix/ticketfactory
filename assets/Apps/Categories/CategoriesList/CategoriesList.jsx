@@ -48,7 +48,7 @@ export const CategoriesList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Catégories ({categories?.length})
+                                Catégories ({categories?.children?.length})
                             </Typography>
                             <Button
                                 variant="contained"
@@ -60,7 +60,7 @@ export const CategoriesList = () => {
 
                         <ListTable
                             table={TABLE_COLUMN}
-                            list={categories}
+                            list={categories?.children}
                             onEdit={(id) => {
                                 navigate(`${CATEGORIES_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}

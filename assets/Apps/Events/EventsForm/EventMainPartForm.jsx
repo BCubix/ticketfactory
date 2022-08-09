@@ -61,9 +61,12 @@ export const EventMainPartForm = ({
 
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
-                            <InputLabel id="eventRoomLabel">Salle</InputLabel>
+                            <InputLabel id="eventRoomLabel" size="small">
+                                Salle
+                            </InputLabel>
                             <Select
                                 labelId="eventRoomLabel"
+                                size="small"
                                 id="room"
                                 value={values.room}
                                 label="Salle"
@@ -82,9 +85,12 @@ export const EventMainPartForm = ({
 
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
-                            <InputLabel id="eventRoomLabel">Saison</InputLabel>
+                            <InputLabel id="eventRoomLabel" size="small">
+                                Saison
+                            </InputLabel>
                             <Select
                                 labelId="eventSeasonLabel"
+                                size="small"
                                 id="season"
                                 value={values.season}
                                 label="Saison"
@@ -107,10 +113,13 @@ export const EventMainPartForm = ({
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth sx={{ marginTop: 3 }}>
-                            <InputLabel id="eventCategoriesLabel">Catégories</InputLabel>
+                            <InputLabel id="eventCategoriesLabel" size="small">
+                                Catégories
+                            </InputLabel>
                             <Select
                                 labelId="eventCategoriesLabel"
                                 id="eventCategories"
+                                size="small"
                                 value={values.eventCategories}
                                 label="Catégories"
                                 onChange={(e) => {
@@ -147,11 +156,14 @@ export const EventMainPartForm = ({
 
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth sx={{ marginTop: 3 }}>
-                            <InputLabel id="eventCategoriesLabel">Tags</InputLabel>
+                            <InputLabel id="eventCategoriesLabel" size="small">
+                                Tags
+                            </InputLabel>
                             <Select
                                 labelId="eventTagsLabel"
                                 id="eventTags"
                                 value={values.tags}
+                                size="small"
                                 label="Tags"
                                 onChange={(e) => {
                                     setFieldValue('tags', e.target.value);

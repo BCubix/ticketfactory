@@ -27,6 +27,7 @@ const categoriesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('parent', data.parent);
 
             const result = await axios.post('/event-categories', formData);
 
@@ -42,6 +43,7 @@ const categoriesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('parent', data.parent);
 
             const result = await axios.post(`/event-categories/${id}`, formData);
 

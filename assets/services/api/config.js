@@ -3,6 +3,8 @@ import { NotificationManager } from 'react-notifications';
 import axiosRetry from 'axios-retry';
 import { API_URL, REDIRECTION_TIME } from '../../Constant';
 import authApi from './authApi';
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../../redux/profile/profileSlice';
 
 let api_count = 0;
 
@@ -39,6 +41,8 @@ api.interceptors.response.use(
             if (check.result) {
                 return Axios.request(error.config);
             }
+
+            useDispatch(logoutAction());
         }
 
         throw error;
