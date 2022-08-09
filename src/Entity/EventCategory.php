@@ -46,6 +46,8 @@ class EventCategory extends Datable
     private $root;
 
     #[Gedmo\TreeParent]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $parent;
