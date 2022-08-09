@@ -50,6 +50,8 @@ class EventCategory extends Datable
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $parent;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private $children;
@@ -128,6 +130,13 @@ class EventCategory extends Datable
                 $child->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function resetChildren(): self
+    {
+        $this->children = new ArrayCollection();
 
         return $this;
     }

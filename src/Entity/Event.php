@@ -63,7 +63,7 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'events')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events')]
     private $tags;
 
 
@@ -237,7 +237,6 @@ class Event extends Datable
     {
         if (!$this->tags->contains($tag)) {
             $this->tags[] = $tag;
-            $tag->addEvent($this);
         }
 
         return $this;
@@ -245,9 +244,7 @@ class Event extends Datable
 
     public function removeTag(Tag $tag): self
     {
-        if ($this->tags->removeElement($tag)) {
-            $tag->removeEvent($this);
-        }
+        $this->tags->removeElement($tag);
 
         return $this;
     }

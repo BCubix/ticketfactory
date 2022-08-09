@@ -27,9 +27,17 @@ class EventCategoryController extends CrudController
     {
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
-        $objects = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters, $categoryId);
+        $mainCategory = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters, $categoryId);
 
-        return $this->view($objects, Response::HTTP_OK);
+        // Hack to delete children which are not needed
+        // For the moment, JMS Serializer lazy loads all children categories and there is no efficient way to avoid that
+        if (null != $categoryId) {
+            foreach ($mainCategory->getChildren() as $child) {
+                $child->resetChildren();
+            }
+        }
+
+        return $this->view($mainCategory, Response::HTTP_OK);
     }
 
     #[Rest\Post('/event-categories')]
