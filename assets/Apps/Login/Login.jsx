@@ -18,6 +18,7 @@ import { Formik } from 'formik';
 import { loginAction, profileSelector } from '@Redux/profile/profileSlice';
 import { HOME_PATH } from '@/Constant';
 import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
 export const Login = () => {
     const dispatch = useDispatch();
@@ -30,21 +31,13 @@ export const Login = () => {
         }
     }, [connected]);
 
-    const checkErrors = (values) => {
-        let errors = {};
+    const loginSchema = Yup.object().shape({
+        username: Yup.string()
+            .required('Veuillez renseigner une adresse email.')
+            .email('Adresse email invalide.'),
+        password: Yup.string().required('Veuillez renseigner votre mot de passe.'),
+    });
 
-        if (!values.username) {
-            errors.username = 'Veuillez renseigner une adresse email';
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.username)) {
-            errors.username = 'Adresse email invalide';
-        }
-
-        if (!values.password) {
-            errors.password = 'Veuillez renseigner votre mot de passe.';
-        }
-
-        return errors;
-    };
     return (
         <Container
             component="main"
@@ -53,8 +46,8 @@ export const Login = () => {
         >
             <Paper elevation={2} sx={{ borderRadius: 4 }}>
                 <Formik
-                    initialValues={{ username: 'bryan.bouillot@bcubix.com', password: 'Ticket' }}
-                    validate={(values) => checkErrors(values)}
+                    initialValues={{ username: '', password: '' }}
+                    validationSchema={loginSchema}
                     onSubmit={async (values, { setSubmitting }) => {
                         await dispatch(loginAction(values));
                         setSubmitting(false);
