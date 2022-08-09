@@ -31,7 +31,7 @@ class Tag extends Datable
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'tags')]
+    #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'tags')]
     private $events;
 
 
@@ -82,6 +82,7 @@ class Tag extends Datable
     {
         if (!$this->events->contains($event)) {
             $this->events[] = $event;
+            $event->addTag($this);
         }
 
         return $this;
@@ -89,7 +90,9 @@ class Tag extends Datable
 
     public function removeEvent(Event $event): self
     {
-        $this->events->removeElement($event);
+        if ($this->events->removeElement($event)) {
+            $event->removeTag($this);
+        }
 
         return $this;
     }

@@ -5,47 +5,27 @@ namespace App\Repository;
 use App\Entity\EventCategory;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class EventCategoryRepository extends CrudRepository
+class EventCategoryRepository extends NestedTreeRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, EventCategory::class);
-    }
-
     public function findAllForAdmin(array $filters = [], int $categoryId = null)
     {
-        list($limit, $page, $sortField, $sortOrder) = $this->getSortParameters($filters);
-
-        $results = $this->createQueryBuilder('o');
-
-        if ($categoryId != null) {
-            $results
-                ->innerJoin('o.parent', 'p')
-                ->where('p.id = :categoryId')
-                ->setParameter('categoryId', $categoryId)
+        if (null == $categoryId) {
+            return $this
+                ->createQueryBuilder('o')
+                ->where('o.lvl = 0')
+                ->getQuery()
+                ->getOneOrNullResult()
             ;
         }
 
-        foreach (static::FILTERS as $filterArray) {
-            if (!isset($filters[$filterArray[0]]) || is_null($filters[$filterArray[0]])) {
-                continue;
-            }
-
-            list($filterField, $filterOperator, $filterConst, $filterValue) = $this->getFilterParameters($filterArray, $filters[$filterArray[0]]);
-
-            $results
-                ->andWhere($filterField . ' ' . $filterOperator . ' ' . $filterConst)
-			    ->setParameter($filterConst, $filterValue)
-		    ;
-        }
-
-        return $results
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
-            ->orderBy($sortField, $sortOrder)
+        return $this
+            ->createQueryBuilder('o')
+            ->where('o.id = :categoryId')
+            ->setParameter('categoryId', $categoryId)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
 }
