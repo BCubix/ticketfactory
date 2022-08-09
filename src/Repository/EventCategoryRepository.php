@@ -24,6 +24,16 @@ class EventCategoryRepository extends NestedTreeRepository
         ;
     }
 
+    public function findOneForAdmin(int $id)
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     public function findRootCategory() {
         return $this
             ->createQueryBuilder('o')
