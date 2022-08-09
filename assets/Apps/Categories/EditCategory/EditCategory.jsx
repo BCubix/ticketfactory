@@ -88,7 +88,7 @@ export const EditCategory = () => {
         <CategoriesForm
             handleSubmit={handleSubmit}
             initialValues={category}
-            categoriesList={categoriesData.categories.filter((cat) => cat.id !== parseInt(id))}
+            categoriesList={categoriesData.categories}
         />
     );
 };

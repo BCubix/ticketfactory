@@ -12,7 +12,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesList = null }) => {
     const categorySchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la categorie.'),
-        parent: Yup.string().required('Veuillez renseigner une catégorie parente.'),
+        parent: Yup.string().when('mustHaveParent', (mustHaveParent) => {
+            if (mustHaveParent) {
+                return Yup.string().required('Veuillez renseigner une catégorie parente.');
+            }
+        }),
     });
 
     if (!categoriesList) {
@@ -55,6 +59,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                 name: initialValues?.name || '',
                 active: initialValues?.active || false,
                 parent: initialValues?.parent?.id || '',
+                mustHaveParent: !initialValues || Boolean(initialValues?.parent),
             }}
             validationSchema={categorySchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -90,25 +95,33 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                             error={touched.name && errors.name}
                         />
 
-                        <Typography variant="body1" sx={{ mt: 2 }}>
-                            Catégorie parente
-                        </Typography>
-                        <TreeView
-                            size="small"
-                            id="categoriesParent"
-                            value={values.parent}
-                            label="Catégorie parent"
-                            defaultCollapseIcon={<ExpandMoreIcon />}
-                            defaultExpanded={[categoriesList.id?.toString()]}
-                            defaultExpandIcon={<ChevronRightIcon />}
-                            sx={{ flexGrow: 1, overflowY: 'auto' }}
-                            selected={values?.parent?.toString()}
-                        >
-                            {displayCategoriesOptions(categoriesList, values, setFieldValue)}
-                        </TreeView>
-                        <Typography sx={{ fontSize: 12 }} color="error">
-                            {touched?.parent && errors?.parent}
-                        </Typography>
+                        {values?.mustHaveParent && (
+                            <>
+                                <Typography variant="body1" sx={{ mt: 2 }}>
+                                    Catégorie parente
+                                </Typography>
+                                <TreeView
+                                    size="small"
+                                    id="categoriesParent"
+                                    value={values.parent}
+                                    label="Catégorie parent"
+                                    defaultCollapseIcon={<ExpandMoreIcon />}
+                                    defaultExpanded={[categoriesList.id?.toString()]}
+                                    defaultExpandIcon={<ChevronRightIcon />}
+                                    sx={{ flexGrow: 1, overflowY: 'auto' }}
+                                    selected={values?.parent?.toString()}
+                                >
+                                    {displayCategoriesOptions(
+                                        categoriesList,
+                                        values,
+                                        setFieldValue
+                                    )}
+                                </TreeView>
+                                <Typography sx={{ fontSize: 12 }} color="error">
+                                    {touched?.parent && errors?.parent}
+                                </Typography>
+                            </>
+                        )}
                     </CmtFormBlock>
 
                     <Box display="flex" justifyContent={'flex-end'}>
