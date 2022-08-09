@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { NotificationManager } from 'react-notifications';
 import { useNavigate } from 'react-router-dom';
+import { REDIRECTION_TIME } from '../../Constant';
 import authApi from '../../services/api/authApi';
 import profileApi from '../../services/api/profileApi';
 import { resetCategories } from '../categories/categoriesSlice';
@@ -54,6 +56,14 @@ export function loginAction(data) {
             const response = await authApi.login(data);
 
             if (!response.result) {
+                NotificationManager.error(
+                    response?.error?.code === 401
+                        ? 'Email ou mot de passe incorrect.'
+                        : 'Une erreur est survenue.',
+                    'Erreur',
+                    REDIRECTION_TIME
+                );
+
                 dispatch(loginFailure({ error: response.error }));
 
                 return;

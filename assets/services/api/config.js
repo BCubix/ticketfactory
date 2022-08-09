@@ -1,7 +1,8 @@
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import { NotificationManager } from 'react-notifications';
 import axiosRetry from 'axios-retry';
 import { API_URL, REDIRECTION_TIME } from '../../Constant';
+import authApi from './authApi';
 
 let api_count = 0;
 
@@ -12,7 +13,7 @@ let api = axios.create({
 
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
         const status = error?.response?.status;
 
         if (api_count === 3) {
@@ -30,6 +31,14 @@ api.interceptors.response.use(
                 'Erreur',
                 REDIRECTION_TIME
             );
+        }
+
+        if (status === 401) {
+            const check = await authApi.refreshConnexionToken();
+
+            if (check.result) {
+                return Axios.request(error.config);
+            }
         }
 
         throw error;
