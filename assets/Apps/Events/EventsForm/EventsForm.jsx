@@ -35,7 +35,7 @@ export const EventsForm = ({
                     { name: 'Dates', eventDates: [] },
                 ],
                 eventPriceBlocks: initialValues?.eventPriceBlocks || [
-                    { name: 'Prix', eventPrices: [] },
+                    { name: 'Tarifs', eventPrices: [] },
                 ],
                 eventCategories: initialValues?.eventCategories
                     ? initialValues?.eventCategories?.map((el) => el.id)
@@ -44,6 +44,8 @@ export const EventsForm = ({
                 season: initialValues?.season?.id || '',
                 tags: initialValues?.tags ? initialValues?.tags?.map((el) => el.id) : [],
                 mainCategory: initialValues?.mainCategory || '',
+                multiplePriceBlock: initialValues?.eventPriceBlock?.length > 1 || false,
+                multipleDateBlock: initialValues?.eventDateBlock?.length > 1 || false,
             }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -104,7 +106,7 @@ export const EventsForm = ({
                                 ),
                             },
                             {
-                                label: 'Prix',
+                                label: 'Tarifs',
                                 component: (
                                     <EventsPriceBlockForm
                                         values={values}
