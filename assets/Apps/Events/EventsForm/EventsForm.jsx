@@ -44,12 +44,11 @@ export const EventsForm = ({
                 season: initialValues?.season?.id || '',
                 tags: initialValues?.tags ? initialValues?.tags?.map((el) => el.id) : [],
                 mainCategory: initialValues?.mainCategory || '',
-                multiplePriceBlock: initialValues?.eventPriceBlock?.length > 1 || false,
-                multipleDateBlock: initialValues?.eventDateBlock?.length > 1 || false,
+                multiplePriceBlock: initialValues?.eventPriceBlocks?.length > 1 || false,
+                multipleDateBlock: initialValues?.eventDateBlocks?.length > 1 || false,
             }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
-                console.log(values);
                 handleSubmit(values);
 
                 setSubmitting(false);
