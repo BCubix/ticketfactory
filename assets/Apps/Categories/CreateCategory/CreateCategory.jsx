@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import categoriesApi from '../../../services/api/categoriesApi';
 import { CategoriesForm } from '../CategoriesForm/CategoriesForm';
-import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
+import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 
 export const CreateCategory = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const categoriesData = useSelector(categoriesSelector);
+
+    useEffect(() => {
+        if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
+            dispatch(getCategoriesAction());
+        }
+    }, []);
+
+    useEffect(() => {
+        if (categoriesData.error) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+
+            navigate(EVENTS_BASE_PATH);
+
+            return;
+        }
+    }, [categoriesData]);
 
     const handleSubmit = async (values) => {
         const check = await authApi.checkIsAuth();
@@ -37,5 +54,7 @@ export const CreateCategory = () => {
         }
     };
 
-    return <CategoriesForm handleSubmit={handleSubmit} />;
+    return (
+        <CategoriesForm handleSubmit={handleSubmit} categoriesList={categoriesData.categories} />
+    );
 };
