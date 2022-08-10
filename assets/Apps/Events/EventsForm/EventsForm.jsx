@@ -43,7 +43,7 @@ export const EventsForm = ({
                 room: initialValues?.room?.id || '',
                 season: initialValues?.season?.id || '',
                 tags: initialValues?.tags ? initialValues?.tags?.map((el) => el.id) : [],
-                mainCategory: initialValues?.mainCategory || '',
+                mainCategory: initialValues?.mainCategory?.id || '',
                 multiplePriceBlock: initialValues?.eventPriceBlocks?.length > 1 || false,
                 multipleDateBlock: initialValues?.eventDateBlocks?.length > 1 || false,
             }}

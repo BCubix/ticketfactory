@@ -32,7 +32,7 @@ import { objectResolver } from '../../services/utils/objectResolver';
  *
  * @returns
  */
-export const ListTable = ({ table, list, onDelete = null, onEdit = null }) => {
+export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick = null }) => {
     if (!table || table?.length === 0 || !list || list.length === 0) {
         return <></>;
     }
@@ -52,7 +52,21 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null }) => {
                 </TableHead>
                 <TableBody>
                     {list?.map((item, index) => (
-                        <TableRow key={index}>
+                        <TableRow
+                            key={index}
+                            onClick={() => {
+                                if (onClick) {
+                                    onClick(item?.id);
+                                }
+                            }}
+                            sx={
+                                onClick
+                                    ? {
+                                          cursor: 'pointer',
+                                      }
+                                    : {}
+                            }
+                        >
                             {table.map((tableItem, ind) => (
                                 <TableCell component="th" scope="row" key={ind}>
                                     <RenderFunction item={item} tableItem={tableItem} />
@@ -65,7 +79,8 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null }) => {
                                         color="primary"
                                         size="small"
                                         aria-label="Modifier"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             onEdit(item.id);
                                         }}
                                     >
@@ -77,7 +92,8 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null }) => {
                                         color="error"
                                         size="small"
                                         aria-label="Supprimer"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             onDelete(item.id);
                                         }}
                                     >

@@ -36,13 +36,11 @@ api.interceptors.response.use(
         }
 
         if (status === 401) {
-            const check = await authApi.refreshConnexionToken();
+            await authApi.refreshConnexionToken();
 
-            if (check.result) {
-                return Axios.request(error.config);
+            if (api_count === 3) {
+                useDispatch(logoutAction());
             }
-
-            useDispatch(logoutAction());
         }
 
         throw error;

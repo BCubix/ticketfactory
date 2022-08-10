@@ -153,6 +153,15 @@ export const App = () => {
                 />
 
                 <Route
+                    path={`${CATEGORIES_BASE_PATH}/:id`}
+                    element={
+                        <AuthenticatedLayout>
+                            <CategoriesMenu tabValue={0} />
+                        </AuthenticatedLayout>
+                    }
+                />
+
+                <Route
                     path={CATEGORIES_BASE_PATH + CREATE_PATH}
                     element={
                         <AuthenticatedLayout>

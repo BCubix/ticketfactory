@@ -13,6 +13,7 @@ import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import LightEditor from '../../../Components/Editors/LightEditor/LightEditor';
 import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
 import Select from '@mui/material/Select';
+import { EventParentCategoryPartForm } from './EventParentCategoryPartForm';
 
 export const EventMainPartForm = ({
     values,
@@ -112,46 +113,13 @@ export const EventMainPartForm = ({
             <CmtFormBlock title="Catégories">
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={6}>
-                        <FormControl fullWidth sx={{ marginTop: 3 }}>
-                            <InputLabel id="eventCategoriesLabel" size="small">
-                                Catégories
-                            </InputLabel>
-                            <Select
-                                labelId="eventCategoriesLabel"
-                                id="eventCategories"
-                                size="small"
-                                value={values.eventCategories}
-                                label="Catégories"
-                                onChange={(e) => {
-                                    setFieldValue('eventCategories', e.target.value);
-                                }}
-                                multiple
-                                renderValue={(selected) => {
-                                    let renderName = [];
-
-                                    selected.forEach((elem) => {
-                                        const name = categoriesList?.find(
-                                            (el) => el.id === elem
-                                        )?.name;
-
-                                        if (name) {
-                                            renderName.push(name);
-                                        }
-                                    });
-
-                                    return renderName.join(', ');
-                                }}
-                            >
-                                {categoriesList?.map((item, index) => (
-                                    <MenuItem value={item.id} key={index}>
-                                        <Checkbox
-                                            checked={values.eventCategories.indexOf(item.id) > -1}
-                                        />
-                                        <ListItemText>{item.name}</ListItemText>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <EventParentCategoryPartForm
+                            values={values}
+                            categoriesList={categoriesList}
+                            setFieldValue={setFieldValue}
+                            touched={touched}
+                            errors={errors}
+                        />
                     </Grid>
 
                     <Grid item xs={12} md={6}>
