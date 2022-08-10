@@ -15,8 +15,8 @@ import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import { NotificationManager } from 'react-notifications';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { EditCategoryLink } from './sc.EditCategoryLink';
+import { CmtBreadCrumb } from '../../../Components/CmtBreadCrumb/CmtBreadCrumb';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -77,7 +77,10 @@ export const CategoriesList = () => {
         let categoryCopy = { ...category };
 
         while (categoryCopy !== null) {
-            pathArray.push({ name: categoryCopy.name, id: categoryCopy.id });
+            pathArray.push({
+                label: categoryCopy.name,
+                path: `${CATEGORIES_BASE_PATH}/${categoryCopy.id}`,
+            });
 
             categoryCopy = categoryCopy.parent ? { ...categoryCopy.parent } : null;
         }
@@ -97,21 +100,7 @@ export const CategoriesList = () => {
                 <PageTitle>Catégories</PageTitle>
 
                 <Box display="flex" alignItems="center" pt={5}>
-                    {path?.map((item, index) => (
-                        <Box pl={2} key={index} display="flex" alignItems="center">
-                            <ArrowForwardIosIcon style={{ fontSize: 12 }} />
-                            <Box
-                                pl={2}
-                                onClick={() => navigate(`${CATEGORIES_BASE_PATH}/${item?.id}`)}
-                                className="link"
-                            >
-                                <Typography component="span" variant="body1">
-                                    {item?.name}
-                                </Typography>
-                            </Box>
-                        </Box>
-                    ))}
-
+                    <CmtBreadCrumb list={path} />
                     <Box
                         pl={3}
                         onClick={() => navigate(`${CATEGORIES_BASE_PATH}/${id}${EDIT_PATH}`)}

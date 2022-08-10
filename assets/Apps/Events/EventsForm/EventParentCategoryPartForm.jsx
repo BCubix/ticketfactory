@@ -28,7 +28,7 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
             key={list.id}
             nodeId={list?.id?.toString()}
             label={
-                <Box component="span">
+                <Box display="flex" alignItems={'center'}>
                     <Checkbox
                         checked={values?.eventCategories?.includes(list.id)}
                         onClick={(e) => {
@@ -36,8 +36,22 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                             handleCheckCategory(list.id);
                         }}
                     />
-                    {console.log(values)}
                     {list?.name}
+                    <Box component="span" sx={{ ml: 'auto' }}>
+                        <Radio
+                            checked={values?.mainCategory === list.id}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (!values?.eventCategories?.includes(list.id)) {
+                                    let categories = values.eventCategories;
+                                    categories.push(list.id);
+                                    setFieldValue('eventCategories', categories);
+                                }
+
+                                setFieldValue('mainCategory', list.id);
+                            }}
+                        />
+                    </Box>
                 </Box>
             }
         >
@@ -58,9 +72,14 @@ export const EventParentCategoryPartForm = ({
 }) => {
     return (
         <>
-            <Typography variant="body1" sx={{ mt: 2 }}>
-                Catégorie parente
-            </Typography>
+            <Box display="flex" justifyContent={'space-between'}>
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                    Catégorie parente
+                </Typography>
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                    Catégorie principale
+                </Typography>
+            </Box>
             <TreeView
                 size="small"
                 id="categoriesParent"
