@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import seasonsApi from '../../../services/api/seasonsApi';
 import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
-import { PageWrapper } from '../../../Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { CREATE_PATH, EDIT_PATH, SEASONS_BASE_PATH } from '../../../Constant';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
@@ -40,8 +40,8 @@ export const SeasonsList = () => {
 
     return (
         <>
-            <PageWrapper>
-                <PageTitle>Saisons</PageTitle>
+            <CmtPageWrapper>
+                <CmtPageTitle>Saisons</CmtPageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
@@ -66,7 +66,7 @@ export const SeasonsList = () => {
                         />
                     </CardContent>
                 </Card>
-            </PageWrapper>
+            </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}

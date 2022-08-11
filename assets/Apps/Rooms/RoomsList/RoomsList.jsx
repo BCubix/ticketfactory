@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import roomsApi from '../../../services/api/roomsApi';
 import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
-import { PageWrapper } from '../../../Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { CREATE_PATH, EDIT_PATH, ROOMS_BASE_PATH } from '../../../Constant';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
@@ -42,8 +42,8 @@ export const RoomsList = () => {
 
     return (
         <>
-            <PageWrapper>
-                <PageTitle>Salles</PageTitle>
+            <CmtPageWrapper>
+                <CmtPageTitle>Salles</CmtPageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
@@ -68,7 +68,7 @@ export const RoomsList = () => {
                         />
                     </CardContent>
                 </Card>
-            </PageWrapper>
+            </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}

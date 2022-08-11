@@ -2,8 +2,8 @@ import { eventsSelector } from '@Redux/events/eventsSlice';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
-import { PageWrapper } from '@Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { getEventsAction } from '@Redux/events/eventsSlice';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
@@ -44,8 +44,8 @@ export const EventsList = () => {
 
     return (
         <>
-            <PageWrapper>
-                <PageTitle>Evènements</PageTitle>
+            <CmtPageWrapper>
+                <CmtPageTitle>Evènements</CmtPageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
@@ -70,7 +70,7 @@ export const EventsList = () => {
                         />
                     </CardContent>
                 </Card>
-            </PageWrapper>
+            </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}

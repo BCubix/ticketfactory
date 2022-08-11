@@ -1,8 +1,8 @@
 import { Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
-import { PageWrapper } from '@Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
 import { useState } from 'react';
@@ -101,8 +101,8 @@ export const LogsList = () => {
     }, []);
 
     return (
-        <PageWrapper>
-            <PageTitle>Logs</PageTitle>
+        <CmtPageWrapper>
+            <CmtPageTitle>Logs</CmtPageTitle>
             <Card sx={{ width: '100%', mt: 5 }}>
                 <CardContent>
                     <Box display="flex" justifyContent="space-between">
@@ -114,6 +114,6 @@ export const LogsList = () => {
                     <ListTable table={TABLE_COLUMN} list={logs} />
                 </CardContent>
             </Card>
-        </PageWrapper>
+        </CmtPageWrapper>
     );
 };

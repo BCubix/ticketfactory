@@ -13,6 +13,7 @@ import {
     CATEGORIES_BASE_PATH,
     EVENTS_BASE_PATH,
     LOGS_BASE_PATH,
+    MEDIAS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
     USER_BASE_PATH,
@@ -55,7 +56,7 @@ const MENU = [
             { name: 'Pages', link: null, icon: <DescriptionIcon /> },
             { name: 'Redirections', link: null, icon: <CallMissedOutgoingIcon /> },
             { name: 'Modules', link: null, icon: <ViewModuleIcon /> },
-            { name: 'Bibliothèque médias', link: null, icon: <PermMediaIcon /> },
+            { name: 'Bibliothèque médias', link: MEDIAS_BASE_PATH, icon: <PermMediaIcon /> },
             { name: 'Contenus', link: null, icon: <SourceIcon /> },
             { name: 'Types de contenus', link: null, icon: <WidgetsIcon /> },
         ],
@@ -83,7 +84,7 @@ export const SideMenu = () => {
 
                 '& .MuiDrawer-paper': {
                     width: drawerWidth,
-                    paddingTop: 8,
+                    paddingTop: 16,
                 },
             }}
             variant="permanent"

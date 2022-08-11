@@ -6,6 +6,7 @@ import categoriesReducer from '../categories/categoriesSlice';
 import roomsReducer from '../rooms/roomsSlice';
 import seasonsReducer from '../seasons/seasonsSlice';
 import tagsReducer from '../tags/tagsSlice';
+import mediasReducer from '../medias/mediasSlice';
 
 export default configureStore({
     reducer: {
@@ -16,5 +17,6 @@ export default configureStore({
         rooms: roomsReducer,
         seasons: seasonsReducer,
         tags: tagsReducer,
+        medias: mediasReducer,
     },
 });

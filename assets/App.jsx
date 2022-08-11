@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress, createTheme, ThemeProvider } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
@@ -10,6 +10,7 @@ import {
     HOME_PATH,
     LOGIN_PATH,
     LOGS_BASE_PATH,
+    MEDIAS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
     TAGS_BASE_PATH,
@@ -41,6 +42,8 @@ import { LogsList } from './Apps/Logs/LogsList/LogsList';
 import { CategoriesMenu } from './Apps/Categories/CategoriesMenu/CategoriesMenu';
 import { CreateTag } from './Apps/Tags/CreateTag/CreateTag';
 import { EditTag } from './Apps/Tags/EditTag/EditTag';
+import defaultTheme from './services/themes/defaultTheme';
+import { MediasList } from './Apps/Medias/MediasList/MediasList';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -78,198 +81,209 @@ export const App = () => {
     }, []);
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route
-                    exact
-                    path={HOME_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <Home />
-                        </AuthenticatedLayout>
-                    }
-                />
-                <Route path={LOGIN_PATH} element={<Login />} />
-                <Route
-                    path={USER_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <UserList />
-                        </AuthenticatedLayout>
-                    }
-                />
-                <Route
-                    path={USER_BASE_PATH + CREATE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CreateUser />
-                        </AuthenticatedLayout>
-                    }
-                />
+        <ThemeProvider theme={createTheme(defaultTheme)}>
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        exact
+                        path={HOME_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <Home />
+                            </AuthenticatedLayout>
+                        }
+                    />
+                    <Route path={LOGIN_PATH} element={<Login />} />
+                    <Route
+                        path={USER_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <UserList />
+                            </AuthenticatedLayout>
+                        }
+                    />
+                    <Route
+                        path={USER_BASE_PATH + CREATE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CreateUser />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${USER_BASE_PATH}/:id${EDIT_PATH}`}
-                    element={
-                        <AuthenticatedLayout>
-                            <EditUser />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${USER_BASE_PATH}/:id${EDIT_PATH}`}
+                        element={
+                            <AuthenticatedLayout>
+                                <EditUser />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={EVENTS_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <EventsList />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={EVENTS_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <EventsList />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={EVENTS_BASE_PATH + CREATE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CreateEvent />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={EVENTS_BASE_PATH + CREATE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CreateEvent />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${EVENTS_BASE_PATH}/:id${EDIT_PATH}`}
-                    element={
-                        <AuthenticatedLayout>
-                            <EditEvent />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${EVENTS_BASE_PATH}/:id${EDIT_PATH}`}
+                        element={
+                            <AuthenticatedLayout>
+                                <EditEvent />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={CATEGORIES_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CategoriesMenu tabValue={0} />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={CATEGORIES_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CategoriesMenu tabValue={0} />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${CATEGORIES_BASE_PATH}/:id`}
-                    element={
-                        <AuthenticatedLayout>
-                            <CategoriesMenu tabValue={0} />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${CATEGORIES_BASE_PATH}/:id`}
+                        element={
+                            <AuthenticatedLayout>
+                                <CategoriesMenu tabValue={0} />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={CATEGORIES_BASE_PATH + CREATE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CreateCategory />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={CATEGORIES_BASE_PATH + CREATE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CreateCategory />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={TAGS_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CategoriesMenu tabValue={1} />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={TAGS_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CategoriesMenu tabValue={1} />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${CATEGORIES_BASE_PATH}/:id${EDIT_PATH}`}
-                    element={
-                        <AuthenticatedLayout>
-                            <EditCategory />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${CATEGORIES_BASE_PATH}/:id${EDIT_PATH}`}
+                        element={
+                            <AuthenticatedLayout>
+                                <EditCategory />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={TAGS_BASE_PATH + CREATE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CreateTag />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={TAGS_BASE_PATH + CREATE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CreateTag />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${TAGS_BASE_PATH}/:id${EDIT_PATH}`}
-                    element={
-                        <AuthenticatedLayout>
-                            <EditTag />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${TAGS_BASE_PATH}/:id${EDIT_PATH}`}
+                        element={
+                            <AuthenticatedLayout>
+                                <EditTag />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={ROOMS_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <RoomsList />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={ROOMS_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <RoomsList />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={ROOMS_BASE_PATH + CREATE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CreateRoom />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={ROOMS_BASE_PATH + CREATE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CreateRoom />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${ROOMS_BASE_PATH}/:id${EDIT_PATH}`}
-                    element={
-                        <AuthenticatedLayout>
-                            <EditRoom />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${ROOMS_BASE_PATH}/:id${EDIT_PATH}`}
+                        element={
+                            <AuthenticatedLayout>
+                                <EditRoom />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={SEASONS_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <SeasonsList />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={SEASONS_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <SeasonsList />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={SEASONS_BASE_PATH + CREATE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <CreateSeason />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={SEASONS_BASE_PATH + CREATE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <CreateSeason />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={`${SEASONS_BASE_PATH}/:id${EDIT_PATH}`}
-                    element={
-                        <AuthenticatedLayout>
-                            <EditSeason />
-                        </AuthenticatedLayout>
-                    }
-                />
+                    <Route
+                        path={`${SEASONS_BASE_PATH}/:id${EDIT_PATH}`}
+                        element={
+                            <AuthenticatedLayout>
+                                <EditSeason />
+                            </AuthenticatedLayout>
+                        }
+                    />
 
-                <Route
-                    path={LOGS_BASE_PATH}
-                    element={
-                        <AuthenticatedLayout>
-                            <LogsList />
-                        </AuthenticatedLayout>
-                    }
-                />
-            </Routes>
-            <NotificationContainer />
-        </BrowserRouter>
+                    <Route
+                        path={LOGS_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <LogsList />
+                            </AuthenticatedLayout>
+                        }
+                    />
+
+                    <Route
+                        path={MEDIAS_BASE_PATH}
+                        element={
+                            <AuthenticatedLayout>
+                                <MediasList />
+                            </AuthenticatedLayout>
+                        }
+                    />
+                </Routes>
+                <NotificationContainer />
+            </BrowserRouter>
+        </ThemeProvider>
     );
 };

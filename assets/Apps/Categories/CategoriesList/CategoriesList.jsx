@@ -2,8 +2,8 @@ import { categoriesSelector } from '@Redux/categories/categoriesSlice';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
-import { PageWrapper } from '@Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -96,8 +96,8 @@ export const CategoriesList = () => {
 
     return (
         <>
-            <PageWrapper>
-                <PageTitle>Catégories</PageTitle>
+            <CmtPageWrapper>
+                <CmtPageTitle>Catégories</CmtPageTitle>
 
                 <Box display="flex" alignItems="center" pt={5}>
                     <CmtBreadCrumb list={path} />
@@ -138,7 +138,7 @@ export const CategoriesList = () => {
                         />
                     </CardContent>
                 </Card>
-            </PageWrapper>
+            </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}

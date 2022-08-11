@@ -2,8 +2,8 @@ import { tagsSelector } from '@Redux/tags/tagsSlice';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { PageTitle } from '@Components/Page/PageTitle/PageTitle';
-import { PageWrapper } from '@Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
@@ -41,8 +41,8 @@ export const TagsList = () => {
 
     return (
         <>
-            <PageWrapper>
-                <PageTitle>Tags</PageTitle>
+            <CmtPageWrapper>
+                <CmtPageTitle>Tags</CmtPageTitle>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
@@ -67,7 +67,7 @@ export const TagsList = () => {
                         />
                     </CardContent>
                 </Card>
-            </PageWrapper>
+            </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}

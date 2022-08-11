@@ -22,7 +22,7 @@ export const Layout = ({ children }) => {
         <Box>
             <AppBar position="fixed" sx={{ width: `100%`, zIndex: 1201 }}>
                 <Toolbar>
-                    <Typography variant="h6" noWrap component="div">
+                    <Typography variant="h2" noWrap component="div">
                         Ticket Factory
                     </Typography>
 
@@ -33,7 +33,7 @@ export const Layout = ({ children }) => {
             </AppBar>
             <Box sx={{ display: 'flex' }}>
                 <SideMenu />
-                <Box component="main" sx={{ flexGrow: 1, mt: 8 }}>
+                <Box component="main" sx={{ flexGrow: 1, mt: 16 }}>
                     {children}
                 </Box>
             </Box>

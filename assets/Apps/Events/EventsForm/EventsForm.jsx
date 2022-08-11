@@ -1,7 +1,7 @@
 import { Button, FormControlLabel, Switch, Typography, Box } from '@mui/material';
 import { Formik } from 'formik';
 import React from 'react';
-import { PageWrapper } from '../../../Components/Page/PageWrapper/sc.PageWrapper';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import * as Yup from 'yup';
 import { EventMainPartForm } from './EventMainPartForm';
 import { CmtTabs } from '../../../Components/CmtTabs/CmtTabs';
@@ -65,7 +65,7 @@ export const EventsForm = ({
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <PageWrapper component="form" onSubmit={handleSubmit}>
+                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
                     <Typography component="h1" variant={'h5'}>
                         {initialValues ? 'Modification' : 'Création'} d'un évènement
                     </Typography>
@@ -144,7 +144,7 @@ export const EventsForm = ({
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </PageWrapper>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

@@ -12,6 +12,7 @@ export const CmtBreadCrumb = ({ list }) => {
         <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
             {list?.map((item, index) => (
                 <StyledBreadCrumb
+                    sx={{ py: 4, px: 2 }}
                     onClick={() => navigate(item.path)}
                     label={
                         <Typography variant="body1" sx={{ mt: '2px' }}>
