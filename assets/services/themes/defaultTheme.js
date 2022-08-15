@@ -13,12 +13,14 @@ const breakpoints = createBreakpoints({
 const defaultFamily = 'Helvetica';
 
 const defaultTheme = {
-    values: {
-        xs: 480,
-        sm: 768,
-        md: 1024,
-        lg: 1280,
-        xl: 1440,
+    breakpoints: {
+        values: {
+            xs: 480,
+            sm: 768,
+            md: 1024,
+            lg: 1280,
+            xl: 1440,
+        },
     },
 
     spacing: 4,

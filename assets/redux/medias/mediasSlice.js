@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import authApi from '../../services/api/authApi';
+import mediasApi from '../../services/api/mediasApi';
 import { loginFailure } from '../profile/profileSlice';
 
 const initialState = {

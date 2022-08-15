@@ -1,4 +1,5 @@
 export const API_URL = 'http://localhost:8000/admin';
+export const MEDIA_FILE_BASE_URL = 'http://localhost:8000';
 
 export const REDIRECTION_TIME = 5000;
 

@@ -13,6 +13,11 @@ admin:
     type: annotation
     prefix: admin/api
 
+oneup_uploader:
+    resource: .
+    type: uploader
+    prefix: /admin/api
+
 controllers:
     resource: ../../src/Controller/Website
     type: annotation

@@ -1,0 +1,11 @@
+# Read the documentation: https://github.com/1up-lab/OneupUploaderBundle/blob/master/Resources/doc/index.md
+oneup_uploader:
+    chunks:
+        maxage: 1000000
+        storage:
+            directory: '%kernel.project_dir%/public/uploads/chunks'
+    mappings:
+        media:
+            frontend: dropzone
+            storage:
+                directory: '%kernel.project_dir%/public/uploads/media'

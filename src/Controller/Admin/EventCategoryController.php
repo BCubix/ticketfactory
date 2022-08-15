@@ -85,6 +85,7 @@ class EventCategoryController extends CrudController
         return $this->view(null, Response::HTTP_OK);
     }
 
+    // @Todo : Move this function into the associated CrudObjectInstantiatedEvent
     private function attachProductsToRootCategory(EventCategory $mainCategory) {
         $rootCategory = $this->em->getRepository($this->entityClass)->findRootCategory();
         $childrenCategories = $this->em->getRepository($this->entityClass)->getChildren($mainCategory, false, null, 'asc', true);

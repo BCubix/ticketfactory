@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { SideMenu } from '../SideMenu/SideMenu';
@@ -7,10 +7,12 @@ import { logoutAction } from '../../redux/profile/profileSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN_PATH } from '../../Constant';
+import { LayoutContext } from '../CmtLayoutProvider/CmtLayoutProvider';
 
 export const Layout = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const sideBarContextValues = useContext(LayoutContext);
 
     const handleLogout = async () => {
         dispatch(logoutAction());
