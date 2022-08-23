@@ -12,8 +12,12 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { REDIRECTION_TIME } from '../../../Constant';
 import { getMediasAction, mediasSelector } from '../../../redux/medias/mediasSlice';
+import { loginFailure } from '../../../redux/profile/profileSlice';
+import authApi from '../../../services/api/authApi';
+import mediasApi from '../../../services/api/mediasApi';
 import { DisplayMediaType } from '../Components/DisplayMediaType';
 import { MediaElement } from '../Components/sc.MediaElement';
 import { CreateMedia } from '../CreateMedia/CreateMedia';
@@ -24,6 +28,7 @@ export const MediasList = () => {
     const dispatch = useDispatch();
     const [createDialog, setCreateDialog] = useState(false);
     const [editDialog, setEditDialog] = useState(null);
+    const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
         if (!loading && !medias && !error) {
@@ -37,13 +42,30 @@ export const MediasList = () => {
         NotificationManager.success('Votre élément à bien été ajouté.', 'Succès', REDIRECTION_TIME);
     };
 
+    const handleDelete = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
+        await mediasApi.deleteMedia(id);
+
+        dispatch(getMediasAction());
+
+        setDeleteDialog(null);
+        setEditDialog(null);
+    };
+
     return (
         <CmtPageWrapper title="Médias">
-            <Card sx={{ height: '100%' }}>
+            <Card sx={{ height: '100%', mt: 5 }}>
                 <CardContent sx={{ height: '100%' }}>
                     <Box display="flex" justifyContent={'space-between'}>
-                        <Typography component="h2" variant="h3">
-                            Salles ({medias?.length})
+                        <Typography component="h2" variant="h5" fontSize={20}>
+                            Eléments médias ({medias?.length})
                         </Typography>
                         <Button variant="contained" onClick={() => setCreateDialog(true)}>
                             Nouveau
@@ -86,9 +108,24 @@ export const MediasList = () => {
                         editSuccess={() => {
                             setEditDialog(null);
                         }}
+                        deleteElement={(id) => setDeleteDialog(id)}
                     />
                 </DialogContent>
             </Dialog>
+
+            <DeleteDialog
+                open={deleteDialog ? true : false}
+                onCancel={() => setDeleteDialog(null)}
+                onDelete={() => handleDelete(deleteDialog)}
+            >
+                <Box textAlign="center" py={3}>
+                    <Typography component="p">
+                        Êtes-vous sûr de vouloir supprimer cet élément ?
+                    </Typography>
+
+                    <Typography component="p">Cette action est irréversible.</Typography>
+                </Box>
+            </DeleteDialog>
         </CmtPageWrapper>
     );
 };

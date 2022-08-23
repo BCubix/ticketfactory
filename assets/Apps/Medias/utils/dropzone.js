@@ -1,6 +1,7 @@
 import authApi from '../../../services/api/authApi';
 import Dropzone from 'dropzone';
 import $ from 'jquery';
+import { ALL_FILE_SUPPORTED, MEDIA_UPLOAD_URL } from '../../../Constant';
 
 var countChunk = 0;
 
@@ -16,13 +17,11 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
     }
 
     let dZone = new Dropzone(`#${element.id}`, {
-        url: '/admin/api/_uploader/media/upload',
-        chunking: true,
-        maxFilesize: 10000000000,
-        chunkSize: 1000000,
+        url: MEDIA_UPLOAD_URL,
+        chunking: false,
+        maxFilesize: 1048576,
         uploadMultiple: false,
-        parallelUploads: 1,
-        acceptedFiles: 'image/png,image/jpg,image/jpeg,application/pdf',
+        acceptedFiles: ALL_FILE_SUPPORTED,
         uploadprogress: function (file, progress, byteSent) {
             $(element).find('.dz-upload').width(`${progress}%`);
         },
@@ -63,6 +62,7 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
         formData.append('type', file.type);
         formData.append('filePath', '/uploads/media');
 
+        console.log(file);
         if (id) {
             formData.append('id', 10);
         }

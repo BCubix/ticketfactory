@@ -8,6 +8,7 @@ import {
     EDIT_PATH,
     EVENTS_BASE_PATH,
     HOME_PATH,
+    IMAGE_FORMATS_BASE_PATH,
     LOGIN_PATH,
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
@@ -45,6 +46,10 @@ import { EditTag } from './Apps/Tags/EditTag/EditTag';
 import defaultTheme from './services/themes/defaultTheme';
 import { MediasList } from './Apps/Medias/MediasList/MediasList';
 import { CmtLayoutProvider } from './Components/CmtLayoutProvider/CmtLayoutProvider';
+import { ImageFormatsList } from './Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
+import { CreateImageFormat } from './Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
+import { EditImageFormat } from './Apps/ImageFormat/EditImageFormat/EditImageFormat';
+import { MediasMenu } from './Apps/Medias/MediasMenu/MediasMenu';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -279,7 +284,34 @@ export const App = () => {
                             path={MEDIAS_BASE_PATH}
                             element={
                                 <AuthenticatedLayout>
-                                    <MediasList />
+                                    <MediasMenu tabValue={0} />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={IMAGE_FORMATS_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <MediasMenu tabValue={1} />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={IMAGE_FORMATS_BASE_PATH + CREATE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <CreateImageFormat />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={`${IMAGE_FORMATS_BASE_PATH}/:id${EDIT_PATH}`}
+                            element={
+                                <AuthenticatedLayout>
+                                    <EditImageFormat />
                                 </AuthenticatedLayout>
                             }
                         />

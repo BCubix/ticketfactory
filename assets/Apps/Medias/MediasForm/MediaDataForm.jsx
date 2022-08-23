@@ -5,7 +5,7 @@ import React from 'react';
 import * as Yup from 'yup';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
-export const MediaDataForm = ({ media, handleSubmit }) => {
+export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement }) => {
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du fichier'),
     });
@@ -37,14 +37,16 @@ export const MediaDataForm = ({ media, handleSubmit }) => {
                 isSubmitting,
             }) => (
                 <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
-                    <CmtTextField
-                        value={values.alt}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label="Texte alternatif"
-                        name="alt"
-                        error={touched.alt && errors.alt}
-                    />
+                    {mediaType === 'image' && (
+                        <CmtTextField
+                            value={values.alt}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            label="Texte alternatif"
+                            name="alt"
+                            error={touched.alt && errors.alt}
+                        />
+                    )}
 
                     <CmtTextField
                         value={values.title}
@@ -81,6 +83,13 @@ export const MediaDataForm = ({ media, handleSubmit }) => {
                     />
 
                     <Box display="flex" justifyContent={'flex-end'} sx={{ my: 5 }}>
+                        <Button
+                            color="error"
+                            onClick={deleteElement}
+                            sx={{ mt: 3, mb: 2, mr: 'auto' }}
+                        >
+                            Supprimer l'element
+                        </Button>
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
                             control={

@@ -1,68 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import { roomsSelector } from '@Redux/rooms/roomsSlice';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import roomsApi from '../../../services/api/roomsApi';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
-import { CREATE_PATH, EDIT_PATH, ROOMS_BASE_PATH } from '../../../Constant';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+import { ListTable } from '../../../Components/ListTable/ListTable';
+import { CREATE_PATH, EDIT_PATH, IMAGE_FORMATS_BASE_PATH } from '../../../Constant';
+import {
+    getImageFormatsAction,
+    imageFormatsSelector,
+} from '../../../redux/imageFormats/imageFormatSlice';
+import imageFormatsApi from '../../../services/api/imageFormatsApi';
+import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
     { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'name', label: 'Nom de la catégorie' },
-    { name: 'seatsNb', label: 'Nombre de places' },
-    { name: 'area', label: 'Superficie' },
+    { name: 'name', label: 'Nom' },
+    { name: 'length', label: 'Largeur' },
+    { name: 'height', label: 'Hauteur' },
 ];
 
-export const RoomsList = () => {
-    const { loading, rooms, error } = useSelector(roomsSelector);
+export const ImageFormatsList = () => {
+    const { loading, imageFormats, error } = useSelector(imageFormatsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
-        if (!loading && !rooms && !error) {
-            dispatch(getRoomsAction());
+        if (!loading && !imageFormats && !error) {
+            dispatch(getImageFormatsAction());
         }
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        await imageFormatsApi.deleteImageFormat(id);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        await roomsApi.deleteRoom(id);
-
-        dispatch(getRoomsAction());
+        dispatch(getImageFormatsAction());
 
         setDeleteDialog(null);
     };
 
     return (
         <>
-            <CmtPageWrapper>
-                <CmtPageTitle>Salles</CmtPageTitle>
+            <CmtPageWrapper title="Formats D'image">
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Salles ({rooms?.length})
+                                Format d'image ({imageFormats?.length})
                             </Typography>
                             <Button
                                 variant="contained"
-                                onClick={() => navigate(ROOMS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(IMAGE_FORMATS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
                             </Button>
@@ -70,9 +60,9 @@ export const RoomsList = () => {
 
                         <ListTable
                             table={TABLE_COLUMN}
-                            list={rooms}
+                            list={imageFormats}
                             onEdit={(id) => {
-                                navigate(`${ROOMS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${IMAGE_FORMATS_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
@@ -86,7 +76,7 @@ export const RoomsList = () => {
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette salle ?
+                        Êtes-vous sûr de vouloir supprimer ce format d'image ?
                     </Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>

@@ -7,6 +7,7 @@ import roomsReducer from '../rooms/roomsSlice';
 import seasonsReducer from '../seasons/seasonsSlice';
 import tagsReducer from '../tags/tagsSlice';
 import mediasReducer from '../medias/mediasSlice';
+import imageFormatsReducer from '../imageFormats/imageFormatSlice';
 
 export default configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
         seasons: seasonsReducer,
         tags: tagsReducer,
         medias: mediasReducer,
+        imageFormats: imageFormatsReducer,
     },
 });

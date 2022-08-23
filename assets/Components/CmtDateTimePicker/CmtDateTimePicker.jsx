@@ -33,7 +33,6 @@ export const CmtDateTimePicker = ({
                     open={open}
                     value={value || ''}
                     onChange={(date) => {
-                        console.log(date);
                         setValue(date);
                     }}
                     onOpen={() => {

@@ -12,6 +12,8 @@ import eventsApi from '@Services/api/eventsApi';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { useState } from 'react';
 import { CREATE_PATH, EVENTS_BASE_PATH, EDIT_PATH } from '../../../Constant';
+import authApi from '../../../services/api/authApi';
+import { loginFailure } from '../../../redux/profile/profileSlice';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -35,6 +37,14 @@ export const EventsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         await eventsApi.deleteEvent(id);
 
         dispatch(getEventsAction());

@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
@@ -9,11 +9,15 @@ import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import mediasApi from '../../../services/api/mediasApi';
 import { DisplayMediaType } from '../Components/DisplayMediaType';
-import { MediaDataForm } from './MediaDataForm';
+import { MediaDataForm } from '../MediasForm/MediaDataForm';
+import { MediaImageForm } from '../MediasForm/MediaImageForm';
+import { getMediaType } from '../../../services/utils/getMediaType';
 
-export const EditMedia = ({ id, editSuccess, onCancel }) => {
+export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     const dispatch = useDispatch();
     const [media, setMedia] = useState(null);
+    const [editImage, setEditImage] = useState(false);
+    const [mediaType, setMediaType] = useState(null);
 
     const getMedia = async () => {
         const check = await authApi.checkIsAuth();
@@ -35,6 +39,7 @@ export const EditMedia = ({ id, editSuccess, onCancel }) => {
         }
 
         setMedia(result.media);
+        setMediaType(getMediaType(result?.media?.documentType));
     };
 
     const handleSubmit = async (values) => {
@@ -55,10 +60,16 @@ export const EditMedia = ({ id, editSuccess, onCancel }) => {
         NotificationManager.success('Votre fichier à bien été modifié', 'Succès', REDIRECTION_TIME);
 
         editSuccess();
-
         dispatch(getMediasAction());
 
         return;
+    };
+
+    const handleEditImageSuccess = () => {
+        setEditImage(false);
+
+        getMedia();
+        dispatch(getMediasAction());
     };
 
     useEffect(() => {
@@ -75,26 +86,53 @@ export const EditMedia = ({ id, editSuccess, onCancel }) => {
 
     return (
         <Grid container spacing={4} sx={{ mb: -4, minHeight: 300 }}>
-            <Grid
-                item
-                sx={{ mt: 4, mb: 4 }}
-                xs={12}
-                sm={6}
-                md={7}
-                display="flex"
-                justifyContent={'center'}
-            >
-                <DisplayMediaType
+            {editImage && mediaType === 'image' ? (
+                <MediaImageForm
                     media={media}
-                    maxWidth={'50%'}
-                    maxHeight={200}
-                    sx={{ objectFit: 'contain' }}
+                    closeImageEditor={() => setEditImage(false)}
+                    editSuccess={handleEditImageSuccess}
                 />
-            </Grid>
+            ) : (
+                <>
+                    <Grid
+                        item
+                        sx={{ mt: 4, mb: 4 }}
+                        xs={12}
+                        sm={6}
+                        md={7}
+                        display="flex"
+                        flexDirection={'column'}
+                        alignItems={'center'}
+                    >
+                        <DisplayMediaType
+                            media={media}
+                            maxWidth={'50%'}
+                            maxHeight={200}
+                            sx={{ objectFit: 'contain' }}
+                        />
 
-            <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
-                <MediaDataForm media={media} handleSubmit={handleSubmit} />
-            </Grid>
+                        {mediaType === 'image' && (
+                            <Button
+                                sx={{ mt: 5 }}
+                                variant={'contained'}
+                                color="primary"
+                                onClick={() => setEditImage(true)}
+                            >
+                                Modifier l'image
+                            </Button>
+                        )}
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
+                        <MediaDataForm
+                            media={media}
+                            handleSubmit={handleSubmit}
+                            deleteElement={() => deleteElement(id)}
+                            mediaType={mediaType}
+                        />
+                    </Grid>
+                </>
+            )}
         </Grid>
     );
 };

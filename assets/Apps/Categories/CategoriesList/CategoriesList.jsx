@@ -86,7 +86,16 @@ export const CategoriesList = () => {
         }
         setPath(pathArray.reverse());
     }, [category]);
+
     const handleDelete = async (id) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
         await categoriesApi.deleteCategory(id);
 
         dispatch(getCategoriesAction());

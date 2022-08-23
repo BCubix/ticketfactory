@@ -1,10 +1,14 @@
+import { Card } from '@mui/material';
 import { Box, styled } from '@mui/system';
 
-export const MediaElement = styled(Box)`
+export const MediaElement = styled(Card)`
     width: 100%;
-    padding: 8px;
+    margin: 8px;
     flex-shrink: 0;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
 
     & > img {
         object-fit: cover;
