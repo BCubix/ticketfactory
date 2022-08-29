@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import roomsApi from '../../../services/api/roomsApi';
-import { REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
-import { RoomsForm } from '../RoomsForm/RoomsForm';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
-import authApi from '../../../services/api/authApi';
+import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { loginFailure } from '../../../redux/profile/profileSlice';
+import authApi from '../../../services/api/authApi';
+import contentTypesApi from '../../../services/api/contentTypesApi';
+import { ContentTypeForm } from '../ContentTypeForm/ContentTypeForm';
 
-export const EditRoom = () => {
+export const EditContentType = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [room, setRoom] = useState(null);
+    const [contentType, setContentType] = useState(null);
 
-    const getRoom = async (id) => {
+    const getContentType = async (id) => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -24,26 +23,26 @@ export const EditRoom = () => {
             return;
         }
 
-        const result = await roomsApi.getOneRoom(id);
+        const result = await contentTypesApi.getOneContentType(id);
 
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
 
-            navigate(ROOMS_BASE_PATH);
+            navigate(CONTENT_TYPES_BASE_PATH);
 
             return;
         }
 
-        setRoom(result.room);
+        setContentType(result.contentType);
     };
 
     useEffect(() => {
         if (!id) {
-            navigate(ROOMS_BASE_PATH);
+            navigate(CONTENT_TYPES_BASE_PATH);
             return;
         }
 
-        getRoom(id);
+        getContentType(id);
     }, [id]);
 
     const handleSubmit = async (values) => {
@@ -55,20 +54,24 @@ export const EditRoom = () => {
             return;
         }
 
-        const result = await roomsApi.editRoom(id, values);
+        const result = await contentTypesApi.editContentType(id, values);
 
         if (result.result) {
-            NotificationManager.success('La salle à bien été modifié.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success(
+                'Le type de contenus à bien été modifié.',
+                'Succès',
+                REDIRECTION_TIME
+            );
 
-            dispatch(getRoomsAction());
+            dispatch(getContentTypesAction());
 
-            navigate(ROOMS_BASE_PATH);
+            navigate(CONTENT_TYPES_BASE_PATH);
         }
     };
 
-    if (!room) {
+    if (!contentType) {
         return <></>;
     }
 
-    return <RoomsForm handleSubmit={handleSubmit} initialValues={room} />;
+    return <ContentTypeForm handleSubmit={handleSubmit} initialValues={contentType} />;
 };

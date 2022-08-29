@@ -17,6 +17,7 @@ export const LOGS_BASE_PATH = '/admin/logs';
 export const TAGS_BASE_PATH = '/admin/tags';
 export const MEDIAS_BASE_PATH = '/admin/medias';
 export const IMAGE_FORMATS_BASE_PATH = '/admin/image-formats';
+export const CONTENT_TYPES_BASE_PATH = '/admin/types-de-contenus';
 
 export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';
@@ -42,4 +43,4 @@ export const PDF_FILE_SUPPORTED = 'application/pdf';
 
 export const TEXT_FILE_SUPPORTED = 'text/plain';
 
-export const ALL_FILE_SUPPORTED = `${IMAGE_FILE_SUPPORTED},${AUDIO_FILE_SUPPORTED},${VIDEO_FILE_SUPPORTED},${WORD_FILE_SUPPORTED},${EXCEL_FILE_SUPPORTED},${POWERPOINT_FILE_SUPPORTED},${PDF_FILE_SUPPORTED},${TEXT_FILE_SUPPORTED}`;
+export const ALL_FILE_SUPPORTED = `${IMAGE_FILE_SUPPORTED}, ${AUDIO_FILE_SUPPORTED}, ${VIDEO_FILE_SUPPORTED}, ${WORD_FILE_SUPPORTED}, ${EXCEL_FILE_SUPPORTED}, ${POWERPOINT_FILE_SUPPORTED}, ${PDF_FILE_SUPPORTED}, ${TEXT_FILE_SUPPORTED}`;

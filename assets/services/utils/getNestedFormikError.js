@@ -15,5 +15,5 @@ export const getNestedFormikError = (touched, errors, index, name) => {
         return null;
     }
 
-    return err[index][name];
+    return err[name];
 };

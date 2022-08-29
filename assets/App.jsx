@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import {
     CATEGORIES_BASE_PATH,
+    CONTENT_TYPES_BASE_PATH,
     CREATE_PATH,
     EDIT_PATH,
     EVENTS_BASE_PATH,
@@ -50,6 +51,9 @@ import { ImageFormatsList } from './Apps/ImageFormat/ImageFormatsList/ImageForma
 import { CreateImageFormat } from './Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from './Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { MediasMenu } from './Apps/Medias/MediasMenu/MediasMenu';
+import { ContentTypeList } from './Apps/ContentType/ContentTypeList/ContentTypeList';
+import { CreateContentType } from './Apps/ContentType/CreateContentType/CreateContentType';
+import { EditContentType } from './Apps/ContentType/EditContentType/EditContentType';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -312,6 +316,33 @@ export const App = () => {
                             element={
                                 <AuthenticatedLayout>
                                     <EditImageFormat />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={CONTENT_TYPES_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <ContentTypeList />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={CONTENT_TYPES_BASE_PATH + CREATE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <CreateContentType />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={`${CONTENT_TYPES_BASE_PATH}/:id${EDIT_PATH}`}
+                            element={
+                                <AuthenticatedLayout>
+                                    <EditContentType />
                                 </AuthenticatedLayout>
                             }
                         />

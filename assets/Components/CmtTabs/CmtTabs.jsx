@@ -27,26 +27,30 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
                     }}
                     aria-label="Panel"
                 >
-                    {list?.map((item, index) => (
-                        <Tab
-                            label={item.label}
-                            id={item.label}
-                            key={index}
-                            onClick={() => {
-                                if (item.path) {
-                                    navigate(item.path);
-                                }
-                            }}
-                        />
-                    ))}
+                    {list
+                        ?.filter((el) => !el.hidden)
+                        ?.map((item, index) => (
+                            <Tab
+                                label={item.label}
+                                id={item.label}
+                                key={index}
+                                onClick={() => {
+                                    if (item.path) {
+                                        navigate(item.path);
+                                    }
+                                }}
+                            />
+                        ))}
                 </Tabs>
             </Box>
 
-            {list?.map((item, index) => (
-                <TabPanel value={value} index={index} key={index} label={item.label}>
-                    {item.component}
-                </TabPanel>
-            ))}
+            {list
+                ?.filter((el) => !el.hidden)
+                ?.map((item, index) => (
+                    <TabPanel value={value} index={index} key={index} label={item.label}>
+                        {item.component}
+                    </TabPanel>
+                ))}
         </Box>
     );
 };

@@ -62,7 +62,6 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
         formData.append('type', file.type);
         formData.append('filePath', '/uploads/media');
 
-        console.log(file);
         if (id) {
             formData.append('id', 10);
         }

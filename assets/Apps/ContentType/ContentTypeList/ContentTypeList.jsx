@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
+import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { roomsSelector } from '@Redux/rooms/roomsSlice';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import roomsApi from '../../../services/api/roomsApi';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { CREATE_PATH, EDIT_PATH, ROOMS_BASE_PATH } from '../../../Constant';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import authApi from '../../../services/api/authApi';
+import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
+import { ListTable } from '../../../Components/ListTable/ListTable';
+import { CONTENT_TYPES_BASE_PATH, CREATE_PATH, EDIT_PATH } from '../../../Constant';
+import {
+    contentTypesSelector,
+    getContentTypesAction,
+} from '../../../redux/contentTypes/contentTypesSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
+import authApi from '../../../services/api/authApi';
+import contentTypesApi from '../../../services/api/contentTypesApi';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
     { name: 'active', label: 'Activé ?', type: 'bool' },
     { name: 'name', label: 'Nom de la catégorie' },
-    { name: 'seatsNb', label: 'Nombre de places' },
-    { name: 'area', label: 'Superficie' },
 ];
 
-export const RoomsList = () => {
-    const { loading, rooms, error } = useSelector(roomsSelector);
+export const ContentTypeList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { loading, contentTypes, error } = useSelector(contentTypesSelector);
     const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
-        if (!loading && !rooms && !error) {
-            dispatch(getRoomsAction());
+        if (!loading && !contentTypes && !error) {
+            dispatch(getContentTypesAction());
         }
-    }, []);
+    });
 
     const handleDelete = async (id) => {
         const check = await authApi.checkIsAuth();
@@ -42,25 +42,24 @@ export const RoomsList = () => {
             return;
         }
 
-        await roomsApi.deleteRoom(id);
+        await contentTypesApi.deleteContentType(id);
 
-        dispatch(getRoomsAction());
+        dispatch(getContentTypesAction());
 
         setDeleteDialog(null);
     };
-
     return (
         <>
-            <CmtPageWrapper title="Salles">
+            <CmtPageWrapper title="Types de contenus">
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Salles ({rooms?.length})
+                                Types de contenus ({contentTypes?.length})
                             </Typography>
                             <Button
                                 variant="contained"
-                                onClick={() => navigate(ROOMS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(CONTENT_TYPES_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
                             </Button>
@@ -68,9 +67,9 @@ export const RoomsList = () => {
 
                         <ListTable
                             table={TABLE_COLUMN}
-                            list={rooms}
+                            list={contentTypes}
                             onEdit={(id) => {
-                                navigate(`${ROOMS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${CONTENT_TYPES_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
@@ -84,7 +83,7 @@ export const RoomsList = () => {
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette salle ?
+                        Êtes-vous sûr de vouloir supprimer ce type de contenus ?
                     </Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>

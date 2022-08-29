@@ -8,6 +8,7 @@ import seasonsReducer from '../seasons/seasonsSlice';
 import tagsReducer from '../tags/tagsSlice';
 import mediasReducer from '../medias/mediasSlice';
 import imageFormatsReducer from '../imageFormats/imageFormatSlice';
+import contentTypesReducer from '../contentTypes/contentTypesSlice';
 
 export default configureStore({
     reducer: {
@@ -20,5 +21,6 @@ export default configureStore({
         tags: tagsReducer,
         medias: mediasReducer,
         imageFormats: imageFormatsReducer,
+        contentTypes: contentTypesReducer,
     },
 });
