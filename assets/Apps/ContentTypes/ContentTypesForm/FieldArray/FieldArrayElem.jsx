@@ -13,6 +13,7 @@ export const FieldArrayElem = ({
     handleBlur,
     setFieldValue,
     setFieldTouched,
+    prefixName,
 }) => {
     return (
         <CmtTabs
@@ -28,6 +29,7 @@ export const FieldArrayElem = ({
                             handleBlur={handleBlur}
                             setFieldValue={setFieldValue}
                             index={index}
+                            prefixName={prefixName}
                         />
                     ),
                 },
@@ -43,6 +45,7 @@ export const FieldArrayElem = ({
                             handleBlur={handleBlur}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
+                            prefixName={prefixName}
                         />
                     ),
                 },
@@ -58,6 +61,7 @@ export const FieldArrayElem = ({
                             handleBlur={handleBlur}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
+                            prefixName={prefixName}
                         />
                     ),
                     hidden: Object.keys(values?.validations)?.length === 0,

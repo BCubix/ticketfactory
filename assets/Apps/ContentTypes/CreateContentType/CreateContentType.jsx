@@ -7,7 +7,7 @@ import { loginFailure } from '../../../redux/profile/profileSlice';
 import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import authApi from '../../../services/api/authApi';
 import contentTypesApi from '../../../services/api/contentTypesApi';
-import { ContentTypeForm } from '../ContentTypeForm/ContentTypeForm';
+import { ContentTypesForm } from '../ContentTypesForm/ContentTypesForm';
 
 export const CreateContentType = () => {
     const dispatch = useDispatch();
@@ -37,5 +37,5 @@ export const CreateContentType = () => {
         }
     };
 
-    return <ContentTypeForm handleSubmit={handleSubmit} />;
+    return <ContentTypesForm handleSubmit={handleSubmit} />;
 };

@@ -9,6 +9,7 @@ import tagsReducer from '../tags/tagsSlice';
 import mediasReducer from '../medias/mediasSlice';
 import imageFormatsReducer from '../imageFormats/imageFormatSlice';
 import contentTypesReducer from '../contentTypes/contentTypesSlice';
+import contentsReducer from '../contents/contentsSlice';
 
 export default configureStore({
     reducer: {
@@ -22,5 +23,6 @@ export default configureStore({
         medias: mediasReducer,
         imageFormats: imageFormatsReducer,
         contentTypes: contentTypesReducer,
+        contents: contentsReducer,
     },
 });

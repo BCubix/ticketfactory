@@ -15,10 +15,11 @@ export const ContentTypeFieldArrayForm = ({
     handleBlur,
     setFieldValue,
     setFieldTouched,
+    prefixName = '',
 }) => {
     return (
         <>
-            <FieldArray name="fields">
+            <FieldArray name={`${prefixName}fields`}>
                 {({ remove, push }) => (
                     <Box>
                         {values?.fields?.map((item, index) => (
@@ -36,6 +37,7 @@ export const ContentTypeFieldArrayForm = ({
                                     handleBlur={handleBlur}
                                     setFieldValue={setFieldValue}
                                     setFieldTouched={setFieldTouched}
+                                    prefixName={prefixName}
                                 />
 
                                 <Button

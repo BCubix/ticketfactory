@@ -5,6 +5,7 @@ import { CmtDatePicker } from '../../../../Components/CmtDatePicker/CmtDatePicke
 import { CmtDateTimePicker } from '../../../../Components/CmtDateTimePicker/CmtDateTimePicker';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { CmtTimePicker } from '../../../../Components/CmtTimePicker/CmtTimePicker';
+import { ContentTypeFieldArrayForm } from '../FieldArray/ContentTypeFieldArrayForm';
 
 export const FIELDS_FORM_TYPE = [
     {
@@ -16,6 +17,20 @@ export const FIELDS_FORM_TYPE = [
                 onBlur={onBlur}
                 name={name}
                 error={error}
+            />
+        ),
+    },
+    {
+        type: 'textarea',
+        component: ({ value, onChange, onBlur, name, error }) => (
+            <CmtTextField
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                name={name}
+                error={error}
+                multiline
+                rows={4}
             />
         ),
     },
@@ -82,7 +97,7 @@ export const FIELDS_FORM_TYPE = [
         ),
     },
     {
-        type: 'date/time',
+        type: 'dateTime',
         component: ({ value, setFieldTouched, setFieldValue, name, error }) => (
             <CmtDateTimePicker
                 fullWidth
@@ -108,6 +123,31 @@ export const FIELDS_FORM_TYPE = [
                 onTouched={setFieldTouched}
                 name={name}
                 error={error}
+            />
+        ),
+    },
+    {
+        type: 'groupFields',
+        component: ({
+            value,
+            touched,
+            handleChange,
+            handleBlur,
+            setFieldTouched,
+            setFieldValue,
+            name,
+            error,
+            prefixName,
+        }) => (
+            <ContentTypeFieldArrayForm
+                values={value}
+                errors={error}
+                touched={touched}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                prefixName={`${prefixName}${name}.`}
             />
         ),
     },

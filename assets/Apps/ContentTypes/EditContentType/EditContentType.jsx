@@ -6,7 +6,7 @@ import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import contentTypesApi from '../../../services/api/contentTypesApi';
-import { ContentTypeForm } from '../ContentTypeForm/ContentTypeForm';
+import { ContentTypeForm } from '../ContentTypesForm/ContentTypesForm';
 
 export const EditContentType = () => {
     const dispatch = useDispatch();

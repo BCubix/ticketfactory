@@ -53,6 +53,7 @@
         "formik": "^2.2.9",
         "jquery": "^3.6.0",
         "moment": "^2.29.4",
+        "react-color": "^2.19.3",
         "react-dropzone": "^14.2.2",
         "react-dropzone-uploader": "^2.11.0",
         "react-filepond": "^7.1.2",

@@ -8,7 +8,7 @@ import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPa
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import { ContentTypeFieldArrayForm } from './FieldArray/ContentTypeFieldArrayForm';
 
-export const ContentTypeForm = ({ initialValues = null }) => {
+export const ContentTypesForm = ({ initialValues = null }) => {
     const contentTypeSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du type de contenus.'),
         fields: Yup.array()

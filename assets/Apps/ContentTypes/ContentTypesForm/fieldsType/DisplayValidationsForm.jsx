@@ -1,4 +1,4 @@
-import { FormControlLabel } from '@mui/material';
+import { Box, FormControlLabel } from '@mui/material';
 import React from 'react';
 import { FieldFormControl } from '../sc.ContentTypeFields';
 import { FIELDS_FORM_TYPE } from './FieldsComponents';
@@ -42,7 +42,12 @@ export const DisplayValidationsForm = ({
                         setFieldTouched={setFieldTouched}
                     />
                 }
-                label={validation.label}
+                label={
+                    <Box>
+                        {validation.label}
+                        {validation?.instructions && <validation.instructions />}
+                    </Box>
+                }
                 labelPlacement="start"
             />
         </FieldFormControl>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import {
     CATEGORIES_BASE_PATH,
+    CONTENT_BASE_PATH,
     CONTENT_TYPES_BASE_PATH,
     CREATE_PATH,
     EDIT_PATH,
@@ -45,15 +46,15 @@ import { CategoriesMenu } from './Apps/Categories/CategoriesMenu/CategoriesMenu'
 import { CreateTag } from './Apps/Tags/CreateTag/CreateTag';
 import { EditTag } from './Apps/Tags/EditTag/EditTag';
 import defaultTheme from './services/themes/defaultTheme';
-import { MediasList } from './Apps/Medias/MediasList/MediasList';
 import { CmtLayoutProvider } from './Components/CmtLayoutProvider/CmtLayoutProvider';
-import { ImageFormatsList } from './Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { CreateImageFormat } from './Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from './Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { MediasMenu } from './Apps/Medias/MediasMenu/MediasMenu';
-import { ContentTypeList } from './Apps/ContentType/ContentTypeList/ContentTypeList';
-import { CreateContentType } from './Apps/ContentType/CreateContentType/CreateContentType';
-import { EditContentType } from './Apps/ContentType/EditContentType/EditContentType';
+import { ContentTypesList } from './Apps/ContentTypes/ContentTypesList/ContentTypesList';
+import { CreateContentType } from './Apps/ContentTypes/CreateContentType/CreateContentType';
+import { EditContentType } from './Apps/ContentTypes/EditContentType/EditContentType';
+import { ContentsList } from './Apps/Contents/ContentsList/ContentsList';
+import { CreateContent } from './Apps/Contents/CreateContent/CreateContent';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -324,7 +325,7 @@ export const App = () => {
                             path={CONTENT_TYPES_BASE_PATH}
                             element={
                                 <AuthenticatedLayout>
-                                    <ContentTypeList />
+                                    <ContentTypesList />
                                 </AuthenticatedLayout>
                             }
                         />
@@ -343,6 +344,24 @@ export const App = () => {
                             element={
                                 <AuthenticatedLayout>
                                     <EditContentType />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={CONTENT_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <ContentsList />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={CONTENT_BASE_PATH + CREATE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <CreateContent />
                                 </AuthenticatedLayout>
                             }
                         />

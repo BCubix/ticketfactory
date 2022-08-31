@@ -21,7 +21,7 @@ const TABLE_COLUMN = [
     { name: 'name', label: 'Nom de la catégorie' },
 ];
 
-export const ContentTypeList = () => {
+export const ContentTypesList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { loading, contentTypes, error } = useSelector(contentTypesSelector);
@@ -48,6 +48,7 @@ export const ContentTypeList = () => {
 
         setDeleteDialog(null);
     };
+
     return (
         <>
             <CmtPageWrapper title="Types de contenus">

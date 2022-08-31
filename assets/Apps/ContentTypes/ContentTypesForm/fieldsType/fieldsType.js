@@ -1,4 +1,6 @@
+import { Box, Typography } from '@mui/material';
 import { ALL_FILE_SUPPORTED, IMAGE_FILE_SUPPORTED } from '../../../../Constant';
+import React from 'react';
 
 export const FIELDS_TYPE = [
     {
@@ -407,6 +409,11 @@ export const FIELDS_TYPE = [
         options: [
             { name: 'required', label: 'Requis', type: 'boolean' },
             { name: 'disabled', label: 'Désactivé', type: 'boolean' },
+            { name: 'token', label: 'Token', type: 'text' },
+            { name: 'mapStyle', label: 'Style de carte', type: 'text' },
+            { name: 'lat', label: 'Latitude du centre', type: 'text' },
+            { name: 'lng', label: 'Longitude du centre', type: 'text' },
+            { name: 'zoom', label: 'Zoom', type: 'number' },
         ],
     },
     {
@@ -422,6 +429,28 @@ export const FIELDS_TYPE = [
             { name: 'required', label: 'Requis', type: 'boolean' },
             { name: 'disabled', label: 'Désactivé', type: 'boolean' },
             { name: 'multiple', label: 'Multiple', type: 'boolean' },
+            {
+                name: 'choices',
+                label: 'Choix',
+                instructions: () => (
+                    <Box>
+                        <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
+                            Indiquez une valeur par ligne.
+                        </Typography>
+                        <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
+                            Vous pouvez spécifier la valeur et le libellé de cette manière.
+                        </Typography>
+                        <Typography
+                            component="p"
+                            variant="body2"
+                            sx={{ marginTop: 2, fontSize: 10 }}
+                        >
+                            rouge : Rouge
+                        </Typography>
+                    </Box>
+                ),
+                type: 'textarea',
+            },
         ],
     },
     {
@@ -436,6 +465,28 @@ export const FIELDS_TYPE = [
         options: [
             { name: 'required', label: 'Requis', type: 'boolean' },
             { name: 'disabled', label: 'Désactivé', type: 'boolean' },
+            {
+                name: 'choices',
+                label: 'Choix',
+                instructions: () => (
+                    <Box>
+                        <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
+                            Indiquez une valeur par ligne.
+                        </Typography>
+                        <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
+                            Vous pouvez spécifier la valeur et le libellé de cette manière.
+                        </Typography>
+                        <Typography
+                            component="p"
+                            variant="body2"
+                            sx={{ marginTop: 2, fontSize: 10 }}
+                        >
+                            rouge : Rouge
+                        </Typography>
+                    </Box>
+                ),
+                type: 'textarea',
+            },
         ],
     },
     {
@@ -488,6 +539,14 @@ export const FIELDS_TYPE = [
             { name: 'disabled', label: 'Désactivé', type: 'boolean' },
         ],
     },
+    {
+        name: 'groupFields',
+        options: [
+            { name: 'required', label: 'Requis', type: 'boolean' },
+            { name: 'disabled', label: 'Désactivé', type: 'boolean' },
+            { name: 'fields', label: 'Champs', type: 'groupFields' },
+        ],
+    },
 ];
 
 export const FIELDS_TYPE_LIST = [
@@ -516,6 +575,7 @@ export const FIELDS_TYPE_LIST = [
             { name: 'audio/video', label: 'Audio / Vidéo' },
             { name: 'map', label: 'Carte' },
             { name: 'color', label: 'Couleur' },
+            { name: 'groupFields', label: 'Groupe de champs' },
         ],
     },
     {

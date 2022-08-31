@@ -13,6 +13,7 @@ export const MainPartFieldForm = ({
     handleChange,
     handleBlur,
     setFieldValue,
+    prefixName,
 }) => {
     const [fieldsTypeList, setFieldsTypeList] = useState([]);
 
@@ -32,8 +33,8 @@ export const MainPartFieldForm = ({
                 (values?.validations && values?.validations[el.name]) || el.initialValue;
         });
 
-        setFieldValue(`fields.${index}.options`, options);
-        setFieldValue(`fields.${index}.validations`, validations);
+        setFieldValue(`${prefixName}fields.${index}.options`, options);
+        setFieldValue(`${prefixName}fields.${index}.validations`, validations);
     };
 
     useEffect(() => {
@@ -56,7 +57,7 @@ export const MainPartFieldForm = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 label="Titre du champ"
-                name={`fields.${index}.title`}
+                name={`${prefixName}fields.${index}.title`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'title')}
             />
 
@@ -65,7 +66,7 @@ export const MainPartFieldForm = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 label="Nom du type de champ"
-                name={`fields.${index}.name`}
+                name={`${prefixName}fields.${index}.name`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'name')}
             />
 
@@ -80,7 +81,7 @@ export const MainPartFieldForm = ({
                     value={values.fieldType}
                     onChange={(e) => {
                         handleChangeFieldType(e.target.value);
-                        setFieldValue(`fields.${index}.fieldType`, e.target.value);
+                        setFieldValue(`${prefixName}fields.${index}.fieldType`, e.target.value);
                     }}
                     label="Type de champs"
                 >
@@ -105,7 +106,7 @@ export const MainPartFieldForm = ({
                 multiline
                 rows={3}
                 label="Instructions"
-                name={`fields.${index}.instructions`}
+                name={`${prefixName}fields.${index}.instructions`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'instructions')}
             />
         </>

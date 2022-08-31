@@ -25,6 +25,104 @@ const contentTypesApi = {
                                 maxLength: 50,
                             },
                         },
+                        {
+                            title: 'Nombre de place',
+                            name: 'placeNb',
+                            fieldType: 'number',
+                            instruction: 'Nombre de place pour le spectacle.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                                scale: '',
+                            },
+                            validations: {
+                                min: '',
+                                max: '',
+                            },
+                        },
+                        {
+                            title: 'Description',
+                            name: 'description',
+                            fieldType: 'contentEditor',
+                            instruction: 'Description du spectacle.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                                trim: false,
+                            },
+                            validations: {
+                                minLength: '',
+                                maxLength: '',
+                            },
+                        },
+                        {
+                            title: 'Image',
+                            name: 'image',
+                            fieldType: 'image',
+                            instruction: 'Image du spectacle.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                                multiple: false,
+                            },
+                            validations: {
+                                minLength: '',
+                                maxLength: '',
+                            },
+                        },
+                        {
+                            title: 'Couleur',
+                            name: 'color',
+                            fieldType: 'color',
+                            instruction: 'Couleur.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                            },
+                        },
+                        {
+                            title: 'Choix',
+                            name: 'choiceList',
+                            fieldType: 'choiceList',
+                            instruction: 'choix.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                                multiple: true,
+                                choices: 'red:Red\ngreen:Green',
+                            },
+                        },
+                        {
+                            title: 'radio',
+                            name: 'radioButton',
+                            fieldType: 'radioButton',
+                            instruction: 'Radio.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                                choices: 'red:Red\ngreen:Green',
+                            },
+                        },
+                        {
+                            title: 'checkbox',
+                            name: 'checkbox',
+                            fieldType: 'checkbox',
+                            instruction: 'Checkbox.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                            },
+                        },
+                        {
+                            title: 'Switch',
+                            name: 'switch',
+                            fieldType: 'true/false',
+                            instruction: 'Switch.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                            },
+                        },
                     ],
                 },
             ];

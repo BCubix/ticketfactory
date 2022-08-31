@@ -1,4 +1,4 @@
-import { FormControlLabel } from '@mui/material';
+import { Box, FormControlLabel } from '@mui/material';
 import React from 'react';
 import { FieldFormControl } from '../sc.ContentTypeFields';
 import { FIELDS_FORM_TYPE } from './FieldsComponents';
@@ -38,9 +38,15 @@ export const DisplayOptionsForm = ({
                         }
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
+                        touched={touched}
                     />
                 }
-                label={option.label}
+                label={
+                    <Box>
+                        {option.label}
+                        {option?.instructions && <option.instructions />}
+                    </Box>
+                }
                 labelPlacement="start"
             />
         </FieldFormControl>

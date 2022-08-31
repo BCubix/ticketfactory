@@ -18,6 +18,7 @@ export const TAGS_BASE_PATH = '/admin/tags';
 export const MEDIAS_BASE_PATH = '/admin/medias';
 export const IMAGE_FORMATS_BASE_PATH = '/admin/image-formats';
 export const CONTENT_TYPES_BASE_PATH = '/admin/types-de-contenus';
+export const CONTENT_BASE_PATH = '/admin/contenus';
 
 export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';

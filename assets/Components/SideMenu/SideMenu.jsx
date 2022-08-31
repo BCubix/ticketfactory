@@ -11,6 +11,7 @@ import {
 import { MenuTitle } from './sc.SideMenu';
 import {
     CATEGORIES_BASE_PATH,
+    CONTENT_BASE_PATH,
     CONTENT_TYPES_BASE_PATH,
     EVENTS_BASE_PATH,
     LOGS_BASE_PATH,
@@ -58,7 +59,7 @@ const MENU = [
             { name: 'Redirections', link: null, icon: <CallMissedOutgoingIcon /> },
             { name: 'Modules', link: null, icon: <ViewModuleIcon /> },
             { name: 'Bibliothèque médias', link: MEDIAS_BASE_PATH, icon: <PermMediaIcon /> },
-            { name: 'Contenus', link: null, icon: <SourceIcon /> },
+            { name: 'Contenus', link: CONTENT_BASE_PATH, icon: <SourceIcon /> },
             { name: 'Types de contenus', link: CONTENT_TYPES_BASE_PATH, icon: <WidgetsIcon /> },
         ],
     },
