@@ -1,9 +1,9 @@
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import React from 'react';
-import { DisplayOptionsForm } from '../../fieldsType/DisplayOptionsForm';
+import { DisplayOtherFieldsForm } from '../../fieldsType/DisplayOtherFieldsForm';
 import { FIELDS_TYPE } from '../../fieldsType/fieldsType';
 
-export const OptionsPartFieldForm = ({
+export const OtherFieldsPartFieldForm = ({
     values,
     fieldIndex,
     touched,
@@ -14,13 +14,21 @@ export const OptionsPartFieldForm = ({
     setFieldTouched,
     prefixName,
 }) => {
-    const optionsList = FIELDS_TYPE?.find((el) => el.name === values?.fieldType)?.options || [];
+    const otherFieldsList =
+        FIELDS_TYPE?.find((el) => el.name === values?.fieldType)?.otherFields || [];
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            {optionsList?.map((item, index) => (
-                <DisplayOptionsForm
-                    option={item}
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                width: '100%',
+            }}
+        >
+            {otherFieldsList?.map((item, index) => (
+                <DisplayOtherFieldsForm
+                    field={item}
                     key={index}
                     values={values}
                     index={fieldIndex}

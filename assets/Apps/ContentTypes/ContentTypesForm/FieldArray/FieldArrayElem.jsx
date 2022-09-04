@@ -28,6 +28,7 @@ export const FieldArrayElem = ({
                             handleChange={handleChange}
                             handleBlur={handleBlur}
                             setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
                             index={index}
                             prefixName={prefixName}
                         />

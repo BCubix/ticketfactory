@@ -544,8 +544,8 @@ export const FIELDS_TYPE = [
         options: [
             { name: 'required', label: 'Requis', type: 'boolean' },
             { name: 'disabled', label: 'Désactivé', type: 'boolean' },
-            { name: 'fields', label: 'Champs', type: 'groupFields' },
         ],
+        otherFields: [{ name: 'fields', label: 'Champs', type: 'groupFields', initialValue: [] }],
     },
 ];
 

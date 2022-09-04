@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { CmtTextField } from '../../../../../Components/CmtTextField/CmtTextField';
 import { getNestedFormikError } from '../../../../../services/utils/getNestedFormikError';
 import { FIELDS_TYPE, FIELDS_TYPE_LIST } from '../../fieldsType/fieldsType';
+import { OtherFieldsPartFieldForm } from './OtherFieldsPartFieldForm';
 
 export const MainPartFieldForm = ({
     values,
@@ -13,6 +14,7 @@ export const MainPartFieldForm = ({
     handleChange,
     handleBlur,
     setFieldValue,
+    setFieldTouched,
     prefixName,
 }) => {
     const [fieldsTypeList, setFieldsTypeList] = useState([]);
@@ -21,6 +23,7 @@ export const MainPartFieldForm = ({
         const fieldTypeObject = FIELDS_TYPE?.find((el) => el.name === value);
         let options = {};
         let validations = {};
+        let otherFields = {};
 
         fieldTypeObject?.options?.forEach((el) => {
             options[el.name] =
@@ -33,8 +36,16 @@ export const MainPartFieldForm = ({
                 (values?.validations && values?.validations[el.name]) || el.initialValue;
         });
 
+        fieldTypeObject?.otherFields?.forEach((el) => {
+            otherFields[el.name] =
+                (values?.otherFields && values?.otherFields[el.name]) ||
+                el.initialValue ||
+                (el.type === 'boolean' ? false : '');
+        });
+
         setFieldValue(`${prefixName}fields.${index}.options`, options);
         setFieldValue(`${prefixName}fields.${index}.validations`, validations);
+        setFieldValue(`${prefixName}fields.${index}.otherFields`, otherFields);
     };
 
     useEffect(() => {
@@ -50,6 +61,7 @@ export const MainPartFieldForm = ({
 
         setFieldsTypeList(list);
     }, []);
+
     return (
         <>
             <CmtTextField
@@ -108,6 +120,18 @@ export const MainPartFieldForm = ({
                 label="Instructions"
                 name={`${prefixName}fields.${index}.instructions`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'instructions')}
+            />
+
+            <OtherFieldsPartFieldForm
+                values={values}
+                fieldIndex={index}
+                errors={errors && errors[index]}
+                touched={touched && touched[index]}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                prefixName={prefixName}
             />
         </>
     );

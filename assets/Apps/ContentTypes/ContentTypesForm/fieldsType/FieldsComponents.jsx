@@ -131,8 +131,8 @@ export const FIELDS_FORM_TYPE = [
         component: ({
             value,
             touched,
-            handleChange,
-            handleBlur,
+            onChange,
+            onBlur,
             setFieldTouched,
             setFieldValue,
             name,
@@ -143,8 +143,8 @@ export const FIELDS_FORM_TYPE = [
                 values={value}
                 errors={error}
                 touched={touched}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
+                handleChange={onChange}
+                handleBlur={onBlur}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched}
                 prefixName={`${prefixName}${name}.`}

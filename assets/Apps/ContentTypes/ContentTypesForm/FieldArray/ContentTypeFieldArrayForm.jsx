@@ -21,7 +21,7 @@ export const ContentTypeFieldArrayForm = ({
         <>
             <FieldArray name={`${prefixName}fields`}>
                 {({ remove, push }) => (
-                    <Box>
+                    <Box sx={{ width: '100%' }}>
                         {values?.fields?.map((item, index) => (
                             <FieldElemWrapper key={index}>
                                 <Typography component="p" variant="h4">

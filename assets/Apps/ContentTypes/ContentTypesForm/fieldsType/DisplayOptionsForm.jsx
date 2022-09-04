@@ -13,6 +13,7 @@ export const DisplayOptionsForm = ({
     touched,
     setFieldValue,
     setFieldTouched,
+    prefixName,
     ...rest
 }) => {
     const OptionForm = FIELDS_FORM_TYPE?.find((el) => el.type === option?.type)?.component;
@@ -39,6 +40,7 @@ export const DisplayOptionsForm = ({
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         touched={touched}
+                        prefixName={prefixName}
                     />
                 }
                 label={
