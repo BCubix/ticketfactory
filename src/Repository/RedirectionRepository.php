@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\Media;
+use App\Entity\Redirection;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class MediaRepository extends CrudRepository
+class RedirectionRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Media::class);
+        parent::__construct($registry, Redirection::class);
     }
 }

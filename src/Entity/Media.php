@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\MediaRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -58,6 +58,7 @@ class Media extends Datable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $documentUrl = null;
+
 
     public function getId(): ?int
     {
