@@ -27,7 +27,6 @@ services:
     App\EventSubscriber\Admin\ApiExceptionSubscriber:
         tags:
             - { name: kernel.event_subscriber }
-        arguments: []
 
     App\EventSubscriber\Admin\JmsSerializerSubscriber:
         tags:
@@ -36,16 +35,23 @@ services:
             $metadata: '@vich_uploader.metadata_reader'
             $remoteFileUrl: '%env(resolve:REMOTE_FILE_URL)%'
 
+    App\EventSubscriber\Admin\DoctrineSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+
     App\EventSubscriber\Admin\UserSubscriber:
         tags:
             - { name: kernel.event_subscriber, event: tf.object.validated }
 
     App\EventListener\FileUploader:
         arguments:
-            [
-                '@vich_uploader.upload_handler',
-                '@vich_uploader.metadata_driver.annotation',
-                '%kernel.project_dir%',
-            ]
+            $handler: '@vich_uploader.upload_handler'
+            $annotation: '@vich_uploader.metadata_driver.annotation'
+            $rootPath: '%kernel.project_dir%'
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+
+    # Managers
+    App\Manager\ContentTypeFieldManager:
+        arguments:
+            $projectDir: "%kernel.project_dir%"
