@@ -17,7 +17,7 @@ const contentTypesApi = {
                                 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
                             options: {
                                 required: true,
-                                disabled: false,
+                                disabled: true,
                                 trim: false,
                             },
                             validations: {

@@ -19,6 +19,7 @@ export const MEDIAS_BASE_PATH = '/admin/medias';
 export const IMAGE_FORMATS_BASE_PATH = '/admin/image-formats';
 export const CONTENT_TYPES_BASE_PATH = '/admin/types-de-contenus';
 export const CONTENT_BASE_PATH = '/admin/contenus';
+export const CONTACT_REQUEST_BASE_PATH = '/admin/demandes-de-contact';
 
 export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';

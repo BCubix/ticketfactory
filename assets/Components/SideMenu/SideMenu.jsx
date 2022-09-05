@@ -11,6 +11,7 @@ import {
 import { MenuTitle } from './sc.SideMenu';
 import {
     CATEGORIES_BASE_PATH,
+    CONTACT_REQUEST_BASE_PATH,
     CONTENT_BASE_PATH,
     CONTENT_TYPES_BASE_PATH,
     EVENTS_BASE_PATH,
@@ -68,7 +69,7 @@ const MENU = [
         title: 'ADMINISTRATION',
         menu: [
             { name: 'Paramètres', link: null, icon: <SettingsIcon /> },
-            { name: 'Contacts', link: null, icon: <EmailIcon /> },
+            { name: 'Contacts', link: CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon /> },
             { name: 'Utilisateurs', link: USER_BASE_PATH, icon: <PersonIcon /> },
             { name: 'Logs', link: LOGS_BASE_PATH, icon: <TocIcon /> },
         ],

@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+import { CONTACT_REQUEST_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import authApi from '../../../services/api/authApi';
-import contentTypesApi from '../../../services/api/contentTypesApi';
-import { ContentTypesForm } from '../ContentTypesForm/ContentTypesForm';
+import { loginFailure } from '../../../redux/profile/profileSlice';
+import contactRequestsApi from '../../../services/api/contactRequestsApi';
+import { ContactRequestsForm } from '../ContactRequestsForm/ContactRequestsForm';
 
-export const EditContentType = () => {
+export const EditContactRequest = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [contentType, setContentType] = useState(null);
+    const [contactRequest, setContactRequest] = useState(null);
 
-    const getContentType = async (id) => {
+    const getContactRequest = async (id) => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -23,26 +23,26 @@ export const EditContentType = () => {
             return;
         }
 
-        const result = await contentTypesApi.getOneContentType(id);
+        const result = await contactRequestsApi.getOneContactRequest(id);
 
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
 
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(CONTACT_REQUEST_BASE_PATH);
 
             return;
         }
 
-        setContentType(result.contentType);
+        setContactRequest(result.contactRequest);
     };
 
     useEffect(() => {
         if (!id) {
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(CONTACT_REQUEST_BASE_PATH);
             return;
         }
 
-        getContentType(id);
+        getContactRequest(id);
     }, [id]);
 
     const handleSubmit = async (values) => {
@@ -54,24 +54,24 @@ export const EditContentType = () => {
             return;
         }
 
-        const result = await contentTypesApi.editContentType(id, values);
+        const result = await contactRequest.EditContactRequest(id, values);
 
         if (result.result) {
             NotificationManager.success(
-                'Le type de contenus à bien été modifié.',
+                'La demande de contact à bien été modifié.',
                 'Succès',
                 REDIRECTION_TIME
             );
 
-            dispatch(getContentTypesAction());
+            dispatch(getContactRequest());
 
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(CONTACT_REQUEST_BASE_PATH);
         }
     };
 
-    if (!contentType) {
+    if (!contactRequest) {
         return <></>;
     }
 
-    return <ContentTypesForm handleSubmit={handleSubmit} initialValues={contentType} />;
+    return <ContactRequestsForm handleSubmit={handleSubmit} initialValues={contactRequest} />;
 };

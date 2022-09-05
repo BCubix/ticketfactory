@@ -14,7 +14,6 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                         onBlur={handleBlur}
                         label="Nom"
                         name="name"
-                        autoComplete="name"
                         error={touched.name && errors.name}
                     />
                 </Grid>

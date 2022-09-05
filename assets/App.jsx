@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import {
     CATEGORIES_BASE_PATH,
+    CONTACT_REQUEST_BASE_PATH,
     CONTENT_BASE_PATH,
     CONTENT_TYPES_BASE_PATH,
     CREATE_PATH,
@@ -55,6 +56,9 @@ import { CreateContentType } from './Apps/ContentTypes/CreateContentType/CreateC
 import { EditContentType } from './Apps/ContentTypes/EditContentType/EditContentType';
 import { ContentsList } from './Apps/Contents/ContentsList/ContentsList';
 import { CreateContent } from './Apps/Contents/CreateContent/CreateContent';
+import { ContactRequestsList } from './Apps/ContactRequests/ContactRequestsList/ContactRequestsList';
+import { CreateContactRequests } from './Apps/ContactRequests/CreateContactRequest/CreateContactRequest';
+import { EditContactRequest } from './Apps/ContactRequests/EditContactRequest/EditContactRequest';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -362,6 +366,33 @@ export const App = () => {
                             element={
                                 <AuthenticatedLayout>
                                     <CreateContent />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={CONTACT_REQUEST_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <ContactRequestsList />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={CONTACT_REQUEST_BASE_PATH + CREATE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <CreateContactRequests />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={`${CONTACT_REQUEST_BASE_PATH}/:id${EDIT_PATH}`}
+                            element={
+                                <AuthenticatedLayout>
+                                    <EditContactRequest />
                                 </AuthenticatedLayout>
                             }
                         />
