@@ -15,6 +15,7 @@ import {
     LOGIN_PATH,
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
+    REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
     TAGS_BASE_PATH,
@@ -59,6 +60,9 @@ import { CreateContent } from './Apps/Contents/CreateContent/CreateContent';
 import { ContactRequestsList } from './Apps/ContactRequests/ContactRequestsList/ContactRequestsList';
 import { CreateContactRequests } from './Apps/ContactRequests/CreateContactRequest/CreateContactRequest';
 import { EditContactRequest } from './Apps/ContactRequests/EditContactRequest/EditContactRequest';
+import { RedirectionsList } from './Apps/Redirections/RedirectionsList/RedirectionsList';
+import { CreateRedirection } from './Apps/Redirections/CreateRedirection/CreateRedirection';
+import { EditRedirection } from './Apps/Redirections/EditRedirection/EditRedirection';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -393,6 +397,32 @@ export const App = () => {
                             element={
                                 <AuthenticatedLayout>
                                     <EditContactRequest />
+                                </AuthenticatedLayout>
+                            }
+                        />
+                        <Route
+                            path={REDIRECTIONS_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <RedirectionsList />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={REDIRECTIONS_BASE_PATH + CREATE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <CreateRedirection />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={`${REDIRECTIONS_BASE_PATH}/:id${EDIT_PATH}`}
+                            element={
+                                <AuthenticatedLayout>
+                                    <EditRedirection />
                                 </AuthenticatedLayout>
                             }
                         />

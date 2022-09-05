@@ -17,6 +17,7 @@ import {
     EVENTS_BASE_PATH,
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
+    REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
     USER_BASE_PATH,
@@ -58,7 +59,11 @@ const MENU = [
         menu: [
             { name: 'Menus', link: null, icon: <MenuIcon /> },
             { name: 'Pages', link: null, icon: <DescriptionIcon /> },
-            { name: 'Redirections', link: null, icon: <CallMissedOutgoingIcon /> },
+            {
+                name: 'Redirections',
+                link: REDIRECTIONS_BASE_PATH,
+                icon: <CallMissedOutgoingIcon />,
+            },
             { name: 'Modules', link: null, icon: <ViewModuleIcon /> },
             { name: 'Bibliothèque médias', link: MEDIAS_BASE_PATH, icon: <PermMediaIcon /> },
             { name: 'Contenus', link: CONTENT_BASE_PATH, icon: <SourceIcon /> },

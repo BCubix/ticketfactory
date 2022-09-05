@@ -20,6 +20,7 @@ export const IMAGE_FORMATS_BASE_PATH = '/admin/image-formats';
 export const CONTENT_TYPES_BASE_PATH = '/admin/types-de-contenus';
 export const CONTENT_BASE_PATH = '/admin/contenus';
 export const CONTACT_REQUEST_BASE_PATH = '/admin/demandes-de-contact';
+export const REDIRECTIONS_BASE_PATH = '/admin/redirections';
 
 export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';
@@ -46,3 +47,8 @@ export const PDF_FILE_SUPPORTED = 'application/pdf';
 export const TEXT_FILE_SUPPORTED = 'text/plain';
 
 export const ALL_FILE_SUPPORTED = `${IMAGE_FILE_SUPPORTED}, ${AUDIO_FILE_SUPPORTED}, ${VIDEO_FILE_SUPPORTED}, ${WORD_FILE_SUPPORTED}, ${EXCEL_FILE_SUPPORTED}, ${POWERPOINT_FILE_SUPPORTED}, ${PDF_FILE_SUPPORTED}, ${TEXT_FILE_SUPPORTED}`;
+
+export const REDIRECTION_TYPES = [
+    { label: 'Permanente (301)', value: 301 },
+    { label: 'Temporaire (302)', value: 302 },
+];

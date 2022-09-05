@@ -11,6 +11,7 @@ import imageFormatsReducer from '../imageFormats/imageFormatSlice';
 import contentTypesReducer from '../contentTypes/contentTypesSlice';
 import contentsReducer from '../contents/contentsSlice';
 import contactRequestsReducer from '../contactRequests/contactRequestsSlice';
+import redirectionsReducer from '../redirections/redirectionsSlice';
 
 export default configureStore({
     reducer: {
@@ -26,5 +27,6 @@ export default configureStore({
         contentTypes: contentTypesReducer,
         contents: contentsReducer,
         contactRequests: contactRequestsReducer,
+        redirections: redirectionsReducer,
     },
 });
