@@ -10,19 +10,20 @@ import { ContentTypeFieldArrayForm } from '../FieldArray/ContentTypeFieldArrayFo
 export const FIELDS_FORM_TYPE = [
     {
         type: 'text',
-        component: ({ value, onChange, onBlur, name, error }) => (
+        component: ({ value, onChange, onBlur, name, error, label = '' }) => (
             <CmtTextField
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
                 name={name}
                 error={error}
+                label={label}
             />
         ),
     },
     {
         type: 'textarea',
-        component: ({ value, onChange, onBlur, name, error }) => (
+        component: ({ value, onChange, onBlur, name, error, label = '' }) => (
             <CmtTextField
                 value={value}
                 onChange={onChange}
@@ -31,23 +32,25 @@ export const FIELDS_FORM_TYPE = [
                 error={error}
                 multiline
                 rows={4}
+                label={label}
             />
         ),
     },
     {
         type: 'boolean',
-        component: ({ value, name, setFieldValue }) => (
+        component: ({ value, name, setFieldValue, label = '' }) => (
             <Switch
                 checked={Boolean(value)}
                 onChange={(e) => {
                     setFieldValue(name, e.target.checked);
                 }}
+                label={label}
             />
         ),
     },
     {
         type: 'number',
-        component: ({ value, onChange, onBlur, name, error }) => (
+        component: ({ value, onChange, onBlur, name, error, label = '' }) => (
             <CmtTextField
                 value={value}
                 onChange={onChange}
@@ -55,12 +58,13 @@ export const FIELDS_FORM_TYPE = [
                 name={name}
                 error={error}
                 type="number"
+                label={label}
             />
         ),
     },
     {
         type: 'select',
-        component: ({ value, setFieldValue, onBlur, name, error, list, multiple }) => (
+        component: ({ value, setFieldValue, onBlur, name, error, list, multiple, label = '' }) => (
             <Select
                 value={value}
                 fullWidth
@@ -72,6 +76,7 @@ export const FIELDS_FORM_TYPE = [
                 name={name}
                 error={error}
                 multiple={multiple}
+                label={label}
             >
                 {list?.map((item, index) => (
                     <MenuItem key={index} value={item}>
@@ -83,7 +88,7 @@ export const FIELDS_FORM_TYPE = [
     },
     {
         type: 'date',
-        component: ({ value, setFieldTouched, setFieldValue, name, error }) => (
+        component: ({ value, setFieldTouched, setFieldValue, name, error, label = '' }) => (
             <CmtDatePicker
                 fullWidth
                 value={value}
@@ -93,12 +98,13 @@ export const FIELDS_FORM_TYPE = [
                 onTouched={setFieldTouched}
                 name={name}
                 error={error}
+                label={label}
             />
         ),
     },
     {
         type: 'dateTime',
-        component: ({ value, setFieldTouched, setFieldValue, name, error }) => (
+        component: ({ value, setFieldTouched, setFieldValue, name, error, label = '' }) => (
             <CmtDateTimePicker
                 fullWidth
                 value={value}
@@ -108,12 +114,13 @@ export const FIELDS_FORM_TYPE = [
                 onTouched={setFieldTouched}
                 name={name}
                 error={error}
+                label={label}
             />
         ),
     },
     {
         type: 'time',
-        component: ({ value, setFieldTouched, setFieldValue, name, error }) => (
+        component: ({ value, setFieldTouched, setFieldValue, name, error, label = '' }) => (
             <CmtTimePicker
                 fullWidth
                 value={value}
@@ -123,6 +130,7 @@ export const FIELDS_FORM_TYPE = [
                 onTouched={setFieldTouched}
                 name={name}
                 error={error}
+                label={label}
             />
         ),
     },

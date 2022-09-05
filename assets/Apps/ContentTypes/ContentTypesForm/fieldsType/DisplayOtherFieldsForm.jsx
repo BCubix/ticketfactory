@@ -1,4 +1,6 @@
+import { Box, FormControl, FormControlLabel, InputLabel } from '@mui/material';
 import React from 'react';
+import { FieldFormControl } from '../sc.ContentTypeFields';
 import { FIELDS_FORM_TYPE } from './FieldsComponents';
 
 export const DisplayOtherFieldsForm = ({
@@ -47,10 +49,11 @@ export const DisplayOtherFieldsForm = ({
                 errors?.otherFields &&
                 errors?.otherFields[field.name]
             }
+            multiple={field?.multiple}
+            list={field?.list}
             setFieldValue={setFieldValue}
             setFieldTouched={setFieldTouched}
-            touched={touched}
-            prefixName={prefixName}
+            label={field.label}
         />
     );
 };

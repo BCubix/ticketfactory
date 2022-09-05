@@ -29,7 +29,6 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 import TocIcon from '@mui/icons-material/Toc';
-import GridOnIcon from '@mui/icons-material/GridOn';
 import MenuIcon from '@mui/icons-material/Menu';
 import DescriptionIcon from '@mui/icons-material/Description';
 import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
@@ -40,13 +39,15 @@ import WidgetsIcon from '@mui/icons-material/Widgets';
 import SettingsIcon from '@mui/icons-material/Settings';
 import EmailIcon from '@mui/icons-material/Email';
 
+// import GridOnIcon from '@mui/icons-material/GridOn';
+// { name: 'Caractéristiques', link: null, icon: <GridOnIcon /> },
+
 const MENU = [
     {
         title: 'PROGRAMMATION',
         menu: [
             { name: 'Evènement', link: EVENTS_BASE_PATH, icon: <ConfirmationNumberIcon /> },
             { name: 'Catégories', link: CATEGORIES_BASE_PATH, icon: <CategoryIcon /> },
-            { name: 'Caractéristiques', link: null, icon: <GridOnIcon /> },
             { name: 'Salles', link: ROOMS_BASE_PATH, icon: <BusinessIcon /> },
             { name: 'Saisons', link: SEASONS_BASE_PATH, icon: <AccessTimeIcon /> },
         ],

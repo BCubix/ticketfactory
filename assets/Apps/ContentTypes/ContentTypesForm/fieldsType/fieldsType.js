@@ -409,11 +409,10 @@ export const FIELDS_TYPE = [
         options: [
             { name: 'required', label: 'Requis', type: 'boolean' },
             { name: 'disabled', label: 'Désactivé', type: 'boolean' },
+        ],
+        otherFields: [
             { name: 'token', label: 'Token', type: 'text' },
             { name: 'mapStyle', label: 'Style de carte', type: 'text' },
-            { name: 'lat', label: 'Latitude du centre', type: 'text' },
-            { name: 'lng', label: 'Longitude du centre', type: 'text' },
-            { name: 'zoom', label: 'Zoom', type: 'number' },
         ],
     },
     {
