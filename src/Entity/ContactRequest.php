@@ -16,37 +16,37 @@ class ContactRequest extends Datable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $firstName = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $lastName = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $email = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $phone = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $subject = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'text')]
     private ?string $message = null;
 
 
