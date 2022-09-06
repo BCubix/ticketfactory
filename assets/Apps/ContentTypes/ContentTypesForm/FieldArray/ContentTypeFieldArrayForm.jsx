@@ -3,9 +3,10 @@ import { Box } from '@mui/system';
 import { FieldArray } from 'formik';
 import React from 'react';
 import { FieldArrayElem } from './FieldArrayElem';
-import { FIELDS_TYPE } from '../fieldsType/fieldsType';
 import { FieldElemWrapper } from '../sc.ContentTypeFields';
 import { CmtEndPositionWrapper } from '../../../../Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
+import { useSelector } from 'react-redux';
+import { contentTypeFieldsSelector } from '../../../../redux/contentTypeFields/contentTypeFieldsSlice';
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -17,6 +18,8 @@ export const ContentTypeFieldArrayForm = ({
     setFieldTouched,
     prefixName = '',
 }) => {
+    const { contentTypeFields } = useSelector(contentTypeFieldsSelector);
+
     return (
         <>
             <FieldArray name={`${prefixName}fields`}>
@@ -62,17 +65,24 @@ export const ContentTypeFieldArrayForm = ({
                                     let options = {};
                                     let validations = {};
 
-                                    const fieldTypeObject = FIELDS_TYPE?.find(
-                                        (el) => el.name === fieldType
+                                    const key = Object.keys(contentTypeFields).find(
+                                        (k) => k === fieldType
                                     );
 
-                                    fieldTypeObject?.options?.forEach((el) => {
-                                        options[el.name] = el.type === 'boolean' ? false : '';
-                                    });
+                                    const fieldTypeObject = contentTypeFields[key];
 
-                                    fieldTypeObject?.validations?.forEach((el) => {
-                                        validations[el.name] = el.type === 'boolean' ? false : '';
-                                    });
+                                    Object.entries(fieldTypeObject?.options)?.forEach(
+                                        ([key, value]) => {
+                                            options[key] = value.type === 'boolean' ? false : '';
+                                        }
+                                    );
+
+                                    Object.entries(fieldTypeObject?.validations)?.forEach(
+                                        ([key, value]) => {
+                                            validations[key] =
+                                                value.type === 'boolean' ? false : '';
+                                        }
+                                    );
 
                                     push({
                                         title: '',

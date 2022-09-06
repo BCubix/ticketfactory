@@ -31,7 +31,7 @@ export const ContentTypesList = () => {
         if (!loading && !contentTypes && !error) {
             dispatch(getContentTypesAction());
         }
-    });
+    }, []);
 
     const handleDelete = async (id) => {
         const check = await authApi.checkIsAuth();

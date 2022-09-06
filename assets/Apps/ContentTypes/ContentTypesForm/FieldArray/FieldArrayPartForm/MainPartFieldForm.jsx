@@ -1,10 +1,20 @@
 import { FormControl, InputLabel, ListSubheader, MenuItem, Select } from '@mui/material';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { CmtTextField } from '../../../../../Components/CmtTextField/CmtTextField';
+import { contentTypeFieldsSelector } from '../../../../../redux/contentTypeFields/contentTypeFieldsSlice';
 import { getNestedFormikError } from '../../../../../services/utils/getNestedFormikError';
-import { FIELDS_TYPE, FIELDS_TYPE_LIST } from '../../fieldsType/fieldsType';
+import { FIELDS_TYPE_LIST } from '../../fieldsType/fieldsType';
 import { OtherFieldsPartFieldForm } from './OtherFieldsPartFieldForm';
+
+function importAll(r) {
+    let components = {};
+    r.keys().map((item, index) => {
+        components[item.replace('./', '')] = r(item).default;
+    });
+    return components;
+}
 
 export const MainPartFieldForm = ({
     values,
@@ -17,31 +27,52 @@ export const MainPartFieldForm = ({
     setFieldTouched,
     prefixName,
 }) => {
+    const { contentTypeFields } = useSelector(contentTypeFieldsSelector);
     const [fieldsTypeList, setFieldsTypeList] = useState([]);
 
+    const Components = importAll(require.context('./Tests', false, /\.jsx$/));
+
+    console.log(Components);
+    const App = Components['Test1Component.jsx'];
+
     const handleChangeFieldType = (value) => {
-        const fieldTypeObject = FIELDS_TYPE?.find((el) => el.name === value);
+        let fieldTypeObject = contentTypeFields[value];
+
+        if (!fieldTypeObject) {
+            return;
+        }
+
         let options = {};
         let validations = {};
         let otherFields = {};
 
-        fieldTypeObject?.options?.forEach((el) => {
-            options[el.name] =
-                (values?.options && values?.options[el.name]) ||
-                (el.type === 'boolean' ? false : '');
-        });
+        if (fieldTypeObject?.options) {
+            Object.entries(fieldTypeObject?.options)?.forEach(([key, value]) => {
+                options[key] =
+                    (values?.options && values?.options[key]) ||
+                    (value.type === 'boolean' ? false : '');
+            });
+        }
 
-        fieldTypeObject?.validations?.forEach((el) => {
-            validations[el.name] =
-                (values?.validations && values?.validations[el.name]) || el.initialValue;
-        });
+        if (fieldTypeObject?.validations) {
+            Object.entries(fieldTypeObject?.validations)?.forEach(([key, value]) => {
+                if (value?.validations?.react) {
+                    validations[key] =
+                        (values?.validations && values?.validations[key]) ||
+                        value?.react?.initialValue ||
+                        (value?.react?.type === 'boolean' ? false : '');
+                }
+            });
+        }
 
-        fieldTypeObject?.otherFields?.forEach((el) => {
-            otherFields[el.name] =
-                (values?.otherFields && values?.otherFields[el.name]) ||
-                el.initialValue ||
-                (el.type === 'boolean' ? false : '');
-        });
+        if (fieldTypeObject?.otherFields) {
+            Object.entries(fieldTypeObject?.otherFields)?.forEach(([key, value]) => {
+                otherFields[key] =
+                    (values?.otherFields && values?.otherFields[key]) ||
+                    value.initialValue ||
+                    (value.type === 'boolean' ? false : '');
+            });
+        }
 
         setFieldValue(`${prefixName}fields.${index}.options`, options);
         setFieldValue(`${prefixName}fields.${index}.validations`, validations);
@@ -61,6 +92,10 @@ export const MainPartFieldForm = ({
 
         setFieldsTypeList(list);
     }, []);
+
+    if (!fieldsTypeList) {
+        return <></>;
+    }
 
     return (
         <>
@@ -133,6 +168,8 @@ export const MainPartFieldForm = ({
                 setFieldTouched={setFieldTouched}
                 prefixName={prefixName}
             />
+
+            <App name={'toto'} />
         </>
     );
 };
