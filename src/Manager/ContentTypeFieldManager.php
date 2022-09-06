@@ -67,7 +67,7 @@ class ContentTypeFieldManager extends AbstractManager
             $realOptions = [];
             foreach ($currOptions as $currOption) {
                 if (!empty($currOption)) {
-                    $realOptions[] = $options[$currOption];
+                    $realOptions[$currOption] = $options[$currOption];
                 }
             }
             $this->data[$name]['options'] = $realOptions;
@@ -78,7 +78,7 @@ class ContentTypeFieldManager extends AbstractManager
             $realValidations = [];
             foreach ($currValidations as $currValidation) {
                 if (!empty($currValidation)) {
-                    $realValidations[] = $validations[$currValidation];
+                    $realValidations[$currValidation] = $validations[$currValidation];
                 }
             }
             $this->data[$name]['validations'] = $realValidations;
