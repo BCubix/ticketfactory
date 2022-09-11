@@ -7,8 +7,14 @@ import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import { ContentTypeFieldArrayForm } from './FieldArray/ContentTypeFieldArrayForm';
+import { useMemo } from 'react';
+import ContentTypesModules from './ContentTypeModules';
 
 export const ContentTypesForm = ({ initialValues = null }) => {
+    const getContentTypesModules = useMemo(() => {
+        return ContentTypesModules();
+    }, []);
+
     const contentTypeSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du type de contenus.'),
         fields: Yup.array()
@@ -65,6 +71,7 @@ export const ContentTypesForm = ({ initialValues = null }) => {
 
                     <CmtFormBlock title="Champs">
                         <ContentTypeFieldArrayForm
+                            contentTypesModules={getContentTypesModules}
                             values={values}
                             errors={errors}
                             touched={touched}

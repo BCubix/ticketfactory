@@ -13,6 +13,8 @@ export const CmtDatePicker = ({
     label,
     fullWidth = false,
     onTouched = null,
+    inputVariant = 'standard',
+    inputSize = 'normal',
     id = '',
     ...rest
 }) => {
@@ -63,7 +65,8 @@ export const CmtDatePicker = ({
                         return (
                             <TextField
                                 {...params}
-                                variant="standard"
+                                variant={inputVariant}
+                                size={inputSize}
                                 helperText={error}
                                 onClick={() => {
                                     setOpen(true);

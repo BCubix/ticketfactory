@@ -13,6 +13,8 @@ export const CmtTimePicker = ({
     label,
     fullWidth = false,
     onTouched = null,
+    inputVariant = 'standard',
+    inputSize = 'normal',
     id = '',
     ...rest
 }) => {
@@ -32,7 +34,7 @@ export const CmtTimePicker = ({
                     name={name}
                     fullWidth
                     open={open}
-                    value={value || null}
+                    value={value ? moment(value, 'HH:mm') : null}
                     onChange={(date) => {
                         setValue(date);
                     }}
@@ -64,13 +66,14 @@ export const CmtTimePicker = ({
                         return (
                             <TextField
                                 {...params}
-                                variant="standard"
+                                variant={inputVariant}
                                 helperText={error}
                                 onClick={() => {
                                     setOpen(true);
                                 }}
                                 fullWidth={fullWidth}
                                 color="primary"
+                                size={inputSize}
                                 id={id}
                             />
                         );

@@ -5,8 +5,6 @@ import React from 'react';
 import { FieldArrayElem } from './FieldArrayElem';
 import { FieldElemWrapper } from '../sc.ContentTypeFields';
 import { CmtEndPositionWrapper } from '../../../../Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
-import { useSelector } from 'react-redux';
-import { contentTypeFieldsSelector } from '../../../../redux/contentTypeFields/contentTypeFieldsSlice';
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -17,9 +15,8 @@ export const ContentTypeFieldArrayForm = ({
     setFieldValue,
     setFieldTouched,
     prefixName = '',
+    contentTypesModules,
 }) => {
-    const { contentTypeFields } = useSelector(contentTypeFieldsSelector);
-
     return (
         <>
             <FieldArray name={`${prefixName}fields`}>
@@ -41,6 +38,7 @@ export const ContentTypeFieldArrayForm = ({
                                     setFieldValue={setFieldValue}
                                     setFieldTouched={setFieldTouched}
                                     prefixName={prefixName}
+                                    contentTypesModules={contentTypesModules}
                                 />
 
                                 <Button
@@ -62,35 +60,16 @@ export const ContentTypeFieldArrayForm = ({
                                 color="primary"
                                 onClick={() => {
                                     const fieldType = 'text';
-                                    let options = {};
-                                    let validations = {};
-
-                                    const key = Object.keys(contentTypeFields).find(
-                                        (k) => k === fieldType
-                                    );
-
-                                    const fieldTypeObject = contentTypeFields[key];
-
-                                    Object.entries(fieldTypeObject?.options)?.forEach(
-                                        ([key, value]) => {
-                                            options[key] = value.type === 'boolean' ? false : '';
-                                        }
-                                    );
-
-                                    Object.entries(fieldTypeObject?.validations)?.forEach(
-                                        ([key, value]) => {
-                                            validations[key] =
-                                                value.type === 'boolean' ? false : '';
-                                        }
-                                    );
+                                    const initialValues =
+                                        contentTypesModules['TextFieldType'].getInitialValues();
 
                                     push({
                                         title: '',
                                         name: '',
                                         fieldType: fieldType,
                                         instructions: '',
-                                        options: options || {},
-                                        validations: validations || {},
+                                        options: initialValues.options,
+                                        validations: initialValues.validations || {},
                                     });
                                 }}
                             >

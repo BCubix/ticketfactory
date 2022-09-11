@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import {
-    contentTypeFieldsSelector,
-    getContentTypeFieldsAction,
-} from '../../../redux/contentTypeFields/contentTypeFieldsSlice';
 import { getContentTypesAction } from '../../../redux/contentTypes/contentTypesSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
@@ -16,15 +12,8 @@ import { ContentTypesForm } from '../ContentTypesForm/ContentTypesForm';
 export const EditContentType = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { loading, contentTypeFields, error } = useSelector(contentTypeFieldsSelector);
     const { id } = useParams();
     const [contentType, setContentType] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !contentTypeFields && !error) {
-            dispatch(getContentTypeFieldsAction());
-        }
-    }, []);
 
     const getContentType = async (id) => {
         const check = await authApi.checkIsAuth();
@@ -81,7 +70,7 @@ export const EditContentType = () => {
         }
     };
 
-    if (!contentType || !contentTypeFields) {
+    if (!contentType) {
         return <></>;
     }
 

@@ -1,8 +1,8 @@
-import React from 'react';
+import { Box } from '@mui/system';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { CmtTabs } from '../../../../Components/CmtTabs/CmtTabs';
-import { MainPartFieldForm } from './FieldArrayPartForm/MainPartFieldForm';
-import { OptionsPartFieldForm } from './FieldArrayPartForm/OptionsPartFieldForm';
-import { ValidationPartFieldForm } from './FieldArrayPartForm/ValidationPartFieldForm';
+import { MainPartFieldForm } from './MainPartFieldForm';
 
 export const FieldArrayElem = ({
     values,
@@ -14,12 +14,45 @@ export const FieldArrayElem = ({
     setFieldValue,
     setFieldTouched,
     prefixName,
+    contentTypesModules,
 }) => {
+    const [tabList, setTabList] = useState([]);
+
+    useEffect(() => {
+        const moduleName =
+            String(values.fieldType).charAt(0).toUpperCase() + values.fieldType?.slice(1);
+
+        const list = contentTypesModules[`${moduleName}FieldType`]?.getTabList();
+
+        setTabList(list);
+    }, [values.fieldType]);
+
+    if (!tabList) {
+        return <></>;
+    }
+
+    const list = tabList.map((item) => ({
+        label: item.label,
+        component: (
+            <item.component
+                values={values}
+                index={index}
+                errors={errors}
+                touched={touched}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                prefixName={prefixName}
+            />
+        ),
+    }));
+
     return (
         <CmtTabs
             list={[
                 {
-                    label: 'Informations générales',
+                    label: 'Informations générale',
                     component: (
                         <MainPartFieldForm
                             values={values}
@@ -31,42 +64,11 @@ export const FieldArrayElem = ({
                             setFieldTouched={setFieldTouched}
                             index={index}
                             prefixName={prefixName}
+                            contentTypesModules={contentTypesModules}
                         />
                     ),
                 },
-                {
-                    label: 'Options',
-                    component: (
-                        <OptionsPartFieldForm
-                            values={values}
-                            fieldIndex={index}
-                            errors={errors && errors[index]}
-                            touched={touched && touched[index]}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            prefixName={prefixName}
-                        />
-                    ),
-                },
-                {
-                    label: 'Validation',
-                    component: (
-                        <ValidationPartFieldForm
-                            values={values}
-                            fieldIndex={index}
-                            errors={errors && errors[index]}
-                            touched={touched && touched[index]}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            prefixName={prefixName}
-                        />
-                    ),
-                    hidden: Object.keys(values?.validations)?.length === 0,
-                },
+                ...list,
             ]}
             tabValue={0}
         />
