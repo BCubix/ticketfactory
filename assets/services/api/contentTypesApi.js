@@ -13,11 +13,11 @@ const contentTypesApi = {
                             title: 'Nom du spectacle',
                             name: 'spectacleName',
                             fieldType: 'text',
-                            instruction:
+                            instructions:
                                 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
                             options: {
                                 required: true,
-                                disabled: true,
+                                disabled: false,
                                 trim: false,
                             },
                             validations: {
@@ -26,101 +26,62 @@ const contentTypesApi = {
                             },
                         },
                         {
-                            title: 'Nombre de place',
-                            name: 'placeNb',
-                            fieldType: 'number',
-                            instruction: 'Nombre de place pour le spectacle.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                                scale: '',
-                            },
-                            validations: {
-                                min: '',
-                                max: '',
-                            },
-                        },
-                        {
-                            title: 'Description',
-                            name: 'description',
-                            fieldType: 'contentEditor',
-                            instruction: 'Description du spectacle.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                                trim: false,
-                            },
-                            validations: {
-                                minLength: '',
-                                maxLength: '',
-                            },
-                        },
-                        {
-                            title: 'Image',
-                            name: 'image',
-                            fieldType: 'image',
-                            instruction: 'Image du spectacle.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                                multiple: false,
-                            },
-                            validations: {
-                                minLength: '',
-                                maxLength: '',
-                            },
-                        },
-                        {
-                            title: 'Couleur',
-                            name: 'color',
-                            fieldType: 'color',
-                            instruction: 'Couleur.',
+                            title: 'Groupe de champs',
+                            name: 'groupF',
+                            fieldType: 'groupFields',
+                            instructions: 'Groupe de champs.',
                             options: {
                                 required: true,
                                 disabled: false,
                             },
-                        },
-                        {
-                            title: 'Choix',
-                            name: 'choiceList',
-                            fieldType: 'choiceList',
-                            instruction: 'choix.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                                multiple: true,
-                                choices: 'red:Red\ngreen:Green',
-                            },
-                        },
-                        {
-                            title: 'radio',
-                            name: 'radioButton',
-                            fieldType: 'radioButton',
-                            instruction: 'Radio.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                                choices: 'red:Red\ngreen:Green',
-                            },
-                        },
-                        {
-                            title: 'checkbox',
-                            name: 'checkbox',
-                            fieldType: 'checkbox',
-                            instruction: 'Checkbox.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                            },
-                        },
-                        {
-                            title: 'Switch',
-                            name: 'switch',
-                            fieldType: 'true/false',
-                            instruction: 'Switch.',
-                            options: {
-                                required: true,
-                                disabled: false,
+                            parameters: {
+                                fields: [
+                                    {
+                                        title: 'Titre du block',
+                                        name: 'blockTitle',
+                                        fieldType: 'text',
+                                        options: {
+                                            required: true,
+                                            disabled: false,
+                                            trim: false,
+                                        },
+                                        validations: {
+                                            minLength: 8,
+                                            maxLength: 50,
+                                        },
+                                    },
+                                    {
+                                        title: 'TextArea',
+                                        name: 'textArea',
+                                        fieldType: 'textarea',
+                                        instructions:
+                                            'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
+                                        options: {
+                                            required: true,
+                                            disabled: false,
+                                            trim: false,
+                                        },
+                                        validations: {
+                                            minLength: 8,
+                                            maxLength: 50,
+                                        },
+                                    },
+                                    {
+                                        title: 'Nombre de place',
+                                        name: 'placeNb',
+                                        fieldType: 'number',
+                                        instructions: 'Nombre de place pour le spectacle.',
+                                        options: {
+                                            required: true,
+                                            disabled: false,
+                                            scale: '',
+                                        },
+                                        validations: {
+                                            min: '',
+                                            max: '',
+                                        },
+                                    },
+                                ],
                             },
                         },
                     ],
@@ -144,7 +105,7 @@ const contentTypesApi = {
                         title: 'Nom du spectacle',
                         name: 'spectacleName',
                         fieldType: 'text',
-                        instruction:
+                        instructions:
                             'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
                         options: {
                             required: true,
@@ -191,3 +152,182 @@ const contentTypesApi = {
 };
 
 export default contentTypesApi;
+
+/* {
+    title: 'Nom du spectacle',
+    name: 'spectacleName',
+    fieldType: 'text',
+    instructions:
+        'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
+    options: {
+        required: true,
+        disabled: false,
+        trim: false,
+    },
+    validations: {
+        minLength: 8,
+        maxLength: 50,
+    },
+},
+{
+    title: 'TextArea',
+    name: 'textArea',
+    fieldType: 'textarea',
+    instructions:
+        'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
+    options: {
+        required: true,
+        disabled: false,
+        trim: false,
+    },
+    validations: {
+        minLength: 8,
+        maxLength: 50,
+    },
+},
+{
+    title: 'Nombre de place',
+    name: 'placeNb',
+    fieldType: 'number',
+    instructions: 'Nombre de place pour le spectacle.',
+    options: {
+        required: true,
+        disabled: false,
+        scale: '',
+    },
+    validations: {
+        min: '',
+        max: '',
+    },
+},
+{
+    title: 'Date',
+    name: 'date',
+    fieldType: 'time',
+    instructions: 'Nombre de place pour le spectacle.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+    validations: {
+        disablePast: true,
+        minDate: '',
+        maxDate: '',
+    },
+},
+{
+    title: 'Description',
+    name: 'description',
+    fieldType: 'contentEditor',
+    instructions: 'Description du spectacle.',
+    options: {
+        required: true,
+        disabled: false,
+        trim: false,
+    },
+    validations: {
+        minLength: '',
+        maxLength: '',
+    },
+},
+{
+    title: 'Fichier',
+    name: 'file',
+    fieldType: 'slider',
+    instructions: 'Fichiers du spectacle.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+    validations: {
+        minLength: '',
+        maxLength: '',
+    },
+},
+{
+    title: 'Couleur',
+    name: 'color',
+    fieldType: 'color',
+    instructions: 'Couleur.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+},
+{
+    title: 'Choix',
+    name: 'choiceList',
+    fieldType: 'choiceList',
+    instructions: 'choix.',
+    options: {
+        required: true,
+        disabled: false,
+        multiple: true,
+    },
+    parameters: {
+        choices: 'red:Red\ngreen:Green',
+    },
+},
+{
+    title: 'radio',
+    name: 'radioButton',
+    fieldType: 'radioButton',
+    instructions: 'Radio.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+    parameters: {
+        choices: 'red:Red\ngreen:Green',
+    },
+},
+{
+    title: 'checkbox',
+    name: 'checkbox',
+    fieldType: 'checkbox',
+    instructions: 'Checkbox.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+},
+{
+    title: 'Switch',
+    name: 'switch',
+    fieldType: 'trueFalse',
+    instructions: 'Switch.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+},
+{
+    title: 'Event Link',
+    name: 'eventLink',
+    fieldType: 'eventLink',
+    instructions: 'Event Link.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+},
+{
+    title: 'Category Link',
+    name: 'categoryLink',
+    fieldType: 'categoryLink',
+    instructions: 'Category Link.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+},
+{
+    title: 'Tag Link',
+    name: 'tagLink',
+    fieldType: 'tagLink',
+    instructions: 'Tag Link.',
+    options: {
+        required: true,
+        disabled: false,
+    },
+}, */

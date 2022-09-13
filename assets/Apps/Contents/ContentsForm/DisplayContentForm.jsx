@@ -11,6 +11,8 @@ export const DisplayContentForm = ({
     setFieldValue,
     setFieldTouched,
     contentType,
+    contentModules,
+    prefixName = '',
 }) => {
     if (!contentType) {
         return <></>;
@@ -29,6 +31,8 @@ export const DisplayContentForm = ({
                 field={item}
                 key={index}
                 index={index}
+                contentModules={contentModules}
+                prefixName={prefixName}
             />
         </Box>
     ));

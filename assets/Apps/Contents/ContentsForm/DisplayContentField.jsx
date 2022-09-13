@@ -1,6 +1,5 @@
 import React from 'react';
-import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import { CONTENT_FIELD_COMPONENT } from './ContentFieldComponent';
+import { CONTENT_MODULES_EXTENSION } from '../../../Constant';
 
 export const DisplayContentField = ({
     values,
@@ -11,27 +10,37 @@ export const DisplayContentField = ({
     setFieldValue,
     setFieldTouched,
     field,
-    index,
+    contentModules,
+    prefixName,
 }) => {
-    const FormComponent = CONTENT_FIELD_COMPONENT.find(
-        (el) => el.type === field.fieldType
-    )?.component;
+    const moduleName =
+        String(field.fieldType).charAt(0).toUpperCase() +
+        field.fieldType?.slice(1) +
+        CONTENT_MODULES_EXTENSION;
+
+    const FormComponent =
+        (contentModules &&
+            contentModules[moduleName] &&
+            contentModules[moduleName].FormComponent) ||
+        null;
 
     if (!FormComponent) {
-        return <></>;
+        return <>Ce composant n'existe pas</>;
     }
 
     return (
         <FormComponent
-            value={values?.fields[index].value}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            name={`fields.${index}.value`}
-            error={getNestedFormikError(touched.fields, errors.fields, index, 'value')}
+            values={values?.fields}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            name={`${prefixName}fields.${field.name}`}
+            errors={errors.fields}
+            touched={touched.fields}
             setFieldValue={setFieldValue}
             setFieldTouched={setFieldTouched}
             label={field.title}
             field={field}
+            contentModules={contentModules}
         />
     );
 };

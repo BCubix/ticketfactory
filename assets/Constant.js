@@ -52,3 +52,6 @@ export const REDIRECTION_TYPES = [
     { label: 'Permanente (301)', value: 301 },
     { label: 'Temporaire (302)', value: 302 },
 ];
+
+export const CONTENT_TYPE_MODULES_EXTENSION = 'FieldType';
+export const CONTENT_MODULES_EXTENSION = 'FieldContentType';

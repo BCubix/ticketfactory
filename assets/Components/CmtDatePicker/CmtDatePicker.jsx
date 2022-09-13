@@ -16,6 +16,7 @@ export const CmtDatePicker = ({
     inputVariant = 'standard',
     inputSize = 'normal',
     id = '',
+    disablePast = false,
     ...rest
 }) => {
     const [open, setOpen] = useState(false);
@@ -26,6 +27,7 @@ export const CmtDatePicker = ({
                 <DatePicker
                     allowKeyboardControl
                     disableCloseOnSelect={false}
+                    disablePast={disablePast}
                     openTo={openToYear ? 'year' : 'day'}
                     inputFormat="DD/MM/YYYY"
                     clearable

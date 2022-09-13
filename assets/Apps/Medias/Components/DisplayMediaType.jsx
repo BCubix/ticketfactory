@@ -7,7 +7,12 @@ const MEDIA_TYPE = [
     {
         type: 'image',
         component: ({ media, ...typeProps }) => (
-            <Box component="img" src={MEDIA_FILE_BASE_URL + media.documentUrl} alt={media.alt} />
+            <Box
+                component="img"
+                src={MEDIA_FILE_BASE_URL + media.documentUrl}
+                alt={media.alt}
+                {...typeProps}
+            />
         ),
     },
     {
@@ -18,6 +23,8 @@ const MEDIA_TYPE = [
                 src={`${ICONS_FILE_PATH}/Fichiers Audio.png`}
                 alt="Fichier Audio"
                 sx={{ padding: 5 }}
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },
@@ -29,6 +36,8 @@ const MEDIA_TYPE = [
                 src={`${ICONS_FILE_PATH}/Fichiers Vidéos.png`}
                 alt="Fichier Vidéo"
                 sx={{ padding: 5 }}
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },
@@ -40,6 +49,8 @@ const MEDIA_TYPE = [
                 src={`${ICONS_FILE_PATH}/Fichiers Word.png`}
                 alt="Fichier Word"
                 sx={{ padding: 5 }}
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },
@@ -51,6 +62,8 @@ const MEDIA_TYPE = [
                 src={`${ICONS_FILE_PATH}/Fichiers Excel.png`}
                 alt="Fichier Excel"
                 sx={{ padding: 5 }}
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },
@@ -62,6 +75,8 @@ const MEDIA_TYPE = [
                 alt="Fichier Powerpoint"
                 src={`${ICONS_FILE_PATH}/Fichiers Powerpoint.png`}
                 sx={{ padding: 5 }}
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },
@@ -73,6 +88,8 @@ const MEDIA_TYPE = [
                 sx={{ padding: 5 }}
                 src={`${ICONS_FILE_PATH}/Fichiers PDF.png`}
                 alt="Fichier Pdf"
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },
@@ -84,6 +101,8 @@ const MEDIA_TYPE = [
                 sx={{ padding: 5 }}
                 src={`${ICONS_FILE_PATH}/Fichiers Text.png`}
                 alt="Fichier Text"
+                maxHeight="100%"
+                maxWidth="100%"
             />
         ),
     },

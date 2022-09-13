@@ -2,6 +2,7 @@ import { FormControl, InputLabel, ListSubheader, MenuItem, Select } from '@mui/m
 import React from 'react';
 import { useMemo } from 'react';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
+import { CONTENT_TYPE_MODULES_EXTENSION } from '../../../../Constant';
 import { getNestedFormikError } from '../../../../services/utils/getNestedFormikError';
 
 export const MainPartFieldForm = ({
@@ -17,10 +18,15 @@ export const MainPartFieldForm = ({
     contentTypesModules,
 }) => {
     const moduleName =
-        String(values.fieldType).charAt(0).toUpperCase() + values.fieldType?.slice(1) + 'FieldType';
+        String(values.fieldType).charAt(0).toUpperCase() +
+        values.fieldType?.slice(1) +
+        CONTENT_TYPE_MODULES_EXTENSION;
 
     const handleChangeFieldType = (value) => {
-        const modName = String(value).charAt(0).toUpperCase() + value?.slice(1) + 'FieldType';
+        const modName =
+            String(value).charAt(0).toUpperCase() +
+            value?.slice(1) +
+            CONTENT_TYPE_MODULES_EXTENSION;
 
         contentTypesModules[modName]?.setInitialValues(
             `${prefixName}fields.${index}`,

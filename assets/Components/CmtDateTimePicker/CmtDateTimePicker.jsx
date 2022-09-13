@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 export const CmtDateTimePicker = ({
     openToYear = false,
+    disablePast = false,
     value = null,
     setValue,
     name,
@@ -13,6 +14,8 @@ export const CmtDateTimePicker = ({
     label,
     fullWidth = false,
     onTouched = null,
+    inputVariant = 'standard',
+    inputSize = 'normal',
     id = '',
     ...rest
 }) => {
@@ -63,7 +66,8 @@ export const CmtDateTimePicker = ({
                         return (
                             <TextField
                                 {...params}
-                                variant="standard"
+                                variant={inputVariant}
+                                size={inputSize}
                                 helperText={error}
                                 onClick={() => {
                                     setOpen(true);

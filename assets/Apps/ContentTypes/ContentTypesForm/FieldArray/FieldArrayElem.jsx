@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { CmtTabs } from '../../../../Components/CmtTabs/CmtTabs';
+import { CONTENT_TYPE_MODULES_EXTENSION } from '../../../../Constant';
 import { MainPartFieldForm } from './MainPartFieldForm';
 
 export const FieldArrayElem = ({
@@ -22,7 +23,8 @@ export const FieldArrayElem = ({
         const moduleName =
             String(values.fieldType).charAt(0).toUpperCase() + values.fieldType?.slice(1);
 
-        const list = contentTypesModules[`${moduleName}FieldType`]?.getTabList();
+        const list =
+            contentTypesModules[`${moduleName}${CONTENT_TYPE_MODULES_EXTENSION}`]?.getTabList();
 
         setTabList(list);
     }, [values.fieldType]);

@@ -4,10 +4,10 @@ import React from 'react';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { FieldFormControl } from '../sc.ContentTypeFields';
 
-const NAME = 'choiceList';
-const LABEL = 'Liste de choix';
+const NAME = 'radioButton';
+const LABEL = 'Bouton radio';
 
-const TYPE = 'choiceList';
+const TYPE = 'radioButton';
 const TYPE_GROUP_NAME = 'Choix';
 
 const ComplementInformation = ({ values, index, handleChange, handleBlur, prefixName, errors }) => {

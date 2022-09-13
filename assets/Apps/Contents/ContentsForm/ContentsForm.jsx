@@ -1,24 +1,20 @@
-import {
-    Box,
-    Button,
-    FormControl,
-    FormControlLabel,
-    InputLabel,
-    MenuItem,
-    Select,
-    Switch,
-    Typography,
-} from '@mui/material';
+import { Box, Button, FormControlLabel, Switch, Typography } from '@mui/material';
 import { Formik } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import * as Yup from 'yup';
 import { DisplayContentForm } from './DisplayContentForm';
 import { useState } from 'react';
+import ContentModules from './ContentModules';
+import { CONTENT_MODULES_EXTENSION } from '../../../Constant';
 
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType }) => {
     const [initValue, setInitValue] = useState(null);
+
+    const getContentModules = useMemo(() => {
+        return ContentModules();
+    }, []);
 
     let contentValidationSchema = Yup.object().shape({
         contentType: Yup.number().required('Veuillez renseigner le type de contenu.'),
@@ -35,13 +31,17 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             return;
         }
 
-        let fields = [];
+        const formModules = getContentModules;
+
+        let fields = {};
 
         selectedContentType?.fields?.forEach((el) => {
-            fields.push({
-                name: el.name,
-                value: '',
-            });
+            const moduleName =
+                String(el.fieldType).charAt(0).toUpperCase() +
+                el.fieldType?.slice(1) +
+                CONTENT_MODULES_EXTENSION;
+
+            fields[el.name] = formModules[moduleName]?.getInitialValue(el) || '';
         });
 
         setInitValue({
@@ -90,6 +90,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                             setFieldTouched={setFieldTouched}
                             setFieldValue={setFieldValue}
                             contentType={selectedContentType}
+                            contentModules={getContentModules}
                         />
                     </CmtFormBlock>
 
