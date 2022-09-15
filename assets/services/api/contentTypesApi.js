@@ -84,6 +84,20 @@ const contentTypesApi = {
                                 ],
                             },
                         },
+                        {
+                            title: 'Fichiers utiles',
+                            name: 'utilsFile',
+                            fieldType: 'file',
+                            instructions: 'Fichiers du spectacle.',
+                            options: {
+                                required: true,
+                                disabled: false,
+                            },
+                            validations: {
+                                minLength: '',
+                                maxLength: '',
+                            },
+                        },
                     ],
                 },
             ];

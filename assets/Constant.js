@@ -21,6 +21,7 @@ export const CONTENT_TYPES_BASE_PATH = '/admin/types-de-contenus';
 export const CONTENT_BASE_PATH = '/admin/contenus';
 export const CONTACT_REQUEST_BASE_PATH = '/admin/demandes-de-contact';
 export const REDIRECTIONS_BASE_PATH = '/admin/redirections';
+export const MENUS_BASE_PATH = '/admin/menus';
 
 export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';

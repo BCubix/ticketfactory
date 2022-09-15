@@ -2,7 +2,6 @@ import { eventsSelector } from '@Redux/events/eventsSlice';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { getEventsAction } from '@Redux/events/eventsSlice';
 import { ListTable } from '@Components/ListTable/ListTable';
@@ -54,8 +53,7 @@ export const EventsList = () => {
 
     return (
         <>
-            <CmtPageWrapper>
-                <CmtPageTitle>Evènements</CmtPageTitle>
+            <CmtPageWrapper title={'Evènements'}>
                 <Card sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">

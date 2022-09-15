@@ -15,6 +15,7 @@ import {
     LOGIN_PATH,
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
+    MENUS_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
@@ -63,6 +64,7 @@ import { EditContactRequest } from './Apps/ContactRequests/EditContactRequest/Ed
 import { RedirectionsList } from './Apps/Redirections/RedirectionsList/RedirectionsList';
 import { CreateRedirection } from './Apps/Redirections/CreateRedirection/CreateRedirection';
 import { EditRedirection } from './Apps/Redirections/EditRedirection/EditRedirection';
+import { MenusList } from './Apps/Menus/MenusList/MenusList';
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -423,6 +425,15 @@ export const App = () => {
                             element={
                                 <AuthenticatedLayout>
                                     <EditRedirection />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={MENUS_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <MenusList />
                                 </AuthenticatedLayout>
                             }
                         />

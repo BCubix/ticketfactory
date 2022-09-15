@@ -66,10 +66,10 @@ const FormComponent = ({
                             {item.label}
                         </MenuItem>
                     ))}
-                    {touched && touched[field.name] && errors && errors[field.name] && (
-                        <FormHelperText error>{errors[field.name]}</FormHelperText>
-                    )}
                 </Select>
+                {touched && touched[field.name] && errors && errors[field.name] && (
+                    <FormHelperText error>{errors[field.name]}</FormHelperText>
+                )}
             </FormControl>
             {field.instructions && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
