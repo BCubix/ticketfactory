@@ -27,7 +27,7 @@ const FormComponent = ({
 
     const getList = useMemo(() => {
         if (!field || !field?.parameters?.choices) {
-            return;
+            return null;
         }
 
         let list = [];

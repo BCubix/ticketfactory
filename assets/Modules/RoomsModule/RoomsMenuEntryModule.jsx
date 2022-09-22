@@ -1,4 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Checkbox, Typography } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    Checkbox,
+    Typography,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
@@ -8,8 +15,12 @@ import roomsApi from '../../services/api/roomsApi';
 import { NotificationManager } from 'react-notifications';
 import { REDIRECTION_TIME } from '../../Constant';
 import { Box } from '@mui/system';
+import { loginFailure } from '../../redux/profile/profileSlice';
 
-export const MenuEntryModule = () => {
+const MENU_TYPE = 'rooms';
+const MENU_TYPE_LABEL = 'Salle';
+
+export const MenuEntryModule = ({ addElementToMenu }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
@@ -42,11 +53,7 @@ export const MenuEntryModule = () => {
 
     return (
         <Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-            >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
                 <Typography>Salles</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -62,7 +69,6 @@ export const MenuEntryModule = () => {
                                 newValue.push(item.id);
                             }
 
-                            console.log(newValue);
                             setSelectedAdd([...newValue]);
                         }}
                     >
@@ -72,6 +78,33 @@ export const MenuEntryModule = () => {
                         </Typography>
                     </Box>
                 ))}
+
+                <Box display="flex" justifyContent={'flex-end'}>
+                    <Button
+                        variant="contained"
+                        disabled={selectedAdd.length === 0}
+                        onClick={() => {
+                            let submitList = [];
+
+                            selectedAdd.forEach((el) => {
+                                let listElement = list.find((element) => element.id === el);
+
+                                if (listElement) {
+                                    submitList.push({
+                                        name: listElement.name,
+                                        elementId: listElement.id,
+                                        menuType: MENU_TYPE,
+                                        menuTypeLabel: MENU_TYPE_LABEL,
+                                    });
+                                }
+                            });
+
+                            addElementToMenu(submitList);
+                        }}
+                    >
+                        Ajouter
+                    </Button>
+                </Box>
             </AccordionDetails>
         </Accordion>
     );

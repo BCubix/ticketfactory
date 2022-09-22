@@ -9,7 +9,5 @@ export default function getMenuEntryModules() {
         components[name] = list(item).default;
     });
 
-    console.log(components);
-
     return components;
 }

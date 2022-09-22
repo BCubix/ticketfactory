@@ -4,7 +4,7 @@ import React from 'react';
 import { useMemo } from 'react';
 import getMenuEntryModules from './getMenuEntryModules';
 
-export const AddMenuElement = () => {
+export const AddMenuElement = ({ addElementToMenu }) => {
     const menuEntryModule = useMemo(() => {
         return getMenuEntryModules();
     }, []);
@@ -18,12 +18,12 @@ export const AddMenuElement = () => {
             throw `Le module ${name} n'existe pas ou est corrompu`;
         }
 
-        return <Component />;
+        return <Component addElementToMenu={addElementToMenu} />;
     };
 
     return (
         <>
-            <Typography component="h2" variant="h3">
+            <Typography component="h2" variant="h4">
                 Ajouter des éléments de menu
             </Typography>
 

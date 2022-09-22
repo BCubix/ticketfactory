@@ -10,38 +10,15 @@ const menusApi = {
                     name: 'Premier menu',
                     menus: [
                         {
-                            id: 1,
-                            name: 'Premier menu',
-                            menus: [
-                                {
-                                    name: 'page 1',
-                                    menuType: 'page',
-                                    elementId: 1,
-                                    subMenu: [
-                                        {
-                                            name: 'page 2',
-                                            menuType: 'page',
-                                            elementId: 2,
-                                            subMenu: [],
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    name: 'Deuxième menu',
-                    menus: [
-                        {
-                            name: 'page 1',
-                            menuType: 'page',
+                            name: 'Salle N°1',
+                            menuType: 'rooms',
+                            menuTypeLabel: 'Salle',
                             elementId: 1,
                             subMenu: [
                                 {
-                                    name: 'page 2',
-                                    menuType: 'page',
+                                    name: 'Salle N°2',
+                                    menuType: 'rooms',
+                                    menuTypeLabel: 'Salle',
                                     elementId: 2,
                                     subMenu: [],
                                 },
