@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\ContentType;
 
-class ContentTypeValidation implements JsonDoctrineSerializable
+use App\Entity\JsonDoctrineSerializable;
+
+class ContentTypeOption implements JsonDoctrineSerializable
 {
     private ?string $name = null;
 

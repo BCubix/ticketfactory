@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\ContentType;
 
-class ContentTypeField implements JsonDoctrineSerializable
+use App\Entity\JsonDoctrineSerializable;
+
+class ContentField implements JsonDoctrineSerializable
 {
     private ?string $title = null;
 

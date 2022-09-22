@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\Admin;
+namespace App\Form\Admin\ContentType;
 
-use App\Entity\ContentTypeField;
-use App\Manager\ContentTypeFieldManager;
+use App\Entity\ContentType\ContentField;
+use App\Manager\ContentTypeManager;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,13 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentTypeFieldType extends AbstractType
+class ContentFieldType extends AbstractType
 {
-    protected $ctfm;
+    protected $ctm;
 
-    public function __construct(ContentTypeFieldManager $ctfm)
+    public function __construct(ContentTypeManager $ctm)
     {
-        $this->ctfm = $ctfm;
+        $this->ctm = $ctm;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -29,7 +29,7 @@ class ContentTypeFieldType extends AbstractType
             ->add('name',                 TextType::class,            [])
             ->add('helper',               TextareaType::class,        [])
             ->add('type',                 ChoiceType::class,          [
-                'choices' => array_flip($this->ctfm->getFieldsSelect())
+                'choices' => array_flip($this->ctm->getFieldsSelect())
             ])
             ->add('options',              CollectionType::class,      [
                 'entry_type'   => ContentTypeOptionType::class,
@@ -51,7 +51,15 @@ class ContentTypeFieldType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContentTypeField::class
+            'data_class' => ContentField::class
         ]);
+    }
+
+    protected static function getOptions() {
+        return ['attr', 'disabled', 'required', 'trim'];
+    }
+
+    protected static function getValidations() {
+        return [];
     }
 }

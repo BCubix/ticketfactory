@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\ContentType;
 
+use App\Entity\Datable;
 use App\Repository\ContentTypeRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContentTypeRepository::class)]

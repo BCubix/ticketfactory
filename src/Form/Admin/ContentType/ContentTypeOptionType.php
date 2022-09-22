@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Admin;
+namespace App\Form\Admin\ContentType;
 
-use App\Entity\ContentTypeOption;
+use App\Entity\ContentType\ContentTypeOption;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -2,7 +2,7 @@
 
 namespace App\EventSubscriber\Admin;
 
-use App\Entity\ContentType;
+use App\Entity\ContentType\ContentType;
 use App\Entity\JsonDoctrineSerializable;
 
 use Doctrine\Common\EventSubscriber;
