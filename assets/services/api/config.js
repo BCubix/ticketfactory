@@ -1,4 +1,4 @@
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import { NotificationManager } from 'react-notifications';
 import axiosRetry from 'axios-retry';
 import { API_URL, REDIRECTION_TIME } from '../../Constant';

@@ -5,7 +5,6 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { formatMenusData } from '../../../../services/utils/formatMenusData';
 import { DisplayMenuElement } from './DisplayMenuElement';
-import $ from 'jquery';
 import { DroppableBox } from './sc.DroppableBox';
 
 export const MenuStructure = ({
@@ -47,7 +46,6 @@ export const MenuStructure = ({
     };
 
     const handleDragEnd = (result) => {
-        console.log(result);
         if (!result.destination) {
             return;
         }
@@ -61,7 +59,6 @@ export const MenuStructure = ({
         let destinationId = result.destination.droppableId.split('.');
         destinationId.shift();
 
-        console.log(removedElement, element, destinationId);
         insertMenuElement(element, destinationId, removedElement, result.destination.index);
 
         setFieldValue('menus', element);
@@ -99,51 +96,58 @@ export const MenuStructure = ({
 
             <Box sx={{ marginTop: 3 }}>
                 <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
-                    <Droppable droppableId="menus">
-                        {(provided, snapshot) => (
-                            <DroppableBox
-                                id="menus"
-                                className="droppableMenus"
-                                {...provided.droppableProps}
-                                ref={provided.innerRef}
-                                sx={{
-                                    paddingTop: 0,
-                                    paddingBottom: 10,
-                                    margin: 0,
-                                    paddingInline: 0,
-                                }}
-                                isDraggingOver={snapshot.isDraggingOver}
-                            >
-                                {values?.menus?.map((item, index) => (
-                                    <Draggable
-                                        key={`menus.${index}`}
-                                        draggableId={`menus.${index}`}
-                                        index={index}
-                                    >
-                                        {(provided2) => (
-                                            <Box
-                                                {...provided2.draggableProps}
-                                                {...provided2.dragHandleProps}
-                                                ref={provided2.innerRef}
-                                            >
-                                                <DisplayMenuElement
-                                                    element={item}
-                                                    key={index}
-                                                    index={index}
-                                                    handleChange={handleChange}
-                                                    handleBlur={handleBlur}
-                                                    list={values.menus}
-                                                    setFieldValue={setFieldValue}
-                                                    maxLevel={values.maxLevel}
-                                                />
-                                            </Box>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </DroppableBox>
-                        )}
-                    </Droppable>
+                    <Box>
+                        <Droppable
+                            droppableId="menus"
+                            type="menus"
+                            isCombineEnabled
+                            ignoreContainerClipping
+                        >
+                            {(provided, snapshot) => (
+                                <DroppableBox
+                                    id="menus"
+                                    className="droppableMenus"
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                    sx={{
+                                        paddingTop: 0,
+                                        paddingBottom: 10,
+                                        margin: 0,
+                                        paddingInline: 0,
+                                    }}
+                                    isDraggingOver={snapshot.isDraggingOver}
+                                >
+                                    {values?.menus?.map((item, index) => (
+                                        <Draggable
+                                            key={`menus.${index}`}
+                                            draggableId={`menus.${index}`}
+                                            index={index}
+                                        >
+                                            {(provided2) => (
+                                                <Box
+                                                    {...provided2.draggableProps}
+                                                    {...provided2.dragHandleProps}
+                                                    ref={provided2.innerRef}
+                                                >
+                                                    <DisplayMenuElement
+                                                        element={item}
+                                                        key={index}
+                                                        index={index}
+                                                        handleChange={handleChange}
+                                                        handleBlur={handleBlur}
+                                                        list={values.menus}
+                                                        setFieldValue={setFieldValue}
+                                                        maxLevel={values.maxLevel}
+                                                    />
+                                                </Box>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </DroppableBox>
+                            )}
+                        </Droppable>
+                    </Box>
                 </DragDropContext>
             </Box>
         </>

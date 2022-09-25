@@ -158,7 +158,11 @@ export const DisplayMenuElement = ({
                 </AccordionDetails>
             </Accordion>
 
-            <Droppable droppableId={`${name}.${index}.subMenu`} className={'droppableZone'}>
+            <Droppable
+                droppableId={`${name}.${index}.subMenu`}
+                className={'droppableZone'}
+                type={`menus`}
+            >
                 {(provided, snapshot) => (
                     <DroppableBox
                         id={`${name}-${index}-subMenu`}
