@@ -6,7 +6,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { logoutAction } from '../../redux/profile/profileSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { LOGIN_PATH } from '../../Constant';
+import { HOME_PATH, LOGIN_PATH } from '../../Constant';
 import { LayoutContext } from '../CmtLayoutProvider/CmtLayoutProvider';
 
 export const Layout = ({ children }) => {
@@ -24,9 +24,11 @@ export const Layout = ({ children }) => {
         <Box>
             <AppBar position="fixed" sx={{ width: `100%`, zIndex: 1201 }}>
                 <Toolbar>
-                    <Typography variant="h2" noWrap component="div">
-                        Ticket Factory
-                    </Typography>
+                    <Button variant="text" onClick={() => navigate(HOME_PATH)} sx={{ color: '#FFFFFF' }}>
+                        <Typography variant="h2" component="div">
+                            Ticket Factory
+                        </Typography>
+                    </Button>
 
                     <Button onClick={handleLogout} sx={{ marginLeft: 'auto' }}>
                         <LogoutIcon sx={{ color: '#FFFFFF' }} />
