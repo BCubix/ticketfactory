@@ -4,6 +4,7 @@ import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrappe
 import { Grid } from '@mui/material';
 import { dashboardSelector, getDashboardAction } from '@Redux/dashboard/dashboardSlice';
 import FirstCardDashboard from '@Apps/Home/FirstCardDashboard';
+import SecondCardDashboard from '@Apps/Home/SecondCardDashboard';
 import ThirdCardDashboard from '@Apps/Home/ThirdCardDashboard';
 
 const MainDashboard = () => {
@@ -23,7 +24,9 @@ const MainDashboard = () => {
                     <Grid item xs={12} md={4} lg={3}>
                         <FirstCardDashboard data={ dashboard.col1 }/>
                     </Grid>
-                    <Grid item xs={12} md={8} lg={7}></Grid>
+                    <Grid item xs={12} md={8} lg={7}>
+                        <SecondCardDashboard data={ dashboard.col2 }/>
+                    </Grid>
                     <Grid item xs={12} md={2} lg={2}>
                         <ThirdCardDashboard data={ dashboard.col3 }/>
                     </Grid>
