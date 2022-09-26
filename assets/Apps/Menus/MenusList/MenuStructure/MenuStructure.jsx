@@ -1,12 +1,21 @@
 import { Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { ReactSortable } from 'react-sortablejs';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { formatMenusData } from '../../../../services/utils/formatMenusData';
 import { DisplayMenuElement, RenderElement } from './DisplayMenuElement';
 import { DraggableBox } from './sc.DraggableBox';
 import { DroppableBox } from './sc.DroppableBox';
+
+const sortableOptions = {
+    animation: 150,
+    fallbackOnBody: true,
+    swapThreshold: 0.65,
+    ghostClass: 'ghost',
+    group: 'shared',
+};
 
 export const MenuStructure = ({
     values,
@@ -16,6 +25,64 @@ export const MenuStructure = ({
     touched,
     errors,
 }) => {
+    const [blocks, setBlocks] = useState([
+        {
+            id: 1,
+            content: 'item 1',
+            parent_id: null,
+            type: 'container',
+            children: [
+                {
+                    id: 2,
+                    content: 'item 2',
+                    width: 3,
+                    type: 'text',
+                    parent_id: 1,
+                },
+                {
+                    id: 3,
+                    content: 'item 3',
+                    width: 3,
+                    type: 'text',
+                    parent_id: 1,
+                },
+            ],
+        },
+        {
+            id: 4,
+            content: 'item 2',
+            parent_id: null,
+            type: 'container',
+            children: [
+                {
+                    id: 5,
+                    content: 'item 5',
+                    width: 3,
+                    parent_id: 2,
+                    type: 'container',
+                    children: [
+                        { id: 8, content: 'item 8', width: 6, type: 'text', parent_id: 5 },
+                        { id: 9, content: 'item 9', width: 6, type: 'text', parent_id: 5 },
+                    ],
+                },
+                {
+                    id: 6,
+                    content: 'item 6',
+                    width: 2,
+                    type: 'text',
+                    parent_id: 2,
+                },
+                {
+                    id: 7,
+                    content: 'item 7',
+                    width: 2,
+                    type: 'text',
+                    parent_id: 2,
+                },
+            ],
+        },
+    ]);
+
     const removeMenuElement = (menus, path) => {
         if (path.length === 0) {
             return menus;
@@ -96,62 +163,13 @@ export const MenuStructure = ({
             </Grid>
 
             <Box sx={{ marginTop: 3 }}>
-                <Box id={'menus-portal'} />
-                <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
-                    <Box>
-                        <Droppable
-                            droppableId="menus"
-                            type="menus"
-                            isCombineEnabled
-                            ignoreContainerClipping
-                        >
-                            {(provided, snapshot) => (
-                                <DroppableBox
-                                    id="menus"
-                                    className="droppableMenus"
-                                    {...provided.droppableProps}
-                                    ref={provided.innerRef}
-                                    sx={{
-                                        paddingTop: 0,
-                                        paddingBottom: 10,
-                                        margin: 0,
-                                        paddingInline: 0,
-                                    }}
-                                    isDraggingOver={snapshot.isDraggingOver}
-                                >
-                                    {values?.menus?.map((item, index) => (
-                                        <Draggable
-                                            key={`menus.${index}`}
-                                            draggableId={`menus.${index}`}
-                                            index={index}
-                                        >
-                                            {(provided2, snapshot2) => (
-                                                <RenderElement
-                                                    isDragging={snapshot2.isDragging}
-                                                    provided={provided2}
-                                                    snapshot={snapshot2}
-                                                >
-                                                    <DisplayMenuElement
-                                                        element={item}
-                                                        key={index}
-                                                        index={index}
-                                                        handleChange={handleChange}
-                                                        handleBlur={handleBlur}
-                                                        list={values.menus}
-                                                        setFieldValue={setFieldValue}
-                                                        isDragging={snapshot2.isDragging}
-                                                        maxLevel={values.maxLevel}
-                                                    />
-                                                </RenderElement>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </DroppableBox>
-                            )}
-                        </Droppable>
-                    </Box>
-                </DragDropContext>
+                <ReactSortable
+                    list={values.menus}
+                    setList={(newValue) => {
+                        console.log(newValue);
+                    }}
+                    {...sortableOptions}
+                ></ReactSortable>
             </Box>
         </>
     );
