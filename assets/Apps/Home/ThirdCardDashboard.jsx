@@ -1,11 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
-import { Button, Card, CardContent, CardHeader, List, ListItem, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Link, List, ListItem, Typography } from '@mui/material';
 
 const ThirdCardDashboard = ({ data }) => {
-    const navigate = useNavigate();
-
     return (
         <Card>
             <CardContent>
@@ -15,9 +12,9 @@ const ThirdCardDashboard = ({ data }) => {
                             <Card variant='outlined'>
                                 <CardContent>
                                     <Box display='flex' flexDirection='column'>
-                                        <Button onClick={() => navigate(url)}>
+                                        <Link href={url} underline="hover">
                                             <CardHeader title={title} />
-                                        </Button>
+                                        </Link>
                                         <Box display='flex' justifyContent='flex-end'>
                                             <Typography color='text.secondary'>
                                                 {date}
