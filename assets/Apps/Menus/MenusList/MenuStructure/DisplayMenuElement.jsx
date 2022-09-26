@@ -1,4 +1,5 @@
 import React from 'react';
+import PortalReactDom from 'react-dom';
 import {
     Accordion,
     AccordionDetails,
@@ -17,6 +18,7 @@ import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DroppableBox } from './sc.DroppableBox';
+import { DraggableBox } from './sc.DraggableBox';
 
 export const DisplayMenuElement = ({
     element,
@@ -30,6 +32,7 @@ export const DisplayMenuElement = ({
     parent = null,
     handleMoveOutSubMenuElement = null,
     maxLevel,
+    isDragging = false,
     level = 1,
 }) => {
     const displayMove = index > 0 || index < list?.length - 1 || isSubMenu;
@@ -173,6 +176,7 @@ export const DisplayMenuElement = ({
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                         isDraggingOver={snapshot.isDraggingOver}
+                        isDragging={isDragging}
                         className={'droppableMenus'}
                     >
                         {element?.subMenu?.length > 0 &&
@@ -184,11 +188,11 @@ export const DisplayMenuElement = ({
                                     index={index}
                                     item={item}
                                 >
-                                    {(provided2) => (
-                                        <Box
-                                            {...provided2.draggableProps}
-                                            {...provided2.dragHandleProps}
-                                            ref={provided2.innerRef}
+                                    {(provided2, snapshot2) => (
+                                        <RenderElement
+                                            provided={provided2}
+                                            snapshot={snapshot2}
+                                            isDragging={snapshot2.isDragging}
                                         >
                                             <DisplayMenuElement
                                                 element={item}
@@ -204,8 +208,9 @@ export const DisplayMenuElement = ({
                                                 handleMoveOutSubMenuElement={moveOutSubMenuElement}
                                                 maxLevel={maxLevel}
                                                 level={level + 1}
+                                                isDragging={snapshot2.isDragging}
                                             />
-                                        </Box>
+                                        </RenderElement>
                                     )}
                                 </Draggable>
                             ))}
@@ -215,4 +220,19 @@ export const DisplayMenuElement = ({
             </Droppable>
         </Box>
     );
+};
+
+export const RenderElement = ({ children, provided, snapshot }) => {
+    const child = (
+        <DraggableBox
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            isDragging={snapshot.isDragging}
+        >
+            {children}
+        </DraggableBox>
+    );
+
+    return child;
 };

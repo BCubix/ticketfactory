@@ -4,7 +4,8 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { formatMenusData } from '../../../../services/utils/formatMenusData';
-import { DisplayMenuElement } from './DisplayMenuElement';
+import { DisplayMenuElement, RenderElement } from './DisplayMenuElement';
+import { DraggableBox } from './sc.DraggableBox';
 import { DroppableBox } from './sc.DroppableBox';
 
 export const MenuStructure = ({
@@ -95,6 +96,7 @@ export const MenuStructure = ({
             </Grid>
 
             <Box sx={{ marginTop: 3 }}>
+                <Box id={'menus-portal'} />
                 <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
                     <Box>
                         <Droppable
@@ -123,11 +125,11 @@ export const MenuStructure = ({
                                             draggableId={`menus.${index}`}
                                             index={index}
                                         >
-                                            {(provided2) => (
-                                                <Box
-                                                    {...provided2.draggableProps}
-                                                    {...provided2.dragHandleProps}
-                                                    ref={provided2.innerRef}
+                                            {(provided2, snapshot2) => (
+                                                <RenderElement
+                                                    isDragging={snapshot2.isDragging}
+                                                    provided={provided2}
+                                                    snapshot={snapshot2}
                                                 >
                                                     <DisplayMenuElement
                                                         element={item}
@@ -137,9 +139,10 @@ export const MenuStructure = ({
                                                         handleBlur={handleBlur}
                                                         list={values.menus}
                                                         setFieldValue={setFieldValue}
+                                                        isDragging={snapshot2.isDragging}
                                                         maxLevel={values.maxLevel}
                                                     />
-                                                </Box>
+                                                </RenderElement>
                                             )}
                                         </Draggable>
                                     ))}

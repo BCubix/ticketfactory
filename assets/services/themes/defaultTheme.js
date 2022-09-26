@@ -30,7 +30,7 @@ const defaultTheme = {
         type: 'light',
         common: {
             black: '#000',
-            white: '#fff',
+            white: '#FFFFFF',
             dark: '#020202',
         },
         primary: {
