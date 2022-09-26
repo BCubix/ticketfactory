@@ -13,7 +13,7 @@ function TabPanel(props) {
     );
 }
 
-export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
+export const CmtTabs = ({ list, tabValue = 0, containerStyle = {}}) => {
     const [value, setValue] = useState(tabValue);
     const navigate = useNavigate();
 
@@ -38,7 +38,12 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
                                     if (item.path) {
                                         navigate(item.path);
                                     }
+
+                                    if (item.changeFunction) {
+                                        item.changeFunction();
+                                    }
                                 }}
+                                disabled={item.disabled}
                             />
                         ))}
                 </Tabs>
