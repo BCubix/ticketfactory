@@ -16,7 +16,6 @@ import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
 import moment from 'moment';
 import { CmtDateTimePicker } from '../../../Components/CmtDateTimePicker/CmtDateTimePicker';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import CloseIcon from '@mui/icons-material/Close';
 import { CmtRemoveButton } from '../../../Components/CmtRemoveButton/CmtRemoveButton';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
@@ -39,6 +38,7 @@ export const EventsDateForm = ({
     errors,
     blockIndex,
 }) => {
+    console.log(touched.eventDateBlocks?.at(blockIndex), errors.eventDateBlocks?.at(blockIndex));
     return (
         <FieldArray name={`eventDateBlocks[${blockIndex}].eventDates`}>
             {({ remove, push }) => (
@@ -54,6 +54,8 @@ export const EventsDateForm = ({
                                                     fullWidth
                                                     value={item.eventDate}
                                                     disablePast
+                                                    label="Date"
+                                                    required
                                                     setValue={(value) => {
                                                         setFieldValue(
                                                             `eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`,
@@ -63,10 +65,11 @@ export const EventsDateForm = ({
                                                     onTouched={setFieldTouched}
                                                     name={`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`}
                                                     error={getNestedFormikError(
-                                                        touched?.eventDates,
-                                                        errors?.eventDates,
+                                                        touched?.eventDateBlocks?.at(blockIndex)
+                                                            ?.eventDates,
+                                                        errors?.eventDateBlocks?.at(blockIndex)
+                                                            ?.eventDates,
                                                         index,
-                                                        'eventDates',
                                                         'eventDate'
                                                     )}
                                                 />

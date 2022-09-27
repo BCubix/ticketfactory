@@ -23,6 +23,27 @@ export const EventsForm = ({
     const eventSchema = Yup.object().shape({
         name: Yup.string().required("Veuillez renseigner le nom de l'évènement."),
         description: Yup.string().required('Veuillez renseigner une description.'),
+        eventDateBlocks: Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
+                eventDates: Yup.array().of(
+                    Yup.object().shape({
+                        eventDate: Yup.string().required('Veuillez renseigner la date.'),
+                    })
+                ),
+            })
+        ),
+        eventPriceBlocks: Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
+                eventPrices: Yup.array().of(
+                    Yup.object().shape({
+                        name: Yup.string().required('Veuillez renseigner le nom du tarif.'),
+                        price: Yup.number().required('Veuillez renseigner le prix'),
+                    })
+                ),
+            })
+        ),
     });
 
     return (

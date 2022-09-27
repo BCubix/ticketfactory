@@ -20,7 +20,7 @@ const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
     { name: 'active', label: 'Actif ?', type: 'bool' },
     { name: 'name', label: 'Nom' },
-    { name: 'eventCategory.name', label: 'Catégorie' },
+    { name: 'mainCategory.name', label: 'Catégorie' },
     { name: 'room.name', label: 'Salle' },
     { name: 'season.name', label: 'Saison' },
 ];

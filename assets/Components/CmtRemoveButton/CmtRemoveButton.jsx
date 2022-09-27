@@ -10,9 +10,9 @@ export const CmtRemoveButton = styled(Fab)`
     min-height: 10px;
     font-size: 10px;
     color: #ffffff;
-    background-color: #ff0000;
+    background-color: ${(props) => props.theme.palette.crud.delete.textColor};
     &:hover {
         color: #ffffff;
-        background-color: #ff0000;
+        background-color: ${(props) => props.theme.palette.crud.delete.textColor};
     }
 `;

@@ -17,6 +17,7 @@ export const CmtDatePicker = ({
     inputSize = 'normal',
     id = '',
     disablePast = false,
+    required = false,
     ...rest
 }) => {
     const [open, setOpen] = useState(false);
@@ -60,6 +61,7 @@ export const CmtDatePicker = ({
                     renderInput={(params) => {
                         params.error = Boolean(error);
                         params.label = label;
+                        params.required = required;
 
                         params.inputProps.placeholder = 'jj/mm/aaaa';
                         params.InputProps.endAdornment = null;
