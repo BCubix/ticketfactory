@@ -34,9 +34,9 @@ const defaultTheme = {
             dark: '#020202',
         },
         primary: {
-            main: '#F07512',
-            dark: '#C15D00',
-            light: '#F7BA88',
+            main: '#980B27',
+            dark: '#980B27',
+            light: '#980B27',
             contrastText: '#fff',
             publicMain: '#F9F1E4',
             family: defaultFamily,
