@@ -14,6 +14,7 @@ import contactRequestsReducer from '../contactRequests/contactRequestsSlice';
 import redirectionsReducer from '../redirections/redirectionsSlice';
 import menusReducer from '../menus/menusSlice';
 import dashboardReducer from '../dashboard/dashboardSlice';
+import pagesReducer from '../pages/pagesSlice';
 
 export default configureStore({
     reducer: {
@@ -32,5 +33,6 @@ export default configureStore({
         redirections: redirectionsReducer,
         menus: menusReducer,
         dashboard: dashboardReducer,
+        pages: pagesReducer,
     },
 });
