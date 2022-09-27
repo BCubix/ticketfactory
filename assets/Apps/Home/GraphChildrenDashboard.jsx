@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { Chart } from 'react-google-charts';
 
@@ -7,7 +8,13 @@ const GraphChildrenDashboard = ({ values }) => {
             chartType="LineChart"
             width="100%"
             height="400px"
-            data={[['Date', 'Valeur'], ...Object.entries(values)]}
+            data={[
+                ['Date', 'Valeur'],
+                ...Object.entries(values).map(([key, value]) => [
+                    moment(key).format('DD-MM-YYYY'),
+                    value,
+                ]),
+            ]}
             options={{
                 curveType: 'function',
                 legend: { position: 'bottom' },
