@@ -6,16 +6,17 @@ import { useEffect } from 'react';
 import seasonsApi from '../../../services/api/seasonsApi';
 import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
+import { Box, CardContent, Typography } from '@mui/material';
 import { CREATE_PATH, EDIT_PATH, SEASONS_BASE_PATH } from '../../../Constant';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'name', label: 'Nom de la catégorie' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+    { name: 'name', label: 'Nom de la catégorie', width: '70%' },
 ];
 
 export const SeasonsList = () => {
@@ -40,20 +41,19 @@ export const SeasonsList = () => {
 
     return (
         <>
-            <CmtPageWrapper>
-                <CmtPageTitle>Saisons</CmtPageTitle>
-                <Card sx={{ width: '100%', mt: 5 }}>
+            <CmtPageWrapper title={'Saisons'}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Saisons ({seasons?.length})
+                                Liste des saisons
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(SEASONS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -65,7 +65,7 @@ export const SeasonsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

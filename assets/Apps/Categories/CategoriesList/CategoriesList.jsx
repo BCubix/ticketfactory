@@ -17,6 +17,8 @@ import { loginFailure } from '../../../redux/profile/profileSlice';
 import { NotificationManager } from 'react-notifications';
 import { EditCategoryLink } from './sc.EditCategoryLink';
 import { CmtBreadCrumb } from '../../../Components/CmtBreadCrumb/CmtBreadCrumb';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -105,9 +107,7 @@ export const CategoriesList = () => {
 
     return (
         <>
-            <CmtPageWrapper>
-                <CmtPageTitle>Catégories</CmtPageTitle>
-
+            <CmtPageWrapper title="Catégories">
                 <Box display="flex" alignItems="center" pt={5}>
                     <CmtBreadCrumb list={path} />
                     <Box
@@ -120,18 +120,18 @@ export const CategoriesList = () => {
                     </Box>
                 </Box>
 
-                <Card sx={{ width: '100%', mt: 2 }}>
+                <CmtCard sx={{ width: '100%', mt: 2 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Catégories ({category?.children?.length})
+                                Liste des catégories
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(CATEGORIES_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -146,7 +146,7 @@ export const CategoriesList = () => {
                             }}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

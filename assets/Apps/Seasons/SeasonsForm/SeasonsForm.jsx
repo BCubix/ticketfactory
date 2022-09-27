@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
@@ -35,14 +36,11 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <Box
+                <CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
-                    sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'une saison`}
                 >
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'une saison
-                    </Typography>
                     <CmtFormBlock title={'Informations générales'}>
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6}>
@@ -91,7 +89,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Box>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

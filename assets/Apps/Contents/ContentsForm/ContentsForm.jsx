@@ -75,11 +75,11 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'un contenu
-                    </Typography>
-
+                <CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}
+                >
                     <CmtFormBlock title="Formulaire">
                         <DisplayContentForm
                             values={values}

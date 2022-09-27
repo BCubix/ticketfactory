@@ -12,6 +12,8 @@ import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -52,18 +54,18 @@ export const RedirectionsList = () => {
     return (
         <>
             <CmtPageWrapper title="Redirections">
-                <Card sx={{ width: '100%', mt: 5 }}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Redirections ({redirections?.length})
+                                Liste des redirections
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(REDIRECTIONS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -75,7 +77,7 @@ export const RedirectionsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

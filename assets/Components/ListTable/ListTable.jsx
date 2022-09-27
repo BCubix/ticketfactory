@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { objectResolver } from '../../services/utils/objectResolver';
+import { DeleteFabButton, EditFabButton } from '../CmtButton/sc.Buttons';
 
 /**
  *
@@ -74,7 +75,7 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick
                             ))}
                             {(onDelete !== null || onEdit !== null) && (
                                 <TableCell component="th" scope="row">
-                                    <Fab
+                                    <EditFabButton
                                         sx={{ marginInline: 1 }}
                                         color="primary"
                                         size="small"
@@ -85,9 +86,9 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick
                                         }}
                                     >
                                         <EditIcon />
-                                    </Fab>
+                                    </EditFabButton>
 
-                                    <Fab
+                                    <DeleteFabButton
                                         sx={{ marginInline: 1 }}
                                         color="error"
                                         size="small"
@@ -98,7 +99,7 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick
                                         }}
                                     >
                                         <DeleteIcon />
-                                    </Fab>
+                                    </DeleteFabButton>
                                 </TableCell>
                             )}
                         </TableRow>

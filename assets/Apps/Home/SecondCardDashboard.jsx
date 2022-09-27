@@ -15,9 +15,12 @@ import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
 
 import GraphChildrenDashboard from '@Apps/Home/GraphChildrenDashboard';
 import { GraphTabTitle } from './sc.Home';
+import { useTheme } from '@emotion/react';
+import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 
 function SecondCardDashboard({ data }) {
-    const colorProps = '#02374D';
+    const theme = useTheme();
+    const colorProps = theme.palette.secondary.main;
 
     const dispatch = useDispatch();
 
@@ -53,7 +56,7 @@ function SecondCardDashboard({ data }) {
 
     return (
         <>
-            <Card sx={{ marginBottom: 4 }}>
+            <CmtCard sx={{ marginBottom: 4 }}>
                 <Box sx={{ width: '100%', backgroundColor: colorProps }}>
                     <CardHeader
                         title="Période sélectionnée"
@@ -93,9 +96,9 @@ function SecondCardDashboard({ data }) {
                         </Grid>
                     </Grid>
                 </CardContent>
-            </Card>
+            </CmtCard>
 
-            <Card>
+            <CmtCard>
                 <Box sx={{ width: '100%', backgroundColor: colorProps }}>
                     <CardHeader
                         title="Statistiques"
@@ -156,7 +159,7 @@ function SecondCardDashboard({ data }) {
                         )}
                     </Box>
                 </CardContent>
-            </Card>
+            </CmtCard>
         </>
     );
 }

@@ -1,8 +1,11 @@
+import { useTheme } from '@emotion/react';
 import moment from 'moment';
 import React from 'react';
 import { Chart } from 'react-google-charts';
 
 const GraphChildrenDashboard = ({ values }) => {
+    const theme = useTheme();
+
     return (
         <Chart
             chartType="LineChart"
@@ -22,7 +25,7 @@ const GraphChildrenDashboard = ({ values }) => {
                     width: '100%',
                 },
                 width: '100%',
-                colors: ['#27E3B1'],
+                colors: [theme.palette.tertiary.main],
                 legend: { position: 'none' },
             }}
         />

@@ -28,7 +28,6 @@ const FormComponent = ({
                 required={field?.options?.required}
                 disabled={field?.options?.disabled}
                 disablePast={field?.validations?.disablePast}
-                inputVariant="outlined"
                 inputSize="small"
             />
             {field.instructions && (

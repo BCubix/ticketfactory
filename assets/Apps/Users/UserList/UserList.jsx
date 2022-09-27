@@ -12,12 +12,14 @@ import { useNavigate } from 'react-router-dom';
 import usersApi from '../../../services/api/usersApi';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { useState } from 'react';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'firstName', label: 'Prénom' },
-    { name: 'lastName', label: 'Nom' },
-    { name: 'email', label: 'Adresse Email' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'firstName', label: 'Prénom', width: '20%' },
+    { name: 'lastName', label: 'Nom', width: '20%' },
+    { name: 'email', label: 'Adresse Email', width: '40%' },
 ];
 export const UserList = () => {
     const { loading, users, error } = useSelector(usersSelector);
@@ -41,20 +43,19 @@ export const UserList = () => {
 
     return (
         <>
-            <CmtPageWrapper>
-                <CmtPageTitle>Utilisateurs</CmtPageTitle>
-                <Card sx={{ width: '100%', mt: 5 }}>
+            <CmtPageWrapper title={'Utilisateurs'}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Employés ({users?.length})
+                                Liste des utilisateurs
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(USER_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -66,7 +67,7 @@ export const UserList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

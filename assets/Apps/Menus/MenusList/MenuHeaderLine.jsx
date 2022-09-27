@@ -9,6 +9,7 @@ import {
     Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CREATE_PATH, MENUS_BASE_PATH } from '../../../Constant';
 
 const SelectMenu = ({ selectedMenu, list, handleChange }) => {
@@ -21,6 +22,7 @@ const SelectMenu = ({ selectedMenu, list, handleChange }) => {
                     labelId={`select-menus-label`}
                     size="small"
                     id={`select-menus`}
+                    variant="standard"
                     value={value}
                     onChange={(e) => {
                         setValue(e.target.value);
@@ -48,7 +50,7 @@ const SelectMenu = ({ selectedMenu, list, handleChange }) => {
 
 export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
     return (
-        <Card sx={{ width: '100%', mt: 5 }}>
+        <CmtCard sx={{ width: '100%', mt: 5 }}>
             <CardContent>
                 <Typography component="span" variant="body1" display={'flex'} alignItems={'center'}>
                     {list?.length > 1 ? (
@@ -70,6 +72,6 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
                     N’oubliez pas d’enregistrer vos modifications !
                 </Typography>
             </CardContent>
-        </Card>
+        </CmtCard>
     );
 };

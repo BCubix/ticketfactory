@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { CREATE_PATH, EVENTS_BASE_PATH, EDIT_PATH } from '../../../Constant';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -54,18 +56,18 @@ export const EventsList = () => {
     return (
         <>
             <CmtPageWrapper title={'Evènements'}>
-                <Card sx={{ width: '100%', mt: 5 }}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Evènements ({events?.length})
+                                Liste des évènements
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(EVENTS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -77,7 +79,7 @@ export const EventsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

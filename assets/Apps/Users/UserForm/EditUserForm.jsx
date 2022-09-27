@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
@@ -53,10 +54,11 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
-                    <Typography component="h1" variant={'h5'}>
-                        Modification d'un utilisateur
-                    </Typography>
+                <CmtPageWrapper
+                    title="Modification d'un utilisateur"
+                    component="form"
+                    onSubmit={handleSubmit}
+                >
                     <CmtFormBlock title={'Informations générales'}>
                         <CmtTextField
                             value={values.email}
@@ -107,16 +109,17 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                             error={touched.confirmPassword && errors.confirmPassword}
                         />
                     </CmtFormBlock>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        disabled={isSubmitting}
-                    >
-                        Créer
-                    </Button>
-                </Box>
+                    <Box display="flex" justifyContent={'flex-end'}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={isSubmitting}
+                        >
+                            Créer
+                        </Button>
+                    </Box>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

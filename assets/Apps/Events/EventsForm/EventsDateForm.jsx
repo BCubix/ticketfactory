@@ -92,6 +92,7 @@ export const EventsDateForm = ({
                                                         id="statusDate"
                                                         size="small"
                                                         value={item.state}
+                                                        variant="standard"
                                                         label="Status"
                                                         onChange={(e) => {
                                                             setFieldValue(

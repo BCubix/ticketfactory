@@ -65,10 +65,11 @@ export const EventsForm = ({
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'un évènement
-                    </Typography>
+                <CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}
+                >
                     <CmtTabs
                         containerStyle={{ mt: 3 }}
                         list={[

@@ -12,6 +12,8 @@ import { useState } from 'react';
 import { CREATE_PATH, EDIT_PATH, TAGS_BASE_PATH } from '../../../Constant';
 import tagsApi from '../../../services/api/tagsApi';
 import { getTagsAction } from '../../../redux/tags/tagsSlice';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -41,20 +43,19 @@ export const TagsList = () => {
 
     return (
         <>
-            <CmtPageWrapper>
-                <CmtPageTitle>Tags</CmtPageTitle>
-                <Card sx={{ width: '100%', mt: 5 }}>
+            <CmtPageWrapper title="Tags">
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Tags ({tags?.length})
+                                Liste des tags
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(TAGS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -66,7 +67,7 @@ export const TagsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

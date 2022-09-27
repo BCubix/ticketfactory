@@ -5,7 +5,6 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { formatMenusData } from '../../../../services/utils/formatMenusData';
 import { DisplayMenuElement, RenderElement } from './DisplayMenuElement';
-import { DraggableBox } from './sc.DraggableBox';
 import { DroppableBox } from './sc.DroppableBox';
 
 export const MenuStructure = ({
@@ -70,30 +69,14 @@ export const MenuStructure = ({
             <Typography component="h2" variant="h4">
                 Structure du menu
             </Typography>
-            <Grid container spacing={4}>
-                <Grid item xs={12} sm={7} md={9}>
-                    <CmtTextField
-                        value={values.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label={'Nom du menu'}
-                        name={'name'}
-                        error={touched.name && errors.name}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={5} md={3}>
-                    <CmtTextField
-                        value={values.maxLevel}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label={'Niveau maximum de sous menus'}
-                        name={'maxLevel'}
-                        error={touched.maxLevel && errors.maxLevel}
-                        type="number"
-                    />
-                </Grid>
-            </Grid>
+            <CmtTextField
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                label={'Nom du menu'}
+                name={'name'}
+                error={touched.name && errors.name}
+            />
 
             <Box sx={{ marginTop: 3 }}>
                 <Box id={'menus-portal'} />

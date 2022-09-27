@@ -89,7 +89,6 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.minDate`}
                             error={errors?.validations?.minDate}
-                            inputVariant={'outlined'}
                             inputSize="small"
                         />
                     }
@@ -113,7 +112,6 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.maxDate`}
                             error={errors?.validations?.maxDate}
-                            inputVariant={'outlined'}
                             inputSize="small"
                         />
                     }
@@ -137,7 +135,6 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.minHour`}
                             error={errors?.validations?.minHour}
-                            inputVariant="outlined"
                             inputSize="small"
                         />
                     }
@@ -161,7 +158,6 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.maxHour`}
                             error={errors?.validations?.maxHour}
-                            inputVariant="outlined"
                             inputSize="small"
                         />
                     }

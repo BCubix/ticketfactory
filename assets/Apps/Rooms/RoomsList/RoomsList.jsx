@@ -12,6 +12,8 @@ import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -52,18 +54,18 @@ export const RoomsList = () => {
     return (
         <>
             <CmtPageWrapper title="Salles">
-                <Card sx={{ width: '100%', mt: 5 }}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Salles ({rooms?.length})
+                                Liste des salles
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(ROOMS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -75,7 +77,7 @@ export const RoomsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

@@ -64,6 +64,7 @@ const FormComponent = ({
                     labelId={`tagLink-${label}-label`}
                     id={`tagLink-${label}`}
                     size="small"
+                    variant="standard"
                     value={values[field.name]}
                     label={label}
                     onChange={(e) => {

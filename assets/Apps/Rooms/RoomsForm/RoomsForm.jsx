@@ -3,6 +3,7 @@ import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { RoomsMainPartForm } from './RoomsMainPartForm';
 import { RoomsSeatingPlanPartForm } from './RoomsSeatingPlansPartForm';
 
@@ -41,10 +42,11 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'une salle
-                    </Typography>
+                <CmtPageWrapper
+                    title={`${initialValues ? 'Modification' : 'Création'} d'une salle`}
+                    component="form"
+                    onSubmit={handleSubmit}
+                >
                     <RoomsMainPartForm
                         values={values}
                         errors={errors}
@@ -84,7 +86,7 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Box>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

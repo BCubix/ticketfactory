@@ -4,6 +4,7 @@ import { TextField } from '@mui/material';
 export const CmtTextField = ({
     margin = 'normal',
     size = 'small',
+    variant = 'standard',
     value,
     handleChange,
     handleBlur,
@@ -20,6 +21,7 @@ export const CmtTextField = ({
             margin={margin}
             size={size}
             value={value}
+            variant={variant}
             onChange={handleChange}
             onBlur={handleBlur}
             required={required}

@@ -11,6 +11,8 @@ import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { REDIRECTION_TIME } from '../../../Constant';
@@ -61,15 +63,15 @@ export const MediasList = () => {
 
     return (
         <CmtPageWrapper title="Médias">
-            <Card sx={{ height: '100%', mt: 5 }}>
+            <CmtCard sx={{ height: '100%', mt: 5 }}>
                 <CardContent sx={{ height: '100%' }}>
                     <Box display="flex" justifyContent={'space-between'}>
                         <Typography component="h2" variant="h5" fontSize={20}>
-                            Eléments médias ({medias?.length})
+                            Liste des médias
                         </Typography>
-                        <Button variant="contained" onClick={() => setCreateDialog(true)}>
+                        <CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                             Nouveau
-                        </Button>
+                        </CreateButton>
                     </Box>
                     <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
                         {medias?.map((item, index) => (
@@ -79,7 +81,7 @@ export const MediasList = () => {
                         ))}
                     </Box>
                 </CardContent>
-            </Card>
+            </CmtCard>
             <Dialog
                 fullWidth
                 maxWidth="md"

@@ -17,6 +17,8 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { ListTable } from '../../../Components/ListTable/ListTable';
@@ -29,9 +31,9 @@ import {
 import contentsApi from '../../../services/api/contentsApi';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'type', label: 'Catégory du contenu' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+    { name: 'type', label: 'Type de contenu', width: '70%' },
 ];
 
 export const ContentsList = () => {
@@ -72,15 +74,15 @@ export const ContentsList = () => {
     return (
         <>
             <CmtPageWrapper title="Contenus">
-                <Card sx={{ width: '100%', mt: 5 }}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Contenus ({contents?.length})
+                                Liste des contenus
                             </Typography>
-                            <Button variant="contained" onClick={() => setCreateDialog(true)}>
+                            <CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -92,7 +94,7 @@ export const ContentsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
 
             <Dialog
@@ -109,6 +111,7 @@ export const ContentsList = () => {
                         </InputLabel>
                         <Select
                             labelId={`contentType-label`}
+                            variant="standard"
                             size="small"
                             id={`contentType`}
                             value={formContentType}

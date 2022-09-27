@@ -68,6 +68,7 @@ export const EventMainPartForm = ({
                             <Select
                                 labelId="eventRoomLabel"
                                 size="small"
+                                variant="standard"
                                 id="room"
                                 value={values.room}
                                 label="Salle"
@@ -93,6 +94,7 @@ export const EventMainPartForm = ({
                                 labelId="eventSeasonLabel"
                                 size="small"
                                 id="season"
+                                variant="standard"
                                 value={values.season}
                                 label="Saison"
                                 onChange={(e) => {
@@ -130,6 +132,7 @@ export const EventMainPartForm = ({
                             <Select
                                 labelId="eventTagsLabel"
                                 id="eventTags"
+                                variant="standard"
                                 value={values.tags}
                                 size="small"
                                 label="Tags"

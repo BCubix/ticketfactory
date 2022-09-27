@@ -51,11 +51,13 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'une demande de contact
-                    </Typography>
-
+                <CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${
+                        initialValues ? 'Modification' : 'Création'
+                    } d'une demande de contact`}
+                >
                     <CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} sm={6} md={4} lg={3}>

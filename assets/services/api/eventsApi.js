@@ -49,10 +49,13 @@ const eventsApi = {
                         `eventDateBlocks[${index}][eventDates][${ind}][state]`,
                         date.state
                     );
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][reportDate]`,
-                        moment(date.reportDate).format('YYYY-MM-DD HH:mm')
-                    );
+
+                    if (date.reportDate) {
+                        formData.append(
+                            `eventDateBlocks[${index}][eventDates][${ind}][reportDate]`,
+                            moment(date.reportDate).format('YYYY-MM-DD HH:mm')
+                        );
+                    }
                 });
             });
 

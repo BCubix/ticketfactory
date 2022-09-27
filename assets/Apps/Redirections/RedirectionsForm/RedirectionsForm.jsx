@@ -51,10 +51,11 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'une redirection
-                    </Typography>
+                <CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'une redirection`}
+                >
                     <CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6} lg={4}>
@@ -66,6 +67,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                         labelId="redirectionType-label"
                                         size="small"
                                         id="redirectionType"
+                                        variant="standard"
                                         value={values.redirectType}
                                         label="Type de redirection"
                                         onChange={(e) => {

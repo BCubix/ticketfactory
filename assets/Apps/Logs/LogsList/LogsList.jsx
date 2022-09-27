@@ -11,6 +11,8 @@ import logsApi from '../../../services/api/logsApi';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import { NotificationManager } from 'react-notifications';
+import { useTheme } from '@emotion/react';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 
 const userName = (item) => {
     return (
@@ -23,39 +25,50 @@ const userName = (item) => {
 };
 
 const tags = (item) => {
-    let color = '#000000';
-    let bgColor = '';
-    let text = '';
+    const statusTheme = useTheme().palette.status;
+    const key = item.severity;
 
-    switch (item.severity) {
-        case 0:
-            bgColor = '#0A9706';
-            text = "Tout va bien, il n'y a aucun soucis";
-            break;
-        case 1:
-            bgColor = '#D5E300';
-            text = 'On commence à avoir un petit pépin, mais ca va encore';
-            break;
-        case 2:
-            bgColor = '#DF0000';
-            text = 'Là, on est dedans';
-            break;
-        case 3:
-            bgColor = '#000000';
-            text = 'Abandonnez tout éspoir';
-            color = '#FFFFFF';
-            break;
-        default:
-            break;
+    const severityList = [
+        {
+            bgColor: statusTheme.info.backgroundColor,
+            color: statusTheme.info.textColor,
+            text: 'Information',
+        },
+        {
+            bgColor: statusTheme.warning.backgroundColor,
+            color: statusTheme.warning.textColor,
+            text: 'Avertissement',
+        },
+        {
+            bgColor: statusTheme.error.backgroundColor,
+            color: statusTheme.error.textColor,
+            text: 'Erreur',
+        },
+        {
+            bgColor: statusTheme.critical.backgroundColor,
+            color: statusTheme.critical.textColor,
+            text: 'Critique',
+        },
+    ];
+
+    if ((!key && key !== 0) || key > severityList.length) {
+        return <></>;
     }
+
+    const severity = severityList[key];
 
     return (
         <Typography
-            sx={{ color: color, backgroundColor: bgColor, padding: '5px' }}
+            sx={{
+                color: severity.color,
+                backgroundColor: severity.bgColor,
+                padding: '5px',
+                borderRadius: '4px',
+            }}
             component="span"
             variant="body1"
         >
-            {text}
+            {severity.text}
         </Typography>
     );
 };
@@ -101,19 +114,18 @@ export const LogsList = () => {
     }, []);
 
     return (
-        <CmtPageWrapper>
-            <CmtPageTitle>Logs</CmtPageTitle>
-            <Card sx={{ width: '100%', mt: 5 }}>
+        <CmtPageWrapper title={'Logs'}>
+            <CmtCard sx={{ width: '100%', mt: 5 }}>
                 <CardContent>
                     <Box display="flex" justifyContent="space-between">
                         <Typography component="h2" variant="h5" fontSize={20}>
-                            Logs ({logs?.length})
+                            Liste des logs
                         </Typography>
                     </Box>
 
                     <ListTable table={TABLE_COLUMN} list={logs} />
                 </CardContent>
-            </Card>
+            </CmtCard>
         </CmtPageWrapper>
     );
 };

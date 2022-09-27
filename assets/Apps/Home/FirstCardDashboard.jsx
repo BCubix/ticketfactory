@@ -13,9 +13,12 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import ArticleIcon from '@mui/icons-material/Article';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+import { useTheme } from '@emotion/react';
+import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 
 const FirstCardDashboard = ({ data }) => {
-    const colorProps = '#02374D';
+    const theme = useTheme();
+    const colorProps = theme.palette.secondary.main;
 
     const list = [
         {
@@ -46,7 +49,7 @@ const FirstCardDashboard = ({ data }) => {
     ];
 
     return (
-        <Card sx={{ position: 'relative' }}>
+        <CmtCard sx={{ position: 'relative' }}>
             <CardHeader
                 title="Informations générales"
                 titleTypographyProps={{
@@ -87,7 +90,7 @@ const FirstCardDashboard = ({ data }) => {
                     ))}
                 </List>
             </CardContent>
-        </Card>
+        </CmtCard>
     );
 };
 

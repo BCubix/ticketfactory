@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
@@ -37,11 +38,11 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <Box component={'form'} onSubmit={handleSubmit} sx={{ margin: 5 }}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'un format
-                    </Typography>
-
+                <CmtPageWrapper
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un format`}
+                    component={'form'}
+                    onSubmit={handleSubmit}
+                >
                     <CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12}>
@@ -105,7 +106,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Box>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

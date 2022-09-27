@@ -12,6 +12,8 @@ import {
 } from '../../../redux/imageFormats/imageFormatSlice';
 import imageFormatsApi from '../../../services/api/imageFormatsApi';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
+import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID' },
@@ -44,18 +46,18 @@ export const ImageFormatsList = () => {
     return (
         <>
             <CmtPageWrapper title="Formats D'image">
-                <Card sx={{ width: '100%', mt: 5 }}>
+                <CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Format d'image ({imageFormats?.length})
+                                Liste des formats d'image
                             </Typography>
-                            <Button
+                            <CreateButton
                                 variant="contained"
                                 onClick={() => navigate(IMAGE_FORMATS_BASE_PATH + CREATE_PATH)}
                             >
                                 Nouveau
-                            </Button>
+                            </CreateButton>
                         </Box>
 
                         <ListTable
@@ -67,7 +69,7 @@ export const ImageFormatsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>
-                </Card>
+                </CmtCard>
             </CmtPageWrapper>
             <DeleteDialog
                 open={deleteDialog ? true : false}

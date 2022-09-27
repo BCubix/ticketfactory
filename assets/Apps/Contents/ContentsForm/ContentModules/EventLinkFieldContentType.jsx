@@ -63,6 +63,7 @@ const FormComponent = ({
                 </InputLabel>
                 <Select
                     labelId={`eventLink-${label}-label`}
+                    variant="standard"
                     id={`eventLink-${label}`}
                     size="small"
                     value={values[field.name]}

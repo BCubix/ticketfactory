@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { ParentCategoryPartForm } from './ParentCategoryPartForm';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 
 export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesList = null }) => {
     const categorySchema = Yup.object().shape({
@@ -45,14 +46,11 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <Box
+                <CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
-                    sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}
                 >
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'une catégorie
-                    </Typography>
                     <CmtFormBlock title="Informations générales">
                         <CmtTextField
                             value={values.name}
@@ -97,7 +95,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Box>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

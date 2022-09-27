@@ -90,6 +90,7 @@ export const MainPartFieldForm = ({
                 <Select
                     labelId={`fieldsType-${index}-label`}
                     size="small"
+                    variant="standard"
                     id={`fieldsType-${index}`}
                     value={values.fieldType}
                     onChange={(e) => {

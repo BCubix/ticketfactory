@@ -98,7 +98,6 @@ export const MenusList = () => {
                     </CmtPageWrapper>
                 )}
             </Formik>
-            ;
         </>
     );
 };

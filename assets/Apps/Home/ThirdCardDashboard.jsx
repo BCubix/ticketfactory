@@ -18,12 +18,16 @@ import { useDispatch } from 'react-redux';
 import { loginFailure } from '../../redux/profile/profileSlice';
 import { getDashboardAction } from '../../redux/dashboard/dashboardSlice';
 import dashboardApi from '../../services/api/dashboardApi';
+import { useTheme } from '@emotion/react';
+import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
+import moment from 'moment';
 
 const ThirdCardDashboard = ({ data }) => {
     const dispatch = useDispatch();
     const [editNote, setEditNote] = useState(false);
     const [note, setNote] = useState(data.notes);
-    const colorProps = '#02374D';
+    const theme = useTheme();
+    const colorProps = theme.palette.secondary.main;
 
     const handlechangeNote = async () => {
         const check = await authApi.checkIsAuth();
@@ -45,7 +49,7 @@ const ThirdCardDashboard = ({ data }) => {
 
     return (
         <>
-            <Card>
+            <CmtCard>
                 <CardHeader
                     title="Informations générales"
                     titleTypographyProps={{
@@ -81,7 +85,7 @@ const ThirdCardDashboard = ({ data }) => {
                                     </Link>
                                     <Box display="flex" justifyContent="flex-end">
                                         <Typography color="text.secondary" fontSize={12}>
-                                            {date}
+                                            {moment(date).format('DD-MM-YYYY')}
                                         </Typography>
                                     </Box>
                                     <Typography variant="body1" color="text.secondary">
@@ -92,8 +96,8 @@ const ThirdCardDashboard = ({ data }) => {
                         ))}
                     </List>
                 </CardContent>
-            </Card>
-            <Card sx={{ marginTop: 4 }}>
+            </CmtCard>
+            <CmtCard sx={{ marginTop: 4 }}>
                 <CardHeader
                     title="Notes"
                     titleTypographyProps={{
@@ -140,7 +144,7 @@ const ThirdCardDashboard = ({ data }) => {
                         </Box>
                     </Box>
                 )}
-            </Card>
+            </CmtCard>
         </>
     );
 };

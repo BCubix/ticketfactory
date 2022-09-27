@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
+import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import LightEditor from '../../../Components/Editors/LightEditor/LightEditor';
 import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
@@ -37,10 +38,10 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <Box
+                <CmtPageWrapper
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un tag`}
                     component="form"
                     onSubmit={handleSubmit}
-                    sx={{ margin: 5, display: 'flex', flexDirection: 'column' }}
                 >
                     <CmtFormBlock title="Informations générales">
                         <CmtTextField
@@ -91,7 +92,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </Box>
+                </CmtPageWrapper>
             )}
         </Formik>
     );

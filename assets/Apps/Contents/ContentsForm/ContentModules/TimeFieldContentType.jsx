@@ -27,7 +27,6 @@ const FormComponent = ({
                 error={touched && touched[field.name] && errors && errors[field.name]}
                 required={field?.options?.required}
                 disabled={field?.options?.disabled}
-                inputVariant="outlined"
                 inputSize="small"
             />
             {field.instructions && (

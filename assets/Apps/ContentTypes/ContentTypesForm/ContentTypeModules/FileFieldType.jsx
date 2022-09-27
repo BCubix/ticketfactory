@@ -128,6 +128,7 @@ const Validations = ({
                             sx={{ marginTop: 3 }}
                             labelId={`imageType-${index}-label`}
                             size="small"
+                            variant="standard"
                             id="imageType"
                             fullWidth
                             value={values.validations.type}

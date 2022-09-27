@@ -53,11 +53,11 @@ export const ContentTypesForm = ({ initialValues = null }) => {
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
-                    <Typography component="h1" variant={'h5'}>
-                        {initialValues ? 'Modification' : 'Création'} d'un type de contenus
-                    </Typography>
-
+                <CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un type de contenus`}
+                >
                     <CmtFormBlock title="Informations générales">
                         <CmtTextField
                             value={values.name}

@@ -51,6 +51,7 @@ const FormComponent = ({
                 </InputLabel>
                 <Select
                     labelId={`choice-${name}-label`}
+                    variant="standard"
                     size="small"
                     id={`choice-${name}`}
                     value={val}
