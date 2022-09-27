@@ -19,6 +19,8 @@ export const CmtFormBlock = ({ title, children, marginBlock = 3, ...rest }) => {
                     borderBottom: 1,
                     borderBottomColor: 'divider',
                     backgroundColor: theme.palette.secondary.main,
+                    borderTopLeftRadius: '4px',
+                    borderTopRightRadius: '4px',
                 }}
             />
             <CardContent>{children}</CardContent>

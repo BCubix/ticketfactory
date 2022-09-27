@@ -103,7 +103,7 @@ const defaultTheme = {
             dark: '#5D9405',
         },
         info: {
-            main: '#0795F4',
+            main: '#FFAB00',
             light: '#9BE7FD',
             dark: '#0356AF',
         },
@@ -114,7 +114,7 @@ const defaultTheme = {
             contrastText: '#fff',
         },
         error: {
-            main: '#E00930',
+            main: '#B71C1C',
             light: '#FFC7D1',
             dark: '#87061E',
         },

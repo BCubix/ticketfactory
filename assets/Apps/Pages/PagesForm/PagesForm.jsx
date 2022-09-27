@@ -1,24 +1,24 @@
 import React from 'react';
-import {Formik} from "formik";
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import {Box} from "@mui/system";
-import {Button, FormControlLabel, FormHelperText, Switch, Typography} from "@mui/material";
+import { Box } from '@mui/system';
+import { Button, FormControlLabel, FormHelperText, Switch, Typography } from '@mui/material';
 
-import {CmtPageWrapper} from "@Components/CmtPage/CmtPageWrapper/CmtPageWrapper";
-import {CmtFormBlock} from "@Components/CmtFormBlock/CmtFormBlock";
-import {CmtTextField} from "@Components/CmtTextField/CmtTextField";
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
+import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
 
-import PagesBlocksForm from "@Apps/Pages/PagesForm/PagesBlocksForm";
+import PagesBlocksForm from '@Apps/Pages/PagesForm/PagesBlocksForm';
 
-function PagesForm({handleSubmit, initialValues = null}) {
+function PagesForm({ handleSubmit, initialValues = null }) {
     const pageSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre de la page.'),
         pageBlocks: Yup.array().of(
             Yup.object().shape({
                 content: Yup.string().required('Veuillez renseigner le contenu de votre bloc.'),
             })
-        )
+        ),
     });
 
     return (
@@ -29,27 +29,27 @@ function PagesForm({handleSubmit, initialValues = null}) {
                 pageBlocks: initialValues?.pageBlocks || [],
             }}
             validationSchema={pageSchema}
-            onSubmit={(values, {setSubmitting}) => {
+            onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
             }}
         >
             {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  setFieldValue,
-                  setFieldTouched,
-                  isSubmitting,
-              }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit}>
-                    <Typography component="h1" variant="h5">
-                        {initialValues ? 'Modification' : 'Création'} d'une page
-                    </Typography>
-
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                setFieldTouched,
+                isSubmitting,
+            }) => (
+                <CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'une page`}
+                >
                     <CmtFormBlock title="Informations générales">
                         <CmtTextField
                             value={values.title}
@@ -76,7 +76,7 @@ function PagesForm({handleSubmit, initialValues = null}) {
                     </CmtFormBlock>
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
-                            sx={{marginRight: 2, marginTop: 1}}
+                            sx={{ marginRight: 2, marginTop: 1 }}
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
@@ -91,7 +91,7 @@ function PagesForm({handleSubmit, initialValues = null}) {
                         <Button
                             type="submit"
                             variant="contained"
-                            sx={{mt: 3, mb: 2}}
+                            sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
                         >
                             {initialValues ? 'Modifier' : 'Créer'}

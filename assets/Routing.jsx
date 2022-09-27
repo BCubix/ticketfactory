@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import {
     CATEGORIES_BASE_PATH,
     CONTACT_REQUEST_BASE_PATH,
@@ -16,6 +16,7 @@ import {
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
     MENUS_BASE_PATH,
+    PAGES_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
@@ -62,6 +63,10 @@ import { RedirectionsList } from './Apps/Redirections/RedirectionsList/Redirecti
 import { CreateRedirection } from './Apps/Redirections/CreateRedirection/CreateRedirection';
 import { EditRedirection } from './Apps/Redirections/EditRedirection/EditRedirection';
 import { MenusList } from './Apps/Menus/MenusList/MenusList';
+import PagesList from './Apps/Pages/PagesList/PagesList';
+import CreatePage from './Apps/Pages/CreatePage/CreatePage';
+import EditPage from './Apps/Pages/EditPage/EditPage';
+import { EditContent } from './Apps/Contents/EditContent/EditContent';
 
 const NON_AUTHENTICATED_ROUTES = [{ path: LOGIN_PATH, component: <Login /> }];
 
@@ -118,6 +123,10 @@ const AUTHENTICATED_ROUTES = [
     { path: `${REDIRECTIONS_BASE_PATH}/:id${EDIT_PATH}`, component: <EditRedirection /> },
 
     { path: MENUS_BASE_PATH, component: <MenusList /> },
+
+    { path: PAGES_BASE_PATH, component: <PagesList /> },
+    { path: PAGES_BASE_PATH + CREATE_PATH, component: <CreatePage /> },
+    { path: `${PAGES_BASE_PATH}/:id${EDIT_PATH}`, component: <EditPage /> },
 ];
 
 const AuthenticatedLayout = ({ children }) => {
@@ -147,7 +156,7 @@ const AuthenticatedLayout = ({ children }) => {
 
 export const Routing = () => {
     return (
-        <>
+        <Routes>
             {NON_AUTHENTICATED_ROUTES.map((item, index) => (
                 <Route
                     key={index}
@@ -165,6 +174,6 @@ export const Routing = () => {
                     element={<AuthenticatedLayout>{item.component}</AuthenticatedLayout>}
                 />
             ))}
-        </>
+        </Routes>
     );
 };

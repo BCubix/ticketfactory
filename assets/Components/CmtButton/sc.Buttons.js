@@ -44,3 +44,16 @@ export const ActionFabButton = styled(Fab)`
             0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
+
+export const AddBlockButton = styled(Button)`
+    background-color: #ffffff;
+    color: ${(props) => props.theme.palette.crud.create.textColor};
+    border-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
+
+    &:hover {
+        background-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
+        border-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
+            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+    }
+`;

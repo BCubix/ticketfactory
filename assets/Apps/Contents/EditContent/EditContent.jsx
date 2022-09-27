@@ -1,19 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CONTENT_BASE_PATH, CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import {
     contentTypesSelector,
     getContentTypesAction,
 } from '../../../redux/contentTypes/contentTypesSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import authApi from '../../../services/api/authApi';
 import contentsApi from '../../../services/api/contentsApi';
 import { ContentsForm } from '../ContentsForm/ContentsForm';
 
-export const CreateContent = () => {
+export const EditContent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
