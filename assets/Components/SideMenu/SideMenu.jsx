@@ -18,6 +18,7 @@ import {
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
     MENUS_BASE_PATH,
+    PAGES_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
@@ -59,7 +60,7 @@ const MENU = [
         title: 'PERSONNALISATION',
         menu: [
             { name: 'Menus', link: MENUS_BASE_PATH, icon: <MenuIcon /> },
-            { name: 'Pages', link: null, icon: <DescriptionIcon /> },
+            { name: 'Pages', link: PAGES_BASE_PATH, icon: <DescriptionIcon /> },
             {
                 name: 'Redirections',
                 link: REDIRECTIONS_BASE_PATH,

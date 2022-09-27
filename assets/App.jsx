@@ -16,6 +16,7 @@ import {
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
     MENUS_BASE_PATH,
+    PAGES_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
@@ -65,6 +66,9 @@ import { RedirectionsList } from './Apps/Redirections/RedirectionsList/Redirecti
 import { CreateRedirection } from './Apps/Redirections/CreateRedirection/CreateRedirection';
 import { EditRedirection } from './Apps/Redirections/EditRedirection/EditRedirection';
 import { MenusList } from './Apps/Menus/MenusList/MenusList';
+import PagesList from "@Apps/Pages/PagesList/PagesList";
+import CreatePage from "@Apps/Pages/CreatePage/CreatePage";
+import EditPage from "@Apps/Pages/EditPage/EditPage";
 
 const AuthenticatedLayout = ({ children }) => {
     const { connected, loading } = useSelector(profileSelector);
@@ -434,6 +438,33 @@ export const App = () => {
                             element={
                                 <AuthenticatedLayout>
                                     <MenusList />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={PAGES_BASE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <PagesList />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={PAGES_BASE_PATH + CREATE_PATH}
+                            element={
+                                <AuthenticatedLayout>
+                                    <CreatePage />
+                                </AuthenticatedLayout>
+                            }
+                        />
+
+                        <Route
+                            path={`${PAGES_BASE_PATH}/:id${EDIT_PATH}`}
+                            element={
+                                <AuthenticatedLayout>
+                                    <EditPage />
                                 </AuthenticatedLayout>
                             }
                         />
