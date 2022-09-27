@@ -47,7 +47,6 @@ export const MenuStructure = ({
     };
 
     const handleDragEnd = (result) => {
-        console.log(result);
         if (!result.destination) {
             return;
         }
@@ -61,7 +60,6 @@ export const MenuStructure = ({
         let destinationId = result.destination.droppableId.split('.');
         destinationId.shift();
 
-        console.log(removedElement, element, destinationId);
         insertMenuElement(element, destinationId, removedElement, result.destination.index);
 
         setFieldValue('menus', element);

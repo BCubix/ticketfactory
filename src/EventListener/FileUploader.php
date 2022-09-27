@@ -12,21 +12,17 @@ class FileUploader
 {
     private const NOT_FOUND_MESSAGE = "Cet élément n'existe pas.";
 
-    private $em;
-
-    private $handler;
     private $annotation;
-    
+    private $em;
+    private $handler;
     private $rootPath;
 
     public function __construct($handler, $annotation, $rootPath, EntityManagerInterface $em)
     {
-        $this->handler = $handler;
         $this->annotation = $annotation;
-
-        $this->rootPath = $rootPath;
-
         $this->em = $em;
+        $this->handler = $handler;
+        $this->rootPath = $rootPath;
     }
 
     public function onUpload(PostPersistEvent $event)
@@ -35,7 +31,6 @@ class FileUploader
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-
         $file = $event->getFile();
 
         $id = $event->getRequest()->get('id');
@@ -43,17 +38,16 @@ class FileUploader
         $type = $event->getRequest()->get('type');
         $url = $event->getRequest()->get('filePath') . '/' . $file->getFileName();
 
-        if ($id == null) {
+        if (null === $id) {
             $media = new Media();
 
             $media->setTitle($fileName);
         } else {
             $media = $this->em->getRepository(Media::class)->findOneForAdmin($id);
 
-            if (is_null($media)) {
+            if (null === $media) {
                 throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
             }
-    
         }
 
         $media->setDocumentFileName($file->getFileName());

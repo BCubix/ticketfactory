@@ -52,12 +52,36 @@ class DashboardController extends AdminController
                         'endDate'   => '2022-08-07'
                     ],
                     'numbers' => [
-                        'sales'          => 3808.35,
-                        'orders'         => 84,
-                        'tickets'        => 217,
-                        'averageBasket'  => 45.33,
-                        'visits'         => 48809,
-                        'transformation' => 2.1
+                        'sales' => [
+                            'label'  => 'Ventes',
+                            'amount' => 3808.35,
+                            'unit'   => '€'
+                        ],
+                        'orders' => [
+                            'label'  => 'Commandes',
+                            'amount' => 84,
+                            'unit'   => 'commandes'
+                        ],
+                        'tickets' => [
+                            'label'  => 'Ticket',
+                            'amount' => 217,
+                            'unit'   => 'tickets'
+                        ],
+                        'averageBasket' => [
+                            'label'  => 'Panier moyen',
+                            'amount' => 45.33,
+                            'unit'   => '€'
+                        ],
+                        'visits' => [
+                            'label'  => 'Visites',
+                            'amount' => 48809,
+                            'unit'   => 'visiteurs'
+                        ],
+                        'transformation' => [
+                            'label'  => 'Taux de transformation',
+                            'amount' => 2.1,
+                            'unit'   => '%'
+                        ]
                     ],
                     'graph' => [
                         'tab' => 'tickets',

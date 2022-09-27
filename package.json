@@ -47,7 +47,6 @@
         "@mui/material": "^5.9.3",
         "@mui/system": "^5.10.6",
         "@mui/x-date-pickers": "^5.0.2",
-        "@mui/x-date-pickers-pro": "^5.0.2",
         "@reduxjs/toolkit": "^1.8.3",
         "@toast-ui/react-image-editor": "^3.15.2",
         "axios-retry": "^3.3.1",

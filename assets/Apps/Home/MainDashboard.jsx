@@ -19,16 +19,16 @@ const MainDashboard = () => {
 
     return (
         <CmtPageWrapper title={'Tableau de bord'}>
-            { dashboard && (
-                <Grid container spacing={2} sx={{ marginTop: 0 }}>
+            {dashboard && (
+                <Grid container spacing={4} sx={{ marginTop: 0 }}>
                     <Grid item xs={12} md={4} lg={3}>
-                        <FirstCardDashboard data={ dashboard.col1 }/>
+                        <FirstCardDashboard data={dashboard.col1} />
                     </Grid>
                     <Grid item xs={12} md={8} lg={7}>
-                        <SecondCardDashboard data={ dashboard.col2 }/>
+                        <SecondCardDashboard data={dashboard.col2} />
                     </Grid>
                     <Grid item xs={12} md={2} lg={2}>
-                        <ThirdCardDashboard data={ dashboard.col3 }/>
+                        <ThirdCardDashboard data={dashboard.col3} />
                     </Grid>
                 </Grid>
             )}

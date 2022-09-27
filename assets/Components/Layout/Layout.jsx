@@ -24,7 +24,11 @@ export const Layout = ({ children }) => {
         <Box>
             <AppBar position="fixed" sx={{ width: `100%`, zIndex: 1201 }}>
                 <Toolbar>
-                    <Button variant="text" onClick={() => navigate(HOME_PATH)} sx={{ color: '#FFFFFF' }}>
+                    <Button
+                        variant="text"
+                        onClick={() => navigate(HOME_PATH)}
+                        sx={{ color: '#FFFFFF' }}
+                    >
                         <Typography variant="h2" component="div">
                             Ticket Factory
                         </Typography>
@@ -37,7 +41,7 @@ export const Layout = ({ children }) => {
             </AppBar>
             <Box sx={{ display: 'flex' }}>
                 <SideMenu />
-                <Box component="main" sx={{ flexGrow: 1, mt: 16 }}>
+                <Box component="main" sx={{ flexGrow: 1, marginTop: '64px' }}>
                     {children}
                 </Box>
             </Box>
