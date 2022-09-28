@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Admin\ContentType;
+namespace App\Form\Admin\Content;
 
-use App\Entity\ContentType\ContentType;
+use App\Entity\Content\ContentType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,7 +20,7 @@ class ContentTypeType extends AbstractType
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
             ->add('fields',               CollectionType::class,      [
-                'entry_type'   => ContentFieldType::class,
+                'entry_type'   => ContentTypeFieldType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'delete_empty' => true,

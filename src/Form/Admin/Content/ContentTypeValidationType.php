@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Form\Admin\ContentType\Types;
+namespace App\Form\Admin\Content;
 
-use App\Form\Admin\ContentType\ContentFieldType;
+use App\Entity\Content\ContentTypeValidation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentFieldTextType extends ContentFieldType
+class ContentTypeValidationType extends AbstractType
 {
-    public const FIELD_NAME = 'text';
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('name',                 TextType::class,            [])
             ->add('value',                TextType::class,            [])
         ;
     }
@@ -23,13 +22,7 @@ class ContentFieldTextType extends ContentFieldType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'inherit_data' => true
+            'data_class' => ContentTypeValidation::class
         ]);
-    }
-
-    protected static function getValidations() {
-        $validations = parent::getValidations();
-
-        return array_merge($validations, ['minLength', 'maxLength', 'regex']);
     }
 }

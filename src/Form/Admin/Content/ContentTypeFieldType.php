@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Admin\ContentType;
+namespace App\Form\Admin\Content;
 
-use App\Entity\ContentType\ContentField;
+use App\Entity\Content\ContentTypeField;
 use App\Manager\ContentTypeManager;
 
 use Symfony\Component\Form\AbstractType;
@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentFieldType extends AbstractType
+class ContentTypeFieldType extends AbstractType
 {
     protected $ctm;
 
@@ -51,15 +51,7 @@ class ContentFieldType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContentField::class
+            'data_class' => ContentTypeField::class
         ]);
-    }
-
-    protected static function getOptions() {
-        return ['attr', 'disabled', 'required', 'trim'];
-    }
-
-    protected static function getValidations() {
-        return [];
     }
 }

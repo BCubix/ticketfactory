@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\ContentType;
+namespace App\Entity\Content;
 
 use App\Entity\JsonDoctrineSerializable;
 
-class ContentTypeValidation implements JsonDoctrineSerializable
+class ContentTypeOption implements JsonDoctrineSerializable
 {
     private ?string $name = null;
 
@@ -39,12 +39,14 @@ class ContentTypeValidation implements JsonDoctrineSerializable
         return json_encode([$this->name => $this->value]);
     }
 
-    public static function jsonUnserialize($data): self
+    public static function jsonDeserialize($data): self
     {
         $data = json_decode($data, true);
 
         $object = new self();
-        $object->name  = $data['name'];
-        $object->value = $data['value'];
+        $object->name  = array_key_first($data);
+        $object->value = $data[$object->name];
+
+        return $object;
     }
 }

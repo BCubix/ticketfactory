@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\Content\ContentType;
+use App\Entity\Content\Content;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class ContentTypeRepository extends CrudRepository
+class ContentRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ContentType::class);
+        parent::__construct($registry, Content::class);
     }
 }

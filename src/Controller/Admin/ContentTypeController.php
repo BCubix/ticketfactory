@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ContentType\ContentType;
-use App\Form\Admin\ContentType\ContentTypeType;
+use App\Entity\Content\ContentType;
+use App\Form\Admin\Content\ContentTypeType;
 use App\Form\Admin\Filters\FilterContentTypeType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
