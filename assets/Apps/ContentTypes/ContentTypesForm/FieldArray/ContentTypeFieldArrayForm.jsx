@@ -1,11 +1,12 @@
-import { Button, Typography } from '@mui/material';
+import { Card, CardContent, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import { FieldArray } from 'formik';
 import React from 'react';
 import { FieldArrayElem } from './FieldArrayElem';
-import { FieldElemWrapper } from '../sc.ContentTypeFields';
-import { CmtEndPositionWrapper } from '../../../../Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
-import { AddBlockButton } from '../../../../Components/CmtButton/sc.Buttons';
+import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
+import { AddBlockButton, DeleteBlockFabButton } from '@Components/CmtButton/sc.Buttons';
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -22,41 +23,47 @@ export const ContentTypeFieldArrayForm = ({
         <>
             <FieldArray name={`${prefixName}fields`}>
                 {({ remove, push }) => (
-                    <Box sx={{ width: '100%' }}>
+                    <Box sx={{ width: '100%', marginTop: 2, paddingInline: 1 }}>
                         {values?.fields?.map((item, index) => (
-                            <FieldElemWrapper key={index}>
-                                <Typography component="p" variant="h4">
-                                    Champ n°{index + 1}
-                                </Typography>
+                            <Card
+                                key={index}
+                                sx={{ position: 'relative', overflow: 'visible', marginBottom: 7 }}
+                            >
+                                <CardContent>
+                                    <Box p={2}>
+                                        <DeleteBlockFabButton
+                                            size="small"
+                                            onClick={() => {
+                                                remove(index);
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </DeleteBlockFabButton>
 
-                                <FieldArrayElem
-                                    values={item}
-                                    index={index}
-                                    errors={errors}
-                                    touched={touched}
-                                    handleChange={handleChange}
-                                    handleBlur={handleBlur}
-                                    setFieldValue={setFieldValue}
-                                    setFieldTouched={setFieldTouched}
-                                    prefixName={prefixName}
-                                    contentTypesModules={contentTypesModules}
-                                />
+                                        <InputLabel sx={{ marginBottom: 3 }} id={index}>
+                                            Champ n°{index + 1}
+                                        </InputLabel>
 
-                                <Button
-                                    variant="outlined"
-                                    color="error"
-                                    onClick={() => {
-                                        remove(index);
-                                    }}
-                                    sx={{ marginTop: 5, marginBottom: 3 }}
-                                >
-                                    Supprimer
-                                </Button>
-                            </FieldElemWrapper>
+                                        <FieldArrayElem
+                                            values={item}
+                                            index={index}
+                                            errors={errors}
+                                            touched={touched}
+                                            handleChange={handleChange}
+                                            handleBlur={handleBlur}
+                                            setFieldValue={setFieldValue}
+                                            setFieldTouched={setFieldTouched}
+                                            prefixName={prefixName}
+                                            contentTypesModules={contentTypesModules}
+                                        />
+                                    </Box>
+                                </CardContent>
+                            </Card>
                         ))}
 
                         <CmtEndPositionWrapper>
                             <AddBlockButton
+                                size="small"
                                 variant="outlined"
                                 color="primary"
                                 onClick={() => {
@@ -74,7 +81,7 @@ export const ContentTypeFieldArrayForm = ({
                                     });
                                 }}
                             >
-                                Ajouter un champ
+                                <AddIcon /> Ajouter un champ
                             </AddBlockButton>
                         </CmtEndPositionWrapper>
                     </Box>
