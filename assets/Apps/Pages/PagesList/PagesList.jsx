@@ -19,9 +19,9 @@ import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'title', label: 'Titre de la page' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+    { name: 'title', label: 'Titre de la page', width: '70%' },
 ];
 
 function PagesList() {

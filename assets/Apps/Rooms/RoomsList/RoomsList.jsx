@@ -16,11 +16,11 @@ import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'name', label: 'Nom de la catégorie' },
-    { name: 'seatsNb', label: 'Nombre de places' },
-    { name: 'area', label: 'Superficie' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+    { name: 'name', label: 'Nom de la catégorie', width: '30%' },
+    { name: 'seatsNb', label: 'Nombre de places', width: '20%' },
+    { name: 'area', label: 'Superficie', width: '20%' },
 ];
 
 export const RoomsList = () => {

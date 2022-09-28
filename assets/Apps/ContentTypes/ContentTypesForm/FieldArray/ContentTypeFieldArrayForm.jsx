@@ -5,6 +5,7 @@ import React from 'react';
 import { FieldArrayElem } from './FieldArrayElem';
 import { FieldElemWrapper } from '../sc.ContentTypeFields';
 import { CmtEndPositionWrapper } from '../../../../Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
+import { AddBlockButton } from '../../../../Components/CmtButton/sc.Buttons';
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -55,8 +56,8 @@ export const ContentTypeFieldArrayForm = ({
                         ))}
 
                         <CmtEndPositionWrapper>
-                            <Button
-                                variant="contained"
+                            <AddBlockButton
+                                variant="outlined"
                                 color="primary"
                                 onClick={() => {
                                     const fieldType = 'text';
@@ -74,7 +75,7 @@ export const ContentTypeFieldArrayForm = ({
                                 }}
                             >
                                 Ajouter un champ
-                            </Button>
+                            </AddBlockButton>
                         </CmtEndPositionWrapper>
                     </Box>
                 )}

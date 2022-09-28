@@ -16,11 +16,11 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'name', label: 'Nom' },
-    { name: 'length', label: 'Largeur' },
-    { name: 'height', label: 'Hauteur' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+    { name: 'name', label: 'Nom', width: '30%' },
+    { name: 'length', label: 'Largeur', width: '20%' },
+    { name: 'height', label: 'Hauteur', width: '20%' },
 ];
 
 export const ImageFormatsList = () => {

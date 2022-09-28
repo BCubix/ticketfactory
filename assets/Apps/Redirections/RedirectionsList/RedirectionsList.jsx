@@ -16,11 +16,11 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Activé ?', type: 'bool' },
-    { name: 'redirectType', label: 'Type de redirection' },
-    { name: 'redirectFrom', label: 'Redirigé depuis' },
-    { name: 'redirectTo', label: 'Redirigé vers' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+    { name: 'redirectType', label: 'Type de redirection', width: '10%' },
+    { name: 'redirectFrom', label: 'Redirigé depuis', width: '30%' },
+    { name: 'redirectTo', label: 'Redirigé vers', width: '30%' },
 ];
 
 export const RedirectionsList = () => {

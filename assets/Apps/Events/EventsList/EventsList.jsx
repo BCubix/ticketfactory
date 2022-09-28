@@ -17,12 +17,12 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID' },
-    { name: 'active', label: 'Actif ?', type: 'bool' },
-    { name: 'name', label: 'Nom' },
-    { name: 'mainCategory.name', label: 'Catégorie' },
-    { name: 'room.name', label: 'Salle' },
-    { name: 'season.name', label: 'Saison' },
+    { name: 'id', label: 'ID', width: '10%' },
+    { name: 'active', label: 'Actif ?', type: 'bool', width: '10%' },
+    { name: 'name', label: 'Nom', width: '30%' },
+    { name: 'mainCategory.name', label: 'Catégorie', width: '10%' },
+    { name: 'room.name', label: 'Salle', width: '10%' },
+    { name: 'season.name', label: 'Saison', width: '20%' },
 ];
 
 export const EventsList = () => {

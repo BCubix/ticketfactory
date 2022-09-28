@@ -15,6 +15,7 @@ import {
     CONTENT_BASE_PATH,
     CONTENT_TYPES_BASE_PATH,
     EVENTS_BASE_PATH,
+    HOME_PATH,
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
     MENUS_BASE_PATH,
@@ -108,7 +109,7 @@ export const SideMenu = () => {
                     <List>
                         {menu?.menu?.map((item, ind) => (
                             <ListItem disablePadding key={ind}>
-                                <ListItemButton component={Link} to={item.link}>
+                                <ListItemButton component={Link} to={item.link || HOME_PATH}>
                                     <ListItemIcon>{item.icon}</ListItemIcon>
                                     <ListItemText primary={item.name} />
                                 </ListItemButton>
