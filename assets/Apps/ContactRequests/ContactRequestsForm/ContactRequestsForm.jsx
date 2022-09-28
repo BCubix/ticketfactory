@@ -101,6 +101,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Numéro de téléphone'}
                                     name="phone"
                                     error={touched.phone && errors.phone}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12}>
