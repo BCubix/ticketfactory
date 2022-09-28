@@ -5,7 +5,7 @@ import { SideMenu } from '../SideMenu/SideMenu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { logoutAction } from '../../redux/profile/profileSlice';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { HOME_PATH, LOGIN_PATH } from '../../Constant';
 import { LayoutContext } from '../CmtLayoutProvider/CmtLayoutProvider';
 
@@ -25,8 +25,9 @@ export const Layout = ({ children }) => {
             <AppBar position="fixed" sx={{ width: `100%`, zIndex: 1201 }}>
                 <Toolbar>
                     <Button
+                        component={Link}
+                        to={HOME_PATH}
                         variant="text"
-                        onClick={() => navigate(HOME_PATH)}
                         sx={{ color: '#FFFFFF' }}
                     >
                         <Typography variant="h2" component="div">

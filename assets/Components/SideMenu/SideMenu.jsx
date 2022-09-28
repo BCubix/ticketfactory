@@ -25,7 +25,7 @@ import {
     USER_BASE_PATH,
 } from '../../Constant';
 import { Box } from '@mui/system';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -108,15 +108,7 @@ export const SideMenu = () => {
                     <List>
                         {menu?.menu?.map((item, ind) => (
                             <ListItem disablePadding key={ind}>
-                                <ListItemButton
-                                    onClick={() => {
-                                        if (!item.link) {
-                                            return;
-                                        }
-
-                                        navigate(item.link);
-                                    }}
-                                >
+                                <ListItemButton component={Link} to={item.link}>
                                     <ListItemIcon>{item.icon}</ListItemIcon>
                                     <ListItemText primary={item.name} />
                                 </ListItemButton>
