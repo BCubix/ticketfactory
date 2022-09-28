@@ -68,6 +68,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Prénom'}
                                     name="firstName"
                                     error={touched.firstName && errors.firstName}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -78,6 +79,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Nom'}
                                     name="lastName"
                                     error={touched.lastName && errors.lastName}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -88,6 +90,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Email'}
                                     name="email"
                                     error={touched.email && errors.email}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -108,6 +111,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Objet'}
                                     name="subject"
                                     error={touched.subject && errors.subject}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -120,6 +124,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     error={touched.message && errors.message}
                                     multiline
                                     rows={5}
+                                    required
                                 />
                             </Grid>
                         </Grid>

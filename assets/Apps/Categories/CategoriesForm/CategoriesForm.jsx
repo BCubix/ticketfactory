@@ -59,6 +59,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                             label="Nom"
                             name="name"
                             error={touched.name && errors.name}
+                            required
                         />
 
                         {values?.mustHaveParent && (

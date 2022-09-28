@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\EventCategory;
 use App\Form\Admin\EventCategoryType;
 use App\Form\Admin\Filters\FilterEventCategoryType;
+use App\Event\Admin\CrudObjectInstantiatedEvent;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -65,7 +66,7 @@ class EventCategoryController extends CrudController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $categoryId): View
     {
-        $mainCategory = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters, $categoryId);
+        $object = $this->em->getRepository($this->entityClass)->findAllForAdmin([], $categoryId);
         if (null === $object) {
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
@@ -75,7 +76,7 @@ class EventCategoryController extends CrudController
 
         $objectId = $object->getId();
 
-        $this->attachProductsToRootCategory($mainCategory);
+        $this->attachProductsToRootCategory($object);
 
         $this->em->remove($object);
         $this->em->flush();

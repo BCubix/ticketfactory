@@ -15,6 +15,7 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                         label="Nom"
                         name="name"
                         error={touched.name && errors.name}
+                        required
                     />
                 </Grid>
 
@@ -26,6 +27,7 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                         label="Nombre de places"
                         name="seatsNb"
                         error={touched.seatsNb && errors.seatsNb}
+                        required
                     />
                 </Grid>
 
@@ -37,6 +39,7 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                         label="Superficie"
                         name="area"
                         error={touched.area && errors.area}
+                        required
                     />
                 </Grid>
             </Grid>

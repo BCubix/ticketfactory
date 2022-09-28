@@ -8,8 +8,13 @@ import { EventsPriceForm } from './EventsPriceForm';
 import AddIcon from '@mui/icons-material/Add';
 import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import { CmtRemoveButton } from '../../../Components/CmtRemoveButton/CmtRemoveButton';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+    ActionButton,
+    CreateButton,
+    DeleteBlockFabButton,
+} from '../../../Components/CmtButton/sc.Buttons';
+import DeleteIcon from '@mui/icons-material/Delete';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
 
 export const EventsPriceBlockForm = ({
     values,
@@ -42,7 +47,7 @@ export const EventsPriceBlockForm = ({
                 {({ remove, push }) => (
                     <Box>
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <Button
+                            <ActionButton
                                 size="small"
                                 color="primary"
                                 variant="contained"
@@ -59,16 +64,14 @@ export const EventsPriceBlockForm = ({
                                     }
                                 }}
                             >
-                                <AddIcon />
-                                <Typography mt={'2px'} component="p" variant="body1">
-                                    {values?.multiplePriceBlock
-                                        ? 'Ne plus utiliser les groupes'
-                                        : 'Utiliser les groupes'}
-                                </Typography>
-                            </Button>
+                                <WorkspacesIcon sx={{ marginRight: 1 }} />
+                                {values?.multiplePriceBlock
+                                    ? 'Ne plus utiliser les groupes'
+                                    : 'Utiliser les groupes'}
+                            </ActionButton>
 
                             {values?.multiplePriceBlock && (
-                                <Button
+                                <CreateButton
                                     size="small"
                                     color="primary"
                                     variant="contained"
@@ -77,16 +80,15 @@ export const EventsPriceBlockForm = ({
                                     }}
                                     sx={{ ml: 2 }}
                                 >
-                                    <AddIcon />
-                                    <Typography mt={'2px'} component="p" variant="body1">
-                                        Ajouter un groupe
-                                    </Typography>
-                                </Button>
+                                    <AddIcon sx={{ marginRight: 1 }} />
+                                    Ajouter un groupe
+                                </CreateButton>
                             )}
                         </Box>
                         {values?.eventPriceBlocks?.map((item, index) => (
                             <CmtFormBlock
                                 title={values?.multiplePriceBlock ? '' : item?.name}
+                                marginBlock={7}
                                 key={index}
                             >
                                 {values?.multiplePriceBlock && (
@@ -123,16 +125,14 @@ export const EventsPriceBlockForm = ({
                                 />
 
                                 {values.multiplePriceBlock && (
-                                    <CmtRemoveButton
-                                        pt="2px"
-                                        className="pointer"
+                                    <DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
-                                        <CloseIcon />
-                                    </CmtRemoveButton>
+                                        <DeleteIcon />
+                                    </DeleteBlockFabButton>
                                 )}
                             </CmtFormBlock>
                         ))}

@@ -52,6 +52,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                             name="name"
                             error={touched.name && errors.name}
                             sx={{ marginBottom: 3 }}
+                            required
                         />
                         <InputLabel id="description">Description</InputLabel>
 

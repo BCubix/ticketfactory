@@ -5,15 +5,19 @@ import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
 
 export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange, handleBlur }) => {
     return (
         <CmtFormBlock title="Plans">
             <FieldArray name="seatingPlans">
                 {({ remove, push }) => (
-                    <Box>
+                    <Box sx={{ padding: 2 }}>
                         {values.seatingPlans?.map((item, index) => (
-                            <Card sx={{ marginBlock: 2 }} key={index}>
+                            <Card
+                                sx={{ marginBlock: 7, position: 'relative', overflow: 'visible' }}
+                                key={index}
+                            >
                                 <CardContent sx={{ display: 'flex' }}>
                                     <CmtTextField
                                         value={item.name}
@@ -28,25 +32,24 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                             errors.seatingPlans[index]?.name
                                         }
                                         sx={{ marginInline: 1 }}
+                                        required
                                     />
-                                    <Fab
-                                        sx={{ marginLeft: 2, marginTop: 2, flexShrink: 0 }}
-                                        className="pointer"
+                                    <DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
-                                        <DeleteIcon color="error" />
-                                    </Fab>
+                                        <DeleteIcon />
+                                    </DeleteBlockFabButton>
                                 </CardContent>
                             </Card>
                         ))}
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <Button
+                            <AddBlockButton
                                 size="small"
                                 color="primary"
-                                variant="contained"
+                                variant="outlined"
                                 onClick={() => {
                                     push({ name: '' });
                                 }}
@@ -55,7 +58,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 <Typography mt={'2px'} component="p" variant="body1">
                                     Ajouter
                                 </Typography>
-                            </Button>
+                            </AddBlockButton>
                         </Box>
                     </Box>
                 )}

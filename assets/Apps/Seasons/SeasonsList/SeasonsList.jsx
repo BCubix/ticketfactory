@@ -16,7 +16,8 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
     { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'name', label: 'Nom de la catégorie', width: '70%' },
+    { name: 'name', label: 'Nom de la catégorie', width: '40%' },
+    { name: 'beginYear', label: 'Année de début', width: '30%' },
 ];
 
 export const SeasonsList = () => {

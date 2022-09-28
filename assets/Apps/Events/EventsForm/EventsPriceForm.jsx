@@ -1,12 +1,11 @@
 import React from 'react';
 import { FieldArray } from 'formik';
-import { Box } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid } from '@mui/material';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { CmtRemoveButton } from '../../../Components/CmtRemoveButton/CmtRemoveButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
+import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const EventsPriceForm = ({
     values,
@@ -19,8 +18,8 @@ export const EventsPriceForm = ({
     return (
         <FieldArray name={`eventPriceBlocks[${blockIndex}].eventPrices`}>
             {({ remove, push }) => (
-                <Box>
-                    <Grid container spacing={4}>
+                <Box sx={{ padding: 2 }}>
+                    <Grid container spacing={6}>
                         {values?.eventPriceBlocks[blockIndex]?.eventPrices?.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
@@ -81,36 +80,31 @@ export const EventsPriceForm = ({
                                             </Grid>
                                         </Grid>
 
-                                        <CmtRemoveButton
-                                            pt="2px"
-                                            className="pointer"
+                                        <DeleteBlockFabButton
                                             size="small"
                                             onClick={() => {
                                                 remove(index);
                                             }}
                                         >
-                                            <CloseIcon />
-                                        </CmtRemoveButton>
+                                            <DeleteIcon />
+                                        </DeleteBlockFabButton>
                                     </CardContent>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
 
-                    <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                        <Button
+                    <Box pt={4} pl={4} display="flex" justifyContent={'flex-end'}>
+                        <AddBlockButton
                             size="small"
                             color="primary"
-                            variant="contained"
+                            variant="outlined"
                             onClick={() => {
                                 push({ name: '', annotation: '', price: 0 });
                             }}
                         >
-                            <AddIcon />
-                            <Typography mt={'2px'} component="p" variant="body1">
-                                Ajouter
-                            </Typography>
-                        </Button>
+                            <AddIcon /> Ajouter
+                        </AddBlockButton>
                     </Box>
                 </Box>
             )}

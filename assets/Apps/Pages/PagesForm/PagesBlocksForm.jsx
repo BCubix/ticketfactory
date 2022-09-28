@@ -1,20 +1,14 @@
 import React from 'react';
 import { FieldArray } from 'formik';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
-import { Button, Card, CardContent, Fab, InputLabel } from '@mui/material';
+import { Card, CardContent, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
-import { FieldElemWrapper } from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
 import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
 import { LightEditorFormControl } from '@Components/Editors/LightEditor/sc.LightEditorFormControl';
 import LightEditor from '@Components/Editors/LightEditor/LightEditor';
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {
-    AddBlockButton,
-    CreateButton,
-    DeleteFabButton,
-} from '../../../Components/CmtButton/sc.Buttons';
+import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
 import { useTheme } from '@emotion/react';
 
 function PagesBlocksForm({ values, errors, touched, setFieldValue, setFieldTouched }) {
@@ -31,25 +25,14 @@ function PagesBlocksForm({ values, errors, touched, setFieldValue, setFieldTouch
                         >
                             <CardContent>
                                 <Box p={2}>
-                                    <DeleteFabButton
+                                    <DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
-                                        sx={{
-                                            marginTop: 3,
-                                            marginBottom: 3,
-                                            position: 'absolute',
-                                            top: -30,
-                                            right: -15,
-                                            height: 30,
-                                            width: 30,
-                                            minHeight: 0,
-                                            minWidth: 0,
-                                        }}
                                     >
                                         <DeleteIcon />
-                                    </DeleteFabButton>
+                                    </DeleteBlockFabButton>
 
                                     <InputLabel sx={{ marginBottom: 3 }} id={index}>
                                         Bloc n°{index + 1}
@@ -86,7 +69,6 @@ function PagesBlocksForm({ values, errors, touched, setFieldValue, setFieldTouch
                             size="small"
                             color="primary"
                             variant="outlined"
-                            sx={{ borderColor: theme.palette.crud.create.backgroundColor }}
                             onClick={() => {
                                 push({ content: '' });
                             }}

@@ -6,10 +6,15 @@ import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import { EventsDateForm } from './EventsDateForm';
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import { CmtRemoveButton } from '../../../Components/CmtRemoveButton/CmtRemoveButton';
+import {
+    ActionButton,
+    CreateButton,
+    DeleteBlockFabButton,
+} from '../../../Components/CmtButton/sc.Buttons';
+import DeleteIcon from '@mui/icons-material/Delete';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
 
 export const EventsDateBlockForm = ({
     values,
@@ -42,7 +47,7 @@ export const EventsDateBlockForm = ({
                 {({ remove, push }) => (
                     <Box>
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <Button
+                            <ActionButton
                                 size="small"
                                 color="primary"
                                 variant="contained"
@@ -59,16 +64,14 @@ export const EventsDateBlockForm = ({
                                     }
                                 }}
                             >
-                                <AddIcon />
-                                <Typography mt={'2px'} component="p" variant="body1">
-                                    {values?.multipleDateBlock
-                                        ? 'Ne plus utiliser les groupes'
-                                        : 'Utiliser les groupes'}
-                                </Typography>
-                            </Button>
+                                <WorkspacesIcon sx={{ marginRight: 1 }} />
+                                {values?.multipleDateBlock
+                                    ? 'Ne plus utiliser les groupes'
+                                    : 'Utiliser les groupes'}
+                            </ActionButton>
 
                             {values?.multipleDateBlock && (
-                                <Button
+                                <CreateButton
                                     size="small"
                                     color="primary"
                                     variant="contained"
@@ -77,15 +80,14 @@ export const EventsDateBlockForm = ({
                                     }}
                                     sx={{ ml: 2 }}
                                 >
-                                    <AddIcon />
-                                    <Typography mt={'2px'} component="p" variant="body1">
-                                        Ajouter un groupe
-                                    </Typography>
-                                </Button>
+                                    <AddIcon sx={{ marginRight: 1 }} />
+                                    Ajouter un groupe
+                                </CreateButton>
                             )}
                         </Box>
                         {values?.eventDateBlocks?.map((item, index) => (
                             <CmtFormBlock
+                                marginBlock={7}
                                 title={values?.multipleDateBlock ? '' : item?.name}
                                 key={index}
                             >
@@ -119,16 +121,14 @@ export const EventsDateBlockForm = ({
                                     blockIndex={index}
                                 />
                                 {values.multipleDateBlock && (
-                                    <CmtRemoveButton
-                                        pt="2px"
-                                        className="pointer"
+                                    <DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
-                                        <CloseIcon />
-                                    </CmtRemoveButton>
+                                        <DeleteIcon />
+                                    </DeleteBlockFabButton>
                                 )}
                             </CmtFormBlock>
                         ))}

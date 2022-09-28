@@ -7,6 +7,7 @@ import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import contactRequestsApi from '../../../services/api/contactRequestsApi';
 import { ContactRequestsForm } from '../ContactRequestsForm/ContactRequestsForm';
+import { getContactRequestsAction } from '../../../redux/contactRequests/contactRequestsSlice';
 
 export const EditContactRequest = () => {
     const dispatch = useDispatch();
@@ -54,7 +55,7 @@ export const EditContactRequest = () => {
             return;
         }
 
-        const result = await contactRequest.EditContactRequest(id, values);
+        const result = await contactRequestsApi.editContactRequest(id, values);
 
         if (result.result) {
             NotificationManager.success(
@@ -63,7 +64,7 @@ export const EditContactRequest = () => {
                 REDIRECTION_TIME
             );
 
-            dispatch(getContactRequest());
+            dispatch(getContactRequestsAction());
 
             navigate(CONTACT_REQUEST_BASE_PATH);
         }

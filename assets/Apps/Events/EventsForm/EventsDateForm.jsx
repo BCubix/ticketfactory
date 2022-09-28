@@ -1,25 +1,23 @@
 import {
-    Button,
     Card,
     CardContent,
     FormControl,
     Grid,
     InputLabel,
     ListItemText,
+    Box,
     MenuItem,
     Select,
-    Typography,
 } from '@mui/material';
-import { Box } from '@mui/system';
 import { FieldArray } from 'formik';
 import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
 import moment from 'moment';
 import { CmtDateTimePicker } from '../../../Components/CmtDateTimePicker/CmtDateTimePicker';
-import CloseIcon from '@mui/icons-material/Close';
-import { CmtRemoveButton } from '../../../Components/CmtRemoveButton/CmtRemoveButton';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
+import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const STATES = [
     { label: 'Valide', value: 'valid' },
@@ -42,8 +40,8 @@ export const EventsDateForm = ({
     return (
         <FieldArray name={`eventDateBlocks[${blockIndex}].eventDates`}>
             {({ remove, push }) => (
-                <Box>
-                    <Grid container spacing={4}>
+                <Box sx={{ padding: 2 }}>
+                    <Grid container spacing={6}>
                         {values?.eventDateBlocks[blockIndex]?.eventDates?.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
@@ -139,26 +137,24 @@ export const EventsDateForm = ({
                                             )}
                                         </Grid>
 
-                                        <CmtRemoveButton
-                                            pt="2px"
-                                            className="pointer"
+                                        <DeleteBlockFabButton
                                             size="small"
                                             onClick={() => {
                                                 remove(index);
                                             }}
                                         >
-                                            <CloseIcon />
-                                        </CmtRemoveButton>
+                                            <DeleteIcon />
+                                        </DeleteBlockFabButton>
                                     </CardContent>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
-                    <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                        <Button
+                    <Box pt={4} pl={4} display="flex" justifyContent={'flex-end'}>
+                        <AddBlockButton
                             size="small"
                             color="primary"
-                            variant="contained"
+                            variant="outlined"
                             onClick={() => {
                                 push({
                                     eventDate: '',
@@ -168,11 +164,8 @@ export const EventsDateForm = ({
                                 });
                             }}
                         >
-                            <AddIcon />
-                            <Typography mt={'2px'} component="p" variant="body1">
-                                Ajouter
-                            </Typography>
-                        </Button>
+                            <AddIcon /> Ajouter
+                        </AddBlockButton>
                     </Box>
                 </Box>
             )}

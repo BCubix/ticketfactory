@@ -121,6 +121,8 @@ const defaultTheme = {
         disabled: {
             main: 'rgb(211, 211, 211)',
         },
+
+        labelColor: 'rgba(0, 0, 0, 0.6)',
     },
 
     components: {

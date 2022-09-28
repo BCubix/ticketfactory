@@ -10,7 +10,10 @@ import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     const seasonsSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la saison.'),
-        beginYear: Yup.number().required("Veuillez renseigner l'année de début."),
+        beginYear: Yup.number()
+            .required("Veuillez renseigner l'année de début.")
+            .min(1970, 'Veuillez renseigner une année valide.')
+            .max(2100, 'Veuillez renseigner une année valide.'),
     });
 
     return (
@@ -51,6 +54,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                                     label="Nom"
                                     name="name"
                                     error={touched.name && errors.name}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -62,6 +66,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                                     label="Année de début"
                                     name="beginYear"
                                     error={touched.beginYear && errors.beginYear}
+                                    required
                                 />
                             </Grid>
                         </Grid>

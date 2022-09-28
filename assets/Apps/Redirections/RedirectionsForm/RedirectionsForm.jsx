@@ -23,8 +23,18 @@ import { REDIRECTION_TYPES } from '../../../Constant';
 export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
     const redirectionSchema = Yup.object().shape({
         redirectType: Yup.string().required('Veuillez renseigner le type de redirection.'),
-        redirectFrom: Yup.string().required("Veuillez renseigner l'url à rediriger."),
-        redirectTo: Yup.string().required("Veuillez renseigner l'url de destination."),
+        redirectFrom: Yup.string()
+            .matches(
+                /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+                'Veuillez renseigner une url valide.'
+            )
+            .required("Veuillez renseigner l'url à rediriger."),
+        redirectTo: Yup.string()
+            .matches(
+                /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+                'Veuillez renseigner une url valide.'
+            )
+            .required("Veuillez renseigner l'url de destination."),
     });
 
     return (
@@ -60,7 +70,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6} lg={4}>
                                 <FormControl fullWidth margin="normal">
-                                    <InputLabel id="redirectionType-label" size="small">
+                                    <InputLabel id="redirectionType-label" size="small" required>
                                         Type de redirection
                                     </InputLabel>
                                     <Select
@@ -76,6 +86,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                         onBlur={handleBlur}
                                         name={'redirectType'}
                                         error={touched.redirectType && Boolean(errors.redirectType)}
+                                        required
                                     >
                                         {REDIRECTION_TYPES.map((item, index) => (
                                             <MenuItem value={item.value} key={index}>
@@ -97,6 +108,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                     label="Url source"
                                     name="redirectFrom"
                                     error={touched.redirectFrom && errors.redirectFrom}
+                                    required
                                 />
                             </Grid>
 
@@ -108,6 +120,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                     label="Url de destination"
                                     name="redirectTo"
                                     error={touched.redirectTo && errors.redirectTo}
+                                    required
                                 />
                             </Grid>
                         </Grid>

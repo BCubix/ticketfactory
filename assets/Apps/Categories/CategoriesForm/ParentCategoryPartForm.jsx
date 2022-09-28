@@ -4,6 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import React from 'react';
 import { Box } from '@mui/system';
+import { useTheme } from '@emotion/react';
 
 const displayCategoriesOptions = (list, values, setFieldValue) => {
     if (!list || list?.length === 0) {
@@ -42,10 +43,15 @@ export const ParentCategoryPartForm = ({
     touched,
     errors,
 }) => {
+    const theme = useTheme();
+
     return (
         <>
-            <Typography variant="body1" sx={{ mt: 2 }}>
-                Catégorie parente
+            <Typography
+                variant="body1"
+                sx={{ fontWeight: 500, mt: 2, color: theme.palette.labelColor }}
+            >
+                Catégorie parente *
             </Typography>
             <TreeView
                 size="small"
