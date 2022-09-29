@@ -85,7 +85,7 @@ const authApi = {
 
     forgotPassword: async (data) => {
         try {
-            const result = await axios.post('/forgot_password', {
+            const result = await axios.post('/forgot-password', {
                 username: data.username,
             });
 
@@ -99,11 +99,11 @@ const authApi = {
         try {
             let formData = new FormData();
 
-            formData.append('username', data.username);
+            formData.append('login', data.username);
             formData.append('token', data.token);
-            formData.append('password', data.password);
+            formData.append('newPassword', data.password);
 
-            const result = await axios.post('/changePassword', formData);
+            const result = await axios.post('/reset-password', formData);
 
             return { result: true, data: result.data };
         } catch (error) {
