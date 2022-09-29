@@ -10,12 +10,14 @@ import {
     CREATE_PATH,
     EDIT_PATH,
     EVENTS_BASE_PATH,
+    FORGOT_PASSWORD_PATH,
     HOME_PATH,
     IMAGE_FORMATS_BASE_PATH,
     LOGIN_PATH,
     LOGS_BASE_PATH,
     MEDIAS_BASE_PATH,
     MENUS_BASE_PATH,
+    MODIFY_PASSWORD_PATH,
     PAGES_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
@@ -67,8 +69,14 @@ import PagesList from './Apps/Pages/PagesList/PagesList';
 import CreatePage from './Apps/Pages/CreatePage/CreatePage';
 import EditPage from './Apps/Pages/EditPage/EditPage';
 import { EditContent } from './Apps/Contents/EditContent/EditContent';
+import { ForgotPassword } from './Apps/ForgotPassword/ForgotPassword';
+import { ChangePassword } from './Apps/ChangePassword/ChangePassword';
 
-const NON_AUTHENTICATED_ROUTES = [{ path: LOGIN_PATH, component: <Login /> }];
+const NON_AUTHENTICATED_ROUTES = [
+    { path: LOGIN_PATH, component: <Login /> },
+    { path: FORGOT_PASSWORD_PATH, component: <ForgotPassword /> },
+    { path: MODIFY_PASSWORD_PATH, component: <ChangePassword /> },
+];
 
 const AUTHENTICATED_ROUTES = [
     { path: HOME_PATH, exact: true, component: <Home /> },

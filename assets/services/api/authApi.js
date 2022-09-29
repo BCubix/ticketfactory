@@ -82,6 +82,34 @@ const authApi = {
 
         axios.defaults.headers.common['Authorization'] = '';
     },
+
+    forgotPassword: async (data) => {
+        try {
+            const result = await axios.post('/forgot_password', {
+                username: data.username,
+            });
+
+            return { result: true, data: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    changePassword: async (data) => {
+        try {
+            let formData = new FormData();
+
+            formData.append('username', data.username);
+            formData.append('token', data.token);
+            formData.append('password', data.password);
+
+            const result = await axios.post('/changePassword', formData);
+
+            return { result: true, data: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default authApi;

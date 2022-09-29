@@ -1,28 +1,19 @@
-import {
-    Avatar,
-    Box,
-    Button,
-    Checkbox,
-    FormControlLabel,
-    Grid,
-    Link,
-    Paper,
-    Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Formik } from 'formik';
-import { loginAction, profileSelector } from '@Redux/profile/profileSlice';
+import { profileSelector } from '@Redux/profile/profileSlice';
 import { HOME_PATH } from '@/Constant';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { FORGOT_PASSWORD_PATH } from '../../Constant';
+import authApi from '../../services/api/authApi';
+import { LOGIN_PATH, REDIRECTION_TIME } from '../../Constant';
 import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
+import { NotificationManager } from 'react-notifications';
 
-export const Login = () => {
-    const dispatch = useDispatch();
+export const ForgotPassword = () => {
     const { connected } = useSelector(profileSelector);
     const navigate = useNavigate();
 
@@ -32,11 +23,10 @@ export const Login = () => {
         }
     }, [connected]);
 
-    const loginSchema = Yup.object().shape({
+    const forgotPasswordSchema = Yup.object().shape({
         username: Yup.string()
             .required('Veuillez renseigner une adresse email.')
             .email('Adresse email invalide.'),
-        password: Yup.string().required('Veuillez renseigner votre mot de passe.'),
     });
 
     return (
@@ -47,10 +37,26 @@ export const Login = () => {
         >
             <Paper elevation={2} sx={{ borderRadius: 4 }}>
                 <Formik
-                    initialValues={{ username: '', password: '' }}
-                    validationSchema={loginSchema}
+                    initialValues={{ username: '' }}
+                    validationSchema={forgotPasswordSchema}
                     onSubmit={async (values, { setSubmitting }) => {
-                        await dispatch(loginAction(values));
+                        const result = await authApi.forgotPassword(values);
+                        if (result.result) {
+                            NotificationManager.success(
+                                'Votre demande de changement de mot de passe à bien été prise en compte',
+                                'Succès',
+                                REDIRECTION_TIME
+                            );
+
+                            navigate(LOGIN_PATH);
+                        } else {
+                            NotificationManager.error(
+                                "Une erreur s'est produite",
+                                'Erreur',
+                                REDIRECTION_TIME
+                            );
+                        }
+
                         setSubmitting(false);
                     }}
                 >
@@ -76,7 +82,7 @@ export const Login = () => {
                                 <LockOutlinedIcon />
                             </Avatar>
                             <Typography component="h1" variant="h5" sx={{ fontWeight: 600 }}>
-                                Connexion
+                                Mot de passe oublié
                             </Typography>
                             <Box sx={{ mt: 1 }}>
                                 <CmtTextField
@@ -93,42 +99,6 @@ export const Login = () => {
                                     error={touched.username && Boolean(errors.username)}
                                     helperText={touched.username && errors.username}
                                 />
-                                <CmtTextField
-                                    margin="normal"
-                                    value={values.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Mot de passe"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    error={touched.password && Boolean(errors.password)}
-                                    helperText={touched.password && errors.password}
-                                />
-                                <Grid container>
-                                    <Grid item xs>
-                                        <FormControlLabel
-                                            control={<Checkbox value="remember" color="primary" />}
-                                            label="Remember me"
-                                        />
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'flex-end',
-                                        }}
-                                    >
-                                        <Link href={FORGOT_PASSWORD_PATH} variant="body2">
-                                            Mot de passe oublié
-                                        </Link>
-                                    </Grid>
-                                </Grid>
                                 <Button
                                     type="submit"
                                     fullWidth
@@ -136,7 +106,7 @@ export const Login = () => {
                                     sx={{ mt: 3, mb: 2, borderRadius: 5 }}
                                     disabled={isSubmitting}
                                 >
-                                    Se connecter
+                                    Envoyer
                                 </Button>
                             </Box>
                         </Box>

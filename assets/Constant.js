@@ -7,6 +7,8 @@ export const REDIRECTION_TIME = 5000;
 
 export const HOME_PATH = '/admin';
 export const LOGIN_PATH = '/admin/connexion';
+export const FORGOT_PASSWORD_PATH = '/admin/mot-de-passe-oublie';
+export const MODIFY_PASSWORD_PATH = '/admin/modifier-son-mot-de-passe';
 
 export const USER_BASE_PATH = '/admin/utilisateurs';
 export const EVENTS_BASE_PATH = '/admin/evenements';
