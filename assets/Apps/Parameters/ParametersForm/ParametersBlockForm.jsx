@@ -4,15 +4,16 @@ import {CmtFormBlock} from "@Components/CmtFormBlock/CmtFormBlock";
 
 import {FormControl, Grid, InputLabel, ListItemText, MenuItem, Select} from "@mui/material";
 
-function ParametersBlockForm({tabName, parameters, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue}) {
-    return (
-        <CmtFormBlock title={'Types par défaut'}>
+function ParametersBlockForm({indexTab, blocks, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue}) {
+
+    return blocks?.map(({ blockName, parameters }, indexBlock) => (
+        <CmtFormBlock title={blockName} key={indexBlock}>
             <Grid container spacing={4}>
-                {parameters?.map(({id, name, key, type, value, availableValue}, index) => {
+                {parameters?.map(({name, key, type, value, availableValue}, indexParam) => {
                     switch (type) {
                         case 'list':
                             return (
-                                <Grid item xs={12} sm={6} key={index}>
+                                <Grid item xs={12} sm={6} key={indexParam}>
                                     <FormControl fullWidth sx={{marginBlock: 3}}>
                                         <InputLabel id={`${key}-label`} size="small">
                                             {name}
@@ -25,7 +26,7 @@ function ParametersBlockForm({tabName, parameters, handleChange, handleBlur, tou
                                             label={name}
                                             value={value}
                                             onChange={(e) => {
-                                                setFieldValue(`parameters.${tabName}.${index}.value`, e.target.value)
+                                                setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].value`, e.target.value)
                                             }}
                                         >
                                             {availableValue?.map(({id, name}, index) => (
@@ -43,7 +44,7 @@ function ParametersBlockForm({tabName, parameters, handleChange, handleBlur, tou
                 })}
             </Grid>
         </CmtFormBlock>
-    );
+    ));
 }
 
 export default ParametersBlockForm;

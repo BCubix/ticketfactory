@@ -9,25 +9,51 @@ import {CmtPageWrapper} from "@Components/CmtPage/CmtPageWrapper/CmtPageWrapper"
 import ParametersBlockForm from "@Apps/Parameters/ParametersForm/ParametersBlockForm";
 
 function parametersForm({handleSubmit, parameters}) {
-    const tabs = {};
+    const tabs = [];
     parameters.forEach((parameter) => {
-        if (!tabs[parameter.tabName])
-            tabs[parameter.tabName] = [parameter];
-        else
-            tabs[parameter.tabName].push(parameter);
+        const indexTab = tabs.findIndex(tab => tab.tabName === parameter.tabName);
+        if (indexTab === -1) {
+            tabs.push({
+                tabName: parameter.tabName,
+                blocks: [{
+                    blockName: parameter.blockName,
+                    parameters: [
+                        parameter,
+                    ],
+                }]
+            });
+        }
+        else {
+            const blocks = tabs[indexTab].blocks;
+            const indexBlock = blocks.findIndex(block => block.blockName === parameter.blockName);
+            if (indexBlock === -1) {
+                blocks.push({
+                    blockName: parameter.blockName,
+                    parameters: [
+                        parameter,
+                    ],
+                });
+            }
+            else {
+                blocks[indexBlock].parameters.push(parameter);
+            }
+        }
     });
 
     return (
         <Formik
             initialValues={{
-                parameters: tabs,
+                tabs: tabs
             }}
             onSubmit={(values, {setSubmitting}) => {
-                let parametersList = [];
-                Object.values(values.parameters).map(parameters => {
-                    parametersList = [...parametersList, ...parameters]
-                })
-                handleSubmit({parameters: parametersList});
+                const parameters = values.tabs.reduce((parametersList, {blocks}) => {
+                    for (const block of blocks) {
+                        parametersList = [ ...parametersList, ...block.parameters ]
+                    }
+                    return parametersList;
+                }, []);
+
+                handleSubmit({ parameters: parameters });
                 setSubmitting(false);
             }}
         >
@@ -49,13 +75,13 @@ function parametersForm({handleSubmit, parameters}) {
                 >
                     <CmtTabs
                         tabValue={0}
-                        list={[ ...Object.entries(values.parameters).map(([tabName, parameter]) => {
+                        list={ values.tabs.map(({ tabName, blocks }, indexTab) => {
                             return {
                                 label: tabName,
                                 component: (
                                     <ParametersBlockForm
-                                        tabName={tabName}
-                                        parameters={parameter}
+                                        indexTab={indexTab}
+                                        blocks={blocks}
                                         handleChange={handleChange}
                                         handleBlur={handleBlur}
                                         touched={touched}
@@ -65,7 +91,7 @@ function parametersForm({handleSubmit, parameters}) {
                                     />
                                 )
                             }
-                        })]}
+                        })}
                     />
                     <Box display="flex" justifyContent="flex-end">
                         <Button

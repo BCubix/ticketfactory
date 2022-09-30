@@ -26,6 +26,11 @@ class Parameter
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
+    private $blockName;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
