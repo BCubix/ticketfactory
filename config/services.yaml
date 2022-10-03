@@ -52,6 +52,6 @@ services:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
 
     # Managers
-    App\Manager\ContentTypeFieldManager:
+    App\Manager\ContentTypeManager:
         arguments:
             $projectDir: "%kernel.project_dir%"

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Admin;
+namespace App\Form\Admin\Content;
 
-use App\Entity\ContentTypeValidation;
+use App\Entity\Content\ContentTypeValidation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

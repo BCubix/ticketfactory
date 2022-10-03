@@ -2,7 +2,6 @@
 
 namespace App\EventSubscriber\Admin;
 
-use App\Entity\ContentType;
 use App\Entity\JsonDoctrineSerializable;
 
 use Doctrine\Common\EventSubscriber;
@@ -24,44 +23,25 @@ class DoctrineSubscriber implements EventSubscriber
     public function prePersist($args): void
     {
         $entity = $args->getEntity();
-        if ($entity instanceof (ContentType::class)) {
-            $this->serialize($entity);
+        if ($entity instanceof (JsonDoctrineSerializable::class)) {
+            $entity->jsonSerialize();
         }
     }
 
     public function preUpdate($args): void
     {
         $entity = $args->getEntity();
-        if ($entity instanceof (ContentType::class)) {
-            $this->serialize($entity);
+        if ($entity instanceof (JsonDoctrineSerializable::class)) {
+            $entity->jsonSerialize();
         }
     }
 
     public function postLoad($args): void
     {
         $entity = $args->getEntity();
-        if ($entity instanceof (ContentType::class)) {
-            $this->unserialize($entity);
+        if ($entity instanceof (JsonDoctrineSerializable::class)) {
+            $className = get_class($entity);
+            $className::jsonDeserialize($entity);
         }
-    }
-
-    private function serialize(object $entity)
-    {
-        $newFields = [];
-        foreach ($entity->getFields() as $field) {
-            $newFields[] = $field->jsonSerialize();
-        }
-
-        $entity->setFields($newFields);
-    }
-
-    private function deserialize(object $entity)
-    {
-        $newFields = [];
-        foreach ($entity->getFields() as $field) {
-            $newFields[] = ContentType::jsonUnserialize($field);
-        }
-
-        $entity->setFields($newFields);
     }
 }

@@ -77,7 +77,7 @@ abstract class CrudController extends AdminController
 
         $this->em->persist($object);
         $this->em->flush();
-die();
+
         $this->log->log(0, 0, 'Created object.', $this->entityClass, $object->getId());
 
         return $this->view($object, Response::HTTP_CREATED);

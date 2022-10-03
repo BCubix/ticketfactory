@@ -1,30 +1,26 @@
 <?php
 
-namespace App\Form\Admin;
+namespace App\Form\Admin\Content;
 
-use App\Entity\ContentType;
+use App\Entity\Content\Content;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentTypeType extends AbstractType
+class ContentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $contentType = $options['content_type'];
+
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
-            ->add('name',                 TextType::class,            [])
-            ->add('fields',               CollectionType::class,      [
-                'entry_type'   => ContentTypeFieldType::class,
-                'allow_add'    => true,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'by_reference' => false
+            ->add('title',                TextType::class,            [])
+            ->add('fields',               ContentFieldsType::class,   [
+                'content_type' => $contentType
             ])
         ;
     }
@@ -32,7 +28,9 @@ class ContentTypeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContentType::class
+            'data_class' => Content::class
         ]);
+
+        $resolver->setRequired('content_type');
     }
 }

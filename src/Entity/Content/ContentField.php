@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Content;
 
-class ContentTypeValidation implements JsonDoctrineSerializable
+use App\Entity\JsonDoctrineSerializable;
+
+class ContentField implements JsonDoctrineSerializable
 {
     private ?string $name = null;
 
@@ -25,7 +27,7 @@ class ContentTypeValidation implements JsonDoctrineSerializable
         return $this->value;
     }
 
-    public function setValue(?string $value): self
+    public function setValue(string $value): self
     {
         $this->value = $value;
 
@@ -34,15 +36,20 @@ class ContentTypeValidation implements JsonDoctrineSerializable
 
     public function jsonSerialize(): string
     {
-        return json_encode([$this->name => $this->value]);
+        return json_encode([
+            'name'  => $this->name,
+            'value' => $this->value
+        ]);
     }
 
-    public static function jsonUnserialize($data): self
+    public static function jsonDeserialize($data): self
     {
         $data = json_decode($data, true);
 
         $object = new self();
         $object->name  = $data['name'];
         $object->value = $data['value'];
+
+        return $object;
     }
 }
