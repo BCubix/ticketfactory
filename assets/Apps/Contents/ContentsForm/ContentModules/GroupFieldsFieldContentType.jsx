@@ -34,9 +34,9 @@ const FormComponent = ({
                     prefixName={`${name}.`}
                 />
 
-                {field.instructions && (
+                {field.helper && (
                     <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
-                        {field.instructions}
+                        {field.helper}
                     </Typography>
                 )}
             </CmtFormBlock>
@@ -51,9 +51,7 @@ const getInitialValue = (field) => {
 
     field?.parameters?.fields?.forEach((el) => {
         const moduleName =
-            String(el.fieldType).charAt(0).toUpperCase() +
-            el.fieldType?.slice(1) +
-            CONTENT_MODULES_EXTENSION;
+            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + CONTENT_MODULES_EXTENSION;
 
         fields[el.name] = contentModules[moduleName]?.getInitialValue(el) || '';
     });

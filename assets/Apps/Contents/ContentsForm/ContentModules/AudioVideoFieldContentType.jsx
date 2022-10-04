@@ -133,9 +133,9 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                     </Grid>
                 </Box>
             </Dialog>
-            {field.instructions && (
+            {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
-                    {field.instructions}
+                    {field.helper}
                 </Typography>
             )}
         </>

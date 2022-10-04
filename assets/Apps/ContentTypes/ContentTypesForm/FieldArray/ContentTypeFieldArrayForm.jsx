@@ -5,8 +5,8 @@ import React from 'react';
 import { FieldArrayElem } from './FieldArrayElem';
 import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
 import { AddBlockButton, DeleteBlockFabButton } from '@Components/CmtButton/sc.Buttons';
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -67,15 +67,15 @@ export const ContentTypeFieldArrayForm = ({
                                 variant="outlined"
                                 color="primary"
                                 onClick={() => {
-                                    const fieldType = 'text';
+                                    const type = 'text';
                                     const initialValues =
                                         contentTypesModules['TextFieldType'].getInitialValues();
 
                                     push({
                                         title: '',
                                         name: '',
-                                        fieldType: fieldType,
-                                        instructions: '',
+                                        type: type,
+                                        helper: '',
                                         options: initialValues.options,
                                         validations: initialValues.validations || {},
                                     });

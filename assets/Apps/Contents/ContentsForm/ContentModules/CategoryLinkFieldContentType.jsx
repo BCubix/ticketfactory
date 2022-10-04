@@ -107,9 +107,9 @@ const FormComponent = ({
                     <FormHelperText error>{errors[field.name]}</FormHelperText>
                 )}
             </FormControl>
-            {field.instructions && (
+            {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
-                    {field.instructions}
+                    {field.helper}
                 </Typography>
             )}
         </>

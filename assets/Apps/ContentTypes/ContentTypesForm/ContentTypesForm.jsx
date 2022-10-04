@@ -9,11 +9,46 @@ import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import { ContentTypeFieldArrayForm } from './FieldArray/ContentTypeFieldArrayForm';
 import { useMemo } from 'react';
 import ContentTypesModules from './ContentTypeModules';
+import authApi from '../../../services/api/authApi';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { loginFailure } from '../../../redux/profile/profileSlice';
+import contentTypesApi from '../../../services/api/contentTypesApi';
+import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
+import { NotificationManager } from 'react-notifications';
+import { getContentTypesAction } from '../../../redux/contentTypes/contentTypesSlice';
 
 export const ContentTypesForm = ({ initialValues = null }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const getContentTypesModules = useMemo(() => {
         return ContentTypesModules();
     }, []);
+
+    const createContentType = async (values) => {
+        const check = await authApi.checkIsAuth();
+
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
+
+            return;
+        }
+
+        const result = await contentTypesApi.createContentType(values);
+
+        if (result.result) {
+            NotificationManager.success(
+                'Le type de contenu à bien été crée.',
+                'Succès',
+                REDIRECTION_TIME
+            );
+
+            dispatch(getContentTypesAction());
+
+            navigate(CONTENT_TYPES_BASE_PATH);
+        }
+    };
 
     const contentTypeSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du type de contenus.'),
@@ -22,7 +57,7 @@ export const ContentTypesForm = ({ initialValues = null }) => {
                 Yup.object().shape({
                     title: Yup.string().required('Veuillez renseigner le titre de votre champ.'),
                     name: Yup.string().required('Veuillez renseigner le nom de votre champ.'),
-                    fieldType: Yup.string().required('Veuillez renseigner le type de votre champ.'),
+                    type: Yup.string().required('Veuillez renseigner le type de votre champ.'),
                 })
             )
             .required('Veuillez renseigner un champ')
@@ -37,8 +72,8 @@ export const ContentTypesForm = ({ initialValues = null }) => {
                 fields: initialValues?.fields || [],
             }}
             validationSchema={contentTypeSchema}
-            onSubmit={(values, { setSubmitting }) => {
-                console.log(values);
+            onSubmit={async (values, { setSubmitting }) => {
+                await createContentType(values);
                 setSubmitting(false);
             }}
         >

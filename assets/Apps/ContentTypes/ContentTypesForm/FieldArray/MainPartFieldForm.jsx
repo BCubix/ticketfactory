@@ -18,8 +18,8 @@ export const MainPartFieldForm = ({
     contentTypesModules,
 }) => {
     const moduleName =
-        String(values.fieldType).charAt(0).toUpperCase() +
-        values.fieldType?.slice(1) +
+        String(values.type).charAt(0).toUpperCase() +
+        values.type?.slice(1) +
         CONTENT_TYPE_MODULES_EXTENSION;
 
     const handleChangeFieldType = (value) => {
@@ -92,10 +92,10 @@ export const MainPartFieldForm = ({
                     size="small"
                     variant="standard"
                     id={`fieldsType-${index}`}
-                    value={values.fieldType}
+                    value={values.type}
                     onChange={(e) => {
                         handleChangeFieldType(e.target.value);
-                        setFieldValue(`${prefixName}fields.${index}.fieldType`, e.target.value);
+                        setFieldValue(`${prefixName}fields.${index}.type`, e.target.value);
                     }}
                     label="Type de champs"
                 >
@@ -114,14 +114,14 @@ export const MainPartFieldForm = ({
             </FormControl>
 
             <CmtTextField
-                value={values.instructions}
+                value={values.helper}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 multiline
                 rows={3}
                 label="Instructions"
-                name={`${prefixName}fields.${index}.instructions`}
-                error={getNestedFormikError(touched?.fields, errors?.fields, index, 'instructions')}
+                name={`${prefixName}fields.${index}.helper`}
+                error={getNestedFormikError(touched?.fields, errors?.fields, index, 'helper')}
             />
 
             {ComplementInformation && (

@@ -30,9 +30,9 @@ const FormComponent = ({
                 disablePast={field?.validations?.disablePast}
                 inputSize="small"
             />
-            {field.instructions && (
+            {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 2 }}>
-                    {field.instructions}
+                    {field.helper}
                 </Typography>
             )}
         </Box>

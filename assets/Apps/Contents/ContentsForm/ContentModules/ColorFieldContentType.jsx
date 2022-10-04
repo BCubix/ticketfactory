@@ -28,9 +28,9 @@ const FormComponent = ({
                 required={field?.options?.required}
                 disabled={field?.options?.disabled}
             />
-            {field.instructions && (
+            {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
-                    {field.instructions}
+                    {field.helper}
                 </Typography>
             )}
         </Box>

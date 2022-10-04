@@ -1,5 +1,35 @@
 import axios from './config';
 
+const serializeOptionsValidations = (element, name, formData) => {
+    Object.entries(element).map(([key, value], index) => {
+        if (null !== value && typeof value === 'object') {
+            serializeOptionsValidations(value, `${name}[${key}][${index}]`, formData);
+        } else {
+            formData.append(`${name}[${index}][name]`, key);
+            formData.append(`${name}[${index}][value]`, value);
+        }
+    });
+};
+
+const serializeData = (element, name, formData) => {
+    Object.entries(element).map(([key, value]) => {
+        if (null !== value && typeof value === 'object') {
+            if (key === 'options' || key === 'validations') {
+                serializeOptionsValidations(value, `${name}[${key}]`, formData);
+            } else {
+                serializeData(value, `${name}[${key}]`, formData);
+            }
+        } else if (null !== value && Array.isArray(value)) {
+            value.forEach((el, index) => {
+                serializeData(el, `${name}[${key}][${index}]`, formData);
+            });
+        } else {
+            console.log(`${name}[${key}]`, value);
+            formData.append(`${name}[${key}]`, value || null);
+        }
+    });
+};
+
 const contentTypesApi = {
     getContentTypes: async () => {
         try {
@@ -13,8 +43,7 @@ const contentTypesApi = {
                             title: 'Nom du spectacle',
                             name: 'spectacleName',
                             fieldType: 'text',
-                            instructions:
-                                'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
+                            helper: 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
                             options: {
                                 required: true,
                                 disabled: false,
@@ -29,7 +58,7 @@ const contentTypesApi = {
                             title: 'Groupe de champs',
                             name: 'groupF',
                             fieldType: 'groupFields',
-                            instructions: 'Groupe de champs.',
+                            helper: 'Groupe de champs.',
                             options: {
                                 required: true,
                                 disabled: false,
@@ -54,8 +83,7 @@ const contentTypesApi = {
                                         title: 'TextArea',
                                         name: 'textArea',
                                         fieldType: 'textarea',
-                                        instructions:
-                                            'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
+                                        helper: 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
                                         options: {
                                             required: true,
                                             disabled: false,
@@ -70,7 +98,7 @@ const contentTypesApi = {
                                         title: 'Nombre de place',
                                         name: 'placeNb',
                                         fieldType: 'number',
-                                        instructions: 'Nombre de place pour le spectacle.',
+                                        helper: 'Nombre de place pour le spectacle.',
                                         options: {
                                             required: true,
                                             disabled: false,
@@ -88,7 +116,7 @@ const contentTypesApi = {
                             title: 'Fichiers utiles',
                             name: 'utilsFile',
                             fieldType: 'file',
-                            instructions: 'Fichiers du spectacle.',
+                            helper: 'Fichiers du spectacle.',
                             options: {
                                 required: true,
                                 disabled: false,
@@ -119,8 +147,7 @@ const contentTypesApi = {
                         title: 'Nom du spectacle',
                         name: 'spectacleName',
                         fieldType: 'text',
-                        instructions:
-                            'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
+                        helper: 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
                         options: {
                             required: true,
                             disabled: false,
@@ -142,7 +169,18 @@ const contentTypesApi = {
 
     createContentType: async (data) => {
         try {
-            return { result: true, contentType: data };
+            const formData = new FormData();
+
+            formData.append('active', data.active);
+            formData.append('name', data.name);
+
+            data.fields?.forEach((el, index) => {
+                serializeData(el, `fields[${index}]`, formData);
+            });
+
+            const result = await axios.post(`/content-types`, formData);
+
+            return { result: true, contentType: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -171,7 +209,7 @@ export default contentTypesApi;
     title: 'Nom du spectacle',
     name: 'spectacleName',
     fieldType: 'text',
-    instructions:
+    helper:
         'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
     options: {
         required: true,
@@ -187,7 +225,7 @@ export default contentTypesApi;
     title: 'TextArea',
     name: 'textArea',
     fieldType: 'textarea',
-    instructions:
+    helper:
         'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
     options: {
         required: true,
@@ -203,7 +241,7 @@ export default contentTypesApi;
     title: 'Nombre de place',
     name: 'placeNb',
     fieldType: 'number',
-    instructions: 'Nombre de place pour le spectacle.',
+    helper: 'Nombre de place pour le spectacle.',
     options: {
         required: true,
         disabled: false,
@@ -218,7 +256,7 @@ export default contentTypesApi;
     title: 'Date',
     name: 'date',
     fieldType: 'time',
-    instructions: 'Nombre de place pour le spectacle.',
+    helper: 'Nombre de place pour le spectacle.',
     options: {
         required: true,
         disabled: false,
@@ -233,7 +271,7 @@ export default contentTypesApi;
     title: 'Description',
     name: 'description',
     fieldType: 'contentEditor',
-    instructions: 'Description du spectacle.',
+    helper: 'Description du spectacle.',
     options: {
         required: true,
         disabled: false,
@@ -248,7 +286,7 @@ export default contentTypesApi;
     title: 'Fichier',
     name: 'file',
     fieldType: 'slider',
-    instructions: 'Fichiers du spectacle.',
+    helper: 'Fichiers du spectacle.',
     options: {
         required: true,
         disabled: false,
@@ -262,7 +300,7 @@ export default contentTypesApi;
     title: 'Couleur',
     name: 'color',
     fieldType: 'color',
-    instructions: 'Couleur.',
+    helper: 'Couleur.',
     options: {
         required: true,
         disabled: false,
@@ -272,7 +310,7 @@ export default contentTypesApi;
     title: 'Choix',
     name: 'choiceList',
     fieldType: 'choiceList',
-    instructions: 'choix.',
+    helper: 'choix.',
     options: {
         required: true,
         disabled: false,
@@ -286,7 +324,7 @@ export default contentTypesApi;
     title: 'radio',
     name: 'radioButton',
     fieldType: 'radioButton',
-    instructions: 'Radio.',
+    helper: 'Radio.',
     options: {
         required: true,
         disabled: false,
@@ -299,7 +337,7 @@ export default contentTypesApi;
     title: 'checkbox',
     name: 'checkbox',
     fieldType: 'checkbox',
-    instructions: 'Checkbox.',
+    helper: 'Checkbox.',
     options: {
         required: true,
         disabled: false,
@@ -309,7 +347,7 @@ export default contentTypesApi;
     title: 'Switch',
     name: 'switch',
     fieldType: 'trueFalse',
-    instructions: 'Switch.',
+    helper: 'Switch.',
     options: {
         required: true,
         disabled: false,
@@ -319,7 +357,7 @@ export default contentTypesApi;
     title: 'Event Link',
     name: 'eventLink',
     fieldType: 'eventLink',
-    instructions: 'Event Link.',
+    helper: 'Event Link.',
     options: {
         required: true,
         disabled: false,
@@ -329,7 +367,7 @@ export default contentTypesApi;
     title: 'Category Link',
     name: 'categoryLink',
     fieldType: 'categoryLink',
-    instructions: 'Category Link.',
+    helper: 'Category Link.',
     options: {
         required: true,
         disabled: false,
@@ -339,7 +377,7 @@ export default contentTypesApi;
     title: 'Tag Link',
     name: 'tagLink',
     fieldType: 'tagLink',
-    instructions: 'Tag Link.',
+    helper: 'Tag Link.',
     options: {
         required: true,
         disabled: false,

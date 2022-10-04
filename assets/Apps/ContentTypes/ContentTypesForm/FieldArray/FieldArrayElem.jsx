@@ -20,14 +20,13 @@ export const FieldArrayElem = ({
     const [tabList, setTabList] = useState([]);
 
     useEffect(() => {
-        const moduleName =
-            String(values.fieldType).charAt(0).toUpperCase() + values.fieldType?.slice(1);
+        const moduleName = String(values.type).charAt(0).toUpperCase() + values.type?.slice(1);
 
         const list =
             contentTypesModules[`${moduleName}${CONTENT_TYPE_MODULES_EXTENSION}`]?.getTabList();
 
         setTabList(list);
-    }, [values.fieldType]);
+    }, [values.type]);
 
     if (!tabList) {
         return <></>;
