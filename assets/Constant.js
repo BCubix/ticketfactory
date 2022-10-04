@@ -25,6 +25,7 @@ export const CONTACT_REQUEST_BASE_PATH = '/admin/demandes-de-contact';
 export const REDIRECTIONS_BASE_PATH = '/admin/redirections';
 export const MENUS_BASE_PATH = '/admin/menus';
 export const PAGES_BASE_PATH = '/admin/pages';
+export const PARAMETERS_BASE_PATH = '/admin/parametres';
 
 export const EDIT_PATH = '/modifier';
 export const CREATE_PATH = '/nouveau';

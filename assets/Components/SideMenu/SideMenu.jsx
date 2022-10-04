@@ -20,6 +20,7 @@ import {
     MEDIAS_BASE_PATH,
     MENUS_BASE_PATH,
     PAGES_BASE_PATH,
+    PARAMETERS_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
@@ -76,7 +77,7 @@ const MENU = [
     {
         title: 'ADMINISTRATION',
         menu: [
-            { name: 'Paramètres', link: null, icon: <SettingsIcon /> },
+            { name: 'Paramètres', link: PARAMETERS_BASE_PATH, icon: <SettingsIcon /> },
             { name: 'Contacts', link: CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon /> },
             { name: 'Utilisateurs', link: USER_BASE_PATH, icon: <PersonIcon /> },
             { name: 'Logs', link: LOGS_BASE_PATH, icon: <TocIcon /> },

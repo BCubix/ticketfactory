@@ -19,6 +19,7 @@ import {
     MENUS_BASE_PATH,
     MODIFY_PASSWORD_PATH,
     PAGES_BASE_PATH,
+    PARAMETERS_BASE_PATH,
     REDIRECTIONS_BASE_PATH,
     ROOMS_BASE_PATH,
     SEASONS_BASE_PATH,
@@ -72,6 +73,7 @@ import { EditContent } from './Apps/Contents/EditContent/EditContent';
 import { ForgotPassword } from './Apps/ForgotPassword/ForgotPassword';
 import { ChangePassword } from './Apps/ChangePassword/ChangePassword';
 import { CreateMenu } from './Apps/Menus/CreateMenu/CreateMenu';
+import ParametersMenu from '@Apps/Parameters/ParametersMenu/ParametersMenu';
 
 const NON_AUTHENTICATED_ROUTES = [
     { path: LOGIN_PATH, component: <Login /> },
@@ -137,6 +139,8 @@ const AUTHENTICATED_ROUTES = [
     { path: PAGES_BASE_PATH, component: <PagesList /> },
     { path: PAGES_BASE_PATH + CREATE_PATH, component: <CreatePage /> },
     { path: `${PAGES_BASE_PATH}/:id${EDIT_PATH}`, component: <EditPage /> },
+
+    { path: PARAMETERS_BASE_PATH, component: <ParametersMenu /> },
 ];
 
 const AuthenticatedLayout = ({ children }) => {
