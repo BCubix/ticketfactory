@@ -78,10 +78,18 @@ class ContentTypeManager extends AbstractManager
             $format = $explicitOptions[$option->getName()]['type'];
             $value = $option->getValue();
 
-            if ($format == "array") {
-                $value = [$value];
-            } else {
-                $value = settype($value, $format);
+            switch ($format) {
+                case "array":
+                    $value = [$value];
+                    break;
+
+                case "boolean":
+                    $value = ($value === 'true');
+                    break;
+
+                default:
+                    $value = settype($value, $format);
+                    break;
             }
 
             // We fill the option's value

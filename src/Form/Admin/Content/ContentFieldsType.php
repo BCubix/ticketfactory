@@ -27,7 +27,7 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
             [$this, 'onPreSetData']
         );
 
-        //$builder->setDataMapper($this);
+        $builder->setDataMapper($this);
     }
 
     public function onPreSetData(FormEvent $event): void

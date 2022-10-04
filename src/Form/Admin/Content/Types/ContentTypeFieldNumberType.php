@@ -3,6 +3,9 @@
 namespace App\Form\Admin\Content\Types;
 
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldNumberType extends ContentTypeFieldAbstractType
