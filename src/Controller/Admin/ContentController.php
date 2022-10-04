@@ -61,7 +61,6 @@ class ContentController extends CrudController
         $form->submit($fields);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            dd($form->getErrors());
             $errors = $this->fec->getErrorsFromForm($form);
 
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);

@@ -52,27 +52,14 @@ class Content extends Datable implements JsonDoctrineSerializable
         return $this;
     }
 
-    public function jsonSerialize(): string
+    public function jsonSerialize(): mixed
     {
-        $fields = [];
-        foreach ($this->fields as $field) {
-            $fields[] = $field->jsonSerialize();
-        }
-
-        $this->fields = $fields;
 
         return $this->fields;
     }
 
     public static function jsonDeserialize($data): self
     {
-        $fields = [];
-        foreach ($data->fields as $field) {
-            $fields[] = ContentField::jsonDeserialize($field);
-        }
-
-        $data->fields = $fields;
-
         return $data;
     }
 }

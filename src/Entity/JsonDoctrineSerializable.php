@@ -4,6 +4,6 @@ namespace App\Entity;
 
 interface JsonDoctrineSerializable
 {
-    public function jsonSerialize(): string;
+    public function jsonSerialize(): mixed;
     public static function jsonDeserialize($data): self;
 }

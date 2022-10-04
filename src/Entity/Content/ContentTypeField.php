@@ -90,7 +90,7 @@ class ContentTypeField implements JsonDoctrineSerializable
         return $this;
     }
 
-    public function jsonSerialize(): string
+    public function jsonSerialize(): mixed
     {
         $options = [];
         foreach ($this->options as $option) {
@@ -102,20 +102,18 @@ class ContentTypeField implements JsonDoctrineSerializable
             $validations[] = $validation->jsonSerialize();
         }
 
-        return json_encode([
+        return [
             'title'       => $this->title,
             'name'        => $this->name,
             'helper'      => $this->helper,
             'type'        => $this->type,
             'options'     => $options,
             'validations' => $validations
-        ]);
+        ];
     }
 
     public static function jsonDeserialize($data): self
     {
-        $data = json_decode($data, true);
-
         $object = new self();
         $object->title  = $data['title'];
         $object->name   = $data['name'];
