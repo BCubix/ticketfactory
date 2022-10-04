@@ -34,15 +34,13 @@ class ContentTypeValidation implements JsonDoctrineSerializable
         return $this;
     }
 
-    public function jsonSerialize(): string
+    public function jsonSerialize(): mixed
     {
-        return json_encode([$this->name => $this->value]);
+        return [$this->name => $this->value];
     }
 
     public static function jsonDeserialize($data): self
     {
-        $data = json_decode($data, true);
-
         $object = new self();
         $object->name  = array_key_first($data);
         $object->value = $data[$object->name];

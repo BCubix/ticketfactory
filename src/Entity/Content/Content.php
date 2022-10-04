@@ -52,7 +52,7 @@ class Content extends Datable implements JsonDoctrineSerializable
         return $this;
     }
 
-    public function jsonSerialize(): string
+    public function jsonSerialize(): mixed
     {
         $fields = [];
         foreach ($this->fields as $field) {

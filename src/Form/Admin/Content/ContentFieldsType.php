@@ -27,16 +27,6 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
             [$this, 'onPreSetData']
         );
 
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            [$this, 'onPreSubmit']
-        );
-
-        $builder->addEventListener(
-            FormEvents::SUBMIT,
-            [$this, 'onSubmit']
-        );
-
         //$builder->setDataMapper($this);
     }
 
@@ -57,22 +47,6 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
                 $options
             );
         }
-    }
-
-    public function onPreSubmit(FormEvent $event): void
-    {
-        $object = $event->getData();
-        $form = $event->getForm();
-
-        dump($object, $form); die();
-    }
-
-    public function onSubmit(FormEvent $event): void
-    {
-        $object = $event->getData();
-        $form = $event->getForm();
-
-        dump($object, $form); die();
     }
 
     public function mapDataToForms($viewData, \Traversable $forms): void
