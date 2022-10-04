@@ -21,7 +21,6 @@ export const CmtDateTimePicker = ({
 }) => {
     const [open, setOpen] = useState(false);
 
-    console.log(error);
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
             <Box md={2} width="100%">

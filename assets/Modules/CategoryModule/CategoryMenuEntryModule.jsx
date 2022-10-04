@@ -11,21 +11,57 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import authApi from '../../services/api/authApi';
 import { useDispatch } from 'react-redux';
-import roomsApi from '../../services/api/roomsApi';
 import { NotificationManager } from 'react-notifications';
 import { REDIRECTION_TIME } from '../../Constant';
 import { Box } from '@mui/system';
 import { loginFailure } from '../../redux/profile/profileSlice';
+import seasonsApi from '../../services/api/seasonsApi';
+import categoriesApi from '../../services/api/categoriesApi';
 
-const MENU_TYPE = 'rooms';
-const MENU_TYPE_LABEL = 'Salle';
+const MENU_TYPE = 'category';
+const MENU_TYPE_LABEL = 'Catégories';
+
+const DisplayCategories = ({ category, selectedAdd, setSelectedAdd }) => {
+    return (
+        <>
+            <Box
+                onClick={() => {
+                    let newValue = [...selectedAdd];
+
+                    if (newValue?.some((el) => el.id === category.id)) {
+                        newValue = newValue.filter((el) => el.id !== category.id);
+                    } else {
+                        newValue.push({ id: category.id, name: category.name });
+                    }
+
+                    setSelectedAdd([...newValue]);
+                }}
+            >
+                <Typography component="span">
+                    <Checkbox checked={selectedAdd?.some((el) => el.id === category.id)} />
+                    {category?.name}
+                </Typography>
+            </Box>
+
+            {Array.isArray(category?.children) &&
+                category?.children?.map((item, index) => (
+                    <DisplayCategories
+                        key={index}
+                        category={item}
+                        selectedAdd={selectedAdd}
+                        setSelectedAdd={setSelectedAdd}
+                    />
+                ))}
+        </>
+    );
+};
 
 export const MenuEntryModule = ({ addElementToMenu }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
 
-    const getRooms = async () => {
+    const getList = async () => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -34,7 +70,7 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
             return;
         }
 
-        const result = await roomsApi.getRooms();
+        const result = await categoriesApi.getCategories();
 
         if (!result?.result) {
             NotificationManager.error(
@@ -44,40 +80,24 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
             );
         }
 
-        setList(result.rooms);
+        setList(result.categories);
     };
 
     useEffect(() => {
-        getRooms();
+        getList();
     }, []);
 
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
-                <Typography>Salles</Typography>
+                <Typography>Catégories</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                {list?.map((item, index) => (
-                    <Box
-                        key={index}
-                        onClick={() => {
-                            let newValue = [...selectedAdd];
-
-                            if (newValue?.includes(item.id)) {
-                                newValue = newValue.filter((el) => el !== item.id);
-                            } else {
-                                newValue.push(item.id);
-                            }
-
-                            setSelectedAdd([...newValue]);
-                        }}
-                    >
-                        <Typography component="span">
-                            <Checkbox checked={selectedAdd?.includes(item.id)} />
-                            {item?.name}
-                        </Typography>
-                    </Box>
-                ))}
+                <DisplayCategories
+                    category={list}
+                    selectedAdd={selectedAdd}
+                    setSelectedAdd={setSelectedAdd}
+                />
 
                 <Box display="flex" justifyContent={'flex-end'}>
                     <Button
@@ -87,16 +107,12 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                             let submitList = [];
 
                             selectedAdd.forEach((el) => {
-                                let listElement = list.find((element) => element.id === el);
-
-                                if (listElement) {
-                                    submitList.push({
-                                        name: listElement.name,
-                                        value: listElement.id,
-                                        menuType: MENU_TYPE,
-                                        children: [],
-                                    });
-                                }
+                                submitList.push({
+                                    name: el.name,
+                                    value: el.id,
+                                    menuType: MENU_TYPE,
+                                    children: [],
+                                });
                             });
 
                             addElementToMenu(submitList);

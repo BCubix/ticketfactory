@@ -15,7 +15,7 @@ class MenuEntryRepository extends NestedTreeRepository
             ->createQueryBuilder('o')
             ->where('o.lvl = 0')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 

@@ -50,7 +50,7 @@ export const MenuStructure = ({
             return;
         }
 
-        let element = formatMenusData(values.menus);
+        let element = formatMenusData(values.children);
         let draggableId = result.draggableId.split('.');
         draggableId.shift();
 
@@ -61,7 +61,7 @@ export const MenuStructure = ({
 
         insertMenuElement(element, destinationId, removedElement, result.destination.index);
 
-        setFieldValue('menus', element);
+        setFieldValue('children', element);
     };
 
     return (
@@ -102,15 +102,14 @@ export const MenuStructure = ({
                                     }}
                                     isDraggingOver={snapshot.isDraggingOver}
                                 >
-                                    {values?.menus?.map((item, index) => (
+                                    {values?.children?.map((item, index) => (
                                         <Draggable
-                                            key={`menus.${index}`}
-                                            draggableId={`menus.${index}`}
+                                            key={`children.${index}`}
+                                            draggableId={`children.${index}`}
                                             index={index}
                                         >
                                             {(provided2, snapshot2) => (
                                                 <RenderElement
-                                                    isDragging={snapshot2.isDragging}
                                                     provided={provided2}
                                                     snapshot={snapshot2}
                                                 >
@@ -120,7 +119,7 @@ export const MenuStructure = ({
                                                         index={index}
                                                         handleChange={handleChange}
                                                         handleBlur={handleBlur}
-                                                        list={values.menus}
+                                                        list={values.children}
                                                         setFieldValue={setFieldValue}
                                                         isDragging={snapshot2.isDragging}
                                                         maxLevel={values.maxLevel}

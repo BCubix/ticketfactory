@@ -11,21 +11,21 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import authApi from '../../services/api/authApi';
 import { useDispatch } from 'react-redux';
-import roomsApi from '../../services/api/roomsApi';
 import { NotificationManager } from 'react-notifications';
 import { REDIRECTION_TIME } from '../../Constant';
 import { Box } from '@mui/system';
 import { loginFailure } from '../../redux/profile/profileSlice';
+import tagsApi from '../../services/api/tagsApi';
 
-const MENU_TYPE = 'rooms';
-const MENU_TYPE_LABEL = 'Salle';
+const MENU_TYPE = 'tag';
+const MENU_TYPE_LABEL = 'Tags';
 
 export const MenuEntryModule = ({ addElementToMenu }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
 
-    const getRooms = async () => {
+    const getList = async () => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -34,7 +34,7 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
             return;
         }
 
-        const result = await roomsApi.getRooms();
+        const result = await tagsApi.getTags();
 
         if (!result?.result) {
             NotificationManager.error(
@@ -44,17 +44,17 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
             );
         }
 
-        setList(result.rooms);
+        setList(result.tags);
     };
 
     useEffect(() => {
-        getRooms();
+        getList();
     }, []);
 
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
-                <Typography>Salles</Typography>
+                <Typography>Tags</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 {list?.map((item, index) => (

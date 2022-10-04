@@ -27,7 +27,7 @@ export const DisplayMenuElement = ({
     handleChange,
     handleBlur,
     setFieldValue,
-    name = 'menus',
+    name = 'children',
     isSubMenu = false,
     parent = null,
     handleMoveOutSubMenuElement = null,
@@ -50,13 +50,13 @@ export const DisplayMenuElement = ({
     const handleMoveIntoSubMenuElement = () => {
         let newList = [...list];
         let parent = { ...list[index - 1] };
-        let newSubMenu = parent.subMenu ? [...parent.subMenu] : [];
+        let newSubMenu = parent.children ? [...parent.children] : [];
         let elem = element;
 
         newList.splice(index, 1);
 
         newSubMenu.push(elem);
-        parent.subMenu = [...newSubMenu];
+        parent.children = [...newSubMenu];
         newList[index - 1] = parent;
 
         setFieldValue(name, newList);
@@ -65,13 +65,13 @@ export const DisplayMenuElement = ({
     const moveOutSubMenuElement = (subMenuIndex) => {
         let newList = [...list];
         let parent = { ...list[index] };
-        let subMenu = [...parent.subMenu];
-        let elem = element.subMenu[subMenuIndex];
+        let children = [...parent.children];
+        let elem = element.children[subMenuIndex];
 
         newList.splice(index + 1, 0, elem);
 
-        subMenu.splice(subMenuIndex, 1);
-        parent.subMenu = [...subMenu];
+        children.splice(subMenuIndex, 1);
+        parent.children = [...children];
         newList[index] = { ...parent };
 
         setFieldValue(name, newList);
@@ -162,13 +162,13 @@ export const DisplayMenuElement = ({
             </Accordion>
 
             <Droppable
-                droppableId={`${name}.${index}.subMenu`}
+                droppableId={`${name}.${index}.children`}
                 className={'droppableZone'}
                 type={`menus`}
             >
                 {(provided, snapshot) => (
                     <DroppableBox
-                        id={`${name}-${index}-subMenu`}
+                        id={`${name}-${index}-children`}
                         sx={{
                             marginLeft: 10,
                             zIndex: 10,
@@ -179,30 +179,26 @@ export const DisplayMenuElement = ({
                         isDragging={isDragging}
                         className={'droppableMenus'}
                     >
-                        {element?.subMenu?.length > 0 &&
+                        {element?.children?.length > 0 &&
                             level < maxLevel &&
-                            element?.subMenu?.map((item, ind) => (
+                            element?.children?.map((item, ind) => (
                                 <Draggable
-                                    key={`${name}.${index}.subMenu.${ind}`}
-                                    draggableId={`${name}.${index}.subMenu.${ind}`}
+                                    key={`${name}.${index}.children.${ind}`}
+                                    draggableId={`${name}.${index}.children.${ind}`}
                                     index={index}
                                     item={item}
                                 >
                                     {(provided2, snapshot2) => (
-                                        <RenderElement
-                                            provided={provided2}
-                                            snapshot={snapshot2}
-                                            isDragging={snapshot2.isDragging}
-                                        >
+                                        <RenderElement provided={provided2} snapshot={snapshot2}>
                                             <DisplayMenuElement
                                                 element={item}
                                                 key={ind}
                                                 index={ind}
                                                 handleChange={handleChange}
                                                 handleBlur={handleBlur}
-                                                list={element?.subMenu}
+                                                list={element?.children}
                                                 setFieldValue={setFieldValue}
-                                                name={`${name}.${index}.subMenu`}
+                                                name={`${name}.${index}.children`}
                                                 isSubMenu={true}
                                                 parent={element}
                                                 handleMoveOutSubMenuElement={moveOutSubMenuElement}

@@ -36,7 +36,6 @@ export const EventsDateForm = ({
     errors,
     blockIndex,
 }) => {
-    console.log(touched.eventDateBlocks?.at(blockIndex), errors.eventDateBlocks?.at(blockIndex));
     return (
         <FieldArray name={`eventDateBlocks[${blockIndex}].eventDates`}>
             {({ remove, push }) => (

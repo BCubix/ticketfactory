@@ -71,6 +71,7 @@ import EditPage from './Apps/Pages/EditPage/EditPage';
 import { EditContent } from './Apps/Contents/EditContent/EditContent';
 import { ForgotPassword } from './Apps/ForgotPassword/ForgotPassword';
 import { ChangePassword } from './Apps/ChangePassword/ChangePassword';
+import { CreateMenu } from './Apps/Menus/CreateMenu/CreateMenu';
 
 const NON_AUTHENTICATED_ROUTES = [
     { path: LOGIN_PATH, component: <Login /> },
@@ -131,6 +132,7 @@ const AUTHENTICATED_ROUTES = [
     { path: `${REDIRECTIONS_BASE_PATH}/:id${EDIT_PATH}`, component: <EditRedirection /> },
 
     { path: MENUS_BASE_PATH, component: <MenusList /> },
+    { path: MENUS_BASE_PATH + CREATE_PATH, component: <CreateMenu /> },
 
     { path: PAGES_BASE_PATH, component: <PagesList /> },
     { path: PAGES_BASE_PATH + CREATE_PATH, component: <CreatePage /> },

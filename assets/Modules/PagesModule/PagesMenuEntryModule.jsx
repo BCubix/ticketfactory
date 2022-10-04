@@ -92,9 +92,9 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                                 if (listElement) {
                                     submitList.push({
                                         name: listElement.title,
-                                        elementId: listElement.id,
+                                        value: listElement.id,
                                         menuType: MENU_TYPE,
-                                        menuTypeLabel: MENU_TYPE_LABEL,
+                                        children: [],
                                     });
                                 }
                             });

@@ -28,10 +28,14 @@ class MenuEntry
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(length: 255)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $menuType = null;
 
-    #[ORM\Column(length: 255)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $value = null;
 
     #[Gedmo\TreeLeft]

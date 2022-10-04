@@ -64,10 +64,10 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
                             ou
                         </>
                     ) : (
-                        <>Modifiez votre menu ci-dessous, ou</>
+                        list?.length > 0 && <>Modifiez votre menu ci-dessous, ou</>
                     )}
                     <Link sx={{ marginInline: 2 }} href={`${MENUS_BASE_PATH}${CREATE_PATH}`}>
-                        créez un nouveau menu.
+                        {list.length === 0 ? 'C' : 'c'}réez un nouveau menu.
                     </Link>
                     N’oubliez pas d’enregistrer vos modifications !
                 </Typography>

@@ -29,6 +29,8 @@ class MenuController extends CrudController
         $filters = empty($filters) ? [] : $filters;
         $menus = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters);
 
+        $menus = ($menus ?? []);
+
         return $this->view($menus, Response::HTTP_OK);
     }
 
