@@ -1,11 +1,20 @@
 import { Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { ReactSortable } from 'react-sortablejs';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { formatMenusData } from '../../../../services/utils/formatMenusData';
 import { DisplayMenuElement, RenderElement } from './DisplayMenuElement';
 import { DroppableBox } from './sc.DroppableBox';
+
+const sortableOptions = {
+    animation: 150,
+    fallbackOnBody: true,
+    swapThreshold: 0.65,
+    ghostClass: 'ghost',
+    group: 'shared',
+};
 
 export const MenuStructure = ({
     values,
@@ -15,6 +24,64 @@ export const MenuStructure = ({
     touched,
     errors,
 }) => {
+    const [blocks, setBlocks] = useState([
+        {
+            id: 1,
+            content: 'item 1',
+            parent_id: null,
+            type: 'container',
+            children: [
+                {
+                    id: 2,
+                    content: 'item 2',
+                    width: 3,
+                    type: 'text',
+                    parent_id: 1,
+                },
+                {
+                    id: 3,
+                    content: 'item 3',
+                    width: 3,
+                    type: 'text',
+                    parent_id: 1,
+                },
+            ],
+        },
+        {
+            id: 4,
+            content: 'item 2',
+            parent_id: null,
+            type: 'container',
+            children: [
+                {
+                    id: 5,
+                    content: 'item 5',
+                    width: 3,
+                    parent_id: 2,
+                    type: 'container',
+                    children: [
+                        { id: 8, content: 'item 8', width: 6, type: 'text', parent_id: 5 },
+                        { id: 9, content: 'item 9', width: 6, type: 'text', parent_id: 5 },
+                    ],
+                },
+                {
+                    id: 6,
+                    content: 'item 6',
+                    width: 2,
+                    type: 'text',
+                    parent_id: 2,
+                },
+                {
+                    id: 7,
+                    content: 'item 7',
+                    width: 2,
+                    type: 'text',
+                    parent_id: 2,
+                },
+            ],
+        },
+    ]);
+
     const removeMenuElement = (menus, path) => {
         if (path.length === 0) {
             return menus;
