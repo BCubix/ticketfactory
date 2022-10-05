@@ -28,12 +28,14 @@ import {
     contentTypesSelector,
     getContentTypesAction,
 } from '../../../redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '../../../redux/profile/profileSlice';
+import authApi from '../../../services/api/authApi';
 import contentsApi from '../../../services/api/contentsApi';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
     { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'type', label: 'Type de contenu', width: '70%' },
+    { name: 'title', label: 'Titre du contenu', width: '70%' },
 ];
 
 export const ContentsList = () => {

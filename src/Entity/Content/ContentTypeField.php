@@ -3,19 +3,32 @@
 namespace App\Entity\Content;
 
 use App\Entity\JsonDoctrineSerializable;
+use JMS\Serializer\Annotation as JMS;
 
 class ContentTypeField implements JsonDoctrineSerializable
 {
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?string $title = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?string $name = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?string $helper = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?string $type = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?array $options = [];
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?array $validations = [];
 
     public function getTitle(): ?string

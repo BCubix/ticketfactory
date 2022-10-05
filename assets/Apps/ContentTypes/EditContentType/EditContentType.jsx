@@ -74,5 +74,5 @@ export const EditContentType = () => {
         return <></>;
     }
 
-    return <ContentTypesForm handleSubmit={handleSubmit} initialValues={contentType} />;
+    return <ContentTypesForm submitForm={handleSubmit} initialValues={contentType} />;
 };

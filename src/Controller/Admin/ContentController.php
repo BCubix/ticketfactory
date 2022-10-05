@@ -41,7 +41,7 @@ class ContentController extends CrudController
         return parent::getOne($request, $contentId);
     }
 
-    #[Rest\Post('/contents/{contentTypeId}', requirements: ['contentTypeId' => '\d+'])]
+    #[Rest\Post('/contents/{contentTypeId}/create', requirements: ['contentTypeId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function addContent(Request $request, ContentTypeManager $ctm): View
     {
@@ -77,7 +77,7 @@ class ContentController extends CrudController
         return $this->view($object, Response::HTTP_CREATED);
     }
 
-    #[Rest\Post('/contents/{contentId}', requirements: ['contentId' => '\d+'])]
+    #[Rest\Post('/contents/{contentId}/edit', requirements: ['contentId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function edit(Request $request, int $contentId): View
     {

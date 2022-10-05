@@ -8,6 +8,7 @@ import { DisplayContentForm } from './DisplayContentForm';
 import { useState } from 'react';
 import ContentModules from './ContentModules';
 import { CONTENT_MODULES_EXTENSION } from '../../../Constant';
+import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType }) => {
     const [initValue, setInitValue] = useState(null);
@@ -22,9 +23,11 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
     useEffect(() => {
         if (initialValues) {
+            console.log(initialValues);
             setInitValue({
                 active: initialValues?.active || false,
-                fields: initialValues?.fields,
+                fields: { ...initialValues?.fields },
+                title: initialValues?.title || '',
                 contentType: initialValues?.contentType?.id || selectedContentType?.id,
             });
 
@@ -37,8 +40,8 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
         selectedContentType?.fields?.forEach((el) => {
             const moduleName =
-                String(el.fieldType).charAt(0).toUpperCase() +
-                el.fieldType?.slice(1) +
+                String(el.type).charAt(0).toUpperCase() +
+                el.type?.slice(1) +
                 CONTENT_MODULES_EXTENSION;
 
             fields[el.name] = formModules[moduleName]?.getInitialValue(el) || '';
@@ -47,6 +50,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         setInitValue({
             active: false,
             fields: fields,
+            title: '',
             contentType: selectedContentType?.id,
         });
     }, []);
@@ -59,7 +63,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         <Formik
             initialValues={initValue}
             onSubmit={(values, { setSubmitting }) => {
-                console.log(values);
+                handleSubmit(values);
                 setSubmitting(false);
             }}
             validationSchema={contentValidationSchema}
@@ -80,6 +84,18 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}
                 >
+                    <CmtFormBlock title="Informations générales">
+                        <CmtTextField
+                            value={values.title}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            label="Titre du contenu"
+                            name="title"
+                            error={touched.title && errors.title}
+                            required
+                        />
+                    </CmtFormBlock>
+
                     <CmtFormBlock title="Formulaire">
                         <DisplayContentForm
                             values={values}

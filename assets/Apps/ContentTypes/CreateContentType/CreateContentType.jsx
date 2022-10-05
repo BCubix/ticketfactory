@@ -3,8 +3,8 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
+import { getContentTypesAction } from '../../../redux/contentTypes/contentTypesSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import authApi from '../../../services/api/authApi';
 import contentTypesApi from '../../../services/api/contentTypesApi';
 import { ContentTypesForm } from '../ContentTypesForm/ContentTypesForm';
@@ -26,16 +26,16 @@ export const CreateContentType = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'Le type de contenus à bien été crée.',
+                'Le type de contenu à bien été crée.',
                 'Succès',
                 REDIRECTION_TIME
             );
 
-            dispatch(getRoomsAction());
+            dispatch(getContentTypesAction());
 
             navigate(CONTENT_TYPES_BASE_PATH);
         }
     };
 
-    return <ContentTypesForm handleSubmit={handleSubmit} />;
+    return <ContentTypesForm submitForm={handleSubmit} />;
 };

@@ -3,11 +3,16 @@
 namespace App\Entity\Content;
 
 use App\Entity\JsonDoctrineSerializable;
+use JMS\Serializer\Annotation as JMS;
 
 class ContentTypeOption implements JsonDoctrineSerializable
 {
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?string $name = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     private ?string $value = null;
 
     public function getName(): ?string

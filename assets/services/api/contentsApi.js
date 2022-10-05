@@ -1,23 +1,31 @@
 import axios from './config';
 
+const serializeData = (element, name, formData) => {
+    if (null !== element && typeof element !== 'object') {
+        formData.append(name, element);
+
+        return;
+    }
+
+    Object.entries(element).map(([key, value]) => {
+        if (null !== value && typeof value === 'object') {
+            serializeData(value, `${name}[${key}]`, formData);
+        } else if (null !== value && Array.isArray(value)) {
+            value.forEach((el, index) => {
+                serializeData(el, `${name}[${key}][${index}]`, formData);
+            });
+        } else {
+            formData.append(`${name}[${key}]`, value);
+        }
+    });
+};
+
 const contentsApi = {
     getContents: async () => {
         try {
-            const result = [
-                {
-                    id: 1,
-                    active: true,
-                    type: 'Spectacle',
-                    fields: [
-                        {
-                            name: 'spectacleName',
-                            value: 'spectacle',
-                        },
-                    ],
-                },
-            ];
+            const result = await axios.get('/contents');
 
-            return { result: true, contents: result };
+            return { result: true, contents: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -25,19 +33,9 @@ const contentsApi = {
 
     getOneContent: async (id) => {
         try {
-            const result = {
-                id: 1,
-                active: true,
-                type: 'Spectacle',
-                fields: [
-                    {
-                        name: 'spectacleName',
-                        value: 'spectacle',
-                    },
-                ],
-            };
+            const result = await axios.get(`/contents/${id}`);
 
-            return { result: true, content: result };
+            return { result: true, content: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -45,7 +43,18 @@ const contentsApi = {
 
     createContent: async (data) => {
         try {
-            return { result: true, content: data };
+            let formData = new FormData();
+
+            formData.append('active', data.active);
+            formData.append('title', data.title);
+
+            Object.entries(data.fields)?.map(([key, value]) => {
+                serializeData(value, `fields[${key}]`, formData);
+            });
+
+            const result = await axios.post(`/contents/${data.contentType}/create`, formData);
+
+            return { result: true, content: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -53,7 +62,18 @@ const contentsApi = {
 
     editContent: async (id, data) => {
         try {
-            return { result: true, content: data };
+            let formData = new FormData();
+
+            formData.append('active', data.active);
+            formData.append('title', data.title);
+
+            Object.entries(data.fields)?.map(([key, value]) => {
+                serializeData(value, `fields[${key}]`, formData);
+            });
+
+            const result = await axios.post(`/contents/${data.contentType}/edit`, formData);
+
+            return { result: true, content: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -61,6 +81,8 @@ const contentsApi = {
 
     deleteContent: async (id) => {
         try {
+            await axios.delete(`/contents/${id}`);
+
             return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };

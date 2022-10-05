@@ -14,8 +14,8 @@ export const DisplayContentField = ({
     prefixName,
 }) => {
     const moduleName =
-        String(field.fieldType).charAt(0).toUpperCase() +
-        field.fieldType?.slice(1) +
+        String(field.type).charAt(0).toUpperCase() +
+        field.type?.slice(1) +
         CONTENT_MODULES_EXTENSION;
 
     const FormComponent =

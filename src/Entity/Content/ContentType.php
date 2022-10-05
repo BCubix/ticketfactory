@@ -7,18 +7,25 @@ use App\Entity\JsonDoctrineSerializable;
 use App\Repository\ContentTypeRepository;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 #[ORM\Entity(repositoryClass: ContentTypeRepository::class)]
 class ContentType extends Datable implements JsonDoctrineSerializable
 {
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'json')]
     private array $fields = [];
 

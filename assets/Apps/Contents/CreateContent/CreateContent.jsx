@@ -38,7 +38,7 @@ export const CreateContent = () => {
 
             dispatch(getRoomsAction());
 
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(CONTENT_BASE_PATH);
         }
     };
 

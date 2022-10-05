@@ -3,6 +3,7 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CONTENT_BASE_PATH, CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
+import { getContentsAction } from '../../../redux/contents/contentsSlice';
 import {
     contentTypesSelector,
     getContentTypesAction,
@@ -37,7 +38,7 @@ export const EditContent = () => {
                 REDIRECTION_TIME
             );
 
-            //dispatch(getContentAction());
+            dispatch(getContentsAction());
 
             navigate(CONTENT_TYPES_BASE_PATH);
         }
@@ -48,36 +49,6 @@ export const EditContent = () => {
             dispatch(getContentTypesAction());
         }
     }, []);
-
-    useEffect(() => {
-        if (!contentTypes) {
-            return;
-        }
-
-        const urlId = parseInt(urlParams.get('contentType'));
-
-        if (!urlId) {
-            NotificationManager.error(
-                "Le type de contenu n'a pas été renseigné",
-                'Erreur',
-                REDIRECTION_TIME
-            );
-            navigate(CONTENT_BASE_PATH);
-        }
-
-        const contentType = contentTypes?.find((el) => el.id === urlId);
-
-        if (!contentType) {
-            NotificationManager.error(
-                'Le type de contenu renseigné ne correspond à aucun type connu.',
-                'Erreur',
-                REDIRECTION_TIME
-            );
-            navigate(CONTENT_BASE_PATH);
-        }
-
-        setSelectedContentType(contentType);
-    }, [contentTypes]);
 
     const getContent = async (id) => {
         const check = await authApi.checkIsAuth();
@@ -93,12 +64,12 @@ export const EditContent = () => {
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
 
-            navigate(CATEGORIES_BASE_PATH);
+            navigate(CONTENT_BASE_PATH);
 
             return;
         }
 
-        setContent(result.category);
+        setContent(result.content);
     };
 
     useEffect(() => {
@@ -110,15 +81,9 @@ export const EditContent = () => {
         getContent(id);
     }, [id]);
 
-    if (!contentTypes || !content) {
+    if (!content) {
         return <></>;
     }
 
-    return (
-        <ContentsForm
-            handleSubmit={handleSubmit}
-            contentTypeList={contentTypes}
-            selectedContentType={selectedContentType}
-        />
-    );
+    return <ContentsForm handleSubmit={handleSubmit} initialValues={content} />;
 };

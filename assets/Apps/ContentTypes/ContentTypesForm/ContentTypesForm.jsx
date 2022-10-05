@@ -18,37 +18,13 @@ import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { NotificationManager } from 'react-notifications';
 import { getContentTypesAction } from '../../../redux/contentTypes/contentTypesSlice';
 
-export const ContentTypesForm = ({ initialValues = null }) => {
+export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const getContentTypesModules = useMemo(() => {
         return ContentTypesModules();
     }, []);
-
-    const createContentType = async (values) => {
-        const check = await authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await contentTypesApi.createContentType(values);
-
-        if (result.result) {
-            NotificationManager.success(
-                'Le type de contenu à bien été crée.',
-                'Succès',
-                REDIRECTION_TIME
-            );
-
-            dispatch(getContentTypesAction());
-
-            navigate(CONTENT_TYPES_BASE_PATH);
-        }
-    };
 
     const contentTypeSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du type de contenus.'),
@@ -73,7 +49,7 @@ export const ContentTypesForm = ({ initialValues = null }) => {
             }}
             validationSchema={contentTypeSchema}
             onSubmit={async (values, { setSubmitting }) => {
-                await createContentType(values);
+                await submitForm(values);
                 setSubmitting(false);
             }}
         >

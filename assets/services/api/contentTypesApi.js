@@ -24,113 +24,40 @@ const serializeData = (element, name, formData) => {
                 serializeData(el, `${name}[${key}][${index}]`, formData);
             });
         } else {
-            console.log(`${name}[${key}]`, value);
-            formData.append(`${name}[${key}]`, value || null);
+            formData.append(`${name}[${key}]`, value);
         }
     });
+};
+
+const deserializeData = (data) => {
+    const newData = data;
+
+    newData?.fields?.forEach((field, fieldIndex) => {
+        newData.fields[fieldIndex].options = field?.options?.reduce(
+            (previousValue, currentValue) => ({
+                ...previousValue,
+                [currentValue.name]: currentValue.value,
+            }),
+            {}
+        );
+
+        newData.fields[fieldIndex].validations = field?.validations?.reduce(
+            (previousValue, currentValue) => ({
+                ...previousValue,
+                [currentValue.name]: currentValue.value,
+            })
+        );
+    });
+
+    return newData;
 };
 
 const contentTypesApi = {
     getContentTypes: async () => {
         try {
-            const result = [
-                {
-                    id: 1,
-                    name: 'spectacle',
-                    active: true,
-                    fields: [
-                        {
-                            title: 'Nom du spectacle',
-                            name: 'spectacleName',
-                            fieldType: 'text',
-                            helper: 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                                trim: false,
-                            },
-                            validations: {
-                                minLength: 8,
-                                maxLength: 50,
-                            },
-                        },
-                        {
-                            title: 'Groupe de champs',
-                            name: 'groupF',
-                            fieldType: 'groupFields',
-                            helper: 'Groupe de champs.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                            },
-                            parameters: {
-                                fields: [
-                                    {
-                                        title: 'Titre du block',
-                                        name: 'blockTitle',
-                                        fieldType: 'text',
-                                        options: {
-                                            required: true,
-                                            disabled: false,
-                                            trim: false,
-                                        },
-                                        validations: {
-                                            minLength: 8,
-                                            maxLength: 50,
-                                        },
-                                    },
-                                    {
-                                        title: 'TextArea',
-                                        name: 'textArea',
-                                        fieldType: 'textarea',
-                                        helper: 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
-                                        options: {
-                                            required: true,
-                                            disabled: false,
-                                            trim: false,
-                                        },
-                                        validations: {
-                                            minLength: 8,
-                                            maxLength: 50,
-                                        },
-                                    },
-                                    {
-                                        title: 'Nombre de place',
-                                        name: 'placeNb',
-                                        fieldType: 'number',
-                                        helper: 'Nombre de place pour le spectacle.',
-                                        options: {
-                                            required: true,
-                                            disabled: false,
-                                            scale: '',
-                                        },
-                                        validations: {
-                                            min: '',
-                                            max: '',
-                                        },
-                                    },
-                                ],
-                            },
-                        },
-                        {
-                            title: 'Fichiers utiles',
-                            name: 'utilsFile',
-                            fieldType: 'file',
-                            helper: 'Fichiers du spectacle.',
-                            options: {
-                                required: true,
-                                disabled: false,
-                            },
-                            validations: {
-                                minLength: '',
-                                maxLength: '',
-                            },
-                        },
-                    ],
-                },
-            ];
+            const result = await axios.get('/content-types');
 
-            return { result: true, contentTypes: result };
+            return { result: true, contentTypes: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -138,37 +65,21 @@ const contentTypesApi = {
 
     getOneContentType: async (id) => {
         try {
-            const result = {
-                id: 1,
-                name: 'spectacle',
-                active: true,
-                fields: [
-                    {
-                        title: 'Nom du spectacle',
-                        name: 'spectacleName',
-                        fieldType: 'text',
-                        helper: 'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
-                        options: {
-                            required: true,
-                            disabled: false,
-                            trim: false,
-                        },
-                        validations: {
-                            minLength: 8,
-                            maxLength: 50,
-                        },
-                    },
-                ],
-            };
+            const result = await axios.get(`content-types/${id}`);
 
-            return { result: true, contentType: result };
+            const data = deserializeData(result.data);
+            console.log(data);
+            return { result: true, contentType: data };
         } catch (error) {
+            console.log(error);
+
             return { result: false, error: error?.response?.data };
         }
     },
 
     createContentType: async (data) => {
         try {
+            console.log(data);
             const formData = new FormData();
 
             formData.append('active', data.active);
@@ -188,7 +99,19 @@ const contentTypesApi = {
 
     editContentType: async (id, data) => {
         try {
-            return { result: true, contentType: data };
+            console.log(data);
+            const formData = new FormData();
+
+            formData.append('active', data.active);
+            formData.append('name', data.name);
+
+            data.fields?.forEach((el, index) => {
+                serializeData(el, `fields[${index}]`, formData);
+            });
+
+            const result = await axios.post(`/content-types/${id}`, formData);
+
+            return { result: true, contentType: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -196,6 +119,8 @@ const contentTypesApi = {
 
     deleteContentType: async (id) => {
         try {
+            await axios.delete(`/content-types/${id}`);
+
             return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
@@ -204,182 +129,3 @@ const contentTypesApi = {
 };
 
 export default contentTypesApi;
-
-/* {
-    title: 'Nom du spectacle',
-    name: 'spectacleName',
-    fieldType: 'text',
-    helper:
-        'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
-    options: {
-        required: true,
-        disabled: false,
-        trim: false,
-    },
-    validations: {
-        minLength: 8,
-        maxLength: 50,
-    },
-},
-{
-    title: 'TextArea',
-    name: 'textArea',
-    fieldType: 'textarea',
-    helper:
-        'La longueur du nom du spectacle doit être comprise entre 8 et 50 caractères.',
-    options: {
-        required: true,
-        disabled: false,
-        trim: false,
-    },
-    validations: {
-        minLength: 8,
-        maxLength: 50,
-    },
-},
-{
-    title: 'Nombre de place',
-    name: 'placeNb',
-    fieldType: 'number',
-    helper: 'Nombre de place pour le spectacle.',
-    options: {
-        required: true,
-        disabled: false,
-        scale: '',
-    },
-    validations: {
-        min: '',
-        max: '',
-    },
-},
-{
-    title: 'Date',
-    name: 'date',
-    fieldType: 'time',
-    helper: 'Nombre de place pour le spectacle.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-    validations: {
-        disablePast: true,
-        minDate: '',
-        maxDate: '',
-    },
-},
-{
-    title: 'Description',
-    name: 'description',
-    fieldType: 'contentEditor',
-    helper: 'Description du spectacle.',
-    options: {
-        required: true,
-        disabled: false,
-        trim: false,
-    },
-    validations: {
-        minLength: '',
-        maxLength: '',
-    },
-},
-{
-    title: 'Fichier',
-    name: 'file',
-    fieldType: 'slider',
-    helper: 'Fichiers du spectacle.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-    validations: {
-        minLength: '',
-        maxLength: '',
-    },
-},
-{
-    title: 'Couleur',
-    name: 'color',
-    fieldType: 'color',
-    helper: 'Couleur.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-},
-{
-    title: 'Choix',
-    name: 'choiceList',
-    fieldType: 'choiceList',
-    helper: 'choix.',
-    options: {
-        required: true,
-        disabled: false,
-        multiple: true,
-    },
-    parameters: {
-        choices: 'red:Red\ngreen:Green',
-    },
-},
-{
-    title: 'radio',
-    name: 'radioButton',
-    fieldType: 'radioButton',
-    helper: 'Radio.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-    parameters: {
-        choices: 'red:Red\ngreen:Green',
-    },
-},
-{
-    title: 'checkbox',
-    name: 'checkbox',
-    fieldType: 'checkbox',
-    helper: 'Checkbox.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-},
-{
-    title: 'Switch',
-    name: 'switch',
-    fieldType: 'trueFalse',
-    helper: 'Switch.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-},
-{
-    title: 'Event Link',
-    name: 'eventLink',
-    fieldType: 'eventLink',
-    helper: 'Event Link.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-},
-{
-    title: 'Category Link',
-    name: 'categoryLink',
-    fieldType: 'categoryLink',
-    helper: 'Category Link.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-},
-{
-    title: 'Tag Link',
-    name: 'tagLink',
-    fieldType: 'tagLink',
-    helper: 'Tag Link.',
-    options: {
-        required: true,
-        disabled: false,
-    },
-}, */
