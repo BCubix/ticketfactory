@@ -29,6 +29,12 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[ORM\Column]
     private array $fields = [];
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(targetEntity: ContentType::class, inversedBy: 'contents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $contentType;
+
 
     public function getId(): ?int
     {
@@ -55,6 +61,18 @@ class Content extends Datable implements JsonDoctrineSerializable
     public function setFields(array $fields): self
     {
         $this->fields = $fields;
+
+        return $this;
+    }
+
+    public function getContentType(): ?ContentType
+    {
+        return $this->contentType;
+    }
+
+    public function setContentType(?ContentType $contentType): self
+    {
+        $this->contentType = $contentType;
 
         return $this;
     }

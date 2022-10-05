@@ -81,7 +81,33 @@ class ContentController extends CrudController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function edit(Request $request, int $contentId): View
     {
-        return parent::edit($request, $contentId);
+        $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($contentId);
+        if (null === $object) {
+            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+        }
+
+        $event = new CrudObjectInstantiatedEvent($object, 'edit');
+        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+
+        $form = $this->createForm($this->typeClass, $object, ['content_type' => $object->getContentType()]);
+        $fields = array_replace_recursive($request->request->all(), $request->files->all());
+        $form->submit($fields);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $errors = $this->fec->getErrorsFromForm($form);
+
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
+        }
+
+        $event = new CrudObjectValidatedEvent($object);
+        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
+
+        $this->em->persist($object);
+        $this->em->flush();
+
+        $this->log->log(0, 0, 'Updated object.', $this->entityClass, $object->getId());
+
+        return $this->view($object, Response::HTTP_OK);
     }
 
     #[Rest\Delete('/contents/{contentId}', requirements: ['contentId' => '\d+'])]
