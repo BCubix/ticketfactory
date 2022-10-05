@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Season;
-use App\Form\Admin\SeasonType;
+use App\Entity\Event\Season;
+use App\Form\Admin\Event\SeasonType;
 use App\Form\Admin\Filters\FilterSeasonType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;

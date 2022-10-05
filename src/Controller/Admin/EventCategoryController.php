@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\EventCategory;
-use App\Form\Admin\EventCategoryType;
+use App\Entity\Event\EventCategory;
+use App\Form\Admin\Event\EventCategoryType;
 use App\Form\Admin\Filters\FilterEventCategoryType;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 

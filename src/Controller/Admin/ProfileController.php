@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
-use App\Form\Admin\UserProfileType;
+use App\Entity\User\User;
+use App\Form\Admin\User\UserProfileType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;

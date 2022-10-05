@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\EventDate;
+use App\Entity\Event\EventDate;
 
 use Doctrine\Persistence\ManagerRegistry;
 

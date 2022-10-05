@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Event;
-use App\Form\Admin\EventType;
+use App\Entity\Event\Event;
+use App\Form\Admin\Event\EventType;
 use App\Form\Admin\Filters\FilterEventType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;

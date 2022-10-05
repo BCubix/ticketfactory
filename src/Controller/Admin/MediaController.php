@@ -2,8 +2,9 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Media;
-use App\Form\Admin\MediaType;
+use App\Entity\Media\Media;
+use App\Exception\ApiException;
+use App\Form\Admin\Media\MediaType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -11,7 +12,6 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Exception\ApiException;
 
 class MediaController extends CrudController
 {

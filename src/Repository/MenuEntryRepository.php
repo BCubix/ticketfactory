@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Menu;
+use App\Entity\Menu\MenuEntry;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;

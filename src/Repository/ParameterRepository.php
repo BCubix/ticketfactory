@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Parameter;
+use App\Entity\Parameter\Parameter;
 
 use Doctrine\Persistence\ManagerRegistry;
 

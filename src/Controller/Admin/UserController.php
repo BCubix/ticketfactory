@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
-use App\Form\Admin\UserType;
+use App\Entity\User\User;
+use App\Form\Admin\User\UserType;
 use App\Form\Admin\Filters\FilterUserType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;

@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Page;
-use App\Form\Admin\PageType;
+use App\Entity\Page\Page;
+use App\Form\Admin\Page\PageType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;

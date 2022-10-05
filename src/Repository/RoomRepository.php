@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Room;
+use App\Entity\Event\Room;
 
 use Doctrine\Persistence\ManagerRegistry;
 

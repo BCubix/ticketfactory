@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Parameter;
-use App\Entity\ParametersContainer;
+use App\Entity\Parameter\Parameter;
+use App\Entity\Parameter\ParametersContainer;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
-use App\Form\Admin\ParametersContainerType;
-use App\Form\Admin\ParameterType;
+use App\Form\Admin\Parameter\ParametersContainerType;
+use App\Form\Admin\Parameter\ParameterType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;

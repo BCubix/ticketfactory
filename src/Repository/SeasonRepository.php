@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Season;
+use App\Entity\Event\Season;
 
 use Doctrine\Persistence\ManagerRegistry;
 

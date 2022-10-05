@@ -2,7 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\ImageFormat;
+use App\Entity\Media\ImageFormat;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

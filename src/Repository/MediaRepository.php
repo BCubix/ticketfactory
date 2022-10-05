@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Media;
+use App\Entity\Media\Media;
 
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ContactRequest;
+use App\Entity\ContactRequest\ContactRequest;
 
 use Doctrine\Persistence\ManagerRegistry;
 

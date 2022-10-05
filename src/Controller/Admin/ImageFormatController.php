@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ImageFormat;
-use App\Form\Admin\ImageFormatType;
+use App\Entity\Media\ImageFormat;
+use App\Form\Admin\Media\ImageFormatType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;

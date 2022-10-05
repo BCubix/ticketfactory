@@ -13,16 +13,9 @@ use Vich\UploaderBundle\Util\ClassUtils;
 
 class JmsSerializerSubscriber implements EventSubscriberInterface
 {
-    /** @var MetadataReader */
     private $metadata;
-
-    /** @var UploaderHelper */
     private $helper;
-
-    /** @var string */
     private $remoteFileUrl;
-
-    /** @var Security */
     private $security;
 
     public function __construct(

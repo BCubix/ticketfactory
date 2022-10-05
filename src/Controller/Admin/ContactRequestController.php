@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ContactRequest;
-use App\Form\Admin\ContactRequestType;
+use App\Entity\ContactRequest\ContactRequest;
+use App\Form\Admin\ContactRequest\ContactRequestType;
 use App\Form\Admin\Filters\FilterContactRequestType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;

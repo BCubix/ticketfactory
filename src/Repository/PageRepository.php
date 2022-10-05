@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Page;
+use App\Entity\Page\Page;
 
 use Doctrine\Persistence\ManagerRegistry;
 

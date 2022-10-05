@@ -2,12 +2,12 @@
 
 namespace App\Service\Logger;
 
+use App\Entity\Technical\Log;
+use App\Entity\User\User;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
-
-use App\Entity\Log;
-use App\Entity\User;
 
 class Logger
 {

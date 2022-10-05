@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\EventCategory;
+use App\Entity\Event\EventCategory;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;

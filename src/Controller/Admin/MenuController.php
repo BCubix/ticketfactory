@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\MenuEntry;
-use App\Form\Admin\MenuEntryType;
+use App\Entity\Menu\MenuEntry;
+use App\Form\Admin\Menu\MenuEntryType;
 use App\Form\Admin\Filters\FilterMenuEntryType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;

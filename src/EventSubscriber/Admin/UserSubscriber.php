@@ -2,7 +2,7 @@
 
 namespace App\EventSubscriber\Admin;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Manager\UserManager;

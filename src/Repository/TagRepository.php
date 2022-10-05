@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Tag;
+use App\Entity\Event\Tag;
 
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Redirection;
-use App\Form\Admin\RedirectionType;
+use App\Entity\Technical\Redirection;
+use App\Form\Admin\Technical\RedirectionType;
 use App\Form\Admin\Filters\FilterRedirectionType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;

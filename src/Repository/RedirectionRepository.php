@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Redirection;
+use App\Entity\Technical\Redirection;
 
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Tag;
-use App\Form\Admin\TagType;
+use App\Entity\Event\Tag;
+use App\Form\Admin\Event\TagType;
 use App\Form\Admin\Filters\FilterTagType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
