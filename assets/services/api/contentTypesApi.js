@@ -68,18 +68,14 @@ const contentTypesApi = {
             const result = await axios.get(`content-types/${id}`);
 
             const data = deserializeData(result.data);
-            console.log(data);
             return { result: true, contentType: data };
         } catch (error) {
-            console.log(error);
-
             return { result: false, error: error?.response?.data };
         }
     },
 
     createContentType: async (data) => {
         try {
-            console.log(data);
             const formData = new FormData();
 
             formData.append('active', data.active);
@@ -99,7 +95,6 @@ const contentTypesApi = {
 
     editContentType: async (id, data) => {
         try {
-            console.log(data);
             const formData = new FormData();
 
             formData.append('active', data.active);

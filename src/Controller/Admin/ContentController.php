@@ -69,6 +69,8 @@ class ContentController extends CrudController
         $event = new CrudObjectValidatedEvent($object);
         $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
 
+        $object->setContentType($contentType);
+
         $this->em->persist($object);
         $this->em->flush();
 

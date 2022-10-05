@@ -64,14 +64,14 @@ const contentsApi = {
         try {
             let formData = new FormData();
 
-            formData.append('active', data.active);
+            formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
 
             Object.entries(data.fields)?.map(([key, value]) => {
                 serializeData(value, `fields[${key}]`, formData);
             });
 
-            const result = await axios.post(`/contents/${data.contentType}/edit`, formData);
+            const result = await axios.post(`/contents/${id}/edit`, formData);
 
             return { result: true, content: result.data };
         } catch (error) {

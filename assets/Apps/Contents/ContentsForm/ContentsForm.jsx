@@ -23,7 +23,6 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
     useEffect(() => {
         if (initialValues) {
-            console.log(initialValues);
             setInitValue({
                 active: initialValues?.active || false,
                 fields: { ...initialValues?.fields },

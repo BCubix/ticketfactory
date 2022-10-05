@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CONTENT_BASE_PATH, CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
+import { CONTENT_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import { getContentsAction } from '../../../redux/contents/contentsSlice';
 import {
     contentTypesSelector,
@@ -29,7 +29,7 @@ export const EditContent = () => {
             return;
         }
 
-        const result = await contentsApi.updateContent(values);
+        const result = await contentsApi.editContent(id, values);
 
         if (result.result) {
             NotificationManager.success(
@@ -40,7 +40,7 @@ export const EditContent = () => {
 
             dispatch(getContentsAction());
 
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(CONTENT_BASE_PATH);
         }
     };
 
@@ -85,5 +85,11 @@ export const EditContent = () => {
         return <></>;
     }
 
-    return <ContentsForm handleSubmit={handleSubmit} initialValues={content} />;
+    return (
+        <ContentsForm
+            handleSubmit={handleSubmit}
+            initialValues={content}
+            selectedContentType={content?.contentType}
+        />
+    );
 };
