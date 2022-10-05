@@ -43,13 +43,11 @@ services:
         tags:
             - { name: kernel.event_subscriber, event: tf.object.validated }
 
-    App\EventListener\FileUploader:
+    App\EventSubscriber\Admin\FileUploader:
         arguments:
-            $handler: '@vich_uploader.upload_handler'
-            $annotation: '@vich_uploader.metadata_driver.annotation'
             $rootPath: '%kernel.project_dir%'
         tags:
-            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+            - { name: kernel.event_subscriber, event: oneup_uploader.post_persist }
 
     # Managers
     App\Manager\ContentTypeManager:

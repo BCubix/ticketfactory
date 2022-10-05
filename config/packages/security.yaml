@@ -10,7 +10,7 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         tf_user_provider:
             entity:
-                class: App\Entity\User
+                class: App\Entity\User\User
 
     firewalls:
         dev:
