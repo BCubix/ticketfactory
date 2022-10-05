@@ -3,6 +3,8 @@
 namespace App\Entity\Technical;
 
 use App\Entity\Datable;
+use App\Entity\User\User;
+
 use App\Repository\LogRepository;
 
 use Doctrine\ORM\Mapping as ORM;

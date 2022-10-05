@@ -94,6 +94,7 @@ export const MenusList = () => {
                     maxLevel: initialValues?.maxLevel || 3,
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
+                    console.log('Hell', values);
                     await updateMenu(values);
 
                     setSubmitting(false);
@@ -152,7 +153,7 @@ export const MenusList = () => {
                                         <Button
                                             variant="outlined"
                                             sx={{ mt: 3, mb: 2 }}
-                                            isSubmitting
+                                            disabled={isSubmitting}
                                             color="error"
                                             onClick={() => setDeleteDialog(!deleteDialog)}
                                         >
@@ -163,7 +164,6 @@ export const MenusList = () => {
                                             type="submit"
                                             variant="contained"
                                             sx={{ mt: 3, mb: 2 }}
-                                            disabled={isSubmitting}
                                         >
                                             Modifier
                                         </Button>

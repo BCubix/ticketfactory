@@ -33,7 +33,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                 email: initialValues?.email || '',
                 phone: initialValues?.phone || '',
                 subject: initialValues?.subject || '',
-                message: initialValues?.firstName || '',
+                message: initialValues?.message || '',
             }}
             validationSchema={contactRequestSchema}
             onSubmit={async (values, { setSubmitting }) => {

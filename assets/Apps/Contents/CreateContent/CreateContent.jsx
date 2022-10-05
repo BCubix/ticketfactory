@@ -3,6 +3,7 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CONTENT_BASE_PATH, CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
+import { getContentsAction } from '../../../redux/contents/contentsSlice';
 import {
     contentTypesSelector,
     getContentTypesAction,
@@ -36,7 +37,7 @@ export const CreateContent = () => {
         if (result.result) {
             NotificationManager.success('Le contenu à bien été crée.', 'Succès', REDIRECTION_TIME);
 
-            dispatch(getRoomsAction());
+            dispatch(getContentsAction());
 
             navigate(CONTENT_BASE_PATH);
         }

@@ -68,7 +68,7 @@ const MENU = [
                 link: REDIRECTIONS_BASE_PATH,
                 icon: <CallMissedOutgoingIcon />,
             },
-            { name: 'Modules', link: null, icon: <ViewModuleIcon /> },
+            /* { name: 'Modules', link: null, icon: <ViewModuleIcon /> }, */
             { name: 'Bibliothèque médias', link: MEDIAS_BASE_PATH, icon: <PermMediaIcon /> },
             { name: 'Contenus', link: CONTENT_BASE_PATH, icon: <SourceIcon /> },
             { name: 'Types de contenus', link: CONTENT_TYPES_BASE_PATH, icon: <WidgetsIcon /> },
