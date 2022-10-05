@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {Formik} from "formik";
 
 import {Box} from "@mui/system";
@@ -9,36 +9,41 @@ import {CmtPageWrapper} from "@Components/CmtPage/CmtPageWrapper/CmtPageWrapper"
 import ParametersBlockForm from "@Apps/Parameters/ParametersForm/ParametersBlockForm";
 
 function parametersForm({handleSubmit, parameters}) {
-    const tabs = [];
-    parameters.forEach((parameter) => {
-        const indexTab = tabs.findIndex(tab => tab.tabName === parameter.tabName);
-        if (indexTab === -1) {
-            tabs.push({
-                tabName: parameter.tabName,
-                blocks: [{
-                    blockName: parameter.blockName,
-                    parameters: [
-                        parameter,
-                    ],
-                }]
-            });
-        }
-        else {
-            const blocks = tabs[indexTab].blocks;
-            const indexBlock = blocks.findIndex(block => block.blockName === parameter.blockName);
-            if (indexBlock === -1) {
-                blocks.push({
-                    blockName: parameter.blockName,
-                    parameters: [
-                        parameter,
-                    ],
+    const tabs = useMemo(() => {
+        const tabs = [];
+
+        parameters.forEach((parameter) => {
+            const indexTab = tabs.findIndex(tab => tab.tabName === parameter.tabName);
+            if (indexTab === -1) {
+                tabs.push({
+                    tabName: parameter.tabName,
+                    blocks: [{
+                        blockName: parameter.blockName,
+                        parameters: [
+                            parameter,
+                        ],
+                    }]
                 });
             }
             else {
-                blocks[indexBlock].parameters.push(parameter);
+                const blocks = tabs[indexTab].blocks;
+                const indexBlock = blocks.findIndex(block => block.blockName === parameter.blockName);
+                if (indexBlock === -1) {
+                    blocks.push({
+                        blockName: parameter.blockName,
+                        parameters: [
+                            parameter,
+                        ],
+                    });
+                }
+                else {
+                    blocks[indexBlock].parameters.push(parameter);
+                }
             }
-        }
-    });
+        });
+
+        return tabs;
+    }, [parameters]);
 
     return (
         <Formik
