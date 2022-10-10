@@ -23,18 +23,8 @@ import { REDIRECTION_TYPES } from '../../../Constant';
 export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
     const redirectionSchema = Yup.object().shape({
         redirectType: Yup.string().required('Veuillez renseigner le type de redirection.'),
-        redirectFrom: Yup.string()
-            .matches(
-                /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-                'Veuillez renseigner une url valide.'
-            )
-            .required("Veuillez renseigner l'url à rediriger."),
-        redirectTo: Yup.string()
-            .matches(
-                /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-                'Veuillez renseigner une url valide.'
-            )
-            .required("Veuillez renseigner l'url de destination."),
+        redirectFrom: Yup.string().required("Veuillez renseigner l'url à rediriger."),
+        redirectTo: Yup.string().required("Veuillez renseigner l'url de destination."),
     });
 
     return (

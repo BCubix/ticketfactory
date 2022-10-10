@@ -94,8 +94,7 @@ export const MenusList = () => {
                     maxLevel: initialValues?.maxLevel || 3,
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
-                    console.log('Hell', values);
-                    await updateMenu(values);
+                    updateMenu(values);
 
                     setSubmitting(false);
                 }}
@@ -164,6 +163,7 @@ export const MenusList = () => {
                                             type="submit"
                                             variant="contained"
                                             sx={{ mt: 3, mb: 2 }}
+                                            disabled={isSubmitting}
                                         >
                                             Modifier
                                         </Button>

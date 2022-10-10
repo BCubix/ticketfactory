@@ -12,8 +12,30 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
     const [name, setName] = useState('');
     const [value, setValue] = useState('');
 
+    const handleSubmitLink = () => {
+        if (!name || !value) {
+            return;
+        }
+
+        addElementToMenu([
+            {
+                name: name,
+                value: value,
+                menuType: MENU_TYPE,
+                children: [],
+            },
+        ]);
+    };
+
     return (
-        <Accordion>
+        <Accordion
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSubmitLink();
+                }
+            }}
+        >
             <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
                 <Typography>Liens externe</Typography>
             </AccordionSummary>
@@ -22,30 +44,19 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     label="Nom de l'élément"
-                    required
                 />
 
                 <CmtTextField
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     label="Lien"
-                    required
                 />
 
                 <Box display="flex" justifyContent={'flex-end'}>
                     <Button
                         variant="contained"
                         disabled={!name || !value}
-                        onClick={() => {
-                            addElementToMenu([
-                                {
-                                    name: name,
-                                    value: value,
-                                    menuType: MENU_TYPE,
-                                    children: [],
-                                },
-                            ]);
-                        }}
+                        onClick={handleSubmitLink}
                     >
                         Ajouter
                     </Button>

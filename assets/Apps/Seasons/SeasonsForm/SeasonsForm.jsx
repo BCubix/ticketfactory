@@ -1,5 +1,4 @@
-import { Button, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, FormControlLabel, Grid, Switch, Box } from '@mui/material';
 import { Formik } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
