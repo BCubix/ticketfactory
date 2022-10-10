@@ -56,6 +56,8 @@ export const DeleteBlockFabButton = styled(Fab)`
     width: 30px;
     min-height: 0;
     min-width: 0;
+    border: ${(props) => `1px solid ${props.theme.palette.crud.delete.backgroundColor}`};
+    box-shadow: none;
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.delete.backgroundColor};

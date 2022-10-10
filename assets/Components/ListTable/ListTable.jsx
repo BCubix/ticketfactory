@@ -1,4 +1,5 @@
 import {
+    Chip,
     Fab,
     Table,
     TableBody,
@@ -13,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { objectResolver } from '../../services/utils/objectResolver';
 import { DeleteFabButton, EditFabButton } from '../CmtButton/sc.Buttons';
+import { useTheme } from '@emotion/react';
 
 /**
  *
@@ -111,6 +113,8 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick
 };
 
 const RenderFunction = ({ item, tableItem }) => {
+    const theme = useTheme();
+
     if (tableItem.renderFunction) {
         return tableItem.renderFunction(item);
     }
@@ -123,9 +127,20 @@ const RenderFunction = ({ item, tableItem }) => {
         }
 
         return (
-            <Typography component="p" variant="body1">
-                {result ? 'Oui' : 'Non'}
-            </Typography>
+            <Chip
+                sx={{ backgroundColor: '#FFFFFF' }}
+                label={
+                    <Typography
+                        component="p"
+                        variant="body1"
+                        sx={{
+                            color: result ? theme.palette.success.main : theme.palette.error.main,
+                        }}
+                    >
+                        {result ? 'Oui' : 'Non'}
+                    </Typography>
+                }
+            />
         );
     }
 

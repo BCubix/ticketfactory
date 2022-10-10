@@ -8,6 +8,7 @@ import {
     Box,
     MenuItem,
     Select,
+    Chip,
 } from '@mui/material';
 import { FieldArray } from 'formik';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,13 +19,7 @@ import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
 import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-const STATES = [
-    { label: 'Valide', value: 'valid' },
-    { label: 'Reporté', value: 'delayed' },
-    { label: 'Annulé', value: 'canceled' },
-    { label: 'Nouvelle date', value: 'new_date' },
-];
+import { useTheme } from '@emotion/react';
 
 export const EventsDateForm = ({
     values,
@@ -36,6 +31,15 @@ export const EventsDateForm = ({
     errors,
     blockIndex,
 }) => {
+    const theme = useTheme();
+
+    const STATES = [
+        { label: 'Valide', value: 'valid', color: theme.palette.dateStatus.valid },
+        { label: 'Reporté', value: 'delayed', color: theme.palette.dateStatus.reported },
+        { label: 'Annulé', value: 'canceled', color: theme.palette.dateStatus.canceled },
+        { label: 'Nouvelle date', value: 'new_date', color: theme.palette.dateStatus.newDate },
+    ];
+
     return (
         <FieldArray name={`eventDateBlocks[${blockIndex}].eventDates`}>
             {({ remove, push }) => (
@@ -107,7 +111,16 @@ export const EventsDateForm = ({
                                                                 key={index}
                                                             >
                                                                 <ListItemText>
-                                                                    {item.label}
+                                                                    <Box
+                                                                        display={'inline'}
+                                                                        borderRadius={4}
+                                                                        px={2}
+                                                                        py={1}
+                                                                        mx={1}
+                                                                        backgroundColor={item.color}
+                                                                    >
+                                                                        {item.label}
+                                                                    </Box>
                                                                 </ListItemText>
                                                             </MenuItem>
                                                         ))}
