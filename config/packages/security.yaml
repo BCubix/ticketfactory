@@ -43,6 +43,8 @@ security:
 
     access_control:
         - { path: ^/admin/api/(login|token/refresh), roles: PUBLIC_ACCESS }
+        - { path: ^/admin/api/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/api/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin/api, roles: ROLE_ADMIN }
 
 when@test:

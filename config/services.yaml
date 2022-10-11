@@ -28,13 +28,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    App\EventSubscriber\Admin\JmsSerializerSubscriber:
-        tags:
-            - { name: jms_serializer.event_subscriber }
-        arguments:
-            $metadata: '@vich_uploader.metadata_reader'
-            $remoteFileUrl: '%env(resolve:REMOTE_FILE_URL)%'
-
     App\EventSubscriber\Admin\DoctrineSubscriber:
         tags:
             - { name: doctrine.event_subscriber }

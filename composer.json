@@ -24,6 +24,7 @@
         "symfony/flex": "^1.17|^2",
         "symfony/form": "^6.0",
         "symfony/framework-bundle": "*",
+        "symfony/mailer": "5.4.*",
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/runtime": "*",
         "symfony/security-bundle": "^5.4",
@@ -31,8 +32,7 @@
         "symfony/twig-bundle": "^5.4",
         "symfony/validator": "^6.0",
         "symfony/webpack-encore-bundle": "^1.14",
-        "symfony/yaml": "*",
-        "vich/uploader-bundle": "^1.19"
+        "symfony/yaml": "*"
     },
     "require-dev": {
         "symfony/debug-bundle": "^5.4",

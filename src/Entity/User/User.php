@@ -5,6 +5,7 @@ namespace App\Entity\User;
 use App\Entity\Datable;
 use App\Repository\UserRepository;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -56,6 +57,12 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $emailToken = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $passwordRequestedAt = null;
 
     private $plainPassword;
 
@@ -131,6 +138,30 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getEmailToken(): ?string
+    {
+        return $this->emailToken;
+    }
+
+    public function setEmailToken(?string $emailToken): self
+    {
+        $this->emailToken = $emailToken;
+
+        return $this;
+    }
+
+    public function getPasswordRequestedAt(): ?\DateTimeInterface
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    public function setPasswordRequestedAt(?\DateTimeInterface $passwordRequestedAt): self
+    {
+        $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
     }
