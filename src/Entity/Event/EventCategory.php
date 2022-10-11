@@ -29,6 +29,12 @@ class EventCategory extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[Gedmo\Slug(fields: ['name'])]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(length: 123, unique: true)]
+    private ?string $slug = null;
+
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: 'integer')]
     private $lft;
@@ -86,6 +92,18 @@ class EventCategory extends Datable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

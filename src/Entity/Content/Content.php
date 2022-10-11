@@ -7,6 +7,7 @@ use App\Entity\JsonDoctrineSerializable;
 use App\Repository\ContentRepository;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
@@ -23,6 +24,12 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
+
+    #[Gedmo\Slug(fields: ['title'])]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(length: 123, unique: true)]
+    private ?string $slug = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -49,6 +56,18 @@ class Content extends Datable implements JsonDoctrineSerializable
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
