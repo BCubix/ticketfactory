@@ -13,7 +13,9 @@ import PagesBlocksForm from '@Apps/Pages/PagesForm/PagesBlocksForm';
 
 function PagesForm({ handleSubmit, initialValues = null }) {
     const pageSchema = Yup.object().shape({
-        title: Yup.string().required('Veuillez renseigner le titre de la page.'),
+        title: Yup.string()
+            .required('Veuillez renseigner le titre de la page.')
+            .max(250, 'Le nom renseigné est trop long.'),
         pageBlocks: Yup.array().of(
             Yup.object().shape({
                 content: Yup.string().required('Veuillez renseigner le contenu de votre bloc.'),

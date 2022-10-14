@@ -6,6 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import 'mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { Box } from '@mui/system';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
+import * as Yup from 'yup';
 
 const FormComponent = ({
     values,
@@ -164,7 +165,26 @@ const getInitialValue = () => {
     return { lng: 2.21, lat: 46.22, zoom: 5, address: '' };
 };
 
+const getValidation = (contentType) => {
+    let validation = Yup.object();
+    let val = {};
+
+    const valList = [...contentType.validations, ...contentType.options];
+
+    const elVal = valList.find((el) => el.name === 'required');
+    if (elVal && elVal.value) {
+        val['zoom'] = Yup.string().required('Veuillez renseigner le zoom.');
+        val['lng'] = Yup.string().required('Veuillez renseigner la longitude.');
+        val['lat'] = Yup.string().required('Veuillez renseigner la latitude');
+        val['address'] = Yup.string().required("Veuillez renseigner l'adresse");
+    }
+
+    validation = validation.shape({ ...val });
+    return validation;
+};
+
 export default {
     FormComponent,
     getInitialValue,
+    getValidation,
 };

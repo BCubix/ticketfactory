@@ -51,7 +51,10 @@ export const ParentCategoryPartForm = ({
                 variant="body1"
                 sx={{ fontWeight: 500, mt: 2, color: theme.palette.labelColor }}
             >
-                Catégorie parente *
+                Catégorie parente{' '}
+                <Typography component="span" className="MuiFormLabel-asterisk">
+                    *
+                </Typography>
             </Typography>
             <TreeView
                 size="small"

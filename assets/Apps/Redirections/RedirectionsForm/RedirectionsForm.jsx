@@ -10,7 +10,6 @@ import {
     MenuItem,
     Select,
     Switch,
-    Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
@@ -23,8 +22,20 @@ import { REDIRECTION_TYPES } from '../../../Constant';
 export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
     const redirectionSchema = Yup.object().shape({
         redirectType: Yup.string().required('Veuillez renseigner le type de redirection.'),
-        redirectFrom: Yup.string().required("Veuillez renseigner l'url à rediriger."),
-        redirectTo: Yup.string().required("Veuillez renseigner l'url de destination."),
+        redirectFrom: Yup.string()
+            .required("Veuillez renseigner l'url à rediriger.")
+            .max(1000, "l'url renseigné est trop longue.")
+            .matches(
+                /^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
+                'Url invalide'
+            ),
+        redirectTo: Yup.string()
+            .required("Veuillez renseigner l'url de destination.")
+            .max(1000, "l'url renseigné est trop longue.")
+            .matches(
+                /^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
+                'Url invalide'
+            ),
     });
 
     return (

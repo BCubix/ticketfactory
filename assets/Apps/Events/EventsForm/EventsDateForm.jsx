@@ -9,6 +9,7 @@ import {
     MenuItem,
     Select,
     Chip,
+    FormHelperText,
 } from '@mui/material';
 import { FieldArray } from 'formik';
 import AddIcon from '@mui/icons-material/Add';
@@ -87,7 +88,19 @@ export const EventsDateForm = ({
                                             </Grid>
 
                                             <Grid item xs={12}>
-                                                <FormControl fullWidth>
+                                                <FormControl
+                                                    fullWidth
+                                                    error={Boolean(
+                                                        getNestedFormikError(
+                                                            touched?.eventDateBlocks?.at(blockIndex)
+                                                                ?.eventDates,
+                                                            errors?.eventDateBlocks?.at(blockIndex)
+                                                                ?.eventDates,
+                                                            index,
+                                                            'state'
+                                                        )
+                                                    )}
+                                                >
                                                     <InputLabel id="statusDateLabel" size="small">
                                                         Status
                                                     </InputLabel>
@@ -125,6 +138,16 @@ export const EventsDateForm = ({
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
+                                                    <FormHelperText error>
+                                                        {getNestedFormikError(
+                                                            touched?.eventDateBlocks?.at(blockIndex)
+                                                                ?.eventDates,
+                                                            errors?.eventDateBlocks?.at(blockIndex)
+                                                                ?.eventDates,
+                                                            index,
+                                                            'state'
+                                                        )}
+                                                    </FormHelperText>
                                                 </FormControl>
                                             </Grid>
 
@@ -144,6 +167,14 @@ export const EventsDateForm = ({
                                                         }}
                                                         onTouched={setFieldTouched}
                                                         name={`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`}
+                                                        error={getNestedFormikError(
+                                                            touched?.eventDateBlocks?.at(blockIndex)
+                                                                ?.eventDates,
+                                                            errors?.eventDateBlocks?.at(blockIndex)
+                                                                ?.eventDates,
+                                                            index,
+                                                            'reportDate'
+                                                        )}
                                                     />
                                                 </Grid>
                                             )}

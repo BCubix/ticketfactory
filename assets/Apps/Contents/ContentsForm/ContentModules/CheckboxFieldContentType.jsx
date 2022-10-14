@@ -2,6 +2,16 @@ import { Checkbox, FormControl, FormControlLabel, FormHelperText, Typography } f
 import { Box } from '@mui/system';
 import React from 'react';
 
+const VALIDATION_TYPE = 'bool';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'required',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [`Veuillez renseigner le champ ${name}`],
+    },
+];
+
 const FormComponent = ({
     values,
     setFieldValue,
@@ -53,4 +63,6 @@ const getInitialValue = () => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_LIST,
+    VALIDATION_TYPE,
 };

@@ -100,7 +100,7 @@ export const EventsPriceForm = ({
                             color="primary"
                             variant="outlined"
                             onClick={() => {
-                                push({ name: '', annotation: '', price: 0 });
+                                push({ name: '', annotation: '', price: '' });
                             }}
                         >
                             <AddIcon /> Ajouter

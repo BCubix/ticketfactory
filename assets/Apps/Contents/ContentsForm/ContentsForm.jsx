@@ -1,4 +1,4 @@
-import { Box, Button, FormControlLabel, Switch, Typography } from '@mui/material';
+import { Box, Button, FormControlLabel, Switch } from '@mui/material';
 import { Formik } from 'formik';
 import React, { useEffect, useMemo } from 'react';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
@@ -17,8 +17,50 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         return ContentModules();
     }, []);
 
-    let contentValidationSchema = Yup.object().shape({
-        contentType: Yup.number().required('Veuillez renseigner le type de contenu.'),
+    const getValidation = (contentType, contentModule) => {
+        if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
+            return;
+        }
+
+        let validation = Yup[contentModule?.VALIDATION_TYPE]();
+
+        const valList = [...contentType.validations, ...contentType.options];
+
+        contentModule?.VALIDATION_LIST?.forEach((element) => {
+            const elVal = valList.find((el) => el.name === element.name);
+            if (elVal && element.test(elVal.value)) {
+                validation = validation[element.validationName](
+                    ...element.params({ name: contentType.title, value: elVal.value })
+                );
+            }
+        });
+
+        return validation;
+    };
+
+    const getFieldsValidation = (contentType) => {
+        let validation = {};
+
+        contentType.fields?.forEach((el) => {
+            const moduleName =
+                String(el.type).charAt(0).toUpperCase() +
+                el.type?.slice(1) +
+                CONTENT_MODULES_EXTENSION;
+
+            validation[el.name] = getContentModules[moduleName]?.getValidation
+                ? getContentModules[moduleName].getValidation(el)
+                : getValidation(el, getContentModules[moduleName]);
+        });
+
+        return Yup.object().shape({ ...validation });
+    };
+
+    let contentValidationSchema = useMemo(() => {
+        return Yup.object().shape({
+            contentType: Yup.number().required('Veuillez renseigner le type de contenu.'),
+            title: Yup.string().required('Veuillez renseigner le titre du contenu.'),
+            fields: getFieldsValidation(initialValues?.contentType || selectedContentType),
+        });
     });
 
     useEffect(() => {

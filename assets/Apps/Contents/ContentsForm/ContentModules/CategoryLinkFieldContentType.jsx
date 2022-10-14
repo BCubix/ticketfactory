@@ -11,6 +11,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Box } from '@mui/system';
 
+const VALIDATION_TYPE = 'array';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'min',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [1, `Veuillez renseigner le champ ${name}`],
+    },
+];
+
 const displayCategoriesOptions = (list, values, setFieldValue, name, field) => {
     if (!list || list?.length === 0) {
         return <></>;
@@ -41,16 +51,7 @@ const displayCategoriesOptions = (list, values, setFieldValue, name, field) => {
     );
 };
 
-const FormComponent = ({
-    values,
-    handleBlur,
-    setFieldValue,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
@@ -123,4 +124,6 @@ const getInitialValue = () => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_TYPE,
+    VALIDATION_LIST,
 };

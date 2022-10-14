@@ -53,9 +53,9 @@ const categoriesApi = {
         }
     },
 
-    deleteCategory: async (id) => {
+    deleteCategory: async (id, deleteEvent) => {
         try {
-            await axios.delete(`/event-categories/${id}`);
+            await axios.delete(`/event-categories/${id}?deleteEvent=${deleteEvent ? 1 : 0}`);
 
             return { result: true };
         } catch (error) {

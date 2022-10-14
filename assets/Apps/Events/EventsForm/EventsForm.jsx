@@ -21,27 +21,47 @@ export const EventsForm = ({
     }
 
     const eventSchema = Yup.object().shape({
-        name: Yup.string().required("Veuillez renseigner le nom de l'évènement."),
+        name: Yup.string()
+            .required("Veuillez renseigner le nom de l'évènement.")
+            .max(250, "Le nom de l'évènement est trop long"),
+        eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
+        mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
         description: Yup.string().required('Veuillez renseigner une description.'),
         eventDateBlocks: Yup.array().of(
             Yup.object().shape({
                 name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
-                eventDates: Yup.array().of(
-                    Yup.object().shape({
-                        eventDate: Yup.string().required('Veuillez renseigner la date.'),
-                    })
-                ),
+                eventDates: Yup.array()
+                    .of(
+                        Yup.object().shape({
+                            eventDate: Yup.string().required('Veuillez renseigner la date.'),
+                            state: Yup.string().required(
+                                'Veuillez renseigner le status de cette date.'
+                            ),
+                            reportDate: Yup.string().when('state', (state) => {
+                                if (state === 'delayed') {
+                                    return Yup.string().required(
+                                        'Veuillez renseigner la nouvelle date.'
+                                    );
+                                }
+                            }),
+                        })
+                    )
+                    .min(1, 'Veuillez renseigner au moins une date.'),
             })
         ),
         eventPriceBlocks: Yup.array().of(
             Yup.object().shape({
                 name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
-                eventPrices: Yup.array().of(
-                    Yup.object().shape({
-                        name: Yup.string().required('Veuillez renseigner le nom du tarif.'),
-                        price: Yup.number().required('Veuillez renseigner le prix'),
-                    })
-                ),
+                eventPrices: Yup.array()
+                    .of(
+                        Yup.object().shape({
+                            name: Yup.string().required('Veuillez renseigner le nom du tarif.'),
+                            price: Yup.number()
+                                .required('Veuillez renseigner le prix')
+                                .min(0, 'Veuillez renseigner un prix valide.'),
+                        })
+                    )
+                    .min(1, 'Veuillez renseigner au moins un prix.'),
             })
         ),
     });

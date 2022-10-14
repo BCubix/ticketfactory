@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
-import React, { useEffect } from 'react';
-import { DisplayContentField } from './DisplayContentField';
+import React from 'react';
+import { DisplayContentField } from '../ContentsForm/DisplayContentField';
 
 export const DisplayContentForm = ({
     values,

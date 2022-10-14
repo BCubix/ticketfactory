@@ -45,7 +45,8 @@ const deserializeData = (data) => {
             (previousValue, currentValue) => ({
                 ...previousValue,
                 [currentValue.name]: currentValue.value,
-            })
+            }),
+            {}
         );
     });
 

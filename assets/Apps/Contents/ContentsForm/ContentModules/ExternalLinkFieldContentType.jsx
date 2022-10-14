@@ -2,6 +2,16 @@ import { Typography } from '@mui/material';
 import React from 'react';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 
+const VALIDATION_TYPE = 'array';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'min',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [1, `Veuillez renseigner le champ ${name}`],
+    },
+];
+
 const FormComponent = ({
     values,
     handleChange,
@@ -41,4 +51,6 @@ const getInitialValue = () => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_TYPE,
+    VALIDATION_LIST,
 };

@@ -8,7 +8,9 @@ import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     const seasonsSchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom de la saison.'),
+        name: Yup.string()
+            .required('Veuillez renseigner le nom de la saison.')
+            .max(250, 'Le nom renseigné est trop long.'),
         beginYear: Yup.number()
             .required("Veuillez renseigner l'année de début.")
             .min(1970, 'Veuillez renseigner une année valide.')

@@ -21,6 +21,16 @@ import { MediaElement } from '../../../Medias/Components/sc.MediaElement';
 import CloseIcon from '@mui/icons-material/Close';
 import moment from 'moment/moment';
 
+const VALIDATION_TYPE = 'mixed';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'min',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [1, `Veuillez renseigner le champ ${name}`],
+    },
+];
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -288,4 +298,6 @@ const getInitialValue = (field) => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_LIST,
+    VALIDATION_TYPE,
 };

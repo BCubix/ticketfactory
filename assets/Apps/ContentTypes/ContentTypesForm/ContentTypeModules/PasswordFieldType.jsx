@@ -51,7 +51,15 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
     );
 };
 
-const Validations = ({ values, errors, index, handleChange, handleBlur, prefixName }) => {
+const Validations = ({
+    values,
+    errors,
+    index,
+    handleChange,
+    handleBlur,
+    prefixName,
+    setFieldValue,
+}) => {
     return (
         <>
             <FieldFormControl fullWidth>

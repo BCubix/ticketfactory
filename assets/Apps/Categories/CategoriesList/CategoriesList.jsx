@@ -1,8 +1,15 @@
 import { categoriesSelector } from '@Redux/categories/categoriesSlice';
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import {
+    Button,
+    CardContent,
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    Typography,
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { Box } from '@mui/system';
@@ -32,6 +39,7 @@ export const CategoriesList = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [deleteDialog, setDeleteDialog] = useState(null);
+    const [deleteEvent, setDeleteEvent] = useState(false);
     const [category, setCategory] = useState(null);
     const [path, setPath] = useState(null);
 
@@ -89,7 +97,7 @@ export const CategoriesList = () => {
         setPath(pathArray.reverse());
     }, [category]);
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (deleteId, deleteEvent) => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -98,11 +106,12 @@ export const CategoriesList = () => {
             return;
         }
 
-        await categoriesApi.deleteCategory(id);
+        await categoriesApi.deleteCategory(deleteId, deleteEvent);
 
         dispatch(getCategoriesAction());
 
         setDeleteDialog(null);
+        setDeleteEvent(false);
     };
 
     return (
@@ -112,7 +121,9 @@ export const CategoriesList = () => {
                     <CmtBreadCrumb list={path} />
                     <Box
                         pl={3}
-                        onClick={() => navigate(`${CATEGORIES_BASE_PATH}/${id}${EDIT_PATH}`)}
+                        onClick={() =>
+                            navigate(`${CATEGORIES_BASE_PATH}/${id || categories.id}${EDIT_PATH}`)
+                        }
                     >
                         <EditCategoryLink component="span" variant="body1">
                             Modifier
@@ -148,17 +159,45 @@ export const CategoriesList = () => {
                     </CardContent>
                 </CmtCard>
             </CmtPageWrapper>
+
             <DeleteDialog
                 open={deleteDialog ? true : false}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
+                onCancel={() => {
+                    setDeleteDialog(null);
+                    setDeleteEvent(false);
+                }}
+                deleteText={'Valider'}
+                onDelete={() => handleDelete(deleteDialog, deleteEvent)}
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette catégorie ?
+                        Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie ou
+                        souhaitez-vous les rattacher à la catégorie parente ?
                     </Typography>
 
-                    <Typography component="p">Cette action est irréversible.</Typography>
+                    <Box className="flex row-center" mt={5}>
+                        <RadioGroup
+                            defaultValue={false}
+                            name="delete-event-radio-choice"
+                            value={deleteEvent}
+                            onChange={(e) => {
+                                setDeleteEvent(e.target.value);
+                            }}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-around',
+                                width: '100%',
+                            }}
+                        >
+                            <FormControlLabel value={true} control={<Radio />} label={'Suprimer'} />
+                            <FormControlLabel
+                                value={false}
+                                control={<Radio />}
+                                label={'Rattacher à la catégorie parente'}
+                            />
+                        </RadioGroup>
+                    </Box>
                 </Box>
             </DeleteDialog>
         </>

@@ -99,7 +99,7 @@ const authApi = {
         try {
             let formData = new FormData();
 
-            formData.append('login', data.username);
+            formData.append('username', data.username);
             formData.append('token', data.token);
             formData.append('newPassword', data.password);
 

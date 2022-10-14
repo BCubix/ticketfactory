@@ -3,6 +3,16 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { CirclePicker } from 'react-color';
 
+const VALIDATION_TYPE = 'date';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'required',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [`Veuillez renseigner le champ ${name}`],
+    },
+];
+
 const FormComponent = ({
     values,
     setFieldValue,
@@ -44,4 +54,6 @@ const getInitialValue = () => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_LIST,
+    VALIDATION_TYPE,
 };

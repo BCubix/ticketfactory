@@ -21,6 +21,36 @@ import { MediaElement } from '../../../Medias/Components/sc.MediaElement';
 import CloseIcon from '@mui/icons-material/Close';
 import moment from 'moment/moment';
 
+const VALIDATION_TYPE = 'mixed';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'required',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [`Veuillez renseigner le champ ${name}`],
+    },
+
+    {
+        name: 'min',
+        validationName: 'min',
+        test: (value) => Boolean(value),
+        params: ({ name, value }) => [
+            value,
+            `Le champ ${name} doit avoir au moins ${value} élément${value > 1 ? 's' : ''}`,
+        ],
+    },
+
+    {
+        name: 'max',
+        validationName: 'max',
+        test: (value) => Boolean(value),
+        params: ({ name, value }) => [
+            value,
+            `Le champ ${name} doit avoir au maximum ${value} élément${value > 1 ? 's' : ''}`,
+        ],
+    },
+];
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -273,4 +303,6 @@ const getInitialValue = () => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_TYPE,
+    VALIDATION_LIST,
 };

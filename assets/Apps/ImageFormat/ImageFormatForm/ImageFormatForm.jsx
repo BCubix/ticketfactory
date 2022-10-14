@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
+import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';
@@ -9,9 +9,15 @@ import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
 
 export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
     const imageFormatSchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom du format.'),
-        length: Yup.number().required('Veuillez renseigner la largeur du format.'),
-        height: Yup.number().required('Veuillez renseigner la hauteur du format.'),
+        name: Yup.string()
+            .required('Veuillez renseigner le nom du format.')
+            .max(250, 'Le nom renseigné est trop long.'),
+        length: Yup.number()
+            .required('Veuillez renseigner la largeur du format.')
+            .min(1, 'Veuillez renseigner une largeur valide.'),
+        height: Yup.number()
+            .required('Veuillez renseigner la hauteur du format.')
+            .min(1, 'Veuillez renseigner une hauteur valide.'),
     });
 
     return (

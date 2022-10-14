@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
-import { CmtTimePicker } from '../../../../Components/CmtTimePicker/CmtTimePicker';
+import { CmtDateTimePicker } from '../../../../Components/CmtDateTimePicker/CmtDateTimePicker';
 import * as Yup from 'yup';
 
 const VALIDATION_TYPE = 'date';
@@ -26,18 +26,19 @@ const FormComponent = ({
 }) => {
     return (
         <Box sx={{ marginTop: 2 }}>
-            <CmtTimePicker
+            <CmtDateTimePicker
                 fullWidth
                 value={values[field.name]}
                 label={label}
                 setValue={(newValue) => {
-                    setFieldValue(name, moment(newValue).format('HH:mm'));
+                    setFieldValue(name, moment(newValue).format('YYYY-MM-DD HH:mm'));
                 }}
                 onTouched={setFieldTouched}
                 name={name}
                 error={touched && touched[field.name] && errors && errors[field.name]}
                 required={field?.options?.required}
                 disabled={field?.options?.disabled}
+                disablePast={field?.validations?.disablePast}
                 inputSize="small"
             />
             {field.helper && (
@@ -54,7 +55,7 @@ const getInitialValue = () => {
 };
 
 const getValidation = (contentType) => {
-    let validation = Yup.string();
+    let validation = Yup.date();
 
     const valList = [...contentType.validations, ...contentType.options];
 
@@ -67,12 +68,43 @@ const getValidation = (contentType) => {
         }
     });
 
-    // Add test to validation to check if time is valid
-    validation = validation.test(
-        'isValid',
-        'Date invalide',
-        (val) => val && moment(val, 'HH:mm').isValid()
-    );
+    // Add test to validation to check if date is valid
+    validation = validation.test('isValid', 'Date invalide', (val) => val && moment(val).isValid());
+
+    const minDate = valList.find((el) => el.name === 'minDate');
+    const disablePast = valList.find((el) => el.name === 'disablePast');
+    let validMinDate = '';
+    let validMinDateMessage = '';
+
+    /**
+     *  We check if the minDate exist and defined and is after today date or disablePast doesn't exist or is false.
+     *  Or if disablePast exist and defined.
+     **/
+    if (
+        minDate &&
+        minDate.value &&
+        (moment().isBefore(moment(minDate.value)) || !disablePast || !disablePast?.value)
+    ) {
+        validMinDate = moment(minDate.value);
+        validMinDateMessage = `La date doit être supérieur ou égal à ${validMinDate.format(
+            'DD-MM-YYYY'
+        )}`;
+    } else if (disablePast && disablePast.value) {
+        validMinDate = moment();
+        validMinDateMessage = `La date doit doit être supérieur ou égal à aujourd'hui`;
+    }
+
+    /**
+     *  We are sure that either the minDate or the disablePast is defined.
+     *  Then we add to validation a test for the minimum date.
+     **/
+    if (validMinDate) {
+        validation = validation.test(
+            'minDate',
+            validMinDateMessage,
+            (val) => val && moment(val).isSameOrAfter(validMinDate, 'day')
+        );
+    }
 
     // We get the minHour validation data and add a test to validation to check minimum Hour if minHour.value exist and is defined
     const minHour = valList.find((el) => el.name === 'minHour');
@@ -89,6 +121,16 @@ const getValidation = (contentType) => {
                     val && moment(valHour, 'HH:mm').isSameOrAfter(moment(minHour.value, 'HH:mm'))
                 );
             }
+        );
+    }
+
+    // We get the maxDate validation data and add a test to validation to check maximum Date if maxDate.value exist and is defined
+    const maxDate = valList.find((el) => el.name === 'maxDate');
+    if (maxDate && maxDate.value) {
+        validation = validation.test(
+            'maxDate',
+            `La date doit être inférieur ou égal à ${moment(maxDate.value).format('DD-MM-YYYY')}`,
+            (val) => val && moment(val).isSameOrBefore(moment(maxDate.value), 'day')
         );
     }
 

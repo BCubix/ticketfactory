@@ -1,4 +1,4 @@
-import { Button, Typography } from '@mui/material';
+import { Button, FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FieldArray } from 'formik';
 import React, { useState } from 'react';
@@ -39,6 +39,21 @@ export const EventsDateBlockForm = ({
 
         setFieldValue('eventDateBlocks', [block]);
         setFieldValue('multipleDateBlock', false);
+    };
+
+    const getBlockError = (index) => {
+        const err = getNestedFormikError(
+            touched?.eventDateBlocks,
+            errors?.eventDateBlocks,
+            index,
+            'eventDates'
+        );
+
+        if (typeof err === 'string') {
+            return err;
+        }
+
+        return '';
     };
 
     return (
@@ -120,6 +135,9 @@ export const EventsDateBlockForm = ({
                                     key={index}
                                     blockIndex={index}
                                 />
+
+                                <FormHelperText error>{getBlockError(index)}</FormHelperText>
+
                                 {values.multipleDateBlock && (
                                     <DeleteBlockFabButton
                                         size="small"

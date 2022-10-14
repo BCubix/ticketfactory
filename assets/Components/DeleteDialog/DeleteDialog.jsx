@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { Box } from '@mui/system';
 
-export const DeleteDialog = ({ open = false, onCancel, onDelete, children }) => {
+export const DeleteDialog = ({ open = false, onCancel, onDelete = null, deleteText, children }) => {
     return (
         <Dialog open={open} onClose={onCancel}>
             <DialogContent dividers>{children}</DialogContent>
@@ -12,9 +12,11 @@ export const DeleteDialog = ({ open = false, onCancel, onDelete, children }) => 
                     <Button color="primary" onClick={onCancel} id="cancelDeleteDialog">
                         Annuler
                     </Button>
-                    <Button color="error" onClick={onDelete} id="validateDeleteDialog">
-                        Supprimer
-                    </Button>
+                    {onDelete && (
+                        <Button color="error" onClick={onDelete} id="validateDeleteDialog">
+                            {deleteText || 'Supprimer'}
+                        </Button>
+                    )}
                 </Box>
             </DialogActions>
         </Dialog>

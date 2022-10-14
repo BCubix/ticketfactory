@@ -1,4 +1,4 @@
-import { Button, Typography } from '@mui/material';
+import { Button, FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FieldArray } from 'formik';
 import React, { useState } from 'react';
@@ -39,6 +39,21 @@ export const EventsPriceBlockForm = ({
 
         setFieldValue('eventPriceBlocks', [block]);
         setFieldValue('multiplePriceBlock', false);
+    };
+
+    const getBlockError = (index) => {
+        const err = getNestedFormikError(
+            touched?.eventPriceBlocks,
+            errors?.eventPriceBlocks,
+            index,
+            'eventPrices'
+        );
+
+        if (typeof err === 'string') {
+            return err;
+        }
+
+        return '';
     };
 
     return (
@@ -123,6 +138,8 @@ export const EventsPriceBlockForm = ({
                                     handleChange={handleChange}
                                     blockIndex={index}
                                 />
+
+                                <FormHelperText error>{getBlockError(index)}</FormHelperText>
 
                                 {values.multiplePriceBlock && (
                                     <DeleteBlockFabButton

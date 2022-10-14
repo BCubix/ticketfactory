@@ -9,6 +9,16 @@ import {
 import { Box } from '@mui/system';
 import React, { useMemo } from 'react';
 
+const VALIDATION_TYPE = 'string';
+const VALIDATION_LIST = [
+    {
+        name: 'required',
+        validationName: 'required',
+        test: (value) => Boolean(value),
+        params: ({ name }) => [`Veuillez renseigner le champ ${name}`],
+    },
+];
+
 const FormComponent = ({
     values,
     setFieldValue,
@@ -88,4 +98,6 @@ const getInitialValue = (field) => {
 export default {
     FormComponent,
     getInitialValue,
+    VALIDATION_LIST,
+    VALIDATION_TYPE,
 };
