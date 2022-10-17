@@ -48,6 +48,13 @@ class RoomController extends CrudController
         return parent::edit($request, $roomId);
     }
 
+    #[Rest\Post('/rooms/{roomId}/duplicate', requirements: ['roomId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function duplicate(Request $request, int $roomId): View
+    {
+        return parent::duplicate($request, $roomId);
+    }
+
     #[Rest\Delete('/rooms/{roomId}', requirements: ['roomId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $roomId): View

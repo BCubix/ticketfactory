@@ -48,6 +48,13 @@ class EventController extends CrudController
         return parent::edit($request, $eventId);
     }
 
+    #[Rest\Post('/events/{eventId}/duplicate', requirements: ['eventId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function duplicate(Request $request, int $eventId): View
+    {
+        return parent::duplicate($request, $eventId);
+    }
+
     #[Rest\Delete('/events/{eventId}', requirements: ['eventId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $eventId): View

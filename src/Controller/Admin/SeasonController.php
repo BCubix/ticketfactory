@@ -48,6 +48,13 @@ class SeasonController extends CrudController
         return parent::edit($request, $seasonId);
     }
 
+    #[Rest\Post('/seasons/{seasonId}/duplicate', requirements: ['seasonId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function duplicate(Request $request, int $seasonId): View
+    {
+        return parent::duplicate($request, $seasonId);
+    }
+
     #[Rest\Delete('/seasons/{seasonId}', requirements: ['seasonId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $seasonId): View

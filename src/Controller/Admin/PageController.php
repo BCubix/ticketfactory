@@ -46,6 +46,13 @@ class PageController extends CrudController
         return parent::edit($request, $pageId);
     }
 
+    #[Rest\Post('/pages/{pageId}/duplicate', requirements: ['pageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function duplicate(Request $request, int $pageId): View
+    {
+        return parent::duplicate($request, $pageId);
+    }
+
     #[Rest\Delete('/pages/{pageId}', requirements: ['pageId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $pageId): View

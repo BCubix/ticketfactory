@@ -6,6 +6,7 @@ use App\Entity\Parameter\Parameter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -31,6 +32,11 @@ class ParameterType extends AbstractType
                             'choices' => $choices,
                         ]);
                         break;
+
+                    case "upload":
+                        $form->add('value', FileType::class, []);
+                        break;
+
                     default:
                         $form->add('value', TextType::class, [
                             'label'    => $parameter->getName(),
