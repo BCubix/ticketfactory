@@ -22,7 +22,7 @@ const getComponent = ({paramName, paramKey, paramValue, paramAvailableValue, set
                     label={paramName}
                     value={paramValue}
                     onChange={(e) => {
-                        setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].value`, e.target.value)
+                        setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.target.value)
                     }}
                 >
                     {paramAvailableValue?.map(({id, name}, index) => (

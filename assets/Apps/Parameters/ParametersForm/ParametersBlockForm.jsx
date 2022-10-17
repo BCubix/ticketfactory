@@ -13,14 +13,14 @@ function ParametersBlockForm({indexTab, blocks, handleChange, handleBlur, touche
     return blocks?.map(({blockName, parameters}, indexBlock) => (
         <CmtFormBlock title={blockName} key={indexBlock}>
             <Grid container spacing={4}>
-                {parameters?.map(({name, key, type, value, availableValue}, indexParam) => {
+                {parameters?.map(({name, type, paramKey, paramValue, availableValue}, indexParam) => {
                     const ParametersTypeComponent = parametersTypesModules[type].getComponent;
                     return (
                         <ParametersTypeComponent
                             key={indexParam}
                             paramName={name}
-                            paramKey={key}
-                            paramValue={value}
+                            paramKey={paramKey}
+                            paramValue={paramValue}
                             paramAvailableValue={availableValue}
                             setFieldValue={setFieldValue}
                             indexTab={indexTab}
