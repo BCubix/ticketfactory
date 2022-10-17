@@ -53,6 +53,11 @@ class Parameter
     #[ORM\Column(type: 'string', length: 255)]
     private $blockName;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $breakpointsValue;
+
 
     public function getId(): int
     {
@@ -139,6 +144,18 @@ class Parameter
     public function setBlockName(string $blockName): self
     {
         $this->blockName = $blockName;
+
+        return $this;
+    }
+
+    public function getBreakpointsValue(): string
+    {
+        return $this->breakpointsValue;
+    }
+
+    public function setBreakpointsValue(string $breakpointsValue): self
+    {
+        $this->breakpointsValue = $breakpointsValue;
 
         return $this;
     }
