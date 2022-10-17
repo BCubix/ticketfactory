@@ -9,9 +9,10 @@ import { HOME_PATH } from '@/Constant';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import authApi from '../../services/api/authApi';
-import { LOGIN_PATH, REDIRECTION_TIME } from '../../Constant';
+import { FORGOT_PASSWORD_PATH, LOGIN_PATH, REDIRECTION_TIME } from '../../Constant';
 import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
 import { NotificationManager } from 'react-notifications';
+import moment from 'moment';
 
 export const ChangePassword = () => {
     const { connected } = useSelector(profileSelector);
@@ -19,6 +20,26 @@ export const ChangePassword = () => {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
+        const dateTime = localStorage.getItem('forgotPasswordDate');
+
+        if (!dateTime) {
+            NotificationManager.error(
+                'Une erreur est survenu, Veuillez recommencer la procédure',
+                'Erreur',
+                REDIRECTION_TIME
+            );
+
+            navigate(FORGOT_PASSWORD_PATH);
+        } else if (moment().subtract(15, 'minutes').isAfter(moment(dateTime, 'x'))) {
+            NotificationManager.error(
+                'Vous avez fait une demande il y a plus de 15 minutes, Veuillez recommencer la procédure',
+                'Erreur',
+                REDIRECTION_TIME
+            );
+
+            navigate(FORGOT_PASSWORD_PATH);
+        }
+
         if (!searchParams.get('token')) {
             NotificationManager.error('Le token est introuvable', 'Erreur', REDIRECTION_TIME);
 
@@ -26,12 +47,8 @@ export const ChangePassword = () => {
             return;
         }
 
-        if (!searchParams.get('username')) {
-            NotificationManager.error(
-                "Le nom d'utilisateur est introuvable",
-                'Erreur',
-                REDIRECTION_TIME
-            );
+        if (!searchParams.get('email')) {
+            NotificationManager.error("L'email est introuvable", 'Erreur', REDIRECTION_TIME);
 
             navigate(LOGIN_PATH);
             return;
@@ -46,7 +63,7 @@ export const ChangePassword = () => {
 
     const forgotPasswordSchema = Yup.object().shape({
         password: Yup.string()
-            .min(9, 'Votre mot de passe doit contenir au moins 9 caractères.')
+            .min(10, 'Votre mot de passe doit contenir au moins 10 caractères.')
             .matches(
                 /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,}$/,
                 'Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spéciale.'
@@ -70,8 +87,8 @@ export const ChangePassword = () => {
                     validationSchema={forgotPasswordSchema}
                     onSubmit={async (values, { setSubmitting }) => {
                         const result = await authApi.changePassword({
-                            password: values.password,
-                            username: searchParams.get('username'),
+                            newPassword: values.password,
+                            username: searchParams.get('email'),
                             token: searchParams.get('token'),
                         });
                         if (result.result) {

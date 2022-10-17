@@ -89,6 +89,8 @@ const authApi = {
                 username: data.username,
             });
 
+            localStorage.setItem('forgotPasswordDate', Date.now());
+
             return { result: true, data: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
@@ -97,13 +99,7 @@ const authApi = {
 
     changePassword: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('username', data.username);
-            formData.append('token', data.token);
-            formData.append('newPassword', data.password);
-
-            const result = await axios.post('/reset-password', formData);
+            const result = await axios.post('/reset-password', data);
 
             return { result: true, data: result.data };
         } catch (error) {
