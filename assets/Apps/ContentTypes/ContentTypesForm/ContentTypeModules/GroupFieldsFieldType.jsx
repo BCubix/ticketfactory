@@ -4,7 +4,7 @@ import { ContentTypeFieldArrayForm } from '../FieldArray/ContentTypeFieldArrayFo
 import { FieldFormControl } from '../sc.ContentTypeFields';
 
 const NAME = 'groupFields';
-const LABEL = 'Groupe de champ';
+const LABEL = 'Groupe de champs';
 
 const TYPE = 'groupFields';
 const TYPE_GROUP_NAME = 'Relationel';

@@ -1,8 +1,17 @@
-import { FormControlLabel, Switch, Typography } from '@mui/material';
+import { FormControlLabel, FormHelperText, Grid, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+    AddBlockFabButton,
+    DeleteBlockFabButton,
+} from '../../../../Components/CmtButton/sc.Buttons';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { FieldFormControl } from '../sc.ContentTypeFields';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import { CmtCard } from '../../../../Components/CmtCard/sc.CmtCard';
+import * as Yup from 'yup';
+import { getNestedFormikError } from '../../../../services/utils/getNestedFormikError';
 
 const NAME = 'choiceList';
 const LABEL = 'Liste de choix';
@@ -10,31 +19,148 @@ const LABEL = 'Liste de choix';
 const TYPE = 'choiceList';
 const TYPE_GROUP_NAME = 'Choix';
 
-const ComplementInformation = ({ values, index, handleChange, handleBlur, prefixName, errors }) => {
+const ComplementInformation = ({
+    values,
+    index,
+    setFieldValue,
+    handleBlur,
+    prefixName,
+    errors,
+    touched,
+}) => {
+    const [list, setList] = useState([]);
+
+    useEffect(() => {
+        if (!values?.parameters?.choices) {
+            return;
+        }
+
+        let tmpList = [];
+
+        values?.parameters?.choices?.split('\n')?.forEach((element) => {
+            const line = element.split(':');
+            let val = line[0].trim();
+            let lab = line.length > 1 ? line[1].trim() : val;
+
+            tmpList.push({ value: val, label: lab });
+        });
+
+        setList(tmpList);
+    }, []);
+
+    const handleChangeChoice = ({ label, value, choiceIndex }) => {
+        let newList = [...list];
+
+        newList[choiceIndex] = { label, value };
+        setList(newList);
+
+        let choices = newList
+            .map((el) => `${el.value}${el.label ? ` : ${el.label}` : ''}`)
+            .join('\n');
+
+        setFieldValue(`${prefixName}fields.${index}.parameters.choices`, choices);
+    };
+
+    const handleAddChoice = () => {
+        let newList = [...list];
+
+        newList.push({ label: '', value: '' });
+
+        setList(newList);
+    };
+
+    const handleDeleteChoice = (deleteIndex) => {
+        let newList = [...list];
+
+        newList.splice(deleteIndex, 1);
+
+        setList(newList);
+
+        let choices = newList
+            .map((el) => `${el.value}${el.label ? ` : ${el.label}` : ''}`)
+            .join('\n');
+
+        setFieldValue(`${prefixName}fields.${index}.parameters.choices`, choices);
+    };
+
     return (
         <>
-            <CmtTextField
-                value={values.parameters.choices}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                name={`${prefixName}fields.${index}.parameters.choices`}
-                error={errors?.parameters?.choices}
-                required
-                label="Liste des choix"
-                multiline
-                rows={4}
-            />
+            <Typography variant="body1" sx={{ marginTop: 5 }}>
+                Liste de choix
+            </Typography>
+            <Box marginTop={8} marginLeft={4} marginBottom={4}>
+                <Grid container spacing={12}>
+                    {list.map((item, ind) => (
+                        <Grid
+                            item
+                            container
+                            spacing={4}
+                            xs={12}
+                            sm={6}
+                            key={ind}
+                            position="relative"
+                        >
+                            <CmtCard sx={{ width: '100%', position: 'relative', padding: 2 }}>
+                                <Grid container spacing={4}>
+                                    <Grid item xs={12} sm={6}>
+                                        <CmtTextField
+                                            value={item.label}
+                                            onChange={(e) =>
+                                                handleChangeChoice({
+                                                    label: e.target.value,
+                                                    value: item.value,
+                                                    choiceIndex: ind,
+                                                })
+                                            }
+                                            onBlur={handleBlur}
+                                            required
+                                            label="Label"
+                                        />
+                                    </Grid>
 
-            <Box mt={1} mb={5}>
-                <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
-                    Indiquez une valeur par ligne.
-                </Typography>
-                <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
-                    Vous pouvez spécifier la valeur et le libellé de cette manière.
-                </Typography>
-                <Typography component="p" variant="body2" sx={{ marginTop: 1, fontSize: 10 }}>
-                    rouge : Rouge
-                </Typography>
+                                    <Grid item xs={12} sm={6} position="relative">
+                                        <CmtTextField
+                                            value={item.value}
+                                            onChange={(e) =>
+                                                handleChangeChoice({
+                                                    label: item.label,
+                                                    value: e.target.value,
+                                                    choiceIndex: ind,
+                                                })
+                                            }
+                                            onBlur={handleBlur}
+                                            required
+                                            label="Valeur"
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <DeleteBlockFabButton
+                                    size={'small'}
+                                    onClick={() => handleDeleteChoice(ind)}
+                                >
+                                    <CloseIcon />
+                                </DeleteBlockFabButton>
+                            </CmtCard>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+
+            <FormHelperText error>
+                {
+                    getNestedFormikError(touched?.fields, errors?.fields, index, 'parameters')
+                        ?.choices
+                }
+            </FormHelperText>
+            <Box className="flex row-end">
+                <AddBlockFabButton
+                    size="small"
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleAddChoice}
+                >
+                    <AddIcon />
+                </AddBlockFabButton>
             </Box>
         </>
     );
@@ -116,6 +242,10 @@ const getInitialValues = () => ({
     parameters: { choices: '' },
 });
 
+const getValidation = () => {
+    return { choices: Yup.string().required('Veuillez renseigner votre liste de choix') };
+};
+
 export default {
     Options,
     ComplementInformation,
@@ -123,4 +253,5 @@ export default {
     getTabList,
     setInitialValues,
     getInitialValues,
+    getValidation,
 };

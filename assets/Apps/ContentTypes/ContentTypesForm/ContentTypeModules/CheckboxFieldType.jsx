@@ -3,7 +3,7 @@ import React from 'react';
 import { FieldFormControl } from '../sc.ContentTypeFields';
 
 const NAME = 'checkbox';
-const LABEL = 'Checkbox';
+const LABEL = 'Cases à cocher';
 
 const TYPE = 'checkbox';
 const TYPE_GROUP_NAME = 'Choix';

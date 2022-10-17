@@ -36,7 +36,7 @@ export const MainPartFieldForm = ({
 
     const getSelectEntryList = useMemo(() => {
         let moduleSelectList = Object.entries(contentTypesModules)?.map(([key, item]) =>
-            item.getSelectEntry()
+            item?.getSelectEntry()
         );
 
         let selectList = {};

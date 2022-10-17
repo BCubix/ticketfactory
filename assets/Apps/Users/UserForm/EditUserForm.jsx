@@ -16,7 +16,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
             .required("Veuillez renseigner l'adresse email."),
         password: Yup.string()
             .nullable()
-            .min(9, 'Votre mot de passe doit contenir au moins 9 caractères.')
+            .min(10, 'Votre mot de passe doit contenir au moins 10 caractères.')
             .matches(
                 /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,}$/,
                 'Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spéciale.'
