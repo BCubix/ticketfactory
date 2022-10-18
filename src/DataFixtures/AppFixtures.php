@@ -23,6 +23,7 @@ class AppFixtures extends Fixture
     {
         // Root Category
         $eventCategory = new EventCategory();
+        $eventCategory->setActive(true);
         $eventCategory->setName('Accueil');
         $om->persist($eventCategory);
 
@@ -100,10 +101,12 @@ class AppFixtures extends Fixture
 
         // Default User
         $user = new User();
+        $user->setActive(true);
         $user->setEmail('thomas.anderson@matrix.com');
         $user->setPlainPassword('matrix');
         $user->setFirstName('Thomas');
         $user->setLastName('Anderson');
+        $user->setRoles(['ROLE_ADMIN']);
         $this->um->upgradePassword($user);
 
         $om->flush();

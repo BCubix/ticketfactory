@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Technical\Log;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 class LogRepository extends AbstractRepository
@@ -52,12 +53,17 @@ class LogRepository extends AbstractRepository
 		    ;
         }
 
-        return $results
+        $results = $results
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit)
             ->orderBy($sortField, $sortOrder)
-            ->getQuery()
-            ->getResult()
         ;
+
+        $results = new Paginator($results);
+
+        return [
+            'results' => $results->getIterator()->getArrayCopy(),
+            'total' => count($results)
+        ];
     }
 }

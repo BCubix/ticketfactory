@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 abstract class CrudRepository extends AbstractRepository
@@ -17,6 +18,22 @@ abstract class CrudRepository extends AbstractRepository
 
         $results = $this->createQueryBuilder('o');
 
+        foreach (static::JOINS as $joinArray) {
+            $joinType = $joinArray[0];
+
+            if (isset($joinArray[3])) {
+                $results->$joinType($joinArray[1], $joinArray[2], 'WITH', $joinArray[3]);
+            } else {
+                $results->$joinType($joinArray[1], $joinArray[2]);
+            }
+        }
+
+        /*$results->select('o');
+        foreach (static::SELECTS as $selectKey => $selectValue) {
+            $selectComplete = ((null === $selectValue) ? $selectKey : ($selectValue . ' AS ' . $selectKey));
+            $results->addSelect($selectComplete);
+        }*/
+
         foreach (static::FILTERS as $filterArray) {
             if (!isset($filters[$filterArray[0]]) || is_null($filters[$filterArray[0]])) {
                 continue;
@@ -30,13 +47,18 @@ abstract class CrudRepository extends AbstractRepository
 		    ;
         }
 
-        return $results
+        $results = $results
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit)
             ->orderBy($sortField, $sortOrder)
-            ->getQuery()
-            ->getResult()
         ;
+
+        $results = new Paginator($results);
+
+        return [
+            'results' => $results->getIterator()->getArrayCopy(),
+            'total' => count($results)
+        ];
     }
 
     public function findOneForAdmin(int $id)

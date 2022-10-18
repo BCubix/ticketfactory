@@ -20,7 +20,7 @@ class RoomController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Cette salle n'existe pas.";
 
     #[Rest\Get('/rooms')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
