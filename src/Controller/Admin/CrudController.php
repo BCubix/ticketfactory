@@ -114,7 +114,7 @@ abstract class CrudController extends AdminController
         return $this->view($object, Response::HTTP_OK);
     }
 
-    public function duplicate(Request $request, int $eventId): View
+    public function duplicate(Request $request, int $id): View
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($id);
         if (null === $object) {
@@ -125,6 +125,7 @@ abstract class CrudController extends AdminController
         $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
         $object = clone $object;
+        $object->setSlug(null);
 
         $this->em->persist($object);
         $this->em->flush();

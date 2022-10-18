@@ -1,6 +1,5 @@
 import {
     Button,
-    Card,
     CardContent,
     Dialog,
     DialogActions,
@@ -31,6 +30,7 @@ import {
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import contentsApi from '../../../services/api/contentsApi';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -73,6 +73,24 @@ export const ContentsList = () => {
         setDeleteDialog(null);
     };
 
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await contentsApi.duplicateContent(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'Le contenu à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getContentsAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
+    };
+
     return (
         <>
             <CmtPageWrapper title="Contenus">
@@ -88,10 +106,14 @@ export const ContentsList = () => {
                         </Box>
 
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={contents}
                             onEdit={(id) => {
                                 navigate(`${CONTENT_BASE_PATH}/${id}${EDIT_PATH}`);
+                            }}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />

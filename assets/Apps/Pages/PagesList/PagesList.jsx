@@ -17,6 +17,9 @@ import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { NotificationManager } from 'react-notifications';
+import { REDIRECTION_TIME } from '../../../Constant';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -52,6 +55,24 @@ function PagesList() {
         setDeleteDialog(null);
     };
 
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await pagesApi.duplicatePage(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'La page à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getPagesAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
+    };
+
     return (
         <>
             <CmtPageWrapper title={'Pages'}>
@@ -69,10 +90,14 @@ function PagesList() {
                             </CreateButton>
                         </Box>
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={pages}
                             onEdit={(id) => {
                                 navigate(`${PAGES_BASE_PATH}/${id}${EDIT_PATH}`);
+                            }}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />

@@ -18,13 +18,14 @@ export const CmtDatePicker = ({
     id = '',
     disablePast = false,
     required = false,
+    maxWidth = '100%',
     ...rest
 }) => {
     const [open, setOpen] = useState(false);
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
-            <Box md={2} width="100%">
+            <Box md={2} width="100%" maxWidth={maxWidth}>
                 <DatePicker
                     allowKeyboardControl
                     disableCloseOnSelect={false}

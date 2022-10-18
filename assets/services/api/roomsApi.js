@@ -72,6 +72,16 @@ const roomsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    duplicateRoom: async (id) => {
+        try {
+            await axios.post(`/rooms/${id}/duplicate`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default roomsApi;

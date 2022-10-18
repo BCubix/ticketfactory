@@ -88,6 +88,16 @@ const contentsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    duplicateContent: async (id) => {
+        try {
+            await axios.post(`/contents/${id}/duplicate`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default contentsApi;

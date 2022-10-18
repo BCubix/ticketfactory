@@ -7,9 +7,9 @@ function getType() {
     return TYPE;
 }
 
-const getComponent = ({paramName, paramKey, paramValue, paramAvailableValue, setFieldValue, indexTab, indexBlock, indexParam}) => {
+const getComponent = ({paramName, paramKey, paramValue, paramAvailableValue, paramBreakpoints, setFieldValue, indexTab, indexBlock, indexParam}) => {
     return (
-        <Grid item xs={12} sm={6} key={indexParam}>
+        <Grid item key={indexParam} { ...paramBreakpoints }>
             <FormControl fullWidth sx={{marginBlock: 3}}>
                 <InputLabel id={`${paramKey}-label`} size="small">
                     {paramName}
@@ -22,7 +22,7 @@ const getComponent = ({paramName, paramKey, paramValue, paramAvailableValue, set
                     label={paramName}
                     value={paramValue}
                     onChange={(e) => {
-                        setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].value`, e.target.value)
+                        setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.target.value)
                     }}
                 >
                     {paramAvailableValue?.map(({id, name}, index) => (

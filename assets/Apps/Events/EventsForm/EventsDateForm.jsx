@@ -21,6 +21,7 @@ import { getNestedFormikError } from '../../../services/utils/getNestedFormikErr
 import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTheme } from '@emotion/react';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 
 export const EventsDateForm = ({
     values,
@@ -31,6 +32,7 @@ export const EventsDateForm = ({
     touched,
     errors,
     blockIndex,
+    setGenerateDate,
 }) => {
     const theme = useTheme();
 
@@ -208,6 +210,18 @@ export const EventsDateForm = ({
                             }}
                         >
                             <AddIcon /> Ajouter
+                        </AddBlockButton>
+
+                        <AddBlockButton
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                            onClick={() => {
+                                setGenerateDate(blockIndex);
+                            }}
+                            sx={{ marginLeft: 3 }}
+                        >
+                            <LibraryAddIcon /> Générer
                         </AddBlockButton>
                     </Box>
                 </Box>

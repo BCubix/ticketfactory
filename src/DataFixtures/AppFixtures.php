@@ -53,6 +53,7 @@ class AppFixtures extends Fixture
         );
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Types par défaut");
+        $parameter->setBreakpointsValue("xs-12 md-6");
         $om->persist($parameter);
 
         $parameter = new Parameter();
@@ -77,6 +78,7 @@ class AppFixtures extends Fixture
         );
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Types par défaut");
+        $parameter->setBreakpointsValue("xs-12 md-6");
         $om->persist($parameter);
 
         $parameter = new Parameter();
@@ -87,6 +89,7 @@ class AppFixtures extends Fixture
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Thème & Logo");
+        $parameter->setBreakpointsValue("xs-12 md-6");
         $om->persist($parameter);
 
         $parameter = new Parameter();
@@ -97,6 +100,7 @@ class AppFixtures extends Fixture
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Thème & Logo");
+        $parameter->setBreakpointsValue("xs-12 md-6");
         $om->persist($parameter);
 
         // Default User
