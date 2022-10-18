@@ -1,13 +1,5 @@
 import { categoriesSelector } from '@Redux/categories/categoriesSlice';
-import {
-    Button,
-    CardContent,
-    FormControl,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    Typography,
-} from '@mui/material';
+import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
@@ -16,7 +8,7 @@ import { Box } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { useState } from 'react';
-import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH } from '../../../Constant';
+import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import categoriesApi from '../../../services/api/categoriesApi';
 import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import authApi from '../../../services/api/authApi';
@@ -26,6 +18,7 @@ import { EditCategoryLink } from './sc.EditCategoryLink';
 import { CmtBreadCrumb } from '../../../Components/CmtBreadCrumb/CmtBreadCrumb';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -114,6 +107,24 @@ export const CategoriesList = () => {
         setDeleteEvent(false);
     };
 
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await categoriesApi.duplicateCategory(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'La catégorie à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getCategoriesAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
+    };
+
     return (
         <>
             <CmtPageWrapper title="Catégories">
@@ -146,6 +157,7 @@ export const CategoriesList = () => {
                         </Box>
 
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={category?.children}
                             onEdit={(id) => {
@@ -154,6 +166,9 @@ export const CategoriesList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                             onClick={(elemId) => {
                                 navigate(`${CATEGORIES_BASE_PATH}/${elemId}`);
+                            }}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
                             }}
                         />
                     </CardContent>

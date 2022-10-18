@@ -68,6 +68,16 @@ const pagesApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    duplicatePage: async (id) => {
+        try {
+            await axios.post(`/pages/${id}/duplicate`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default pagesApi;

@@ -62,6 +62,16 @@ const categoriesApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    duplicateCategory: async (id) => {
+        try {
+            await axios.post(`/event-categories/${id}/duplicate`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default categoriesApi;

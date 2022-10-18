@@ -16,13 +16,15 @@ export const CmtTimePicker = ({
     inputVariant = 'standard',
     inputSize = 'normal',
     id = '',
+    required = false,
+    maxWidth = '100%',
     ...rest
 }) => {
     const [open, setOpen] = useState(false);
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
-            <Box md={2} width="100%">
+            <Box md={2} width="100%" maxWidth={maxWidth}>
                 <TimePicker
                     allowKeyboardControl
                     disableCloseOnSelect={false}
@@ -59,6 +61,7 @@ export const CmtTimePicker = ({
                     renderInput={(params) => {
                         params.error = Boolean(error);
                         params.label = label;
+                        params.required = required;
 
                         params.inputProps.placeholder = 'hh:mm';
                         params.InputProps.endAdornment = null;

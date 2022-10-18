@@ -62,6 +62,16 @@ const seasonsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    duplicateSeason: async (id) => {
+        try {
+            await axios.post(`/seasons/${id}/duplicate`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default seasonsApi;

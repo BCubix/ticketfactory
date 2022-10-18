@@ -7,11 +7,13 @@ import seasonsApi from '../../../services/api/seasonsApi';
 import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { Box, CardContent, Typography } from '@mui/material';
-import { CREATE_PATH, EDIT_PATH, SEASONS_BASE_PATH } from '../../../Constant';
+import { CREATE_PATH, EDIT_PATH, REDIRECTION_TIME, SEASONS_BASE_PATH } from '../../../Constant';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { NotificationManager } from 'react-notifications';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -40,6 +42,24 @@ export const SeasonsList = () => {
         setDeleteDialog(null);
     };
 
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await seasonsApi.duplicateSeason(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'La saison à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getSeasonsAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
+    };
+
     return (
         <>
             <CmtPageWrapper title={'Saisons'}>
@@ -58,10 +78,14 @@ export const SeasonsList = () => {
                         </Box>
 
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={seasons}
                             onEdit={(id) => {
                                 navigate(`${SEASONS_BASE_PATH}/${id}${EDIT_PATH}`);
+                            }}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />

@@ -1,4 +1,4 @@
-import { Button, FormHelperText, Typography } from '@mui/material';
+import { FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FieldArray } from 'formik';
 import React, { useState } from 'react';
@@ -15,6 +15,8 @@ import {
 } from '../../../Components/CmtButton/sc.Buttons';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import { EventDateRange } from './EventDateRange';
+import moment from 'moment';
 
 export const EventsDateBlockForm = ({
     values,
@@ -26,6 +28,7 @@ export const EventsDateBlockForm = ({
     errors,
 }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
+    const [generateDate, setGenerateDate] = useState(null);
 
     const handleDeleteMultiple = () => {
         let block = values.eventDateBlocks;
@@ -91,7 +94,7 @@ export const EventsDateBlockForm = ({
                                     color="primary"
                                     variant="contained"
                                     onClick={() => {
-                                        push({ name: '', eventPrices: [] });
+                                        push({ name: '', eventDates: [] });
                                     }}
                                     sx={{ ml: 2 }}
                                 >
@@ -134,6 +137,7 @@ export const EventsDateBlockForm = ({
                                     handleChange={handleChange}
                                     key={index}
                                     blockIndex={index}
+                                    setGenerateDate={setGenerateDate}
                                 />
 
                                 <FormHelperText error>{getBlockError(index)}</FormHelperText>
@@ -153,6 +157,18 @@ export const EventsDateBlockForm = ({
                     </Box>
                 )}
             </FieldArray>
+            <EventDateRange
+                open={generateDate}
+                setOpen={setGenerateDate}
+                submitDateRange={(newDates) => {
+                    let dates = values.eventDateBlocks[generateDate]?.eventDates;
+                    dates = [...dates, ...newDates];
+
+                    dates.sort((a, b) => moment(a.eventDate).diff(b.eventDate));
+
+                    setFieldValue(`eventDateBlocks.${generateDate}.eventDates`, [...dates]);
+                }}
+            />
             <DeleteDialog
                 open={deleteMultiple}
                 onCancel={() => setDeleteMultiple(false)}

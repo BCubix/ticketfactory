@@ -6,14 +6,16 @@ import { useEffect } from 'react';
 import roomsApi from '../../../services/api/roomsApi';
 import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { CREATE_PATH, EDIT_PATH, ROOMS_BASE_PATH } from '../../../Constant';
+import { Box, CardContent, Typography } from '@mui/material';
+import { CREATE_PATH, EDIT_PATH, REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { NotificationManager } from 'react-notifications';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -51,6 +53,24 @@ export const RoomsList = () => {
         setDeleteDialog(null);
     };
 
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await roomsApi.duplicateRoom(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'La salle à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getRoomsAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
+    };
+
     return (
         <>
             <CmtPageWrapper title="Salles">
@@ -69,8 +89,12 @@ export const RoomsList = () => {
                         </Box>
 
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={rooms}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
+                            }}
                             onEdit={(id) => {
                                 navigate(`${ROOMS_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}

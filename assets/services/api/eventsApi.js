@@ -175,6 +175,16 @@ const eventsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    duplicateEvent: async (id) => {
+        try {
+            await axios.post(`/events/${id}/duplicate`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default eventsApi;
