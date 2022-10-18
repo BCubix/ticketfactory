@@ -8,6 +8,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    TableSortLabel,
     Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -42,16 +43,20 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 export const ListTable = ({
     table,
     list,
+    filters,
     onDelete = null,
     onEdit = null,
     onClick = null,
     onDuplicate = null,
     onPreview = null,
+    changeFilters = null,
     contextualMenu = false,
 }) => {
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const field = filters.sort ? filters.sort.split(' ')[0] : '';
+    const order = filters.sort ? filters.sort.split(' ')[1] : '';
 
     const handleClick = (event) => {
         event.stopPropagation();
@@ -60,6 +65,22 @@ export const ListTable = ({
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleSortClick = (newField) => {
+        if (!changeFilters) {
+            return;
+        }
+
+        let newOrder = '';
+
+        if (field === newField) {
+            newOrder = order === 'ASC' ? 'DESC' : 'ASC';
+        } else {
+            newOrder = order;
+        }
+
+        changeFilters({ ...filters, sort: `${newField} ${newOrder}` });
     };
 
     if (!table || table?.length === 0 || !list || list.length === 0) {
@@ -73,7 +94,17 @@ export const ListTable = ({
                     <TableRow>
                         {table.map((element, index) => (
                             <TableCell key={index} sx={{ width: element.width || 'auto' }}>
-                                {element.label}
+                                {element.sortable ? (
+                                    <TableSortLabel
+                                        active={element.name === field}
+                                        direction={order.toLowerCase()}
+                                        onClick={() => handleSortClick(element.name)}
+                                    >
+                                        {element.label}
+                                    </TableSortLabel>
+                                ) : (
+                                    element.label
+                                )}
                             </TableCell>
                         ))}
                         {(onDelete !== null || onEdit !== null) && <TableCell>Actions</TableCell>}

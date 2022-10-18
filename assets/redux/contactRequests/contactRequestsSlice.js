@@ -1,12 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
 import contactRequestsApi from '../../services/api/contactRequestsApi';
-import { loginFailure } from '../profile/profileSlice';
+import { apiMiddleware } from '../../services/utils/apiMiddleware';
 
 const initialState = {
     loading: false,
     error: null,
     contactRequests: null,
+    total: null,
+    filters: {
+        active: sessionStorage.getItem('contactRequestActive') || '',
+        firstName: sessionStorage.getItem('contactRequestFirstName') || '',
+        lastName: sessionStorage.getItem('contactRequestLastName') || '',
+        email: sessionStorage.getItem('contactRequestEmail') || '',
+        phone: sessionStorage.getItem('contactRequestPhone') || '',
+        subject: sessionStorage.getItem('contactRequestSubject') || '',
+        sort: sessionStorage.getItem('contactRequestSort') || 'id ASC',
+        page: 1,
+        limit: 20,
+    },
 };
 
 const contactRequestsSlice = createSlice({
@@ -32,36 +43,55 @@ const contactRequestsSlice = createSlice({
         resetContactRequests: (state) => {
             state = { ...initialState };
         },
+
+        updateContactRequestFilters: (state, action) => {
+            state.filters = action.payload.filters;
+        },
     },
 });
 
-export function getContactRequestsAction(data) {
-    return async (dispatch) => {
+export function getContactRequestsAction(filters = null) {
+    return async (dispatch, getState) => {
         try {
             dispatch(getContactRequests());
 
-            const response = await authApi.checkIsAuth();
+            apiMiddleware(dispatch, async () => {
+                const state = filters || getState().contactRequests?.filters;
 
-            if (!response.result) {
-                dispatch(loginFailure({ error: response.error }));
+                const contactRequests = await contactRequestsApi.getContactRequests(state);
+                if (!contactRequests.result) {
+                    dispatch(getContactRequestsFailure({ error: contactRequests.error }));
 
-                return;
-            }
+                    return;
+                }
 
-            const contactRequests = await contactRequestsApi.getContactRequests(data);
-
-            if (!contactRequests.result) {
-                dispatch(getContactRequestsFailure({ error: contactRequests.error }));
-
-                return;
-            }
-
-            dispatch(
-                getContactRequestsSuccess({ contactRequests: contactRequests.contactRequests })
-            );
+                dispatch(
+                    getContactRequestsSuccess({
+                        contactRequests: contactRequests.contactRequests,
+                        total: contactRequests?.total,
+                    })
+                );
+            });
         } catch (error) {
             dispatch(getContactRequestsFailure({ error: error.message || error }));
         }
+    };
+}
+
+export function changeContactRequestFilters(filters) {
+    return async (dispatch) => {
+        sessionStorage.setItem('contactRequestActive', filters?.active);
+        sessionStorage.setItem('contactRequestFirstName', filters?.firstName);
+        sessionStorage.setItem('contactRequestLastName', filters?.lastName);
+        sessionStorage.setItem('contactRequestEmail', filters?.email);
+        sessionStorage.setItem('contactRequestPhone', filters?.phone);
+        sessionStorage.setItem('contactRequestSubject', filters?.subject);
+        sessionStorage.setItem('contactRequestSort', filters?.sort);
+
+        filters.page = 1;
+
+        dispatch(updateContactRequestFilters({ filters: filters }));
+        dispatch(getContactRequestsAction(filters));
     };
 }
 
@@ -69,6 +99,7 @@ export const {
     getContactRequests,
     getContactRequestsSuccess,
     getContactRequestsFailure,
+    updateContactRequestFilters,
     resetContactRequests,
 } = contactRequestsSlice.actions;
 
