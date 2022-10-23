@@ -20,15 +20,18 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { NotificationManager } from 'react-notifications';
 import { REDIRECTION_TIME } from '../../../Constant';
+import { changePagesFilters } from '../../../redux/pages/pagesSlice';
+import { PagesFilters } from './PagesFIlters/PagesFilters';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'title', label: 'Titre de la page', width: '70%' },
+    { name: 'id', label: 'ID', width: '10%', sortable: true },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+    { name: 'title', label: 'Titre', width: '50%', sortable: true },
+    { name: 'slug', label: 'Url', width: '20%' },
 ];
 
 function PagesList() {
-    const { loading, pages, error } = useSelector(pagesSelector);
+    const { loading, pages, filters, error } = useSelector(pagesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -89,6 +92,12 @@ function PagesList() {
                                 Nouveau
                             </CreateButton>
                         </Box>
+
+                        <PagesFilters
+                            filters={filters}
+                            changeFilters={(values) => dispatch(changePagesFilters(values))}
+                        />
+
                         <ListTable
                             contextualMenu
                             table={TABLE_COLUMN}
@@ -100,6 +109,8 @@ function PagesList() {
                                 handleDuplicate(id);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
+                            filters={filters}
+                            changeFilters={(newFilters) => dispatch(changePagesFilters(newFilters))}
                         />
                     </CardContent>
                 </CmtCard>

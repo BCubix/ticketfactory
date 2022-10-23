@@ -1,7 +1,15 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
+var controller = null;
+
 const FILTERS_SORT_TAB = [
-    { name: 'active', sortName: 'filters[active]' },
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
     { name: 'firstName', sortName: 'filters[firstName]' },
     { name: 'lastName', sortName: 'filters[lastName]' },
     { name: 'email', sortName: 'filters[email]' },
@@ -25,19 +33,20 @@ const contactRequestsApi = {
         try {
             let params = {};
 
-            FILTERS_SORT_TAB.forEach((element) => {
-                const filter = filters[element.name];
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
 
-                if (filter) {
-                    if (element.transformFilter) {
-                        element.transformFilter(params, filter);
-                    } else {
-                        params[element.sortName] = filter;
-                    }
-                }
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/contact-requests', {
+                params: params,
+                signal: controller.signal,
             });
 
-            const result = await axios.get('/contact-requests', { params: params });
+            controller = null;
 
             return {
                 result: true,

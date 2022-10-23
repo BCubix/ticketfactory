@@ -1,12 +1,83 @@
 import moment from 'moment';
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
-const eventsApi = {
-    getEvents: async () => {
-        try {
-            const result = await axios.get('/events');
+var controller = null;
 
-            return { result: true, events: result.data };
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'name', sortName: 'filters[name]' },
+    {
+        name: 'category',
+        transformFilter: (params, values) => {
+            values?.split(',').forEach((el, index) => {
+                params[`filters[category][${index}]`] = el;
+            });
+        },
+    },
+    {
+        name: 'season',
+        transformFilter: (params, values) => {
+            values?.split(',').forEach((el, index) => {
+                params[`filters[season][${index}]`] = el;
+            });
+        },
+    },
+    {
+        name: 'room',
+        transformFilter: (params, values) => {
+            values?.split(',').forEach((el, index) => {
+                params[`filters[room][${index}]`] = el;
+            });
+        },
+    },
+    {
+        name: 'tags',
+        transformFilter: (params, values) => {
+            values?.split(',').forEach((el, index) => {
+                params[`filters[tags][${index}]`] = el;
+            });
+        },
+    },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
+
+const eventsApi = {
+    getEvents: async (filters) => {
+        try {
+            let params = {};
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/events', {
+                params: params,
+                signal: controller.signal,
+            });
+
+            controller = null;
+
+            return { result: true, events: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

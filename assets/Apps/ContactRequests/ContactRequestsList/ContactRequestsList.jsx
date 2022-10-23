@@ -10,19 +10,21 @@ import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import {
-    changeContactRequestFilters,
+    changeContactRequestsFilters,
     contactRequestsSelector,
     getContactRequestsAction,
 } from '../../../redux/contactRequests/contactRequestsSlice';
 import contactRequestsApi from '../../../services/api/contactRequestsApi';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { ContactRequestsFilters } from './ContactRequestsFilters/ContactRequestsFilters';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
     { name: 'active', label: 'Gérée ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'firstName', label: 'Prénom', width: '20%', sortable: true },
-    { name: 'lastName', label: 'Nom', width: '20%', sortable: true },
+    { name: 'firstName', label: 'Prénom', width: '10%', sortable: true },
+    { name: 'lastName', label: 'Nom', width: '10%', sortable: true },
+    { name: 'phone', label: 'Téléphone', width: '20%', sortable: true },
     { name: 'email', label: 'Email', width: '20%', sortable: true },
     { name: 'subject', label: 'Objet', width: '10%', sortable: true },
 ];
@@ -72,12 +74,18 @@ export const ContactRequestsList = () => {
                             </CreateButton>
                         </Box>
 
+                        <ContactRequestsFilters
+                            filters={filters}
+                            changeFilters={(values) =>
+                                dispatch(changeContactRequestsFilters(values))
+                            }
+                        />
                         <ListTable
                             filters={filters}
                             table={TABLE_COLUMN}
                             list={contactRequests}
                             changeFilters={(newFilters) =>
-                                dispatch(changeContactRequestFilters(newFilters))
+                                dispatch(changeContactRequestsFilters(newFilters))
                             }
                             onEdit={(id) => {
                                 navigate(`${CONTACT_REQUEST_BASE_PATH}/${id}${EDIT_PATH}`);

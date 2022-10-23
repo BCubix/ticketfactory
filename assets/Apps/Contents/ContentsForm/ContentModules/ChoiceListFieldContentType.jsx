@@ -45,7 +45,7 @@ const FormComponent = ({
         field?.parameters?.choices?.split('\n')?.forEach((element) => {
             const line = element.split(':');
             let val = line[0].trim();
-            let lab = line.length > 1 ? line[1].trim() : value;
+            let lab = line.length > 1 ? line[1].trim() : val;
 
             list.push({ value: val, label: lab });
         });

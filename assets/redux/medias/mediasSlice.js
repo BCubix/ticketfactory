@@ -1,12 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
 import mediasApi from '../../services/api/mediasApi';
-import { loginFailure } from '../profile/profileSlice';
+import { apiMiddleware } from '../../services/utils/apiMiddleware';
+import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
     error: null,
     medias: null,
+    total: null,
+    filters: {
+        active: getBooleanFromString(sessionStorage.getItem('mediasActiveFilter')),
+        title: sessionStorage.getItem('mediasTitleFilter') || '',
+        documentType: sessionStorage.getItem('mediasDocumentTypeFilter') || '',
+        sort: sessionStorage.getItem('mediasSort') || 'id ASC',
+        page: 1,
+        limit: 20,
+    },
 };
 
 const mediasSlice = createSlice({
@@ -21,6 +30,7 @@ const mediasSlice = createSlice({
             state.loading = false;
             state.error = null;
             state.medias = action.payload.medias;
+            state.total = action.payload.total;
         },
 
         getMediasFailure: (state, action) => {
@@ -32,37 +42,51 @@ const mediasSlice = createSlice({
         resetMedias: (state) => {
             state = { ...initialState };
         },
+
+        updateMediasFilters: (state, action) => {
+            state.filters = action.payload.filters;
+        },
     },
 });
 
-export function getMediasAction(data) {
-    return async (dispatch) => {
+export function getMediasAction(filters) {
+    return async (dispatch, getState) => {
         try {
             dispatch(getMedias());
 
-            const response = await authApi.checkIsAuth();
+            apiMiddleware(dispatch, async () => {
+                const state = filters || getState().medias?.filters;
 
-            if (!response.result) {
-                dispatch(loginFailure({ error: response.error }));
+                const medias = await mediasApi.getMedias(state);
+                if (!medias.result) {
+                    dispatch(getMediasFailure({ error: medias.error }));
 
-                return;
-            }
+                    return;
+                }
 
-            const medias = await mediasApi.getMedias(data);
-
-            if (!medias.result) {
-                dispatch(getMediasFailure({ error: medias.error }));
-
-                return;
-            }
-
-            dispatch(getMediasSuccess({ medias: medias.medias }));
+                dispatch(getMediasSuccess({ medias: medias.medias, total: medias.total }));
+            });
         } catch (error) {
             dispatch(getMediasFailure({ error: error.message || error }));
         }
     };
 }
 
-export const { getMedias, getMediasSuccess, getMediasFailure, resetMedias } = mediasSlice.actions;
+export function changeMediasFilters(filters, page = 1) {
+    return async (dispatch) => {
+        sessionStorage.setItem('mediasActiveFilter', filters?.active);
+        sessionStorage.setItem('mediasTitleFilter', filters?.title);
+        sessionStorage.setItem('mediasDocumentTypeFilter', filters?.documentType);
+        sessionStorage.setItem('mediasSort', filters?.sort);
+
+        filters.page = page;
+
+        dispatch(updateMediasFilters({ filters: filters }));
+        dispatch(getMediasAction(filters));
+    };
+}
+
+export const { getMedias, getMediasSuccess, getMediasFailure, resetMedias, updateMediasFilters } =
+    mediasSlice.actions;
 export const mediasSelector = (state) => state.medias;
 export default mediasSlice.reducer;

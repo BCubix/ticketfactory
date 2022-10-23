@@ -17,18 +17,24 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { NotificationManager } from 'react-notifications';
+import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
+import { EventsFilters } from './EventsFilters/EventsFilters';
+import { changeEventsFilters } from '../../../redux/events/eventsSlice';
+import categoriesApi from '../../../services/api/categoriesApi';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Actif ?', type: 'bool', width: '10%' },
-    { name: 'name', label: 'Nom', width: '30%' },
-    { name: 'mainCategory.name', label: 'Catégorie', width: '10%' },
-    { name: 'room.name', label: 'Salle', width: '10%' },
-    { name: 'season.name', label: 'Saison', width: '20%' },
+    { name: 'id', label: 'ID', width: '10%', sortable: true },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+    { name: 'name', label: 'Nom', width: '20%', sortable: true },
+    { name: 'mainCategory.name', label: 'Catégorie', width: '10%', sortable: true },
+    { name: 'room.name', label: 'Salle', width: '10%', sortable: true },
+    { name: 'season.name', label: 'Saison', width: '20%', sortable: true },
+    { name: 'tags.0.name', label: 'Tags', width: '10%', sortable: true },
 ];
 
 export const EventsList = () => {
-    const { loading, events, error } = useSelector(eventsSelector);
+    const { loading, events, filters, error } = useSelector(eventsSelector);
+    const [categories, setCategories] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -37,6 +43,13 @@ export const EventsList = () => {
         if (!loading && !events && !error) {
             dispatch(getEventsAction());
         }
+
+        apiMiddleware(dispatch, async () => {
+            const categories = await categoriesApi.getCategories();
+            if (categories.result) {
+                setCategories(categories?.categories);
+            }
+        });
     }, []);
 
     const handleDelete = async (id) => {
@@ -90,7 +103,14 @@ export const EventsList = () => {
                             </CreateButton>
                         </Box>
 
+                        <EventsFilters
+                            filters={filters}
+                            changeFilters={(values) => dispatch(changeEventsFilters(values))}
+                            categoriesList={categories}
+                        />
+
                         <ListTable
+                            filters={filters}
                             contextualMenu
                             table={TABLE_COLUMN}
                             list={events}
@@ -101,6 +121,9 @@ export const EventsList = () => {
                                 handleDuplicate(id);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
+                            changeFilters={(newFilters) =>
+                                dispatch(changeEventsFilters(newFilters))
+                            }
                         />
                     </CardContent>
                 </CmtCard>
@@ -112,7 +135,7 @@ export const EventsList = () => {
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                        Êtes-vous sûr de vouloir supprimer cet évènement ?
                     </Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>

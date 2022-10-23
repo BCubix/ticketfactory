@@ -41,8 +41,13 @@ abstract class CrudRepository extends AbstractRepository
 
             list($filterField, $filterOperator, $filterConst, $filterValue) = $this->getFilterParameters($filterArray, $filters[$filterArray[0]]);
 
+            $filterConstComplete = $filterConst;
+            if ($filterOperator == 'IN') {
+                $filterConstComplete = '(' . $filterConst . ')';
+            }
+
             $results
-                ->andWhere($filterField . ' ' . $filterOperator . ' ' . $filterConst)
+                ->andWhere($filterField . ' ' . $filterOperator . ' ' . $filterConstComplete)
 			    ->setParameter($filterConst, $filterValue)
 		    ;
         }

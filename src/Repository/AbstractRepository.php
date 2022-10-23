@@ -45,11 +45,10 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         $filterConst = ':filter' . ucfirst($filterArray[0]);
-        if ($filterArray[2] == 'in') {
-            $filterConst = '(' . $filterConst . ')';
-        }
 
-        $filterValue = ($filterPrev . $filterValue . $filterNext);
+        if (is_string($filterValue)) {
+            $filterValue = ($filterPrev . $filterValue . $filterNext);
+        }
 
         return [$filterField, $filterOperator, $filterConst, $filterValue];
 

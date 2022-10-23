@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import contactRequestsApi from '../../services/api/contactRequestsApi';
 import { apiMiddleware } from '../../services/utils/apiMiddleware';
+import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -8,7 +9,7 @@ const initialState = {
     contactRequests: null,
     total: null,
     filters: {
-        active: sessionStorage.getItem('contactRequestActive') || '',
+        active: getBooleanFromString(sessionStorage.getItem('contactRequestActive')),
         firstName: sessionStorage.getItem('contactRequestFirstName') || '',
         lastName: sessionStorage.getItem('contactRequestLastName') || '',
         email: sessionStorage.getItem('contactRequestEmail') || '',
@@ -32,6 +33,7 @@ const contactRequestsSlice = createSlice({
             state.loading = false;
             state.error = null;
             state.contactRequests = action.payload.contactRequests;
+            state.total = action.payload.total;
         },
 
         getContactRequestsFailure: (state, action) => {
@@ -44,7 +46,7 @@ const contactRequestsSlice = createSlice({
             state = { ...initialState };
         },
 
-        updateContactRequestFilters: (state, action) => {
+        updateContactRequestsFilters: (state, action) => {
             state.filters = action.payload.filters;
         },
     },
@@ -78,7 +80,7 @@ export function getContactRequestsAction(filters = null) {
     };
 }
 
-export function changeContactRequestFilters(filters) {
+export function changeContactRequestsFilters(filters, page = 1) {
     return async (dispatch) => {
         sessionStorage.setItem('contactRequestActive', filters?.active);
         sessionStorage.setItem('contactRequestFirstName', filters?.firstName);
@@ -88,9 +90,9 @@ export function changeContactRequestFilters(filters) {
         sessionStorage.setItem('contactRequestSubject', filters?.subject);
         sessionStorage.setItem('contactRequestSort', filters?.sort);
 
-        filters.page = 1;
+        filters.page = page;
 
-        dispatch(updateContactRequestFilters({ filters: filters }));
+        dispatch(updateContactRequestsFilters({ filters: filters }));
         dispatch(getContactRequestsAction(filters));
     };
 }
@@ -99,7 +101,7 @@ export const {
     getContactRequests,
     getContactRequestsSuccess,
     getContactRequestsFailure,
-    updateContactRequestFilters,
+    updateContactRequestsFilters,
     resetContactRequests,
 } = contactRequestsSlice.actions;
 

@@ -1,4 +1,36 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
+
+var controller = null;
+
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'title', sortName: 'filters[title]' },
+    {
+        name: 'contentType',
+        transformFilter: (params, values) => {
+            values?.split(',').forEach((el, index) => {
+                params[`filters[contentType][${index}]`] = el;
+            });
+        },
+    },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
 
 const serializeData = (element, name, formData) => {
     if (null !== element && typeof element !== 'object') {
@@ -21,11 +53,26 @@ const serializeData = (element, name, formData) => {
 };
 
 const contentsApi = {
-    getContents: async () => {
+    getContents: async (filters) => {
         try {
-            const result = await axios.get('/contents');
+            let params = {};
 
-            return { result: true, contents: result.data };
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/contents', {
+                params: params,
+                signal: controller.signal,
+            });
+
+            controller = null;
+
+            return { result: true, contents: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

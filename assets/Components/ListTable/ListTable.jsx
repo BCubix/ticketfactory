@@ -55,8 +55,8 @@ export const ListTable = ({
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const field = filters.sort ? filters.sort.split(' ')[0] : '';
-    const order = filters.sort ? filters.sort.split(' ')[1] : '';
+    const field = filters?.sort ? filters?.sort?.split(' ')[0] : '';
+    const order = filters?.sort ? filters?.sort?.split(' ')[1] : '';
 
     const handleClick = (event) => {
         event.stopPropagation();
@@ -97,7 +97,7 @@ export const ListTable = ({
                                 {element.sortable ? (
                                     <TableSortLabel
                                         active={element.name === field}
-                                        direction={order.toLowerCase()}
+                                        direction={order.toLowerCase() || 'asc'}
                                         onClick={() => handleSortClick(element.name)}
                                     >
                                         {element.label}

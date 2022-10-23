@@ -22,27 +22,30 @@ import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPa
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { ListTable } from '../../../Components/ListTable/ListTable';
 import { CONTENT_BASE_PATH, CREATE_PATH, EDIT_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { contentsSelector, getContentsAction } from '../../../redux/contents/contentsSlice';
 import {
-    contentTypesSelector,
-    getContentTypesAction,
-} from '../../../redux/contentTypes/contentTypesSlice';
+    changeContentsFilters,
+    contentsSelector,
+    getContentsAction,
+} from '../../../redux/contents/contentsSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import contentsApi from '../../../services/api/contentsApi';
+import contentTypesApi from '../../../services/api/contentTypesApi';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { ContentsFilters } from './ContentsFilters/ContentsFilters';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'title', label: 'Titre du contenu', width: '70%' },
+    { name: 'id', label: 'ID', width: '10%', sortable: true },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+    { name: 'title', label: 'Titre', width: '40%', sortable: true },
+    { name: 'contentType.name', label: 'Type de contenu', width: '30%', sortable: true },
 ];
 
 export const ContentsList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { loading, contents, error } = useSelector(contentsSelector);
-    const contentTypes = useSelector(contentTypesSelector);
+    const { loading, contents, filters, error } = useSelector(contentsSelector);
+    const [contentTypes, setContentTypes] = useState([]);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [createDialog, setCreateDialog] = useState(false);
     const [formContentType, setFormContentType] = useState('');
@@ -52,9 +55,13 @@ export const ContentsList = () => {
             dispatch(getContentsAction());
         }
 
-        if (!contentTypes?.loading && !contentTypes?.contentTypes && !contentTypes?.error) {
-            dispatch(getContentTypesAction());
-        }
+        apiMiddleware(dispatch, async () => {
+            const result = await contentTypesApi.getAllContentTypes();
+
+            if (result?.result) {
+                setContentTypes(result?.contentTypes);
+            }
+        });
     }, []);
 
     const handleDelete = async (id) => {
@@ -105,7 +112,14 @@ export const ContentsList = () => {
                             </CreateButton>
                         </Box>
 
+                        <ContentsFilters
+                            filters={filters}
+                            changeFilters={(values) => dispatch(changeContentsFilters(values))}
+                            list={contentTypes}
+                        />
+
                         <ListTable
+                            filters={filters}
                             contextualMenu
                             table={TABLE_COLUMN}
                             list={contents}
@@ -115,6 +129,9 @@ export const ContentsList = () => {
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
                             }}
+                            changeFilters={(newFilters) =>
+                                dispatch(changeContentsFilters(newFilters))
+                            }
                             onDelete={(id) => setDeleteDialog(id)}
                         />
                     </CardContent>

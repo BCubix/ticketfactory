@@ -1,11 +1,56 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
-const redirectionsApi = {
-    getRedirections: async () => {
-        try {
-            const result = await axios.get('/redirections');
+var controller = null;
 
-            return { result: true, redirections: result.data };
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'redirectType', sortName: 'filters[redirectType]' },
+    { name: 'redirectFrom', sortName: 'filters[redirectFrom]' },
+    { name: 'redirectTo', sortName: 'filters[redirectTo]' },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
+
+const redirectionsApi = {
+    getRedirections: async (filters) => {
+        try {
+            let params = {};
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/redirections', {
+                params: params,
+                signal: controller.signal,
+            });
+
+            controller = null;
+
+            return {
+                result: true,
+                redirections: result?.data?.results,
+                total: result?.data?.total,
+            };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

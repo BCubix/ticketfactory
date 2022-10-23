@@ -4,7 +4,7 @@ import { seasonsSelector } from '@Redux/seasons/seasonsSlice';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import seasonsApi from '../../../services/api/seasonsApi';
-import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
+import { changeSeasonsFilters, getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { Box, CardContent, Typography } from '@mui/material';
 import { CREATE_PATH, EDIT_PATH, REDIRECTION_TIME, SEASONS_BASE_PATH } from '../../../Constant';
@@ -14,16 +14,16 @@ import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { NotificationManager } from 'react-notifications';
+import { SeasonsFilters } from './SeasonsFilters/SeasonsFilters';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'name', label: 'Nom de la catégorie', width: '40%' },
-    { name: 'beginYear', label: 'Année de début', width: '30%' },
+    { name: 'id', label: 'ID', width: '20%', sortable: true },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '20%', sortable: true },
+    { name: 'name', label: 'Nom de la catégorie', width: '50%', sortable: true },
 ];
 
 export const SeasonsList = () => {
-    const { loading, seasons, error } = useSelector(seasonsSelector);
+    const { loading, seasons, filters, error } = useSelector(seasonsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -77,6 +77,11 @@ export const SeasonsList = () => {
                             </CreateButton>
                         </Box>
 
+                        <SeasonsFilters
+                            filters={filters}
+                            changeFilters={(values) => dispatch(changeSeasonsFilters(values))}
+                        />
+
                         <ListTable
                             contextualMenu
                             table={TABLE_COLUMN}
@@ -88,6 +93,10 @@ export const SeasonsList = () => {
                                 handleDuplicate(id);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
+                            filters={filters}
+                            changeFilters={(newFilters) =>
+                                dispatch(changeSeasonsFilters(newFilters))
+                            }
                         />
                     </CardContent>
                 </CmtCard>

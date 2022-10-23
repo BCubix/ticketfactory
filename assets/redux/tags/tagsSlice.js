@@ -1,12 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
 import tagsApi from '../../services/api/tagsApi';
-import { loginFailure } from '../profile/profileSlice';
+import { apiMiddleware } from '../../services/utils/apiMiddleware';
+import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
     error: null,
     tags: null,
+    total: null,
+    filters: {
+        active: getBooleanFromString(sessionStorage.getItem('tagsActiveFilter')),
+        name: sessionStorage.getItem('tagsNameFilter') || '',
+        sort: sessionStorage.getItem('tagsSort') || 'id ASC',
+        page: 1,
+        limit: 20,
+    },
 };
 
 const tagsSlice = createSlice({
@@ -21,6 +29,7 @@ const tagsSlice = createSlice({
             state.loading = false;
             state.error = null;
             state.tags = action.payload.tags;
+            state.total = action.payload.total;
         },
 
         getTagsFailure: (state, action) => {
@@ -32,37 +41,50 @@ const tagsSlice = createSlice({
         resetTags: (state) => {
             state = { ...initialState };
         },
+
+        updateTagsFilters: (state, action) => {
+            state.filters = action.payload.filters;
+        },
     },
 });
 
-export function getTagsAction(data) {
-    return async (dispatch) => {
+export function getTagsAction(filters) {
+    return async (dispatch, getState) => {
         try {
             dispatch(getTags());
 
-            const response = await authApi.checkIsAuth();
+            apiMiddleware(dispatch, async () => {
+                const state = filters || getState().tags?.filters;
 
-            if (!response.result) {
-                dispatch(loginFailure({ error: response.error }));
+                const tags = await tagsApi.getTags(state);
+                if (!tags.result) {
+                    dispatch(getTagsFailure({ error: tags.error }));
 
-                return;
-            }
+                    return;
+                }
 
-            const tags = await tagsApi.getTags(data);
-
-            if (!tags.result) {
-                dispatch(getTagsFailure({ error: tags.error }));
-
-                return;
-            }
-
-            dispatch(getTagsSuccess({ tags: tags.tags }));
+                dispatch(getTagsSuccess({ tags: tags.tags, total: tags.total }));
+            });
         } catch (error) {
             dispatch(getTagsFailure({ error: error.message || error }));
         }
     };
 }
 
-export const { getTags, getTagsSuccess, getTagsFailure, resetTags } = tagsSlice.actions;
+export function changeTagsFilters(filters, page = 1) {
+    return async (dispatch) => {
+        sessionStorage.setItem('tagsActiveFilter', filters?.active);
+        sessionStorage.setItem('tagsNameFilter', filters?.name);
+        sessionStorage.setItem('tagsSort', filters?.sort);
+
+        filters.page = page;
+
+        dispatch(updateTagsFilters({ filters: filters }));
+        dispatch(getTagsAction(filters));
+    };
+}
+
+export const { getTags, getTagsSuccess, getTagsFailure, resetTags, updateTagsFilters } =
+    tagsSlice.actions;
 export const tagsSelector = (state) => state.tags;
 export default tagsSlice.reducer;

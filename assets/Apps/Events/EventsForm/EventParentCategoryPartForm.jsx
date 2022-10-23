@@ -89,7 +89,6 @@ export const EventParentCategoryPartForm = ({
                 defaultExpanded={[categoriesList.id?.toString()]}
                 defaultExpandIcon={<ChevronRightIcon />}
                 sx={{ flexGrow: 1, overflowY: 'auto' }}
-                selected={values?.parent?.toString()}
             >
                 {displayCategoriesOptions(categoriesList, values, setFieldValue)}
             </TreeView>

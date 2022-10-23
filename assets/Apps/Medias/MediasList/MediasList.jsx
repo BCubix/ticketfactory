@@ -16,7 +16,11 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { REDIRECTION_TIME } from '../../../Constant';
-import { getMediasAction, mediasSelector } from '../../../redux/medias/mediasSlice';
+import {
+    changeMediasFilters,
+    getMediasAction,
+    mediasSelector,
+} from '../../../redux/medias/mediasSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import mediasApi from '../../../services/api/mediasApi';
@@ -24,9 +28,10 @@ import { DisplayMediaType } from '../Components/DisplayMediaType';
 import { MediaElement } from '../Components/sc.MediaElement';
 import { CreateMedia } from '../CreateMedia/CreateMedia';
 import { EditMedia } from '../EditMedia/EditMedia';
+import { MediasFilters } from './MediasFilters/MediasFilters';
 
 export const MediasList = () => {
-    const { loading, medias, error } = useSelector(mediasSelector);
+    const { loading, medias, filters, error } = useSelector(mediasSelector);
     const dispatch = useDispatch();
     const [createDialog, setCreateDialog] = useState(false);
     const [editDialog, setEditDialog] = useState(null);
@@ -73,6 +78,12 @@ export const MediasList = () => {
                             Nouveau
                         </CreateButton>
                     </Box>
+
+                    <MediasFilters
+                        filters={filters}
+                        changeFilters={(values) => dispatch(changeMediasFilters(values))}
+                    />
+
                     <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
                         {medias?.map((item, index) => (
                             <MediaElement key={index} onClick={() => setEditDialog(item.id)}>

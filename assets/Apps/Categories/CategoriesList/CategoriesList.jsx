@@ -32,7 +32,7 @@ export const CategoriesList = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [deleteDialog, setDeleteDialog] = useState(null);
-    const [deleteEvent, setDeleteEvent] = useState(false);
+    const [deleteEvents, setDeleteEvent] = useState(false);
     const [category, setCategory] = useState(null);
     const [path, setPath] = useState(null);
 
@@ -90,7 +90,7 @@ export const CategoriesList = () => {
         setPath(pathArray.reverse());
     }, [category]);
 
-    const handleDelete = async (deleteId, deleteEvent) => {
+    const handleDelete = async (deleteId, deleteEvents) => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -99,7 +99,7 @@ export const CategoriesList = () => {
             return;
         }
 
-        await categoriesApi.deleteCategory(deleteId, deleteEvent);
+        await categoriesApi.deleteCategory(deleteId, deleteEvents);
 
         dispatch(getCategoriesAction());
 
@@ -182,7 +182,7 @@ export const CategoriesList = () => {
                     setDeleteEvent(false);
                 }}
                 deleteText={'Valider'}
-                onDelete={() => handleDelete(deleteDialog, deleteEvent)}
+                onDelete={() => handleDelete(deleteDialog, deleteEvents)}
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
@@ -194,7 +194,7 @@ export const CategoriesList = () => {
                         <RadioGroup
                             defaultValue={false}
                             name="delete-event-radio-choice"
-                            value={deleteEvent}
+                            value={deleteEvents}
                             onChange={(e) => {
                                 setDeleteEvent(e.target.value);
                             }}
