@@ -91,20 +91,6 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $file = $event->getFile();
-        $id = $event->getRequest()->get('id');
-
-        $parameter = $this->em->getRepository(Parameter::class)->findOneForAdmin($id);
-
-        if (null === $parameter) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
-        }
-
-        $parameter->setParamValue($file->getFileName());
-
-        $this->em->persist($parameter);
-        $this->em->flush();
-
         return $response;
     }
 }

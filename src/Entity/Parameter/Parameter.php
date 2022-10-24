@@ -45,6 +45,11 @@ class Parameter
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $validations = [];
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $tabName;
 
@@ -120,6 +125,18 @@ class Parameter
     public function setAvailableValue(?array $availableValue): self
     {
         $this->availableValue = $availableValue;
+
+        return $this;
+    }
+
+    public function getValidations(): array
+    {
+        return $this->validations;
+    }
+
+    public function setValidations(?array $validations): self
+    {
+        $this->validations = $validations;
 
         return $this;
     }

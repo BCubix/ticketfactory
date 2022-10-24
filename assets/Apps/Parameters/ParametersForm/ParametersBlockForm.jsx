@@ -40,7 +40,16 @@ function ParametersBlockForm({
             <Grid container spacing={4}>
                 {parameters?.map(
                     (
-                        { id, name, type, paramKey, paramValue, availableValue, breakpointsValue },
+                        {
+                            id,
+                            name,
+                            type,
+                            paramKey,
+                            paramValue,
+                            validations,
+                            availableValue,
+                            breakpointsValue,
+                        },
                         indexParam
                     ) => {
                         const ParametersTypeComponent = parametersTypesModules[type]?.getComponent;
@@ -67,6 +76,7 @@ function ParametersBlockForm({
                                 indexBlock={indexBlock}
                                 indexParam={indexParam}
                                 id={id}
+                                validations={validations}
                             />
                         );
                     }

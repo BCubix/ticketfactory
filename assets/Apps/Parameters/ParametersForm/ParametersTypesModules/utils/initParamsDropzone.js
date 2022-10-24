@@ -62,7 +62,7 @@ export const initParamsDropzoneElement = ({
         }
 
         if (onSuccess) {
-            onSuccess();
+            onSuccess(response);
         }
     });
 

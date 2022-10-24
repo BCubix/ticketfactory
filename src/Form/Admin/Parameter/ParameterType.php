@@ -6,7 +6,6 @@ use App\Entity\Parameter\Parameter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -33,8 +32,9 @@ class ParameterType extends AbstractType
                         ]);
                         break;
 
+                    // We use a TextType to store the fileName as the upload is handled by the listener
                     case "upload":
-                        $form->add('paramValue', FileType::class, []);
+                        $form->add('paramValue', TextType::class, []); 
                         break;
 
                     default:
