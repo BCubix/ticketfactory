@@ -82,7 +82,6 @@ export function getContactRequestsAction(filters = null) {
 
 export function changeContactRequestsFilters(filters, page = 1) {
     return async (dispatch) => {
-        console.log(filters, page);
         sessionStorage.setItem('contactRequestActive', filters?.active);
         sessionStorage.setItem('contactRequestFirstName', filters?.firstName);
         sessionStorage.setItem('contactRequestLastName', filters?.lastName);

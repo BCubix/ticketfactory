@@ -1,27 +1,42 @@
-import authApi from '../../../services/api/authApi';
 import Dropzone from 'dropzone';
 import $ from 'jquery';
-import { ALL_FILE_SUPPORTED, MEDIA_UPLOAD_URL } from '../../../Constant';
+import authApi from '@Services/api/authApi';
+import { ALL_FILE_SUPPORTED } from '@/Constant';
+import { PARAMETERS_UPLOAD_URL } from '../../../../../Constant';
 
 var countChunk = 0;
 
-export function intitializeDropzone({ logFail, onSuccess, id = null }) {
-    $('.js-dropzone').each(function (_, element) {
-        initDropzoneElement({ element, logFail, onSuccess, id });
+export function intitializeParamsDropzone({
+    logFail,
+    onSuccess,
+    id = null,
+    dropzoneId,
+    fileType,
+    maxWeight,
+}) {
+    $(`#${dropzoneId}`)?.each(function (_, element) {
+        initParamsDropzoneElement({ element, logFail, onSuccess, id, fileType, maxWeight });
     });
 }
 
-export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
+export const initParamsDropzoneElement = ({
+    element,
+    logFail,
+    onSuccess,
+    id,
+    fileType,
+    maxWeight,
+}) => {
     if (!element) {
         return;
     }
 
     let dZone = new Dropzone(`#${element.id}`, {
-        url: MEDIA_UPLOAD_URL,
+        url: PARAMETERS_UPLOAD_URL,
         chunking: false,
-        maxFilesize: 1048576,
+        maxFilesize: maxWeight || 1048576,
         uploadMultiple: false,
-        acceptedFiles: ALL_FILE_SUPPORTED,
+        acceptedFiles: fileType || ALL_FILE_SUPPORTED,
         uploadprogress: function (file, progress, byteSent) {
             $(element).find('.dz-upload').width(`${progress}%`);
         },
@@ -60,7 +75,6 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
 
         formData.append('fileName', fileName.join('.'));
         formData.append('type', file.type);
-        formData.append('filePath', '/uploads/media');
 
         if (id) {
             formData.append('id', id);

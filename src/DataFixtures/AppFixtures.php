@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
         $parameter->setType("list");
         $parameter->setParamKey("default_events_type");
         $parameter->setParamValue("Pièces");
-        $parameter->setAvailableValue(
+        $parameter->setAvailableValue([
             [
                 "id"   => "Pièces",
                 "name" => "Pièces de théatre"
@@ -50,7 +50,7 @@ class AppFixtures extends Fixture
                 "id"   => "Ballets",
                 "name" => "Ballets"
             ]
-        );
+    ]);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Types par défaut");
         $parameter->setBreakpointsValue("xs-12 md-6");
@@ -61,7 +61,7 @@ class AppFixtures extends Fixture
         $parameter->setType("list");
         $parameter->setParamKey("default_structures_type");
         $parameter->setParamValue(3);
-        $parameter->setAvailableValue(
+        $parameter->setAvailableValue([
             [
                 "id"   => 0,
                 "name" => "Théatre"
@@ -75,7 +75,7 @@ class AppFixtures extends Fixture
                 "id"   => 3,
                 "name" => "Festival"
             ]
-        );
+        ]);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Types par défaut");
         $parameter->setBreakpointsValue("xs-12 md-6");

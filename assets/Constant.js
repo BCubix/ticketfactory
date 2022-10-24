@@ -1,6 +1,7 @@
 export const API_URL = 'http://localhost:8000/admin';
 export const MEDIA_FILE_BASE_URL = 'http://localhost:8000';
 export const MEDIA_UPLOAD_URL = '/admin/api/_uploader/media/upload';
+export const PARAMETERS_UPLOAD_URL = '/admin/api/_uploader/parameter/upload';
 export const ICONS_FILE_PATH = '/images/icons';
 
 export const REDIRECTION_TIME = 5000;
