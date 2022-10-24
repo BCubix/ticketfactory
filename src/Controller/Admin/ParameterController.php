@@ -48,6 +48,8 @@ class ParameterController extends AdminController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
+        $parameters = $parameters["results"];
+
         $parametersContainer = new ParametersContainer();
         foreach ($parameters as $parameter) {
             $parametersContainer->addParameter($parameter);

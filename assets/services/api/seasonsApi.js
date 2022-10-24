@@ -1,11 +1,62 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
-const seasonsApi = {
-    getSeasons: async () => {
-        try {
-            const result = await axios.get('/seasons');
+var controller = null;
 
-            return { result: true, seasons: result.data };
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'name', sortName: 'filters[name]' },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
+
+const seasonsApi = {
+    getSeasons: async (filters) => {
+        try {
+            let params = {};
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/seasons', {
+                params: params,
+                signal: controller.signal,
+            });
+
+            controller = null;
+
+            return { result: true, seasons: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getAllSeasons: async () => {
+        try {
+            let params = { page: 1, limit: 10000 };
+
+            const result = await axios.get('/seasons', { params: params });
+
+            return { result: true, seasons: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -56,6 +107,16 @@ const seasonsApi = {
     deleteSeason: async (id) => {
         try {
             await axios.delete(`/seasons/${id}`);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    duplicateSeason: async (id) => {
+        try {
+            await axios.post(`/seasons/${id}/duplicate`);
 
             return { result: true };
         } catch (error) {

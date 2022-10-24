@@ -27,12 +27,18 @@ class ParameterType extends AbstractType
                         foreach ($parameter->getAvailableValue() as $parameter) {
                             $choices += [$parameter['name'] => $parameter['id']];
                         }
-                        $form->add('value', ChoiceType::class, [
+                        $form->add('paramValue', ChoiceType::class, [
                             'choices' => $choices,
                         ]);
                         break;
+
+                    // We use a TextType to store the fileName as the upload is handled by the listener
+                    case "upload":
+                        $form->add('paramValue', TextType::class, []); 
+                        break;
+
                     default:
-                        $form->add('value', TextType::class, [
+                        $form->add('paramValue', TextType::class, [
                             'label'    => $parameter->getName(),
                             'required' => false
                         ]);

@@ -10,24 +10,29 @@ import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import {
+    changeContactRequestsFilters,
     contactRequestsSelector,
     getContactRequestsAction,
 } from '../../../redux/contactRequests/contactRequestsSlice';
 import contactRequestsApi from '../../../services/api/contactRequestsApi';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { ContactRequestsFilters } from './ContactRequestsFilters/ContactRequestsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'firstName', label: 'Prénom', width: '20%' },
-    { name: 'lastName', label: 'Nom', width: '20%' },
-    { name: 'email', label: 'Email', width: '20%' },
-    { name: 'subject', label: 'Objet', width: '10%' },
+    { name: 'id', label: 'ID', width: '10%', sortable: true },
+    { name: 'active', label: 'Gérée ?', type: 'bool', width: '10%', sortable: true },
+    { name: 'firstName', label: 'Prénom', width: '10%', sortable: true },
+    { name: 'lastName', label: 'Nom', width: '10%', sortable: true },
+    { name: 'phone', label: 'Téléphone', width: '20%', sortable: true },
+    { name: 'email', label: 'Email', width: '20%', sortable: true },
+    { name: 'subject', label: 'Objet', width: '10%', sortable: true },
 ];
 
 export const ContactRequestsList = () => {
-    const { loading, contactRequests, error } = useSelector(contactRequestsSelector);
+    const { loading, contactRequests, filters, total, error } =
+        useSelector(contactRequestsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -61,7 +66,11 @@ export const ContactRequestsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des demandes de contact
+                                Liste des demandes de contact{' '}
+                                {contactRequests &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + contactRequests.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -71,13 +80,38 @@ export const ContactRequestsList = () => {
                             </CreateButton>
                         </Box>
 
+                        <ContactRequestsFilters
+                            filters={filters}
+                            changeFilters={(values) =>
+                                dispatch(changeContactRequestsFilters(values))
+                            }
+                        />
                         <ListTable
+                            filters={filters}
                             table={TABLE_COLUMN}
                             list={contactRequests}
+                            changeFilters={(newFilters) =>
+                                dispatch(changeContactRequestsFilters(newFilters))
+                            }
                             onEdit={(id) => {
                                 navigate(`${CONTACT_REQUEST_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeContactRequestsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(
+                                    changeContactRequestsFilters({ ...filters, limit: newValue })
+                                );
+                            }}
+                            length={contactRequests?.length}
                         />
                     </CardContent>
                 </CmtCard>

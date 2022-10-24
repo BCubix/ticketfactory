@@ -4,7 +4,10 @@ import { redirectionsSelector } from '@Redux/redirections/redirectionsSlice';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import redirectionsApi from '../../../services/api/redirectionsApi';
-import { getRedirectionsAction } from '../../../redux/redirections/redirectionsSlice';
+import {
+    changeRedirectionsFilters,
+    getRedirectionsAction,
+} from '../../../redux/redirections/redirectionsSlice';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { Box, Button, Card, CardContent, Typography } from '@mui/material';
 import { CREATE_PATH, EDIT_PATH, REDIRECTIONS_BASE_PATH } from '../../../Constant';
@@ -14,17 +17,19 @@ import authApi from '../../../services/api/authApi';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { RedirectionsFilters } from './RedirectionsFilters/RedirectionsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'redirectType', label: 'Type de redirection', width: '10%' },
-    { name: 'redirectFrom', label: 'Redirigé depuis', width: '30%' },
-    { name: 'redirectTo', label: 'Redirigé vers', width: '30%' },
+    { name: 'id', label: 'ID', width: '10%', sortable: true },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+    { name: 'redirectType', label: 'Type de redirection', width: '20%', sortable: true },
+    { name: 'redirectFrom', label: 'Redirigé depuis', width: '25%', sortable: true },
+    { name: 'redirectTo', label: 'Redirigé vers', width: '25%', sortable: true },
 ];
 
 export const RedirectionsList = () => {
-    const { loading, redirections, error } = useSelector(redirectionsSelector);
+    const { loading, redirections, filters, total, error } = useSelector(redirectionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -58,7 +63,11 @@ export const RedirectionsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des redirections
+                                Liste des redirections{' '}
+                                {redirections &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + redirections.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -68,6 +77,11 @@ export const RedirectionsList = () => {
                             </CreateButton>
                         </Box>
 
+                        <RedirectionsFilters
+                            filters={filters}
+                            changeFilters={(values) => dispatch(changeRedirectionsFilters(values))}
+                        />
+
                         <ListTable
                             table={TABLE_COLUMN}
                             list={redirections}
@@ -75,6 +89,25 @@ export const RedirectionsList = () => {
                                 navigate(`${REDIRECTIONS_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
+                            filters={filters}
+                            changeFilters={(newFilters) =>
+                                dispatch(changeRedirectionsFilters(newFilters))
+                            }
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeRedirectionsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(
+                                    changeRedirectionsFilters({ ...filters, limit: newValue })
+                                );
+                            }}
+                            length={redirections?.length}
                         />
                     </CardContent>
                 </CmtCard>

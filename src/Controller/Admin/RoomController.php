@@ -20,7 +20,7 @@ class RoomController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Cette salle n'existe pas.";
 
     #[Rest\Get('/rooms')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
@@ -46,6 +46,13 @@ class RoomController extends CrudController
     public function edit(Request $request, int $roomId): View
     {
         return parent::edit($request, $roomId);
+    }
+
+    #[Rest\Post('/rooms/{roomId}/duplicate', requirements: ['roomId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function duplicate(Request $request, int $roomId): View
+    {
+        return parent::duplicate($request, $roomId);
     }
 
     #[Rest\Delete('/rooms/{roomId}', requirements: ['roomId' => '\d+'])]

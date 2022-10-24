@@ -1,4 +1,28 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
+
+var controller = null;
+
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'name', sortName: 'filters[name]' },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
 
 const serializeOptionsValidations = (element, name, formData) => {
     Object.entries(element).map(([key, value], index) => {
@@ -54,11 +78,38 @@ const deserializeData = (data) => {
 };
 
 const contentTypesApi = {
-    getContentTypes: async () => {
+    getContentTypes: async (filters) => {
         try {
-            const result = await axios.get('/content-types');
+            let params = {};
 
-            return { result: true, contentTypes: result.data };
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/content-types', {
+                params: params,
+                signal: controller.signal,
+            });
+
+            controller = null;
+
+            return { result: true, contentTypes: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getAllContentTypes: async () => {
+        try {
+            let params = { page: 1, limit: 10000 };
+
+            const result = await axios.get('/content-types', { params: params });
+
+            return { result: true, contentTypes: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

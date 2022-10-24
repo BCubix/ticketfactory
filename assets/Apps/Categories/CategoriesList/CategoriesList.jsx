@@ -1,13 +1,5 @@
 import { categoriesSelector } from '@Redux/categories/categoriesSlice';
-import {
-    Button,
-    CardContent,
-    FormControl,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    Typography,
-} from '@mui/material';
+import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
@@ -16,7 +8,7 @@ import { Box } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { useState } from 'react';
-import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH } from '../../../Constant';
+import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
 import categoriesApi from '../../../services/api/categoriesApi';
 import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import authApi from '../../../services/api/authApi';
@@ -26,6 +18,7 @@ import { EditCategoryLink } from './sc.EditCategoryLink';
 import { CmtBreadCrumb } from '../../../Components/CmtBreadCrumb/CmtBreadCrumb';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%' },
@@ -39,7 +32,7 @@ export const CategoriesList = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [deleteDialog, setDeleteDialog] = useState(null);
-    const [deleteEvent, setDeleteEvent] = useState(false);
+    const [deleteEvents, setDeleteEvent] = useState(false);
     const [category, setCategory] = useState(null);
     const [path, setPath] = useState(null);
 
@@ -97,7 +90,7 @@ export const CategoriesList = () => {
         setPath(pathArray.reverse());
     }, [category]);
 
-    const handleDelete = async (deleteId, deleteEvent) => {
+    const handleDelete = async (deleteId, deleteEvents) => {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -106,12 +99,30 @@ export const CategoriesList = () => {
             return;
         }
 
-        await categoriesApi.deleteCategory(deleteId, deleteEvent);
+        await categoriesApi.deleteCategory(deleteId, deleteEvents);
 
         dispatch(getCategoriesAction());
 
         setDeleteDialog(null);
         setDeleteEvent(false);
+    };
+
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await categoriesApi.duplicateCategory(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'La catégorie à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getCategoriesAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
     };
 
     return (
@@ -146,6 +157,7 @@ export const CategoriesList = () => {
                         </Box>
 
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={category?.children}
                             onEdit={(id) => {
@@ -154,6 +166,9 @@ export const CategoriesList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                             onClick={(elemId) => {
                                 navigate(`${CATEGORIES_BASE_PATH}/${elemId}`);
+                            }}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
                             }}
                         />
                     </CardContent>
@@ -167,7 +182,7 @@ export const CategoriesList = () => {
                     setDeleteEvent(false);
                 }}
                 deleteText={'Valider'}
-                onDelete={() => handleDelete(deleteDialog, deleteEvent)}
+                onDelete={() => handleDelete(deleteDialog, deleteEvents)}
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
@@ -179,7 +194,7 @@ export const CategoriesList = () => {
                         <RadioGroup
                             defaultValue={false}
                             name="delete-event-radio-choice"
-                            value={deleteEvent}
+                            value={deleteEvents}
                             onChange={(e) => {
                                 setDeleteEvent(e.target.value);
                             }}

@@ -1,11 +1,58 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
-const contactRequestsApi = {
-    getContactRequests: async () => {
-        try {
-            const result = await axios.get('/contact-requests');
+var controller = null;
 
-            return { result: true, contactRequests: result.data };
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'firstName', sortName: 'filters[firstName]' },
+    { name: 'lastName', sortName: 'filters[lastName]' },
+    { name: 'email', sortName: 'filters[email]' },
+    { name: 'phone', sortName: 'filters[phone]' },
+    { name: 'subject', sortName: 'filters[subject]' },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
+
+const contactRequestsApi = {
+    getContactRequests: async (filters) => {
+        try {
+            let params = {};
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/contact-requests', {
+                params: params,
+                signal: controller.signal,
+            });
+
+            controller = null;
+
+            return {
+                result: true,
+                contactRequests: result.data?.results,
+                total: result?.data?.total,
+            };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

@@ -29,7 +29,9 @@ export const EventsForm = ({
         description: Yup.string().required('Veuillez renseigner une description.'),
         eventDateBlocks: Yup.array().of(
             Yup.object().shape({
-                name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
+                name: Yup.string()
+                    .required('Veuillez renseigner le nom du bloc.')
+                    .max(250, 'Le nom du bloc est trop long'),
                 eventDates: Yup.array()
                     .of(
                         Yup.object().shape({
@@ -42,6 +44,8 @@ export const EventsForm = ({
                                     return Yup.string().required(
                                         'Veuillez renseigner la nouvelle date.'
                                     );
+                                } else {
+                                    return Yup.string().nullable();
                                 }
                             }),
                         })
@@ -51,7 +55,9 @@ export const EventsForm = ({
         ),
         eventPriceBlocks: Yup.array().of(
             Yup.object().shape({
-                name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
+                name: Yup.string()
+                    .required('Veuillez renseigner le nom du bloc.')
+                    .max(250, 'Le nom du bloc est trop long'),
                 eventPrices: Yup.array()
                     .of(
                         Yup.object().shape({

@@ -17,15 +17,22 @@ import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { NotificationManager } from 'react-notifications';
+import { REDIRECTION_TIME } from '../../../Constant';
+import { changePagesFilters } from '../../../redux/pages/pagesSlice';
+import { PagesFilters } from './PagesFIlters/PagesFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'title', label: 'Titre de la page', width: '70%' },
+    { name: 'id', label: 'ID', width: '10%', sortable: true },
+    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+    { name: 'title', label: 'Titre', width: '50%', sortable: true },
+    { name: 'slug', label: 'Url', width: '20%' },
 ];
 
 function PagesList() {
-    const { loading, pages, error } = useSelector(pagesSelector);
+    const { loading, pages, filters, total, error } = useSelector(pagesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -52,6 +59,24 @@ function PagesList() {
         setDeleteDialog(null);
     };
 
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await pagesApi.duplicatePage(id);
+
+            if (result?.result) {
+                NotificationManager.success(
+                    'La page à bien été dupliqué.',
+                    'Succès',
+                    REDIRECTION_TIME
+                );
+
+                dispatch(getPagesAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            }
+        });
+    };
+
     return (
         <>
             <CmtPageWrapper title={'Pages'}>
@@ -59,7 +84,11 @@ function PagesList() {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des pages
+                                Liste des pages{' '}
+                                {pages &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + pages.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -68,13 +97,38 @@ function PagesList() {
                                 Nouveau
                             </CreateButton>
                         </Box>
+
+                        <PagesFilters
+                            filters={filters}
+                            changeFilters={(values) => dispatch(changePagesFilters(values))}
+                        />
+
                         <ListTable
+                            contextualMenu
                             table={TABLE_COLUMN}
                             list={pages}
                             onEdit={(id) => {
                                 navigate(`${PAGES_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
+                            onDuplicate={(id) => {
+                                handleDuplicate(id);
+                            }}
                             onDelete={(id) => setDeleteDialog(id)}
+                            filters={filters}
+                            changeFilters={(newFilters) => dispatch(changePagesFilters(newFilters))}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changePagesFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changePagesFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={pages?.length}
                         />
                     </CardContent>
                 </CmtCard>

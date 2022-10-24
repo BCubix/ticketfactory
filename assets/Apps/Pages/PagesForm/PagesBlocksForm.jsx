@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldArray } from 'formik';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
-import { Card, CardContent, InputLabel } from '@mui/material';
+import { Card, CardContent, FormHelperText, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
 import { LightEditorFormControl } from '@Components/Editors/LightEditor/sc.LightEditorFormControl';
@@ -60,6 +60,15 @@ function PagesBlocksForm({ values, errors, touched, setFieldValue, setFieldTouch
                                             )}
                                         />
                                     </LightEditorFormControl>
+
+                                    <FormHelperText error>
+                                        {getNestedFormikError(
+                                            touched?.pageBlocks,
+                                            errors?.pageBlocks,
+                                            index,
+                                            'content'
+                                        )}
+                                    </FormHelperText>
                                 </Box>
                             </CardContent>
                         </Card>

@@ -21,6 +21,36 @@ class Parameter
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
+    private $name;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $type;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $paramKey;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $paramValue;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $availableValue = [];
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $validations = [];
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'string', length: 255)]
     private $tabName;
 
     #[JMS\Expose()]
@@ -31,43 +61,12 @@ class Parameter
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    private $key;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    private $type;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
-    private $value;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'json')]
-    private $availableValue = [];
+    private $breakpointsValue;
 
 
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getTabName(): string
-    {
-        return $this->tabName;
-    }
-
-    public function setTabName(string $tabName): self
-    {
-        $this->tabName = $tabName;
-        return $this;
     }
 
     public function getName(): string
@@ -78,17 +77,7 @@ class Parameter
     public function setName(string $name): self
     {
         $this->name = $name;
-        return $this;
-    }
 
-    public function getKey(): string
-    {
-        return $this->key;
-    }
-
-    public function setKey(string $key): self
-    {
-        $this->key = $key;
         return $this;
     }
 
@@ -100,17 +89,31 @@ class Parameter
     public function setType(string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
-    public function getValue(): string
+    public function getParamKey(): string
     {
-        return $this->value;
+        return $this->paramKey;
     }
 
-    public function setValue(string $value): self
+    public function setParamKey(string $paramKey): self
     {
-        $this->value = $value;
+        $this->paramKey = $paramKey;
+
+        return $this;
+    }
+
+    public function getParamValue(): string
+    {
+        return $this->paramValue;
+    }
+
+    public function setParamValue(?string $paramValue): self
+    {
+        $this->paramValue = $paramValue;
+
         return $this;
     }
 
@@ -119,9 +122,58 @@ class Parameter
         return $this->availableValue;
     }
 
-    public function setAvailableValue(array $availableValue): self
+    public function setAvailableValue(?array $availableValue): self
     {
         $this->availableValue = $availableValue;
+
+        return $this;
+    }
+
+    public function getValidations(): array
+    {
+        return $this->validations;
+    }
+
+    public function setValidations(?array $validations): self
+    {
+        $this->validations = $validations;
+
+        return $this;
+    }
+
+    public function getTabName(): string
+    {
+        return $this->tabName;
+    }
+
+    public function setTabName(string $tabName): self
+    {
+        $this->tabName = $tabName;
+
+        return $this;
+    }
+
+    public function getBlockName(): string
+    {
+        return $this->blockName;
+    }
+
+    public function setBlockName(string $blockName): self
+    {
+        $this->blockName = $blockName;
+
+        return $this;
+    }
+
+    public function getBreakpointsValue(): string
+    {
+        return $this->breakpointsValue;
+    }
+
+    public function setBreakpointsValue(string $breakpointsValue): self
+    {
+        $this->breakpointsValue = $breakpointsValue;
+
         return $this;
     }
 }

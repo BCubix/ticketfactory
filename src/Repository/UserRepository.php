@@ -9,6 +9,23 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 class UserRepository extends CrudRepository implements UserLoaderInterface
 {
+    protected const FILTERS = [
+        ['active', 'o.active', 'equals'],
+        ['email', 'o.email', 'search'],
+        ['firstName', 'o.firstName', 'search'],
+        ['lastName', 'o.lastName', 'search'],
+        ['role', 'o.roles', 'search'],
+    ];
+
+    protected const SORTS = [
+        'id' => 'o.id',
+        'active' => 'o.active',
+        'email' => 'o.email',
+        'firstName' => 'o.firstName',
+        'lastName' => 'o.lastName',
+        'role' => 'o.roles',
+    ];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);

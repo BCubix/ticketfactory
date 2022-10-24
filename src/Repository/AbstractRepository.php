@@ -7,8 +7,10 @@ use Doctrine\Persistence\ManagerRegistry;
 
 abstract class AbstractRepository extends ServiceEntityRepository
 {
+    //protected const SELECTS = [];
+    protected const JOINS   = [];
     protected const FILTERS = [];
-    protected const SORTS = ['id' => 'o.id'];
+    protected const SORTS   = ['id' => 'o.id'];
 
     private const OPERATOR_MAPPING = [
         'equals' => ['='],
@@ -17,7 +19,8 @@ abstract class AbstractRepository extends ServiceEntityRepository
         'sup'    => ['>'],
         'inf'    => ['<'],
         'supeq'  => ['>='],
-        'infeq'  => ['<=']
+        'infeq'  => ['<='],
+        'in'     => ['IN']
     ];
 
     public function __construct(ManagerRegistry $registry, string $className)
@@ -42,7 +45,10 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         $filterConst = ':filter' . ucfirst($filterArray[0]);
-        $filterValue = ($filterPrev . $filterValue . $filterNext);
+
+        if (is_string($filterValue)) {
+            $filterValue = ($filterPrev . $filterValue . $filterNext);
+        }
 
         return [$filterField, $filterOperator, $filterConst, $filterValue];
 

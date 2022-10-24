@@ -1,11 +1,59 @@
+import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
-const tagsApi = {
-    getTags: async () => {
-        try {
-            const result = await axios.get('/tags');
+var controller = null;
 
-            return { result: true, tags: result.data };
+const FILTERS_SORT_TAB = [
+    {
+        name: 'active',
+        transformFilter: (params, sort) => {
+            params['filters[active]'] = sort ? '1' : '0';
+        },
+    },
+    { name: 'name', sortName: 'filters[name]' },
+    { name: 'page', sortName: 'filters[page]' },
+    { name: 'limit', sortName: 'filters[limit]' },
+    {
+        name: 'sort',
+        transformFilter: (params, sort) => {
+            const splitSort = sort?.split(' ');
+
+            params['filters[sortField]'] = splitSort[0];
+            params['filters[sortOrder]'] = splitSort[1];
+        },
+    },
+];
+
+const tagsApi = {
+    getTags: async (filters) => {
+        try {
+            let params = {};
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            if (null !== controller) {
+                controller.abort();
+            }
+
+            controller = new AbortController();
+
+            const result = await axios.get('/tags', { params: params, signal: controller.signal });
+
+            controller = null;
+
+            return { result: true, tags: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getAllTags: async () => {
+        try {
+            let params = { page: 1, limit: 10000 };
+
+            const result = await axios.get('/tags', { params: params });
+
+            return { result: true, tags: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

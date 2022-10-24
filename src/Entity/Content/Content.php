@@ -65,7 +65,7 @@ class Content extends Datable implements JsonDoctrineSerializable
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
 

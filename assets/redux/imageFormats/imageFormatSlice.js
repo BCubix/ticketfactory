@@ -1,12 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import authApi from '../../services/api/authApi';
 import imageFormatsApi from '../../services/api/imageFormatsApi';
+import { apiMiddleware } from '../../services/utils/apiMiddleware';
+import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
 import { loginFailure } from '../profile/profileSlice';
 
 const initialState = {
     loading: false,
     error: null,
     imageFormats: null,
+    filters: {
+        active: getBooleanFromString(sessionStorage.getItem('imageFormatsActiveFilter')),
+        name: sessionStorage.getItem('imageFormatsNameFilter') || '',
+        sort: sessionStorage.getItem('imageFormatsSort') || 'id ASC',
+        page: 1,
+        limit: 20,
+    },
 };
 
 const imageFormatsSlice = createSlice({
@@ -21,6 +30,7 @@ const imageFormatsSlice = createSlice({
             state.loading = false;
             state.error = null;
             state.imageFormats = action.payload.imageFormats;
+            state.total = action.payload.total;
         },
 
         getImageFormatsFailure: (state, action) => {
@@ -32,34 +42,51 @@ const imageFormatsSlice = createSlice({
         resetImageFormats: (state) => {
             state = { ...initialState };
         },
+
+        updateImageFormatsFilters: (state, action) => {
+            state.filters = action.payload.filters;
+        },
     },
 });
 
-export function getImageFormatsAction(data) {
-    return async (dispatch) => {
+export function getImageFormatsAction(filters) {
+    return async (dispatch, getState) => {
         try {
             dispatch(getImageFormats());
 
-            const response = await authApi.checkIsAuth();
+            apiMiddleware(dispatch, async () => {
+                const state = filters || getState().imageFormats?.filters;
 
-            if (!response.result) {
-                dispatch(loginFailure({ error: response.error }));
+                const imageFormats = await imageFormatsApi.getImageFormats(state);
+                if (!imageFormats.result) {
+                    dispatch(getImageFormatsFailure({ error: imageFormats.error }));
 
-                return;
-            }
+                    return;
+                }
 
-            const imageFormats = await imageFormatsApi.getImageFormats(data);
-
-            if (!imageFormats.result) {
-                dispatch(getImageFormatsFailure({ error: imageFormats.error }));
-
-                return;
-            }
-
-            dispatch(getImageFormatsSuccess({ imageFormats: imageFormats.imageFormats }));
+                dispatch(
+                    getImageFormatsSuccess({
+                        imageFormats: imageFormats.imageFormats,
+                        total: imageFormats.total,
+                    })
+                );
+            });
         } catch (error) {
             dispatch(getImageFormatsFailure({ error: error.message || error }));
         }
+    };
+}
+
+export function changeImageFormatsFilters(filters, page = 1) {
+    return async (dispatch) => {
+        sessionStorage.setItem('imageFormatsActiveFilter', filters?.active);
+        sessionStorage.setItem('imageFormatsNameFilter', filters?.name);
+        sessionStorage.setItem('imageFormatsSort', filters?.sort);
+
+        filters.page = page;
+
+        dispatch(updateImageFormatsFilters({ filters: filters }));
+        dispatch(getImageFormatsAction(filters));
     };
 }
 
@@ -68,6 +95,7 @@ export const {
     getImageFormatsSuccess,
     getImageFormatsFailure,
     resetImageFormats,
+    updateImageFormatsFilters,
 } = imageFormatsSlice.actions;
 export const imageFormatsSelector = (state) => state.imageFormats;
 export default imageFormatsSlice.reducer;

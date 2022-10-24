@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import React from 'react';

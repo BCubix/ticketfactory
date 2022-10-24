@@ -1,20 +1,25 @@
 import {
     Chip,
-    Fab,
+    Menu,
+    MenuItem,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    TableSortLabel,
     Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import React from 'react';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import React, { useState } from 'react';
 import { objectResolver } from '../../services/utils/objectResolver';
-import { DeleteFabButton, EditFabButton } from '../CmtButton/sc.Buttons';
+import { ActionFabButton, DeleteFabButton, EditFabButton } from '../CmtButton/sc.Buttons';
 import { useTheme } from '@emotion/react';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 /**
  *
@@ -35,7 +40,52 @@ import { useTheme } from '@emotion/react';
  *
  * @returns
  */
-export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick = null }) => {
+export const ListTable = ({
+    table,
+    list,
+    filters,
+    onDelete = null,
+    onEdit = null,
+    onClick = null,
+    onDuplicate = null,
+    onPreview = null,
+    changeFilters = null,
+    contextualMenu = false,
+}) => {
+    const theme = useTheme();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+    const open = Boolean(anchorEl);
+    const field = filters?.sort ? filters?.sort?.split(' ')[0] : '';
+    const order = filters?.sort ? filters?.sort?.split(' ')[1] : '';
+
+    const handleClick = (event, selectedMenu) => {
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+        setSelectedMenuItem(selectedMenu);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSelectedMenuItem(null);
+    };
+
+    const handleSortClick = (newField) => {
+        if (!changeFilters) {
+            return;
+        }
+
+        let newOrder = '';
+
+        if (field === newField) {
+            newOrder = order === 'ASC' ? 'DESC' : 'ASC';
+        } else {
+            newOrder = order;
+        }
+
+        changeFilters({ ...filters, sort: `${newField} ${newOrder}` });
+    };
+
     if (!table || table?.length === 0 || !list || list.length === 0) {
         return <></>;
     }
@@ -47,7 +97,17 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick
                     <TableRow>
                         {table.map((element, index) => (
                             <TableCell key={index} sx={{ width: element.width || 'auto' }}>
-                                {element.label}
+                                {element.sortable ? (
+                                    <TableSortLabel
+                                        active={element.name === field}
+                                        direction={order.toLowerCase() || 'asc'}
+                                        onClick={() => handleSortClick(element.name)}
+                                    >
+                                        {element.label}
+                                    </TableSortLabel>
+                                ) : (
+                                    element.label
+                                )}
                             </TableCell>
                         ))}
                         {(onDelete !== null || onEdit !== null) && <TableCell>Actions</TableCell>}
@@ -90,22 +150,82 @@ export const ListTable = ({ table, list, onDelete = null, onEdit = null, onClick
                                         <EditIcon />
                                     </EditFabButton>
 
-                                    <DeleteFabButton
-                                        sx={{ marginInline: 1 }}
-                                        color="error"
-                                        size="small"
-                                        aria-label="Supprimer"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onDelete(item.id);
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </DeleteFabButton>
+                                    {contextualMenu ? (
+                                        <ActionFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="error"
+                                            size="small"
+                                            aria-label="Supprimer"
+                                            onClick={(e) => handleClick(e, item)}
+                                        >
+                                            <MoreHorizIcon />
+                                        </ActionFabButton>
+                                    ) : (
+                                        <DeleteFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="error"
+                                            size="small"
+                                            aria-label="Supprimer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onDelete(item.id);
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </DeleteFabButton>
+                                    )}
                                 </TableCell>
                             )}
                         </TableRow>
                     ))}
+
+                    {contextualMenu && (
+                        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                            <MenuItem
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(selectedMenuItem.id);
+                                    setSelectedMenuItem(null);
+                                    setAnchorEl(null);
+                                }}
+                                sx={{ color: theme.palette.error.main }}
+                            >
+                                <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
+                            </MenuItem>
+                            <MenuItem
+                                sx={{
+                                    color: theme.palette.crud.action.textColor,
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+
+                                    if (onDuplicate) {
+                                        onDuplicate(selectedMenuItem.id);
+                                        setSelectedMenuItem(null);
+                                        setAnchorEl(null);
+                                    }
+                                }}
+                            >
+                                <ContentCopyIcon sx={{ marginRight: 2 }} />
+                                Dupliquer
+                            </MenuItem>
+                            <MenuItem
+                                onClick={(e) => {
+                                    e.stopPropagation();
+
+                                    if (onPreview) {
+                                        onPreview(selectedMenuItem.id);
+                                        setSelectedMenuItem(null);
+                                        setAnchorEl(null);
+                                    }
+                                }}
+                                sx={{ color: '#4A148C' }}
+                            >
+                                <VisibilityIcon sx={{ marginRight: 2 }} />
+                                Prévisualiser
+                            </MenuItem>
+                        </Menu>
+                    )}
                 </TableBody>
             </Table>
         </TableContainer>

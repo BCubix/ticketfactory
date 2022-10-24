@@ -62,6 +62,13 @@ class EventCategoryController extends CrudController
         return parent::edit($request, $categoryId);
     }
 
+    #[Rest\Post('/event-categories/{categoryId}/duplicate', requirements: ['categoryId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function duplicate(Request $request, int $categoryId): View
+    {
+        return parent::duplicate($request, $categoryId);
+    }
+
     #[Rest\Delete('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $categoryId): View

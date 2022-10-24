@@ -9,7 +9,6 @@ import {
     getContentTypesAction,
 } from '../../../redux/contentTypes/contentTypesSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
 import authApi from '../../../services/api/authApi';
 import contentsApi from '../../../services/api/contentsApi';
 import { ContentsForm } from '../ContentsForm/ContentsForm';
