@@ -14,6 +14,7 @@ import { changeTagsFilters, getTagsAction } from '../../../redux/tags/tagsSlice'
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { TagsFilters } from './TagsFilters/TagsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -22,7 +23,7 @@ const TABLE_COLUMN = [
 ];
 
 export const TagsList = () => {
-    const { loading, tags, filters, error } = useSelector(tagsSelector);
+    const { loading, tags, filters, total, error } = useSelector(tagsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -48,7 +49,11 @@ export const TagsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des tags
+                                Liste des tags{' '}
+                                {tags &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + tags.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -72,6 +77,19 @@ export const TagsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeTagsFilters(newFilters))}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeTagsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changeTagsFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={tags?.length}
                         />
                     </CardContent>
                 </CmtCard>

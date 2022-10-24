@@ -54,17 +54,20 @@ export const ListTable = ({
 }) => {
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedMenuItem, setSelectedMenuItem] = useState(null);
     const open = Boolean(anchorEl);
     const field = filters?.sort ? filters?.sort?.split(' ')[0] : '';
     const order = filters?.sort ? filters?.sort?.split(' ')[1] : '';
 
-    const handleClick = (event) => {
+    const handleClick = (event, selectedMenu) => {
         event.stopPropagation();
         setAnchorEl(event.currentTarget);
+        setSelectedMenuItem(selectedMenu);
     };
 
     const handleClose = () => {
         setAnchorEl(null);
+        setSelectedMenuItem(null);
     };
 
     const handleSortClick = (newField) => {
@@ -148,61 +151,15 @@ export const ListTable = ({
                                     </EditFabButton>
 
                                     {contextualMenu ? (
-                                        <>
-                                            <ActionFabButton
-                                                sx={{ marginInline: 1 }}
-                                                color="error"
-                                                size="small"
-                                                aria-label="Supprimer"
-                                                onClick={handleClick}
-                                            >
-                                                <MoreHorizIcon />
-                                            </ActionFabButton>
-
-                                            <Menu
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleClose}
-                                            >
-                                                <MenuItem
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        onDelete(item.id);
-                                                    }}
-                                                    sx={{ color: theme.palette.error.main }}
-                                                >
-                                                    <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
-                                                </MenuItem>
-                                                <MenuItem
-                                                    sx={{
-                                                        color: theme.palette.crud.action.textColor,
-                                                    }}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-
-                                                        if (onDuplicate) {
-                                                            onDuplicate(item.id);
-                                                        }
-                                                    }}
-                                                >
-                                                    <ContentCopyIcon sx={{ marginRight: 2 }} />
-                                                    Dupliquer
-                                                </MenuItem>
-                                                <MenuItem
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-
-                                                        if (onPreview) {
-                                                            onPreview(item.id);
-                                                        }
-                                                    }}
-                                                    sx={{ color: '#4A148C' }}
-                                                >
-                                                    <VisibilityIcon sx={{ marginRight: 2 }} />
-                                                    Prévisualiser
-                                                </MenuItem>
-                                            </Menu>
-                                        </>
+                                        <ActionFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="error"
+                                            size="small"
+                                            aria-label="Supprimer"
+                                            onClick={(e) => handleClick(e, item)}
+                                        >
+                                            <MoreHorizIcon />
+                                        </ActionFabButton>
                                     ) : (
                                         <DeleteFabButton
                                             sx={{ marginInline: 1 }}
@@ -221,6 +178,54 @@ export const ListTable = ({
                             )}
                         </TableRow>
                     ))}
+
+                    {contextualMenu && (
+                        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                            <MenuItem
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(selectedMenuItem.id);
+                                    setSelectedMenuItem(null);
+                                    setAnchorEl(null);
+                                }}
+                                sx={{ color: theme.palette.error.main }}
+                            >
+                                <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
+                            </MenuItem>
+                            <MenuItem
+                                sx={{
+                                    color: theme.palette.crud.action.textColor,
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+
+                                    if (onDuplicate) {
+                                        onDuplicate(selectedMenuItem.id);
+                                        setSelectedMenuItem(null);
+                                        setAnchorEl(null);
+                                    }
+                                }}
+                            >
+                                <ContentCopyIcon sx={{ marginRight: 2 }} />
+                                Dupliquer
+                            </MenuItem>
+                            <MenuItem
+                                onClick={(e) => {
+                                    e.stopPropagation();
+
+                                    if (onPreview) {
+                                        onPreview(selectedMenuItem.id);
+                                        setSelectedMenuItem(null);
+                                        setAnchorEl(null);
+                                    }
+                                }}
+                                sx={{ color: '#4A148C' }}
+                            >
+                                <VisibilityIcon sx={{ marginRight: 2 }} />
+                                Prévisualiser
+                            </MenuItem>
+                        </Menu>
+                    )}
                 </TableBody>
             </Table>
         </TableContainer>

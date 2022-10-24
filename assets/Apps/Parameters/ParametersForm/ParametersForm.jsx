@@ -1,42 +1,40 @@
-import React, {useMemo} from "react";
-import {Formik} from "formik";
+import React, { useMemo } from 'react';
+import { Formik } from 'formik';
 
-import {Box} from "@mui/system";
-import {Button} from "@mui/material";
+import { Box } from '@mui/system';
+import { Button } from '@mui/material';
 
-import {CmtTabs} from "@Components/CmtTabs/CmtTabs";
-import {CmtPageWrapper} from "@Components/CmtPage/CmtPageWrapper/CmtPageWrapper";
-import ParametersBlockForm from "@Apps/Parameters/ParametersForm/ParametersBlockForm";
+import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+import ParametersBlockForm from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
 
-function parametersForm({handleSubmit, parameters}) {
+function parametersForm({ handleSubmit, parameters }) {
     const tabs = useMemo(() => {
         const tabs = [];
 
-        parameters.forEach((parameter) => {
-            const indexTab = tabs.findIndex(tab => tab.tabName === parameter.tabName);
+        parameters?.forEach((parameter) => {
+            const indexTab = tabs.findIndex((tab) => tab.tabName === parameter.tabName);
             if (indexTab === -1) {
                 tabs.push({
                     tabName: parameter.tabName,
-                    blocks: [{
-                        blockName: parameter.blockName,
-                        parameters: [
-                            parameter,
-                        ],
-                    }]
+                    blocks: [
+                        {
+                            blockName: parameter.blockName,
+                            parameters: [parameter],
+                        },
+                    ],
                 });
-            }
-            else {
+            } else {
                 const blocks = tabs[indexTab].blocks;
-                const indexBlock = blocks.findIndex(block => block.blockName === parameter.blockName);
+                const indexBlock = blocks.findIndex(
+                    (block) => block.blockName === parameter.blockName
+                );
                 if (indexBlock === -1) {
                     blocks.push({
                         blockName: parameter.blockName,
-                        parameters: [
-                            parameter,
-                        ],
+                        parameters: [parameter],
                     });
-                }
-                else {
+                } else {
                     blocks[indexBlock].parameters.push(parameter);
                 }
             }
@@ -48,12 +46,12 @@ function parametersForm({handleSubmit, parameters}) {
     return (
         <Formik
             initialValues={{
-                tabs: tabs
+                tabs: tabs,
             }}
-            onSubmit={(values, {setSubmitting}) => {
-                const parameters = values.tabs.reduce((parametersList, {blocks}) => {
+            onSubmit={(values, { setSubmitting }) => {
+                const parameters = values.tabs.reduce((parametersList, { blocks }) => {
                     for (const block of blocks) {
-                        parametersList = [ ...parametersList, ...block.parameters ]
+                        parametersList = [...parametersList, ...block.parameters];
                     }
                     return parametersList;
                 }, []);
@@ -63,24 +61,20 @@ function parametersForm({handleSubmit, parameters}) {
             }}
         >
             {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  setFieldValue,
-                  setFieldTouched,
-                  isSubmitting,
-              }) => (
-                <CmtPageWrapper
-                    title="Paramètres"
-                    component="form"
-                    onSubmit={handleSubmit}
-                >
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                setFieldTouched,
+                isSubmitting,
+            }) => (
+                <CmtPageWrapper title="Paramètres" component="form" onSubmit={handleSubmit}>
                     <CmtTabs
                         tabValue={0}
-                        list={ values.tabs.map(({ tabName, blocks }, indexTab) => {
+                        list={values.tabs.map(({ tabName, blocks }, indexTab) => {
                             return {
                                 label: tabName,
                                 component: (
@@ -94,8 +88,8 @@ function parametersForm({handleSubmit, parameters}) {
                                         setFieldTouched={setFieldTouched}
                                         setFieldValue={setFieldValue}
                                     />
-                                )
-                            }
+                                ),
+                            };
                         })}
                     />
                     <Box display="flex" justifyContent="flex-end">

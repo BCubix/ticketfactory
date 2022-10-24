@@ -22,6 +22,7 @@ import { NotificationManager } from 'react-notifications';
 import { REDIRECTION_TIME } from '../../../Constant';
 import { changePagesFilters } from '../../../redux/pages/pagesSlice';
 import { PagesFilters } from './PagesFIlters/PagesFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -31,7 +32,7 @@ const TABLE_COLUMN = [
 ];
 
 function PagesList() {
-    const { loading, pages, filters, error } = useSelector(pagesSelector);
+    const { loading, pages, filters, total, error } = useSelector(pagesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -83,7 +84,11 @@ function PagesList() {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des pages
+                                Liste des pages{' '}
+                                {pages &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + pages.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -111,6 +116,19 @@ function PagesList() {
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changePagesFilters(newFilters))}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changePagesFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changePagesFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={pages?.length}
                         />
                     </CardContent>
                 </CmtCard>

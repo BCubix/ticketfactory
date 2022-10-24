@@ -15,6 +15,7 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { NotificationManager } from 'react-notifications';
 import { SeasonsFilters } from './SeasonsFilters/SeasonsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '20%', sortable: true },
@@ -23,7 +24,7 @@ const TABLE_COLUMN = [
 ];
 
 export const SeasonsList = () => {
-    const { loading, seasons, filters, error } = useSelector(seasonsSelector);
+    const { loading, seasons, filters, total, error } = useSelector(seasonsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -67,7 +68,11 @@ export const SeasonsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des saisons
+                                Liste des saisons{' '}
+                                {seasons &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + seasons.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -97,6 +102,19 @@ export const SeasonsList = () => {
                             changeFilters={(newFilters) =>
                                 dispatch(changeSeasonsFilters(newFilters))
                             }
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeSeasonsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changeSeasonsFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={seasons?.length}
                         />
                     </CardContent>
                 </CmtCard>

@@ -18,6 +18,7 @@ import { loginFailure } from '../../../redux/profile/profileSlice';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { RedirectionsFilters } from './RedirectionsFilters/RedirectionsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -28,7 +29,7 @@ const TABLE_COLUMN = [
 ];
 
 export const RedirectionsList = () => {
-    const { loading, redirections, filters, error } = useSelector(redirectionsSelector);
+    const { loading, redirections, filters, total, error } = useSelector(redirectionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -62,7 +63,11 @@ export const RedirectionsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des redirections
+                                Liste des redirections{' '}
+                                {redirections &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + redirections.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -88,6 +93,21 @@ export const RedirectionsList = () => {
                             changeFilters={(newFilters) =>
                                 dispatch(changeRedirectionsFilters(newFilters))
                             }
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeRedirectionsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(
+                                    changeRedirectionsFilters({ ...filters, limit: newValue })
+                                );
+                            }}
+                            length={redirections?.length}
                         />
                     </CardContent>
                 </CmtCard>

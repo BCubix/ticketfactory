@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { ListTable } from '../../../Components/ListTable/ListTable';
 import { CONTENT_BASE_PATH, CREATE_PATH, EDIT_PATH, REDIRECTION_TIME } from '../../../Constant';
@@ -44,7 +45,7 @@ const TABLE_COLUMN = [
 export const ContentsList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { loading, contents, filters, error } = useSelector(contentsSelector);
+    const { loading, contents, filters, total, error } = useSelector(contentsSelector);
     const [contentTypes, setContentTypes] = useState([]);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [createDialog, setCreateDialog] = useState(false);
@@ -105,7 +106,11 @@ export const ContentsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des contenus
+                                Liste des contenus{' '}
+                                {contents &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + contents.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                                 Nouveau
@@ -133,6 +138,19 @@ export const ContentsList = () => {
                                 dispatch(changeContentsFilters(newFilters))
                             }
                             onDelete={(id) => setDeleteDialog(id)}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeContentsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changeContentsFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={contents?.length}
                         />
                     </CardContent>
                 </CmtCard>

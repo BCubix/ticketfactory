@@ -16,6 +16,7 @@ import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { ImageFormatsFilters } from './ImageFormatsFilters/ImageFormatsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -26,7 +27,7 @@ const TABLE_COLUMN = [
 ];
 
 export const ImageFormatsList = () => {
-    const { loading, imageFormats, filters, error } = useSelector(imageFormatsSelector);
+    const { loading, imageFormats, filters, total, error } = useSelector(imageFormatsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -52,7 +53,11 @@ export const ImageFormatsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des formats d'image
+                                Liste des formats d'image{' '}
+                                {imageFormats &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + imageFormats.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -78,6 +83,21 @@ export const ImageFormatsList = () => {
                             changeFilters={(newFilters) =>
                                 dispatch(changeImageFormatsFilters(newFilters))
                             }
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeImageFormatsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(
+                                    changeImageFormatsFilters({ ...filters, limit: newValue })
+                                );
+                            }}
+                            length={imageFormats?.length}
                         />
                     </CardContent>
                 </CmtCard>

@@ -17,6 +17,7 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { NotificationManager } from 'react-notifications';
 import { RoomsFilters } from './RoomsFilters/RoomsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -27,7 +28,7 @@ const TABLE_COLUMN = [
 ];
 
 export const RoomsList = () => {
-    const { loading, rooms, filters, error } = useSelector(roomsSelector);
+    const { loading, rooms, filters, total, error } = useSelector(roomsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -79,7 +80,11 @@ export const RoomsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des salles
+                                Liste des salles{' '}
+                                {rooms &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + rooms.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -107,6 +112,19 @@ export const RoomsList = () => {
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeRoomsFilters(newFilters))}
                             onDelete={(id) => setDeleteDialog(id)}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeRoomsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changeRoomsFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={rooms?.length}
                         />
                     </CardContent>
                 </CmtCard>

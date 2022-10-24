@@ -78,6 +78,8 @@ export function getEventsAction(filters) {
 
 export function changeEventsFilters(filters, page = 1) {
     return async (dispatch) => {
+        console.log(filters);
+
         sessionStorage.setItem('eventsActiveFilter', filters?.active);
         sessionStorage.setItem('eventsNameFilter', filters?.name);
         sessionStorage.setItem('eventsCategoryFilter', filters?.category);
@@ -87,6 +89,8 @@ export function changeEventsFilters(filters, page = 1) {
         sessionStorage.setItem('eventsSort', filters?.sort);
 
         filters.page = page;
+
+        console.log(filters);
 
         dispatch(updateEventsFilters({ filters: filters }));
         dispatch(getEventsAction(filters));

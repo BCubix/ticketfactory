@@ -15,15 +15,17 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { changeUsersFilters } from '../../../redux/users/usersSlice';
 import { UserFilters } from './UserFilters/UserFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'firstName', label: 'Prénom', width: '20%', sortable: true },
-    { name: 'lastName', label: 'Nom', width: '20%', sortable: true },
-    { name: 'email', label: 'Adresse Email', width: '40%', sortable: true },
+    { name: 'firstName', label: 'Prénom', width: '15%', sortable: true },
+    { name: 'lastName', label: 'Nom', width: '15%', sortable: true },
+    { name: 'email', label: 'Adresse Email', width: '30%', sortable: true },
+    { name: 'roles', label: 'Rôle', width: '20%', sortable: true },
 ];
 export const UserList = () => {
-    const { loading, users, filters, error } = useSelector(usersSelector);
+    const { loading, users, filters, total, error } = useSelector(usersSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -49,7 +51,11 @@ export const UserList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des utilisateurs
+                                Liste des utilisateurs{' '}
+                                {users &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + users.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -73,6 +79,19 @@ export const UserList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeUsersFilters(newFilters))}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeUsersFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changeUsersFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={users?.length}
                         />
                     </CardContent>
                 </CmtCard>

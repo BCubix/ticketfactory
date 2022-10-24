@@ -1,4 +1,8 @@
 export const createFilterParams = (values, filterList, params) => {
+    if (!filterList || !values) {
+        return;
+    }
+
     filterList.forEach((element) => {
         const filter = values[element.name];
 

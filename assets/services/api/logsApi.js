@@ -5,7 +5,7 @@ const logsApi = {
         try {
             const result = await axios.get('/logs');
 
-            return { result: true, logs: result.data };
+            return { result: true, logs: result.data?.results };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

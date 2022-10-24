@@ -18,6 +18,7 @@ import contactRequestsApi from '../../../services/api/contactRequestsApi';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { ContactRequestsFilters } from './ContactRequestsFilters/ContactRequestsFilters';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -30,7 +31,8 @@ const TABLE_COLUMN = [
 ];
 
 export const ContactRequestsList = () => {
-    const { loading, contactRequests, filters, error } = useSelector(contactRequestsSelector);
+    const { loading, contactRequests, filters, total, error } =
+        useSelector(contactRequestsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -64,7 +66,11 @@ export const ContactRequestsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des demandes de contact
+                                Liste des demandes de contact{' '}
+                                {contactRequests &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + contactRequests.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -91,6 +97,21 @@ export const ContactRequestsList = () => {
                                 navigate(`${CONTACT_REQUEST_BASE_PATH}/${id}${EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeContactRequestsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(
+                                    changeContactRequestsFilters({ ...filters, limit: newValue })
+                                );
+                            }}
+                            length={contactRequests?.length}
                         />
                     </CardContent>
                 </CmtCard>

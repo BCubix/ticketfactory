@@ -5,7 +5,7 @@ const parametersApi = {
         try {
             const result = await axios.get('/parametres');
 
-            return { result: true, parameters: result.data };
+            return { result: true, parameters: result.data?.results };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

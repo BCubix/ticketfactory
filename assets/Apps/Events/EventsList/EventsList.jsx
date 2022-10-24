@@ -17,10 +17,10 @@ import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { NotificationManager } from 'react-notifications';
-import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
 import { EventsFilters } from './EventsFilters/EventsFilters';
 import { changeEventsFilters } from '../../../redux/events/eventsSlice';
 import categoriesApi from '../../../services/api/categoriesApi';
+import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
 const TABLE_COLUMN = [
     { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -33,7 +33,7 @@ const TABLE_COLUMN = [
 ];
 
 export const EventsList = () => {
-    const { loading, events, filters, error } = useSelector(eventsSelector);
+    const { loading, events, filters, total, error } = useSelector(eventsSelector);
     const [categories, setCategories] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -93,7 +93,11 @@ export const EventsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des évènements
+                                Liste des évènements{' '}
+                                {events &&
+                                    `(${(filters.page - 1) * filters.limit + 1} - ${
+                                        (filters.page - 1) * filters.limit + events.length
+                                    } sur ${total})`}
                             </Typography>
                             <CreateButton
                                 variant="contained"
@@ -124,6 +128,19 @@ export const EventsList = () => {
                             changeFilters={(newFilters) =>
                                 dispatch(changeEventsFilters(newFilters))
                             }
+                        />
+
+                        <CmtPagination
+                            page={filters.page}
+                            total={total}
+                            limit={filters.limit}
+                            setPage={(newValue) =>
+                                dispatch(changeEventsFilters({ ...filters }, newValue))
+                            }
+                            setLimit={(newValue) => {
+                                dispatch(changeEventsFilters({ ...filters, limit: newValue }));
+                            }}
+                            length={events?.length}
                         />
                     </CardContent>
                 </CmtCard>
