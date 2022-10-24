@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { getNestedFormikError } from '../../../../services/utils/getNestedFormikError';
 
 const NAME = 'choiceList';
-const LABEL = 'Liste de choix';
+const LABEL = 'Liste de choix multiples';
 
 const TYPE = 'choiceList';
 const TYPE_GROUP_NAME = 'Choix';

@@ -1,14 +1,15 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
+import * as Yup from 'yup';
 
-const VALIDATION_TYPE = 'array';
+const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
     {
         name: 'required',
-        validationName: 'min',
+        validationName: 'required',
         test: (value) => Boolean(value),
-        params: ({ name }) => [1, `Veuillez renseigner le champ ${name}`],
+        params: ({ name }) => [`Veuillez renseigner le champ ${name}`],
     },
 ];
 
@@ -48,9 +49,34 @@ const getInitialValue = () => {
     return '';
 };
 
+const getValidation = (contentType) => {
+    let validation = Yup[VALIDATION_TYPE]();
+
+    validation = validation['matches'](
+        ...[
+            /^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
+            'Url invalide',
+        ]
+    );
+
+    const valList = [...contentType.validations, ...contentType.options];
+
+    VALIDATION_LIST.forEach((element) => {
+        const elVal = valList.find((el) => el.name === element.name);
+        if (elVal && element.test(elVal.value)) {
+            validation = validation[element.validationName](
+                ...element.params({ name: contentType.title, value: elVal.value })
+            );
+        }
+    });
+
+    return validation;
+};
+
 export default {
     FormComponent,
     getInitialValue,
     VALIDATION_TYPE,
     VALIDATION_LIST,
+    getValidation,
 };

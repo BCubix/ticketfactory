@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import { getNestedFormikError } from '../../../../services/utils/getNestedFormikError';
 
 const NAME = 'radioButton';
-const LABEL = 'Bouton radio';
+const LABEL = 'Boutons radio';
 
 const TYPE = 'radioButton';
 const TYPE_GROUP_NAME = 'Choix';

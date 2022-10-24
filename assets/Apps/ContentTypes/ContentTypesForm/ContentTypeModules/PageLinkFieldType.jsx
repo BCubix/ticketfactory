@@ -6,7 +6,7 @@ const NAME = 'pageLink';
 const LABEL = 'Lien vers une page';
 
 const TYPE = 'pageLink';
-const TYPE_GROUP_NAME = 'Relationel';
+const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (

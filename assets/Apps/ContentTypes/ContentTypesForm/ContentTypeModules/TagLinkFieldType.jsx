@@ -6,7 +6,7 @@ const NAME = 'tagLink';
 const LABEL = 'Lien vers un tag';
 
 const TYPE = 'tagLink';
-const TYPE_GROUP_NAME = 'Relationel';
+const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (

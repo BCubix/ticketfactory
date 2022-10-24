@@ -4,10 +4,10 @@ import { ContentTypeFieldArrayForm } from '../FieldArray/ContentTypeFieldArrayFo
 import { FieldFormControl } from '../sc.ContentTypeFields';
 
 const NAME = 'groupFields';
-const LABEL = 'Groupe de champs';
+const LABEL = 'Groupes de champs';
 
 const TYPE = 'groupFields';
-const TYPE_GROUP_NAME = 'Relationel';
+const TYPE_GROUP_NAME = 'Groupes';
 
 const ComplementInformation = ({
     values,

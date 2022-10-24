@@ -4,7 +4,7 @@ import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { FieldFormControl } from '../sc.ContentTypeFields';
 
 const NAME = 'text';
-const LABEL = 'Text';
+const LABEL = 'Texte';
 
 const TYPE = 'text';
 const TYPE_GROUP_NAME = 'Champs de base';
