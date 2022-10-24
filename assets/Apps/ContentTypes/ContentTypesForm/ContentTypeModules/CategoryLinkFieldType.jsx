@@ -6,7 +6,7 @@ const NAME = 'categoryLink';
 const LABEL = 'Lien vers une catégorie';
 
 const TYPE = 'categoryLink';
-const TYPE_GROUP_NAME = 'Relationel';
+const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (

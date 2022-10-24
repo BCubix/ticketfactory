@@ -4,7 +4,7 @@ import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import { FieldFormControl } from '../sc.ContentTypeFields';
 
 const NAME = 'textarea';
-const LABEL = 'TextArea';
+const LABEL = 'Texte sur plusieurs lignes';
 
 const TYPE = 'textarea';
 const TYPE_GROUP_NAME = 'Champs de base';

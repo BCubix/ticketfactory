@@ -7,7 +7,7 @@ const NAME = 'slider';
 const LABEL = 'Slider';
 
 const TYPE = 'slider';
-const TYPE_GROUP_NAME = 'Contenu';
+const TYPE_GROUP_NAME = 'Groupes';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (

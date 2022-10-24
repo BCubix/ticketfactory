@@ -49,11 +49,23 @@ export const MainPartFieldForm = ({
             selectList[item.groupName].push({ label: item.label, name: item.name });
         });
 
-        let sList = [];
+        let sortList = [];
 
         Object.entries(selectList).forEach(([key, value]) => {
-            sList.push({ label: key });
-            value.forEach((it) => {
+            const sortValue = [...value];
+
+            sortValue.sort((a, b) => a.label > b.label);
+
+            sortList.push({ groupName: key, contentTypes: [...sortValue] });
+        });
+
+        sortList.sort((a, b) => a.groupName > b.groupName);
+
+        let sList = [];
+
+        sortList.forEach((element) => {
+            sList.push({ label: element.groupName });
+            element.contentTypes?.forEach((it) => {
                 sList.push(it);
             });
         });

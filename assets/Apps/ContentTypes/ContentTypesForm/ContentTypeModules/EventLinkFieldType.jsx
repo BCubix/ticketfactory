@@ -6,7 +6,7 @@ const NAME = 'eventLink';
 const LABEL = 'Lien vers un évènement';
 
 const TYPE = 'eventLink';
-const TYPE_GROUP_NAME = 'Relationel';
+const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
