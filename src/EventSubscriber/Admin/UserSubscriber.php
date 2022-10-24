@@ -37,7 +37,10 @@ class UserSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // @TODO : Check at least one admin user still exists
+        $admins = $this->um->getAdminUsers();
+        if (count($admins) <= 1) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer le dernier compte administrateur.');
+        }
     }
 
     public function onUserValidate(CrudObjectValidatedEvent $event)

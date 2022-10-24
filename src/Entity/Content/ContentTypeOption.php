@@ -14,6 +14,7 @@ class ContentTypeOption implements JsonDoctrineSerializable
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     private ?string $value = null;
+    
 
     public function getName(): ?string
     {

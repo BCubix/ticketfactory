@@ -2,6 +2,12 @@
 
 namespace App\Entity\Menu;
 
+use App\Entity\Event\Event;
+use App\Entity\Event\EventCategory;
+use App\Entity\Event\Room;
+use App\Entity\Event\Season;
+use App\Entity\Event\Tag;
+use App\Entity\Page\Page;
 use App\Repository\MenuEntryRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,6 +22,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MenuEntryRepository::class)]
 class MenuEntry
 {
+    const TYPES_MAPPING = [
+        'event'    => Event::class,
+        'category' => EventCategory::class,
+        'page'     => Page::class,
+        'room'     => Room::class,
+        'season'   => Season::class,
+        'tag'      => Tag::class,
+        'external' => null,
+        'none'     => null
+    ];
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]
@@ -23,11 +40,15 @@ class MenuEntry
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'élément doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de l\'élément doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[Assert\Choice(callback: getTypesKeys, message: 'Vous devez choisir un type valide.')]
+    #[Assert\NotBlank(message: 'Le type de l\'élément doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 255, nullable: true)]
@@ -161,5 +182,9 @@ class MenuEntry
         }
 
         return $this;
+    }
+
+    public function getTypesKeys() {
+        return array_keys(self::TYPES_MAPPING);
     }
 }

@@ -23,6 +23,8 @@ class Season extends Datable
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de la saison doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de la saison doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -34,6 +36,8 @@ class Season extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[Assert\GreaterThan(value: "1970", message: 'Vous devez renseigner une année de saison valide.')]
+    #[Assert\NotBlank(message: 'L\'année de début de saison doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'integer')]

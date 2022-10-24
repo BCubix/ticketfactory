@@ -21,11 +21,14 @@ class Page extends Datable
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le titre de la page doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le titre de la page doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
+    #[Assert\Valid]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]

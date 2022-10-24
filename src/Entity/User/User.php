@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[Assert\UniqueEntity('email')]
+#[Assert\UniqueEntity(fields: 'email', message: 'Un utilisateur existe déjà avec cette adresse.')]
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User extends Datable implements UserInterface, PasswordAuthenticatedUserInterface
@@ -24,29 +24,23 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Assert\Email]
+    #[Assert\Length(max: 250, maxMessage: 'L\'email doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
+    #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
-    #[Assert\Length(
-        min: 2,
-        max: 255,
-        minMessage: 'Le prénom doit être composé de plus de {{ limit }} caractères',
-        maxMessage: 'Le prénom doit être composé de moins de {{ limit }} caractères',
-    )]
+    #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le prénom doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstName;
 
-    #[Assert\Length(
-        min: 2,
-        max: 255,
-        minMessage: 'Le nom doit être composé de plus de {{ limit }} caractères',
-        maxMessage: 'Le nom doit être composé de moins de {{ limit }} caractères',
-    )]
+    #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -64,6 +58,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $passwordRequestedAt = null;
 
+    #[Assert\Regex(pattern: '/^\S*(?=\S{10,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/', message: 'Le mot de passe ne répond pas aux exigences de sécurité.')]
     private $plainPassword;
 
 

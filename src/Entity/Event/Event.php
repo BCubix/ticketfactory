@@ -23,6 +23,8 @@ class Event extends Datable
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -39,16 +41,21 @@ class Event extends Datable
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
+    #[Assert\Valid]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDateBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $eventDateBlocks;
 
+    #[Assert\Valid]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de tarifs.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $eventPriceBlocks;
 
+    #[Assert\NotNull(message: 'La catégorie principale de l\'événement doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'mainEvents')]

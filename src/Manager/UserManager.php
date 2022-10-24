@@ -17,6 +17,11 @@ class UserManager extends AbstractManager
         $this->ph = $ph;
     }
 
+    public function getAdminUsers(): array
+    {
+        return $this->em->getRepository(User::class)->findAdminUsersForAdmin();
+    }
+
     public function upgradePassword(PasswordAuthenticatedUserInterface $user): void
     {
         if (null === $user->getPlainPassword() || strlen($user->getPlainPassword()) == 0) {

@@ -23,6 +23,8 @@ class Room extends Datable
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de la salle doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de la salle doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -34,16 +36,19 @@ class Room extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[Assert\PositiveOrZero(message: 'Le nombre de sièges de la salle doit être un nombre supérieur ou égal à 0.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $seatsNb;
 
+    #[Assert\PositiveOrZero(message: 'La surface de la salle doit être un nombre supérieur ou égal à 0.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $area;
 
+    #[Assert\Valid]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: SeatingPlan::class, orphanRemoval: true, cascade: ['persist', 'remove'])]

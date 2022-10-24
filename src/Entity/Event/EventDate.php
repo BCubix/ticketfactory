@@ -3,11 +3,13 @@
 namespace App\Entity\Event;
 
 use App\Repository\EventDateRepository;
+use App\Validation\Constraint\EventDateConstraint;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[EventDateConstraint]
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: EventDateRepository::class)]
 class EventDate
@@ -26,11 +28,15 @@ class EventDate
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\GreaterThan(value: "1970-01-01", message: 'Vous devez renseigner une date valide.')]
+    #[Assert\NotBlank(message: 'La date doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'datetime')]
     private $eventDate;
 
+    #[Assert\Choice(callback: 'getStateKeys', message: 'Vous devez renseigner un statut valide.')]
+    #[Assert\NotBlank(message: 'Le statut doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
@@ -114,5 +120,9 @@ class EventDate
         $this->eventDateBlock = $eventDateBlock;
 
         return $this;
+    }
+
+    public function getStateKeys() {
+        return array_keys(self::STATES);
     }
 }

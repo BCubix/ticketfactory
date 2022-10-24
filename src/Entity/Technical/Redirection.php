@@ -23,16 +23,22 @@ class Redirection extends Datable
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[Assert\Choice(choices: [Redirection::REDIRECT_PERMANENT, Redirection::REDIRECT_TEMPORARY], message: 'Vous devez choisir un type valide.')]
+    #[Assert\NotBlank(message: 'Le type de la redirection doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'integer')]
     private ?int $redirectType = null;
 
+    #[Assert\Length(max: 1000, maxMessage: 'L\'URL à rediriger doit être inférieure à 1000 caractères.')]
+    #[Assert\NotBlank(message: 'L\'URL à rediriger doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $redirectFrom = null;
 
+    #[Assert\Length(max: 1000, maxMessage: 'L\'URL vers laquelle rediriger doit être inférieure à 1000 caractères.')]
+    #[Assert\NotBlank(message: 'L\'URL vers laquele rediriger doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]

@@ -24,6 +24,8 @@ class EventCategory extends Datable
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de la catégorie doit être inférieure à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de la catégorie doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
