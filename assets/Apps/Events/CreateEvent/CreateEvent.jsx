@@ -47,7 +47,7 @@ export const CreateEvent = () => {
 
             return;
         }
-    }, [categoriesData, roomsData, seasonsData]);
+    }, [categoriesData, roomsData, seasonsData, tagsData]);
 
     const handlesubmit = async (values) => {
         const check = await authApi.checkIsAuth();

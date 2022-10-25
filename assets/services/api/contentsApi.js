@@ -1,3 +1,4 @@
+import { CANCELED_REQUEST_ERROR_CODE } from '../../Constant';
 import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
@@ -74,6 +75,10 @@ const contentsApi = {
 
             return { result: true, contents: result.data?.results, total: result?.data?.total };
         } catch (error) {
+            if (error?.code === CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, contents: [], total: 0 };
+            }
+
             return { result: false, error: error?.response?.data };
         }
     },

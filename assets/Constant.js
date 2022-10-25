@@ -62,3 +62,5 @@ export const REDIRECTION_TYPES = [
 
 export const CONTENT_TYPE_MODULES_EXTENSION = 'FieldType';
 export const CONTENT_MODULES_EXTENSION = 'FieldContentType';
+
+export const CANCELED_REQUEST_ERROR_CODE = 'ERR_CANCELED';

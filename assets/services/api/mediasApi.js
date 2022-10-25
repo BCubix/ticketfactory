@@ -1,4 +1,4 @@
-import { MEDIA_FILE_PATH } from '../../Constant';
+import { CANCELED_REQUEST_ERROR_CODE, MEDIA_FILE_PATH } from '../../Constant';
 import { createFilterParams } from '../utils/createFilterParams';
 import axios from './config';
 
@@ -48,6 +48,10 @@ const mediasApi = {
 
             return { result: true, medias: result.data?.results, total: result?.data?.total };
         } catch (error) {
+            if (error?.code === CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, medias: [], total: 0 };
+            }
+
             return { result: false, error: error?.response?.data };
         }
     },

@@ -6,20 +6,21 @@ import getMenuEntryModules from './getMenuEntryModules';
 
 export const AddMenuElement = ({ addElementToMenu }) => {
     const menuEntryModule = useMemo(() => {
-        return getMenuEntryModules();
+        const menuEntries = getMenuEntryModules();
+        let modules = [];
+
+        Object.entries(menuEntries).map(([name, value]) => {
+            const Component = (value && value?.MenuEntryModule) || null;
+
+            if (!Component) {
+                throw `Le module ${name} n'existe pas ou est corrompu`;
+            }
+
+            modules.push(Component);
+        });
+
+        return modules;
     }, []);
-
-    const MenuEntryModulesComponent = ({ name }) => {
-        const Component =
-            (menuEntryModule && menuEntryModule[name] && menuEntryModule[name]?.MenuEntryModule) ||
-            null;
-
-        if (!Component) {
-            throw `Le module ${name} n'existe pas ou est corrompu`;
-        }
-
-        return <Component addElementToMenu={addElementToMenu} />;
-    };
 
     return (
         <>
@@ -28,8 +29,8 @@ export const AddMenuElement = ({ addElementToMenu }) => {
             </Typography>
 
             <Box marginTop={4}>
-                {Object.entries(menuEntryModule).map(([name], index) => (
-                    <MenuEntryModulesComponent key={index} name={name} />
+                {menuEntryModule.map((Item, index) => (
+                    <Item key={index} addElementToMenu={addElementToMenu} />
                 ))}
             </Box>
         </>

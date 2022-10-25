@@ -25,6 +25,9 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                 children: [],
             },
         ]);
+
+        setName('');
+        setValue('');
     };
 
     return (

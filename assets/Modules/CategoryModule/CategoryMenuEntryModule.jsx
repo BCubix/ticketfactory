@@ -116,6 +116,7 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                             });
 
                             addElementToMenu(submitList);
+                            setSelectedAdd([]);
                         }}
                     >
                         Ajouter
