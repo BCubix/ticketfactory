@@ -16,10 +16,10 @@ import { REDIRECTION_TIME } from '../../../../Constant';
 import { loginFailure } from '../../../../redux/profile/profileSlice';
 import authApi from '../../../../services/api/authApi';
 import mediasApi from '../../../../services/api/mediasApi';
-import { DisplayMediaType } from '../../../Medias/Components/DisplayMediaType';
-import { MediaElement } from '../../../Medias/Components/sc.MediaElement';
 import CloseIcon from '@mui/icons-material/Close';
 import moment from 'moment/moment';
+import { CmtMediaElement } from '../../../../Components/CmtMediaElement/sc.MediaElement';
+import { CmtDisplayMediaType } from '../../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
 
 const VALIDATION_TYPE = 'mixed';
 const VALIDATION_LIST = [
@@ -124,7 +124,7 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                         <Grid item xs={12} md={9}>
                             <Box display="flex" px={5} py={10} flexWrap="wrap">
                                 {list?.map((item, index) => (
-                                    <MediaElement
+                                    <CmtMediaElement
                                         key={index}
                                         onClick={() => setSelectedMedia(item)}
                                         sx={{
@@ -133,8 +133,8 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                                                 : '0px',
                                         }}
                                     >
-                                        <DisplayMediaType media={item} width={'100%'} />
-                                    </MediaElement>
+                                        <CmtDisplayMediaType media={item} width={'100%'} />
+                                    </CmtMediaElement>
                                 ))}
                             </Box>
                         </Grid>
@@ -251,7 +251,11 @@ const DisplayMediaInformation = ({
 
             <Box my={10} display="flex" justifyContent={'center'}>
                 <Box maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center">
-                    <DisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
+                    <CmtDisplayMediaType
+                        media={selectedMedia}
+                        maxWidth={'100%'}
+                        maxHeight={'300px'}
+                    />
                 </Box>
             </Box>
 

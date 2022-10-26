@@ -51,6 +51,11 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventMedia::class, orphanRemoval: true,  cascade: ['persist', 'remove'])]
+    private Collection $eventMedias;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'mainEvents')]
     private $mainCategory;
 
@@ -74,12 +79,12 @@ class Event extends Datable
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events')]
     private $tags;
 
-
     public function __construct()
     {
         $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
+        $this->eventMedias       = new ArrayCollection();
         $this->tags             = new ArrayCollection();
     }
 
@@ -265,6 +270,36 @@ class Event extends Datable
     public function removeTag(Tag $tag): self
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventMedia>
+     */
+    public function getEventMedias(): Collection
+    {
+        return $this->eventMedias;
+    }
+
+    public function addEventMedia(EventMedia $eventMedia): self
+    {
+        if (!$this->eventMedias->contains($eventMedia)) {
+            $this->eventMedias->add($eventMedia);
+            $eventMedia->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventMedia(EventMedia $eventMedia): self
+    {
+        if ($this->eventMedias->removeElement($eventMedia)) {
+            // set the owning side to null (unless already changed)
+            if ($eventMedia->getEvent() === $this) {
+                $eventMedia->setEvent(null);
+            }
+        }
 
         return $this;
     }

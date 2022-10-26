@@ -56,6 +56,18 @@ const mediasApi = {
         }
     },
 
+    getAllMedias: async () => {
+        try {
+            let params = { page: 1, limit: 10000 };
+
+            const result = await axios.get('/medias', { params: params });
+
+            return { result: true, medias: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     getOneMedia: async (id) => {
         try {
             const result = await axios.get(`/medias/${id}`);

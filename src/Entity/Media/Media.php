@@ -3,7 +3,10 @@
 namespace App\Entity\Media;
 
 use App\Entity\Datable;
+use App\Entity\Event\EventMedia;
 use App\Repository\MediaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -59,6 +62,14 @@ class Media extends Datable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $documentUrl = null;
+
+    #[ORM\OneToMany(mappedBy: 'media', targetEntity: EventMedia::class, orphanRemoval: true)]
+    private Collection $eventMedias;
+
+    public function __construct()
+    {
+        $this->eventMedias = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -158,6 +169,36 @@ class Media extends Datable
     public function setDocumentUrl(string $documentUrl): self
     {
         $this->documentUrl = $documentUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventMedia>
+     */
+    public function getEventMedias(): Collection
+    {
+        return $this->eventMedias;
+    }
+
+    public function addEventMedia(EventMedia $eventMedia): self
+    {
+        if (!$this->eventMedias->contains($eventMedia)) {
+            $this->eventMedias->add($eventMedia);
+            $eventMedia->setMedia($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventMedia(EventMedia $eventMedia): self
+    {
+        if ($this->eventMedias->removeElement($eventMedia)) {
+            // set the owning side to null (unless already changed)
+            if ($eventMedia->getMedia() === $this) {
+                $eventMedia->setMedia(null);
+            }
+        }
 
         return $this;
     }

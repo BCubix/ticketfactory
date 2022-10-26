@@ -8,7 +8,7 @@ import { getMediasAction } from '../../../redux/medias/mediasSlice';
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import mediasApi from '../../../services/api/mediasApi';
-import { DisplayMediaType } from '../Components/DisplayMediaType';
+import { CmtDisplayMediaType } from '../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
 import { MediaDataForm } from '../MediasForm/MediaDataForm';
 import { MediaImageForm } from '../MediasForm/MediaImageForm';
 import { getMediaType } from '../../../services/utils/getMediaType';
@@ -75,6 +75,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     useEffect(() => {
         if (!id) {
             onCancel();
+            return;
         }
 
         getMedia();
@@ -104,7 +105,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                         flexDirection={'column'}
                         alignItems={'center'}
                     >
-                        <DisplayMediaType
+                        <CmtDisplayMediaType
                             media={media}
                             maxWidth={'50%'}
                             maxHeight={200}

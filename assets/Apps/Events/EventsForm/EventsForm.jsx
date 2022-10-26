@@ -7,6 +7,7 @@ import { EventMainPartForm } from './EventMainPartForm';
 import { CmtTabs } from '../../../Components/CmtTabs/CmtTabs';
 import { EventsDateBlockForm } from './EventsDateBlockForm';
 import { EventsPriceBlockForm } from './EventPriceBlockForm';
+import { EventMediaPartForm } from './EventMediaPart/EventMediaPartForm';
 
 export const EventsForm = ({
     handleSubmit,
@@ -93,6 +94,12 @@ export const EventsForm = ({
                 mainCategory: initialValues?.mainCategory?.id || '',
                 multiplePriceBlock: initialValues?.eventPriceBlocks?.length > 1 || false,
                 multipleDateBlock: initialValues?.eventDateBlocks?.length > 1 || false,
+                eventMedias:
+                    initialValues?.eventMedias?.map((el) => ({
+                        mainImg: el.mainImg,
+                        position: el.position,
+                        id: el.media?.id,
+                    })) || [],
             }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -156,6 +163,20 @@ export const EventsForm = ({
                                 label: 'Tarifs',
                                 component: (
                                     <EventsPriceBlockForm
+                                        values={values}
+                                        setFieldValue={setFieldValue}
+                                        setFieldTouched={setFieldTouched}
+                                        touched={touched}
+                                        errors={errors}
+                                        handleBlur={handleBlur}
+                                        handleChange={handleChange}
+                                    />
+                                ),
+                            },
+                            {
+                                label: 'Médias',
+                                component: (
+                                    <EventMediaPartForm
                                         values={values}
                                         setFieldValue={setFieldValue}
                                         setFieldTouched={setFieldTouched}

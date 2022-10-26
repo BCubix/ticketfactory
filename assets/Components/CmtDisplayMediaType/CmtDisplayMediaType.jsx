@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import React from 'react';
-import { ICONS_FILE_PATH, MEDIA_FILE_BASE_URL } from '../../../Constant';
-import { getMediaType } from '../../../services/utils/getMediaType';
+import { ICONS_FILE_PATH, MEDIA_FILE_BASE_URL } from '../../Constant';
+import { getMediaType } from '../../services/utils/getMediaType';
 
 const MEDIA_TYPE = [
     {
@@ -108,7 +108,7 @@ const MEDIA_TYPE = [
     },
 ];
 
-export const DisplayMediaType = ({ media, ...typeProps }) => {
+export const CmtDisplayMediaType = ({ media, ...typeProps }) => {
     const type = getMediaType(media.documentType);
 
     if (!type) {

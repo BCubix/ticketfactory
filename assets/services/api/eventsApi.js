@@ -162,6 +162,15 @@ const eventsApi = {
                 formData.append(`tags[${index}]`, tag);
             });
 
+            data.eventMedias?.forEach((eventMedia, index) => {
+                formData.append(`eventMedias[${index}][media]`, eventMedia.id);
+                formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
+                formData.append(
+                    `eventMedias[${index}][position]`,
+                    eventMedia.position || index + 1
+                );
+            });
+
             const result = await axios.post('/events', formData);
 
             return { result: true, event: result.data };
@@ -232,6 +241,15 @@ const eventsApi = {
 
             data?.tags?.forEach((tag, index) => {
                 formData.append(`tags[${index}]`, tag);
+            });
+
+            data.eventMedias?.forEach((eventMedia, index) => {
+                formData.append(`eventMedias[${index}][media]`, eventMedia.id);
+                formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
+                formData.append(
+                    `eventMedias[${index}][position]`,
+                    eventMedia.position || index + 1
+                );
             });
 
             const result = await axios.post(`/events/${id}`, formData);

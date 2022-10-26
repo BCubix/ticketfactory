@@ -1,18 +1,12 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Typography,
-} from '@mui/material';
+import { CardContent, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+import { CmtDisplayMediaType } from '../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
+import { CmtMediaElement } from '../../../Components/CmtMediaElement/sc.MediaElement';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
@@ -25,8 +19,6 @@ import {
 import { loginFailure } from '../../../redux/profile/profileSlice';
 import authApi from '../../../services/api/authApi';
 import mediasApi from '../../../services/api/mediasApi';
-import { DisplayMediaType } from '../Components/DisplayMediaType';
-import { MediaElement } from '../Components/sc.MediaElement';
 import { CreateMedia } from '../CreateMedia/CreateMedia';
 import { EditMedia } from '../EditMedia/EditMedia';
 import { MediasFilters } from './MediasFilters/MediasFilters';
@@ -91,9 +83,9 @@ export const MediasList = () => {
 
                     <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
                         {medias?.map((item, index) => (
-                            <MediaElement key={index} onClick={() => setEditDialog(item.id)}>
-                                <DisplayMediaType media={item} width={'100%'} height={'auto'} />
-                            </MediaElement>
+                            <CmtMediaElement key={index} onClick={() => setEditDialog(item.id)}>
+                                <CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
+                            </CmtMediaElement>
                         ))}
                     </Box>
 

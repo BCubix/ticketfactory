@@ -98,6 +98,13 @@ class EventType extends AbstractType
                     ;
                 }
             ])
+            ->add('eventMedias',           CollectionType::class,      [
+                'entry_type'   => EventMediaType::class,
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false
+            ])
         ;
     }
 
