@@ -2,6 +2,8 @@
 
 namespace App\Validation\Constraint;
 
+use App\Validation\Validator\ContentTypeFieldValidator;
+
 use Symfony\Component\Validator\Constraint;
 
 #[\Attribute]
@@ -13,5 +15,10 @@ class ContentTypeFieldConstraint extends Constraint
     public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;
+    }
+
+    public function validatedBy()
+    {
+        return ContentTypeFieldValidator::class;
     }
 }

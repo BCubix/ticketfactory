@@ -2,6 +2,8 @@
 
 namespace App\Validation\Constraint;
 
+use App\Validation\Validator\MenuEntryValidator;
+
 use Symfony\Component\Validator\Constraint;
 
 #[\Attribute]
@@ -14,5 +16,10 @@ class MenuEntryConstraint extends Constraint
     public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;
+    }
+
+    public function validatedBy()
+    {
+        return MenuEntryValidator::class;
     }
 }

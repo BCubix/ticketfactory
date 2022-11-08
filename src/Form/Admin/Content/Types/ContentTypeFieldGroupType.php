@@ -6,7 +6,7 @@ use App\Form\Admin\Content\ContentFieldsType;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentTypeFieldRadioType extends ContentTypeFieldAbstractType
+class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
 {
     public const FIELD_NAME = 'group';
 

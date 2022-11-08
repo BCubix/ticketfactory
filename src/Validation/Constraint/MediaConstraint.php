@@ -2,10 +2,12 @@
 
 namespace App\Validation\Constraint;
 
+use App\Validation\Validator\MediaValidator;
+
 use Symfony\Component\Validator\Constraint;
 
 #[\Attribute]
-class FileConstraint extends Constraint
+class MediaConstraint extends Constraint
 {
     public $sizeMessage = 'Le poids du fichier est trop important.';
     public $mimeMessage = 'Le type du fichier n\'est pas accepté.';
@@ -13,5 +15,10 @@ class FileConstraint extends Constraint
     public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;
+    }
+
+    public function validatedBy()
+    {
+        return MediaValidator::class;
     }
 }

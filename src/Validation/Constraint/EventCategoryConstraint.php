@@ -2,6 +2,8 @@
 
 namespace App\Validation\Constraint;
 
+use App\Validation\Validator\EventCategoryValidator;
+
 use Symfony\Component\Validator\Constraint;
 
 #[\Attribute]
@@ -12,5 +14,10 @@ class EventCategoryConstraint extends Constraint
     public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;
+    }
+
+    public function validatedBy()
+    {
+        return EventCategoryValidator::class;
     }
 }
