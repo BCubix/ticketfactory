@@ -6,10 +6,16 @@ use App\Entity\Event\EventCategory;
 use App\Form\Admin\Event\EventCategoryType;
 use App\Form\Admin\Filters\FilterEventCategoryType;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
+use App\Manager\EventCategoryManager;
+use App\Service\Logger\Logger;
+use App\Utils\FormErrorsCollector;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +26,21 @@ class EventCategoryController extends CrudController
     protected const TYPE_CLASS = EventCategoryType::class;
 
     protected const NOT_FOUND_MESSAGE = "Cette catégorie n'existe pas.";
+
+    protected $ecm;
+
+    public function __construct(
+        EventDispatcherInterface $ed,
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        EventCategoryManager $ecm
+    ) {
+        parent::__construct($ed, $em, $se, $fec, $log);
+
+        $this->ecm = $ecm;
+    }
 
     #[Rest\Get('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
@@ -83,7 +104,12 @@ class EventCategoryController extends CrudController
 
         $objectId = $object->getId();
 
-        $this->attachProductsToRootCategory($object);
+        $deleteEvents = $request->get('deleteEvents');
+        if ($deleteEvents) {
+            $this->ecm->deleteEventsFromCategory($object);
+        } else {
+            $this->ecm->attachEventsToRootCategory($object);
+        }
 
         $this->em->remove($object);
         $this->em->flush();
@@ -91,20 +117,5 @@ class EventCategoryController extends CrudController
         $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
         return $this->view(null, Response::HTTP_OK);
-    }
-
-    // @Todo : Move this function into the associated CrudObjectInstantiatedEvent
-    private function attachProductsToRootCategory(EventCategory $mainCategory) {
-        $rootCategory = $this->em->getRepository($this->entityClass)->findRootCategory();
-        $childrenCategories = $this->em->getRepository($this->entityClass)->getChildren($mainCategory, false, null, 'asc', true);
-
-        foreach ($childrenCategories as $category) {
-            $events = $category->getEvents();
-
-            foreach ($events as $event) {
-                $event->setMainCategory($rootCategory);
-                $this->em->persist($event);
-            }
-        }
     }
 }

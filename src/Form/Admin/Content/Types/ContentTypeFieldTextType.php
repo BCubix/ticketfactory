@@ -15,8 +15,6 @@ class ContentTypeFieldTextType extends ContentTypeFieldAbstractType
     }
 
     public static function getValidations() {
-        $validations = parent::getValidations();
-
-        return array_merge($validations, ['minLength', 'maxLength', 'regex']);
+        return ['minLength', 'maxLength', 'regex'];
     }
 }

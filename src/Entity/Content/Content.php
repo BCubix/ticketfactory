@@ -9,6 +9,7 @@ use App\Repository\ContentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
 class Content extends Datable implements JsonDoctrineSerializable
@@ -20,6 +21,8 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le titre du contenu doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le titre du contenu doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 255)]

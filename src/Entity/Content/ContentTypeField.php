@@ -3,14 +3,20 @@
 namespace App\Entity\Content;
 
 use App\Entity\JsonDoctrineSerializable;
+
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ContentTypeField implements JsonDoctrineSerializable
 {
+    #[Assert\Length(max: 250, maxMessage: 'Le titre du champ doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le titre du champ doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     private ?string $title = null;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom du champ doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom du champ doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     private ?string $name = null;
@@ -30,6 +36,10 @@ class ContentTypeField implements JsonDoctrineSerializable
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     private ?array $validations = [];
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    private ?array $parameters = [];
 
     public function getTitle(): ?string
     {
@@ -103,6 +113,18 @@ class ContentTypeField implements JsonDoctrineSerializable
         return $this;
     }
 
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
     public function jsonSerialize(): mixed
     {
         $options = [];
@@ -115,13 +137,19 @@ class ContentTypeField implements JsonDoctrineSerializable
             $validations[] = $validation->jsonSerialize();
         }
 
+        $parameters = [];
+        foreach ($this->parameters as $parameter) {
+            $parameters[] = $parameter->jsonSerialize();
+        }
+
         return [
             'title'       => $this->title,
             'name'        => $this->name,
             'helper'      => $this->helper,
             'type'        => $this->type,
             'options'     => $options,
-            'validations' => $validations
+            'validations' => $validations,
+            'parameters'  => $parameters,
         ];
     }
 
@@ -141,6 +169,11 @@ class ContentTypeField implements JsonDoctrineSerializable
         $object->validations = [];
         foreach ($data['validations'] as $validation) {
             $object->validations[] = ContentTypeValidation::jsonDeserialize($validation);
+        }
+
+        $object->parameters = [];
+        foreach ($data['parameters'] as $parameter) {
+            $object->parameters[] = ContentTypeParameter::jsonDeserialize($parameter);
         }
 
         return $object;

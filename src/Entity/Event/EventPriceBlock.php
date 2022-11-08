@@ -19,11 +19,15 @@ class EventPriceBlock
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom du bloc doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom du bloc doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[Assert\Valid]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'eventPriceBlock', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove'])]

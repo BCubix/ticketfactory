@@ -30,4 +30,8 @@ abstract class ContentTypeFieldAbstractType extends AbstractType
     public static function getValidations() {
         return [];
     }
+
+    public static function getParameters() {
+        return [];
+    }
 }

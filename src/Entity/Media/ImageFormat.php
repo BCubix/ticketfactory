@@ -20,24 +20,42 @@ class ImageFormat extends Datable
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'integer')]
-    private ?int $height = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'integer')]
-    private ?int $length = null;
-
+    #[Assert\Length(max: 250, maxMessage: 'Le nom du format doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom du format doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
+    #[Assert\PositiveOrZero(message: 'La hauteur de l\'image doit être un nombre supérieur ou égal à 0.')]
+    #[Assert\NotBlank(message: 'La hauteur de l\'image doit être renseignée.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'integer')]
+    private ?int $height = null;
+
+    #[Assert\PositiveOrZero(message: 'La largeur de l\'image doit être un nombre supérieur ou égal à 0.')]
+    #[Assert\NotBlank(message: 'La largeur de l\'image doit être renseignée.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'integer')]
+    private ?int $length = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getHeight(): ?int
@@ -60,18 +78,6 @@ class ImageFormat extends Datable
     public function setLength(int $length): self
     {
         $this->length = $length;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
 
         return $this;
     }

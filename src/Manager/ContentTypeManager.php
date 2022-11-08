@@ -99,6 +99,23 @@ class ContentTypeManager extends AbstractManager
         return $filledOptions;
     }
 
+    public function getParametersFromField(ContentTypeField $contentTypeField) {
+        $component = $this->getContentTypeFieldFromType($contentTypeField->getType());
+        $expectedParameters = $component::getParameters();
+
+        $parameters = [];
+        foreach ($contentTypeField->getParameters() as $parameter) {
+            // We only pass parameters that are defined
+            if (!in_array($parameter->getName(), $expectedParameters)) {
+                continue;
+            }
+
+            $parameters[] = $parameter;
+        }
+
+        return $parameters;
+    }
+
     private function loadTypes() {
         $types = [];
         $files = glob($this->projectDir . self::TYPE_FILES_PATH);

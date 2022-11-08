@@ -87,7 +87,7 @@ abstract class CrudController extends AdminController
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($id);
         if (null === $object) {
-            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
         $event = new CrudObjectInstantiatedEvent($object, 'edit');
@@ -138,7 +138,7 @@ abstract class CrudController extends AdminController
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($id);
         if (null === $object) {
-            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
         $event = new CrudObjectInstantiatedEvent($object, 'delete');

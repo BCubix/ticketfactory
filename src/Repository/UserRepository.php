@@ -48,4 +48,14 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
     {
         return $this->loadUserByIdentifier($email);
     }
+
+    public function findAdminUsersForAdmin(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.roles LIKE :adminRole')
+            ->setParameter('adminRole', 'ROLE_ADMIN')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

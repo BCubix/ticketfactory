@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContentTypeRepository::class)]
 class ContentType extends Datable implements JsonDoctrineSerializable
@@ -21,6 +22,8 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom du type de contenu doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom du type de contenu doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]

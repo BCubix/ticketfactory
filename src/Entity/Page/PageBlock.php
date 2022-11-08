@@ -16,9 +16,10 @@ class PageBlock
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\NotBlank(message: 'Le contenu doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $content;
 
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'pageBlocks')]

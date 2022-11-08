@@ -17,6 +17,8 @@ class EventPrice
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom du tarif doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom du tarif doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
@@ -27,6 +29,8 @@ class EventPrice
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
 
+    #[Assert\PositiveOrZero(message: 'Le tarif doit être un nombre supérieur ou égal à 0.')]
+    #[Assert\NotBlank(message: 'Le tarif doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'float')]

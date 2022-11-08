@@ -14,13 +14,11 @@ class ContentTypeFieldUrlType extends ContentTypeFieldAbstractType
         return TextType::class;
     }
 
-    public static function getOptions() {
-        $options = parent::getOptions();
-
-        return array_merge($options, ['default_protocol' => [
-            'type'  => 'string',
-            'label' => 'Protocole par défaut'
-        ]]);
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'default_protocol' => 'https'
+        ]);
     }
 
     public static function getValidations() {
