@@ -11,7 +11,7 @@ class FrontUrlSubscriber implements EventSubscriberInterface
 {
     protected const URL_TYPE_CLASS = [
         "App\Entity\Content\Content" => null,
-        "App\Entity\Event\Event" => "tf_website_spectacle_detail",
+        "App\Entity\Event\Event" => null,
         "App\Entity\Event\EventCategory" => null,
         "App\Entity\Event\Room" => null,
         "App\Entity\Event\Season" => null,
