@@ -124,10 +124,9 @@ abstract class CrudController extends AdminController
         $event = new CrudObjectInstantiatedEvent($object, 'duplicate');
         $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
-        $object = clone $object;
-        $object->setSlug(null);
+        $nObject = CloneObject::cloneObject($object);
 
-        $this->em->persist($object);
+        $this->em->persist($nObject);
         $this->em->flush();
 
         $this->log->log(0, 0, 'Duplicated object.', $this->entityClass, $object->getId());
