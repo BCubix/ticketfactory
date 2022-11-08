@@ -3,6 +3,7 @@ import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { Box, TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useState } from 'react';
+import 'moment/locale/fr';
 
 export const CmtDateTimePicker = ({
     openToYear = false,
@@ -22,7 +23,7 @@ export const CmtDateTimePicker = ({
     const [open, setOpen] = useState(false);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
+        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
             <Box md={2} width="100%">
                 <DateTimePicker
                     allowKeyboardControl
