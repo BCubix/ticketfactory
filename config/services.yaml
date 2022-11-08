@@ -42,7 +42,11 @@ services:
         tags:
             - { name: kernel.event_subscriber, event: oneup_uploader.post_persist }
 
+    App\EventSubscriber\Admin\FrontUrlSubscriber:
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
     # Managers
     App\Manager\ContentTypeManager:
         arguments:
-            $projectDir: "%kernel.project_dir%"
+            $projectDir: '%kernel.project_dir%'

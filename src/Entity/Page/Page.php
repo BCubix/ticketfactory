@@ -31,6 +31,11 @@ class Page extends Datable
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $pageBlocks;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    public $frontUrl;
+
+
     public function __construct()
     {
         $this->pageBlocks = new ArrayCollection();

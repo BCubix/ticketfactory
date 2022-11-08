@@ -79,6 +79,11 @@ class Event extends Datable
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events')]
     private $tags;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    public $frontUrl;
+
+
     public function __construct()
     {
         $this->eventCategories  = new ArrayCollection();

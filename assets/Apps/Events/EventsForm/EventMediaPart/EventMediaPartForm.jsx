@@ -48,7 +48,6 @@ export const EventMediaPartForm = ({
             return [];
         }
 
-        console.log(openAddModal);
         if (openAddModal === 'Image') {
             return imageMedias;
         } else if (openAddModal === 'Other') {

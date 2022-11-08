@@ -43,6 +43,45 @@ export const EventsDateForm = ({
         { label: 'Nouvelle date', value: 'new_date', color: theme.palette.dateStatus.newDate },
     ];
 
+    const DAYS_WEEK = [
+        { label: 'L', color: '#4a148c', value: 'Monday' },
+        { label: 'M', color: '#0d47a1', value: 'Tuesday' },
+        { label: 'M', color: '#006664', value: 'Wednesday' },
+        { label: 'J', color: '#33691e', value: 'Thursday' },
+        { label: 'V', color: '#f57f17', value: 'Friday' },
+        { label: 'S', color: '#e65100', value: 'Saturday' },
+        { label: 'D', color: '#b71c1c', value: 'Sunday' },
+    ];
+
+    const DisplayBadge = ({ item }) => {
+        if (!item?.eventDate) {
+            return <></>;
+        }
+
+        const day = DAYS_WEEK.find((el) => el.value === moment(item.eventDate).format('dddd'));
+        if (!day) {
+            return <></>;
+        }
+
+        return (
+            <Box
+                height={30}
+                width={30}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor={day.color}
+                borderRadius="50%"
+                marginRight={3}
+                flexShrink={0}
+            >
+                <Typography component="span" color="white" variant="h4">
+                    {day.label}
+                </Typography>
+            </Box>
+        );
+    };
+
     return (
         <FieldArray name={`eventDateBlocks[${blockIndex}].eventDates`}>
             {({ remove, push }) => (
@@ -53,7 +92,8 @@ export const EventsDateForm = ({
                                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
                                     <CardContent sx={{ position: 'relative' }}>
                                         <Grid container spacing={4}>
-                                            <Grid item xs={12}>
+                                            <Grid item xs={12} display="flex" alignItems="center">
+                                                <DisplayBadge item={item} />
                                                 <CmtDateTimePicker
                                                     fullWidth
                                                     value={item.eventDate}

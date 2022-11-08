@@ -71,6 +71,10 @@ class EventCategory extends Datable
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'eventCategories')]
     private $events;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    public $frontUrl;
+
 
     public function __construct()
     {

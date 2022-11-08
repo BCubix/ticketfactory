@@ -42,6 +42,11 @@ class Season extends Datable
     #[ORM\OneToMany(mappedBy: 'season', targetEntity: Event::class)]
     private $events;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    public $frontUrl;
+
+
     public function __construct()
     {
         $this->events = new ArrayCollection();

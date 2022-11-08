@@ -42,6 +42,10 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[ORM\JoinColumn(nullable: false)]
     private $contentType;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    public $frontUrl;
+
 
     public function getId(): ?int
     {
