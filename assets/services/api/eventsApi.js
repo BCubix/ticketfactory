@@ -104,6 +104,7 @@ const eventsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('chapo', data.chapo);
             formData.append('description', data.description);
             formData.append('room', data.room);
             formData.append('season', data.season);
@@ -185,6 +186,7 @@ const eventsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('chapo', data.chapo);
             formData.append('description', data.description);
             formData.append('room', data.room);
             formData.append('season', data.season);

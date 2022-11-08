@@ -44,6 +44,20 @@ export const EventMainPartForm = ({
                     </Grid>
 
                     <Grid item xs={12}>
+                        <CmtTextField
+                            value={values.chapo}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            label="Chapô"
+                            name="chapo"
+                            error={touched.chapo && errors.chapo}
+                            multiline
+                            rows={4}
+                            required
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
                         <InputLabel id="description">Description</InputLabel>
                         <LightEditorFormControl>
                             <LightEditor

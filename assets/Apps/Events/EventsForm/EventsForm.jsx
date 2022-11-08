@@ -25,6 +25,7 @@ export const EventsForm = ({
         name: Yup.string()
             .required("Veuillez renseigner le nom de l'évènement.")
             .max(250, "Le nom de l'évènement est trop long"),
+        chapo: Yup.string().required('Veuillez renseigner le chapô.'),
         eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
         mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
         description: Yup.string().required('Veuillez renseigner une description.'),
@@ -78,6 +79,7 @@ export const EventsForm = ({
             initialValues={{
                 active: initialValues?.active || false,
                 name: initialValues?.name || '',
+                chapo: initialValues?.chapo || '',
                 description: initialValues?.description || '',
                 eventDateBlocks: initialValues?.eventDateBlocks || [
                     { name: 'Dates', eventDates: [] },

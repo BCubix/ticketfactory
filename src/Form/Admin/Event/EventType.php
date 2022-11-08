@@ -28,6 +28,7 @@ class EventType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
+            ->add('chapo',                TextareaType::class,        [])
             ->add('description',          TextareaType::class,        [])
             ->add('eventDateBlocks',      CollectionType::class,      [
                 'entry_type'   => EventDateBlockType::class,

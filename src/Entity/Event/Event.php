@@ -7,6 +7,7 @@ use App\Repository\EventRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -29,6 +30,12 @@ class Event extends Datable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
+
+    #[Assert\NotBlank(message: 'Le chapô doit être renseigné.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $chapo = null;
 
     #[Gedmo\Slug(fields: ['name'])]
     #[JMS\Expose()]
@@ -114,6 +121,18 @@ class Event extends Datable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getChapo(): ?string
+    {
+        return $this->chapo;
+    }
+
+    public function setChapo(?string $chapo): self
+    {
+        $this->chapo = $chapo;
 
         return $this;
     }
