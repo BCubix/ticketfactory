@@ -8,8 +8,8 @@ import {
     Box,
     MenuItem,
     Select,
-    Chip,
     FormHelperText,
+    Typography,
 } from '@mui/material';
 import { FieldArray } from 'formik';
 import AddIcon from '@mui/icons-material/Add';
@@ -44,13 +44,13 @@ export const EventsDateForm = ({
     ];
 
     const DAYS_WEEK = [
-        { label: 'L', color: '#4a148c', value: 'Monday' },
-        { label: 'M', color: '#0d47a1', value: 'Tuesday' },
-        { label: 'M', color: '#006664', value: 'Wednesday' },
-        { label: 'J', color: '#33691e', value: 'Thursday' },
-        { label: 'V', color: '#f57f17', value: 'Friday' },
-        { label: 'S', color: '#e65100', value: 'Saturday' },
-        { label: 'D', color: '#b71c1c', value: 'Sunday' },
+        { label: 'L', color: '#4a148c', value: 'lundi' },
+        { label: 'M', color: '#0d47a1', value: 'mardi' },
+        { label: 'M', color: '#006664', value: 'mercredi' },
+        { label: 'J', color: '#33691e', value: 'jeudi' },
+        { label: 'V', color: '#f57f17', value: 'vendredi' },
+        { label: 'S', color: '#e65100', value: 'samedi' },
+        { label: 'D', color: '#b71c1c', value: 'dimanche' },
     ];
 
     const DisplayBadge = ({ item }) => {

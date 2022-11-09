@@ -4,7 +4,6 @@ import { Box, TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useState } from 'react';
 import moment from 'moment';
-import 'moment/locale/fr';
 
 export const CmtTimePicker = ({
     value = null,
@@ -24,7 +23,7 @@ export const CmtTimePicker = ({
     const [open, setOpen] = useState(false);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="fr">
+        <LocalizationProvider dateAdapter={AdapterMoment}>
             <Box md={2} width="100%" maxWidth={maxWidth}>
                 <TimePicker
                     allowKeyboardControl

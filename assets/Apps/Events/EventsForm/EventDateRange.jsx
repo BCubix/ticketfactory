@@ -20,13 +20,13 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 const DAY_LIST = [
-    { label: 'Lundi', value: 'Monday' },
-    { label: 'Mardi', value: 'Tuesday' },
-    { label: 'Mercredi', value: 'Wednesday' },
-    { label: 'Jeudi', value: 'Thursday' },
-    { label: 'Vendredi', value: 'Friday' },
-    { label: 'Samedi', value: 'Saturday' },
-    { label: 'Dimanche', value: 'Sunday' },
+    { label: 'Lundi', value: 'lundi' },
+    { label: 'Mardi', value: 'mardi' },
+    { label: 'Mercredi', value: 'mercredi' },
+    { label: 'Jeudi', value: 'jeudi' },
+    { label: 'Vendredi', value: 'vendredi' },
+    { label: 'Samedi', value: 'samedi' },
+    { label: 'Dimanche', value: 'dimanche' },
 ];
 
 export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
