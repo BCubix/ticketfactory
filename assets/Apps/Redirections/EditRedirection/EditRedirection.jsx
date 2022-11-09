@@ -59,7 +59,7 @@ export const EditRedirection = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La salle a bien été modifiée.',
+                'La redirection a bien été modifiée.',
                 'Succès',
                 REDIRECTION_TIME
             );

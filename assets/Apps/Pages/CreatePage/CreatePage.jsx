@@ -27,7 +27,7 @@ function CreatePage() {
         const result = await pagesApi.createPage(values);
 
         if (result.result) {
-            NotificationManager.success('La salle a bien été créée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La page a bien été créée.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getPagesAction());
 
