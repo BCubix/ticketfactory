@@ -48,13 +48,18 @@ abstract class CrudRepository extends AbstractRepository
 
             $results
                 ->andWhere($filterField . ' ' . $filterOperator . ' ' . $filterConstComplete)
-			    ->setParameter($filterConst, $filterValue)
-		    ;
+                ->setParameter($filterConst, $filterValue)
+            ;
+        }
+
+        if ($page != 0) {
+            $results = $results
+                ->setFirstResult(($page - 1) * $limit)
+                ->setMaxResults($limit)
+            ;
         }
 
         $results = $results
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
             ->orderBy($sortField, $sortOrder)
         ;
 

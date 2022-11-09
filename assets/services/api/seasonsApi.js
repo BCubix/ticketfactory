@@ -57,7 +57,7 @@ const seasonsApi = {
 
     getAllSeasons: async () => {
         try {
-            let params = { page: 1, limit: 10000 };
+            let params = { page: 0 };
 
             const result = await axios.get('/seasons', { params: params });
 

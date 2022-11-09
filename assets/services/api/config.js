@@ -59,9 +59,13 @@ axiosRetry(api, {
 
         return retryCount * 2000;
     },
-    retryCondition: () => {
+    retryCondition: (error) => {
         if (!window.navigator.onLine) {
-            return true;
+            return false;
+        }
+
+        if (error?.response?.status === 500) {
+            return false;
         }
 
         return true;

@@ -53,9 +53,14 @@ class LogRepository extends AbstractRepository
 		    ;
         }
 
+        if ($page != 0) {
+            $results = $results
+                ->setFirstResult(($page - 1) * $limit)
+                ->setMaxResults($limit)
+            ;
+        }
+
         $results = $results
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
             ->orderBy($sortField, $sortOrder)
         ;
 
