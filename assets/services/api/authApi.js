@@ -40,7 +40,7 @@ const authApi = {
 
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + result.data.token;
 
-            return { result: true };
+            return { result: true, token: result?.data?.token };
         } catch {
             localStorage.removeItem('token');
             localStorage.removeItem('refresh_token');

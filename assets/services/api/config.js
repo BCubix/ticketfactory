@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import { NotificationManager } from 'react-notifications';
 import axiosRetry from 'axios-retry';
-import { API_URL, REDIRECTION_TIME } from '../../Constant';
+import { REDIRECTION_TIME } from '../../Constant';
 import authApi from './authApi';
 import { useDispatch } from 'react-redux';
 import { logoutAction } from '../../redux/profile/profileSlice';
@@ -35,11 +35,16 @@ api.interceptors.response.use(
             );
         }
 
-        if (status === 401) {
-            await authApi.refreshConnexionToken();
-
+        if (status === 401 && error?.config?.url !== '/token/refresh') {
             if (api_count === 3) {
                 useDispatch(logoutAction());
+            }
+
+            const result = await authApi.refreshConnexionToken();
+            if (!result?.result) {
+                useDispatch(logoutAction());
+            } else {
+                error.config.headers['Authorization'] = 'Bearer ' + result.token;
             }
         }
 
@@ -59,7 +64,7 @@ axiosRetry(api, {
             return true;
         }
 
-        return false;
+        return true;
     },
 });
 
