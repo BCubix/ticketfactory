@@ -59,7 +59,7 @@ export const EditContactRequest = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La demande de contact à bien été modifié.',
+                'La demande de contact a bien été modifiée.',
                 'Succès',
                 REDIRECTION_TIME
             );

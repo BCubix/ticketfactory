@@ -52,7 +52,7 @@ export const MenusList = () => {
         const result = await menusApi.updateMenu(initialValues.id, values);
 
         if (result.result) {
-            NotificationManager.success('Le menu à bien été modifié.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le menu a bien été modifié.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getMenusAction());
         }
@@ -70,7 +70,7 @@ export const MenusList = () => {
         const result = await menusApi.deleteMenu(initialValues.id);
 
         if (result.result) {
-            NotificationManager.success('Le menu à bien été supprimé.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le menu a bien été supprimé.', 'Succès', REDIRECTION_TIME);
 
             setInitialValues(null);
             setDeleteDialog(false);

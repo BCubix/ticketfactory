@@ -61,7 +61,7 @@ export const RoomsList = () => {
 
             if (result?.result) {
                 NotificationManager.success(
-                    'La salle à bien été dupliqué.',
+                    'La salle a bien été dupliquée.',
                     'Succès',
                     REDIRECTION_TIME
                 );

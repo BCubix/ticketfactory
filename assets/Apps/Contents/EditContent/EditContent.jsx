@@ -33,7 +33,7 @@ export const EditContent = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'Le contenu à bien été modifié.',
+                'Le contenu a bien été modifié.',
                 'Succès',
                 REDIRECTION_TIME
             );

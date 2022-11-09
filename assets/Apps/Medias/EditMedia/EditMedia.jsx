@@ -57,7 +57,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
             return;
         }
 
-        NotificationManager.success('Votre fichier à bien été modifié', 'Succès', REDIRECTION_TIME);
+        NotificationManager.success('Votre fichier a bien été modifié', 'Succès', REDIRECTION_TIME);
 
         editSuccess();
         dispatch(getMediasAction());

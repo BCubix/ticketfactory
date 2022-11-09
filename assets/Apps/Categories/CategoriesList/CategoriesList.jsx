@@ -113,7 +113,7 @@ export const CategoriesList = () => {
 
             if (result?.result) {
                 NotificationManager.success(
-                    'La catégorie à bien été dupliqué.',
+                    'La catégorie a bien été dupliquée.',
                     'Succès',
                     REDIRECTION_TIME
                 );

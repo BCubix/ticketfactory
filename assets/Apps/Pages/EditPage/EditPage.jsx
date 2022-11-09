@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {useNavigate, useParams} from "react-router-dom";
-import {NotificationManager} from "react-notifications";
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { NotificationManager } from 'react-notifications';
 
-import authApi from "@Services/api/authApi";
-import pagesApi from "@Services/api/pagesApi";
-import {loginFailure} from "@Redux/profile/profileSlice";
-import {getPagesAction} from "@Redux/pages/pagesSlice";
+import authApi from '@Services/api/authApi';
+import pagesApi from '@Services/api/pagesApi';
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getPagesAction } from '@Redux/pages/pagesSlice';
 
-import {PAGES_BASE_PATH, REDIRECTION_TIME} from "@/Constant";
+import { PAGES_BASE_PATH, REDIRECTION_TIME } from '@/Constant';
 
-import PagesForm from "@Apps/Pages/PagesForm/PagesForm";
+import PagesForm from '@Apps/Pages/PagesForm/PagesForm';
 
 function EditPage() {
     const dispatch = useDispatch();
@@ -19,7 +19,7 @@ function EditPage() {
 
     const [page, setPage] = useState(null);
 
-    async function getPage (id) {
+    async function getPage(id) {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -50,7 +50,7 @@ function EditPage() {
         getPage(id);
     }, [id]);
 
-    async function handleSubmit (values) {
+    async function handleSubmit(values) {
         const check = await authApi.checkIsAuth();
 
         if (!check.result) {
@@ -62,7 +62,7 @@ function EditPage() {
         const result = await pagesApi.editPage(id, values);
 
         if (result.result) {
-            NotificationManager.success('La page a bien été modifié.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La page a bien été modifiée.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getPagesAction());
 
@@ -74,7 +74,7 @@ function EditPage() {
         return <></>;
     }
 
-    return <PagesForm handleSubmit={handleSubmit} initialValues={page} />
+    return <PagesForm handleSubmit={handleSubmit} initialValues={page} />;
 }
 
 export default EditPage;

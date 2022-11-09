@@ -49,7 +49,7 @@ export const SeasonsList = () => {
 
             if (result?.result) {
                 NotificationManager.success(
-                    'La saison à bien été dupliqué.',
+                    'La saison a bien été dupliquée.',
                     'Succès',
                     REDIRECTION_TIME
                 );

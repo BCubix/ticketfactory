@@ -61,7 +61,7 @@ export const CreateEvent = () => {
         const result = await eventsApi.createEvent(values);
 
         if (result.result) {
-            NotificationManager.success("L'évènement à bien été crée.", 'Succès', REDIRECTION_TIME);
+            NotificationManager.success("L'évènement a bien été créé.", 'Succès', REDIRECTION_TIME);
 
             dispatch(getEventsAction());
 

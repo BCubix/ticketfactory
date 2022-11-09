@@ -30,7 +30,7 @@ export const CreateMenu = () => {
         const result = await menusApi.createMenu(values);
 
         if (result.result) {
-            NotificationManager.success('Le menu à bien été crée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le menu a bien été créé.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getMenusAction());
 

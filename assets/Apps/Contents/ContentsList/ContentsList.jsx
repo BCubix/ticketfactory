@@ -87,7 +87,7 @@ export const ContentsList = () => {
 
             if (result?.result) {
                 NotificationManager.success(
-                    'Le contenu à bien été dupliqué.',
+                    'Le contenu a bien été dupliqué.',
                     'Succès',
                     REDIRECTION_TIME
                 );

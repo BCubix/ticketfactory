@@ -59,7 +59,7 @@ export const EditUser = () => {
 
         if (result.result) {
             NotificationManager.success(
-                "L'utilisateur à bien été modifié.",
+                "L'utilisateur a bien été modifié.",
                 'Succès',
                 REDIRECTION_TIME
             );

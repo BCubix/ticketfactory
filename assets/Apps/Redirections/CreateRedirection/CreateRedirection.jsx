@@ -26,7 +26,7 @@ export const CreateRedirection = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La redirection à bien été crée.',
+                'La redirection a bien été créée.',
                 'Succès',
                 REDIRECTION_TIME
             );

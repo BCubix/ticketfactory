@@ -51,7 +51,7 @@ export const EditImageFormat = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'Le format à bien été modifié.',
+                'Le format a bien été modifié.',
                 'Succès',
                 REDIRECTION_TIME
             );

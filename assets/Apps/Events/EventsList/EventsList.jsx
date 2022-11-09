@@ -74,7 +74,7 @@ export const EventsList = () => {
 
             if (result?.result) {
                 NotificationManager.success(
-                    "L'évènement à bien été dupliqué.",
+                    "L'évènement a bien été dupliqué.",
                     'Succès',
                     REDIRECTION_TIME
                 );

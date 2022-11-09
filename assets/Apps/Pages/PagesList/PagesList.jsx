@@ -65,7 +65,7 @@ function PagesList() {
 
             if (result?.result) {
                 NotificationManager.success(
-                    'La page à bien été dupliqué.',
+                    'La page a bien été dupliquée.',
                     'Succès',
                     REDIRECTION_TIME
                 );

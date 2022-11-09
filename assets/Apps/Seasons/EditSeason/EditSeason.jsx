@@ -59,7 +59,7 @@ export const EditSeason = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La saison à bien été modifié.',
+                'La saison a bien été modifié.',
                 'Succès',
                 REDIRECTION_TIME
             );

@@ -26,7 +26,7 @@ export const CreateContentType = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'Le type de contenu à bien été crée.',
+                'Le type de contenu a bien été créé.',
                 'Succès',
                 REDIRECTION_TIME
             );

@@ -25,7 +25,7 @@ export const CreateSeason = () => {
         const result = await seasonsApi.createSeason(values);
 
         if (result.result) {
-            NotificationManager.success('La saison à bien été crée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La saison a bien été créée.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getSeasonsAction());
 

@@ -17,7 +17,7 @@ export const MediaImageForm = ({ media = null, closeImageEditor, editSuccess }) 
 
         if (result?.result && result?.media?.success) {
             NotificationManager.success(
-                'Votre image à bien été mise à jour.',
+                'Votre image a bien été mise à jour.',
                 'Succès',
                 REDIRECTION_TIME
             );

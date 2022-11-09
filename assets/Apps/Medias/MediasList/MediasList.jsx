@@ -39,7 +39,7 @@ export const MediasList = () => {
     const handleSubmit = () => {
         setCreateDialog(false);
         dispatch(getMediasAction());
-        NotificationManager.success('Votre élément à bien été ajouté.', 'Succès', REDIRECTION_TIME);
+        NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', REDIRECTION_TIME);
     };
 
     const handleDelete = async (id) => {

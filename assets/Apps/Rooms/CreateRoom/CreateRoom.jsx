@@ -25,7 +25,7 @@ export const CreateRoom = () => {
         const result = await roomsApi.createRoom(values);
 
         if (result.result) {
-            NotificationManager.success('La salle à bien été crée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La salle a bien été créée.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getRoomsAction());
 

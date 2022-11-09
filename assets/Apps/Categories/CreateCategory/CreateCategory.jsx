@@ -43,7 +43,7 @@ export const CreateCategory = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La catégorie à bien été crée.',
+                'La catégorie a bien été créée.',
                 'Succès',
                 REDIRECTION_TIME
             );

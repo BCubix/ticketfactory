@@ -95,7 +95,7 @@ export const EditEvent = () => {
 
         if (result.result) {
             NotificationManager.success(
-                "L'évènement à bien été modifié.",
+                "L'évènement a bien été modifié.",
                 'Succès',
                 REDIRECTION_TIME
             );

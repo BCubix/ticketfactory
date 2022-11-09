@@ -51,7 +51,7 @@ export const EditTag = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La catégorie à bien été modifié.',
+                'La catégorie a bien été modifiée.',
                 'Succès',
                 REDIRECTION_TIME
             );

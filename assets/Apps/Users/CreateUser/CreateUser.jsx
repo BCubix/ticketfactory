@@ -26,7 +26,7 @@ export const CreateUser = () => {
 
         if (result.result) {
             NotificationManager.success(
-                "L'utilisateur à bien été crée.",
+                "L'utilisateur a bien été créé.",
                 'Succès',
                 REDIRECTION_TIME
             );

@@ -34,7 +34,7 @@ export const CreateContent = () => {
         const result = await contentsApi.createContent(values);
 
         if (result.result) {
-            NotificationManager.success('Le contenu à bien été crée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le contenu a bien été créé.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getContentsAction());
 

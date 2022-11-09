@@ -59,7 +59,7 @@ export const EditContentType = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'Le type de contenus à bien été modifié.',
+                'Le type de contenus a bien été modifié.',
                 'Succès',
                 REDIRECTION_TIME
             );

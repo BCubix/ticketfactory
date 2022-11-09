@@ -41,7 +41,7 @@ const ThirdCardDashboard = ({ data }) => {
         const result = await dashboardApi.updateNote(note);
 
         if (result.result) {
-            NotificationManager.success('La note à bien été modifié.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La note a bien été modifiée.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getDashboardAction());
         }

@@ -25,7 +25,7 @@ export const CreateTag = () => {
         const result = await tagsApi.createTag(values);
 
         if (result.result) {
-            NotificationManager.success('Le tag à bien été crée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le tag a bien été créé.', 'Succès', REDIRECTION_TIME);
 
             dispatch(getTagsAction());
 

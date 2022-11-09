@@ -26,7 +26,7 @@ export const CreateContactRequests = () => {
 
         if (result.result) {
             NotificationManager.success(
-                'La demande de contact à bien été crée.',
+                'La demande de contact a bien été créée.',
                 'Succès',
                 REDIRECTION_TIME
             );

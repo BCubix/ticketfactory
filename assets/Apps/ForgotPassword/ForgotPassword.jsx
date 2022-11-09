@@ -43,7 +43,7 @@ export const ForgotPassword = () => {
                         const result = await authApi.forgotPassword(values);
                         if (result.result) {
                             NotificationManager.success(
-                                'Votre demande de changement de mot de passe à bien été prise en compte.',
+                                'Votre demande de changement de mot de passe a bien été prise en compte.',
                                 'Succès',
                                 REDIRECTION_TIME
                             );

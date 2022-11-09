@@ -58,7 +58,11 @@ export const EditRoom = () => {
         const result = await roomsApi.editRoom(id, values);
 
         if (result.result) {
-            NotificationManager.success('La salle à bien été modifié.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success(
+                'La salle a bien été modifiée.',
+                'Succès',
+                REDIRECTION_TIME
+            );
 
             dispatch(getRoomsAction());
 
