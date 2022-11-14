@@ -171,9 +171,11 @@ class ContentTypeField implements JsonDoctrineSerializable
             $object->validations[] = ContentTypeValidation::jsonDeserialize($validation);
         }
 
-        $object->parameters = [];
-        foreach ($data['parameters'] as $parameter) {
-            $object->parameters[] = ContentTypeParameter::jsonDeserialize($parameter);
+        if (array_key_exists("parameters", $data)) {
+            $object->parameters = [];
+            foreach ($data['parameters'] as $parameter) {
+                $object->parameters[] = ContentTypeParameter::jsonDeserialize($parameter);
+            }
         }
 
         return $object;

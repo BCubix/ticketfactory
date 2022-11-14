@@ -54,7 +54,7 @@ const roomsApi = {
 
     getAllRooms: async () => {
         try {
-            let params = { page: 0 };
+            let params = { 'filters[page]': 0 };
 
             const result = await axios.get('/rooms', { params: params });
 
