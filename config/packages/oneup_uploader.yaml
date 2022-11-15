@@ -9,3 +9,7 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: '%kernel.project_dir%/public/uploads/parameter'
+        module:
+            frontend: dropzone
+            storage:
+                directory: '%kernel.project_dir%/modules'

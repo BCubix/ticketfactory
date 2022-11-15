@@ -4,8 +4,11 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Media\Media;
 use App\Entity\Media\ImageFormat;
+use App\Entity\Module\Module;
 use App\Entity\Parameter\Parameter;
 
+use App\Exception\ApiException;
+use App\Service\Module\ModuleService;
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\UploadEvents;
@@ -20,6 +23,7 @@ class FileUploader implements EventSubscriberInterface
 
     private const MEDIA_ROUTE = '_uploader_upload_media';
     private const PARAMETER_ROUTE = '_uploader_upload_parameter';
+    private const MODULE_ROUTE = '_uploader_upload_module';
 
     private const MEDIA_FILE_PATH = "/public/uploads/media/";
 
@@ -47,6 +51,8 @@ class FileUploader implements EventSubscriberInterface
             return $this->mediaUpload($event);
         } else if ($route === self::PARAMETER_ROUTE) {
             return $this->parameterUpload($event);
+        } else if ($route === self::MODULE_ROUTE) {
+            return $this->moduleUpload($event);
         }
 
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
@@ -138,5 +144,48 @@ class FileUploader implements EventSubscriberInterface
         foreach($imageFormat as $format) {
 
         }
+    }
+
+    public function moduleUpload(PostPersistEvent $event)
+    {
+        $response = $event->getResponse();
+        $response['success'] = true;
+        $response["filename"] = $event->getFile()->getFilename();
+
+        $moduleDirPath = $this->rootPath.'/modules/';
+        $zipPath = $moduleDirPath.$response["filename"];
+
+        $zip = new \ZipArchive;
+
+        if (!$zip->open($zipPath) || !$zip->extractTo($moduleDirPath)) {
+            unlink($zipPath);
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
+        }
+
+        unlink($zipPath);
+
+        // Zip can't not be empty and have to contain main directory in architecture
+        if ($zip->numFiles === 0 || !is_dir($moduleDirPath.$zip->getNameIndex(0))) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
+        }
+
+        // Get the first dir name
+        $name = trim($zip->getNameIndex(0), '/');
+
+        $zip->close();
+
+        $module = $this->em->getRepository(Module::class)->findOneByName($name) ?? new Module();
+        $module->setActive(true);
+        $module->setName($name);
+
+        $this->em->persist($module);
+        $this->em->flush();
+
+        ModuleService::callConfig($name, 'install');
+
+        shell_exec('php ../bin/console cache:clear');
+        shell_exec('php ../bin/console doctrine:schema:update --force');
+
+        return $response;
     }
 }
