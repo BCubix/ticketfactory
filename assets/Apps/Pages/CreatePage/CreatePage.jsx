@@ -9,9 +9,9 @@ import { getPagesAction } from '@Redux/pages/pagesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
 
 import { PAGES_BASE_PATH, REDIRECTION_TIME } from '@/Constant';
-import PagesForm from '@Apps/Pages/PagesForm/PagesForm';
+import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 
-function CreatePage() {
+export const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -37,4 +37,3 @@ function CreatePage() {
     return <PagesForm handleSubmit={handleSubmit} />;
 }
 
-export default CreatePage;

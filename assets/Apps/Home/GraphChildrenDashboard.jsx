@@ -3,7 +3,7 @@ import moment from 'moment';
 import React from 'react';
 import { Chart } from 'react-google-charts';
 
-const GraphChildrenDashboard = ({ values }) => {
+export const GraphChildrenDashboard = ({ values }) => {
     const theme = useTheme();
 
     return (
@@ -31,5 +31,3 @@ const GraphChildrenDashboard = ({ values }) => {
         />
     );
 };
-
-export default GraphChildrenDashboard;

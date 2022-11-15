@@ -22,7 +22,7 @@ import { useTheme } from '@emotion/react';
 import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 import moment from 'moment';
 
-const ThirdCardDashboard = ({ data }) => {
+export const ThirdCardDashboard = ({ data }) => {
     const dispatch = useDispatch();
     const [editNote, setEditNote] = useState(false);
     const [note, setNote] = useState(data.notes);
@@ -148,5 +148,3 @@ const ThirdCardDashboard = ({ data }) => {
         </>
     );
 };
-
-export default ThirdCardDashboard;

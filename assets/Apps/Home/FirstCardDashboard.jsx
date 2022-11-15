@@ -16,7 +16,7 @@ import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import { useTheme } from '@emotion/react';
 import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 
-const FirstCardDashboard = ({ data }) => {
+export const FirstCardDashboard = ({ data }) => {
     const theme = useTheme();
     const colorProps = theme.palette.secondary.main;
 
@@ -93,5 +93,3 @@ const FirstCardDashboard = ({ data }) => {
         </CmtCard>
     );
 };
-
-export default FirstCardDashboard;

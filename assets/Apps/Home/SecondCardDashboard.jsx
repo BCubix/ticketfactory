@@ -13,12 +13,12 @@ import dashboardApi from '@Services/api/dashboardApi';
 
 import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
 
-import GraphChildrenDashboard from '@Apps/Home/GraphChildrenDashboard';
+import { GraphChildrenDashboard } from '@Apps/Home/GraphChildrenDashboard';
 import { GraphTabTitle } from './sc.Home';
 import { useTheme } from '@emotion/react';
 import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 
-function SecondCardDashboard({ data }) {
+export const SecondCardDashboard = ({ data }) => {
     const theme = useTheme();
     const colorProps = theme.palette.secondary.main;
 
@@ -163,5 +163,3 @@ function SecondCardDashboard({ data }) {
         </>
     );
 }
-
-export default SecondCardDashboard;

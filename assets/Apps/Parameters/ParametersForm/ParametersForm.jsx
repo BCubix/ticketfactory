@@ -6,9 +6,9 @@ import { Button } from '@mui/material';
 
 import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import ParametersBlockForm from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
+import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
 
-function parametersForm({ handleSubmit, parameters }) {
+export const ParametersForm = ({ handleSubmit, parameters }) => {
     const tabs = useMemo(() => {
         const tabs = [];
 
@@ -107,5 +107,3 @@ function parametersForm({ handleSubmit, parameters }) {
         </Formik>
     );
 }
-
-export default parametersForm;

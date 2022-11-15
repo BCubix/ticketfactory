@@ -21,7 +21,7 @@ const parseBreakpointsValue = (breakpointsValueStr) => {
     return breakpoints;
 };
 
-function ParametersBlockForm({
+export const ParametersBlockForm = ({
     indexTab,
     blocks,
     handleChange,
@@ -30,7 +30,7 @@ function ParametersBlockForm({
     errors,
     setFieldTouched,
     setFieldValue,
-}) {
+}) => {
     const parametersTypesModules = useMemo(() => {
         return ParametersTypesModules();
     }, []);
@@ -85,5 +85,3 @@ function ParametersBlockForm({
         </CmtFormBlock>
     ));
 }
-
-export default ParametersBlockForm;

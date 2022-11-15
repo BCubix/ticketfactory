@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import LightEditor from '../../../Components/Editors/LightEditor/LightEditor';
+import { LightEditor } from '../../../Components/Editors/LightEditor/LightEditor';
 import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
 
 export const TagsForm = ({ handleSubmit, initialValues = null }) => {

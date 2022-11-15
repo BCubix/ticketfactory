@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
 import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import LightEditor from '../../../Components/Editors/LightEditor/LightEditor';
+import { LightEditor } from '../../../Components/Editors/LightEditor/LightEditor';
 import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
 import Select from '@mui/material/Select';
 import { EventParentCategoryPartForm } from './EventParentCategoryPartForm';

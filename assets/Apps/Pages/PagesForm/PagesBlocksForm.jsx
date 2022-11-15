@@ -5,13 +5,13 @@ import { Card, CardContent, FormHelperText, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
 import { LightEditorFormControl } from '@Components/Editors/LightEditor/sc.LightEditorFormControl';
-import LightEditor from '@Components/Editors/LightEditor/LightEditor';
+import { LightEditor } from '@Components/Editors/LightEditor/LightEditor';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
 import { useTheme } from '@emotion/react';
 
-function PagesBlocksForm({ values, errors, touched, setFieldValue, setFieldTouched }) {
+export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFieldTouched }) => {
     const theme = useTheme();
 
     return (
@@ -91,4 +91,3 @@ function PagesBlocksForm({ values, errors, touched, setFieldValue, setFieldTouch
     );
 }
 
-export default PagesBlocksForm;

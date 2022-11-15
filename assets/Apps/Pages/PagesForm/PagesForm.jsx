@@ -9,9 +9,9 @@ import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrappe
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
 import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
 
-import PagesBlocksForm from '@Apps/Pages/PagesForm/PagesBlocksForm';
+import { PagesBlocksForm } from '@Apps/Pages/PagesForm/PagesBlocksForm';
 
-function PagesForm({ handleSubmit, initialValues = null }) {
+export const PagesForm = ({ handleSubmit, initialValues = null }) => {
     const pageSchema = Yup.object().shape({
         title: Yup.string()
             .required('Veuillez renseigner le titre de la page.')
@@ -105,4 +105,3 @@ function PagesForm({ handleSubmit, initialValues = null }) {
     );
 }
 
-export default PagesForm;

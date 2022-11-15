@@ -10,9 +10,9 @@ import {loginFailure} from "@Redux/profile/profileSlice";
 import {getParametersAction, parametersSelector} from "@Redux/parameters/parametersSlice";
 
 import {PARAMETERS_BASE_PATH, REDIRECTION_TIME} from "@/Constant";
-import ParametersForm from "@Apps/Parameters/ParametersForm/ParametersForm";
+import { ParametersForm } from "@Apps/Parameters/ParametersForm/ParametersForm";
 
-function ParametersMenu() {
+export const ParametersMenu = () => {
     const { loading, parameters, error } = useSelector(parametersSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -53,5 +53,3 @@ function ParametersMenu() {
         />
     );
 }
-
-export default ParametersMenu;

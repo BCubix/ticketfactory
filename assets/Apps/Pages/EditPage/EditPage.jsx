@@ -10,9 +10,9 @@ import { getPagesAction } from '@Redux/pages/pagesSlice';
 
 import { PAGES_BASE_PATH, REDIRECTION_TIME } from '@/Constant';
 
-import PagesForm from '@Apps/Pages/PagesForm/PagesForm';
+import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 
-function EditPage() {
+export const EditPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -77,4 +77,3 @@ function EditPage() {
     return <PagesForm handleSubmit={handleSubmit} initialValues={page} />;
 }
 
-export default EditPage;

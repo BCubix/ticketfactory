@@ -31,7 +31,7 @@ const TABLE_COLUMN = [
     { name: 'slug', label: 'Url', width: '20%' },
 ];
 
-function PagesList() {
+export const PagesList = () => {
     const { loading, pages, filters, total, error } = useSelector(pagesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -147,5 +147,3 @@ function PagesList() {
         </>
     );
 }
-
-export default PagesList;

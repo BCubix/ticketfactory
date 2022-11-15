@@ -66,14 +66,14 @@ import { RedirectionsList } from './Apps/Redirections/RedirectionsList/Redirecti
 import { CreateRedirection } from './Apps/Redirections/CreateRedirection/CreateRedirection';
 import { EditRedirection } from './Apps/Redirections/EditRedirection/EditRedirection';
 import { MenusList } from './Apps/Menus/MenusList/MenusList';
-import PagesList from './Apps/Pages/PagesList/PagesList';
-import CreatePage from './Apps/Pages/CreatePage/CreatePage';
-import EditPage from './Apps/Pages/EditPage/EditPage';
+import { PagesList } from './Apps/Pages/PagesList/PagesList';
+import { CreatePage } from './Apps/Pages/CreatePage/CreatePage';
+import { EditPage } from './Apps/Pages/EditPage/EditPage';
 import { EditContent } from './Apps/Contents/EditContent/EditContent';
 import { ForgotPassword } from './Apps/ForgotPassword/ForgotPassword';
 import { ChangePassword } from './Apps/ChangePassword/ChangePassword';
 import { CreateMenu } from './Apps/Menus/CreateMenu/CreateMenu';
-import ParametersMenu from '@Apps/Parameters/ParametersMenu/ParametersMenu';
+import { ParametersMenu } from '@Apps/Parameters/ParametersMenu/ParametersMenu';
 
 const NON_AUTHENTICATED_ROUTES = [
     { path: LOGIN_PATH, component: <Login /> },

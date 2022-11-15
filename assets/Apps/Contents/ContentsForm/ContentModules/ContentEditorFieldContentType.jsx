@@ -1,6 +1,6 @@
 import { InputLabel, Typography } from '@mui/material';
 import React from 'react';
-import LightEditor from '../../../../Components/Editors/LightEditor/LightEditor';
+import { LightEditor } from '../../../../Components/Editors/LightEditor/LightEditor';
 import { LightEditorFormControl } from '../../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
 
 const VALIDATION_TYPE = 'date';

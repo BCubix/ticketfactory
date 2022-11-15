@@ -14,7 +14,7 @@ import { NotificationManager } from 'react-notifications';
 import { useTheme } from '@emotion/react';
 import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
 
-const userName = (item) => {
+export const LogUserName = (item) => {
     return (
         <Box component="a" href={`${USER_BASE_PATH}/${item.user.id}${EDIT_PATH}`}>
             <Typography component="p" variant="body1">
@@ -24,7 +24,7 @@ const userName = (item) => {
     );
 };
 
-const tags = (item) => {
+export const LogTags = (item) => {
     const statusTheme = useTheme().palette.status;
     const key = item.severity;
 
@@ -74,12 +74,12 @@ const tags = (item) => {
 };
 
 const TABLE_COLUMN = [
-    { label: 'Sévérité', renderFunction: tags },
+    { label: 'Sévérité', renderFunction: LogTags },
     { name: 'errorCode', label: "Code d'erreur" },
     { name: 'message', label: 'Message', width: '40%' },
     { name: 'objectName', label: 'Objet' },
     { name: 'objectId', label: "Id de l'objet" },
-    { label: 'Utilisateur', renderFunction: userName },
+    { label: 'Utilisateur', renderFunction: LogUserName },
 ];
 
 export const LogsList = () => {

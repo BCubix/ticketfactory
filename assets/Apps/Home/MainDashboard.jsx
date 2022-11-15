@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import { Grid } from '@mui/material';
 import { dashboardSelector, getDashboardAction } from '@Redux/dashboard/dashboardSlice';
-import FirstCardDashboard from '@Apps/Home/FirstCardDashboard';
-import SecondCardDashboard from '@Apps/Home/SecondCardDashboard';
-import ThirdCardDashboard from '@Apps/Home/ThirdCardDashboard';
+import { FirstCardDashboard } from '@Apps/Home/FirstCardDashboard';
+import { SecondCardDashboard } from '@Apps/Home/SecondCardDashboard';
+import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
 
-const MainDashboard = () => {
+export const MainDashboard = () => {
     const { loading, dashboard, error } = useSelector(dashboardSelector);
     const dispatch = useDispatch();
 
@@ -35,5 +35,3 @@ const MainDashboard = () => {
         </CmtPageWrapper>
     );
 };
-
-export default MainDashboard;
