@@ -1,5 +1,12 @@
 import React from 'react';
-import PortalReactDom from 'react-dom';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
+
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import {
     Accordion,
     AccordionDetails,
@@ -8,17 +15,8 @@ import {
     IconButton,
     Typography,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { MoveElementButton } from './sc.MoveElementButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
-import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { DroppableBox } from './sc.DroppableBox';
-import { DraggableBox } from './sc.DraggableBox';
+
+import { Component } from "@/AdminService/Component";
 
 export const DisplayMenuElement = ({
     element,
@@ -93,7 +91,7 @@ export const DisplayMenuElement = ({
                 </AccordionSummary>
 
                 <AccordionDetails>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={element.name}
                         name={`${name}.${index}.name`}
                         onChange={handleChange}
@@ -105,45 +103,45 @@ export const DisplayMenuElement = ({
                         {displayMove && (
                             <Box component="span">
                                 {index < list.length - 1 && (
-                                    <MoveElementButton
+                                    <Component.MoveElementButton
                                         onClick={() => handleMoveMenuElement(1)}
                                         size="small"
                                         title="Descendre d'un cran"
                                     >
                                         <ArrowDownwardIcon fontSize="inherit" />
-                                    </MoveElementButton>
+                                    </Component.MoveElementButton>
                                 )}
 
                                 {index > 0 && (
                                     <>
-                                        <MoveElementButton
+                                        <Component.MoveElementButton
                                             onClick={() => handleMoveMenuElement(-1)}
                                             size="small"
                                             title="Monter d'un cran"
                                         >
                                             <ArrowUpwardIcon fontSize="inherit" />
-                                        </MoveElementButton>
+                                        </Component.MoveElementButton>
 
                                         {level < maxLevel && (
-                                            <MoveElementButton
+                                            <Component.MoveElementButton
                                                 onClick={() => handleMoveIntoSubMenuElement()}
                                                 size="small"
                                                 title={`Sous ${list[index - 1].name}`}
                                             >
                                                 <SubdirectoryArrowRightIcon fontSize="inherit" />
-                                            </MoveElementButton>
+                                            </Component.MoveElementButton>
                                         )}
                                     </>
                                 )}
 
                                 {isSubMenu && (
-                                    <MoveElementButton
+                                    <Component.MoveElementButton
                                         onClick={() => handleMoveOutSubMenuElement(index)}
                                         size="small"
                                         title={`Sortir de ${parent.name}`}
                                     >
                                         <SubdirectoryArrowLeftIcon fontSize="inherit" />
-                                    </MoveElementButton>
+                                    </Component.MoveElementButton>
                                 )}
                             </Box>
                         )}
@@ -167,7 +165,7 @@ export const DisplayMenuElement = ({
                 type={`menus`}
             >
                 {(provided, snapshot) => (
-                    <DroppableBox
+                    <Component.DroppableBox
                         id={`${name}-${index}-children`}
                         sx={{
                             marginLeft: 10,
@@ -189,8 +187,8 @@ export const DisplayMenuElement = ({
                                     item={item}
                                 >
                                     {(provided2, snapshot2) => (
-                                        <RenderElement provided={provided2} snapshot={snapshot2}>
-                                            <DisplayMenuElement
+                                        <Component.RenderElement provided={provided2} snapshot={snapshot2}>
+                                            <Component.DisplayMenuElement
                                                 element={item}
                                                 key={ind}
                                                 index={ind}
@@ -206,12 +204,12 @@ export const DisplayMenuElement = ({
                                                 level={level + 1}
                                                 isDragging={snapshot2.isDragging}
                                             />
-                                        </RenderElement>
+                                        </Component.RenderElement>
                                     )}
                                 </Draggable>
                             ))}
                         {provided.placeholder}
-                    </DroppableBox>
+                    </Component.DroppableBox>
                 )}
             </Droppable>
         </Box>
@@ -220,14 +218,14 @@ export const DisplayMenuElement = ({
 
 export const RenderElement = ({ children, provided, snapshot }) => {
     const child = (
-        <DraggableBox
+        <Component.DraggableBox
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             isDragging={snapshot.isDragging}
         >
             {children}
-        </DraggableBox>
+        </Component.DraggableBox>
     );
 
     return child;

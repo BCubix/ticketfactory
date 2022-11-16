@@ -1,6 +1,6 @@
-import { CANCELED_REQUEST_ERROR_CODE, MEDIA_FILE_PATH } from '../../Constant';
-import { createFilterParams } from '../utils/createFilterParams';
-import axios from './config';
+import { Constant } from "@/AdminService/Constant";
+import axios from '@Services/api/config';
+import { createFilterParams } from '@Services/utils/createFilterParams';
 
 var controller = null;
 
@@ -48,7 +48,7 @@ const mediasApi = {
 
             return { result: true, medias: result.data?.results, total: result?.data?.total };
         } catch (error) {
-            if (error?.code === CANCELED_REQUEST_ERROR_CODE) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, medias: [], total: 0 };
             }
 
@@ -98,7 +98,7 @@ const mediasApi = {
 
             formData.append('file', mediaFile);
             formData.append('type', mimeString);
-            formData.append('filePath', MEDIA_FILE_PATH);
+            formData.append('filePath', Constant.MEDIA_FILE_PATH);
             formData.append('id', id);
 
             const result = await axios.post(`/_uploader/media/upload`, formData);

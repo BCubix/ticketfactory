@@ -1,12 +1,15 @@
 import React, { useRef, useEffect } from 'react';
+import * as Yup from 'yup';
+
 import mapboxgl from '!mapbox-gl';
 import MapboxGeocoder from '!mapbox-gl-geocoder';
-import { Button, Grid, InputLabel, Typography } from '@mui/material';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+
+import { Button, Grid, InputLabel, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import * as Yup from 'yup';
+
+import { Component } from "@/AdminService/Component";
 
 const FormComponent = ({
     values,
@@ -61,7 +64,7 @@ const FormComponent = ({
 
             <Grid container spacing={4} sx={{ marginTop: 5 }}>
                 <Grid item xs={12} sm={6} md={4} lg={2}>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values[field.name].zoom}
                         label={'Zoom de la carte'}
                         onChange={handleChange}
@@ -83,7 +86,7 @@ const FormComponent = ({
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values[field.name].lng}
                         label={'Longitude'}
                         onChange={handleChange}
@@ -105,7 +108,7 @@ const FormComponent = ({
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values[field.name].lat}
                         label={'Latitude'}
                         onChange={handleChange}

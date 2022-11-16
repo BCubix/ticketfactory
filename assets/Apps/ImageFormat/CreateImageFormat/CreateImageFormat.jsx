@@ -2,19 +2,20 @@ import React from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { IMAGE_FORMATS_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { getImageFormatsAction } from '../../../redux/imageFormats/imageFormatSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import imageFormatsApi from '../../../services/api/imageFormatsApi';
-import { ImageFormatForm } from '../ImageFormatForm/ImageFormatForm';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getImageFormatsAction } from '@Redux/imageFormats/imageFormatSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const CreateImageFormat = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -22,16 +23,16 @@ export const CreateImageFormat = () => {
             return;
         }
 
-        const result = await imageFormatsApi.createImageFormat(values);
+        const result = await Api.imageFormatsApi.createImageFormat(values);
 
         if (result.result) {
-            NotificationManager.success('Le format a bien été créé.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le format a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getImageFormatsAction());
 
-            navigate(IMAGE_FORMATS_BASE_PATH);
+            navigate(Constant.IMAGE_FORMATS_BASE_PATH);
         }
     };
 
-    return <ImageFormatForm handleSubmit={handleSubmit} />;
+    return <Component.ImageFormatForm handleSubmit={handleSubmit} />;
 };

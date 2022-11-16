@@ -1,5 +1,5 @@
 import React from 'react';
-import { CONTENT_MODULES_EXTENSION } from '../../../Constant';
+import { Constant } from "@/AdminService/Constant";
 
 export const DisplayContentField = ({
     values,
@@ -16,7 +16,7 @@ export const DisplayContentField = ({
     const moduleName =
         String(field.type).charAt(0).toUpperCase() +
         field.type?.slice(1) +
-        CONTENT_MODULES_EXTENSION;
+        Constant.CONTENT_MODULES_EXTENSION;
 
     const FormComponent =
         (contentModules &&

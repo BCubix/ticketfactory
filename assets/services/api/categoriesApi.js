@@ -1,4 +1,4 @@
-import axios from './config';
+import axios from '@Services/api/config';
 
 const categoriesApi = {
     getCategories: async () => {

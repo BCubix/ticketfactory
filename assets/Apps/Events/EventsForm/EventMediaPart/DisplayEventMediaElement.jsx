@@ -1,10 +1,10 @@
-import { Box } from '@mui/system';
 import React from 'react';
-import { CmtMediaElement } from '../../../../Components/CmtMediaElement/sc.MediaElement';
+
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { CmtDisplayMediaType } from '../../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
 import { Radio } from '@mui/material';
-import { CmtFormBlock } from '../../../../Components/CmtFormBlock/CmtFormBlock';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
 
 export const DisplayEventMediaElement = ({
     title,
@@ -17,18 +17,18 @@ export const DisplayEventMediaElement = ({
     setFieldValue,
 }) => {
     return (
-        <CmtFormBlock title={title}>
+        <Component.CmtFormBlock title={title}>
             <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
-                <CmtMediaElement onClick={() => openAddModal(mediaType)}>
+                <Component.CmtMediaElement onClick={() => openAddModal(mediaType)}>
                     <Box className="placeholder">
                         <AddCircleOutlineOutlinedIcon />
                     </Box>
-                </CmtMediaElement>
+                </Component.CmtMediaElement>
                 {mediaList.map((item, index) => {
                     const valueIndex = values.eventMedias?.findIndex((el) => el.id === item.id);
 
                     return (
-                        <CmtMediaElement
+                        <Component.CmtMediaElement
                             key={index}
                             sx={{ position: 'relative' }}
                             onClick={() => {
@@ -38,7 +38,7 @@ export const DisplayEventMediaElement = ({
                                 });
                             }}
                         >
-                            <CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
+                            <Component.CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
                             {mediaType === 'Image' && (
                                 <Radio
                                     checked={values.eventMedias.at(valueIndex)?.mainImg}
@@ -56,10 +56,10 @@ export const DisplayEventMediaElement = ({
                                     }}
                                 />
                             )}
-                        </CmtMediaElement>
+                        </Component.CmtMediaElement>
                     );
                 })}
             </Box>
-        </CmtFormBlock>
+        </Component.CmtFormBlock>
     );
 };

@@ -1,15 +1,14 @@
-import React from 'react';
-import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
-import { Box } from '@mui/system';
+import React, { useMemo } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { ContentTypeFieldArrayForm } from './FieldArray/ContentTypeFieldArrayForm';
-import { useMemo } from 'react';
-import ContentTypesModules from './ContentTypeModules';
-import { CONTENT_TYPE_MODULES_EXTENSION } from '../../../Constant';
+
+import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import ContentTypesModules from "@Apps/ContentTypes/ContentTypesForm/ContentTypeModules";
 
 export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
     const getContentTypesModules = useMemo(() => {
@@ -32,7 +31,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                         const moduleName =
                             String(type).charAt(0).toUpperCase() +
                             type?.slice(1) +
-                            CONTENT_TYPE_MODULES_EXTENSION;
+                            Constant.CONTENT_TYPE_MODULES_EXTENSION;
 
                         if (getContentTypesModules[moduleName]?.getValidation) {
                             return Yup.object().shape({
@@ -70,13 +69,13 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'un type de contenus`}
                 >
-                    <CmtFormBlock title="Informations générales">
-                        <CmtTextField
+                    <Component.CmtFormBlock title="Informations générales">
+                        <Component.CmtTextField
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -84,10 +83,10 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                             name="name"
                             error={touched.name && errors.name}
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
-                    <CmtFormBlock title="Champs">
-                        <ContentTypeFieldArrayForm
+                    <Component.CmtFormBlock title="Champs">
+                        <Component.ContentTypeFieldArrayForm
                             contentTypesModules={getContentTypesModules}
                             values={values}
                             errors={errors}
@@ -101,7 +100,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                         {errors?.fields && typeof errors?.fields === 'string' && (
                             <FormHelperText error>{errors.fields}</FormHelperText>
                         )}
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
@@ -126,7 +125,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

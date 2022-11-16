@@ -1,19 +1,6 @@
-import {
-    Checkbox,
-    FormControl,
-    FormHelperText,
-    Grid,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-} from '@mui/material';
 import React from 'react';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { LightEditor } from '../../../Components/Editors/LightEditor/LightEditor';
-import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
-import Select from '@mui/material/Select';
-import { EventParentCategoryPartForm } from './EventParentCategoryPartForm';
+import { Checkbox, FormControl, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 export const EventMainPartForm = ({
     values,
@@ -30,10 +17,10 @@ export const EventMainPartForm = ({
 }) => {
     return (
         <>
-            <CmtFormBlock title={'Informations générales'}>
+            <Component.CmtFormBlock title={'Informations générales'}>
                 <Grid container spacing={4}>
                     <Grid item xs={12}>
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -44,7 +31,7 @@ export const EventMainPartForm = ({
                     </Grid>
 
                     <Grid item xs={12}>
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.chapo}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -59,8 +46,8 @@ export const EventMainPartForm = ({
 
                     <Grid item xs={12}>
                         <InputLabel id="description">Description</InputLabel>
-                        <LightEditorFormControl>
-                            <LightEditor
+                        <Component.LightEditorFormControl>
+                            <Component.LightEditor
                                 labelId="description"
                                 value={values.description}
                                 onBlur={() => setFieldTouched('description', true, false)}
@@ -71,7 +58,7 @@ export const EventMainPartForm = ({
                             <FormHelperText error>
                                 {touched.description && errors.description}
                             </FormHelperText>
-                        </LightEditorFormControl>
+                        </Component.LightEditorFormControl>
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
@@ -124,12 +111,12 @@ export const EventMainPartForm = ({
                         </FormControl>
                     </Grid>
                 </Grid>
-            </CmtFormBlock>
+            </Component.CmtFormBlock>
 
-            <CmtFormBlock title="Catégories">
+            <Component.CmtFormBlock title="Catégories">
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={6}>
-                        <EventParentCategoryPartForm
+                        <Component.EventParentCategoryPartForm
                             values={values}
                             categoriesList={categoriesList}
                             setFieldValue={setFieldValue}
@@ -178,7 +165,7 @@ export const EventMainPartForm = ({
                         </FormControl>
                     </Grid>
                 </Grid>
-            </CmtFormBlock>
+            </Component.CmtFormBlock>
         </>
     );
 };

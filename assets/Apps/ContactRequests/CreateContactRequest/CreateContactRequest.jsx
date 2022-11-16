@@ -1,20 +1,21 @@
 import React from 'react';
 import { NotificationManager } from 'react-notifications';
-import { CONTACT_REQUEST_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import contactRequestsApi from '../../../services/api/contactRequestsApi';
-import { getContactRequestsAction } from '../../../redux/contactRequests/contactRequestsSlice';
-import { ContactRequestsForm } from '../ContactRequestsForm/ContactRequestsForm';
+import { useNavigate } from 'react-router-dom';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const CreateContactRequests = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -22,20 +23,20 @@ export const CreateContactRequests = () => {
             return;
         }
 
-        const result = await contactRequestsApi.createContactRequest(values);
+        const result = await Api.contactRequestsApi.createContactRequest(values);
 
         if (result.result) {
             NotificationManager.success(
                 'La demande de contact a bien été créée.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getContactRequestsAction());
 
-            navigate(CONTACT_REQUEST_BASE_PATH);
+            navigate(Constant.CONTACT_REQUEST_BASE_PATH);
         }
     };
 
-    return <ContactRequestsForm handleSubmit={handleSubmit} />;
+    return <Component.ContactRequestsForm handleSubmit={handleSubmit} />;
 };

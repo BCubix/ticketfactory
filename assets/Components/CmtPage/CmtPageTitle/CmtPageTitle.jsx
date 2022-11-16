@@ -1,10 +1,10 @@
 import React from 'react';
-import { TitleTypography } from './sc.TitleTypography';
+import { Component } from "@/AdminService/Component";
 
 export const CmtPageTitle = ({ children, ...params }) => {
     return (
-        <TitleTypography component="h1" variant="h5" {...params}>
+        <Component.TitleTypography component="h1" variant="h5" {...params}>
             {children}
-        </TitleTypography>
+        </Component.TitleTypography>
     );
 };

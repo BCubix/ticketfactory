@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import usersApi from '../../../services/api/usersApi';
-import { EditUserForm } from '../UserForm/EditUserForm';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 import { getUsersAction } from '@Redux/users/usersSlice';
-import { REDIRECTION_TIME, USER_BASE_PATH } from '../../../Constant';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
 
 export const EditUser = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const EditUser = () => {
     const [user, setUser] = useState(null);
 
     const getUser = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,12 +25,12 @@ export const EditUser = () => {
             return;
         }
 
-        const result = await usersApi.getOneUser(id);
+        const result = await Api.usersApi.getOneUser(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(USER_BASE_PATH);
+            navigate(Constant.USER_BASE_PATH);
 
             return;
         }
@@ -39,7 +40,7 @@ export const EditUser = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(USER_BASE_PATH);
+            navigate(Constant.USER_BASE_PATH);
             return;
         }
 
@@ -47,7 +48,7 @@ export const EditUser = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -55,18 +56,18 @@ export const EditUser = () => {
             return;
         }
 
-        const result = await usersApi.editUser(id, values);
+        const result = await Api.usersApi.editUser(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 "L'utilisateur a bien été modifié.",
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getUsersAction());
 
-            navigate(USER_BASE_PATH);
+            navigate(Constant.USER_BASE_PATH);
         }
     };
 
@@ -74,5 +75,5 @@ export const EditUser = () => {
         return <></>;
     }
 
-    return <EditUserForm handleSubmit={handleSubmit} initialValues={user} />;
+    return <Component.EditUserForm handleSubmit={handleSubmit} initialValues={user} />;
 };

@@ -1,25 +1,16 @@
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogTitle,
-    Grid,
-    IconButton,
-    InputLabel,
-    Slide,
-    Typography,
-} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { REDIRECTION_TIME } from '../../../../Constant';
-import { loginFailure } from '../../../../redux/profile/profileSlice';
-import authApi from '../../../../services/api/authApi';
-import mediasApi from '../../../../services/api/mediasApi';
-import CloseIcon from '@mui/icons-material/Close';
 import moment from 'moment/moment';
-import { CmtMediaElement } from '../../../../Components/CmtMediaElement/sc.MediaElement';
-import { CmtDisplayMediaType } from '../../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
+
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Dialog, DialogTitle, Grid, IconButton, InputLabel, Slide, Typography } from '@mui/material';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 const VALIDATION_TYPE = 'mixed';
 const VALIDATION_LIST = [
@@ -62,7 +53,7 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
     const [selectedMedia, setSelectedMedia] = useState(null);
 
     const getMedias = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -70,13 +61,13 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
             return;
         }
 
-        const result = await mediasApi.getMedias();
+        const result = await Api.mediasApi.getMedias();
 
         if (!result?.result) {
             NotificationManager.error(
                 'Une erreur est survenue, essayez de rafraichir la page.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
         }
 
@@ -124,7 +115,7 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                         <Grid item xs={12} md={9}>
                             <Box display="flex" px={5} py={10} flexWrap="wrap">
                                 {list?.map((item, index) => (
-                                    <CmtMediaElement
+                                    <Component.CmtMediaElement
                                         key={index}
                                         onClick={() => setSelectedMedia(item)}
                                         sx={{
@@ -133,8 +124,8 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                                                 : '0px',
                                         }}
                                     >
-                                        <CmtDisplayMediaType media={item} width={'100%'} />
-                                    </CmtMediaElement>
+                                        <Component.CmtDisplayMediaType media={item} width={'100%'} />
+                                    </Component.CmtMediaElement>
                                 ))}
                             </Box>
                         </Grid>
@@ -251,7 +242,7 @@ const DisplayMediaInformation = ({
 
             <Box my={10} display="flex" justifyContent={'center'}>
                 <Box maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center">
-                    <CmtDisplayMediaType
+                    <Component.CmtDisplayMediaType
                         media={selectedMedia}
                         maxWidth={'100%'}
                         maxHeight={'300px'}

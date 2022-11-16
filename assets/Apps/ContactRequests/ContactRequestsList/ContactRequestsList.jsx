@@ -1,34 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+
 import { Box, CardContent, Typography } from '@mui/material';
-import { CONTACT_REQUEST_BASE_PATH, CREATE_PATH, EDIT_PATH } from '../../../Constant';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
 import {
     changeContactRequestsFilters,
     contactRequestsSelector,
-    getContactRequestsAction,
-} from '../../../redux/contactRequests/contactRequestsSlice';
-import contactRequestsApi from '../../../services/api/contactRequestsApi';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { ContactRequestsFilters } from './ContactRequestsFilters/ContactRequestsFilters';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
-
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Gérée ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'firstName', label: 'Prénom', width: '10%', sortable: true },
-    { name: 'lastName', label: 'Nom', width: '10%', sortable: true },
-    { name: 'phone', label: 'Téléphone', width: '20%', sortable: true },
-    { name: 'email', label: 'Email', width: '20%', sortable: true },
-    { name: 'subject', label: 'Objet', width: '10%', sortable: true },
-];
+    getContactRequestsAction
+} from '@Redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const ContactRequestsList = () => {
     const { loading, contactRequests, filters, total, error } =
@@ -44,7 +30,7 @@ export const ContactRequestsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -52,7 +38,7 @@ export const ContactRequestsList = () => {
             return;
         }
 
-        await contactRequestsApi.deleteContactRequest(id);
+        await Api.contactRequestsApi.deleteContactRequest(id);
 
         dispatch(getContactRequestsAction());
 
@@ -61,8 +47,8 @@ export const ContactRequestsList = () => {
 
     return (
         <>
-            <CmtPageWrapper title="Demandes de contact">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Demandes de contact">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -72,34 +58,34 @@ export const ContactRequestsList = () => {
                                         (filters.page - 1) * filters.limit + contactRequests.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(CONTACT_REQUEST_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <ContactRequestsFilters
+                        <Component.ContactRequestsFilters
                             filters={filters}
                             changeFilters={(values) =>
                                 dispatch(changeContactRequestsFilters(values))
                             }
                         />
-                        <ListTable
+                        <Component.ListTable
                             filters={filters}
-                            table={TABLE_COLUMN}
+                            table={TableColumn.ContactRequestsList}
                             list={contactRequests}
                             changeFilters={(newFilters) =>
                                 dispatch(changeContactRequestsFilters(newFilters))
                             }
                             onEdit={(id) => {
-                                navigate(`${CONTACT_REQUEST_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.CONTACT_REQUEST_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -114,9 +100,9 @@ export const ContactRequestsList = () => {
                             length={contactRequests?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -128,7 +114,7 @@ export const ContactRequestsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

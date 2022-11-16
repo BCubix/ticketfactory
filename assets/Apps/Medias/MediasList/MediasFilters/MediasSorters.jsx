@@ -1,10 +1,11 @@
-import { Box, Chip, IconButton, ListItemText, MenuItem, Select, Typography } from '@mui/material';
-import SortIcon from '@mui/icons-material/Sort';
 import React, { useState } from 'react';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { RotatingIcons } from './sc.Filters';
-import { CmtPopover } from '../../../../Components/CmtPopover/CmtPopover';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import SortIcon from '@mui/icons-material/Sort';
+import { Box, Chip, IconButton, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
 
 export const MediasSorters = ({ value, setValue, list }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -33,7 +34,7 @@ export const MediasSorters = ({ value, setValue, list }) => {
                 />
             </Box>
 
-            <CmtPopover
+            <Component.CmtPopover
                 anchorEl={anchorEl}
                 closePopover={() => setAnchorEl(null)}
                 style={{ overflow: 'visible' }}
@@ -74,11 +75,11 @@ export const MediasSorters = ({ value, setValue, list }) => {
                             color="primary"
                             onClick={() => setValue(`${field} ${order === 'ASC' ? 'DESC' : 'ASC'}`)}
                         >
-                            <RotatingIcons order={order} />
+                            <Component.RotatingIcons order={order} />
                         </IconButton>
                     </Box>
                 </Box>
-            </CmtPopover>
+            </Component.CmtPopover>
         </Box>
     );
 };

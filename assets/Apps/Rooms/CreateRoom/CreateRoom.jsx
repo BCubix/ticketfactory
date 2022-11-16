@@ -1,20 +1,21 @@
 import React from 'react';
 import { NotificationManager } from 'react-notifications';
-import { REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import roomsApi from '../../../services/api/roomsApi';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
-import { RoomsForm } from '../RoomsForm/RoomsForm';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+import { useNavigate } from 'react-router-dom';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getRoomsAction } from '@Redux/rooms/roomsSlice';
 
 export const CreateRoom = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -22,16 +23,16 @@ export const CreateRoom = () => {
             return;
         }
 
-        const result = await roomsApi.createRoom(values);
+        const result = await Api.roomsApi.createRoom(values);
 
         if (result.result) {
-            NotificationManager.success('La salle a bien été créée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La salle a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getRoomsAction());
 
-            navigate(ROOMS_BASE_PATH);
+            navigate(Constant.ROOMS_BASE_PATH);
         }
     };
 
-    return <RoomsForm handleSubmit={handleSubmit} />;
+    return <Component.RoomsForm handleSubmit={handleSubmit} />;
 };

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import redirectionsApi from '../../services/api/redirectionsApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -58,7 +58,7 @@ export function getRedirectionsAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().redirections?.filters;
 
-                const redirections = await redirectionsApi.getRedirections(state);
+                const redirections = await Api.redirectionsApi.getRedirections(state);
                 if (!redirections.result) {
                     dispatch(getRedirectionsFailure({ error: redirections.error }));
 

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import usersApi from '../../services/api/usersApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -59,7 +59,7 @@ export function getUsersAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().pages?.filters;
 
-                const users = await usersApi.getUsers(state);
+                const users = await Api.usersApi.getUsers(state);
                 if (!users.result) {
                     dispatch(getUsersFailure({ error: users.error }));
 

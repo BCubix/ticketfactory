@@ -1,8 +1,10 @@
-import { Box, Typography } from '@mui/material';
-import moment from 'moment';
 import React from 'react';
-import { CmtTimePicker } from '../../../../Components/CmtTimePicker/CmtTimePicker';
+import moment from 'moment';
 import * as Yup from 'yup';
+
+import { Box, Typography } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
@@ -26,7 +28,7 @@ const FormComponent = ({
 }) => {
     return (
         <Box sx={{ marginTop: 2 }}>
-            <CmtTimePicker
+            <Component.CmtTimePicker
                 fullWidth
                 value={values[field.name]}
                 label={label}

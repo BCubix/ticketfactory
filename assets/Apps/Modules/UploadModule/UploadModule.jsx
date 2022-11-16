@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import { useDispatch } from "react-redux";
 
+import { Typography } from "@mui/material";
+
 import { Component } from "@/AdminService/Component";
 
-import { loginFailure } from "@Redux/profile/profileSlice";
-
 import { intitializeDropzone } from "@Apps/Modules/UploadModule/utils/dropzone";
-import { Typography } from "@mui/material";
+
+import { loginFailure } from "@Redux/profile/profileSlice";
 
 export const UploadModule = ({ handleSubmit }) => {
     const dispatch = useDispatch();

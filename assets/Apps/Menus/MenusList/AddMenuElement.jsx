@@ -1,8 +1,7 @@
+import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
-import { useMemo } from 'react';
-import getMenuEntryModules from './getMenuEntryModules';
+import getMenuEntryModules from "@Apps/Menus/MenusList/getMenuEntryModules";
 
 export const AddMenuElement = ({ addElementToMenu }) => {
     const menuEntryModule = useMemo(() => {

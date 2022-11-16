@@ -1,10 +1,11 @@
-import { Typography } from '@mui/material';
 import React from 'react';
-import ContentModules from '.';
-import { CmtFormBlock } from '../../../../Components/CmtFormBlock/CmtFormBlock';
-import { CONTENT_MODULES_EXTENSION } from '../../../../Constant';
-import { DisplayContentForm } from '../DisplayContentForm';
 import * as Yup from 'yup';
+import { Typography } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import ContentModules from "@Apps/Contents/ContentsForm/ContentModules/index";
 
 const FormComponent = ({
     values,
@@ -21,8 +22,8 @@ const FormComponent = ({
 }) => {
     return (
         <>
-            <CmtFormBlock title={label}>
-                <DisplayContentForm
+            <Component.CmtFormBlock title={label}>
+                <Component.DisplayContentForm
                     values={values[field.name]}
                     errors={(errors && errors[field.name]?.parameters) || {}}
                     touched={(touched && touched[field.name]?.parameters) || {}}
@@ -40,7 +41,7 @@ const FormComponent = ({
                         {field.helper}
                     </Typography>
                 )}
-            </CmtFormBlock>
+            </Component.CmtFormBlock>
         </>
     );
 };
@@ -52,7 +53,7 @@ const getInitialValue = (field) => {
 
     field?.parameters?.fields?.forEach((el) => {
         const moduleName =
-            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + CONTENT_MODULES_EXTENSION;
+            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
 
         fields[el.name] = contentModules[moduleName]?.getInitialValue(el) || '';
     });
@@ -87,7 +88,7 @@ const getValidation = (contentType) => {
 
     contentType?.parameters?.fields?.forEach((el) => {
         const moduleName =
-            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + CONTENT_MODULES_EXTENSION;
+            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
 
         validation[el.name] = contentModules[moduleName]?.getValidation
             ? contentModules[moduleName].getValidation(el)

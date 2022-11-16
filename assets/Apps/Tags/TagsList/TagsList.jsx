@@ -1,26 +1,16 @@
-import { tagsSelector } from '@Redux/tags/tagsSlice';
-import { CardContent, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import { useState } from 'react';
-import { CREATE_PATH, EDIT_PATH, TAGS_BASE_PATH } from '../../../Constant';
-import tagsApi from '../../../services/api/tagsApi';
-import { changeTagsFilters, getTagsAction } from '../../../redux/tags/tagsSlice';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { TagsFilters } from './TagsFilters/TagsFilters';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
 
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
-];
+import { CardContent, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
+import { changeTagsFilters, getTagsAction, tagsSelector } from '@Redux/tags/tagsSlice';
 
 export const TagsList = () => {
     const { loading, tags, filters, total, error } = useSelector(tagsSelector);
@@ -35,7 +25,7 @@ export const TagsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        await tagsApi.deleteTag(id);
+        await Api.tagsApi.deleteTag(id);
 
         dispatch(getTagsAction());
 
@@ -44,8 +34,8 @@ export const TagsList = () => {
 
     return (
         <>
-            <CmtPageWrapper title="Tags">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Tags">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -55,31 +45,31 @@ export const TagsList = () => {
                                         (filters.page - 1) * filters.limit + tags.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(TAGS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <TagsFilters
+                        <Component.TagsFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeTagsFilters(values))}
                         />
 
-                        <ListTable
-                            table={TABLE_COLUMN}
+                        <Component.ListTable
+                            table={TableColumn.TagsList}
                             list={tags}
                             onEdit={(id) => {
-                                navigate(`${TAGS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.TAGS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeTagsFilters(newFilters))}
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -92,9 +82,9 @@ export const TagsList = () => {
                             length={tags?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -106,7 +96,7 @@ export const TagsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

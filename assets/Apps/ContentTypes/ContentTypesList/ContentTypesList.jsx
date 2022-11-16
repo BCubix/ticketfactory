@@ -1,30 +1,21 @@
-import { CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
-import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
-import { ListTable } from '../../../Components/ListTable/ListTable';
-import { CONTENT_TYPES_BASE_PATH, CREATE_PATH, EDIT_PATH } from '../../../Constant';
+
+import { CardContent, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
 import {
     changeContentTypesFilters,
     contentTypesSelector,
-    getContentTypesAction,
-} from '../../../redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import contentTypesApi from '../../../services/api/contentTypesApi';
-import { ContentTypesFilters } from './ContentTypesFilters/ContentTypesFilters';
-
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
-];
+    getContentTypesAction
+} from '@Redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const ContentTypesList = () => {
     const dispatch = useDispatch();
@@ -39,7 +30,7 @@ export const ContentTypesList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -47,7 +38,7 @@ export const ContentTypesList = () => {
             return;
         }
 
-        await contentTypesApi.deleteContentType(id);
+        await Api.contentTypesApi.deleteContentType(id);
 
         dispatch(getContentTypesAction());
 
@@ -56,8 +47,8 @@ export const ContentTypesList = () => {
 
     return (
         <>
-            <CmtPageWrapper title="Types de contenus">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Types de contenus">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -67,24 +58,24 @@ export const ContentTypesList = () => {
                                         (filters.page - 1) * filters.limit + contentTypes.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(CONTENT_TYPES_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
-                        <ContentTypesFilters
+                        <Component.ContentTypesFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeContentTypesFilters(values))}
                         />
 
-                        <ListTable
+                        <Component.ListTable
                             filters={filters}
-                            table={TABLE_COLUMN}
+                            table={TableColumn.ContentTypesList}
                             list={contentTypes}
                             onEdit={(id) => {
-                                navigate(`${CONTENT_TYPES_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.CONTENT_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             changeFilters={(newFilters) =>
                                 dispatch(changeContentTypesFilters(newFilters))
@@ -92,7 +83,7 @@ export const ContentTypesList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -107,9 +98,9 @@ export const ContentTypesList = () => {
                             length={contentTypes?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -121,7 +112,7 @@ export const ContentTypesList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

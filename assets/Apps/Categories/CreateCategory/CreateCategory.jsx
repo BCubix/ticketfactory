@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import categoriesApi from '../../../services/api/categoriesApi';
-import { CategoriesForm } from '../CategoriesForm/CategoriesForm';
-import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
+import { useNavigate } from 'react-router-dom';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const CreateCategory = () => {
     const dispatch = useDispatch();
@@ -22,16 +23,16 @@ export const CreateCategory = () => {
 
     useEffect(() => {
         if (categoriesData.error) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(EVENTS_BASE_PATH);
+            navigate(Constant.EVENTS_BASE_PATH);
 
             return;
         }
     }, [categoriesData]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -39,22 +40,22 @@ export const CreateCategory = () => {
             return;
         }
 
-        const result = await categoriesApi.createCategory(values);
+        const result = await Api.categoriesApi.createCategory(values);
 
         if (result.result) {
             NotificationManager.success(
                 'La catégorie a bien été créée.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getCategoriesAction());
 
-            navigate(CATEGORIES_BASE_PATH);
+            navigate(Constant.CATEGORIES_BASE_PATH);
         }
     };
 
     return (
-        <CategoriesForm handleSubmit={handleSubmit} categoriesList={categoriesData.categories} />
+        <Component.CategoriesForm handleSubmit={handleSubmit} categoriesList={categoriesData.categories} />
     );
 };

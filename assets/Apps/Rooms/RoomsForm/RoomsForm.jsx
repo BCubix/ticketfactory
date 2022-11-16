@@ -1,11 +1,11 @@
+import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 import { Button, FormControlLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
-import { Formik } from 'formik';
-import React from 'react';
-import * as Yup from 'yup';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { RoomsMainPartForm } from './RoomsMainPartForm';
-import { RoomsSeatingPlanPartForm } from './RoomsSeatingPlansPartForm';
+
+import { Component } from "@/AdminService/Component";
 
 export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
     const roomsSchema = Yup.object().shape({
@@ -50,12 +50,12 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     title={`${initialValues ? 'Modification' : 'Création'} d'une salle`}
                     component="form"
                     onSubmit={handleSubmit}
                 >
-                    <RoomsMainPartForm
+                    <Component.RoomsMainPartForm
                         values={values}
                         errors={errors}
                         touched={touched}
@@ -63,7 +63,7 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                         handleBlur={handleBlur}
                     />
 
-                    <RoomsSeatingPlanPartForm
+                    <Component.RoomsSeatingPlanPartForm
                         values={values}
                         errors={errors}
                         touched={touched}
@@ -94,7 +94,7 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

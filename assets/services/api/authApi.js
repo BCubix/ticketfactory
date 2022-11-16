@@ -1,4 +1,5 @@
-import axios from './config';
+import { Api } from "@/AdminService/Api";
+import axios from '@Services/api/config';
 
 const authApi = {
     login: async (data) => {
@@ -67,7 +68,7 @@ const authApi = {
         const limitDate = new Date(parseInt(timeToken) + 1 * 60 * 60 * 1000);
 
         if (!token || Date.now() > limitDate) {
-            return await authApi.refreshConnexionToken(refresh_token);
+            return await Api.authApi.refreshConnexionToken(refresh_token);
         }
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;

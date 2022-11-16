@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import tagsApi from '../../services/api/tagsApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -56,7 +56,7 @@ export function getTagsAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().tags?.filters;
 
-                const tags = await tagsApi.getTags(state);
+                const tags = await Api.tagsApi.getTags(state);
                 if (!tags.result) {
                     dispatch(getTagsFailure({ error: tags.error }));
 

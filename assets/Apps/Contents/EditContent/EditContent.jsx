@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CONTENT_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { getContentsAction } from '../../../redux/contents/contentsSlice';
-import {
-    contentTypesSelector,
-    getContentTypesAction,
-} from '../../../redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import contentsApi from '../../../services/api/contentsApi';
-import { ContentsForm } from '../ContentsForm/ContentsForm';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getContentsAction } from '@Redux/contents/contentsSlice';
+import { contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const EditContent = () => {
     const dispatch = useDispatch();
@@ -21,7 +19,7 @@ export const EditContent = () => {
     const { loading, contentTypes, error } = useSelector(contentTypesSelector);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -29,18 +27,18 @@ export const EditContent = () => {
             return;
         }
 
-        const result = await contentsApi.editContent(id, values);
+        const result = await Api.contentsApi.editContent(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 'Le contenu a bien été modifié.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getContentsAction());
 
-            navigate(CONTENT_BASE_PATH);
+            navigate(Constant.CONTENT_BASE_PATH);
         }
     };
 
@@ -51,7 +49,7 @@ export const EditContent = () => {
     }, []);
 
     const getContent = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -59,12 +57,12 @@ export const EditContent = () => {
             return;
         }
 
-        const result = await contentsApi.getOneContent(id);
+        const result = await Api.contentsApi.getOneContent(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(CONTENT_BASE_PATH);
+            navigate(Constant.CONTENT_BASE_PATH);
 
             return;
         }
@@ -74,7 +72,7 @@ export const EditContent = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(CONTENT_BASE_PATH);
+            navigate(Constant.CONTENT_BASE_PATH);
             return;
         }
 
@@ -86,7 +84,7 @@ export const EditContent = () => {
     }
 
     return (
-        <ContentsForm
+        <Component.ContentsForm
             handleSubmit={handleSubmit}
             initialValues={content}
             selectedContentType={content?.contentType}

@@ -1,11 +1,12 @@
 import React from 'react';
 import { FieldArray } from 'formik';
+
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Card, CardContent, Grid } from '@mui/material';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Card, CardContent, Grid } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsPriceForm = ({
     values,
@@ -26,7 +27,7 @@ export const EventsPriceForm = ({
                                     <CardContent sx={{ position: 'relative' }}>
                                         <Grid container spacing={4}>
                                             <Grid item xs={12} md={6}>
-                                                <CmtTextField
+                                                <Component.CmtTextField
                                                     value={item.name}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
@@ -44,7 +45,7 @@ export const EventsPriceForm = ({
                                             </Grid>
 
                                             <Grid item xs={12} md={6}>
-                                                <CmtTextField
+                                                <Component.CmtTextField
                                                     type="number"
                                                     value={item.price}
                                                     onChange={handleChange}
@@ -63,7 +64,7 @@ export const EventsPriceForm = ({
                                             </Grid>
 
                                             <Grid item xs={12}>
-                                                <CmtTextField
+                                                <Component.CmtTextField
                                                     value={item.annotation}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
@@ -80,14 +81,14 @@ export const EventsPriceForm = ({
                                             </Grid>
                                         </Grid>
 
-                                        <DeleteBlockFabButton
+                                        <Component.DeleteBlockFabButton
                                             size="small"
                                             onClick={() => {
                                                 remove(index);
                                             }}
                                         >
                                             <DeleteIcon />
-                                        </DeleteBlockFabButton>
+                                        </Component.DeleteBlockFabButton>
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -95,7 +96,7 @@ export const EventsPriceForm = ({
                     </Grid>
 
                     <Box pt={4} pl={4} display="flex" justifyContent={'flex-end'}>
-                        <AddBlockButton
+                        <Component.AddBlockButton
                             size="small"
                             color="primary"
                             variant="outlined"
@@ -104,7 +105,7 @@ export const EventsPriceForm = ({
                             }}
                         >
                             <AddIcon /> Ajouter
-                        </AddBlockButton>
+                        </Component.AddBlockButton>
                     </Box>
                 </Box>
             )}

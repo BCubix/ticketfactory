@@ -1,4 +1,8 @@
 import React from 'react';
+import { Formik } from 'formik';
+import moment from 'moment';
+import * as Yup from 'yup';
+
 import {
     Button,
     Dialog,
@@ -11,11 +15,8 @@ import {
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { CmtDatePicker } from '../../../Components/CmtDatePicker/CmtDatePicker';
-import moment from 'moment';
-import { CmtTimePicker } from '../../../Components/CmtTimePicker/CmtTimePicker';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+
+import { Component } from "@/AdminService/Component";
 
 const DAY_LIST = [
     { label: 'Lundi', value: 'lundi' },
@@ -133,7 +134,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
 
                                 <Typography marginInline={5}> entre le </Typography>
 
-                                <CmtDatePicker
+                                <Component.CmtDatePicker
                                     fullWidth
                                     maxWidth={100}
                                     value={values.beginDate}
@@ -153,7 +154,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
 
                                 <Typography marginInline={5}> et le </Typography>
 
-                                <CmtDatePicker
+                                <Component.CmtDatePicker
                                     fullWidth
                                     maxWidth={100}
                                     value={values.endDate}
@@ -173,7 +174,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
 
                                 <Typography marginInline={5}> inclus à </Typography>
 
-                                <CmtTimePicker
+                                <Component.CmtTimePicker
                                     fullWidth
                                     maxWidth={50}
                                     value={values.hour}

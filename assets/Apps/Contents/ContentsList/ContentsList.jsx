@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import {
     Button,
     CardContent,
@@ -12,35 +17,16 @@ import {
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
-import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
-import { ListTable } from '../../../Components/ListTable/ListTable';
-import { CONTENT_BASE_PATH, CREATE_PATH, EDIT_PATH, REDIRECTION_TIME } from '../../../Constant';
-import {
-    changeContentsFilters,
-    contentsSelector,
-    getContentsAction,
-} from '../../../redux/contents/contentsSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import contentsApi from '../../../services/api/contentsApi';
-import contentTypesApi from '../../../services/api/contentTypesApi';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
-import { ContentsFilters } from './ContentsFilters/ContentsFilters';
 
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'title', label: 'Titre', width: '40%', sortable: true },
-    { name: 'contentType.name', label: 'Type de contenu', width: '30%', sortable: true },
-];
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
+import { changeContentsFilters, contentsSelector, getContentsAction } from '@Redux/contents/contentsSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const ContentsList = () => {
     const dispatch = useDispatch();
@@ -57,7 +43,7 @@ export const ContentsList = () => {
         }
 
         apiMiddleware(dispatch, async () => {
-            const result = await contentTypesApi.getAllContentTypes();
+            const result = await Api.contentTypesApi.getAllContentTypes();
 
             if (result?.result) {
                 setContentTypes(result?.contentTypes);
@@ -66,7 +52,7 @@ export const ContentsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -74,7 +60,7 @@ export const ContentsList = () => {
             return;
         }
 
-        await contentsApi.deleteContent(id);
+        await Api.contentsApi.deleteContent(id);
 
         dispatch(getContentsAction());
 
@@ -83,26 +69,26 @@ export const ContentsList = () => {
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await contentsApi.duplicateContent(id);
+            const result = await Api.contentsApi.duplicateContent(id);
 
             if (result?.result) {
                 NotificationManager.success(
                     'Le contenu a bien été dupliqué.',
                     'Succès',
-                    REDIRECTION_TIME
+                    Constant.REDIRECTION_TIME
                 );
 
                 dispatch(getContentsAction());
             } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };
 
     return (
         <>
-            <CmtPageWrapper title="Contenus">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Contenus">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -112,24 +98,24 @@ export const ContentsList = () => {
                                         (filters.page - 1) * filters.limit + contents.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <ContentsFilters
+                        <Component.ContentsFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeContentsFilters(values))}
                             list={contentTypes}
                         />
 
-                        <ListTable
+                        <Component.ListTable
                             filters={filters}
                             contextualMenu
-                            table={TABLE_COLUMN}
+                            table={TableColumn.ContentsList}
                             list={contents}
                             onEdit={(id) => {
-                                navigate(`${CONTENT_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.CONTENT_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
@@ -140,7 +126,7 @@ export const ContentsList = () => {
                             onDelete={(id) => setDeleteDialog(id)}
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -153,8 +139,8 @@ export const ContentsList = () => {
                             length={contents?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
 
             <Dialog
                 open={createDialog}
@@ -210,13 +196,13 @@ export const ContentsList = () => {
                             onClick={() => {
                                 if (formContentType !== '') {
                                     navigate(
-                                        `${CONTENT_BASE_PATH}${CREATE_PATH}?contentType=${formContentType}`
+                                        `${Constant.CONTENT_BASE_PATH}${Constant.CREATE_PATH}?contentType=${formContentType}`
                                     );
                                 } else {
                                     NotificationManager.error(
                                         'Vous devez renseigner le type de contenu.',
                                         'Erreur',
-                                        REDIRECTION_TIME
+                                        Constant.REDIRECTION_TIME
                                     );
                                 }
                             }}
@@ -228,7 +214,7 @@ export const ContentsList = () => {
                 </DialogActions>
             </Dialog>
 
-            <DeleteDialog
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -240,7 +226,7 @@ export const ContentsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

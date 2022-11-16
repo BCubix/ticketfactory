@@ -1,17 +1,14 @@
-import { FormControlLabel, Switch, Typography, Grid, FormHelperText } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { FieldFormControl } from '../sc.ContentTypeFields';
-import {
-    AddBlockFabButton,
-    DeleteBlockFabButton,
-} from '../../../../Components/CmtButton/sc.Buttons';
+import * as Yup from 'yup';
+
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { CmtCard } from '../../../../Components/CmtCard/sc.CmtCard';
-import * as Yup from 'yup';
-import { getNestedFormikError } from '../../../../services/utils/getNestedFormikError';
+import { FormControlLabel, Switch, Typography, Grid, FormHelperText } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 const NAME = 'radioButton';
 const LABEL = 'Boutons radio';
@@ -100,10 +97,10 @@ const ComplementInformation = ({
                             key={ind}
                             position="relative"
                         >
-                            <CmtCard sx={{ width: '100%', position: 'relative', padding: 2 }}>
+                            <Component.CmtCard sx={{ width: '100%', position: 'relative', padding: 2 }}>
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} sm={6}>
-                                        <CmtTextField
+                                        <Component.CmtTextField
                                             value={item.label}
                                             onChange={(e) =>
                                                 handleChangeChoice({
@@ -119,7 +116,7 @@ const ComplementInformation = ({
                                     </Grid>
 
                                     <Grid item xs={12} sm={6} position="relative">
-                                        <CmtTextField
+                                        <Component.CmtTextField
                                             value={item.value}
                                             onChange={(e) =>
                                                 handleChangeChoice({
@@ -134,13 +131,13 @@ const ComplementInformation = ({
                                         />
                                     </Grid>
                                 </Grid>
-                                <DeleteBlockFabButton
+                                <Component.DeleteBlockFabButton
                                     size={'small'}
                                     onClick={() => handleDeleteChoice(ind)}
                                 >
                                     <CloseIcon />
-                                </DeleteBlockFabButton>
-                            </CmtCard>
+                                </Component.DeleteBlockFabButton>
+                            </Component.CmtCard>
                         </Grid>
                     ))}
                 </Grid>
@@ -153,14 +150,14 @@ const ComplementInformation = ({
                 }
             </FormHelperText>
             <Box className="flex row-end">
-                <AddBlockFabButton
+                <Component.AddBlockFabButton
                     size="small"
                     variant="outlined"
                     color="primary"
                     onClick={handleAddChoice}
                 >
                     <AddIcon />
-                </AddBlockFabButton>
+                </Component.AddBlockFabButton>
             </Box>
         </>
     );
@@ -169,7 +166,7 @@ const ComplementInformation = ({
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -185,9 +182,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Requis'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -203,7 +200,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Désactivé'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };

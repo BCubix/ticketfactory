@@ -1,14 +1,13 @@
-import { Box, Button, FormControlLabel, Switch } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Formik } from 'formik';
-import React, { useEffect, useMemo } from 'react';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
 import * as Yup from 'yup';
-import { DisplayContentForm } from './DisplayContentForm';
-import { useState } from 'react';
-import ContentModules from './ContentModules';
-import { CONTENT_MODULES_EXTENSION } from '../../../Constant';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+
+import { Box, Button, FormControlLabel, Switch } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import ContentModules from "@Apps/Contents/ContentsForm/ContentModules";
 
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType }) => {
     const [initValue, setInitValue] = useState(null);
@@ -45,7 +44,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             const moduleName =
                 String(el.type).charAt(0).toUpperCase() +
                 el.type?.slice(1) +
-                CONTENT_MODULES_EXTENSION;
+                Constant.CONTENT_MODULES_EXTENSION;
 
             validation[el.name] = getContentModules[moduleName]?.getValidation
                 ? getContentModules[moduleName].getValidation(el)
@@ -83,7 +82,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             const moduleName =
                 String(el.type).charAt(0).toUpperCase() +
                 el.type?.slice(1) +
-                CONTENT_MODULES_EXTENSION;
+                Constant.CONTENT_MODULES_EXTENSION;
 
             fields[el.name] = formModules[moduleName]?.getInitialValue(el) || '';
         });
@@ -120,13 +119,13 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}
                 >
-                    <CmtFormBlock title="Informations générales">
-                        <CmtTextField
+                    <Component.CmtFormBlock title="Informations générales">
+                        <Component.CmtTextField
                             value={values.title}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -135,10 +134,10 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                             error={touched.title && errors.title}
                             required
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
-                    <CmtFormBlock title="Formulaire">
-                        <DisplayContentForm
+                    <Component.CmtFormBlock title="Formulaire">
+                        <Component.DisplayContentForm
                             values={values}
                             errors={errors}
                             touched={touched}
@@ -149,7 +148,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                             contentType={selectedContentType}
                             contentModules={getContentModules}
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
@@ -174,7 +173,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

@@ -1,4 +1,3 @@
-import { Component } from "@/AdminService/Component";
 import { checkArray, checkObject, checkString } from "@Services/utils/check";
 
 const keys = [ 'name', 'label', 'width', 'type', 'sortable', 'renderFunction' ];

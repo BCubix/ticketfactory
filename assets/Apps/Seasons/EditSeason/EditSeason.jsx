@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import seasonsApi from '../../../services/api/seasonsApi';
-import { REDIRECTION_TIME, SEASONS_BASE_PATH } from '../../../Constant';
-import { SeasonsForm } from '../SeasonsForm/SeasonsForm';
-import { getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getSeasonsAction } from '@Redux/seasons/seasonsSlice';
 
 export const EditSeason = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const EditSeason = () => {
     const [season, setSeason] = useState(null);
 
     const getSeason = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,12 +25,12 @@ export const EditSeason = () => {
             return;
         }
 
-        const result = await seasonsApi.getOneSeason(id);
+        const result = await Api.seasonsApi.getOneSeason(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(SEASONS_BASE_PATH);
+            navigate(Constant.SEASONS_BASE_PATH);
 
             return;
         }
@@ -39,7 +40,7 @@ export const EditSeason = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(SEASONS_BASE_PATH);
+            navigate(Constant.SEASONS_BASE_PATH);
             return;
         }
 
@@ -47,7 +48,7 @@ export const EditSeason = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -55,18 +56,18 @@ export const EditSeason = () => {
             return;
         }
 
-        const result = await seasonsApi.editSeason(id, values);
+        const result = await Api.seasonsApi.editSeason(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 'La saison a bien été modifié.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getSeasonsAction());
 
-            navigate(SEASONS_BASE_PATH);
+            navigate(Constant.SEASONS_BASE_PATH);
         }
     };
 
@@ -74,5 +75,5 @@ export const EditSeason = () => {
         return <></>;
     }
 
-    return <SeasonsForm handleSubmit={handleSubmit} initialValues={season} />;
+    return <Component.SeasonsForm handleSubmit={handleSubmit} initialValues={season} />;
 };

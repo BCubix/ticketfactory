@@ -1,9 +1,11 @@
+import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 import { Button, FormControlLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
-import { Formik } from 'formik';
-import React from 'react';
-import * as Yup from 'yup';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+
+import { Component } from "@/AdminService/Component";
 
 export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement }) => {
     const mediaSchema = Yup.object().shape({
@@ -38,7 +40,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
             }) => (
                 <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
                     {mediaType === 'image' && (
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.alt}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -48,7 +50,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                         />
                     )}
 
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values.title}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -58,7 +60,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                         sx={{ mt: 10 }}
                     />
 
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values.legend}
                         multiline
                         rows={3}
@@ -70,7 +72,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                         sx={{ mt: 10 }}
                     />
 
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values.description}
                         multiline
                         rows={3}

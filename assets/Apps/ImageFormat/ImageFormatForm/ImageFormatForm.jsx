@@ -1,11 +1,11 @@
+import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Box } from '@mui/system';
-import { Formik } from 'formik';
-import React from 'react';
-import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+
+import { Component } from "@/AdminService/Component";
 
 export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
     const imageFormatSchema = Yup.object().shape({
@@ -44,15 +44,15 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     title={`${initialValues ? 'Modification' : 'Création'} d'un format`}
                     component={'form'}
                     onSubmit={handleSubmit}
                 >
-                    <CmtFormBlock title="Informations générales">
+                    <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.name}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -64,7 +64,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
 
                             <Grid item xs={12} sm={6}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.length}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -76,7 +76,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
 
                             <Grid item xs={12} sm={6}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.height}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -87,7 +87,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                         </Grid>
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
@@ -112,7 +112,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

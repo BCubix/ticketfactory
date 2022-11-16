@@ -1,7 +1,7 @@
-import { FormControl, InputLabel, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React from 'react';
 import { CirclePicker } from 'react-color';
+import { InputLabel, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [

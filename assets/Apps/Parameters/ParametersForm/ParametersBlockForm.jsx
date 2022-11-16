@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 
-import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
-
 import { Grid, Typography } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
+
 import ParametersTypesModules from '@Apps/Parameters/ParametersForm/ParametersTypesModules';
 
 const parseBreakpointsValue = (breakpointsValueStr) => {
@@ -36,7 +37,7 @@ export const ParametersBlockForm = ({
     }, []);
 
     return blocks?.map(({ blockName, parameters }, indexBlock) => (
-        <CmtFormBlock title={blockName} key={indexBlock}>
+        <Component.CmtFormBlock title={blockName} key={indexBlock}>
             <Grid container spacing={4}>
                 {parameters?.map(
                     (
@@ -82,6 +83,6 @@ export const ParametersBlockForm = ({
                     }
                 )}
             </Grid>
-        </CmtFormBlock>
+        </Component.CmtFormBlock>
     ));
 }

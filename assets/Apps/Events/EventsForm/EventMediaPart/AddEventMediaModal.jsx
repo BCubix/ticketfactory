@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import CloseIcon from '@mui/icons-material/Close';
-import { CmtMediaElement } from '../../../../Components/CmtMediaElement/sc.MediaElement';
-import { DisplayMediaAddInformations } from './DisplayMediaInformations';
-import { CmtDisplayMediaType } from '../../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
-import { useEffect } from 'react';
+
+import { Component } from "@/AdminService/Component";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -53,7 +52,7 @@ export const AddEventMediaModal = ({
                     <Grid item xs={12} md={9}>
                         <Box display="flex" px={5} py={10} flexWrap="wrap">
                             {mediaList?.map((item, index) => (
-                                <CmtMediaElement
+                                <Component.CmtMediaElement
                                     key={index}
                                     onClick={() => setSelectedMedia(item)}
                                     sx={{
@@ -63,8 +62,8 @@ export const AddEventMediaModal = ({
                                                 : '',
                                     }}
                                 >
-                                    <CmtDisplayMediaType media={item} width={'100%'} />
-                                </CmtMediaElement>
+                                    <Component.CmtDisplayMediaType media={item} width={'100%'} />
+                                </Component.CmtMediaElement>
                             ))}
                         </Box>
                     </Grid>
@@ -74,7 +73,7 @@ export const AddEventMediaModal = ({
                         md={3}
                         sx={{ borderLeft: '1px solid #d3d3d3', height: '100%' }}
                     >
-                        <DisplayMediaAddInformations
+                        <Component.DisplayMediaAddInformations
                             onClose={() => setSelectedMedia(null)}
                             selectedMedia={selectedMedia}
                             values={values}

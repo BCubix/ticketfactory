@@ -1,32 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { redirectionsSelector } from '@Redux/redirections/redirectionsSlice';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import redirectionsApi from '../../../services/api/redirectionsApi';
-import {
-    changeRedirectionsFilters,
-    getRedirectionsAction,
-} from '../../../redux/redirections/redirectionsSlice';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { CREATE_PATH, EDIT_PATH, REDIRECTIONS_BASE_PATH } from '../../../Constant';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { RedirectionsFilters } from './RedirectionsFilters/RedirectionsFilters';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
+import { Box, CardContent, Typography } from '@mui/material';
+import { redirectionsSelector } from '@Redux/redirections/redirectionsSlice';
 
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'redirectType', label: 'Type de redirection', width: '20%', sortable: true },
-    { name: 'redirectFrom', label: 'Redirigé depuis', width: '25%', sortable: true },
-    { name: 'redirectTo', label: 'Redirigé vers', width: '25%', sortable: true },
-];
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { changeRedirectionsFilters, getRedirectionsAction } from '@Redux/redirections/redirectionsSlice';
 
 export const RedirectionsList = () => {
     const { loading, redirections, filters, total, error } = useSelector(redirectionsSelector);
@@ -41,7 +25,7 @@ export const RedirectionsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -49,7 +33,7 @@ export const RedirectionsList = () => {
             return;
         }
 
-        await redirectionsApi.deleteRedirection(id);
+        await Api.redirectionsApi.deleteRedirection(id);
 
         dispatch(getRedirectionsAction());
 
@@ -58,8 +42,8 @@ export const RedirectionsList = () => {
 
     return (
         <>
-            <CmtPageWrapper title="Redirections">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Redirections">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -69,24 +53,24 @@ export const RedirectionsList = () => {
                                         (filters.page - 1) * filters.limit + redirections.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(REDIRECTIONS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <RedirectionsFilters
+                        <Component.RedirectionsFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeRedirectionsFilters(values))}
                         />
 
-                        <ListTable
-                            table={TABLE_COLUMN}
+                        <Component.ListTable
+                            table={TableColumn.RedirectionsList}
                             list={redirections}
                             onEdit={(id) => {
-                                navigate(`${REDIRECTIONS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.REDIRECTIONS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
@@ -95,7 +79,7 @@ export const RedirectionsList = () => {
                             }
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -110,9 +94,9 @@ export const RedirectionsList = () => {
                             length={redirections?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -124,7 +108,7 @@ export const RedirectionsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

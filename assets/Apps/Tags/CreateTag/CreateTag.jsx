@@ -1,20 +1,21 @@
 import React from 'react';
 import { NotificationManager } from 'react-notifications';
-import { CATEGORIES_BASE_PATH, REDIRECTION_TIME, TAGS_BASE_PATH } from '../../../Constant';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import tagsApi from '../../../services/api/tagsApi';
-import { getTagsAction } from '../../../redux/tags/tagsSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import { TagsForm } from '../TagsForm/TagsForm';
+import { useNavigate } from 'react-router-dom';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getTagsAction } from '@Redux/tags/tagsSlice';
 
 export const CreateTag = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -22,16 +23,16 @@ export const CreateTag = () => {
             return;
         }
 
-        const result = await tagsApi.createTag(values);
+        const result = await Api.tagsApi.createTag(values);
 
         if (result.result) {
-            NotificationManager.success('Le tag a bien été créé.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le tag a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getTagsAction());
 
-            navigate(TAGS_BASE_PATH);
+            navigate(Constant.TAGS_BASE_PATH);
         }
     };
 
-    return <TagsForm handleSubmit={handleSubmit} />;
+    return <Component.TagsForm handleSubmit={handleSubmit} />;
 };

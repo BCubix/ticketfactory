@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginFailure } from '../profile/profileSlice';
-import authApi from '../../services/api/authApi';
-import dashboardApi from '../../services/api/dashboardApi';
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { Api } from "@/AdminService/Api";
 
 const initialState = {
     loading: false,
@@ -40,7 +39,7 @@ export function getDashboardAction(data) {
         try {
             dispatch(getDashboard());
 
-            const response = await authApi.checkIsAuth();
+            const response = await Api.authApi.checkIsAuth();
 
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
@@ -48,7 +47,7 @@ export function getDashboardAction(data) {
                 return;
             }
 
-            const dashboard = await dashboardApi.getDashboard(data);
+            const dashboard = await Api.dashboardApi.getDashboard(data);
 
             if (!dashboard.result) {
                 dispatch(getDashboardFailure({ error: dashboard.error }));

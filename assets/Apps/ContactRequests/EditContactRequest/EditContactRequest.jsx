@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CONTACT_REQUEST_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import contactRequestsApi from '../../../services/api/contactRequestsApi';
-import { ContactRequestsForm } from '../ContactRequestsForm/ContactRequestsForm';
-import { getContactRequestsAction } from '../../../redux/contactRequests/contactRequestsSlice';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const EditContactRequest = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const EditContactRequest = () => {
     const [contactRequest, setContactRequest] = useState(null);
 
     const getContactRequest = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,12 +25,12 @@ export const EditContactRequest = () => {
             return;
         }
 
-        const result = await contactRequestsApi.getOneContactRequest(id);
+        const result = await Api.contactRequestsApi.getOneContactRequest(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(CONTACT_REQUEST_BASE_PATH);
+            navigate(Constant.CONTACT_REQUEST_BASE_PATH);
 
             return;
         }
@@ -39,7 +40,7 @@ export const EditContactRequest = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(CONTACT_REQUEST_BASE_PATH);
+            navigate(Constant.CONTACT_REQUEST_BASE_PATH);
             return;
         }
 
@@ -47,7 +48,7 @@ export const EditContactRequest = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -55,18 +56,18 @@ export const EditContactRequest = () => {
             return;
         }
 
-        const result = await contactRequestsApi.editContactRequest(id, values);
+        const result = await Api.contactRequestsApi.editContactRequest(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 'La demande de contact a bien été modifiée.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getContactRequestsAction());
 
-            navigate(CONTACT_REQUEST_BASE_PATH);
+            navigate(Constant.CONTACT_REQUEST_BASE_PATH);
         }
     };
 
@@ -74,5 +75,5 @@ export const EditContactRequest = () => {
         return <></>;
     }
 
-    return <ContactRequestsForm handleSubmit={handleSubmit} initialValues={contactRequest} />;
+    return <Component.ContactRequestsForm handleSubmit={handleSubmit} initialValues={contactRequest} />;
 };

@@ -1,20 +1,21 @@
 import React from 'react';
 import { NotificationManager } from 'react-notifications';
-import { REDIRECTION_TIME, USER_BASE_PATH } from '../../../Constant';
-import usersApi from '../../../services/api/usersApi';
-import { getUsersAction } from '@Redux/users/usersSlice';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { CreateUserForm } from '../UserForm/CreateUserForm';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
+import { useNavigate } from 'react-router-dom';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getUsersAction } from '@Redux/users/usersSlice';
 
 export const CreateUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -22,20 +23,20 @@ export const CreateUser = () => {
             return;
         }
 
-        const result = await usersApi.createUser(values);
+        const result = await Api.usersApi.createUser(values);
 
         if (result.result) {
             NotificationManager.success(
                 "L'utilisateur a bien été créé.",
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getUsersAction());
 
-            navigate(USER_BASE_PATH);
+            navigate(Constant.USER_BASE_PATH);
         }
     };
 
-    return <CreateUserForm handleSubmit={handleSubmit} />;
+    return <Component.CreateUserForm handleSubmit={handleSubmit} />;
 };

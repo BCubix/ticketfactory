@@ -1,18 +1,21 @@
+import React, { useEffect } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { Formik } from 'formik';
+import moment from 'moment';
+import * as Yup from 'yup';
+
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
 import { Container } from '@mui/system';
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Formik } from 'formik';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
 import { profileSelector } from '@Redux/profile/profileSlice';
-import { HOME_PATH } from '@/Constant';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import * as Yup from 'yup';
-import authApi from '../../services/api/authApi';
-import { FORGOT_PASSWORD_PATH, LOGIN_PATH, REDIRECTION_TIME } from '../../Constant';
-import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
-import { NotificationManager } from 'react-notifications';
-import moment from 'moment';
 
 export const ChangePassword = () => {
     const { connected } = useSelector(profileSelector);
@@ -26,38 +29,38 @@ export const ChangePassword = () => {
             NotificationManager.error(
                 'Une erreur est survenu, Veuillez recommencer la procédure',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
-            navigate(FORGOT_PASSWORD_PATH);
+            navigate(Constant.FORGOT_PASSWORD_PATH);
         } else if (moment().subtract(15, 'minutes').isAfter(moment(dateTime, 'x'))) {
             NotificationManager.error(
                 'Vous avez fait une demande il y a plus de 15 minutes, Veuillez recommencer la procédure',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
-            navigate(FORGOT_PASSWORD_PATH);
+            navigate(Constant.FORGOT_PASSWORD_PATH);
         }
 
         if (!searchParams.get('token')) {
-            NotificationManager.error('Le token est introuvable', 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error('Le token est introuvable', 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(LOGIN_PATH);
+            navigate(Constant.LOGIN_PATH);
             return;
         }
 
         if (!searchParams.get('email')) {
-            NotificationManager.error("L'email est introuvable", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("L'email est introuvable", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(LOGIN_PATH);
+            navigate(Constant.LOGIN_PATH);
             return;
         }
     }, []);
 
     useEffect(() => {
         if (connected) {
-            navigate(HOME_PATH);
+            navigate(Constant.HOME_PATH);
         }
     }, [connected]);
 
@@ -86,7 +89,7 @@ export const ChangePassword = () => {
                     initialValues={{ password: '', confirmPassword: '' }}
                     validationSchema={forgotPasswordSchema}
                     onSubmit={async (values, { setSubmitting }) => {
-                        const result = await authApi.changePassword({
+                        const result = await Api.authApi.changePassword({
                             newPassword: values.password,
                             username: searchParams.get('email'),
                             token: searchParams.get('token'),
@@ -95,15 +98,15 @@ export const ChangePassword = () => {
                             NotificationManager.success(
                                 'Votre demande de changement de mot de passe a bien été prise en compte',
                                 'Succès',
-                                REDIRECTION_TIME
+                                Constant.REDIRECTION_TIME
                             );
 
-                            navigate(LOGIN_PATH);
+                            navigate(Constant.LOGIN_PATH);
                         } else {
                             NotificationManager.error(
                                 "Une erreur s'est produite",
                                 'Erreur',
-                                REDIRECTION_TIME
+                                Constant.REDIRECTION_TIME
                             );
                         }
 
@@ -135,7 +138,7 @@ export const ChangePassword = () => {
                                 Modifier le mot de passe
                             </Typography>
                             <Box sx={{ mt: 1 }}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.password}
                                     type="password"
                                     onChange={handleChange}
@@ -145,7 +148,7 @@ export const ChangePassword = () => {
                                     error={touched.password && errors.password}
                                     required
                                 />
-                                <CmtTextField
+                                <Component.CmtTextField
                                     type="password"
                                     value={values.confirmPassword}
                                     onChange={handleChange}

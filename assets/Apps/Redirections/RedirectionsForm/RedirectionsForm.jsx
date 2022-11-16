@@ -1,4 +1,7 @@
 import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 import {
     Button,
     FormControl,
@@ -12,12 +15,9 @@ import {
     Switch,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { REDIRECTION_TYPES } from '../../../Constant';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
 
 export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
     const redirectionSchema = Yup.object().shape({
@@ -62,12 +62,12 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'une redirection`}
                 >
-                    <CmtFormBlock title="Informations générales">
+                    <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6} lg={4}>
                                 <FormControl fullWidth margin="normal">
@@ -89,7 +89,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                         error={touched.redirectType && Boolean(errors.redirectType)}
                                         required
                                     >
-                                        {REDIRECTION_TYPES.map((item, index) => (
+                                        {Constant.REDIRECTION_TYPES.map((item, index) => (
                                             <MenuItem value={item.value} key={index}>
                                                 <ListItemText>{item.label}</ListItemText>
                                             </MenuItem>
@@ -102,7 +102,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
 
                             <Grid item xs={12} md={6} lg={4}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.redirectFrom}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -114,7 +114,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
 
                             <Grid item xs={12} md={6} lg={4}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.redirectTo}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -125,7 +125,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                         </Grid>
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
@@ -149,7 +149,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

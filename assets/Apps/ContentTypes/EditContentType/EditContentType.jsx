@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { getContentTypesAction } from '../../../redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import contentTypesApi from '../../../services/api/contentTypesApi';
-import { ContentTypesForm } from '../ContentTypesForm/ContentTypesForm';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const EditContentType = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const EditContentType = () => {
     const [contentType, setContentType] = useState(null);
 
     const getContentType = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,12 +25,12 @@ export const EditContentType = () => {
             return;
         }
 
-        const result = await contentTypesApi.getOneContentType(id);
+        const result = await Api.contentTypesApi.getOneContentType(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(Constant.CONTENT_TYPES_BASE_PATH);
 
             return;
         }
@@ -39,7 +40,7 @@ export const EditContentType = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(Constant.CONTENT_TYPES_BASE_PATH);
             return;
         }
 
@@ -47,7 +48,7 @@ export const EditContentType = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -55,18 +56,18 @@ export const EditContentType = () => {
             return;
         }
 
-        const result = await contentTypesApi.editContentType(id, values);
+        const result = await Api.contentTypesApi.editContentType(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 'Le type de contenus a bien été modifié.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getContentTypesAction());
 
-            navigate(CONTENT_TYPES_BASE_PATH);
+            navigate(Constant.CONTENT_TYPES_BASE_PATH);
         }
     };
 
@@ -74,5 +75,5 @@ export const EditContentType = () => {
         return <></>;
     }
 
-    return <ContentTypesForm submitForm={handleSubmit} initialValues={contentType} />;
+    return <Component.ContentTypesForm submitForm={handleSubmit} initialValues={contentType} />;
 };

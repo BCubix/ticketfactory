@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import roomsApi from '../../../services/api/roomsApi';
-import { REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
-import { RoomsForm } from '../RoomsForm/RoomsForm';
-import { getRoomsAction } from '../../../redux/rooms/roomsSlice';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getRoomsAction } from '@Redux/rooms/roomsSlice';
 
 export const EditRoom = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const EditRoom = () => {
     const [room, setRoom] = useState(null);
 
     const getRoom = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,12 +25,12 @@ export const EditRoom = () => {
             return;
         }
 
-        const result = await roomsApi.getOneRoom(id);
+        const result = await Api.roomsApi.getOneRoom(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(ROOMS_BASE_PATH);
+            navigate(Constant.ROOMS_BASE_PATH);
 
             return;
         }
@@ -39,7 +40,7 @@ export const EditRoom = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(ROOMS_BASE_PATH);
+            navigate(Constant.ROOMS_BASE_PATH);
             return;
         }
 
@@ -47,7 +48,7 @@ export const EditRoom = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -55,18 +56,18 @@ export const EditRoom = () => {
             return;
         }
 
-        const result = await roomsApi.editRoom(id, values);
+        const result = await Api.roomsApi.editRoom(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 'La salle a bien été modifiée.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getRoomsAction());
 
-            navigate(ROOMS_BASE_PATH);
+            navigate(Constant.ROOMS_BASE_PATH);
         }
     };
 
@@ -74,5 +75,5 @@ export const EditRoom = () => {
         return <></>;
     }
 
-    return <RoomsForm handleSubmit={handleSubmit} initialValues={room} />;
+    return <Component.RoomsForm handleSubmit={handleSubmit} initialValues={room} />;
 };

@@ -1,7 +1,6 @@
-import { InputLabel, Typography } from '@mui/material';
 import React from 'react';
-import { LightEditor } from '../../../../Components/Editors/LightEditor/LightEditor';
-import { LightEditorFormControl } from '../../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
+import { InputLabel, Typography } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
@@ -26,8 +25,8 @@ const FormComponent = ({
     return (
         <>
             <InputLabel id={`${label}-label`}>{label}</InputLabel>
-            <LightEditorFormControl>
-                <LightEditor
+            <Component.LightEditorFormControl>
+                <Component.LightEditor
                     labelId={`${label}-label`}
                     value={values[field.name]}
                     onBlur={() => setFieldTouched(name, true, false)}
@@ -40,7 +39,7 @@ const FormComponent = ({
                 {touched && touched[field.name] && errors && errors[field.name] && (
                     <FormHelperText error>{errors[field.name]}</FormHelperText>
                 )}
-            </LightEditorFormControl>
+            </Component.LightEditorFormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
                     {field.helper}

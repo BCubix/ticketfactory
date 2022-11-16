@@ -1,10 +1,16 @@
-import { Grid, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { PARAMETER_FILE_BASE_URL } from '../../../../Constant';
-import { loginFailure } from '../../../../redux/profile/profileSlice';
-import { intitializeParamsDropzone } from './utils/initParamsDropzone';
+
+import { Grid, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Constant } from "@/AdminService/Constant";
+
+import {
+    intitializeParamsDropzone
+} from "@Apps/Parameters/ParametersForm/ParametersTypesModules/utils/initParamsDropzone";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 const TYPE = 'upload';
 
@@ -52,7 +58,7 @@ const getComponent = ({
             {paramValue && (
                 <Box
                     component="img"
-                    src={`${PARAMETER_FILE_BASE_URL}/${paramValue}`}
+                    src={`${Constant.PARAMETER_FILE_BASE_URL}/${paramValue}`}
                     height={100}
                     marginRight={4}
                 />

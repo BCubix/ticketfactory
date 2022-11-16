@@ -1,27 +1,18 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { seasonsSelector } from '@Redux/seasons/seasonsSlice';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import seasonsApi from '../../../services/api/seasonsApi';
-import { changeSeasonsFilters, getSeasonsAction } from '../../../redux/seasons/seasonsSlice';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, CardContent, Typography } from '@mui/material';
-import { CREATE_PATH, EDIT_PATH, REDIRECTION_TIME, SEASONS_BASE_PATH } from '../../../Constant';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { SeasonsFilters } from './SeasonsFilters/SeasonsFilters';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '20%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '20%', sortable: true },
-    { name: 'name', label: 'Nom de la catégorie', width: '50%', sortable: true },
-];
+import { Box, CardContent, Typography } from '@mui/material';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
+import { changeSeasonsFilters, getSeasonsAction, seasonsSelector } from '@Redux/seasons/seasonsSlice';
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const SeasonsList = () => {
     const { loading, seasons, filters, total, error } = useSelector(seasonsSelector);
@@ -36,7 +27,7 @@ export const SeasonsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        await seasonsApi.deleteSeason(id);
+        await Api.seasonsApi.deleteSeason(id);
 
         dispatch(getSeasonsAction());
 
@@ -45,26 +36,26 @@ export const SeasonsList = () => {
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await seasonsApi.duplicateSeason(id);
+            const result = await Api.seasonsApi.duplicateSeason(id);
 
             if (result?.result) {
                 NotificationManager.success(
                     'La saison a bien été dupliquée.',
                     'Succès',
-                    REDIRECTION_TIME
+                    Constant.REDIRECTION_TIME
                 );
 
                 dispatch(getSeasonsAction());
             } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };
 
     return (
         <>
-            <CmtPageWrapper title={'Saisons'}>
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title={'Saisons'}>
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -74,25 +65,25 @@ export const SeasonsList = () => {
                                         (filters.page - 1) * filters.limit + seasons.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(SEASONS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <SeasonsFilters
+                        <Component.SeasonsFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeSeasonsFilters(values))}
                         />
 
-                        <ListTable
+                        <Component.ListTable
                             contextualMenu
-                            table={TABLE_COLUMN}
+                            table={TableColumn.SeasonsList}
                             list={seasons}
                             onEdit={(id) => {
-                                navigate(`${SEASONS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.SEASONS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
@@ -104,7 +95,7 @@ export const SeasonsList = () => {
                             }
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -117,9 +108,9 @@ export const SeasonsList = () => {
                             length={seasons?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -131,7 +122,7 @@ export const SeasonsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

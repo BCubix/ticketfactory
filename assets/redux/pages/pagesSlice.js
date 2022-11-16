@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
-import pagesApi from '../../services/api/pagesApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
-import { loginFailure } from '../profile/profileSlice';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -58,7 +56,7 @@ export function getPagesAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().pages?.filters;
 
-                const pages = await pagesApi.getPages(state);
+                const pages = await Api.pagesApi.getPages(state);
                 if (!pages.result) {
                     dispatch(getPagesFailure({ error: pages.error }));
 

@@ -1,7 +1,7 @@
-import { useTheme } from '@emotion/react';
-import moment from 'moment';
 import React from 'react';
 import { Chart } from 'react-google-charts';
+import moment from 'moment';
+import { useTheme } from '@emotion/react';
 
 export const GraphChildrenDashboard = ({ values }) => {
     const theme = useTheme();
@@ -20,7 +20,6 @@ export const GraphChildrenDashboard = ({ values }) => {
             ]}
             options={{
                 curveType: 'function',
-                legend: { position: 'bottom' },
                 chartArea: {
                     width: '100%',
                 },

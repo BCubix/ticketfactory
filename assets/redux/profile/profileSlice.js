@@ -1,14 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
 import { NotificationManager } from 'react-notifications';
-import { useNavigate } from 'react-router-dom';
-import { REDIRECTION_TIME } from '../../Constant';
-import authApi from '../../services/api/authApi';
-import profileApi from '../../services/api/profileApi';
-import { resetCategories } from '../categories/categoriesSlice';
-import { resetEvents } from '../events/eventsSlice';
-import { resetRooms } from '../rooms/roomsSlice';
-import { resetSeasons } from '../seasons/seasonsSlice';
-import { resetUsers } from '../users/usersSlice';
+import { createSlice } from '@reduxjs/toolkit';
+
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
+
+import { resetCategories } from '@Redux/categories/categoriesSlice';
+import { resetEvents } from '@Redux/events/eventsSlice';
+import { resetRooms } from '@Redux/rooms/roomsSlice';
+import { resetSeasons } from '@Redux/seasons/seasonsSlice';
+import { resetUsers } from '@Redux/users/usersSlice';
 
 const initialState = {
     connected: null,
@@ -53,7 +53,7 @@ export function loginAction(data) {
         try {
             dispatch(login());
 
-            const response = await authApi.login(data);
+            const response = await Api.authApi.login(data);
 
             if (!response.result) {
                 NotificationManager.error(
@@ -61,7 +61,7 @@ export function loginAction(data) {
                         ? 'Email ou mot de passe incorrect.'
                         : 'Une erreur est survenue.',
                     'Erreur',
-                    REDIRECTION_TIME
+                    Constant.REDIRECTION_TIME
                 );
 
                 dispatch(loginFailure({ error: response.error }));
@@ -69,7 +69,7 @@ export function loginAction(data) {
                 return;
             }
 
-            const profile = await profileApi.getProfile(data);
+            const profile = await Api.profileApi.getProfile(data);
 
             if (!profile.result) {
                 dispatch(loginFailure({ error: profile.error }));
@@ -87,7 +87,7 @@ export function profileInitAction(data) {
         try {
             dispatch(login());
 
-            const response = await authApi.checkIsAuth();
+            const response = await Api.authApi.checkIsAuth();
 
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
@@ -95,7 +95,7 @@ export function profileInitAction(data) {
                 return;
             }
 
-            const profile = await profileApi.getProfile(data);
+            const profile = await Api.profileApi.getProfile(data);
 
             if (!profile.result) {
                 dispatch(loginFailure({ error: profile.error }));
@@ -113,7 +113,7 @@ export function profileInitAction(data) {
 export function logoutAction() {
     return async (dispatch) => {
         try {
-            authApi.logout();
+            Api.authApi.logout();
 
             dispatch(logout());
             dispatch(resetCategories());

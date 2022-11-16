@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import tagsApi from '../../../services/api/tagsApi';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 import { getTagsAction } from '@Redux/tags/tagsSlice';
-import { CATEGORIES_BASE_PATH, REDIRECTION_TIME, TAGS_BASE_PATH } from '../../../Constant';
-import { TagsForm } from '../TagsForm/TagsForm';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
 
 export const EditTag = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const EditTag = () => {
     const [tag, setTag] = useState(null);
 
     const getTag = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,12 +25,12 @@ export const EditTag = () => {
             return;
         }
 
-        const result = await tagsApi.getOneTag(id);
+        const result = await Api.tagsApi.getOneTag(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(CATEGORIES_BASE_PATH);
+            navigate(Constant.CATEGORIES_BASE_PATH);
 
             return;
         }
@@ -39,7 +40,7 @@ export const EditTag = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(CATEGORIES_BASE_PATH);
+            navigate(Constant.CATEGORIES_BASE_PATH);
             return;
         }
 
@@ -47,18 +48,18 @@ export const EditTag = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const result = await tagsApi.editTag(id, values);
+        const result = await Api.tagsApi.editTag(id, values);
 
         if (result.result) {
             NotificationManager.success(
                 'La catégorie a bien été modifiée.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getTagsAction());
 
-            navigate(TAGS_BASE_PATH);
+            navigate(Constant.TAGS_BASE_PATH);
         }
     };
 
@@ -66,5 +67,5 @@ export const EditTag = () => {
         return <></>;
     }
 
-    return <TagsForm handleSubmit={handleSubmit} initialValues={tag} />;
+    return <Component.TagsForm handleSubmit={handleSubmit} initialValues={tag} />;
 };

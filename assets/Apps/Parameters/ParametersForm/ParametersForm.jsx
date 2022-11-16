@@ -4,9 +4,7 @@ import { Formik } from 'formik';
 import { Box } from '@mui/system';
 import { Button } from '@mui/material';
 
-import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
-import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
+import { Component } from "@/AdminService/Component";
 
 export const ParametersForm = ({ handleSubmit, parameters }) => {
     const tabs = useMemo(() => {
@@ -71,14 +69,14 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper title="Paramètres" component="form" onSubmit={handleSubmit}>
-                    <CmtTabs
+                <Component.CmtPageWrapper title="Paramètres" component="form" onSubmit={handleSubmit}>
+                    <Component.CmtTabs
                         tabValue={0}
                         list={values.tabs.map(({ tabName, blocks }, indexTab) => {
                             return {
                                 label: tabName,
                                 component: (
-                                    <ParametersBlockForm
+                                    <Component.ParametersBlockForm
                                         indexTab={indexTab}
                                         blocks={blocks}
                                         handleChange={handleChange}
@@ -102,7 +100,7 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
                             Enregistrer
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

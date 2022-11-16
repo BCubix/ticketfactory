@@ -1,4 +1,4 @@
-import axios from './config';
+import axios from '@Services/api/config';
 
 const serializeMenuData = (element, name, formData) => {
     formData.append(`${name}[name]`, element.name);

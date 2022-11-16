@@ -1,9 +1,11 @@
+import React from 'react';
+import moment from 'moment';
+
+import CloseIcon from '@mui/icons-material/Close';
 import { Button, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
-import { CmtDisplayMediaType } from '../../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
-import moment from 'moment';
+
+import { Component } from "@/AdminService/Component";
 
 export const DisplayMediaAddInformations = ({
     onClose,
@@ -39,7 +41,7 @@ export const DisplayMediaAddInformations = ({
                 <CloseIcon />
             </IconButton>
 
-            <DisplayMediaInformations selectedMedia={selectedMedia} />
+            <Component.DisplayMediaInformations selectedMedia={selectedMedia} />
 
             <Button
                 variant={isSelected ? 'outlined' : 'contained'}
@@ -114,7 +116,7 @@ export const DisplayMediaInformations = ({ selectedMedia }) => {
 
             <Box my={10} display="flex" justifyContent={'center'}>
                 <Box maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center">
-                    <CmtDisplayMediaType
+                    <Component.CmtDisplayMediaType
                         media={selectedMedia}
                         maxWidth={'100%'}
                         maxHeight={'300px'}

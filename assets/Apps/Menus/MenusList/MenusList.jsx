@@ -1,18 +1,16 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
-import { Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
-import { REDIRECTION_TIME } from '../../../Constant';
-import { getMenusAction, menusSelector } from '../../../redux/menus/menusSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import menusApi from '../../../services/api/menusApi';
-import { AddMenuElement } from './AddMenuElement';
-import { MenuHeaderLine } from './MenuHeaderLine';
-import { MenuStructure } from './MenuStructure/MenuStructure';
+import { Formik } from 'formik';
+
+import { Box, Button, Grid, Typography } from '@mui/material';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getMenusAction, menusSelector } from '@Redux/menus/menusSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const MenusList = () => {
     const { loading, menus, error } = useSelector(menusSelector);
@@ -41,7 +39,7 @@ export const MenusList = () => {
     }, [menus]);
 
     const updateMenu = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -49,17 +47,17 @@ export const MenusList = () => {
             return;
         }
 
-        const result = await menusApi.updateMenu(initialValues.id, values);
+        const result = await Api.menusApi.updateMenu(initialValues.id, values);
 
         if (result.result) {
-            NotificationManager.success('Le menu a bien été modifié.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le menu a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getMenusAction());
         }
     };
 
     const handleDelete = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -67,10 +65,10 @@ export const MenusList = () => {
             return;
         }
 
-        const result = await menusApi.deleteMenu(initialValues.id);
+        const result = await Api.menusApi.deleteMenu(initialValues.id);
 
         if (result.result) {
-            NotificationManager.success('Le menu a bien été supprimé.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le menu a bien été supprimé.', 'Succès', Constant.REDIRECTION_TIME);
 
             setInitialValues(null);
             setDeleteDialog(false);
@@ -109,8 +107,8 @@ export const MenusList = () => {
                     setFieldValue,
                     isSubmitting,
                 }) => (
-                    <CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
-                        <MenuHeaderLine
+                    <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
+                        <Component.MenuHeaderLine
                             selectedMenu={initialValues}
                             list={menus}
                             handleChange={(val) => {
@@ -126,7 +124,7 @@ export const MenusList = () => {
                         {Object.keys(initialValues).length > 0 && (
                             <Grid container spacing={5} sx={{ marginTop: 5 }}>
                                 <Grid item xs={12} md={6} lg={3}>
-                                    <AddMenuElement
+                                    <Component.AddMenuElement
                                         addElementToMenu={(newElements) => {
                                             let menu = [...values.children];
 
@@ -139,7 +137,7 @@ export const MenusList = () => {
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={6} lg={9}>
-                                    <MenuStructure
+                                    <Component.MenuStructure
                                         values={values}
                                         setFieldValue={setFieldValue}
                                         handleChange={handleChange}
@@ -172,7 +170,7 @@ export const MenusList = () => {
                             </Grid>
                         )}
 
-                        <DeleteDialog
+                        <Component.DeleteDialog
                             open={deleteDialog ? true : false}
                             onCancel={() => setDeleteDialog(null)}
                             onDelete={() => handleDelete(deleteDialog)}
@@ -186,8 +184,8 @@ export const MenusList = () => {
                                     Cette action est irréversible.
                                 </Typography>
                             </Box>
-                        </DeleteDialog>
-                    </CmtPageWrapper>
+                        </Component.DeleteDialog>
+                    </Component.CmtPageWrapper>
                 )}
             </Formik>
         </>

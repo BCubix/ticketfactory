@@ -1,13 +1,11 @@
+import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 import { Button, FormControlLabel, FormHelperText, InputLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
-import { Formik } from 'formik';
-import React from 'react';
-import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { LightEditor } from '../../../Components/Editors/LightEditor/LightEditor';
-import { LightEditorFormControl } from '../../../Components/Editors/LightEditor/sc.LightEditorFormControl';
+
+import { Component } from "@/AdminService/Component";
 
 export const TagsForm = ({ handleSubmit, initialValues = null }) => {
     const tagSchema = Yup.object().shape({
@@ -38,13 +36,13 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     title={`${initialValues ? 'Modification' : 'Création'} d'un tag`}
                     component="form"
                     onSubmit={handleSubmit}
                 >
-                    <CmtFormBlock title="Informations générales">
-                        <CmtTextField
+                    <Component.CmtFormBlock title="Informations générales">
+                        <Component.CmtTextField
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -56,8 +54,8 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                         />
                         <InputLabel id="description">Description</InputLabel>
 
-                        <LightEditorFormControl>
-                            <LightEditor
+                        <Component.LightEditorFormControl>
+                            <Component.LightEditor
                                 labelId="description"
                                 value={values.description}
                                 onBlur={() => setFieldTouched('description', true, false)}
@@ -68,8 +66,8 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                             <FormHelperText error>
                                 {touched.description && errors.description}
                             </FormHelperText>
-                        </LightEditorFormControl>
-                    </CmtFormBlock>
+                        </Component.LightEditorFormControl>
+                    </Component.CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
@@ -93,7 +91,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

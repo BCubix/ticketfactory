@@ -1,17 +1,19 @@
+import React, { useEffect } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
 import { Container } from '@mui/system';
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Formik } from 'formik';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
 import { profileSelector } from '@Redux/profile/profileSlice';
-import { HOME_PATH } from '@/Constant';
-import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import authApi from '../../services/api/authApi';
-import { LOGIN_PATH, REDIRECTION_TIME } from '../../Constant';
-import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
-import { NotificationManager } from 'react-notifications';
 
 export const ForgotPassword = () => {
     const { connected } = useSelector(profileSelector);
@@ -19,7 +21,7 @@ export const ForgotPassword = () => {
 
     useEffect(() => {
         if (connected) {
-            navigate(HOME_PATH);
+            navigate(Constant.HOME_PATH);
         }
     }, [connected]);
 
@@ -40,20 +42,20 @@ export const ForgotPassword = () => {
                     initialValues={{ username: '' }}
                     validationSchema={forgotPasswordSchema}
                     onSubmit={async (values, { setSubmitting }) => {
-                        const result = await authApi.forgotPassword(values);
+                        const result = await Api.authApi.forgotPassword(values);
                         if (result.result) {
                             NotificationManager.success(
                                 'Votre demande de changement de mot de passe a bien été prise en compte.',
                                 'Succès',
-                                REDIRECTION_TIME
+                                Constant.REDIRECTION_TIME
                             );
 
-                            navigate(LOGIN_PATH);
+                            navigate(Constant.LOGIN_PATH);
                         } else {
                             NotificationManager.error(
                                 "Une erreur s'est produite",
                                 'Erreur',
-                                REDIRECTION_TIME
+                                Constant.REDIRECTION_TIME
                             );
                         }
 
@@ -85,7 +87,7 @@ export const ForgotPassword = () => {
                                 Mot de passe oublié
                             </Typography>
                             <Box sx={{ mt: 1 }}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     margin="normal"
                                     value={values.username}
                                     onChange={handleChange}

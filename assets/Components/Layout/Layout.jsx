@@ -1,13 +1,17 @@
 import React, { useContext } from 'react';
-import { AppBar, Button, Toolbar, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import { SideMenu } from '../SideMenu/SideMenu';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { logoutAction } from '../../redux/profile/profileSlice';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { HOME_PATH, LOGIN_PATH } from '../../Constant';
-import { LayoutContext } from '../CmtLayoutProvider/CmtLayoutProvider';
+
+import LogoutIcon from '@mui/icons-material/Logout';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { LayoutContext } from "@Components/CmtLayoutProvider/CmtLayoutProvider";
+
+import { logoutAction } from '@Redux/profile/profileSlice';
 
 export const Layout = ({ children }) => {
     const dispatch = useDispatch();
@@ -17,7 +21,7 @@ export const Layout = ({ children }) => {
     const handleLogout = async () => {
         dispatch(logoutAction());
 
-        navigate(LOGIN_PATH);
+        navigate(Constant.LOGIN_PATH);
     };
 
     return (
@@ -26,7 +30,7 @@ export const Layout = ({ children }) => {
                 <Toolbar>
                     <Button
                         component={Link}
-                        to={HOME_PATH}
+                        to={Constant.HOME_PATH}
                         variant="text"
                         sx={{ color: '#FFFFFF' }}
                     >
@@ -41,7 +45,7 @@ export const Layout = ({ children }) => {
                 </Toolbar>
             </AppBar>
             <Box sx={{ display: 'flex' }}>
-                <SideMenu />
+                <Component.SideMenu />
                 <Box component="main" sx={{ flexGrow: 1, marginTop: '64px' }}>
                     {children}
                 </Box>

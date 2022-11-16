@@ -1,6 +1,6 @@
-import { CANCELED_REQUEST_ERROR_CODE } from '../../Constant';
-import { createFilterParams } from '../utils/createFilterParams';
-import axios from './config';
+import { Constant } from "@/AdminService/Constant";
+import axios from '@Services/api/config';
+import { createFilterParams } from '@Services/utils/createFilterParams';
 
 var controller = null;
 
@@ -53,7 +53,7 @@ const redirectionsApi = {
                 total: result?.data?.total,
             };
         } catch (error) {
-            if (error?.code === CANCELED_REQUEST_ERROR_CODE) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, redirections: [], total: 0 };
             }
 

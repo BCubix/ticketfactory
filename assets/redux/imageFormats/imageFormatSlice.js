@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
-import imageFormatsApi from '../../services/api/imageFormatsApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
-import { loginFailure } from '../profile/profileSlice';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -57,7 +55,7 @@ export function getImageFormatsAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().imageFormats?.filters;
 
-                const imageFormats = await imageFormatsApi.getImageFormats(state);
+                const imageFormats = await Api.imageFormatsApi.getImageFormats(state);
                 if (!imageFormats.result) {
                     dispatch(getImageFormatsFailure({ error: imageFormats.error }));
 

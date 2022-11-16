@@ -1,11 +1,12 @@
-import { Grid, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { formatMenusData } from '../../../../services/utils/formatMenusData';
-import { DisplayMenuElement, RenderElement } from './DisplayMenuElement';
-import { DroppableBox } from './sc.DroppableBox';
+
+import { Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+
+import { formatMenusData } from '@Services/utils/formatMenusData';
 
 export const MenuStructure = ({
     values,
@@ -69,7 +70,7 @@ export const MenuStructure = ({
             <Typography component="h2" variant="h4">
                 Structure du menu
             </Typography>
-            <CmtTextField
+            <Component.CmtTextField
                 value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -89,7 +90,7 @@ export const MenuStructure = ({
                             ignoreContainerClipping
                         >
                             {(provided, snapshot) => (
-                                <DroppableBox
+                                <Component.DroppableBox
                                     id="menus"
                                     className="droppableMenus"
                                     {...provided.droppableProps}
@@ -109,11 +110,11 @@ export const MenuStructure = ({
                                             index={index}
                                         >
                                             {(provided2, snapshot2) => (
-                                                <RenderElement
+                                                <Component.RenderElement
                                                     provided={provided2}
                                                     snapshot={snapshot2}
                                                 >
-                                                    <DisplayMenuElement
+                                                    <Component.DisplayMenuElement
                                                         element={item}
                                                         key={index}
                                                         index={index}
@@ -124,12 +125,12 @@ export const MenuStructure = ({
                                                         isDragging={snapshot2.isDragging}
                                                         maxLevel={values.maxLevel}
                                                     />
-                                                </RenderElement>
+                                                </Component.RenderElement>
                                             )}
                                         </Draggable>
                                     ))}
                                     {provided.placeholder}
-                                </DroppableBox>
+                                </Component.DroppableBox>
                             )}
                         </Droppable>
                     </Box>

@@ -1,31 +1,18 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { roomsSelector } from '@Redux/rooms/roomsSlice';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import roomsApi from '../../../services/api/roomsApi';
-import { changeRoomsFilters, getRoomsAction } from '../../../redux/rooms/roomsSlice';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { Box, CardContent, Typography } from '@mui/material';
-import { CREATE_PATH, EDIT_PATH, REDIRECTION_TIME, ROOMS_BASE_PATH } from '../../../Constant';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { RoomsFilters } from './RoomsFilters/RoomsFilters';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Box, CardContent, Typography } from '@mui/material';
 
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'name', label: 'Nom', width: '30%', sortable: true },
-    { name: 'seatsNb', label: 'Nombre de places', width: '20%', sortable: true },
-    { name: 'area', label: 'Superficie', width: '20%', sortable: true },
-];
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { changeRoomsFilters, getRoomsAction, roomsSelector } from '@Redux/rooms/roomsSlice';
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const RoomsList = () => {
     const { loading, rooms, filters, total, error } = useSelector(roomsSelector);
@@ -40,7 +27,7 @@ export const RoomsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -48,7 +35,7 @@ export const RoomsList = () => {
             return;
         }
 
-        await roomsApi.deleteRoom(id);
+        await Api.roomsApi.deleteRoom(id);
 
         dispatch(getRoomsAction());
 
@@ -57,26 +44,26 @@ export const RoomsList = () => {
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await roomsApi.duplicateRoom(id);
+            const result = await Api.roomsApi.duplicateRoom(id);
 
             if (result?.result) {
                 NotificationManager.success(
                     'La salle a bien été dupliquée.',
                     'Succès',
-                    REDIRECTION_TIME
+                    Constant.REDIRECTION_TIME
                 );
 
                 dispatch(getRoomsAction());
             } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };
 
     return (
         <>
-            <CmtPageWrapper title="Salles">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Salles">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -86,35 +73,35 @@ export const RoomsList = () => {
                                         (filters.page - 1) * filters.limit + rooms.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(ROOMS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <RoomsFilters
+                        <Component.RoomsFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeRoomsFilters(values))}
                         />
 
-                        <ListTable
+                        <Component.ListTable
                             contextualMenu
-                            table={TABLE_COLUMN}
+                            table={TableColumn.RoomsList}
                             list={rooms}
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
                             }}
                             onEdit={(id) => {
-                                navigate(`${ROOMS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.ROOMS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeRoomsFilters(newFilters))}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -127,9 +114,9 @@ export const RoomsList = () => {
                             length={rooms?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -141,7 +128,7 @@ export const RoomsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

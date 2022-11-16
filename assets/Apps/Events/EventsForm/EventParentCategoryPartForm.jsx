@@ -1,8 +1,8 @@
+import React from 'react';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TreeView, TreeItem } from '@mui/lab';
 import { Typography, Radio, Checkbox, Box } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import React from 'react';
 
 const displayCategoriesOptions = (list, values, setFieldValue) => {
     if (!list || list?.length === 0) {

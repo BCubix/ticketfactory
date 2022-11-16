@@ -1,6 +1,6 @@
-import { Box } from '@mui/system';
 import React from 'react';
-import { DisplayContentField } from '../ContentsForm/DisplayContentField';
+import { Box } from '@mui/system';
+import { Component } from "@/AdminService/Component";
 
 export const DisplayContentForm = ({
     values,
@@ -20,7 +20,7 @@ export const DisplayContentForm = ({
 
     return contentType?.fields?.map((item, index) => (
         <Box sx={{ marginBlock: 4 }} key={index}>
-            <DisplayContentField
+            <Component.DisplayContentField
                 values={values}
                 errors={errors}
                 touched={touched}

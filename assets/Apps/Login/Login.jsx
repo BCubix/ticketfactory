@@ -1,3 +1,10 @@
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
     Avatar,
     Box,
@@ -10,16 +17,11 @@ import {
     Typography,
 } from '@mui/material';
 import { Container } from '@mui/system';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Formik } from 'formik';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
 import { loginAction, profileSelector } from '@Redux/profile/profileSlice';
-import { HOME_PATH } from '@/Constant';
-import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import { FORGOT_PASSWORD_PATH } from '../../Constant';
-import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
 
 export const Login = () => {
     const dispatch = useDispatch();
@@ -28,7 +30,7 @@ export const Login = () => {
 
     useEffect(() => {
         if (connected) {
-            navigate(HOME_PATH);
+            navigate(Constant.HOME_PATH);
         }
     }, [connected]);
 
@@ -79,7 +81,7 @@ export const Login = () => {
                                 Connexion
                             </Typography>
                             <Box sx={{ mt: 1 }}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     margin="normal"
                                     value={values.username}
                                     onChange={handleChange}
@@ -93,7 +95,7 @@ export const Login = () => {
                                     error={touched.username && Boolean(errors.username)}
                                     helperText={touched.username && errors.username}
                                 />
-                                <CmtTextField
+                                <Component.CmtTextField
                                     margin="normal"
                                     value={values.password}
                                     onChange={handleChange}
@@ -124,7 +126,7 @@ export const Login = () => {
                                             justifyContent: 'flex-end',
                                         }}
                                     >
-                                        <Link href={FORGOT_PASSWORD_PATH} variant="body2">
+                                        <Link href={Constant.FORGOT_PASSWORD_PATH} variant="body2">
                                             Mot de passe oublié
                                         </Link>
                                     </Grid>

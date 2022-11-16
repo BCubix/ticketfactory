@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import mediasApi from '../../services/api/mediasApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -57,7 +57,7 @@ export function getMediasAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().medias?.filters;
 
-                const medias = await mediasApi.getMedias(state);
+                const medias = await Api.mediasApi.getMedias(state);
                 if (!medias.result) {
                     dispatch(getMediasFailure({ error: medias.error }));
 

@@ -1,12 +1,11 @@
-import { Box } from '@mui/system';
 import React from 'react';
-import { CmtSearchFilters } from '../../../../Components/CmtFilters/CmtSearchFilters';
-import CheckIcon from '@mui/icons-material/Check';
-import { CmtBooleanFilters } from '../../../../Components/CmtFilters/CmtBooleanFilters';
-import TitleIcon from '@mui/icons-material/Title';
-import { CmtMultipleSelectFilters } from '../../../../Components/CmtFilters/CmtMultipleSelectFilters';
+
 import CategoryIcon from '@mui/icons-material/Category';
-import { MediasSorters } from './MediasSorters';
+import CheckIcon from '@mui/icons-material/Check';
+import TitleIcon from '@mui/icons-material/Title';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
 
 const LIST_TYPE = [
     { label: 'Image', value: 'image' },
@@ -30,7 +29,7 @@ const SORT_LIST = [
 export const MediasFilters = ({ filters, changeFilters }) => {
     return (
         <Box p={3} flexGrow={1} display="flex" justifyContent="flex-start" flexWrap="wrap">
-            <CmtBooleanFilters
+            <Component.CmtBooleanFilters
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status"
@@ -38,7 +37,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 icon={<CheckIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.title}
                 setValue={(newValue) => changeFilters({ ...filters, title: newValue })}
                 title="Chercher par titre"
@@ -46,7 +45,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 icon={<TitleIcon />}
             />
 
-            <CmtMultipleSelectFilters
+            <Component.CmtMultipleSelectFilters
                 value={filters.documentType}
                 setValue={(newValue) => {
                     changeFilters({ ...filters, documentType: newValue });
@@ -61,7 +60,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 list={LIST_TYPE}
             />
 
-            <MediasSorters
+            <Component.MediasSorters
                 value={filters.sort}
                 setValue={(newValue) => {
                     changeFilters({ ...filters, sort: newValue });

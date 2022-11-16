@@ -1,10 +1,13 @@
-import axios, { Axios } from 'axios';
 import { NotificationManager } from 'react-notifications';
-import axiosRetry from 'axios-retry';
-import { REDIRECTION_TIME } from '../../Constant';
-import authApi from './authApi';
 import { useDispatch } from 'react-redux';
-import { logoutAction } from '../../redux/profile/profileSlice';
+
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
+
+import { logoutAction } from '@Redux/profile/profileSlice';
 
 let api_count = 0;
 
@@ -22,7 +25,7 @@ api.interceptors.response.use(
             NotificationManager.error(
                 'Une erreur est survenu, essayez de rafraichir la page.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
             api_count = 0;
         }
@@ -31,7 +34,7 @@ api.interceptors.response.use(
             NotificationManager.error(
                 'Une erreur est survenu, essayez de rafraichir la page.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
         }
 
@@ -40,7 +43,7 @@ api.interceptors.response.use(
                 useDispatch(logoutAction());
             }
 
-            const result = await authApi.refreshConnexionToken();
+            const result = await Api.authApi.refreshConnexionToken();
             if (!result?.result) {
                 useDispatch(logoutAction());
             } else {

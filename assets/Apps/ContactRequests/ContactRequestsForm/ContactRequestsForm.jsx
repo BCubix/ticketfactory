@@ -1,11 +1,11 @@
-import { Button, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import { Formik } from 'formik';
 import React from 'react';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+
+import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
 
 export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
     const contactRequestSchema = Yup.object().shape({
@@ -51,17 +51,17 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${
                         initialValues ? 'Modification' : 'Création'
                     } d'une demande de contact`}
                 >
-                    <CmtFormBlock title="Informations générales">
+                    <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.firstName}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -72,7 +72,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.lastName}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -83,7 +83,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.email}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -94,7 +94,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.phone}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -105,7 +105,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.subject}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -116,7 +116,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.message}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -129,7 +129,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                         </Grid>
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
@@ -153,7 +153,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

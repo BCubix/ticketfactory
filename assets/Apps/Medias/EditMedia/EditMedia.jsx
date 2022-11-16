@@ -1,17 +1,17 @@
-import { Button, Grid } from '@mui/material';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { REDIRECTION_TIME } from '../../../Constant';
-import { getMediasAction } from '../../../redux/medias/mediasSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import mediasApi from '../../../services/api/mediasApi';
-import { CmtDisplayMediaType } from '../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
-import { MediaDataForm } from '../MediasForm/MediaDataForm';
-import { MediaImageForm } from '../MediasForm/MediaImageForm';
-import { getMediaType } from '../../../services/utils/getMediaType';
+
+import { Button, Grid } from '@mui/material';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getMediasAction } from '@Redux/medias/mediasSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
+
+import { getMediaType } from '@Services/utils/getMediaType';
 
 export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     const [mediaType, setMediaType] = useState(null);
 
     const getMedia = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -28,10 +28,10 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
             return;
         }
 
-        const result = await mediasApi.getOneMedia(id);
+        const result = await Api.mediasApi.getOneMedia(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
             onCancel();
 
@@ -43,7 +43,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     };
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -51,13 +51,13 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
             return;
         }
 
-        const result = await mediasApi.editMedia(id, values);
+        const result = await Api.mediasApi.editMedia(id, values);
 
         if (!result.result) {
             return;
         }
 
-        NotificationManager.success('Votre fichier a bien été modifié', 'Succès', REDIRECTION_TIME);
+        NotificationManager.success('Votre fichier a bien été modifié', 'Succès', Constant.REDIRECTION_TIME);
 
         editSuccess();
         dispatch(getMediasAction());
@@ -88,7 +88,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     return (
         <Grid container spacing={4} sx={{ mb: -4, minHeight: 300 }}>
             {editImage && mediaType === 'image' ? (
-                <MediaImageForm
+                <Component.MediaImageForm
                     media={media}
                     closeImageEditor={() => setEditImage(false)}
                     editSuccess={handleEditImageSuccess}
@@ -105,7 +105,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                         flexDirection={'column'}
                         alignItems={'center'}
                     >
-                        <CmtDisplayMediaType
+                        <Component.CmtDisplayMediaType
                             media={media}
                             maxWidth={'50%'}
                             maxHeight={200}
@@ -125,7 +125,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
-                        <MediaDataForm
+                        <Component.MediaDataForm
                             media={media}
                             handleSubmit={handleSubmit}
                             deleteElement={() => deleteElement(id)}

@@ -1,11 +1,14 @@
-import { Box } from '@mui/system';
 import React, { useEffect, useRef } from 'react';
+import { NotificationManager } from 'react-notifications';
+
 import 'tui-image-editor/dist/tui-image-editor.css';
 import ImageEditor from 'tui-image-editor';
+
 import { Button } from '@mui/material';
-import mediasApi from '../../../services/api/mediasApi';
-import { REDIRECTION_TIME } from '../../../Constant';
-import { NotificationManager } from 'react-notifications';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
 
 export const MediaImageForm = ({ media = null, closeImageEditor, editSuccess }) => {
     const editor = useRef(null);
@@ -13,13 +16,13 @@ export const MediaImageForm = ({ media = null, closeImageEditor, editSuccess }) 
     const handleValidateImage = async () => {
         const fileBase64 = editor.current.toDataURL();
 
-        const result = await mediasApi.updateImage(media.id, fileBase64, media.title);
+        const result = await Api.mediasApi.updateImage(media.id, fileBase64, media.title);
 
         if (result?.result && result?.media?.success) {
             NotificationManager.success(
                 'Votre image a bien été mise à jour.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             editSuccess();

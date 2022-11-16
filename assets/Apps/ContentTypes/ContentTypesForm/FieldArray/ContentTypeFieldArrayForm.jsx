@@ -1,12 +1,12 @@
-import { Card, CardContent, InputLabel } from '@mui/material';
-import { Box } from '@mui/system';
-import { FieldArray } from 'formik';
 import React from 'react';
-import { FieldArrayElem } from './FieldArrayElem';
-import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
-import { AddBlockButton, DeleteBlockFabButton } from '@Components/CmtButton/sc.Buttons';
+import { FieldArray } from 'formik';
+
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Card, CardContent, InputLabel } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -31,20 +31,20 @@ export const ContentTypeFieldArrayForm = ({
                             >
                                 <CardContent>
                                     <Box p={2}>
-                                        <DeleteBlockFabButton
+                                        <Component.DeleteBlockFabButton
                                             size="small"
                                             onClick={() => {
                                                 remove(index);
                                             }}
                                         >
                                             <DeleteIcon />
-                                        </DeleteBlockFabButton>
+                                        </Component.DeleteBlockFabButton>
 
                                         <InputLabel sx={{ marginBottom: 3 }} id={index}>
                                             Champ n°{index + 1}
                                         </InputLabel>
 
-                                        <FieldArrayElem
+                                        <Component.FieldArrayElem
                                             values={item}
                                             index={index}
                                             errors={errors}
@@ -61,8 +61,8 @@ export const ContentTypeFieldArrayForm = ({
                             </Card>
                         ))}
 
-                        <CmtEndPositionWrapper>
-                            <AddBlockButton
+                        <Component.CmtEndPositionWrapper>
+                            <Component.AddBlockButton
                                 size="small"
                                 variant="outlined"
                                 color="primary"
@@ -82,8 +82,8 @@ export const ContentTypeFieldArrayForm = ({
                                 }}
                             >
                                 <AddIcon /> Ajouter un champ
-                            </AddBlockButton>
-                        </CmtEndPositionWrapper>
+                            </Component.AddBlockButton>
+                        </Component.CmtEndPositionWrapper>
                     </Box>
                 )}
             </FieldArray>

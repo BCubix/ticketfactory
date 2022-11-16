@@ -1,10 +1,12 @@
+import React from 'react';
+
+import { useTheme } from '@emotion/react';
+
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TreeItem, TreeView } from '@mui/lab';
 import { Radio, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import React from 'react';
 import { Box } from '@mui/system';
-import { useTheme } from '@emotion/react';
 
 const displayCategoriesOptions = (list, values, setFieldValue) => {
     if (!list || list?.length === 0) {

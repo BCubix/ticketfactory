@@ -1,13 +1,13 @@
-import { useTheme } from '@emotion/react';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import React from 'react';
-import { CmtCard } from '../CmtCard/sc.CmtCard';
+import { useTheme } from '@emotion/react';
+import { CardContent, CardHeader } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 export const CmtFormBlock = ({ title, children, marginBlock = 3, ...rest }) => {
     const theme = useTheme();
 
     return (
-        <CmtCard sx={{ marginBlock: marginBlock, position: 'relative' }} elevation={3} {...rest}>
+        <Component.CmtCard sx={{ marginBlock: marginBlock, position: 'relative' }} elevation={3} {...rest}>
             <CardHeader
                 title={title}
                 titleTypographyProps={{
@@ -24,6 +24,6 @@ export const CmtFormBlock = ({ title, children, marginBlock = 3, ...rest }) => {
                 }}
             />
             <CardContent>{children}</CardContent>
-        </CmtCard>
+        </Component.CmtCard>
     );
 };

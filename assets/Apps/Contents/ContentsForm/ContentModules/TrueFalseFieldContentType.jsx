@@ -1,6 +1,6 @@
+import React from 'react';
 import { FormControl, FormControlLabel, FormHelperText, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
 
 const FormComponent = ({
     values,

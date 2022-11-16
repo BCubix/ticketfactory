@@ -1,7 +1,6 @@
-import { FormControlLabel, Switch } from '@mui/material';
 import React from 'react';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { FieldFormControl } from '../sc.ContentTypeFields';
+import { FormControlLabel, Switch } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 const NAME = 'textarea';
 const LABEL = 'Texte sur plusieurs lignes';
@@ -12,7 +11,7 @@ const TYPE_GROUP_NAME = 'Champs de base';
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -28,9 +27,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Requis'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -46,9 +45,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Désactivé'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -64,7 +63,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Gérer les espaces inutiles'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };
@@ -72,10 +71,10 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
 const Validations = ({ values, errors, index, handleChange, handleBlur, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.minLength}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -87,12 +86,12 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, prefixNa
                     label={'Longueur minimum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.maxLength}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -104,7 +103,7 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, prefixNa
                     label={'Longueur maximum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };

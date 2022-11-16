@@ -1,27 +1,19 @@
-import { CardContent, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CmtDisplayMediaType } from '../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
-import { CmtMediaElement } from '../../../Components/CmtMediaElement/sc.MediaElement';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
-import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
-import { REDIRECTION_TIME } from '../../../Constant';
+import { CardContent, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
 import {
     changeMediasFilters,
     getMediasAction,
     mediasSelector,
-} from '../../../redux/medias/mediasSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import mediasApi from '../../../services/api/mediasApi';
-import { CreateMedia } from '../CreateMedia/CreateMedia';
-import { EditMedia } from '../EditMedia/EditMedia';
-import { MediasFilters } from './MediasFilters/MediasFilters';
+} from '@Redux/medias/mediasSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const MediasList = () => {
     const { loading, medias, filters, total, error } = useSelector(mediasSelector);
@@ -39,11 +31,11 @@ export const MediasList = () => {
     const handleSubmit = () => {
         setCreateDialog(false);
         dispatch(getMediasAction());
-        NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', REDIRECTION_TIME);
+        NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
     };
 
     const handleDelete = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -51,7 +43,7 @@ export const MediasList = () => {
             return;
         }
 
-        await mediasApi.deleteMedia(id);
+        await Api.mediasApi.deleteMedia(id);
 
         dispatch(getMediasAction());
 
@@ -60,8 +52,8 @@ export const MediasList = () => {
     };
 
     return (
-        <CmtPageWrapper title="Médias">
-            <CmtCard sx={{ height: '100%', mt: 5 }}>
+        <Component.CmtPageWrapper title="Médias">
+            <Component.CmtCard sx={{ height: '100%', mt: 5 }}>
                 <CardContent sx={{ height: '100%' }}>
                     <Box display="flex" justifyContent={'space-between'}>
                         <Typography component="h2" variant="h5" fontSize={20}>
@@ -71,25 +63,25 @@ export const MediasList = () => {
                                     (filters.page - 1) * filters.limit + medias.length
                                 } sur ${total})`}
                         </Typography>
-                        <CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                        <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                             Nouveau
-                        </CreateButton>
+                        </Component.CreateButton>
                     </Box>
 
-                    <MediasFilters
+                    <Component.MediasFilters
                         filters={filters}
                         changeFilters={(values) => dispatch(changeMediasFilters(values))}
                     />
 
                     <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
                         {medias?.map((item, index) => (
-                            <CmtMediaElement key={index} onClick={() => setEditDialog(item.id)}>
-                                <CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
-                            </CmtMediaElement>
+                            <Component.CmtMediaElement key={index} onClick={() => setEditDialog(item.id)}>
+                                <Component.CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
+                            </Component.CmtMediaElement>
                         ))}
                     </Box>
 
-                    <CmtPagination
+                    <Component.CmtPagination
                         page={filters.page}
                         total={total}
                         limit={filters.limit}
@@ -102,7 +94,7 @@ export const MediasList = () => {
                         length={medias?.length}
                     />
                 </CardContent>
-            </CmtCard>
+            </Component.CmtCard>
             <Dialog
                 fullWidth
                 maxWidth="md"
@@ -111,7 +103,7 @@ export const MediasList = () => {
             >
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un fichier</DialogTitle>
                 <DialogContent>
-                    <CreateMedia handleSubmit={handleSubmit} />
+                    <Component.CreateMedia handleSubmit={handleSubmit} />
                 </DialogContent>
             </Dialog>
 
@@ -123,7 +115,7 @@ export const MediasList = () => {
             >
                 <DialogTitle sx={{ fontSize: 20 }}>Modifier un fichier</DialogTitle>
                 <DialogContent dividers>
-                    <EditMedia
+                    <Component.EditMedia
                         id={editDialog}
                         onCancel={() => {
                             setEditDialog(null);
@@ -136,7 +128,7 @@ export const MediasList = () => {
                 </DialogContent>
             </Dialog>
 
-            <DeleteDialog
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -148,7 +140,7 @@ export const MediasList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
-        </CmtPageWrapper>
+            </Component.DeleteDialog>
+        </Component.CmtPageWrapper>
     );
 };

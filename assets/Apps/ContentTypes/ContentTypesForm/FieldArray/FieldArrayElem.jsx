@@ -1,9 +1,6 @@
-import { Box } from '@mui/system';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { CmtTabs } from '../../../../Components/CmtTabs/CmtTabs';
-import { CONTENT_TYPE_MODULES_EXTENSION } from '../../../../Constant';
-import { MainPartFieldForm } from './MainPartFieldForm';
+import React, { useEffect, useState } from 'react';
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
 
 export const FieldArrayElem = ({
     values,
@@ -23,7 +20,7 @@ export const FieldArrayElem = ({
         const moduleName = String(values.type).charAt(0).toUpperCase() + values.type?.slice(1);
 
         const list =
-            contentTypesModules[`${moduleName}${CONTENT_TYPE_MODULES_EXTENSION}`]?.getTabList();
+            contentTypesModules[`${moduleName}${Constant.CONTENT_TYPE_MODULES_EXTENSION}`]?.getTabList();
 
         setTabList(list);
     }, [values.type]);
@@ -50,12 +47,12 @@ export const FieldArrayElem = ({
     }));
 
     return (
-        <CmtTabs
+        <Component.CmtTabs
             list={[
                 {
                     label: 'Informations générale',
                     component: (
-                        <MainPartFieldForm
+                        <Component.MainPartFieldForm
                             values={values}
                             errors={errors}
                             touched={touched}

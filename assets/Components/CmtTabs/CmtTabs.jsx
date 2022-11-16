@@ -1,7 +1,7 @@
-import { Tab, Tabs } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Tab, Tabs } from '@mui/material';
+import { Box } from '@mui/system';
 
 function TabPanel(props) {
     const { children, value, index, label, ...other } = props;

@@ -1,9 +1,11 @@
+import React, { useMemo } from 'react';
+
 import { FormControl, InputLabel, ListSubheader, MenuItem, Select } from '@mui/material';
-import React from 'react';
-import { useMemo } from 'react';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { CONTENT_TYPE_MODULES_EXTENSION } from '../../../../Constant';
-import { getNestedFormikError } from '../../../../services/utils/getNestedFormikError';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const MainPartFieldForm = ({
     values,
@@ -20,13 +22,13 @@ export const MainPartFieldForm = ({
     const moduleName =
         String(values.type).charAt(0).toUpperCase() +
         values.type?.slice(1) +
-        CONTENT_TYPE_MODULES_EXTENSION;
+        Constant.CONTENT_TYPE_MODULES_EXTENSION;
 
     const handleChangeFieldType = (value) => {
         const modName =
             String(value).charAt(0).toUpperCase() +
             value?.slice(1) +
-            CONTENT_TYPE_MODULES_EXTENSION;
+            Constant.CONTENT_TYPE_MODULES_EXTENSION;
 
         contentTypesModules[modName]?.setInitialValues(
             `${prefixName}fields.${index}`,
@@ -77,7 +79,7 @@ export const MainPartFieldForm = ({
 
     return (
         <>
-            <CmtTextField
+            <Component.CmtTextField
                 value={values.title}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -86,7 +88,7 @@ export const MainPartFieldForm = ({
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'title')}
             />
 
-            <CmtTextField
+            <Component.CmtTextField
                 value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -125,7 +127,7 @@ export const MainPartFieldForm = ({
                 </Select>
             </FormControl>
 
-            <CmtTextField
+            <Component.CmtTextField
                 value={values.helper}
                 onChange={handleChange}
                 onBlur={handleBlur}

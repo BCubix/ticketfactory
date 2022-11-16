@@ -1,6 +1,6 @@
+import React from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
 
 const VALIDATION_TYPE = 'bool';
 const VALIDATION_LIST = [

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
     Box,
     Checkbox,
@@ -11,9 +12,8 @@ import {
     Select,
     Typography,
 } from '@mui/material';
-import { CmtPopover } from '../CmtPopover/CmtPopover';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { useDispatch } from 'react-redux';
+import { Component } from "@/AdminService/Component";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CmtMultipleSelectFilters = ({
     list,
@@ -105,7 +105,7 @@ export const CmtMultipleSelectFilters = ({
                 />
             </Box>
 
-            <CmtPopover anchorEl={anchorEl} closePopover={() => setAnchorEl(null)}>
+            <Component.CmtPopover anchorEl={anchorEl} closePopover={() => setAnchorEl(null)}>
                 <Box p={5}>
                     <Typography mb={2} component="p" variant="h4">
                         {title}
@@ -162,7 +162,7 @@ export const CmtMultipleSelectFilters = ({
                         </Select>
                     </FormControl>
                 </Box>
-            </CmtPopover>
+            </Component.CmtPopover>
         </Box>
     );
 };

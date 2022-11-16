@@ -1,11 +1,11 @@
-import { Button, Container, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import { Formik } from 'formik';
 import React from 'react';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+
+import { Button } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
 
 export const CreateUserForm = ({ handleSubmit }) => {
     const userSchema = Yup.object().shape({
@@ -51,13 +51,13 @@ export const CreateUserForm = ({ handleSubmit }) => {
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     title={"Création d'un utilisateur"}
                     component="form"
                     onSubmit={handleSubmit}
                 >
-                    <CmtFormBlock title={'Informations générales'}>
-                        <CmtTextField
+                    <Component.CmtFormBlock title={'Informations générales'}>
+                        <Component.CmtTextField
                             value={values.email}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -66,7 +66,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.email && errors.email}
                             required
                         />
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.firstName}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -75,7 +75,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.firstName && errors.firstName}
                             required
                         />
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.lastName}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -84,10 +84,10 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.lastName && errors.lastName}
                             required
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
-                    <CmtFormBlock title="Sécurité">
-                        <CmtTextField
+                    <Component.CmtFormBlock title="Sécurité">
+                        <Component.CmtTextField
                             value={values.password}
                             type="password"
                             onChange={handleChange}
@@ -97,7 +97,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.password && errors.password}
                             required
                         />
-                        <CmtTextField
+                        <Component.CmtTextField
                             type="password"
                             value={values.confirmPassword}
                             onChange={handleChange}
@@ -107,7 +107,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.confirmPassword && errors.confirmPassword}
                             required
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
                         <Button
                             type="submit"
@@ -118,7 +118,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             Créer
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

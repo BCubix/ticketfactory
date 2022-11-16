@@ -1,15 +1,15 @@
-import { TreeItem, TreeView } from '@mui/lab';
-import { FormControl, Radio, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { REDIRECTION_TIME } from '../../../../Constant';
-import authApi from '../../../../services/api/authApi';
-import categoriesApi from '../../../../services/api/categoriesApi';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { TreeItem, TreeView } from '@mui/lab';
+import { FormControl, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
 
 const VALIDATION_TYPE = 'array';
 const VALIDATION_LIST = [
@@ -56,7 +56,7 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
     const [list, setList] = useState([]);
 
     const getLinks = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -64,13 +64,13 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
             return;
         }
 
-        const result = await categoriesApi.getCategories();
+        const result = await Api.categoriesApi.getCategories();
 
         if (!result?.result) {
             NotificationManager.error(
                 'Une erreur est survenue, essayez de rafraichir la page.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
         }
 

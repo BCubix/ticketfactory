@@ -1,10 +1,10 @@
-import { Button, FormControlLabel, Grid, Switch, Box } from '@mui/material';
-import { Formik } from 'formik';
 import React from 'react';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+
+import { Button, FormControlLabel, Grid, Switch, Box } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     const seasonsSchema = Yup.object().shape({
@@ -40,15 +40,15 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'une saison`}
                 >
-                    <CmtFormBlock title={'Informations générales'}>
+                    <Component.CmtFormBlock title={'Informations générales'}>
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.name}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -59,7 +59,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <CmtTextField
+                                <Component.CmtTextField
                                     type="number"
                                     value={values.beginYear}
                                     onChange={handleChange}
@@ -71,7 +71,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                                 />
                             </Grid>
                         </Grid>
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
@@ -95,7 +95,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

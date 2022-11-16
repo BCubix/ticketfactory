@@ -1,9 +1,10 @@
+import React, { useMemo } from 'react';
+
 import { FormControlLabel, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useMemo } from 'react';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { IMAGE_FILE_SUPPORTED } from '../../../../Constant';
-import { FieldFormControl } from '../sc.ContentTypeFields';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
 
 const NAME = 'image';
 const LABEL = 'Image';
@@ -14,7 +15,7 @@ const TYPE_GROUP_NAME = 'Contenu';
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -30,9 +31,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Requis'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -48,9 +49,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Désactivé'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -66,7 +67,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Multiple'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };
@@ -81,17 +82,17 @@ const Validations = ({
     prefixName,
 }) => {
     const imageTypeList = useMemo(() => {
-        const list = IMAGE_FILE_SUPPORTED.split(',');
+        const list = Constant.IMAGE_FILE_SUPPORTED.split(',');
 
         return list.map((el) => el.trim());
     }, []);
 
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.minSize}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -103,11 +104,11 @@ const Validations = ({
                     label={'Taille minimum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
-            <FieldFormControl fullWidth>
+            </Component.FieldFormControl>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.maxSize}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -119,11 +120,11 @@ const Validations = ({
                     label={'Taille maximum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
-            <FieldFormControl fullWidth>
+            </Component.FieldFormControl>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.minLength}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -135,11 +136,11 @@ const Validations = ({
                     label={'Longueur minimum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
-            <FieldFormControl fullWidth>
+            </Component.FieldFormControl>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.maxLength}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -151,11 +152,11 @@ const Validations = ({
                     label={'Longueur maximum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
-            <FieldFormControl fullWidth>
+            </Component.FieldFormControl>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.minHeight}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -167,11 +168,11 @@ const Validations = ({
                     label={'Longueur minimum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
-            <FieldFormControl fullWidth>
+            </Component.FieldFormControl>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTextField
+                        <Component.CmtTextField
                             value={values.validations.maxHeight}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -183,9 +184,9 @@ const Validations = ({
                     label={'Longueur maximum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Select
@@ -222,7 +223,7 @@ const Validations = ({
                     label={"Types d'images autorisés"}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };

@@ -1,13 +1,6 @@
-import {
-    FormControlLabel,
-    FormHelperText,
-    InputLabel,
-    Radio,
-    RadioGroup,
-    Typography,
-} from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useMemo } from 'react';
+import { FormControlLabel, FormHelperText, InputLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [

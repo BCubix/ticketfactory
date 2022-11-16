@@ -1,20 +1,15 @@
 import React from 'react';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    List,
-    ListItemAvatar,
-    ListItemButton,
-    ListItemText,
-} from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import ArticleIcon from '@mui/icons-material/Article';
-import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+
 import { useTheme } from '@emotion/react';
-import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
+
+import ArticleIcon from '@mui/icons-material/Article';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import { CardContent, CardHeader, List, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
 
 export const FirstCardDashboard = ({ data }) => {
     const theme = useTheme();
@@ -49,7 +44,7 @@ export const FirstCardDashboard = ({ data }) => {
     ];
 
     return (
-        <CmtCard sx={{ position: 'relative' }}>
+        <Component.CmtCard sx={{ position: 'relative' }}>
             <CardHeader
                 title="Informations générales"
                 titleTypographyProps={{
@@ -90,6 +85,6 @@ export const FirstCardDashboard = ({ data }) => {
                     ))}
                 </List>
             </CardContent>
-        </CmtCard>
+        </Component.CmtCard>
     );
 };

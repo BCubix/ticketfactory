@@ -1,7 +1,6 @@
-import { FormControlLabel, Switch } from '@mui/material';
 import React from 'react';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { FieldFormControl } from '../sc.ContentTypeFields';
+import { FormControlLabel, Switch } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 const NAME = 'map';
 const LABEL = 'Carte';
@@ -12,7 +11,7 @@ const TYPE_GROUP_NAME = 'Contenu';
 const ComplementInformation = ({ values, index, handleChange, handleBlur, prefixName, errors }) => {
     return (
         <>
-            <CmtTextField
+            <Component.CmtTextField
                 value={values.parameters.token}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -22,7 +21,7 @@ const ComplementInformation = ({ values, index, handleChange, handleBlur, prefix
                 label="Token de la carte"
             />
 
-            <CmtTextField
+            <Component.CmtTextField
                 value={values.parameters.mapStyle}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -38,7 +37,7 @@ const ComplementInformation = ({ values, index, handleChange, handleBlur, prefix
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -54,9 +53,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Requis'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -72,7 +71,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Désactivé'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };

@@ -1,5 +1,5 @@
 import { Card } from '@mui/material';
-import { Box, styled } from '@mui/system';
+import { styled } from '@mui/system';
 
 export const CmtMediaElement = styled(Card)`
     width: 100%;

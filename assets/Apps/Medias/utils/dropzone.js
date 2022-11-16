@@ -1,7 +1,7 @@
-import authApi from '../../../services/api/authApi';
 import Dropzone from 'dropzone';
 import $ from 'jquery';
-import { ALL_FILE_SUPPORTED, MEDIA_UPLOAD_URL } from '../../../Constant';
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
 
 var countChunk = 0;
 
@@ -17,11 +17,11 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
     }
 
     let dZone = new Dropzone(`#${element.id}`, {
-        url: MEDIA_UPLOAD_URL,
+        url: Constant.MEDIA_UPLOAD_URL,
         chunking: false,
         maxFilesize: 1048576,
         uploadMultiple: false,
-        acceptedFiles: ALL_FILE_SUPPORTED,
+        acceptedFiles: Constant.ALL_FILE_SUPPORTED,
         uploadprogress: function (file, progress, byteSent) {
             $(element).find('.dz-upload').width(`${progress}%`);
         },
@@ -68,7 +68,7 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
     });
 
     const checkAuth = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             logFail(check.error);

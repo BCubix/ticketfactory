@@ -1,15 +1,16 @@
 import React from 'react';
 import { FieldArray } from 'formik';
-import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
-import { Card, CardContent, FormHelperText, InputLabel } from '@mui/material';
-import { Box } from '@mui/system';
-import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
-import { LightEditorFormControl } from '@Components/Editors/LightEditor/sc.LightEditorFormControl';
-import { LightEditor } from '@Components/Editors/LightEditor/LightEditor';
+
+import { useTheme } from '@emotion/react';
+
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
-import { useTheme } from '@emotion/react';
+import { Card, CardContent, FormHelperText, InputLabel } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFieldTouched }) => {
     const theme = useTheme();
@@ -25,21 +26,21 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                         >
                             <CardContent>
                                 <Box p={2}>
-                                    <DeleteBlockFabButton
+                                    <Component.DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
                                         <DeleteIcon />
-                                    </DeleteBlockFabButton>
+                                    </Component.DeleteBlockFabButton>
 
                                     <InputLabel sx={{ marginBottom: 3 }} id={index}>
                                         Bloc n°{index + 1}
                                     </InputLabel>
 
-                                    <LightEditorFormControl>
-                                        <LightEditor
+                                    <Component.LightEditorFormControl>
+                                        <Component.LightEditor
                                             labelId={index}
                                             value={content}
                                             onBlur={() =>
@@ -59,7 +60,7 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                                                 'content'
                                             )}
                                         />
-                                    </LightEditorFormControl>
+                                    </Component.LightEditorFormControl>
 
                                     <FormHelperText error>
                                         {getNestedFormikError(
@@ -73,8 +74,8 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                             </CardContent>
                         </Card>
                     ))}
-                    <CmtEndPositionWrapper>
-                        <AddBlockButton
+                    <Component.CmtEndPositionWrapper>
+                        <Component.AddBlockButton
                             size="small"
                             color="primary"
                             variant="outlined"
@@ -83,8 +84,8 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                             }}
                         >
                             <AddIcon /> Ajouter un contenu
-                        </AddBlockButton>
-                    </CmtEndPositionWrapper>
+                        </Component.AddBlockButton>
+                    </Component.CmtEndPositionWrapper>
                 </Box>
             )}
         </FieldArray>

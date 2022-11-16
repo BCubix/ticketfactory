@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginFailure } from '../profile/profileSlice';
-import authApi from '../../services/api/authApi';
-import contentTypesApi from '../../services/api/contentTypesApi';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
+import { Api } from "@/AdminService/Api";
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const initialState = {
     loading: false,
@@ -58,7 +56,7 @@ export function getContentTypesAction(filters = null) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().contentTypes?.filters;
 
-                const contentTypes = await contentTypesApi.getContentTypes(state);
+                const contentTypes = await Api.contentTypesApi.getContentTypes(state);
 
                 if (!contentTypes.result) {
                     dispatch(getContentTypesFailure({ error: contentTypes.error }));

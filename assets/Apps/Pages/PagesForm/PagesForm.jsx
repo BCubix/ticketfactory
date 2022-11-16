@@ -3,13 +3,9 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Box } from '@mui/system';
-import { Button, FormControlLabel, FormHelperText, Switch, Typography } from '@mui/material';
+import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
 
-import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
-
-import { PagesBlocksForm } from '@Apps/Pages/PagesForm/PagesBlocksForm';
+import { Component } from "@/AdminService/Component";
 
 export const PagesForm = ({ handleSubmit, initialValues = null }) => {
     const pageSchema = Yup.object().shape({
@@ -47,13 +43,13 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                 setFieldTouched,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'une page`}
                 >
-                    <CmtFormBlock title="Informations générales">
-                        <CmtTextField
+                    <Component.CmtFormBlock title="Informations générales">
+                        <Component.CmtTextField
                             value={values.title}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -61,10 +57,10 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                             name="title"
                             error={touched.title && errors.title}
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
-                    <CmtFormBlock title="Blocs">
-                        <PagesBlocksForm
+                    <Component.CmtFormBlock title="Blocs">
+                        <Component.PagesBlocksForm
                             values={values}
                             errors={errors}
                             touched={touched}
@@ -75,7 +71,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                         {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && (
                             <FormHelperText error>{errors.pageBlocks}</FormHelperText>
                         )}
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
@@ -99,7 +95,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

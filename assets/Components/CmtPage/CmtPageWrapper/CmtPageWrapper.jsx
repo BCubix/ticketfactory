@@ -1,12 +1,11 @@
 import React from 'react';
-import { CmtPageTitle } from '../CmtPageTitle/CmtPageTitle';
-import { PageWrapper } from './sc.PageWrapper';
+import { Component } from "@/AdminService/Component";
 
 export const CmtPageWrapper = ({ children, title, ...params }) => {
     return (
-        <PageWrapper {...params}>
-            {title && <CmtPageTitle>{title}</CmtPageTitle>}
+        <Component.PageWrapper {...params}>
+            {title && <Component.CmtPageTitle>{title}</Component.CmtPageTitle>}
             {children}
-        </PageWrapper>
+        </Component.PageWrapper>
     );
 };

@@ -1,6 +1,6 @@
-import { FormControlLabel, Switch } from '@mui/material';
 import React from 'react';
-import { FieldFormControl } from '../sc.ContentTypeFields';
+import { FormControlLabel, Switch } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 const NAME = 'checkbox';
 const LABEL = 'Cases à cocher';
@@ -11,7 +11,7 @@ const TYPE_GROUP_NAME = 'Choix';
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -27,9 +27,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Requis'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -45,7 +45,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Désactivé'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };

@@ -1,7 +1,7 @@
-import { Box } from '@mui/system';
 import React from 'react';
-import { ICONS_FILE_PATH, MEDIA_FILE_BASE_URL } from '../../Constant';
-import { getMediaType } from '../../services/utils/getMediaType';
+import { Box } from '@mui/system';
+import { Constant } from "@/AdminService/Constant";
+import { getMediaType } from '@Services/utils/getMediaType';
 
 const MEDIA_TYPE = [
     {
@@ -9,7 +9,7 @@ const MEDIA_TYPE = [
         component: ({ media, ...typeProps }) => (
             <Box
                 component="img"
-                src={MEDIA_FILE_BASE_URL + media.documentUrl}
+                src={Constant.MEDIA_FILE_BASE_URL + media.documentUrl}
                 alt={media.alt}
                 {...typeProps}
             />
@@ -20,7 +20,7 @@ const MEDIA_TYPE = [
         component: ({ media, ...typeProps }) => (
             <Box
                 component="img"
-                src={`${ICONS_FILE_PATH}/Fichiers Audio.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers Audio.png`}
                 alt="Fichier Audio"
                 sx={{ padding: 5 }}
                 maxHeight="100%"
@@ -33,7 +33,7 @@ const MEDIA_TYPE = [
         component: ({ media, ...typeProps }) => (
             <Box
                 component="img"
-                src={`${ICONS_FILE_PATH}/Fichiers Vidéos.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers Vidéos.png`}
                 alt="Fichier Vidéo"
                 sx={{ padding: 5 }}
                 maxHeight="100%"
@@ -46,7 +46,7 @@ const MEDIA_TYPE = [
         component: ({ media, ...typeProps }) => (
             <Box
                 component="img"
-                src={`${ICONS_FILE_PATH}/Fichiers Word.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers Word.png`}
                 alt="Fichier Word"
                 sx={{ padding: 5 }}
                 maxHeight="100%"
@@ -59,7 +59,7 @@ const MEDIA_TYPE = [
         component: ({ media, ...typeProps }) => (
             <Box
                 component="img"
-                src={`${ICONS_FILE_PATH}/Fichiers Excel.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers Excel.png`}
                 alt="Fichier Excel"
                 sx={{ padding: 5 }}
                 maxHeight="100%"
@@ -73,7 +73,7 @@ const MEDIA_TYPE = [
             <Box
                 component="img"
                 alt="Fichier Powerpoint"
-                src={`${ICONS_FILE_PATH}/Fichiers Powerpoint.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers Powerpoint.png`}
                 sx={{ padding: 5 }}
                 maxHeight="100%"
                 maxWidth="100%"
@@ -86,7 +86,7 @@ const MEDIA_TYPE = [
             <Box
                 component="img"
                 sx={{ padding: 5 }}
-                src={`${ICONS_FILE_PATH}/Fichiers PDF.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers PDF.png`}
                 alt="Fichier Pdf"
                 maxHeight="100%"
                 maxWidth="100%"
@@ -99,7 +99,7 @@ const MEDIA_TYPE = [
             <Box
                 component="img"
                 sx={{ padding: 5 }}
-                src={`${ICONS_FILE_PATH}/Fichiers Text.png`}
+                src={`${Constant.ICONS_FILE_PATH}/Fichiers Text.png`}
                 alt="Fichier Text"
                 maxHeight="100%"
                 maxWidth="100%"

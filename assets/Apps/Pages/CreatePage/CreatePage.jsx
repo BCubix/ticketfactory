@@ -1,22 +1,21 @@
 import React from 'react';
+import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { NotificationManager } from 'react-notifications';
 
-import authApi from '@Services/api/authApi';
-import pagesApi from '@Services/api/pagesApi';
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
 import { getPagesAction } from '@Redux/pages/pagesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
-
-import { PAGES_BASE_PATH, REDIRECTION_TIME } from '@/Constant';
-import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 
 export const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     async function handleSubmit(values) {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -24,16 +23,16 @@ export const CreatePage = () => {
             return;
         }
 
-        const result = await pagesApi.createPage(values);
+        const result = await Api.pagesApi.createPage(values);
 
         if (result.result) {
-            NotificationManager.success('La page a bien été créée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La page a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getPagesAction());
 
-            navigate(PAGES_BASE_PATH);
+            navigate(Constant.PAGES_BASE_PATH);
         }
     }
-    return <PagesForm handleSubmit={handleSubmit} />;
+    return <Component.PagesForm handleSubmit={handleSubmit} />;
 }
 

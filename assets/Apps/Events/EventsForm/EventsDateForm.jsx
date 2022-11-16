@@ -1,3 +1,12 @@
+import React from 'react';
+import { FieldArray } from 'formik';
+import moment from 'moment';
+
+import { useTheme } from '@emotion/react';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import {
     Card,
     CardContent,
@@ -11,17 +20,9 @@ import {
     FormHelperText,
     Typography,
 } from '@mui/material';
-import { FieldArray } from 'formik';
-import AddIcon from '@mui/icons-material/Add';
-import React from 'react';
-import moment from 'moment';
-import { CmtDateTimePicker } from '../../../Components/CmtDateTimePicker/CmtDateTimePicker';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useTheme } from '@emotion/react';
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+
+import { Component } from "@/AdminService/Component";
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsDateForm = ({
     values,
@@ -94,7 +95,7 @@ export const EventsDateForm = ({
                                         <Grid container spacing={4}>
                                             <Grid item xs={12} display="flex" alignItems="center">
                                                 <DisplayBadge item={item} />
-                                                <CmtDateTimePicker
+                                                <Component.CmtDateTimePicker
                                                     fullWidth
                                                     value={item.eventDate}
                                                     disablePast
@@ -120,7 +121,7 @@ export const EventsDateForm = ({
                                             </Grid>
 
                                             <Grid item xs={12}>
-                                                <CmtTextField
+                                                <Component.CmtTextField
                                                     value={item.annotation}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
@@ -195,7 +196,7 @@ export const EventsDateForm = ({
 
                                             {item?.state === 'delayed' && (
                                                 <Grid item xs={12}>
-                                                    <CmtDateTimePicker
+                                                    <Component.CmtDateTimePicker
                                                         fullWidth
                                                         value={item.reportDate}
                                                         disablePast
@@ -222,21 +223,21 @@ export const EventsDateForm = ({
                                             )}
                                         </Grid>
 
-                                        <DeleteBlockFabButton
+                                        <Component.DeleteBlockFabButton
                                             size="small"
                                             onClick={() => {
                                                 remove(index);
                                             }}
                                         >
                                             <DeleteIcon />
-                                        </DeleteBlockFabButton>
+                                        </Component.DeleteBlockFabButton>
                                     </CardContent>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
                     <Box pt={4} pl={4} display="flex" justifyContent={'flex-end'}>
-                        <AddBlockButton
+                        <Component.AddBlockButton
                             size="small"
                             color="primary"
                             variant="outlined"
@@ -250,9 +251,9 @@ export const EventsDateForm = ({
                             }}
                         >
                             <AddIcon /> Ajouter
-                        </AddBlockButton>
+                        </Component.AddBlockButton>
 
-                        <AddBlockButton
+                        <Component.AddBlockButton
                             size="small"
                             color="primary"
                             variant="outlined"
@@ -262,7 +263,7 @@ export const EventsDateForm = ({
                             sx={{ marginLeft: 3 }}
                         >
                             <LibraryAddIcon /> Générer
-                        </AddBlockButton>
+                        </Component.AddBlockButton>
                     </Box>
                 </Box>
             )}

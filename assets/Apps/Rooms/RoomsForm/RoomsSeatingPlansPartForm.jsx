@@ -1,15 +1,15 @@
-import { Box, Button, Card, CardContent, Fab, TextField, Typography } from '@mui/material';
-import { FieldArray } from 'formik';
 import React from 'react';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { FieldArray } from 'formik';
+
 import AddIcon from '@mui/icons-material/Add';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { AddBlockButton, DeleteBlockFabButton } from '../../../Components/CmtButton/sc.Buttons';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Card, CardContent, Typography } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
 
 export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange, handleBlur }) => {
     return (
-        <CmtFormBlock title="Plans">
+        <Component.CmtFormBlock title="Plans">
             <FieldArray name="seatingPlans">
                 {({ remove, push }) => (
                     <Box sx={{ padding: 2 }}>
@@ -19,7 +19,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 key={index}
                             >
                                 <CardContent sx={{ display: 'flex' }}>
-                                    <CmtTextField
+                                    <Component.CmtTextField
                                         value={item.name}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
@@ -34,19 +34,19 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                         sx={{ marginInline: 1 }}
                                         required
                                     />
-                                    <DeleteBlockFabButton
+                                    <Component.DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
                                         <DeleteIcon />
-                                    </DeleteBlockFabButton>
+                                    </Component.DeleteBlockFabButton>
                                 </CardContent>
                             </Card>
                         ))}
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <AddBlockButton
+                            <Component.AddBlockButton
                                 size="small"
                                 color="primary"
                                 variant="outlined"
@@ -58,11 +58,11 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 <Typography mt={'2px'} component="p" variant="body1">
                                     Ajouter
                                 </Typography>
-                            </AddBlockButton>
+                            </Component.AddBlockButton>
                         </Box>
                     </Box>
                 )}
             </FieldArray>
-        </CmtFormBlock>
+        </Component.CmtFormBlock>
     );
 };

@@ -1,25 +1,25 @@
-import { Formik } from 'formik';
 import React from 'react';
+import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { MENUS_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { getMenusAction } from '../../../redux/menus/menusSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import menusApi from '../../../services/api/menusApi';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { Box, Button, FormControlLabel, Switch } from '@mui/material';
-import { NotificationManager } from 'react-notifications';
+
+import { Box, Button } from '@mui/material';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getMenusAction } from '@Redux/menus/menusSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const CreateMenu = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const createMenu = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -27,14 +27,14 @@ export const CreateMenu = () => {
             return;
         }
 
-        const result = await menusApi.createMenu(values);
+        const result = await Api.menusApi.createMenu(values);
 
         if (result.result) {
-            NotificationManager.success('Le menu a bien été créé.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le menu a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getMenusAction());
 
-            navigate(MENUS_BASE_PATH);
+            navigate(Constant.MENUS_BASE_PATH);
         }
     };
 
@@ -62,9 +62,9 @@ export const CreateMenu = () => {
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper component="form" onSubmit={handleSubmit} title="Création d'un menu">
-                    <CmtFormBlock title="Informations générales">
-                        <CmtTextField
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title="Création d'un menu">
+                    <Component.CmtFormBlock title="Informations générales">
+                        <Component.CmtTextField
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -73,7 +73,7 @@ export const CreateMenu = () => {
                             error={touched.name && errors.name}
                             required
                         />
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
                     <Box display="flex" justifyContent="flex-end">
                         <Button
@@ -85,7 +85,7 @@ export const CreateMenu = () => {
                             Créer
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

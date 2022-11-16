@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { NotificationManager } from "react-notifications";
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Box } from '@mui/system';
 import {
@@ -21,8 +21,8 @@ import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
 import { TableColumn } from "@/AdminService/TableColumn";
 
-import { loginFailure } from '@Redux/profile/profileSlice';
 import { changeModulesFilters, getModulesAction, modulesSelector } from '@Redux/modules/modulesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 const ACTION_DISABLE = "Désactiver";
 const ACTION_UNINSTALL = "Désinstaller";

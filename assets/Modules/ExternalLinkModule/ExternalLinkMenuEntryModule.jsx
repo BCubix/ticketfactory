@@ -1,9 +1,8 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import React from 'react';
-import { useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
+import { Component } from "@/AdminService/Component";
 
 const MENU_TYPE = 'externalLink';
 const MENU_TYPE_LABEL = 'Liens externe';
@@ -43,13 +42,13 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                 <Typography>Liens externe</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <CmtTextField
+                <Component.CmtTextField
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     label="Nom de l'élément"
                 />
 
-                <CmtTextField
+                <Component.CmtTextField
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     label="Lien"

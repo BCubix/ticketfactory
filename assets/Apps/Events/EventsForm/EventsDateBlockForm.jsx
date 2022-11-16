@@ -1,22 +1,15 @@
-import { FormHelperText, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import { FieldArray } from 'formik';
 import React, { useState } from 'react';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { EventsDateForm } from './EventsDateForm';
+import { FieldArray } from 'formik';
+import moment from 'moment';
+
 import AddIcon from '@mui/icons-material/Add';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import {
-    ActionButton,
-    CreateButton,
-    DeleteBlockFabButton,
-} from '../../../Components/CmtButton/sc.Buttons';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import { EventDateRange } from './EventDateRange';
-import moment from 'moment';
+import { FormHelperText, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsDateBlockForm = ({
     values,
@@ -65,7 +58,7 @@ export const EventsDateBlockForm = ({
                 {({ remove, push }) => (
                     <Box>
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <ActionButton
+                            <Component.ActionButton
                                 size="small"
                                 color="primary"
                                 variant="contained"
@@ -86,10 +79,10 @@ export const EventsDateBlockForm = ({
                                 {values?.multipleDateBlock
                                     ? 'Ne plus utiliser les groupes'
                                     : 'Utiliser les groupes'}
-                            </ActionButton>
+                            </Component.ActionButton>
 
                             {values?.multipleDateBlock && (
-                                <CreateButton
+                                <Component.CreateButton
                                     size="small"
                                     color="primary"
                                     variant="contained"
@@ -100,18 +93,18 @@ export const EventsDateBlockForm = ({
                                 >
                                     <AddIcon sx={{ marginRight: 1 }} />
                                     Ajouter un groupe
-                                </CreateButton>
+                                </Component.CreateButton>
                             )}
                         </Box>
                         {values?.eventDateBlocks?.map((item, index) => (
-                            <CmtFormBlock
+                            <Component.CmtFormBlock
                                 marginBlock={7}
                                 title={values?.multipleDateBlock ? '' : item?.name}
                                 key={index}
                             >
                                 {values?.multipleDateBlock && (
                                     <Box mb={4}>
-                                        <CmtTextField
+                                        <Component.CmtTextField
                                             value={item.name}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -127,7 +120,7 @@ export const EventsDateBlockForm = ({
                                         />
                                     </Box>
                                 )}
-                                <EventsDateForm
+                                <Component.EventsDateForm
                                     values={values}
                                     setFieldValue={setFieldValue}
                                     setFieldTouched={setFieldTouched}
@@ -143,21 +136,21 @@ export const EventsDateBlockForm = ({
                                 <FormHelperText error>{getBlockError(index)}</FormHelperText>
 
                                 {values.multipleDateBlock && (
-                                    <DeleteBlockFabButton
+                                    <Component.DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
                                         <DeleteIcon />
-                                    </DeleteBlockFabButton>
+                                    </Component.DeleteBlockFabButton>
                                 )}
-                            </CmtFormBlock>
+                            </Component.CmtFormBlock>
                         ))}
                     </Box>
                 )}
             </FieldArray>
-            <EventDateRange
+            <Component.EventDateRange
                 open={generateDate}
                 setOpen={setGenerateDate}
                 submitDateRange={(newDates) => {
@@ -169,7 +162,7 @@ export const EventsDateBlockForm = ({
                     setFieldValue(`eventDateBlocks.${generateDate}.eventDates`, [...dates]);
                 }}
             />
-            <DeleteDialog
+            <Component.DeleteDialog
                 open={deleteMultiple}
                 onCancel={() => setDeleteMultiple(false)}
                 onDelete={() => {
@@ -187,7 +180,7 @@ export const EventsDateBlockForm = ({
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

@@ -2,16 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CONTENT_BASE_PATH, CONTENT_TYPES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { getContentsAction } from '../../../redux/contents/contentsSlice';
-import {
-    contentTypesSelector,
-    getContentTypesAction,
-} from '../../../redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import authApi from '../../../services/api/authApi';
-import contentsApi from '../../../services/api/contentsApi';
-import { ContentsForm } from '../ContentsForm/ContentsForm';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getContentsAction } from '@Redux/contents/contentsSlice';
+import { contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const CreateContent = () => {
     const dispatch = useDispatch();
@@ -23,7 +21,7 @@ export const CreateContent = () => {
     const urlParams = useMemo(() => new URLSearchParams(search), [search]);
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -31,14 +29,14 @@ export const CreateContent = () => {
             return;
         }
 
-        const result = await contentsApi.createContent(values);
+        const result = await Api.contentsApi.createContent(values);
 
         if (result.result) {
-            NotificationManager.success('Le contenu a bien été créé.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Le contenu a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getContentsAction());
 
-            navigate(CONTENT_BASE_PATH);
+            navigate(Constant.CONTENT_BASE_PATH);
         }
     };
 
@@ -59,9 +57,9 @@ export const CreateContent = () => {
             NotificationManager.error(
                 "Le type de contenu n'a pas été renseigné",
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
-            navigate(CONTENT_BASE_PATH);
+            navigate(Constant.CONTENT_BASE_PATH);
         }
 
         const contentType = contentTypes?.find((el) => el.id === urlId);
@@ -70,9 +68,9 @@ export const CreateContent = () => {
             NotificationManager.error(
                 'Le type de contenu renseigné ne correspond à aucun type connu.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
-            navigate(CONTENT_BASE_PATH);
+            navigate(Constant.CONTENT_BASE_PATH);
         }
 
         setSelectedContentType(contentType);
@@ -83,7 +81,7 @@ export const CreateContent = () => {
     }
 
     return (
-        <ContentsForm
+        <Component.ContentsForm
             handleSubmit={handleSubmit}
             contentTypeList={contentTypes}
             selectedContentType={selectedContentType}

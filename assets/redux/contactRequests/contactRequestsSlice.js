@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import contactRequestsApi from '../../services/api/contactRequestsApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -60,7 +60,7 @@ export function getContactRequestsAction(filters = null) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().contactRequests?.filters;
 
-                const contactRequests = await contactRequestsApi.getContactRequests(state);
+                const contactRequests = await Api.contactRequestsApi.getContactRequests(state);
                 if (!contactRequests.result) {
                     dispatch(getContactRequestsFailure({ error: contactRequests.error }));
 

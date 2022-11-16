@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
-import categoriesApi from '../../services/api/categoriesApi';
-import { loginFailure } from '../profile/profileSlice';
+import { Api } from "@/AdminService/Api";
+import { loginFailure } from "@Redux/profile/profileSlice";
 
 const initialState = {
     loading: false,
@@ -40,7 +39,7 @@ export function getCategoriesAction(data) {
         try {
             dispatch(getCategories());
 
-            const response = await authApi.checkIsAuth();
+            const response = await Api.authApi.checkIsAuth();
 
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
@@ -48,7 +47,7 @@ export function getCategoriesAction(data) {
                 return;
             }
 
-            const categories = await categoriesApi.getCategories(data);
+            const categories = await Api.categoriesApi.getCategories(data);
 
             if (!categories.result) {
                 dispatch(getCategoriesFailure({ error: categories.error }));

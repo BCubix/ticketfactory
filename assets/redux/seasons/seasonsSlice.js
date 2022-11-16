@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
-import seasonsApi from '../../services/api/seasonsApi';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
-import { loginFailure } from '../profile/profileSlice';
+import { Api } from "@/AdminService/Api";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
@@ -58,7 +56,7 @@ export function getSeasonsAction(filters) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().rooms?.filters;
 
-                const seasons = await seasonsApi.getSeasons(state);
+                const seasons = await Api.seasonsApi.getSeasons(state);
                 if (!seasons.result) {
                     dispatch(getSeasonsFailure({ error: seasons.error }));
 

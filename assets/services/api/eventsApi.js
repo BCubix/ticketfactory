@@ -1,7 +1,7 @@
 import moment from 'moment';
-import { CANCELED_REQUEST_ERROR_CODE } from '../../Constant';
-import { createFilterParams } from '../utils/createFilterParams';
-import axios from './config';
+import { Constant } from "@/AdminService/Constant";
+import { createFilterParams } from '@Services/utils/createFilterParams';
+import axios from '@Services/api/config';
 
 var controller = null;
 
@@ -80,7 +80,7 @@ const eventsApi = {
 
             return { result: true, events: result.data?.results, total: result?.data?.total };
         } catch (error) {
-            if (error?.code === CANCELED_REQUEST_ERROR_CODE) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, events: [], total: 0 };
             }
 

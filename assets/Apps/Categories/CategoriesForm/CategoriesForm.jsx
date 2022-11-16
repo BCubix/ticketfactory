@@ -1,12 +1,11 @@
-import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import { Formik } from 'formik';
 import React from 'react';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ParentCategoryPartForm } from './ParentCategoryPartForm';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+
+import { Button, FormControlLabel, Switch } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from '@/AdminService/Component';
 
 export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesList = null }) => {
     const categorySchema = Yup.object().shape({
@@ -46,13 +45,13 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                 setFieldValue,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}
                 >
-                    <CmtFormBlock title="Informations générales">
-                        <CmtTextField
+                    <Component.CmtFormBlock title="Informations générales">
+                        <Component.CmtTextField
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -63,7 +62,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                         />
 
                         {values?.mustHaveParent && (
-                            <ParentCategoryPartForm
+                            <Component.ParentCategoryPartForm
                                 values={values}
                                 categoriesList={categoriesList}
                                 setFieldValue={setFieldValue}
@@ -71,7 +70,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                                 errors={errors}
                             />
                         )}
-                    </CmtFormBlock>
+                    </Component.CmtFormBlock>
 
                     <Box display="flex" justifyContent={'flex-end'}>
                         <FormControlLabel
@@ -96,7 +95,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

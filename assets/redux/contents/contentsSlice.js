@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import contentsApi from '../../services/api/contentsApi';
-import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
+import { Api } from "@/AdminService/Api";
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const initialState = {
     loading: false,
@@ -57,7 +57,7 @@ export function getContentsAction(filters = null) {
             apiMiddleware(dispatch, async () => {
                 const state = filters || getState().contents?.filters;
 
-                const contents = await contentsApi.getContents(state);
+                const contents = await Api.contentsApi.getContents(state);
 
                 if (!contents.result) {
                     dispatch(getContentsFailure({ error: contents.error }));

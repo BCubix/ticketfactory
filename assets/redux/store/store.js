@@ -1,23 +1,23 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import profileReducer from '../profile/profileSlice';
-import usersReducer from '../users/usersSlice';
-import eventsReducer from '../events/eventsSlice';
-import categoriesReducer from '../categories/categoriesSlice';
-import roomsReducer from '../rooms/roomsSlice';
-import seasonsReducer from '../seasons/seasonsSlice';
-import tagsReducer from '../tags/tagsSlice';
-import mediasReducer from '../medias/mediasSlice';
-import imageFormatsReducer from '../imageFormats/imageFormatSlice';
-import contentTypesReducer from '../contentTypes/contentTypesSlice';
-import contentsReducer from '../contents/contentsSlice';
-import contactRequestsReducer from '../contactRequests/contactRequestsSlice';
-import redirectionsReducer from '../redirections/redirectionsSlice';
-import menusReducer from '../menus/menusSlice';
-import dashboardReducer from '../dashboard/dashboardSlice';
-import pagesReducer from '../pages/pagesSlice';
-import parametersReducer from '../parameters/parametersSlice';
-import modulesReducer from '../modules/modulesSlice';
+import profileReducer from '@Redux/profile/profileSlice';
+import usersReducer from '@Redux/users/usersSlice';
+import eventsReducer from '@Redux/events/eventsSlice';
+import categoriesReducer from '@Redux/categories/categoriesSlice';
+import roomsReducer from '@Redux/rooms/roomsSlice';
+import seasonsReducer from '@Redux/seasons/seasonsSlice';
+import tagsReducer from '@Redux/tags/tagsSlice';
+import mediasReducer from '@Redux/medias/mediasSlice';
+import imageFormatsReducer from '@Redux/imageFormats/imageFormatSlice';
+import contentTypesReducer from '@Redux/contentTypes/contentTypesSlice';
+import contentsReducer from '@Redux/contents/contentsSlice';
+import contactRequestsReducer from '@Redux/contactRequests/contactRequestsSlice';
+import redirectionsReducer from '@Redux/redirections/redirectionsSlice';
+import menusReducer from '@Redux/menus/menusSlice';
+import dashboardReducer from '@Redux/dashboard/dashboardSlice';
+import pagesReducer from '@Redux/pages/pagesSlice';
+import parametersReducer from '@Redux/parameters/parametersSlice';
+import modulesReducer from '@Redux/modules/modulesSlice';
 
 const reducer = {
     profile: profileReducer,

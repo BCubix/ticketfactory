@@ -1,20 +1,13 @@
-import {
-    FormControl,
-    FormHelperText,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { REDIRECTION_TIME } from '../../../../Constant';
-import { loginFailure } from '../../../../redux/profile/profileSlice';
-import authApi from '../../../../services/api/authApi';
-import eventsApi from '../../../../services/api/eventsApi';
+
+import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 const VALIDATION_TYPE = 'array';
 const VALIDATION_LIST = [
@@ -40,7 +33,7 @@ const FormComponent = ({
     const [list, setList] = useState([]);
 
     const getLinks = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -48,13 +41,13 @@ const FormComponent = ({
             return;
         }
 
-        const result = await eventsApi.getEvents();
+        const result = await Api.eventsApi.getEvents();
 
         if (!result?.result) {
             NotificationManager.error(
                 'Une erreur est survenue, essayez de rafraichir la page.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
         }
 

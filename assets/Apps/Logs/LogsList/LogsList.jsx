@@ -1,22 +1,21 @@
-import { Card, CardContent, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
-import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { Box } from '@mui/system';
-import { useState } from 'react';
-import { EDIT_PATH, REDIRECTION_TIME, USER_BASE_PATH } from '../../../Constant';
-import logsApi from '../../../services/api/logsApi';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
+import { useDispatch } from 'react-redux';
+
 import { useTheme } from '@emotion/react';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
+
+import { CardContent, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const LogUserName = (item) => {
     return (
-        <Box component="a" href={`${USER_BASE_PATH}/${item.user.id}${EDIT_PATH}`}>
+        <Box component="a" href={`${Constant.USER_BASE_PATH}/${item.user.id}${Constant.EDIT_PATH}`}>
             <Typography component="p" variant="body1">
                 {item.user.lastName} {item.user.firstName}
             </Typography>
@@ -87,7 +86,7 @@ export const LogsList = () => {
     const [logs, setLogs] = useState(null);
 
     const getLogs = async () => {
-        const connect = await authApi.checkIsAuth();
+        const connect = await Api.authApi.checkIsAuth();
 
         if (!connect.result) {
             dispatch(loginFailure({ error: connect.error }));
@@ -95,12 +94,12 @@ export const LogsList = () => {
             return;
         }
 
-        const result = await logsApi.getLogs();
+        const result = await Api.logsApi.getLogs();
 
         if (!result.result) {
             NotificationManager.error(
                 'Une erreur est survenue, vous pouvez tenter de rafraichir la page.',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             return;
@@ -114,8 +113,8 @@ export const LogsList = () => {
     }, []);
 
     return (
-        <CmtPageWrapper title={'Logs'}>
-            <CmtCard sx={{ width: '100%', mt: 5 }}>
+        <Component.CmtPageWrapper title={'Logs'}>
+            <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                 <CardContent>
                     <Box display="flex" justifyContent="space-between">
                         <Typography component="h2" variant="h5" fontSize={20}>
@@ -123,9 +122,9 @@ export const LogsList = () => {
                         </Typography>
                     </Box>
 
-                    <ListTable table={TABLE_COLUMN} list={logs} />
+                    <Component.ListTable table={TABLE_COLUMN} list={logs} />
                 </CardContent>
-            </CmtCard>
-        </CmtPageWrapper>
+            </Component.CmtCard>
+        </Component.CmtPageWrapper>
     );
 };

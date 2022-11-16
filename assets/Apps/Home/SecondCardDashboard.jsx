@@ -3,20 +3,16 @@ import { useDispatch } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import moment from 'moment';
 
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { useTheme } from '@emotion/react';
+
+import { Button, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { REDIRECTION_TIME } from '@/Constant';
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
 import { loginFailure } from '@Redux/profile/profileSlice';
-import authApi from '@Services/api/authApi';
-import dashboardApi from '@Services/api/dashboardApi';
-
-import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
-
-import { GraphChildrenDashboard } from '@Apps/Home/GraphChildrenDashboard';
-import { GraphTabTitle } from './sc.Home';
-import { useTheme } from '@emotion/react';
-import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 
 export const SecondCardDashboard = ({ data }) => {
     const theme = useTheme();
@@ -31,17 +27,17 @@ export const SecondCardDashboard = ({ data }) => {
     const [tab, setTab] = useState(data.graph?.tab);
 
     async function getGraph(tab, beginDate, endDate) {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
             return;
         }
 
-        const result = await dashboardApi.getGraph(tab, beginDate, endDate);
+        const result = await Api.dashboardApi.getGraph(tab, beginDate, endDate);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             return;
         }
 
@@ -56,7 +52,7 @@ export const SecondCardDashboard = ({ data }) => {
 
     return (
         <>
-            <CmtCard sx={{ marginBottom: 4 }}>
+            <Component.CmtCard sx={{ marginBottom: 4 }}>
                 <Box sx={{ width: '100%', backgroundColor: colorProps }}>
                     <CardHeader
                         title="Période sélectionnée"
@@ -71,7 +67,7 @@ export const SecondCardDashboard = ({ data }) => {
                 <CardContent>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={6}>
-                            <CmtDatePicker
+                            <Component.CmtDatePicker
                                 fullWidth
                                 value={beginDate}
                                 setValue={(newValue) => {
@@ -83,7 +79,7 @@ export const SecondCardDashboard = ({ data }) => {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <CmtDatePicker
+                            <Component.CmtDatePicker
                                 fullWidth
                                 value={endDate}
                                 setValue={(newValue) => {
@@ -96,9 +92,9 @@ export const SecondCardDashboard = ({ data }) => {
                         </Grid>
                     </Grid>
                 </CardContent>
-            </CmtCard>
+            </Component.CmtCard>
 
-            <CmtCard>
+            <Component.CmtCard>
                 <Box sx={{ width: '100%', backgroundColor: colorProps }}>
                     <CardHeader
                         title="Statistiques"
@@ -140,7 +136,7 @@ export const SecondCardDashboard = ({ data }) => {
                                     }}
                                 >
                                     <Box>
-                                        <GraphTabTitle variant="h5">{val.label}</GraphTabTitle>
+                                        <Component.GraphTabTitle variant="h5">{val.label}</Component.GraphTabTitle>
                                         <Typography variant="body1" fontSize={10} fontWeight={600}>
                                             {val.amount} {val.unit}
                                         </Typography>
@@ -154,12 +150,12 @@ export const SecondCardDashboard = ({ data }) => {
                     <Box display="flex" flexDirection="column" alignItems="center">
                         {graph?.values && (
                             <Box sx={{ width: '100%' }}>
-                                <GraphChildrenDashboard values={graph.values} />
+                                <Component.GraphChildrenDashboard values={graph.values} />
                             </Box>
                         )}
                     </Box>
                 </CardContent>
-            </CmtCard>
+            </Component.CmtCard>
         </>
     );
 }

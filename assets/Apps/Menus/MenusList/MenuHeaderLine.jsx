@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 import {
     Button,
     Card,
@@ -8,9 +10,9 @@ import {
     Select,
     Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CREATE_PATH, MENUS_BASE_PATH } from '../../../Constant';
+
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
 
 const SelectMenu = ({ selectedMenu, list, handleChange }) => {
     const [value, setValue] = useState(selectedMenu?.id);
@@ -50,7 +52,7 @@ const SelectMenu = ({ selectedMenu, list, handleChange }) => {
 
 export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
     return (
-        <CmtCard sx={{ width: '100%', mt: 5 }}>
+        <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
             <CardContent>
                 <Typography component="span" variant="body1" display={'flex'} alignItems={'center'}>
                     {list?.length > 1 ? (
@@ -66,12 +68,12 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
                     ) : (
                         list?.length > 0 && <>Modifiez votre menu ci-dessous, ou</>
                     )}
-                    <Link sx={{ marginInline: 2 }} href={`${MENUS_BASE_PATH}${CREATE_PATH}`}>
+                    <Link sx={{ marginInline: 2 }} href={`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}`}>
                         {list.length === 0 ? 'C' : 'c'}réez un nouveau menu.
                     </Link>
                     N’oubliez pas d’enregistrer vos modifications !
                 </Typography>
             </CardContent>
-        </CmtCard>
+        </Component.CmtCard>
     );
 };

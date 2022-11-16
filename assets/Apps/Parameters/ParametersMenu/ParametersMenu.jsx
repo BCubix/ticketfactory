@@ -1,16 +1,14 @@
-import React from 'react';
-import {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {NotificationManager} from "react-notifications";
+import React, { useEffect } from 'react';
+import { NotificationManager } from "react-notifications";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import authApi from "@Services/api/authApi";
-import parametersApi from "@Services/api/parametersApi";
-import {loginFailure} from "@Redux/profile/profileSlice";
-import {getParametersAction, parametersSelector} from "@Redux/parameters/parametersSlice";
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
 
-import {PARAMETERS_BASE_PATH, REDIRECTION_TIME} from "@/Constant";
-import { ParametersForm } from "@Apps/Parameters/ParametersForm/ParametersForm";
+import { getParametersAction, parametersSelector } from "@Redux/parameters/parametersSlice";
+import { loginFailure } from "@Redux/profile/profileSlice";
 
 export const ParametersMenu = () => {
     const { loading, parameters, error } = useSelector(parametersSelector);
@@ -24,7 +22,7 @@ export const ParametersMenu = () => {
     }, []);
 
     async function handleSubmit(values) {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -32,13 +30,13 @@ export const ParametersMenu = () => {
             return;
         }
 
-        const result = await parametersApi.editParameters(values);
+        const result = await Api.parametersApi.editParameters(values);
         if (result.result) {
-            NotificationManager.success('Les paramètres ont bien été modifiés.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('Les paramètres ont bien été modifiés.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getParametersAction());
 
-            navigate(PARAMETERS_BASE_PATH);
+            navigate(Constant.PARAMETERS_BASE_PATH);
         }
     }
 
@@ -47,7 +45,7 @@ export const ParametersMenu = () => {
     }
 
     return (
-        <ParametersForm
+        <Component.ParametersForm
             handleSubmit={handleSubmit}
             parameters={parameters}
         />

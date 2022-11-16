@@ -1,30 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { ListTable } from '../../../Components/ListTable/ListTable';
-import { CREATE_PATH, EDIT_PATH, IMAGE_FORMATS_BASE_PATH } from '../../../Constant';
+import { CardContent, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
 import {
     changeImageFormatsFilters,
     getImageFormatsAction,
     imageFormatsSelector,
-} from '../../../redux/imageFormats/imageFormatSlice';
-import imageFormatsApi from '../../../services/api/imageFormatsApi';
-import { DeleteDialog } from '../../../Components/DeleteDialog/DeleteDialog';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { ImageFormatsFilters } from './ImageFormatsFilters/ImageFormatsFilters';
-import { CmtPagination } from '../../../Components/CmtPagination/CmtPagination';
-
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%', sortable: true },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-    { name: 'name', label: 'Nom', width: '30%', sortable: true },
-    { name: 'length', label: 'Largeur', width: '20%', sortable: true },
-    { name: 'height', label: 'Hauteur', width: '20%', sortable: true },
-];
+} from '@Redux/imageFormats/imageFormatSlice';
 
 export const ImageFormatsList = () => {
     const { loading, imageFormats, filters, total, error } = useSelector(imageFormatsSelector);
@@ -39,7 +28,7 @@ export const ImageFormatsList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        await imageFormatsApi.deleteImageFormat(id);
+        await Api.imageFormatsApi.deleteImageFormat(id);
 
         dispatch(getImageFormatsAction());
 
@@ -48,8 +37,8 @@ export const ImageFormatsList = () => {
 
     return (
         <>
-            <CmtPageWrapper title="Formats D'image">
-                <CmtCard sx={{ width: '100%', mt: 5 }}>
+            <Component.CmtPageWrapper title="Formats D'image">
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
@@ -59,24 +48,24 @@ export const ImageFormatsList = () => {
                                         (filters.page - 1) * filters.limit + imageFormats.length
                                     } sur ${total})`}
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(IMAGE_FORMATS_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <ImageFormatsFilters
+                        <Component.ImageFormatsFilters
                             filters={filters}
                             changeFilters={(values) => dispatch(changeImageFormatsFilters(values))}
                         />
 
-                        <ListTable
-                            table={TABLE_COLUMN}
+                        <Component.ListTable
+                            table={TableColumn.ImageFormatsList}
                             list={imageFormats}
                             onEdit={(id) => {
-                                navigate(`${IMAGE_FORMATS_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.IMAGE_FORMATS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
@@ -85,7 +74,7 @@ export const ImageFormatsList = () => {
                             }
                         />
 
-                        <CmtPagination
+                        <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
@@ -100,9 +89,9 @@ export const ImageFormatsList = () => {
                             length={imageFormats?.length}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
-            <DeleteDialog
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
@@ -114,7 +103,7 @@ export const ImageFormatsList = () => {
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

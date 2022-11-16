@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
-import parametersApi from '../../services/api/parametersApi';
-import { loginFailure } from '../profile/profileSlice';
+import { Api } from "@/AdminService/Api";
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 const initialState = {
     loading: false,
@@ -40,7 +39,7 @@ export function getParametersAction(data) {
         try {
             dispatch(getParameters());
 
-            const response = await authApi.checkIsAuth();
+            const response = await Api.authApi.checkIsAuth();
 
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
@@ -48,7 +47,7 @@ export function getParametersAction(data) {
                 return;
             }
 
-            const parameters = await parametersApi.getParameters(data);
+            const parameters = await Api.parametersApi.getParameters(data);
 
             if (!parameters.result) {
                 dispatch(getParametersFailure({ error: parameters.error }));

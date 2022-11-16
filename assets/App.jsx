@@ -1,16 +1,20 @@
-import { createTheme, ThemeProvider } from '@mui/material';
 import React, { useEffect } from 'react';
+import { NotificationContainer } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
-import { getParametersAction, parametersSelector } from './redux/parameters/parametersSlice';
-import { NotificationContainer } from 'react-notifications';
-import defaultTheme from './services/themes/defaultTheme';
-import { CmtLayoutProvider } from './Components/CmtLayoutProvider/CmtLayoutProvider';
-import { Routing } from './Routing';
-import '@Style/index.scss';
 import 'react-notifications/lib/notifications.css';
 import 'moment/locale/fr';
+
+import { createTheme, ThemeProvider } from '@mui/material';
+
+import { Component } from "@/AdminService/Component";
+
+import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
+import { getParametersAction, parametersSelector } from '@Redux/parameters/parametersSlice';
+
+import defaultTheme from '@Services/themes/defaultTheme';
+
+import '@Style/index.scss';
 
 export const App = () => {
     const { connected, loading } = useSelector(profileSelector);
@@ -33,12 +37,12 @@ export const App = () => {
 
     return (
         <ThemeProvider theme={createTheme(defaultTheme)}>
-            <CmtLayoutProvider>
+            <Component.CmtLayoutProvider>
                 <BrowserRouter>
-                    <Routing />
+                    <Component.Routing />
                     <NotificationContainer />
                 </BrowserRouter>
-            </CmtLayoutProvider>
+            </Component.CmtLayoutProvider>
         </ThemeProvider>
     );
 };

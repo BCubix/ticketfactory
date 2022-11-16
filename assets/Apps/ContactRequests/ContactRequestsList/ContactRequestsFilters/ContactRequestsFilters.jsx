@@ -1,17 +1,18 @@
-import { Box } from '@mui/system';
 import React from 'react';
-import { CmtSearchFilters } from '../../../../Components/CmtFilters/CmtSearchFilters';
-import PersonIcon from '@mui/icons-material/Person';
+
+import CheckIcon from '@mui/icons-material/Check';
 import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SubjectIcon from '@mui/icons-material/Subject';
-import CheckIcon from '@mui/icons-material/Check';
-import { CmtBooleanFilters } from '../../../../Components/CmtFilters/CmtBooleanFilters';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
 
 export const ContactRequestsFilters = ({ filters, changeFilters }) => {
     return (
         <Box p={3} flexGrow={1} display="flex" justifyContent="flex-start" flexWrap="wrap">
-            <CmtBooleanFilters
+            <Component.CmtBooleanFilters
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status de gestion"
@@ -19,7 +20,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 icon={<CheckIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.firstName}
                 setValue={(newValue) => changeFilters({ ...filters, firstName: newValue })}
                 title="Chercher par prénom"
@@ -27,7 +28,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 icon={<PersonIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.lastName}
                 setValue={(newValue) => changeFilters({ ...filters, lastName: newValue })}
                 title="Chercher par nom"
@@ -35,7 +36,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 icon={<PersonIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.email}
                 setValue={(newValue) => changeFilters({ ...filters, email: newValue })}
                 title="Chercher par email"
@@ -43,7 +44,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 icon={<EmailIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.phone}
                 setValue={(newValue) => changeFilters({ ...filters, phone: newValue })}
                 title="Chercher par téléphone"
@@ -51,7 +52,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 icon={<PhoneIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.subject}
                 setValue={(newValue) => changeFilters({ ...filters, subject: newValue })}
                 title="Chercher par objet"

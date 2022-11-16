@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch } from 'react-redux';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
     AccordionDetails,
@@ -6,17 +11,12 @@ import {
     Checkbox,
     Typography,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import authApi from '../../services/api/authApi';
-import { useDispatch } from 'react-redux';
-import { NotificationManager } from 'react-notifications';
-import { REDIRECTION_TIME } from '../../Constant';
 import { Box } from '@mui/system';
-import { loginFailure } from '../../redux/profile/profileSlice';
-import seasonsApi from '../../services/api/seasonsApi';
-import categoriesApi from '../../services/api/categoriesApi';
+
+import { Api } from "@/AdminService/Api";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 const MENU_TYPE = 'category';
 const MENU_TYPE_LABEL = 'Catégories';
@@ -62,7 +62,7 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
     const [list, setList] = useState(null);
 
     const getList = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -70,13 +70,13 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
             return;
         }
 
-        const result = await categoriesApi.getCategories();
+        const result = await Api.categoriesApi.getCategories();
 
         if (!result?.result) {
             NotificationManager.error(
                 'Une erreur est survenue, essayez de rafraichir la page.',
                 'Erreur',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
         }
 

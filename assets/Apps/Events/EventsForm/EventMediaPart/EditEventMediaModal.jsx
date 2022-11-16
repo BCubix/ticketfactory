@@ -1,18 +1,11 @@
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    FormControlLabel,
-    Grid,
-    Radio,
-} from '@mui/material';
-import { Box } from '@mui/system';
 import React from 'react';
-import { CmtDisplayMediaType } from '../../../../Components/CmtDisplayMediaType/CmtDisplayMediaType';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
-import { getMediaType } from '../../../../services/utils/getMediaType';
-import { DisplayMediaInformations } from './DisplayMediaInformations';
+
+import { Button, Dialog, DialogContent, DialogTitle, FormControlLabel, Grid, Radio } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+
+import { getMediaType } from '@Services/utils/getMediaType';
 
 export const EditEventMediaModal = ({
     open,
@@ -41,7 +34,7 @@ export const EditEventMediaModal = ({
                             flexDirection={'column'}
                             alignItems={'center'}
                         >
-                            <CmtDisplayMediaType
+                            <Component.CmtDisplayMediaType
                                 media={selectedMedia}
                                 maxWidth={'50%'}
                                 maxHeight={200}
@@ -56,7 +49,7 @@ export const EditEventMediaModal = ({
                                 justifyContent="space-between"
                                 flexWrap={'wrap'}
                             >
-                                <CmtTextField
+                                <Component.CmtTextField
                                     value={values.eventMedias?.at(selectedMediaIndex)?.position}
                                     onChange={handleChange}
                                     name={`medias.${selectedMediaIndex}.position`}
@@ -89,7 +82,7 @@ export const EditEventMediaModal = ({
                                 )}
                             </Box>
 
-                            <DisplayMediaInformations selectedMedia={selectedMedia} />
+                            <Component.DisplayMediaInformations selectedMedia={selectedMedia} />
 
                             <Box display="flex" my={5}>
                                 <Button

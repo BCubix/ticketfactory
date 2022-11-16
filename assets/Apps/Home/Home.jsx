@@ -1,6 +1,6 @@
 import React from 'react';
-import { MainDashboard } from '@Apps/Home/MainDashboard';
+import { Component } from "@/AdminService/Component";
 
 export const Home = () => {
-    return (<MainDashboard />);
+    return (<Component.MainDashboard />);
 };

@@ -1,14 +1,13 @@
-import { Grid } from '@mui/material';
 import React from 'react';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
+import { Grid } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handleBlur }) => {
     return (
-        <CmtFormBlock title="Informations générales">
+        <Component.CmtFormBlock title="Informations générales">
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={4}>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values.name}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -20,7 +19,7 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={4}>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values.seatsNb}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -32,7 +31,7 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={4}>
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={values.area}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -43,6 +42,6 @@ export const RoomsMainPartForm = ({ values, errors, touched, handleChange, handl
                     />
                 </Grid>
             </Grid>
-        </CmtFormBlock>
+        </Component.CmtFormBlock>
     );
 };

@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { apiMiddleware } from '../../../../services/utils/apiMiddleware';
-import mediasApi from '../../../../services/api/mediasApi';
 import { NotificationManager } from 'react-notifications';
-import { REDIRECTION_TIME } from '../../../../Constant';
-import { getMediaType } from '../../../../services/utils/getMediaType';
-import { AddEventMediaModal } from './AddEventMediaModal';
-import { EditEventMediaModal } from './EditEventMediaModal';
-import { DisplayEventMediaElement } from './DisplayEventMediaElement';
+import { useDispatch } from 'react-redux';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getMediaType } from '@Services/utils/getMediaType';
 
 export const EventMediaPartForm = ({
     values,
@@ -24,12 +24,12 @@ export const EventMediaPartForm = ({
 
     const getMedias = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await mediasApi.getAllMedias();
+            const result = await Api.mediasApi.getAllMedias();
             if (!result?.result) {
                 NotificationManager.error(
                     'Une erreur est survenue, essayez de rafraichir la page.',
                     'Erreur',
-                    REDIRECTION_TIME
+                    Constant.REDIRECTION_TIME
                 );
             }
 
@@ -80,7 +80,7 @@ export const EventMediaPartForm = ({
 
     return (
         <>
-            <DisplayEventMediaElement
+            <Component.DisplayEventMediaElement
                 title="Photos"
                 openAddModal={setOpenAddModal}
                 mediaType="Image"
@@ -90,7 +90,7 @@ export const EventMediaPartForm = ({
                 name={name}
                 setFieldValue={setFieldValue}
             />
-            <DisplayEventMediaElement
+            <Component.DisplayEventMediaElement
                 title="Autres contenus"
                 openAddModal={setOpenAddModal}
                 mediaType="Other"
@@ -101,7 +101,7 @@ export const EventMediaPartForm = ({
                 setFieldValue={setFieldValue}
             />
 
-            <AddEventMediaModal
+            <Component.AddEventMediaModal
                 open={Boolean(openAddModal)}
                 closeModal={() => setOpenAddModal(null)}
                 mediaList={mediaList}
@@ -110,7 +110,7 @@ export const EventMediaPartForm = ({
                 setFieldValue={setFieldValue}
             />
 
-            <EditEventMediaModal
+            <Component.EditEventMediaModal
                 open={Boolean(editDialog)}
                 closeModal={() => setEditDialog(null)}
                 selectedMedia={editDialog?.item}

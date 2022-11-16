@@ -1,8 +1,7 @@
 import React from 'react';
-import { FormControlLabel, Switch } from '@mui/material';
-import { FieldFormControl } from '../sc.ContentTypeFields';
 import moment from 'moment';
-import { CmtTimePicker } from '../../../../Components/CmtTimePicker/CmtTimePicker';
+import { FormControlLabel, Switch } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 const NAME = 'time';
 const LABEL = 'Heure';
@@ -13,7 +12,7 @@ const TYPE_GROUP_NAME = 'Champs de base';
 const Options = ({ values, index, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -29,9 +28,9 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Requis'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
                         <Switch
@@ -47,7 +46,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     label={'Désactivé'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };
@@ -55,10 +54,10 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
 const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, prefixName }) => {
     return (
         <>
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTimePicker
+                        <Component.CmtTimePicker
                             fullWidth
                             value={values.validations.minHour}
                             setValue={(newValue) => {
@@ -76,12 +75,12 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                     label={'Heure minimum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
 
-            <FieldFormControl fullWidth>
+            <Component.FieldFormControl fullWidth>
                 <FormControlLabel
                     control={
-                        <CmtTimePicker
+                        <Component.CmtTimePicker
                             fullWidth
                             value={values.validations.maxHour}
                             setValue={(newValue) => {
@@ -99,7 +98,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                     label={'Heure maximum'}
                     labelPlacement="start"
                 />
-            </FieldFormControl>
+            </Component.FieldFormControl>
         </>
     );
 };

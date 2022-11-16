@@ -1,4 +1,4 @@
-import axios from './config';
+import axios from '@Services/api/config';
 
 const profileApi = {
     getProfile: async () => {

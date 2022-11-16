@@ -1,6 +1,6 @@
-import { CANCELED_REQUEST_ERROR_CODE } from '../../Constant';
-import { createFilterParams } from '../utils/createFilterParams';
-import axios from './config';
+import { createFilterParams } from '@Services/utils/createFilterParams';
+import axios from '@Services/api/config';
+import { Constant } from "@/AdminService/Constant";
 
 var controller = null;
 
@@ -47,7 +47,7 @@ const pagesApi = {
 
             return { result: true, pages: result?.data?.results, total: result?.data?.total };
         } catch (error) {
-            if (error?.code === CANCELED_REQUEST_ERROR_CODE) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, pages: [], total: 0 };
             }
 

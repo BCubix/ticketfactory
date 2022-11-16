@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { TreeItem, TreeView } from '@mui/lab';
 import {
     Box,
     Checkbox,
     Chip,
-    CircularProgress,
-    FormControl,
-    InputLabel,
     Typography,
 } from '@mui/material';
-import { CmtPopover } from '../CmtPopover/CmtPopover';
-import { apiMiddleware } from '../../services/utils/apiMiddleware';
-import { useDispatch } from 'react-redux';
-import { TreeItem, TreeView } from '@mui/lab';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
+import { Component } from "@/AdminService/Component";
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const displayCategoriesOptions = (list, values, setValue) => {
     if (!list || list?.length === 0) {
@@ -105,7 +105,7 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
                 />
             </Box>
 
-            <CmtPopover anchorEl={anchorEl} closePopover={() => setAnchorEl(null)}>
+            <Component.CmtPopover anchorEl={anchorEl} closePopover={() => setAnchorEl(null)}>
                 <Box p={5} minWidth={300}>
                     <Typography mb={2} component="p" variant="h4">
                         {title}
@@ -126,7 +126,7 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
                         {displayCategoriesOptions(list, parsedValue, setValue)}
                     </TreeView>
                 </Box>
-            </CmtPopover>
+            </Component.CmtPopover>
         </Box>
     );
 };

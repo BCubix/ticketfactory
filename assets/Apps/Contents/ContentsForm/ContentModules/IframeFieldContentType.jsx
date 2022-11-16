@@ -1,7 +1,7 @@
-import { Typography } from '@mui/material';
 import React from 'react';
-import { CmtTextField } from '../../../../Components/CmtTextField/CmtTextField';
 import * as Yup from 'yup';
+import { Typography } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
@@ -25,7 +25,7 @@ const FormComponent = ({
 }) => {
     return (
         <>
-            <CmtTextField
+            <Component.CmtTextField
                 value={values[field.name]}
                 label={label}
                 onChange={handleChange}

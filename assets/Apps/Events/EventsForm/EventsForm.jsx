@@ -1,13 +1,8 @@
-import { Button, FormControlLabel, Switch, Typography, Box } from '@mui/material';
-import { Formik } from 'formik';
 import React from 'react';
-import { CmtPageWrapper } from '../../../Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { EventMainPartForm } from './EventMainPartForm';
-import { CmtTabs } from '../../../Components/CmtTabs/CmtTabs';
-import { EventsDateBlockForm } from './EventsDateBlockForm';
-import { EventsPriceBlockForm } from './EventPriceBlockForm';
-import { EventMediaPartForm } from './EventMediaPart/EventMediaPartForm';
+import { Button, FormControlLabel, Switch, Box } from '@mui/material';
+import { Component } from "@/AdminService/Component";
 
 export const EventsForm = ({
     handleSubmit,
@@ -121,18 +116,18 @@ export const EventsForm = ({
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <CmtPageWrapper
+                <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}
                 >
-                    <CmtTabs
+                    <Component.CmtTabs
                         containerStyle={{ mt: 3 }}
                         list={[
                             {
                                 label: 'Evènement',
                                 component: (
-                                    <EventMainPartForm
+                                    <Component.EventMainPartForm
                                         values={values}
                                         handleChange={handleChange}
                                         handleBlur={handleBlur}
@@ -150,7 +145,7 @@ export const EventsForm = ({
                             {
                                 label: 'Dates',
                                 component: (
-                                    <EventsDateBlockForm
+                                    <Component.EventsDateBlockForm
                                         values={values}
                                         setFieldValue={setFieldValue}
                                         setFieldTouched={setFieldTouched}
@@ -164,7 +159,7 @@ export const EventsForm = ({
                             {
                                 label: 'Tarifs',
                                 component: (
-                                    <EventsPriceBlockForm
+                                    <Component.EventsPriceBlockForm
                                         values={values}
                                         setFieldValue={setFieldValue}
                                         setFieldTouched={setFieldTouched}
@@ -178,7 +173,7 @@ export const EventsForm = ({
                             {
                                 label: 'Médias',
                                 component: (
-                                    <EventMediaPartForm
+                                    <Component.EventMediaPartForm
                                         values={values}
                                         setFieldValue={setFieldValue}
                                         setFieldTouched={setFieldTouched}
@@ -215,7 +210,7 @@ export const EventsForm = ({
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
-                </CmtPageWrapper>
+                </Component.CmtPageWrapper>
             )}
         </Formik>
     );

@@ -1,20 +1,14 @@
-import { Button, FormHelperText, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import { FieldArray } from 'formik';
 import React, { useState } from 'react';
-import { CmtFormBlock } from '../../../Components/CmtFormBlock/CmtFormBlock';
-import { CmtTextField } from '../../../Components/CmtTextField/CmtTextField';
-import { EventsPriceForm } from './EventsPriceForm';
+import { FieldArray } from 'formik';
+
 import AddIcon from '@mui/icons-material/Add';
-import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import {
-    ActionButton,
-    CreateButton,
-    DeleteBlockFabButton,
-} from '../../../Components/CmtButton/sc.Buttons';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import { FormHelperText, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Component } from "@/AdminService/Component";
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsPriceBlockForm = ({
     values,
@@ -62,7 +56,7 @@ export const EventsPriceBlockForm = ({
                 {({ remove, push }) => (
                     <Box>
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <ActionButton
+                            <Component.ActionButton
                                 size="small"
                                 color="primary"
                                 variant="contained"
@@ -83,10 +77,10 @@ export const EventsPriceBlockForm = ({
                                 {values?.multiplePriceBlock
                                     ? 'Ne plus utiliser les groupes'
                                     : 'Utiliser les groupes'}
-                            </ActionButton>
+                            </Component.ActionButton>
 
                             {values?.multiplePriceBlock && (
-                                <CreateButton
+                                <Component.CreateButton
                                     size="small"
                                     color="primary"
                                     variant="contained"
@@ -97,18 +91,18 @@ export const EventsPriceBlockForm = ({
                                 >
                                     <AddIcon sx={{ marginRight: 1 }} />
                                     Ajouter un groupe
-                                </CreateButton>
+                                </Component.CreateButton>
                             )}
                         </Box>
                         {values?.eventPriceBlocks?.map((item, index) => (
-                            <CmtFormBlock
+                            <Component.CmtFormBlock
                                 title={values?.multiplePriceBlock ? '' : item?.name}
                                 marginBlock={7}
                                 key={index}
                             >
                                 {values?.multiplePriceBlock && (
                                     <Box mb={4}>
-                                        <CmtTextField
+                                        <Component.CmtTextField
                                             value={item.name}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -124,7 +118,7 @@ export const EventsPriceBlockForm = ({
                                         />
                                     </Box>
                                 )}
-                                <EventsPriceForm
+                                <Component.EventsPriceForm
                                     values={values}
                                     setFieldValue={setFieldValue}
                                     setFieldTouched={setFieldTouched}
@@ -142,21 +136,21 @@ export const EventsPriceBlockForm = ({
                                 <FormHelperText error>{getBlockError(index)}</FormHelperText>
 
                                 {values.multiplePriceBlock && (
-                                    <DeleteBlockFabButton
+                                    <Component.DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
                                             remove(index);
                                         }}
                                     >
                                         <DeleteIcon />
-                                    </DeleteBlockFabButton>
+                                    </Component.DeleteBlockFabButton>
                                 )}
-                            </CmtFormBlock>
+                            </Component.CmtFormBlock>
                         ))}
                     </Box>
                 )}
             </FieldArray>
-            <DeleteDialog
+            <Component.DeleteDialog
                 open={deleteMultiple}
                 onCancel={() => setDeleteMultiple(false)}
                 onDelete={() => {
@@ -174,7 +168,7 @@ export const EventsPriceBlockForm = ({
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };

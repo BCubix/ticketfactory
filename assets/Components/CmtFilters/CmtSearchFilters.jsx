@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Chip, Typography } from '@mui/material';
-import { CmtPopover } from '../CmtPopover/CmtPopover';
-import { CmtTextField } from '../CmtTextField/CmtTextField';
+import { Component } from "@/AdminService/Component";
 
 export const CmtSearchFilters = ({ value, setValue, title, label, icon = null }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -19,19 +18,19 @@ export const CmtSearchFilters = ({ value, setValue, title, label, icon = null })
                 />
             </Box>
 
-            <CmtPopover anchorEl={anchorEl} closePopover={() => setAnchorEl(null)}>
+            <Component.CmtPopover anchorEl={anchorEl} closePopover={() => setAnchorEl(null)}>
                 <Box p={5}>
                     <Typography mb={2} component="p" variant="h4">
                         {title}
                     </Typography>
 
-                    <CmtTextField
+                    <Component.CmtTextField
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         label={label}
                     />
                 </Box>
-            </CmtPopover>
+            </Component.CmtPopover>
         </Box>
     );
 };

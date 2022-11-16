@@ -1,19 +1,16 @@
-import { Box } from '@mui/system';
 import React from 'react';
-import { CmtSearchFilters } from '../../../../Components/CmtFilters/CmtSearchFilters';
-import CheckIcon from '@mui/icons-material/Check';
-import { CmtBooleanFilters } from '../../../../Components/CmtFilters/CmtBooleanFilters';
-import TitleIcon from '@mui/icons-material/Title';
-import { CmtMultipleSelectFilters } from '../../../../Components/CmtFilters/CmtMultipleSelectFilters';
+
 import CategoryIcon from '@mui/icons-material/Category';
-import roomsApi from '../../../../services/api/roomsApi';
-import seasonsApi from '../../../../services/api/seasonsApi';
-import tagsApi from '../../../../services/api/tagsApi';
-import { CmtCategoriesFilters } from '../../../../Components/CmtFilters/CmtCategoriesFilters';
+import CheckIcon from '@mui/icons-material/Check';
+import TitleIcon from '@mui/icons-material/Title';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
 
 export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
     const handleGetRooms = async () => {
-        const result = await roomsApi.getAllRooms();
+        const result = await Api.roomsApi.getAllRooms();
 
         if (result?.result) {
             return result?.rooms;
@@ -23,7 +20,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
     };
 
     const handleGetSeasons = async () => {
-        const result = await seasonsApi.getAllSeasons();
+        const result = await Api.seasonsApi.getAllSeasons();
 
         if (result?.result) {
             return result?.seasons;
@@ -33,7 +30,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
     };
 
     const handleGetTags = async () => {
-        const result = await tagsApi.getAllTags();
+        const result = await Api.tagsApi.getAllTags();
 
         if (result?.result) {
             return result?.tags;
@@ -44,7 +41,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
 
     return (
         <Box p={3} flexGrow={1} display="flex" justifyContent="flex-start" flexWrap="wrap">
-            <CmtBooleanFilters
+            <Component.CmtBooleanFilters
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status de gestion"
@@ -52,7 +49,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 icon={<CheckIcon />}
             />
 
-            <CmtSearchFilters
+            <Component.CmtSearchFilters
                 value={filters.name}
                 setValue={(newValue) => changeFilters({ ...filters, name: newValue })}
                 title="Chercher par nom"
@@ -60,7 +57,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 icon={<TitleIcon />}
             />
 
-            <CmtCategoriesFilters
+            <Component.CmtCategoriesFilters
                 list={categoriesList}
                 value={filters.category}
                 setValue={(newValue) => {
@@ -71,7 +68,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 icon={<CategoryIcon />}
             />
 
-            <CmtMultipleSelectFilters
+            <Component.CmtMultipleSelectFilters
                 value={filters.room}
                 setValue={(newValue) => {
                     changeFilters({ ...filters, room: newValue });
@@ -86,7 +83,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 getList={handleGetRooms}
             />
 
-            <CmtMultipleSelectFilters
+            <Component.CmtMultipleSelectFilters
                 value={filters.season}
                 setValue={(newValue) => {
                     changeFilters({ ...filters, season: newValue });
@@ -101,7 +98,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 getList={handleGetSeasons}
             />
 
-            <CmtMultipleSelectFilters
+            <Component.CmtMultipleSelectFilters
                 value={filters.tags}
                 setValue={(newValue) => {
                     changeFilters({ ...filters, tags: newValue });

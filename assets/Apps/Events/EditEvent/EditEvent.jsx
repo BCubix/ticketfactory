@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import eventsApi from '../../../services/api/eventsApi';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
-import { EVENTS_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { EventsForm } from '../EventsForm/EventsForm';
-import { categoriesSelector, getCategoriesAction } from '../../../redux/categories/categoriesSlice';
-import { getRoomsAction, roomsSelector } from '../../../redux/rooms/roomsSlice';
-import { getSeasonsAction, seasonsSelector } from '../../../redux/seasons/seasonsSlice';
-import { getTagsAction, tagsSelector } from '../../../redux/tags/tagsSlice';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+import { getRoomsAction, roomsSelector } from '@Redux/rooms/roomsSlice';
+import { getSeasonsAction, seasonsSelector } from '@Redux/seasons/seasonsSlice';
+import { getTagsAction, tagsSelector } from '@Redux/tags/tagsSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const EditEvent = () => {
     const dispatch = useDispatch();
@@ -43,16 +44,16 @@ export const EditEvent = () => {
 
     useEffect(() => {
         if (categoriesData.error || roomsData.error || seasonsData.error) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(EVENTS_BASE_PATH);
+            navigate(Constant.EVENTS_BASE_PATH);
 
             return;
         }
     }, [categoriesData, roomsData, seasonsData]);
 
     const getEvent = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -60,12 +61,12 @@ export const EditEvent = () => {
             return;
         }
 
-        const result = await eventsApi.getOneEvent(id);
+        const result = await Api.eventsApi.getOneEvent(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(EVENTS_BASE_PATH);
+            navigate(Constant.EVENTS_BASE_PATH);
 
             return;
         }
@@ -75,7 +76,7 @@ export const EditEvent = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(EVENTS_BASE_PATH);
+            navigate(Constant.EVENTS_BASE_PATH);
             return;
         }
 
@@ -91,18 +92,18 @@ export const EditEvent = () => {
             active = 0;
         }
 
-        const result = await eventsApi.editEvent(id, { active, ...data });
+        const result = await Api.eventsApi.editEvent(id, { active, ...data });
 
         if (result.result) {
             NotificationManager.success(
                 "L'évènement a bien été modifié.",
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getEventsAction());
 
-            navigate(EVENTS_BASE_PATH);
+            navigate(Constant.EVENTS_BASE_PATH);
         }
     };
 
@@ -111,7 +112,7 @@ export const EditEvent = () => {
     }
 
     return (
-        <EventsForm
+        <Component.EventsForm
             handleSubmit={handleSubmit}
             initialValues={event}
             categoriesList={categoriesData?.categories}

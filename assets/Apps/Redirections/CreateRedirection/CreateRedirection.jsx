@@ -1,20 +1,21 @@
 import React from 'react';
 import { NotificationManager } from 'react-notifications';
-import { REDIRECTIONS_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
-import redirectionsApi from '../../../services/api/redirectionsApi';
-import { getRedirectionsAction } from '../../../redux/redirections/redirectionsSlice';
-import { RedirectionsForm } from '../RedirectionsForm/RedirectionsForm';
+import { useNavigate } from 'react-router-dom';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { loginFailure } from '@Redux/profile/profileSlice';
+import { getRedirectionsAction } from '@Redux/redirections/redirectionsSlice';
 
 export const CreateRedirection = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (values) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -22,20 +23,20 @@ export const CreateRedirection = () => {
             return;
         }
 
-        const result = await redirectionsApi.createRedirection(values);
+        const result = await Api.redirectionsApi.createRedirection(values);
 
         if (result.result) {
             NotificationManager.success(
                 'La redirection a bien été créée.',
                 'Succès',
-                REDIRECTION_TIME
+                Constant.REDIRECTION_TIME
             );
 
             dispatch(getRedirectionsAction());
 
-            navigate(REDIRECTIONS_BASE_PATH);
+            navigate(Constant.REDIRECTIONS_BASE_PATH);
         }
     };
 
-    return <RedirectionsForm handleSubmit={handleSubmit} />;
+    return <Component.RedirectionsForm handleSubmit={handleSubmit} />;
 };

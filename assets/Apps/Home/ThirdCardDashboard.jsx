@@ -1,26 +1,19 @@
-import React from 'react';
-import { Box } from '@mui/system';
-import {
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Link,
-    List,
-    ListItem,
-    ListItemButton,
-    Typography,
-} from '@mui/material';
-import { useState } from 'react';
-import { CmtTextField } from '../../Components/CmtTextField/CmtTextField';
-import authApi from '../../services/api/authApi';
+import React, { useState } from 'react';
+import { NotificationManager } from "react-notifications";
 import { useDispatch } from 'react-redux';
-import { loginFailure } from '../../redux/profile/profileSlice';
-import { getDashboardAction } from '../../redux/dashboard/dashboardSlice';
-import dashboardApi from '../../services/api/dashboardApi';
-import { useTheme } from '@emotion/react';
-import { CmtCard } from '../../Components/CmtCard/sc.CmtCard';
 import moment from 'moment';
+
+import { useTheme } from '@emotion/react';
+
+import { Button, CardContent, CardHeader, Link, List, ListItemButton, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+
+import { getDashboardAction } from '@Redux/dashboard/dashboardSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const ThirdCardDashboard = ({ data }) => {
     const dispatch = useDispatch();
@@ -30,7 +23,7 @@ export const ThirdCardDashboard = ({ data }) => {
     const colorProps = theme.palette.secondary.main;
 
     const handlechangeNote = async () => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -38,10 +31,10 @@ export const ThirdCardDashboard = ({ data }) => {
             return;
         }
 
-        const result = await dashboardApi.updateNote(note);
+        const result = await Api.dashboardApi.updateNote(note);
 
         if (result.result) {
-            NotificationManager.success('La note a bien été modifiée.', 'Succès', REDIRECTION_TIME);
+            NotificationManager.success('La note a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getDashboardAction());
         }
@@ -49,7 +42,7 @@ export const ThirdCardDashboard = ({ data }) => {
 
     return (
         <>
-            <CmtCard>
+            <Component.CmtCard>
                 <CardHeader
                     title="Informations générales"
                     titleTypographyProps={{
@@ -96,8 +89,8 @@ export const ThirdCardDashboard = ({ data }) => {
                         ))}
                     </List>
                 </CardContent>
-            </CmtCard>
-            <CmtCard sx={{ marginTop: 4 }}>
+            </Component.CmtCard>
+            <Component.CmtCard sx={{ marginTop: 4 }}>
                 <CardHeader
                     title="Notes"
                     titleTypographyProps={{
@@ -114,7 +107,7 @@ export const ThirdCardDashboard = ({ data }) => {
                 {data.notes && (
                     <Box sx={{ padding: 2 }}>
                         {editNote ? (
-                            <CmtTextField
+                            <Component.CmtTextField
                                 value={note}
                                 onChange={(e) => setNote(e.target.value)}
                                 multiline
@@ -144,7 +137,7 @@ export const ThirdCardDashboard = ({ data }) => {
                         </Box>
                     </Box>
                 )}
-            </CmtCard>
+            </Component.CmtCard>
         </>
     );
 };

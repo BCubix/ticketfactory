@@ -1,3 +1,12 @@
+import React, { useState } from 'react';
+
+import { useTheme } from '@emotion/react';
+
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
     Chip,
     Menu,
@@ -11,15 +20,10 @@ import {
     TableSortLabel,
     Typography,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import React, { useState } from 'react';
-import { objectResolver } from '../../services/utils/objectResolver';
-import { ActionFabButton, DeleteFabButton, EditFabButton } from '../CmtButton/sc.Buttons';
-import { useTheme } from '@emotion/react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+
+import { objectResolver } from '@Services/utils/objectResolver';
+
+import { Component } from "@/AdminService/Component";
 
 /**
  *
@@ -137,7 +141,7 @@ export const ListTable = ({
                             ))}
                             {(onDelete !== null || onEdit !== null) && (
                                 <TableCell component="th" scope="row">
-                                    <EditFabButton
+                                    <Component.EditFabButton
                                         sx={{ marginInline: 1 }}
                                         color="primary"
                                         size="small"
@@ -148,10 +152,10 @@ export const ListTable = ({
                                         }}
                                     >
                                         <EditIcon />
-                                    </EditFabButton>
+                                    </Component.EditFabButton>
 
                                     {contextualMenu ? (
-                                        <ActionFabButton
+                                        <Component.ActionFabButton
                                             sx={{ marginInline: 1 }}
                                             color="error"
                                             size="small"
@@ -159,9 +163,9 @@ export const ListTable = ({
                                             onClick={(e) => handleClick(e, item)}
                                         >
                                             <MoreHorizIcon />
-                                        </ActionFabButton>
+                                        </Component.ActionFabButton>
                                     ) : (
-                                        <DeleteFabButton
+                                        <Component.DeleteFabButton
                                             sx={{ marginInline: 1 }}
                                             color="error"
                                             size="small"
@@ -172,7 +176,7 @@ export const ListTable = ({
                                             }}
                                         >
                                             <DeleteIcon />
-                                        </DeleteFabButton>
+                                        </Component.DeleteFabButton>
                                     )}
                                 </TableCell>
                             )}

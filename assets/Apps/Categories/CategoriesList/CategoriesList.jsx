@@ -1,30 +1,21 @@
-import { categoriesSelector } from '@Redux/categories/categoriesSlice';
-import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
-import { ListTable } from '@Components/ListTable/ListTable';
-import { Box } from '@mui/system';
-import { useNavigate, useParams } from 'react-router-dom';
-import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
-import { useState } from 'react';
-import { CREATE_PATH, EDIT_PATH, CATEGORIES_BASE_PATH, REDIRECTION_TIME } from '../../../Constant';
-import categoriesApi from '../../../services/api/categoriesApi';
-import { getCategoriesAction } from '../../../redux/categories/categoriesSlice';
-import authApi from '../../../services/api/authApi';
-import { loginFailure } from '../../../redux/profile/profileSlice';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { EditCategoryLink } from './sc.EditCategoryLink';
-import { CmtBreadCrumb } from '../../../Components/CmtBreadCrumb/CmtBreadCrumb';
-import { CmtCard } from '../../../Components/CmtCard/sc.CmtCard';
-import { CreateButton } from '../../../Components/CmtButton/sc.Buttons';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const TABLE_COLUMN = [
-    { name: 'id', label: 'ID', width: '10%' },
-    { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-    { name: 'name', label: 'Nom de la catégorie', width: '70%' },
-];
+import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+import { Api } from "@/AdminService/Api";
+import { Component } from "@/AdminService/Component";
+import { Constant } from "@/AdminService/Constant";
+import { TableColumn } from "@/AdminService/TableColumn";
+
+import { categoriesSelector } from '@Redux/categories/categoriesSlice';
+import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
+import { loginFailure } from '@Redux/profile/profileSlice';
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CategoriesList = () => {
     const { loading, categories, error } = useSelector(categoriesSelector);
@@ -37,7 +28,7 @@ export const CategoriesList = () => {
     const [path, setPath] = useState(null);
 
     const getCategory = async (id) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -45,12 +36,12 @@ export const CategoriesList = () => {
             return;
         }
 
-        const result = await categoriesApi.getOneCategory(id);
+        const result = await Api.categoriesApi.getOneCategory(id);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(CATEGORIES_BASE_PATH);
+            navigate(Constant.CATEGORIES_BASE_PATH);
 
             return;
         }
@@ -82,7 +73,7 @@ export const CategoriesList = () => {
         while (categoryCopy !== null) {
             pathArray.push({
                 label: categoryCopy.name,
-                path: `${CATEGORIES_BASE_PATH}/${categoryCopy.id}`,
+                path: `${Constant.CATEGORIES_BASE_PATH}/${categoryCopy.id}`,
             });
 
             categoryCopy = categoryCopy.parent ? { ...categoryCopy.parent } : null;
@@ -91,7 +82,7 @@ export const CategoriesList = () => {
     }, [category]);
 
     const handleDelete = async (deleteId, deleteEvents) => {
-        const check = await authApi.checkIsAuth();
+        const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
@@ -99,7 +90,7 @@ export const CategoriesList = () => {
             return;
         }
 
-        await categoriesApi.deleteCategory(deleteId, deleteEvents);
+        await Api.categoriesApi.deleteCategory(deleteId, deleteEvents);
 
         dispatch(getCategoriesAction());
 
@@ -109,73 +100,73 @@ export const CategoriesList = () => {
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await categoriesApi.duplicateCategory(id);
+            const result = await Api.categoriesApi.duplicateCategory(id);
 
             if (result?.result) {
                 NotificationManager.success(
                     'La catégorie a bien été dupliquée.',
                     'Succès',
-                    REDIRECTION_TIME
+                    Constant.REDIRECTION_TIME
                 );
 
                 dispatch(getCategoriesAction());
             } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', REDIRECTION_TIME);
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };
 
     return (
         <>
-            <CmtPageWrapper title="Catégories">
+            <Component.CmtPageWrapper title="Catégories">
                 <Box display="flex" alignItems="center" pt={5}>
-                    <CmtBreadCrumb list={path} />
+                    <Component.CmtBreadCrumb list={path} />
                     <Box
                         pl={3}
                         onClick={() =>
-                            navigate(`${CATEGORIES_BASE_PATH}/${id || categories.id}${EDIT_PATH}`)
+                            navigate(`${Constant.CATEGORIES_BASE_PATH}/${id || categories.id}${Constant.EDIT_PATH}`)
                         }
                     >
-                        <EditCategoryLink component="span" variant="body1">
+                        <Component.EditCategoryLink component="span" variant="body1">
                             Modifier
-                        </EditCategoryLink>
+                        </Component.EditCategoryLink>
                     </Box>
                 </Box>
 
-                <CmtCard sx={{ width: '100%', mt: 2 }}>
+                <Component.CmtCard sx={{ width: '100%', mt: 2 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
                                 Liste des catégories
                             </Typography>
-                            <CreateButton
+                            <Component.CreateButton
                                 variant="contained"
-                                onClick={() => navigate(CATEGORIES_BASE_PATH + CREATE_PATH)}
+                                onClick={() => navigate(Constant.CATEGORIES_BASE_PATH + Constant.CREATE_PATH)}
                             >
                                 Nouveau
-                            </CreateButton>
+                            </Component.CreateButton>
                         </Box>
 
-                        <ListTable
+                        <Component.ListTable
                             contextualMenu
-                            table={TABLE_COLUMN}
+                            table={TableColumn.CategoriesList}
                             list={category?.children}
                             onEdit={(id) => {
-                                navigate(`${CATEGORIES_BASE_PATH}/${id}${EDIT_PATH}`);
+                                navigate(`${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             onClick={(elemId) => {
-                                navigate(`${CATEGORIES_BASE_PATH}/${elemId}`);
+                                navigate(`${Constant.CATEGORIES_BASE_PATH}/${elemId}`);
                             }}
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
                             }}
                         />
                     </CardContent>
-                </CmtCard>
-            </CmtPageWrapper>
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
 
-            <DeleteDialog
+            <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => {
                     setDeleteDialog(null);
@@ -214,7 +205,7 @@ export const CategoriesList = () => {
                         </RadioGroup>
                     </Box>
                 </Box>
-            </DeleteDialog>
+            </Component.DeleteDialog>
         </>
     );
 };
