@@ -16,6 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
 class Season extends Datable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

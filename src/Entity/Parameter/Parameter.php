@@ -11,6 +11,9 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity(repositoryClass: ParameterRepository::class)]
 class Parameter
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

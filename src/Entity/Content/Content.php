@@ -14,6 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
 class Content extends Datable implements JsonDoctrineSerializable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

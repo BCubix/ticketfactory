@@ -9,6 +9,9 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity]
 class PageBlock
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

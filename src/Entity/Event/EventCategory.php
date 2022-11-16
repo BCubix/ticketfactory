@@ -17,6 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: EventCategoryRepository::class)]
 class EventCategory extends Datable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

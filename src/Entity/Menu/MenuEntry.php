@@ -22,6 +22,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MenuEntryRepository::class)]
 class MenuEntry
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     const TYPES_MAPPING = [
         'event'    => Event::class,
         'category' => EventCategory::class,

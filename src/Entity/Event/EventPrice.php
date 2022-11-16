@@ -10,6 +10,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 class EventPrice
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

@@ -11,6 +11,9 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity(repositoryClass: EventMediaRepository::class)]
 class EventMedia
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

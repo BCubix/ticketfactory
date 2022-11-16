@@ -7,6 +7,9 @@ use JMS\Serializer\Annotation as JMS;
 
 class ContentTypeParameter implements JsonDoctrineSerializable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     private ?string $name = null;

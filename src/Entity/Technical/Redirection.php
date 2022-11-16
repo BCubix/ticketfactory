@@ -13,6 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RedirectionRepository::class)]
 class Redirection extends Datable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     const REDIRECT_PERMANENT = 301;
     const REDIRECT_TEMPORARY = 302;
 

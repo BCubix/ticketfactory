@@ -14,6 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: EventDateRepository::class)]
 class EventDate
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     const STATES = [
         'valid'    => 'Valide',
         'delayed'  => 'Reporté',

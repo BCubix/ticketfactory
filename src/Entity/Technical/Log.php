@@ -15,6 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: LogRepository::class)]
 class Log extends Datable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

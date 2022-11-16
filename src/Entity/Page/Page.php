@@ -14,6 +14,9 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity(repositoryClass: PageRepository::class)]
 class Page extends Datable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

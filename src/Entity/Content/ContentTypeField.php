@@ -9,6 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ContentTypeField implements JsonDoctrineSerializable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[Assert\Length(max: 250, maxMessage: 'Le titre du champ doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre du champ doit être renseigné.')]
     #[JMS\Expose()]

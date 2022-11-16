@@ -6,6 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class ParametersContainer
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     private $parameters;
 
     public function __construct()

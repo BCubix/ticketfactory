@@ -10,6 +10,9 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\HasLifecycleCallbacks()]
 class Datable
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'datetime_immutable')]
