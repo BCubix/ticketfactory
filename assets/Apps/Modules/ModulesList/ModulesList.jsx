@@ -119,7 +119,6 @@ export const ModulesList = () => {
                         />
 
                         <Component.ListTable
-                            contextualMenu
                             table={TableColumn.ModulesList}
                             list={modules}
                             onActive={(id) => handleActive(id, false)}

@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
+
 import {
     Chip,
     Menu,
@@ -21,9 +24,9 @@ import {
     Typography,
 } from '@mui/material';
 
-import { objectResolver } from '@Services/utils/objectResolver';
-
 import { Component } from "@/AdminService/Component";
+
+import { objectResolver } from '@Services/utils/objectResolver';
 
 /**
  *
@@ -48,7 +51,9 @@ export const ListTable = ({
     table,
     list,
     filters,
+    onActive = null,
     onDelete = null,
+    onDisable = null,
     onEdit = null,
     onClick = null,
     onDuplicate = null,
@@ -139,20 +144,36 @@ export const ListTable = ({
                                     <RenderFunction item={item} tableItem={tableItem} />
                                 </TableCell>
                             ))}
-                            {(onDelete !== null || onEdit !== null) && (
+                            {(onDelete !== null || onEdit !== null || (onActive !== null && onDisable !== null) || onInstall !== null) && (
                                 <TableCell component="th" scope="row">
-                                    <Component.EditFabButton
-                                        sx={{ marginInline: 1 }}
-                                        color="primary"
-                                        size="small"
-                                        aria-label="Modifier"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onEdit(item.id);
-                                        }}
-                                    >
-                                        <EditIcon />
-                                    </Component.EditFabButton>
+                                    {(onActive !== null && onDisable !== null) && (
+                                        (<Component.ActionFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="primary"
+                                            size="small"
+                                            aria-label="Action"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                (item.active ? onDisable : onActive)(item.id);
+                                            }}
+                                        >
+                                            { item.active ? <UnpublishedIcon /> : <CheckCircleIcon /> }
+                                        </Component.ActionFabButton>)
+                                    )}
+                                    {onEdit !== null &&
+                                        (<Component.EditFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="primary"
+                                            size="small"
+                                            aria-label="Modifier"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onEdit(item.id);
+                                            }}
+                                        >
+                                            <EditIcon />
+                                        </Component.EditFabButton>)
+                                    }
 
                                     {contextualMenu ? (
                                         <Component.ActionFabButton
@@ -164,7 +185,7 @@ export const ListTable = ({
                                         >
                                             <MoreHorizIcon />
                                         </Component.ActionFabButton>
-                                    ) : (
+                                    ) : onDelete !== null && (
                                         <Component.DeleteFabButton
                                             sx={{ marginInline: 1 }}
                                             color="error"
