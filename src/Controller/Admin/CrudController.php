@@ -6,6 +6,7 @@ use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
 use App\Service\Logger\Logger;
+use App\Utils\CloneObject;
 use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
