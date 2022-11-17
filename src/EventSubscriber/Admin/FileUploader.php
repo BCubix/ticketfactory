@@ -174,15 +174,20 @@ class FileUploader implements EventSubscriberInterface
         // Get the first dir name
         $name = trim($zip->getNameIndex(0), '/');
 
-        // Check if a logo is present in module
-        $logo = is_file($modulePath.'logo.jpg') || is_file($modulePath.'logo.png');
+        // Check if a logo is present in module and get extension of logo
+        $extension = null;
+        if (is_file($modulePath.'logo.jpg')) {
+            $extension = 'jpg';
+        } else if (is_file($modulePath.'logo.png')) {
+            $extension = 'png';
+        }
 
         $zip->close();
 
         $module = $this->em->getRepository(Module::class)->findOneByName($name) ?? new Module();
         $module->setActive(true);
         $module->setName($name);
-        $module->setLogo($logo);
+        $module->setLogoExtension($extension);
 
         $this->em->persist($module);
         $this->em->flush();

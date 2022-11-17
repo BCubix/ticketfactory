@@ -1,7 +1,8 @@
 import React from "react";
+import ExtensionIcon from '@mui/icons-material/Extension';
 import { Avatar } from "@mui/material";
-import { getModuleLogo } from "@Apps/Modules/ModulesList/utils/getModuleLogo";
 import { checkArray, checkObject, checkString } from "@Services/utils/check";
+import { getModuleLogo } from "@Apps/Modules/ModulesList/utils/getModuleLogo";
 
 const keys = [ 'name', 'label', 'width', 'type', 'sortable', 'renderFunction' ];
 
@@ -54,7 +55,13 @@ const TableColumnObj = {
             label: 'Logo',
             width: '15%',
             renderFunction: (item) => {
-                return item.logo && (<Avatar src={getModuleLogo()[item.name]} />);
+                if (item.logoExtension) {
+                    try {
+                        return <Avatar src={getModuleLogo(item.name)} />;
+                    } catch (e) {
+                    }
+                }
+                return (<Avatar><ExtensionIcon /></Avatar>);
             },
         },
         { name: 'name', label: 'Nom', width: '55%', sortable: true },

@@ -30,8 +30,8 @@ class Module extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private $logo;
+    #[ORM\Column(type: Types::STRING, length: 3)]
+    private $logoExtension;
 
     public function getId(): int
     {
@@ -50,14 +50,14 @@ class Module extends Datable
         return $this;
     }
 
-    public function isLogo(): bool
+    public function getLogoExtension()
     {
-        return $this->logo;
+        return $this->logoExtension;
     }
 
-    public function setLogo(bool $logo): self
+    public function setLogoExtension(string $logoExtension): self
     {
-        $this->logo = $logo;
+        $this->logoExtension = $logoExtension;
 
         return $this;
     }

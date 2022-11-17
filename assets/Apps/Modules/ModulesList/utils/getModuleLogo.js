@@ -1,11 +1,11 @@
-export const getModuleLogo = () => {
-    let logos = [];
-
+export const getModuleLogo = (moduleName) => {
     const list = require.context(`@/../modules/`, true, /.*\/logo.(jpg|png)$/);
 
-    list.keys().map((item) => {
-        logos[item.split('/')[1]] = list(item);
-    });
+    for (const item of list.keys()) {
+        if (item.split('/')[1] === moduleName) {
+            return list(item);
+        }
+    }
 
-    return logos;
+    return null;
 }
