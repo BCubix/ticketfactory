@@ -1,3 +1,6 @@
+import React from "react";
+import { Avatar } from "@mui/material";
+import { getModuleLogo } from "@Apps/Modules/ModulesList/utils/getModuleLogo";
 import { checkArray, checkObject, checkString } from "@Services/utils/check";
 
 const keys = [ 'name', 'label', 'width', 'type', 'sortable', 'renderFunction' ];
@@ -47,7 +50,14 @@ const TableColumnObj = {
     ModulesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom du module', width: '70%', sortable: true },
+        {
+            label: 'Logo',
+            width: '15%',
+            renderFunction: (item) => {
+                return item.logo && (<Avatar src={getModuleLogo()[item.name]} />);
+            },
+        },
+        { name: 'name', label: 'Nom', width: '55%', sortable: true },
     ],
     PagesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },

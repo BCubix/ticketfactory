@@ -164,19 +164,25 @@ class FileUploader implements EventSubscriberInterface
 
         unlink($zipPath);
 
-        // Zip can't not be empty and have to contain main directory in architecture
-        if ($zip->numFiles === 0 || !is_dir($moduleDirPath.$zip->getNameIndex(0))) {
+        $modulePath = $moduleDirPath.$zip->getNameIndex(0);
+
+        // Zip can't be empty and have to contain main directory in architecture
+        if ($zip->numFiles === 0 || !is_dir($modulePath)) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
         }
 
         // Get the first dir name
         $name = trim($zip->getNameIndex(0), '/');
 
+        // Check if a logo is present in module
+        $logo = is_file($modulePath.'logo.jpg') || is_file($modulePath.'logo.png');
+
         $zip->close();
 
         $module = $this->em->getRepository(Module::class)->findOneByName($name) ?? new Module();
         $module->setActive(true);
         $module->setName($name);
+        $module->setLogo($logo);
 
         $this->em->persist($module);
         $this->em->flush();
