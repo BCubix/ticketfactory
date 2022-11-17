@@ -16,11 +16,13 @@ class Kernel extends BaseKernel
         $contents = require $this->getBundlesPath();
         $modulesActive = ModuleService::getModulesActive();
 
+        // Add active modules in bundles list
         foreach ($modulesActive as $moduleActive) {
             $name = $moduleActive['name'];
 
             ModuleService::callConfig($name, 'register');
 
+            // Find bundle file in module
             $filesBundle = glob(ModuleService::MODULES_DIR.'/'.$name.'/src/*.php');
             foreach ($filesBundle as $fileBundlePath) {
                 $fileBundleName = substr(basename($fileBundlePath), 0, -4);

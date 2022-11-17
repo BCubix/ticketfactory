@@ -14,7 +14,7 @@ class Db
     private $password;
     private $dbname;
 
-    public static function getInstance()
+    public static function getInstance(): Db
     {
         if (!static::$instance) {
             $pattern = '/[^:]*\:\/\/(?<user>[^:]*)\:(?<password>[^@]*)@(?<host>[^\/]*)\/(?<dbname>[^?]*)/';
