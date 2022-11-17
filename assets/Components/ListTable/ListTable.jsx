@@ -144,7 +144,7 @@ export const ListTable = ({
                                     <RenderFunction item={item} tableItem={tableItem} />
                                 </TableCell>
                             ))}
-                            {(onDelete !== null || onEdit !== null || (onActive !== null && onDisable !== null) || onInstall !== null) && (
+                            {(onDelete !== null || onEdit !== null || (onActive !== null && onDisable !== null)) && (
                                 <TableCell component="th" scope="row">
                                     {(onActive !== null && onDisable !== null) && (
                                         (<Component.ActionFabButton

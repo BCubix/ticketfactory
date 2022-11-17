@@ -6,7 +6,6 @@ use App\Entity\Module\Module;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
-use App\Manager\ModuleManager;
 use App\Service\Module\ModuleService;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
