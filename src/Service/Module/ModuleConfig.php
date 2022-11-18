@@ -3,12 +3,13 @@
 namespace App\Service\Module;
 
 use App\Service\Db\Db;
+
 use Composer\Autoload\ClassLoader;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 class ModuleConfig
 {
     protected const MODULE_NAME = null;
-    protected const NAMESPACES = [];
     protected const TABLES = [];
     protected const TRAITS = [];
 
@@ -23,7 +24,9 @@ class ModuleConfig
      * Installation of database, ...
      *
      * @return void
+     * @throws \InvalidArgumentException
      * @throws \ReflectionException
+     * @throws DirectoryNotFoundException
      */
     public function install()
     {
@@ -62,16 +65,25 @@ class ModuleConfig
      * Register namespace for module autoload.
      *
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws DirectoryNotFoundException
      */
     public final function register()
     {
-        if (!static::NAMESPACES)
-            return;
-
-        foreach (static::NAMESPACES as $prefix => $path) {
-            $this->loader->setPsr4($prefix, $path);
+        if (null === static::MODULE_NAME) {
+            throw new \InvalidArgumentException("Le nom du module n'est pas renseigné dans le fichier de configuration.");
         }
 
+        // Namespace prefix of module
+        $prefix = 'TicketFactory\\Module\\' . static::MODULE_NAME . '\\';
+
+        // Path of src directory of module
+        $path = __DIR__ . '/../../../modules/' . static::MODULE_NAME . '/src';
+        if (!is_dir($path)) {
+            throw new DirectoryNotFoundException("Le dossier src du module " . static::MODULE_NAME . " n'existe pas.");
+        }
+
+        $this->loader->setPsr4($prefix, $path);
         $this->loader->register();
     }
 
