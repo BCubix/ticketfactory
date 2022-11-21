@@ -1,4 +1,4 @@
-import { TAGS_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     TAGS_API_PATH,
@@ -15,7 +15,7 @@ describe('Tags List Spec', () => {
         sessionStorage.removeItem('tagsSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + TAGS_API_PATH + '*').as('getTags');
-        cy.visit(TAGS_BASE_PATH);
+        cy.visit(Constant.TAGS_BASE_PATH);
     });
 
     it('get List', () => {

@@ -5,10 +5,10 @@ import * as Yup from 'yup';
 import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import ContentTypesModules from "@Apps/ContentTypes/ContentTypesForm/ContentTypeModules";
+import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
 
 export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
     const getContentTypesModules = useMemo(() => {
@@ -104,7 +104,6 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                         )}
                     </Component.CmtFormBlock>
 
-                    {console.log(errors)}
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}

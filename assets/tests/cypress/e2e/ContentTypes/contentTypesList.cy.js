@@ -1,4 +1,4 @@
-import { CONTENT_TYPES_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     CONTENT_TYPES_API_PATH,
@@ -17,7 +17,7 @@ describe('Redirections List Spec', () => {
         cy.intercept('GET', ADMIN_API_BASE_PATH + CONTENT_TYPES_API_PATH + '*').as(
             'getContentTypes'
         );
-        cy.visit(CONTENT_TYPES_BASE_PATH);
+        cy.visit(Constant.CONTENT_TYPES_BASE_PATH);
         cy.wait(500);
     });
 

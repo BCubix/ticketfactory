@@ -1,4 +1,4 @@
-import { checkString } from "@Services/utils/check";
+import { checkString } from '../services/utils/check';
 
 const ConstantObj = {
     API_URL: 'http://localhost:8000/admin',
@@ -61,9 +61,10 @@ const ConstantObj = {
     CONTENT_MODULES_EXTENSION: 'FieldContentType',
 
     CANCELED_REQUEST_ERROR_CODE: 'ERR_CANCELED',
-}
+};
 
-ConstantObj.ALL_FILE_SUPPORTED = () => `${ConstantObj.IMAGE_FILE_SUPPORTED}, ${ConstantObj.AUDIO_FILE_SUPPORTED}, ${ConstantObj.VIDEO_FILE_SUPPORTED}, ${ConstantObj.WORD_FILE_SUPPORTED}, ${ConstantObj.EXCEL_FILE_SUPPORTED}, ${ConstantObj.POWERPOINT_FILE_SUPPORTED}, ${ConstantObj.PDF_FILE_SUPPORTED}, ${ConstantObj.TEXT_FILE_SUPPORTED}`;
+ConstantObj.ALL_FILE_SUPPORTED = () =>
+    `${ConstantObj.IMAGE_FILE_SUPPORTED}, ${ConstantObj.AUDIO_FILE_SUPPORTED}, ${ConstantObj.VIDEO_FILE_SUPPORTED}, ${ConstantObj.WORD_FILE_SUPPORTED}, ${ConstantObj.EXCEL_FILE_SUPPORTED}, ${ConstantObj.POWERPOINT_FILE_SUPPORTED}, ${ConstantObj.PDF_FILE_SUPPORTED}, ${ConstantObj.TEXT_FILE_SUPPORTED}`;
 
 /**
  * Constant's getter.
@@ -75,8 +76,8 @@ export const Constant = new Proxy(ConstantObj, {
         }
 
         const result = Reflect.get(target, key, receiver);
-        return typeof result === "function" && result.name === "" ? result() : result;
-    }
+        return typeof result === 'function' && result.name === '' ? result() : result;
+    },
 });
 
 /**

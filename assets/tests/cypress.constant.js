@@ -1,4 +1,4 @@
-export const USER_EMAIL = 'bryanbouillot@gmail.com';
+export const USER_EMAIL = 'email@gmail.com';
 export const USER_PASSWORD = 'Azerty!0406';
 
 export const ADMIN_API_BASE_PATH = '/admin/api';
@@ -14,3 +14,4 @@ export const IMAGE_FORMATS_API_PATH = '/image-formats';
 export const CONTENTS_API_PATH = '/contents';
 export const CONTENT_TYPES_API_PATH = '/content-types';
 export const CONTACT_REQUESTS_API_PATH = '/contact-requests';
+export const USERS_API_PATH = '/users';

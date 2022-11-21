@@ -1,4 +1,4 @@
-import { IMAGE_FORMATS_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     IMAGE_FORMATS_API_PATH,
@@ -17,7 +17,7 @@ describe('Redirections List Spec', () => {
         cy.intercept('GET', ADMIN_API_BASE_PATH + IMAGE_FORMATS_API_PATH + '*').as(
             'getImageFormats'
         );
-        cy.visit(IMAGE_FORMATS_BASE_PATH);
+        cy.visit(Constant.IMAGE_FORMATS_BASE_PATH);
     });
 
     it('get List', () => {

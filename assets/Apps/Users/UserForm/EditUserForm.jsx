@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
     const userSchema = Yup.object().shape({
@@ -116,7 +116,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
                         >
-                            Créer
+                            Modifier
                         </Button>
                     </Box>
                 </Component.CmtPageWrapper>

@@ -1,8 +1,7 @@
-import { REDIRECTIONS_BASE_PATH, ROOMS_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     REDIRECTIONS_API_PATH,
-    ROOMS_API_PATH,
     USER_EMAIL,
     USER_PASSWORD,
 } from '../../../cypress.constant';
@@ -20,7 +19,7 @@ describe('Redirections List Spec', () => {
         cy.intercept('GET', ADMIN_API_BASE_PATH + REDIRECTIONS_API_PATH + '*').as(
             'getRedirections'
         );
-        cy.visit(REDIRECTIONS_BASE_PATH);
+        cy.visit(Constant.REDIRECTIONS_BASE_PATH);
     });
 
     it('get List', () => {

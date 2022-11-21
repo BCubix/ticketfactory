@@ -1,4 +1,4 @@
-import { SEASONS_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     SEASONS_API_PATH,
@@ -15,7 +15,7 @@ describe('Seasons List Spec', () => {
         sessionStorage.removeItem('seasonsSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + SEASONS_API_PATH + '*').as('getSeasons');
-        cy.visit(SEASONS_BASE_PATH);
+        cy.visit(Constant.SEASONS_BASE_PATH);
     });
 
     it('get List', () => {

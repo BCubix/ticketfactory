@@ -4,7 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import TitleIcon from '@mui/icons-material/Title';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const UserFilters = ({ filters, changeFilters }) => {
     return (
@@ -15,6 +15,7 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status"
                 label="Activé ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <Component.CmtSearchFilters
@@ -23,6 +24,7 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 title="Chercher par email"
                 label="Email"
                 icon={<TitleIcon />}
+                id="emailFilter"
             />
 
             <Component.CmtSearchFilters
@@ -31,6 +33,7 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 title="Chercher par prénom"
                 label="Prénom"
                 icon={<TitleIcon />}
+                id="firstNameFilter"
             />
 
             <Component.CmtSearchFilters
@@ -39,6 +42,7 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 title="Chercher par nom"
                 label="Nom"
                 icon={<TitleIcon />}
+                id="lastNameFilter"
             />
 
             <Component.CmtSearchFilters
@@ -47,6 +51,7 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 title="Chercher par role"
                 label="Role"
                 icon={<TitleIcon />}
+                id="roleFilter"
             />
         </Box>
     );

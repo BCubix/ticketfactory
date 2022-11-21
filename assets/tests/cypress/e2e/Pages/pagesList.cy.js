@@ -1,4 +1,4 @@
-import { PAGES_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     PAGES_API_PATH,
@@ -15,7 +15,7 @@ describe('Pages List Spec', () => {
         sessionStorage.removeItem('pagesSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + PAGES_API_PATH + '*').as('getPages');
-        cy.visit(PAGES_BASE_PATH);
+        cy.visit(Constant.PAGES_BASE_PATH);
     });
 
     it('get List', () => {

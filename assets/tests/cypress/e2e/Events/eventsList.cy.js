@@ -1,4 +1,4 @@
-import { EVENTS_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     EVENTS_API_PATH,
@@ -19,7 +19,7 @@ describe('Events List Spec', () => {
         sessionStorage.removeItem('eventsSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + EVENTS_API_PATH + '*').as('getEvents');
-        cy.visit(EVENTS_BASE_PATH);
+        cy.visit(Constant.EVENTS_BASE_PATH);
     });
 
     it('get List', () => {

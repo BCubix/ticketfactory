@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 import ExtensionIcon from '@mui/icons-material/Extension';
-import { Avatar } from "@mui/material";
-import { checkArray, checkObject, checkString } from "@Services/utils/check";
-import { getModuleLogo } from "@Apps/Modules/ModulesList/utils/getModuleLogo";
+import { Avatar } from '@mui/material';
+import { checkArray, checkObject, checkString } from '@Services/utils/check';
+import { getModuleLogo } from '@Apps/Modules/ModulesList/utils/getModuleLogo';
 
-const keys = [ 'name', 'label', 'width', 'type', 'sortable', 'renderFunction' ];
+const keys = ['name', 'label', 'width', 'type', 'sortable', 'renderFunction'];
 
 const TableColumnObj = {
     CategoriesList: [
@@ -58,10 +58,13 @@ const TableColumnObj = {
                 if (item.logoExtension) {
                     try {
                         return <Avatar src={getModuleLogo(item.name)} />;
-                    } catch (e) {
-                    }
+                    } catch (e) {}
                 }
-                return (<Avatar><ExtensionIcon /></Avatar>);
+                return (
+                    <Avatar>
+                        <ExtensionIcon />
+                    </Avatar>
+                );
             },
         },
         { name: 'name', label: 'Nom', width: '55%', sortable: true },
@@ -98,12 +101,13 @@ const TableColumnObj = {
     ],
     UserList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'firstName', label: 'Prénom', width: '15%', sortable: true },
         { name: 'lastName', label: 'Nom', width: '15%', sortable: true },
-        { name: 'email', label: 'Adresse Email', width: '30%', sortable: true },
+        { name: 'email', label: 'Adresse Email', width: '20%', sortable: true },
         { name: 'roles', label: 'Rôle', width: '20%', sortable: true },
     ],
-}
+};
 
 /**
  * TableColumn's getter.
@@ -115,7 +119,7 @@ export const TableColumn = new Proxy(TableColumnObj, {
         }
 
         return Reflect.get(target, key, receiver);
-    }
+    },
 });
 
 /**
@@ -130,11 +134,11 @@ export function setTableColumn(name, tableColumn = []) {
     checkString(name);
     checkArray(tableColumn);
 
-    tableColumn.forEach(obj => {
+    tableColumn.forEach((obj) => {
         checkObject(obj);
 
-        Object.keys(obj).forEach(key => {
-            if (!keys.find(keyRule => keyRule === key)) {
+        Object.keys(obj).forEach((key) => {
+            if (!keys.find((keyRule) => keyRule === key)) {
                 throw new Error(`${key} must be in TableColumn's keys.`);
             }
         });

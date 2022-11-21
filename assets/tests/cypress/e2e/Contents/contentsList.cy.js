@@ -1,4 +1,4 @@
-import { CONTENT_BASE_PATH } from '../../../../Constant';
+import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     CONTENTS_API_PATH,
@@ -16,7 +16,7 @@ describe('Redirections List Spec', () => {
         sessionStorage.removeItem('contentsSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + CONTENTS_API_PATH + '*').as('getContents');
-        cy.visit(CONTENT_BASE_PATH);
+        cy.visit(Constant.CONTENT_BASE_PATH);
     });
 
     it('get List', () => {
