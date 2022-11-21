@@ -7,9 +7,16 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import { CardContent, CardHeader, List, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import {
+    CardContent,
+    CardHeader,
+    List,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemText,
+} from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const FirstCardDashboard = ({ data }) => {
     const theme = useTheme();
@@ -44,7 +51,7 @@ export const FirstCardDashboard = ({ data }) => {
     ];
 
     return (
-        <Component.CmtCard sx={{ position: 'relative' }}>
+        <Component.CmtCard sx={{ position: 'relative' }} overflow="hidden">
             <CardHeader
                 title="Informations générales"
                 titleTypographyProps={{

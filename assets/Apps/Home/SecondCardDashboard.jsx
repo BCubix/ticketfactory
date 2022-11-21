@@ -8,9 +8,9 @@ import { useTheme } from '@emotion/react';
 import { Button, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
 
@@ -37,7 +37,11 @@ export const SecondCardDashboard = ({ data }) => {
         const result = await Api.dashboardApi.getGraph(tab, beginDate, endDate);
 
         if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            NotificationManager.error(
+                "Une erreur s'est produite",
+                'Erreur',
+                Constant.REDIRECTION_TIME
+            );
             return;
         }
 
@@ -52,7 +56,7 @@ export const SecondCardDashboard = ({ data }) => {
 
     return (
         <>
-            <Component.CmtCard sx={{ marginBottom: 4 }}>
+            <Component.CmtCard sx={{ marginBottom: 4 }} overflow="hidden">
                 <Box sx={{ width: '100%', backgroundColor: colorProps }}>
                     <CardHeader
                         title="Période sélectionnée"
@@ -94,7 +98,7 @@ export const SecondCardDashboard = ({ data }) => {
                 </CardContent>
             </Component.CmtCard>
 
-            <Component.CmtCard>
+            <Component.CmtCard overflow="hidden">
                 <Box sx={{ width: '100%', backgroundColor: colorProps }}>
                     <CardHeader
                         title="Statistiques"
@@ -136,7 +140,9 @@ export const SecondCardDashboard = ({ data }) => {
                                     }}
                                 >
                                     <Box>
-                                        <Component.GraphTabTitle variant="h5">{val.label}</Component.GraphTabTitle>
+                                        <Component.GraphTabTitle variant="h5">
+                                            {val.label}
+                                        </Component.GraphTabTitle>
                                         <Typography variant="body1" fontSize={10} fontWeight={600}>
                                             {val.amount} {val.unit}
                                         </Typography>
@@ -158,4 +164,4 @@ export const SecondCardDashboard = ({ data }) => {
             </Component.CmtCard>
         </>
     );
-}
+};

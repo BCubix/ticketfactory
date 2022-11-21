@@ -3,5 +3,5 @@ import { Card } from '@mui/material';
 
 export const CmtCard = styled(Card)`
     background-color: ${(props) => props.theme.palette.cardBackground};
-    overflow: visible;
+    overflow: ${(props) => props.overflow || 'visible'};
 `;

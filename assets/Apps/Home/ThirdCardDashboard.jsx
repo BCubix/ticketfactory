@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import { NotificationManager } from "react-notifications";
+import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 
 import { useTheme } from '@emotion/react';
 
-import { Button, CardContent, CardHeader, Link, List, ListItemButton, Typography } from '@mui/material';
+import {
+    Button,
+    CardContent,
+    CardHeader,
+    Link,
+    List,
+    ListItemButton,
+    Typography,
+} from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { getDashboardAction } from '@Redux/dashboard/dashboardSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
@@ -34,7 +42,11 @@ export const ThirdCardDashboard = ({ data }) => {
         const result = await Api.dashboardApi.updateNote(note);
 
         if (result.result) {
-            NotificationManager.success('La note a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
+            NotificationManager.success(
+                'La note a bien été modifiée.',
+                'Succès',
+                Constant.REDIRECTION_TIME
+            );
 
             dispatch(getDashboardAction());
         }
@@ -42,7 +54,7 @@ export const ThirdCardDashboard = ({ data }) => {
 
     return (
         <>
-            <Component.CmtCard>
+            <Component.CmtCard overflow="hidden">
                 <CardHeader
                     title="Informations générales"
                     titleTypographyProps={{
@@ -90,7 +102,7 @@ export const ThirdCardDashboard = ({ data }) => {
                     </List>
                 </CardContent>
             </Component.CmtCard>
-            <Component.CmtCard sx={{ marginTop: 4 }}>
+            <Component.CmtCard sx={{ marginTop: 4 }} overflow="hidden">
                 <CardHeader
                     title="Notes"
                     titleTypographyProps={{
