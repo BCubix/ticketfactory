@@ -14,11 +14,22 @@ class Db
     private $password;
     private $dbname;
 
+    /**
+     * @throws \Exception
+     */
     public static function getInstance(): Db
     {
         if (!static::$instance) {
             $pattern = '/[^:]*\:\/\/(?<user>[^:]*)\:(?<password>[^@]*)@(?<host>[^\/]*)\/(?<dbname>[^?]*)/';
-            preg_match($pattern, $_ENV['DATABASE_URL'], $matches);
+            $err = preg_match($pattern, $_ENV['DATABASE_URL'], $matches);
+
+            if ($err === 0) {
+                throw new \Exception("La récupération des données de la database a échoué.");
+            }
+
+            if ($err === FALSE) {
+                throw new \Exception("Une erreur s'est produite lors de la récupération des données de la database.");
+            }
 
             $host = $matches['host'];
             $user = $matches['user'];
