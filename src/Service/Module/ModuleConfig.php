@@ -109,7 +109,7 @@ class ModuleConfig
         if (!static::MODULE_NAME || !static::TRAITS)
             return;
 
-        $space = "\n    ";
+        $space = PHP_EOL . "    ";
         $mainTemplate = '/*** > Trait ***/';
         $beginTemplate = "/*** > Module: " . static::MODULE_NAME . " ***/";
         $endTemplate = "/*** < Module: " . static::MODULE_NAME . " ***/";
