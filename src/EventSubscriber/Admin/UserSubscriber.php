@@ -3,9 +3,12 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\User\User;
+use App\Exception\ApiException;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Manager\UserManager;
+
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
