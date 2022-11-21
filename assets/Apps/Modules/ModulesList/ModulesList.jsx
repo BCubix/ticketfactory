@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 import { Box } from '@mui/system';
 import {
@@ -31,6 +32,7 @@ const ACTION_UNINSTALL_DELETE = "Désinstaller & Supprimer";
 export const ModulesList = () => {
     const { loading, modules, filters, total, error } = useSelector(modulesSelector);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [actionDelete, setActionDelete] = useState(ACTION_DISABLE);

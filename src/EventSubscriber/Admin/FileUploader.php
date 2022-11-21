@@ -121,7 +121,7 @@ class FileUploader implements EventSubscriberInterface
             $extension = 'png';
         }
 
-        $module = $this->em->getRepository(Module::class)->findOneByName($name) ?? new Module();
+        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($name) ?? new Module();
         $module->setActive(true);
         $module->setName($name);
         $module->setLogoExtension($extension);
