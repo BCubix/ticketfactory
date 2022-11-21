@@ -81,8 +81,7 @@ export const ModulesList = () => {
 
         const result = await Api.modulesApi.disableModule(
             id,
-            action === ACTION_UNINSTALL || action === ACTION_UNINSTALL_DELETE,
-            action === ACTION_UNINSTALL_DELETE
+            action === ACTION_DISABLE ? 0 : action === ACTION_UNINSTALL ? 1 : 2
         );
 
         if (!result.result) {

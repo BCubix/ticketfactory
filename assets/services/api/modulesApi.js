@@ -99,9 +99,9 @@ const modulesApi = {
         }
     },
 
-    disableModule: async (id, uninstall, deleteFolder) => {
+    disableModule: async (id, action) => {
         try {
-            const result = await axios.post(`/modules/${id}/active?filters[uninstall]=${uninstall ? 1 : 0}&filters[deleteFolder]=${deleteFolder ? 1 : 0}`);
+            const result = await axios.post(`/modules/${id}/active?action=${action}`);
 
             return { result: true, module: result.data };
         } catch (error) {
