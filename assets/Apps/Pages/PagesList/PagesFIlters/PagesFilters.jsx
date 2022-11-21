@@ -15,6 +15,7 @@ export const PagesFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status"
                 label="Activé ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <Component.CmtSearchFilters
@@ -23,6 +24,7 @@ export const PagesFilters = ({ filters, changeFilters }) => {
                 title="Chercher par nom"
                 label="Nom"
                 icon={<TitleIcon />}
+                id="titleFilter"
             />
         </Box>
     );

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Api } from "@/AdminService/Api";
+import { Api } from '@/AdminService/Api';
 import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
@@ -11,7 +11,7 @@ const initialState = {
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('contentTypesActiveFilter')),
         name: sessionStorage.getItem('contentTypesNameFilter') || '',
-        sort: sessionStorage.getItem('contentsSort') || 'id ASC',
+        sort: sessionStorage.getItem('contentTypesSort') || 'id ASC',
         page: 1,
         limit: 20,
     },

@@ -37,6 +37,8 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                             return Yup.object().shape({
                                 ...getContentTypesModules[moduleName].getValidation(),
                             });
+                        } else {
+                            return Yup.object().nullable();
                         }
                     }),
                 })
@@ -102,6 +104,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                         )}
                     </Component.CmtFormBlock>
 
+                    {console.log(errors)}
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}

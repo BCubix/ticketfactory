@@ -18,6 +18,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status de gestion"
                 label="Gérée ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <Component.CmtSearchFilters
@@ -26,6 +27,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par prénom"
                 label="Prénom"
                 icon={<PersonIcon />}
+                id="firstNameFilter"
             />
 
             <Component.CmtSearchFilters
@@ -34,6 +36,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par nom"
                 label="Nom"
                 icon={<PersonIcon />}
+                id="lastNameFilter"
             />
 
             <Component.CmtSearchFilters
@@ -42,6 +45,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par email"
                 label="Email"
                 icon={<EmailIcon />}
+                id="emailFilter"
             />
 
             <Component.CmtSearchFilters
@@ -50,6 +54,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par téléphone"
                 label="Téléphone"
                 icon={<PhoneIcon />}
+                id="phoneFilter"
             />
 
             <Component.CmtSearchFilters
@@ -58,6 +63,7 @@ export const ContactRequestsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par objet"
                 label="Objet"
                 icon={<SubjectIcon />}
+                id="subjectFilter"
             />
         </Box>
     );

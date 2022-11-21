@@ -5,8 +5,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import TitleIcon from '@mui/icons-material/Title';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 export const RedirectionsFilters = ({ filters, changeFilters }) => {
     return (
@@ -17,6 +17,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status"
                 label="Activé ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <Component.CmtSimpleSelectFilters
@@ -32,6 +33,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                     nameLabel: 'label',
                 }}
                 list={Constant.REDIRECTION_TYPES}
+                id="redirectionTypeFilter"
             />
 
             <Component.CmtSearchFilters
@@ -40,6 +42,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par source de la redirection"
                 label="Redirigé depuis"
                 icon={<TitleIcon />}
+                id="redirectFromFilter"
             />
 
             <Component.CmtSearchFilters
@@ -48,6 +51,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par destination de la redirection"
                 label="Redirigé vers"
                 icon={<TitleIcon />}
+                id="redirectToFilter"
             />
         </Box>
     );

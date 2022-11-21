@@ -35,6 +35,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status"
                 label="Activé ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <Component.CmtSearchFilters
@@ -43,6 +44,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 title="Chercher par titre"
                 label="Titre"
                 icon={<TitleIcon />}
+                id="titleFilter"
             />
 
             <Component.CmtMultipleSelectFilters
@@ -58,6 +60,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                     nameLabel: 'label',
                 }}
                 list={LIST_TYPE}
+                id="mediaDocumentTypeFilter"
             />
 
             <Component.MediasSorters

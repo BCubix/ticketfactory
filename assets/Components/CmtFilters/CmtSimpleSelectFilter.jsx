@@ -23,6 +23,7 @@ export const CmtSimpleSelectFilters = ({
     icon,
     parameters,
     getList,
+    id,
 }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -62,6 +63,7 @@ export const CmtSimpleSelectFilters = ({
                     variant={value ? 'default' : 'outlined'}
                     icon={icon}
                     size="medium"
+                    id={id ? id + 'Chip' : null}
                     label={label}
                     onClick={(e) => {
                         handleGetList();
@@ -85,6 +87,7 @@ export const CmtSimpleSelectFilters = ({
                             variant="standard"
                             fullWidth
                             value={value}
+                            id={id ? id + 'Select' : null}
                             onChange={(e) => {
                                 setValue(e.target.value);
                             }}
@@ -106,7 +109,11 @@ export const CmtSimpleSelectFilters = ({
                                 </Box>
                             )}
                             {displayList?.map((item, index) => (
-                                <MenuItem key={index} value={item[parameters.nameValue]}>
+                                <MenuItem
+                                    id={id ? id + 'Value-' + item[parameters.nameValue] : null}
+                                    key={index}
+                                    value={item[parameters.nameValue]}
+                                >
                                     <ListItemText primary={item[parameters?.nameLabel]} />
                                 </MenuItem>
                             ))}
