@@ -45,7 +45,7 @@ class ModuleController extends AdminController
     #[Rest\Post('/modules/{moduleId}/active', requirements: ['moduleId' => '\d+'])]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function active(Request $request, ParamFetcher $paramFetcher, int $moduleId): View
+    public function active(Request $request, ParamFetcher $paramFetcher, ModuleService $moduleService, int $moduleId): View
     {
         $module = $this->em->getRepository(Module::class)->findOneForAdmin($moduleId);
         if (null === $module) {
@@ -68,8 +68,8 @@ class ModuleController extends AdminController
 
             $this->log->log(0, 0, 'Deleted object.', Module::class, $moduleId);
 
-            ModuleService::callConfig($module->getName(), 'uninstall');
-            ModuleService::deleteModuleFolder($moduleName);
+            $moduleService->callConfig($module->getName(), 'uninstall');
+            $moduleService->deleteModuleFolder($moduleName);
 
             return $this->view(null, Response::HTTP_OK);
         }
@@ -89,15 +89,19 @@ class ModuleController extends AdminController
 
         $uninstall = $filters['uninstall'] ?? null;
         if ($uninstall) {
-            ModuleService::callConfig($module->getName(), 'uninstall');
+            $moduleService->callConfig($module->getName(), 'uninstall');
         } else if (!$module->isActive()) {
-            ModuleService::callConfig($module->getName(), 'disable');
+            $moduleService->callConfig($module->getName(), 'disable');
         } else {
-            ModuleService::callConfig($module->getName(), 'install');
+            $moduleService->callConfig($module->getName(), 'install');
         }
 
-        shell_exec('php ../bin/console cache:clear');
-        shell_exec('php ../bin/console doctrine:schema:update --force');
+        if (NULL === shell_exec('php ../bin/console cache:clear')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        }
+        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
+        }
 
         return $this->view($module, Response::HTTP_OK);
     }

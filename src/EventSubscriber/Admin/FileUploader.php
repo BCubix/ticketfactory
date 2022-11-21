@@ -29,11 +29,13 @@ class FileUploader implements EventSubscriberInterface
 
     private $em;
     private $rootPath;
+    private $moduleService;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $moduleService)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
+        $this->moduleService = $moduleService;
     }
 
     public static function getSubscribedEvents(): array
@@ -102,6 +104,42 @@ class FileUploader implements EventSubscriberInterface
         return $response;
     }
 
+    public function moduleUpload(PostPersistEvent $event)
+    {
+        $response = $event->getResponse();
+        $response['success'] = true;
+        $response["filename"] = $event->getFile()->getFilename();
+
+        $name = $this->moduleService->unzip($response["filename"]);
+
+        // Check if a logo is present in module and get extension of logo
+        $modulePath = $this->moduleService->getModuleDir() . '/' . $name;
+        $extension = null;
+        if (is_file($modulePath . '/' . 'logo.jpg')) {
+            $extension = 'jpg';
+        } else if (is_file($modulePath . '/' . 'logo.png')) {
+            $extension = 'png';
+        }
+
+        $module = $this->em->getRepository(Module::class)->findOneByName($name) ?? new Module();
+        $module->setActive(true);
+        $module->setName($name);
+        $module->setLogoExtension($extension);
+
+        $this->em->persist($module);
+        $this->em->flush();
+
+        $this->moduleService->callConfig($name, 'install');
+
+        if (NULL === shell_exec('php ../bin/console cache:clear')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        }
+        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
+        }
+
+        return $response;
+    }
 
     private function moveFile(Media $media, string $basePath): void
     {
@@ -144,59 +182,5 @@ class FileUploader implements EventSubscriberInterface
         foreach($imageFormat as $format) {
 
         }
-    }
-
-    public function moduleUpload(PostPersistEvent $event)
-    {
-        $response = $event->getResponse();
-        $response['success'] = true;
-        $response["filename"] = $event->getFile()->getFilename();
-
-        $moduleDirPath = $this->rootPath.'/modules/';
-        $zipPath = $moduleDirPath.$response["filename"];
-
-        $zip = new \ZipArchive;
-
-        if (!$zip->open($zipPath) || !$zip->extractTo($moduleDirPath)) {
-            unlink($zipPath);
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
-        }
-
-        unlink($zipPath);
-
-        $modulePath = $moduleDirPath.$zip->getNameIndex(0);
-
-        // Zip can't be empty and have to contain main directory in architecture
-        if ($zip->numFiles === 0 || !is_dir($modulePath)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
-        }
-
-        // Get the first dir name
-        $name = trim($zip->getNameIndex(0), '/');
-
-        // Check if a logo is present in module and get extension of logo
-        $extension = null;
-        if (is_file($modulePath.'logo.jpg')) {
-            $extension = 'jpg';
-        } else if (is_file($modulePath.'logo.png')) {
-            $extension = 'png';
-        }
-
-        $zip->close();
-
-        $module = $this->em->getRepository(Module::class)->findOneByName($name) ?? new Module();
-        $module->setActive(true);
-        $module->setName($name);
-        $module->setLogoExtension($extension);
-
-        $this->em->persist($module);
-        $this->em->flush();
-
-        ModuleService::callConfig($name, 'install');
-
-        shell_exec('php ../bin/console cache:clear');
-        shell_exec('php ../bin/console doctrine:schema:update --force');
-
-        return $response;
     }
 }

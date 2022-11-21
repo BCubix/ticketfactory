@@ -18,14 +18,15 @@ class Kernel extends BaseKernel
         $bundles = require $this->getBundlesPath();
 
         $modulesActive = ModuleService::getModulesActive();
-        $moduleDir = $this->getProjectDir() . '/modules';
+        $moduleService = new ModuleService($this->getProjectDir());
+        $moduleDir = $moduleService->getModuleDir();
 
         // Add active modules in bundles list
         foreach ($modulesActive as $moduleActive) {
             $moduleName = $moduleActive['name'];
 
             // Register first the namespace of module
-            ModuleService::callConfig($moduleName, 'register');
+            $moduleService->callConfig($moduleName, 'register');
 
             // Find file bundle in module
             $bundleFilePath = $moduleDir . '/' . $moduleName . '/src/' . $moduleName . '.php';

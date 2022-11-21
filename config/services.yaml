@@ -50,3 +50,8 @@ services:
     App\Manager\ContentTypeManager:
         arguments:
             $projectDir: '%kernel.project_dir%'
+
+    # Managers
+    App\Service\Module\ModuleService:
+        arguments:
+            $projectDir: '%kernel.project_dir%'

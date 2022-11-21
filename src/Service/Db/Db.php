@@ -31,7 +31,7 @@ class Db
         return static::$instance;
     }
 
-    public function __construct(string $host, string $user, string $password, string $dbname)
+    private function __construct(string $host, string $user, string $password, string $dbname)
     {
         $this->host = $host;
         $this->user = $user;
