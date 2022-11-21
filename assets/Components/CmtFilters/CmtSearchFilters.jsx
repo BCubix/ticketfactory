@@ -3,7 +3,7 @@ import { Box, Chip, Typography } from '@mui/material';
 import { CmtPopover } from '../CmtPopover/CmtPopover';
 import { CmtTextField } from '../CmtTextField/CmtTextField';
 
-export const CmtSearchFilters = ({ value, setValue, title, label, icon = null }) => {
+export const CmtSearchFilters = ({ value, setValue, title, label, icon = null, id }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     return (
@@ -14,6 +14,7 @@ export const CmtSearchFilters = ({ value, setValue, title, label, icon = null })
                     icon={icon}
                     size="medium"
                     label={label}
+                    id={id ? id + 'Chip' : null}
                     onClick={(e) => setAnchorEl(e.currentTarget)}
                     onDelete={value ? () => setValue('') : null}
                 />
@@ -28,6 +29,7 @@ export const CmtSearchFilters = ({ value, setValue, title, label, icon = null })
                     <CmtTextField
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
+                        id={id ? id + 'Search' : null}
                         label={label}
                     />
                 </Box>

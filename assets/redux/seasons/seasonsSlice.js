@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import authApi from '../../services/api/authApi';
 import seasonsApi from '../../services/api/seasonsApi';
 import { apiMiddleware } from '../../services/utils/apiMiddleware';
 import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
-import { loginFailure } from '../profile/profileSlice';
 
 const initialState = {
     loading: false,

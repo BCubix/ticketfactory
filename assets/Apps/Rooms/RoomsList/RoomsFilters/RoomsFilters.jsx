@@ -14,6 +14,7 @@ export const RoomsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status"
                 label="Activé ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <CmtSearchFilters
@@ -22,6 +23,7 @@ export const RoomsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par nom"
                 label="Nom"
                 icon={<TitleIcon />}
+                id="nameFilter"
             />
         </Box>
     );

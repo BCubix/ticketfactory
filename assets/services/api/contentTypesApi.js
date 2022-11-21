@@ -135,7 +135,7 @@ const contentTypesApi = {
         try {
             const formData = new FormData();
 
-            formData.append('active', data.active);
+            formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
 
             data.fields?.forEach((el, index) => {
@@ -154,7 +154,7 @@ const contentTypesApi = {
         try {
             const formData = new FormData();
 
-            formData.append('active', data.active);
+            formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
 
             data.fields?.forEach((el, index) => {

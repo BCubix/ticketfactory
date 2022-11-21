@@ -24,6 +24,7 @@ export const CmtMultipleSelectFilters = ({
     icon,
     parameters,
     getList,
+    id,
 }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -96,6 +97,7 @@ export const CmtMultipleSelectFilters = ({
                     variant={value ? 'default' : 'outlined'}
                     icon={icon}
                     size="medium"
+                    id={id ? id + 'Chip' : null}
                     label={label}
                     onClick={(e) => {
                         handleGetList();
@@ -119,6 +121,7 @@ export const CmtMultipleSelectFilters = ({
                             variant="standard"
                             multiple
                             fullWidth
+                            id={id ? id + 'Select' : null}
                             value={parsedValue}
                             onChange={(e) => {
                                 setValue(
@@ -148,7 +151,11 @@ export const CmtMultipleSelectFilters = ({
                                 </Box>
                             )}
                             {displayList?.map((item, index) => (
-                                <MenuItem key={index} value={item}>
+                                <MenuItem
+                                    key={index}
+                                    id={id ? id + 'Value-' + item[parameters.nameValue] : null}
+                                    value={item}
+                                >
                                     <Checkbox
                                         checked={
                                             parsedValue

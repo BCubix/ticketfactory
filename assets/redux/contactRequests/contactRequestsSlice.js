@@ -9,13 +9,13 @@ const initialState = {
     contactRequests: null,
     total: null,
     filters: {
-        active: getBooleanFromString(sessionStorage.getItem('contactRequestActive')),
-        firstName: sessionStorage.getItem('contactRequestFirstName') || '',
-        lastName: sessionStorage.getItem('contactRequestLastName') || '',
-        email: sessionStorage.getItem('contactRequestEmail') || '',
-        phone: sessionStorage.getItem('contactRequestPhone') || '',
-        subject: sessionStorage.getItem('contactRequestSubject') || '',
-        sort: sessionStorage.getItem('contactRequestSort') || 'id ASC',
+        active: getBooleanFromString(sessionStorage.getItem('contactRequestActiveFilter')),
+        firstName: sessionStorage.getItem('contactRequestsFirstNameFilter') || '',
+        lastName: sessionStorage.getItem('contactRequestsLastNameFilter') || '',
+        email: sessionStorage.getItem('contactRequestsEmailFilter') || '',
+        phone: sessionStorage.getItem('contactRequestsPhoneFilter') || '',
+        subject: sessionStorage.getItem('contactRequestsSubjectFilter') || '',
+        sort: sessionStorage.getItem('contactRequestsSort') || 'id ASC',
         page: 1,
         limit: 20,
     },
@@ -82,13 +82,13 @@ export function getContactRequestsAction(filters = null) {
 
 export function changeContactRequestsFilters(filters, page = 1) {
     return async (dispatch) => {
-        sessionStorage.setItem('contactRequestActive', filters?.active);
-        sessionStorage.setItem('contactRequestFirstName', filters?.firstName);
-        sessionStorage.setItem('contactRequestLastName', filters?.lastName);
-        sessionStorage.setItem('contactRequestEmail', filters?.email);
-        sessionStorage.setItem('contactRequestPhone', filters?.phone);
-        sessionStorage.setItem('contactRequestSubject', filters?.subject);
-        sessionStorage.setItem('contactRequestSort', filters?.sort);
+        sessionStorage.setItem('contactRequestsActiveFilter', filters?.active);
+        sessionStorage.setItem('contactRequestsFirstNameFilter', filters?.firstName);
+        sessionStorage.setItem('contactRequestsLastNameFilter', filters?.lastName);
+        sessionStorage.setItem('contactRequestsEmailFilter', filters?.email);
+        sessionStorage.setItem('contactRequestsPhoneFilter', filters?.phone);
+        sessionStorage.setItem('contactRequestsSubjectFilter', filters?.subject);
+        sessionStorage.setItem('contactRequestsSort', filters?.sort);
 
         filters.page = page;
 

@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-    Box,
-    Checkbox,
-    Chip,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    Typography,
-} from '@mui/material';
+import { Box, Checkbox, Chip, Typography } from '@mui/material';
 import { CmtPopover } from '../CmtPopover/CmtPopover';
 import { apiMiddleware } from '../../services/utils/apiMiddleware';
 import { useDispatch } from 'react-redux';
@@ -15,7 +7,7 @@ import { TreeItem, TreeView } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-const displayCategoriesOptions = (list, values, setValue) => {
+const displayCategoriesOptions = (list, values, setValue, id) => {
     if (!list || list?.length === 0) {
         return <></>;
     }
@@ -41,6 +33,7 @@ const displayCategoriesOptions = (list, values, setValue) => {
                 <Box display="flex" alignItems={'center'}>
                     <Checkbox
                         checked={values?.includes(list.id?.toString())}
+                        id={id ? id + 'Value-' + list.id : null}
                         onClick={(e) => {
                             e.stopPropagation();
                             handleCheckCategory(list.id?.toString());
@@ -51,12 +44,21 @@ const displayCategoriesOptions = (list, values, setValue) => {
             }
         >
             {Array.isArray(list?.children) &&
-                list?.children?.map((item) => displayCategoriesOptions(item, values, setValue))}
+                list?.children?.map((item) => displayCategoriesOptions(item, values, setValue, id))}
         </TreeItem>
     );
 };
 
-export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon, getList }) => {
+export const CmtCategoriesFilters = ({
+    list,
+    value,
+    setValue,
+    title,
+    label,
+    icon,
+    getList,
+    id,
+}) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const parsedValue = value ? value?.split(',') : [];
@@ -97,6 +99,7 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
                     icon={icon}
                     size="medium"
                     label={label}
+                    id={id ? id + 'Chip' : null}
                     onClick={(e) => {
                         handleGetList();
                         setAnchorEl(e.currentTarget);
@@ -116,14 +119,14 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
                     </Typography>
                     <TreeView
                         size="small"
-                        id={title}
+                        id={id ? id + 'Tree' : null}
                         value={parsedValue}
                         defaultCollapseIcon={<ExpandMoreIcon />}
                         defaultExpanded={[list.id?.toString()]}
                         defaultExpandIcon={<ChevronRightIcon />}
                         sx={{ flexGrow: 1, overflowY: 'auto' }}
                     >
-                        {displayCategoriesOptions(list, parsedValue, setValue)}
+                        {displayCategoriesOptions(list, parsedValue, setValue, id)}
                     </TreeView>
                 </Box>
             </CmtPopover>

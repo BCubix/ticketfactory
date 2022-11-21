@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginFailure } from '../profile/profileSlice';
-import authApi from '../../services/api/authApi';
 import contentTypesApi from '../../services/api/contentTypesApi';
 import { getBooleanFromString } from '../../services/utils/getBooleanFromString';
 import { apiMiddleware } from '../../services/utils/apiMiddleware';
@@ -13,7 +11,7 @@ const initialState = {
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('contentTypesActiveFilter')),
         name: sessionStorage.getItem('contentTypesNameFilter') || '',
-        sort: sessionStorage.getItem('contentsSort') || 'id ASC',
+        sort: sessionStorage.getItem('contentTypesSort') || 'id ASC',
         page: 1,
         limit: 20,
     },

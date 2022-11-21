@@ -17,6 +17,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par status"
                 label="Activé ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <CmtSimpleSelectFilters
@@ -32,6 +33,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                     nameLabel: 'label',
                 }}
                 list={REDIRECTION_TYPES}
+                id="redirectionTypeFilter"
             />
 
             <CmtSearchFilters
@@ -40,6 +42,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par source de la redirection"
                 label="Redirigé depuis"
                 icon={<TitleIcon />}
+                id="redirectFromFilter"
             />
 
             <CmtSearchFilters
@@ -48,6 +51,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 title="Chercher par destination de la redirection"
                 label="Redirigé vers"
                 icon={<TitleIcon />}
+                id="redirectToFilter"
             />
         </Box>
     );

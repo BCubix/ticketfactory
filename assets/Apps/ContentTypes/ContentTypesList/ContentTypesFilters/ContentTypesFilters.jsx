@@ -14,6 +14,7 @@ export const ContentTypesFilters = ({ filters, changeFilters, list }) => {
                 title="Chercher par status de gestion"
                 label="Gérée ?"
                 icon={<CheckIcon />}
+                id="activeFilter"
             />
 
             <CmtSearchFilters
@@ -22,6 +23,7 @@ export const ContentTypesFilters = ({ filters, changeFilters, list }) => {
                 title="Chercher par nom"
                 label="Nom"
                 icon={<TitleIcon />}
+                id="nameFilter"
             />
         </Box>
     );

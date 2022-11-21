@@ -49,6 +49,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status de gestion"
                 label="Gérée ?"
+                id="activeFilter"
                 icon={<CheckIcon />}
             />
 
@@ -57,6 +58,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 setValue={(newValue) => changeFilters({ ...filters, name: newValue })}
                 title="Chercher par nom"
                 label="Nom"
+                id="nameFilter"
                 icon={<TitleIcon />}
             />
 
@@ -68,6 +70,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 }}
                 title="Chercher par catégories"
                 label="Catégories"
+                id="categoryFilter"
                 icon={<CategoryIcon />}
             />
 
@@ -78,6 +81,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 }}
                 title="Chercher par salle"
                 label="Salles"
+                id="roomFilter"
                 icon={<CategoryIcon />}
                 parameters={{
                     nameValue: 'id',
@@ -94,6 +98,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 title="Chercher par saison"
                 label="Saisons"
                 icon={<CategoryIcon />}
+                id="seasonFilter"
                 parameters={{
                     nameValue: 'id',
                     nameLabel: 'name',
@@ -109,6 +114,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 title="Chercher par tags"
                 label="Tags"
                 icon={<CategoryIcon />}
+                id="tagFilter"
                 parameters={{
                     nameValue: 'id',
                     nameLabel: 'name',

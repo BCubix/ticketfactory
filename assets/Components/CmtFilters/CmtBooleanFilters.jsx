@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Chip, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { CmtPopover } from '../CmtPopover/CmtPopover';
-import { DeleteBlockFabButton } from '../CmtButton/sc.Buttons';
 import CloseIcon from '@mui/icons-material/Close';
 import { ClearBooleanButton } from './sc.Filters';
 
-export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null }) => {
+export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null, id }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     return (
@@ -15,6 +14,7 @@ export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null }
                     variant={null !== value ? 'default' : 'outlined'}
                     icon={icon}
                     size="medium"
+                    id={id ? id + 'Chip' : null}
                     label={label}
                     onClick={(e) => setAnchorEl(e.currentTarget)}
                     onDelete={null !== value ? () => setValue(null) : null}
@@ -48,9 +48,19 @@ export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null }
                         }}
                         label={label}
                     >
-                        <FormControlLabel value={false} control={<Radio />} label={'Non'} />
+                        <FormControlLabel
+                            value={false}
+                            id={id ? id + 'Value-False' : null}
+                            control={<Radio />}
+                            label={'Non'}
+                        />
 
-                        <FormControlLabel value={true} control={<Radio />} label={'Oui'} />
+                        <FormControlLabel
+                            value={true}
+                            id={id ? id + 'Value-True' : null}
+                            control={<Radio />}
+                            label={'Oui'}
+                        />
                     </RadioGroup>
                 </Box>
             </CmtPopover>
