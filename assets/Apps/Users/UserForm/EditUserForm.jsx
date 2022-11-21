@@ -21,13 +21,13 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                 /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{9,}$/,
                 'Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spéciale.'
             ),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password')], 'Le mot de passe ne correspond pas.')
-            .when('password', (password) => {
-                if (password) {
-                    return Yup.string().required('Veuillez confirmer le mot de passe.');
-                }
-            }),
+        confirmPassword: Yup.string().when('password', (password) => {
+            if (password) {
+                return Yup.string()
+                    .oneOf([Yup.ref('password')], 'Le mot de passe ne correspond pas.')
+                    .required('Veuillez confirmer le mot de passe.');
+            }
+        }),
     });
 
     return (

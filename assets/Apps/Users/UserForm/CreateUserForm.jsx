@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const CreateUserForm = ({ handleSubmit }) => {
     const userSchema = Yup.object().shape({
@@ -21,10 +21,13 @@ export const CreateUserForm = ({ handleSubmit }) => {
                 'Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spéciale.'
             )
             .required('Veuillez renseigner un mot de passe.'),
-        confirmPassword: Yup.string().oneOf(
-            [Yup.ref('password'), null],
-            'Le mot de passe ne correspond pas.'
-        ),
+        confirmPassword: Yup.string().when('password', (password) => {
+            if (password) {
+                return Yup.string()
+                    .oneOf([Yup.ref('password')], 'Le mot de passe ne correspond pas.')
+                    .required('Veuillez confirmer le mot de passe.');
+            }
+        }),
     });
 
     return (
@@ -97,6 +100,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.password && errors.password}
                             required
                         />
+                        {console.log(touched, errors)}
                         <Component.CmtTextField
                             type="password"
                             value={values.confirmPassword}
