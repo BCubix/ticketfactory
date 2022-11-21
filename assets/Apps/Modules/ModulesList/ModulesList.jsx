@@ -57,11 +57,14 @@ export const ModulesList = () => {
         }
 
         const result = await Api.modulesApi.activeModule(id);
+        if (!result.result) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            navigate(Constant.MODULES_BASE_PATH);
 
-        if (result.result) {
-            NotificationManager.success('Le module a bien été activé.', 'Succès', Constant.REDIRECTION_TIME);
+            return;
         }
 
+        NotificationManager.success('Le module a bien été activé.', 'Succès', Constant.REDIRECTION_TIME);
         dispatch(getModulesAction());
         setTimeout(() => window.location.reload(), 1000);
     }
@@ -80,13 +83,18 @@ export const ModulesList = () => {
             action === ACTION_UNINSTALL_DELETE
         );
 
-        if (result.result) {
-            const message = result.module
-                ? 'Le module a bien été désactivé.'
-                : action === ACTION_UNINSTALL ? 'Le module a bien été désinstallé.' : 'Le module a bien été désinstallé et supprimer.';
+        if (!result.result) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            navigate(Constant.MODULES_BASE_PATH);
 
-            NotificationManager.success(message, 'Succès', Constant.REDIRECTION_TIME);
+            return;
         }
+
+        const message = result.module
+            ? 'Le module a bien été désactivé.'
+            : action === ACTION_UNINSTALL ? 'Le module a bien été désinstallé.' : 'Le module a bien été désinstallé et supprimer.';
+
+        NotificationManager.success(message, 'Succès', Constant.REDIRECTION_TIME);
 
         setDeleteDialog(null);
         setActionDelete(ACTION_DISABLE);
