@@ -156,19 +156,12 @@ class FileUploader implements EventSubscriberInterface
 
         $name = $this->themeService->unzip($response["filename"]);
 
-        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($name) ?? new Theme();
-        $module->setActive(true);
-        $module->setName($name);
+        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($name) ?? new Theme();
+        $theme->setActive(true);
+        $theme->setName($name);
 
-        $this->em->persist($module);
+        $this->em->persist($theme);
         $this->em->flush();
-
-        /*if (NULL === shell_exec('php ../bin/console cache:clear')) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
-        }
-        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
-        }*/
 
         return $response;
     }
