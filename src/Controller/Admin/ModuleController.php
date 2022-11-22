@@ -71,7 +71,7 @@ class ModuleController extends AdminController
             $this->log->log(0, 0, 'Deleted object.', Module::class, $moduleId);
 
             $moduleService->callConfig($module->getName(), 'uninstall');
-            $moduleService->deleteModuleFolder($moduleName);
+            $moduleService->deleteFolder($moduleName);
 
             return $this->view(null, Response::HTTP_OK);
         }

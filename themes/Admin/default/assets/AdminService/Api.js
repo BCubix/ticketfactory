@@ -18,6 +18,7 @@ import redirectionsApi from "@Services/api/redirectionsApi";
 import roomsApi from "@Services/api/roomsApi";
 import seasonsApi from "@Services/api/seasonsApi";
 import tagsApi from "@Services/api/tagsApi";
+import themesApi from "@Services/api/themesApi";
 import usersApi from "@Services/api/usersApi";
 import { checkObject, checkString } from "@Services/utils/check";
 
@@ -42,6 +43,7 @@ const ApiObj = {
     roomsApi: roomsApi,
     seasonsApi: seasonsApi,
     tagsApi: tagsApi,
+    themesApi: themesApi,
     usersApi: usersApi,
 }
 

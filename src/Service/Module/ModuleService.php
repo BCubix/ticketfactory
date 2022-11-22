@@ -3,31 +3,16 @@
 namespace App\Service\Module;
 
 use App\Exception\ApiException;
-use App\Service\Db\Db;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
-class ModuleService
+class ModuleService extends ModuleServiceAbstract
 {
-    public const ZIP_FAIL_OPEN = "L'ouverture du zip a échoué.";
-    public const ZIP_FAIL_EXTRACT = "L'extraction du zip a échoué.";
-    public const ZIP_EMPTY = "Le zip est vide.";
-    public const ZIP_MUST_ONLY_ONE_DIR = "Le zip doit contenir un et uniquement un seul dossier à la racine du zip.";
-    public const ZIP_FIRST_DIR_NOT_FOUND = "Le zip doit contenir un dossier.";
+    protected const PATH = '/themes/Admin/default/modules';
+    protected const MODULE_SERVICE_NAME = 'module';
+
     public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
-
-    private $moduleDir;
-
-    public function __construct(string $projectDir)
-    {
-        $this->moduleDir = $projectDir . '/themes/Admin/default/modules';
-    }
-
-    public function getModuleDir(): string
-    {
-        return $this->moduleDir;
-    }
 
     /**
      * Call configuration function of a module.
@@ -41,7 +26,7 @@ class ModuleService
      */
     public function callConfig(string $moduleFolderName, string $functionName)
     {
-        $moduleConfigFilePath = $this->moduleDir . '/' . $moduleFolderName . '/' . $moduleFolderName . 'Config.php';
+        $moduleConfigFilePath = $this->dir . '/' . $moduleFolderName . '/' . $moduleFolderName . 'Config.php';
         if (!is_file($moduleConfigFilePath)) {
             throw new FileNotFoundException("Le fichier de configuration du module $moduleFolderName n'existe pas.");
         }
@@ -52,7 +37,7 @@ class ModuleService
             throw new \Exception("Le fichier de configuration du module $moduleFolderName ne contient pas la classe {$moduleFolderName}Config.");
         }
 
-        $moduleObj = new ($moduleFolderName.'Config')($this->moduleDir);
+        $moduleObj = new ($moduleFolderName.'Config')($this->dir);
         if (get_parent_class($moduleObj) !== ModuleConfig::class) {
             throw new \Exception("La classe {$moduleFolderName}Config doit hériter de la classe " . ModuleConfig::class . ".");
         }
@@ -62,140 +47,7 @@ class ModuleService
         }
     }
 
-    /**
-     * Get all active modules by query in database.
-     *
-     * @return array List of active modules
-     */
-    public static function getModulesActive(): array
-    {
-        try {
-            return Db::getInstance()->query("SELECT * FROM module");
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-
-    /**
-     * Delete directory recursively.
-     *
-     * @param string $path
-     * @return void
-     */
-    private function removeDirectory(string $path)
-    {
-        if (!is_dir($path))
-            return;
-
-        $files = glob($path.'/*');
-        foreach ($files as $file) {
-            is_dir($file) ? $this->removeDirectory($file) : unlink($file);
-        }
-        rmdir($path);
-    }
-
-    /**
-     * Delete module folder.
-     *
-     * @param string $moduleFolderName
-     * @return void
-     */
-    public function deleteModuleFolder(string $moduleFolderName)
-    {
-        $this->removeDirectory($this->moduleDir . '/' . $moduleFolderName);
-    }
-
-    /**
-     * Unzip the zip which contains module
-     *
-     * @param string $zipName zip's name in module
-     * @return string name of module
-     * @throws ApiException
-     */
-    public function unzip(string $zipName): string
-    {
-        $zip = new \ZipArchive;
-
-        $zipPath = $this->moduleDir . '/' . $zipName;
-        $resultOpenZip = $zip->open($zipPath);
-        unlink($zipPath);
-
-        if (TRUE !== $resultOpenZip) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FAIL_OPEN);
-        }
-
-        if ($zip->numFiles === 0) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_EMPTY);
-        }
-
-        // Zip have to contain main directory in architecture
-        $modulePath = $this->moduleDir . '/' . $zip->getNameIndex(0);
-        if ('/' !== substr($modulePath, -1)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FIRST_DIR_NOT_FOUND);
-        }
-
-        // Get architecture of zip
-        $tree = $this->buildTreeFromZip($zip);
-        if (count(array_keys($tree)) !== 1) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_MUST_ONLY_ONE_DIR);
-        }
-
-        // Check architecture of zip
-        $this->checkTree($tree);
-
-        if (TRUE !== $zip->extractTo($this->moduleDir)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FAIL_EXTRACT);
-        }
-
-        $zip->close();
-
-        return array_key_first($tree);
-    }
-
-    /**
-     * Build tree for the architecture of zip
-     *
-     * @param \ZipArchive $zip
-     * @return array
-     * @throws ApiException
-     */
-    private function buildTreeFromZip(\ZipArchive $zip): array
-    {
-        $tree = [];
-
-        // Visit all files or directories of zip
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $path = $zip->getNameIndex($i);
-            $pathBySlash = array_values(explode('/', rtrim($path, '/')));
-            $len = count($pathBySlash);
-
-            // Go to the last array correspond as the last directory of path
-            $tmp = &$tree;
-            for ($j = 0; $j < $len - 1; $j++) {
-                $tmp = &$tmp[$pathBySlash[$j]];
-            }
-
-            if (substr($path, -1) == '/') {
-                // Add new array if the path is a directory
-                $tmp[$pathBySlash[$len - 1]] = [];
-            } else {
-                // Add in array is the path is a file
-                $tmp[] = $pathBySlash[$len - 1];
-            }
-        }
-
-        return $tree;
-    }
-
-    /**
-     * Verify tree, so verify the architecture of zip
-     *
-     * @param array $tree
-     * @return void
-     * @throws ApiException
-     */
-    private function checkTree(array $tree)
+    protected function checkTree(array $tree)
     {
         // Name of module
         $name = array_key_first($tree);

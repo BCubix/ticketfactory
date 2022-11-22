@@ -13,3 +13,7 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: '%kernel.project_dir%/themes/Admin/default/modules'
+        theme:
+            frontend: dropzone
+            storage:
+                directory: '%kernel.project_dir%/themes/Website'

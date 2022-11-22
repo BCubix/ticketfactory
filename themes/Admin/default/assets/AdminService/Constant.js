@@ -7,6 +7,7 @@ const ConstantObj = {
     MEDIA_UPLOAD_URL: '/admin/api/_uploader/media/upload',
     PARAMETERS_UPLOAD_URL: '/admin/api/_uploader/parameter/upload',
     MODULE_UPLOAD_URL: '/admin/api/_uploader/module/upload',
+    THEME_UPLOAD_URL: '/admin/api/_uploader/theme/upload',
     ICONS_FILE_PATH: '/images/icons',
 
     REDIRECTION_TIME: 5000,
@@ -33,6 +34,7 @@ const ConstantObj = {
     PAGES_BASE_PATH: '/admin/pages',
     PARAMETERS_BASE_PATH: '/admin/parametres',
     MODULES_BASE_PATH: '/admin/modules',
+    THEMES_BASE_PATH: '/admin/themes',
 
     EDIT_PATH: '/modifier',
     CREATE_PATH: '/nouveau',

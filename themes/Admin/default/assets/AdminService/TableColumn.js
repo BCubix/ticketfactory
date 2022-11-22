@@ -99,6 +99,22 @@ const TableColumnObj = {
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
     ],
+    ThemesList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        {
+            label: 'Preview',
+            width: '15%',
+            renderFunction: (item) => {
+                return (
+                    <Avatar>
+                        <ExtensionIcon />
+                    </Avatar>
+                );
+            },
+        },
+        { name: 'name', label: 'Nom', width: '55%', sortable: true },
+    ],
     UserList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },

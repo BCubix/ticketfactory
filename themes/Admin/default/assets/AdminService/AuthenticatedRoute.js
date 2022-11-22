@@ -79,6 +79,8 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.PARAMETERS_BASE_PATH, component: Component.ParametersMenu }),
 
     () => ({ path: Constant.MODULES_BASE_PATH, component: Component.ModulesList }),
+
+    () => ({ path: Constant.THEMES_BASE_PATH, component: Component.ThemesList }),
 ];
 
 /**

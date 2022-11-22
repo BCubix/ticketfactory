@@ -1,6 +1,7 @@
 import React from "react";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AssistantIcon from '@mui/icons-material/Assistant';
 import BusinessIcon from "@mui/icons-material/Business";
 import CallMissedOutgoingIcon from "@mui/icons-material/CallMissedOutgoing";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -44,6 +45,7 @@ const MenuObj = [
     () => ({
         title: 'ADMINISTRATION',
         menu: [
+            { name: 'Thèmes', link: Constant.THEMES_BASE_PATH, icon: <AssistantIcon/> },
             { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon/> },
             { name: 'Contacts', link: Constant.CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon/> },
             { name: 'Utilisateurs', link: Constant.USER_BASE_PATH, icon: <PersonIcon/> },

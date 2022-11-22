@@ -12,8 +12,8 @@ return function (RoutingConfigurator $routes) {
            ->controller([RefreshToken::class, 'refresh'])
     ;
 
-    $modulesActive = ModuleService::getModulesActive();
-    $moduleDir = (new ModuleService(__DIR__.'/../..'))->getModuleDir();
+    $modulesActive = ModuleService::getAllActive();
+    $moduleDir = (new ModuleService(__DIR__.'/../..'))->getDir();
     foreach ($modulesActive as $moduleActive) {
         $controllersPath = $moduleDir . '/' . $moduleActive['name'].'/src/Controller/Admin';
         if (is_dir($controllersPath)) {

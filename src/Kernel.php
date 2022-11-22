@@ -17,9 +17,9 @@ class Kernel extends BaseKernel
     {
         $bundles = require $this->getBundlesPath();
 
-        $modulesActive = ModuleService::getModulesActive();
+        $modulesActive = ModuleService::getAllActive();
         $moduleService = new ModuleService($this->getProjectDir());
-        $moduleDir = $moduleService->getModuleDir();
+        $moduleDir = $moduleService->getDir();
 
         // Add active modules in bundles list
         foreach ($modulesActive as $moduleActive) {

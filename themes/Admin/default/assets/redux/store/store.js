@@ -18,6 +18,7 @@ import dashboardReducer from '@Redux/dashboard/dashboardSlice';
 import pagesReducer from '@Redux/pages/pagesSlice';
 import parametersReducer from '@Redux/parameters/parametersSlice';
 import modulesReducer from '@Redux/modules/modulesSlice';
+import themesReducer from '@Redux/themes/themesSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -38,6 +39,7 @@ const reducer = {
     pages: pagesReducer,
     parameters: parametersReducer,
     modules: modulesReducer,
+    themes: themesReducer,
 }
 
 const store = configureStore({

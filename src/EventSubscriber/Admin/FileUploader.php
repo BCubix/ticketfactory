@@ -7,8 +7,10 @@ use App\Entity\Media\ImageFormat;
 use App\Entity\Module\Module;
 use App\Entity\Parameter\Parameter;
 
+use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Service\Module\ModuleService;
+use App\Service\Module\ThemeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\UploadEvents;
@@ -24,18 +26,21 @@ class FileUploader implements EventSubscriberInterface
     private const MEDIA_ROUTE = '_uploader_upload_media';
     private const PARAMETER_ROUTE = '_uploader_upload_parameter';
     private const MODULE_ROUTE = '_uploader_upload_module';
+    private const THEME_ROUTE = '_uploader_upload_theme';
 
     private const MEDIA_FILE_PATH = "/public/uploads/media/";
 
     private $em;
     private $rootPath;
     private $moduleService;
+    private $themeService;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $moduleService)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $moduleService, ThemeService $themeService)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
         $this->moduleService = $moduleService;
+        $this->themeService = $themeService;
     }
 
     public static function getSubscribedEvents(): array
@@ -55,6 +60,8 @@ class FileUploader implements EventSubscriberInterface
             return $this->parameterUpload($event);
         } else if ($route === self::MODULE_ROUTE) {
             return $this->moduleUpload($event);
+        } else if ($route === self::THEME_ROUTE) {
+            return $this->themeUpload($event);
         }
 
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
@@ -113,7 +120,7 @@ class FileUploader implements EventSubscriberInterface
         $name = $this->moduleService->unzip($response["filename"]);
 
         // Check if a logo is present in module and get extension of logo
-        $modulePath = $this->moduleService->getModuleDir() . '/' . $name;
+        $modulePath = $this->moduleService->getDir() . '/' . $name;
         $extension = null;
         if (is_file($modulePath . '/' . 'logo.jpg')) {
             $extension = 'jpg';
@@ -137,6 +144,31 @@ class FileUploader implements EventSubscriberInterface
         if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
         }
+
+        return $response;
+    }
+
+    public function themeUpload(PostPersistEvent $event)
+    {
+        $response = $event->getResponse();
+        $response['success'] = true;
+        $response["filename"] = $event->getFile()->getFilename();
+
+        $name = $this->themeService->unzip($response["filename"]);
+
+        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($name) ?? new Theme();
+        $module->setActive(true);
+        $module->setName($name);
+
+        $this->em->persist($module);
+        $this->em->flush();
+
+        /*if (NULL === shell_exec('php ../bin/console cache:clear')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        }
+        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
+        }*/
 
         return $response;
     }

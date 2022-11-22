@@ -119,6 +119,9 @@ import { EditTag } from "@Apps/Tags/EditTag/EditTag";
 import { TagsForm } from "@Apps/Tags/TagsForm/TagsForm";
 import { TagsFilters } from "@Apps/Tags/TagsList/TagsFilters/TagsFilters";
 import { TagsList } from "@Apps/Tags/TagsList/TagsList";
+import { UploadTheme } from "@Apps/Themes/UploadTheme/UploadTheme";
+import { ThemesFilters } from "@Apps/Themes/ThemesList/ThemesFilters/ThemesFilters";
+import { ThemesList } from "@Apps/Themes/ThemesList/ThemesList";
 import { CreateUser } from "@Apps/Users/CreateUser/CreateUser";
 import { EditUser } from "@Apps/Users/EditUser/EditUser";
 import { CreateUserForm } from "@Apps/Users/UserForm/CreateUserForm";
@@ -309,6 +312,10 @@ const ComponentObj = {
     TagsForm: TagsForm,
     TagsFilters: TagsFilters,
     TagsList: TagsList,
+
+    UploadTheme: UploadTheme,
+    ThemesFilters: ThemesFilters,
+    ThemesList: ThemesList,
 
     CreateUser: CreateUser,
     EditUser: EditUser,
