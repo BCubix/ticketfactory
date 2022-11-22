@@ -30,7 +30,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "cypress:open": "cypress open --project assets/Admin/tests"
+        "cypress:open": "cypress open --project themes/Admin/default/assets/tests"
     },
     "eslintConfig": {
         "extends": [
