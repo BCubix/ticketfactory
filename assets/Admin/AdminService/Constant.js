@@ -1,4 +1,4 @@
-import { checkString } from '@Services/utils/check';
+import { checkString } from '../services/utils/check';
 
 const ConstantObj = {
     API_URL: 'http://localhost:8000/admin',

@@ -14,7 +14,7 @@ describe('Create Contact Request Spec', () => {
         cy.intercept('POST', ADMIN_API_BASE_PATH + CONTACT_REQUESTS_API_PATH).as(
             'createContactRequest'
         );
-        cy.visit(Constant.USER_BASE_PATH + Constant.CONTACT_REQUEST_BASE_PATH);
+        cy.visit(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH);
         cy.wait(500);
     });
 
@@ -24,98 +24,107 @@ describe('Create Contact Request Spec', () => {
         cy.get('#email').type('email2@gmail.com');
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
         cy.get('[type="submit"]').click();
 
         cy.wait('@createContactRequest').then(({ response }) => {
             expect(response.statusCode).to.eq(201);
         });
     });
-    // Stopped here
+
+    it('Create Contact Request (no FirstName)', () => {
+        cy.get('#firstName').focus().blur();
+        cy.get('#lastName').type('New LastName');
+        cy.get('#email').type('email2@gmail.com');
+        cy.get('#phone').type('0601020304');
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
+        cy.get('[type="submit"]').click();
+
+        cy.get('#firstName-helper-text').should('exist');
+    });
+
+    it('Create Contact Request (no LastName)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').focus().blur();
+        cy.get('#email').type('email2@gmail.com');
+        cy.get('#phone').type('0601020304');
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
+        cy.get('[type="submit"]').click();
+
+        cy.get('#lastName-helper-text').should('exist');
+    });
+
     it('Create Contact Request (bad Email)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').type('New LastName');
         cy.get('#email').type('email2');
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#password').type('Password!02');
-        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#phone').type('0601020304');
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
         cy.get('[type="submit"]').click();
 
         cy.get('#email-helper-text').should('exist');
     });
 
     it('Create Contact Request (no Email)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').type('New LastName');
         cy.get('#email').focus().blur();
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#password').type('Password!02');
-        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#phone').type('0601020304');
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
         cy.get('[type="submit"]').click();
 
         cy.get('#email-helper-text').should('exist');
     });
 
-    it('Create Contact Request (bad password)', () => {
+    it('Create Contact Request (bad phone)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').type('New LastName');
         cy.get('#email').type('email2@gmail.com');
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#password').type('bad password');
-        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#phone').type('bad phone');
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
         cy.get('[type="submit"]').click();
 
-        cy.get('#password-helper-text').should('exist');
+        cy.get('#phone-helper-text').should('exist');
     });
 
-    it('Create Contact Request (no password)', () => {
+    it('Create Contact Request (no phone)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').type('New LastName');
         cy.get('#email').type('email2@gmail.com');
-        cy.get('#password').focus().blur();
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#phone').focus().blur();
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').type('New Message');
         cy.get('[type="submit"]').click();
 
-        cy.get('#password-helper-text').should('exist');
+        cy.get('#phone-helper-text').should('exist');
     });
 
-    it('Create Contact Request (no firstName)', () => {
+    it('Create Contact Request (no subject)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').type('New LastName');
         cy.get('#email').type('email2@gmail.com');
-        cy.get('#firstName').focus().blur();
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#password').type('Password!02');
-        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#phone').type('0601020304');
+        cy.get('#subject').focus().blur();
+        cy.get('#message').type('New Message');
         cy.get('[type="submit"]').click();
 
-        cy.get('#firstName-helper-text').should('exist');
+        cy.get('#subject-helper-text').should('exist');
     });
 
-    it('Create Contact Request (no lastName)', () => {
+    it('Create Contact Request (no message)', () => {
+        cy.get('#firstName').type('New FirstName');
+        cy.get('#lastName').type('New LastName');
         cy.get('#email').type('email2@gmail.com');
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').focus().blur();
-        cy.get('#password').type('Password!02');
-        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#phone').type('0601020304');
+        cy.get('#subject').type('New Subject');
+        cy.get('#message').focus().blur();
         cy.get('[type="submit"]').click();
 
-        cy.get('#lastName-helper-text').should('exist');
-    });
-
-    it('Create Contact Request (no confirmPassword)', () => {
-        cy.get('#email').type('email2@gmail.com');
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#password').type('Password!02');
-        cy.get('#confirmPassword').focus().blur();
-        cy.get('[type="submit"]').click();
-
-        cy.get('#confirmPassword-helper-text').should('exist');
-    });
-
-    it('Create Contact Request (bad confirmPassword)', () => {
-        cy.get('#email').type('email2@gmail.com');
-        cy.get('#firstName').type('FirstName 2');
-        cy.get('#lastName').type('LastName 2');
-        cy.get('#password').type('Password!02');
-        cy.get('#confirmPassword').type('badConfirmPassword');
-        cy.get('[type="submit"]').click();
-
-        cy.get('#confirmPassword-helper-text').should('exist');
+        cy.get('#message-helper-text').should('exist');
     });
 });
