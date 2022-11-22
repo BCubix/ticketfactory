@@ -21,7 +21,7 @@ class ModuleService
 
     public function __construct(string $projectDir)
     {
-        $this->moduleDir = $projectDir . '/modules';
+        $this->moduleDir = $projectDir . '/themes/Admin/default/modules';
     }
 
     public function getModuleDir(): string
@@ -52,7 +52,7 @@ class ModuleService
             throw new \Exception("Le fichier de configuration du module $moduleFolderName ne contient pas la classe {$moduleFolderName}Config.");
         }
 
-        $moduleObj = new ($moduleFolderName.'Config')();
+        $moduleObj = new ($moduleFolderName.'Config')($this->moduleDir);
         if (get_parent_class($moduleObj) !== ModuleConfig::class) {
             throw new \Exception("La classe {$moduleFolderName}Config doit hériter de la classe " . ModuleConfig::class . ".");
         }

@@ -13,8 +13,9 @@ return function (RoutingConfigurator $routes) {
     ;
 
     $modulesActive = ModuleService::getModulesActive();
+    $moduleDir = (new ModuleService(__DIR__.'/../..'))->getModuleDir();
     foreach ($modulesActive as $moduleActive) {
-        $controllersPath = __DIR__.'/../../modules/'.$moduleActive['name'].'/src/Controller/Admin';
+        $controllersPath = $moduleDir . '/' . $moduleActive['name'].'/src/Controller/Admin';
         if (is_dir($controllersPath)) {
             $routes
                 ->import($controllersPath, 'annotation')

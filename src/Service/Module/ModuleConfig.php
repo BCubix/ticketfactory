@@ -14,10 +14,12 @@ class ModuleConfig
     protected const TRAITS = [];
 
     protected $loader;
+    protected $moduleDir;
 
-    public function __construct()
+    public function __construct(string $moduleDir)
     {
         $this->loader = new ClassLoader();
+        $this->moduleDir = $moduleDir;
     }
 
     /**
@@ -78,7 +80,7 @@ class ModuleConfig
         $prefix = 'TicketFactory\\Module\\' . static::MODULE_NAME . '\\';
 
         // Path of src directory of module
-        $path = __DIR__ . '/../../../modules/' . static::MODULE_NAME . '/src';
+        $path = $this->moduleDir . '/' . static::MODULE_NAME . '/src';
         if (!is_dir($path)) {
             throw new DirectoryNotFoundException("Le dossier src du module " . static::MODULE_NAME . " n'existe pas.");
         }
