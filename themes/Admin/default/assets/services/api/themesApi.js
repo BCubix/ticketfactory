@@ -55,16 +55,6 @@ const themesApi = {
         }
     },
 
-    getThemesActive: async () => {
-        try {
-            const result = await axios.get('/themes?filters[active]=1');
-
-            return { result: true, themes: result?.data?.results, total: result?.data?.total };
-        } catch (error) {
-            return { result: false, error: error?.response?.data };
-        }
-    },
-
     getOneTheme: async (id) => {
         try {
             const result = await axios.get(`/themes/${id}`);
@@ -75,35 +65,31 @@ const themesApi = {
         }
     },
 
-    uploadTheme: async (data) => {
+    chooseTheme: async (id) => {
         try {
-            let formData = new FormData();
-            formData.append('active', data.active);
-            formData.append('name', data.name);
+            await axios.post(`/themes/${id}/choose`);
 
-            const result = await axios.post('/themes', formData);
-
-            return { result: true, theme: result.data };
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    activeTheme: async (id) => {
+    duplicateTheme: async (id) => {
         try {
-            const result = await axios.post(`/themes/${id}/active`);
+            await axios.post(`/themes/${id}/duplicate`);
 
-            return { result: true, theme: result.data };
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    disableTheme: async (id, action) => {
+    deleteTheme: async (id) => {
         try {
-            const result = await axios.post(`/themes/${id}/active?action=${action}`);
+            await axios.delete(`/themes/${id}`);
 
-            return { result: true, theme: result.data };
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

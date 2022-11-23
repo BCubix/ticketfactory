@@ -11,6 +11,16 @@ const parametersApi = {
         }
     },
 
+    getParametersByKey: async (key) => {
+        try {
+            const result = await axios.get(`/parametres?filters[paramKey]=${key}`);
+
+            return { result: true, parameters: result.data?.results };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     editParameters: async (data) => {
         try {
             let formData = new FormData();

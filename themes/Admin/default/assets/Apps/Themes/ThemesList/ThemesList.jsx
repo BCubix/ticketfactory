@@ -5,15 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 import { Box } from '@mui/system';
 import {
-    Button,
     CardContent,
-    Dialog, DialogActions,
+    Dialog,
     DialogContent,
     DialogTitle,
-    FormControl,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
     Typography
 } from '@mui/material';
 
@@ -23,11 +18,7 @@ import { Constant } from "@/AdminService/Constant";
 import { TableColumn } from "@/AdminService/TableColumn";
 
 import { changeThemesFilters, getThemesAction, themesSelector } from '@Redux/themes/themesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
-
-const ACTION_DISABLE = "Désactiver";
-const ACTION_UNINSTALL = "Désinstaller";
-const ACTION_UNINSTALL_DELETE = "Désinstaller & Supprimer";
+import { apiMiddleware } from "@Services/utils/apiMiddleware";
 
 export const ThemesList = () => {
     const { loading, themes, filters, total, error } = useSelector(themesSelector);
@@ -35,12 +26,24 @@ export const ThemesList = () => {
     const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
-    const [actionDelete, setActionDelete] = useState(ACTION_DISABLE);
+    const [themeId, setThemeId] = useState(null);
 
     useEffect(() => {
         if (!loading && !themes && !error) {
             dispatch(getThemesAction());
         }
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.parametersApi.getParametersByKey('default_theme');
+            if (!result.result || !result.parameters || result.parameters[0].paramValue === null) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.THEMES_BASE_PATH);
+
+                return;
+            }
+
+            setThemeId(parseInt(result.parameters[0].paramValue));
+        });
     }, []);
 
     const handleSubmit = () => {
@@ -50,59 +53,39 @@ export const ThemesList = () => {
         setTimeout(() => window.location.reload(), 1000);
     }
 
-    const handleActive = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
+    const handleSelect = async (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.themesApi.chooseTheme(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.THEMES_BASE_PATH);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-            return;
-        }
+                return;
+            }
 
-        const result = await Api.themesApi.activeTheme(id);
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-            navigate(Constant.THEMES_BASE_PATH);
-
-            return;
-        }
-
-        NotificationManager.success('Le thème a bien été activé.', 'Succès', Constant.REDIRECTION_TIME);
-        dispatch(getThemesAction());
-        setTimeout(() => window.location.reload(), 1000);
+            dispatch(getThemesAction());
+            NotificationManager.success('Le thème choisi est devenue le thème principal.', 'Succès', Constant.REDIRECTION_TIME);
+            setTimeout(() => window.location.reload(), 1000);
+        });
     }
 
-    const handleDisable = async (id, action) => {
-        const check = await Api.authApi.checkIsAuth();
+    const handleDelete = async (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.themesApi.deleteTheme(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.THEMES_BASE_PATH);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-            return;
-        }
+                return;
+            }
 
-        const result = await Api.themesApi.disableTheme(
-            id,
-            action === ACTION_DISABLE ? 0 : action === ACTION_UNINSTALL ? 1 : 2
-        );
-
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-            navigate(Constant.THEMES_BASE_PATH);
-
-            return;
-        }
-
-        const message = result.theme
-            ? 'Le thème a bien été désactivé.'
-            : action === ACTION_UNINSTALL ? 'Le thème a bien été désinstallé.' : 'Le thème a bien été désinstallé et supprimer.';
-
-        NotificationManager.success(message, 'Succès', Constant.REDIRECTION_TIME);
-
-        setDeleteDialog(null);
-        setActionDelete(ACTION_DISABLE);
-
-        dispatch(getThemesAction());
-        setTimeout(() => window.location.reload(), 1000);
+            dispatch(getThemesAction());
+            setDeleteDialog(null);
+        });
     }
+
+    if (themeId === null)
+        return <></>;
 
     return (
         <>
@@ -130,8 +113,9 @@ export const ThemesList = () => {
                         <Component.ListTable
                             table={TableColumn.ThemesList}
                             list={themes}
-                            onActive={(id) => handleActive(id, false)}
-                            onDisable={(id) => setDeleteDialog(id)}
+                            themeId={themeId}
+                            onSelect={(id) => handleSelect(id)}
+                            onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeThemesFilters(newFilters))}
                         />
@@ -162,71 +146,17 @@ export const ThemesList = () => {
                     <Component.UploadTheme handleSubmit={handleSubmit} />
                 </DialogContent>
             </Dialog>
-            <Dialog
-                open={!!deleteDialog}
-                onClose={() => setDeleteDialog(null)}
+            <Component.DeleteDialog
+                open={deleteDialog ? true : false}
+                onCancel={() => setDeleteDialog(null)}
+                onDelete={() => handleDelete(deleteDialog)}
             >
-                <DialogTitle sx={{ fontSize: 20 }}>
-                    Désactivation, désinstallation et/ou suppression
-                </DialogTitle>
-                <DialogContent dividers>
-                    <Box textAlign="left">
-                        <FormControl>
-                            <RadioGroup
-                                name="Action"
-                                value={actionDelete}
-                                onChange={(event) => setActionDelete(event.target.value)}
-                            >
-                                <FormControlLabel
-                                    value={ACTION_DISABLE}
-                                    control={<Radio />}
-                                    label={ACTION_DISABLE}
-                                />
-                                <Typography variant="h5">
-                                    {
-                                        "Désactivation des fonctionnalités apportées par le thème." + " " +
-                                        "Le paramétrage et les données saisies sont conservées pour une réactivation ultérieure."
-                                    }
-                                </Typography>
-                                <FormControlLabel
-                                    value={ACTION_UNINSTALL}
-                                    control={<Radio />}
-                                    label={ACTION_UNINSTALL}
-                                />
-                                <Typography variant="h5">
-                                    {
-                                        "Désactivation du thème et suppression de son paramétrage ainsi que des données saisies." + " " +
-                                        "Le thème reste présent sur le serveur et pourra être réinstallé ultérieurement, mais il devra être configuré à nouveau."
-                                    }
-                                </Typography>
-                                <FormControlLabel
-                                    value={ACTION_UNINSTALL_DELETE}
-                                    control={<Radio />}
-                                    label={ACTION_UNINSTALL_DELETE}
-                                />
-                                <Typography variant="h5">
-                                    {
-                                        "Désinstallation du thème et suppression de son dossier du serveur." + " " +
-                                        "Pour utiliser le thème ultérieurement, vous devrez le télécharger, l'installer et le configurer à nouveau."
-                                    }
-                                </Typography>
-                            </RadioGroup>
-                        </FormControl>
+                <Box textAlign="center" py={3}>
+                    <Typography>Êtes-vous sûr de vouloir supprimer ce thème ?</Typography>
 
-                    </Box>
-                </DialogContent>
-
-                <DialogActions>
-                    <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                        <Button color="primary" onClick={() => setDeleteDialog(null)}>
-                            Annuler
-                        </Button>
-                        <Button color="error" onClick={() => handleDisable(deleteDialog, actionDelete)}>
-                            { actionDelete }
-                        </Button>
-                    </Box>
-                </DialogActions>
-            </Dialog>
+                    <Typography>Cette action est irréversible.</Typography>
+                </Box>
+            </Component.DeleteDialog>
         </>
     );
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Parameter\Parameter;
 use App\Entity\Theme\Theme;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
@@ -18,10 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ThemeController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce thème n'existe pas.";
-
-    private const ACTION_DISABLE = 0;
-    private const ACTION_UNINSTALL = 1;
-    private const ACTION_UNINSTALL_DELETE = 2;
 
     #[Rest\Get('/themes')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
@@ -47,48 +44,54 @@ class ThemeController extends AdminController
         return $this->view($theme, Response::HTTP_OK);
     }
 
-    #[Rest\Post('/themes/{themeId}/active', requirements: ['themeId' => '\d+'])]
+
+    #[Rest\Post('/themes/{themeId}/choose', requirements: ['themeId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function active(Request $request, ThemeService $themeService, int $themeId): View
+    public function choose(Request $request, ThemeService $themeService, int $themeId): View
     {
-        $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
-        if (null === $theme) {
+        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'default_theme']);
+        if (null === $result || count($result['results']) !== 1) {
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $actionStr = $request->get('action');
-        $action = $actionStr !== null ? intval($actionStr) : null;
+        $parameter = $result['results'][0];
 
-        if ($action === self::ACTION_UNINSTALL_DELETE) {
-            $event = new CrudObjectInstantiatedEvent($theme, 'delete');
-            $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
-            $themeName = $theme->getName();
-            $themeId = $theme->getId();
-
-            $this->em->remove($theme);
-            $this->em->flush();
-
-            $this->log->log(0, 0, 'Deleted object.', Theme::class, $themeId);
-
-            $themeService->deleteFolder($themeName);
-
-            return $this->view(null, Response::HTTP_OK);
-        }
-
-        $event = new CrudObjectInstantiatedEvent($theme, 'edit');
+        $event = new CrudObjectInstantiatedEvent($parameter, 'edit');
         $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
-        $theme->setActive(!$theme->isActive());
+        $parameter->setParamValue($themeId);
 
-        $event = new CrudObjectValidatedEvent($theme);
+        $event = new CrudObjectValidatedEvent($parameter);
         $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
 
-        $this->em->persist($theme);
+        $this->em->persist($parameter);
         $this->em->flush();
 
-        $this->log->log(0, 0, 'Updated object.', Theme::class, $theme->getId());
+        return $this->view(null, Response::HTTP_OK);
+    }
 
-        return $this->view($theme, Response::HTTP_OK);
+    #[Rest\Delete('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function delete(Request $request, ThemeService $themeService, int $themeId): View
+    {
+        $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
+        if (null === $theme) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+        }
+
+        $event = new CrudObjectInstantiatedEvent($theme, 'delete');
+        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+
+        $themeId = $theme->getId();
+        $themeName = $theme->getName();
+
+        $this->em->remove($theme);
+        $this->em->flush();
+
+        $this->log->log(0, 0, 'Deleted object.', Theme::class, $themeId);
+
+        $themeService->deleteFolder($themeName);
+
+        return $this->view(null, Response::HTTP_OK);
     }
 }

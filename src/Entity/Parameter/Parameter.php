@@ -28,7 +28,7 @@ class Parameter
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $type;
 
     #[JMS\Expose()]
@@ -53,17 +53,17 @@ class Parameter
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $tabName;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $blockName;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $breakpointsValue;
 
 

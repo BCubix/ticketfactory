@@ -58,6 +58,8 @@ export const ListTable = ({
     onClick = null,
     onDuplicate = null,
     onPreview = null,
+    onSelect = null,
+    themeId = null,
     changeFilters = null,
     contextualMenu = false,
 }) => {
@@ -160,6 +162,20 @@ export const ListTable = ({
                                             { item.active ? <UnpublishedIcon /> : <CheckCircleIcon /> }
                                         </Component.ActionFabButton>)
                                     )}
+                                    {(onSelect !== null && item.id !== themeId) &&
+                                        (<Component.ActionFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="primary"
+                                            size="small"
+                                            aria-label="Selection"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onSelect(item.id);
+                                            }}
+                                        >
+                                            <CheckCircleIcon />
+                                        </Component.ActionFabButton>)
+                                    }
                                     {onEdit !== null &&
                                         (<Component.EditFabButton
                                             sx={{ marginInline: 1 }}
