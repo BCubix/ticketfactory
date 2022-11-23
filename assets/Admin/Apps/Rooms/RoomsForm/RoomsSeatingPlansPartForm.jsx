@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange, handleBlur }) => {
     return (
@@ -25,6 +25,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                         onBlur={handleBlur}
                                         label="Nom"
                                         name={`seatingPlans.${index}.name`}
+                                        id={`seatingPlans-${index}-name`}
                                         error={
                                             touched.seatingPlans &&
                                             touched.seatingPlans[index]?.name &&
@@ -53,6 +54,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 onClick={() => {
                                     push({ name: '' });
                                 }}
+                                id="addSeatingPlan"
                             >
                                 <AddIcon />
                                 <Typography mt={'2px'} component="p" variant="body1">

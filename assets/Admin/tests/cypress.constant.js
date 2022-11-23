@@ -1,6 +1,7 @@
 export const USER_EMAIL = 'email@gmail.com';
 export const USER_PASSWORD = 'Azerty!0406';
 
+export const LOCAL_URL = 'http://localhost:8000';
 export const ADMIN_API_BASE_PATH = '/admin/api';
 
 export const EVENTS_API_PATH = '/events';

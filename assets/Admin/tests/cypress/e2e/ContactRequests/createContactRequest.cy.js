@@ -2,7 +2,6 @@ import { Constant } from '../../../../AdminService/Constant';
 import {
     ADMIN_API_BASE_PATH,
     CONTACT_REQUESTS_API_PATH,
-    USERS_API_PATH,
     USER_EMAIL,
     USER_PASSWORD,
 } from '../../../cypress.constant';

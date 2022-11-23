@@ -1,20 +1,16 @@
 import React from 'react';
 import { FieldArray } from 'formik';
 
-import { useTheme } from '@emotion/react';
-
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Card, CardContent, FormHelperText, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFieldTouched }) => {
-    const theme = useTheme();
-
     return (
         <FieldArray name="pageBlocks">
             {({ remove, push }) => (
@@ -39,7 +35,9 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                                         Bloc n°{index + 1}
                                     </InputLabel>
 
-                                    <Component.LightEditorFormControl>
+                                    <Component.LightEditorFormControl
+                                        id={`pageBlocks-${index}-contentControl`}
+                                    >
                                         <Component.LightEditor
                                             labelId={index}
                                             value={content}
@@ -50,6 +48,7 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                                                     false
                                                 )
                                             }
+                                            id={`pageBlocks-${index}-content`}
                                             onChange={(val) => {
                                                 setFieldValue(`pageBlocks.${index}.content`, val);
                                             }}
@@ -62,14 +61,24 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                                         />
                                     </Component.LightEditorFormControl>
 
-                                    <FormHelperText error>
-                                        {getNestedFormikError(
-                                            touched?.pageBlocks,
-                                            errors?.pageBlocks,
-                                            index,
-                                            'content'
-                                        )}
-                                    </FormHelperText>
+                                    {getNestedFormikError(
+                                        touched?.pageBlocks,
+                                        errors?.pageBlocks,
+                                        index,
+                                        'content'
+                                    ) && (
+                                        <FormHelperText
+                                            error
+                                            id={`pageBlocks-${index}-content-helper-text`}
+                                        >
+                                            {getNestedFormikError(
+                                                touched?.pageBlocks,
+                                                errors?.pageBlocks,
+                                                index,
+                                                'content'
+                                            )}
+                                        </FormHelperText>
+                                    )}
                                 </Box>
                             </CardContent>
                         </Card>
@@ -79,6 +88,7 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
                             size="small"
                             color="primary"
                             variant="outlined"
+                            id="addContentButton"
                             onClick={() => {
                                 push({ content: '' });
                             }}
@@ -90,5 +100,4 @@ export const PagesBlocksForm = ({ values, errors, touched, setFieldValue, setFie
             )}
         </FieldArray>
     );
-}
-
+};

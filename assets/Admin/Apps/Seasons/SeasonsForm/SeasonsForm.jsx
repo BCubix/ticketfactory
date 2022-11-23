@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 import { Button, FormControlLabel, Grid, Switch, Box } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     const seasonsSchema = Yup.object().shape({
@@ -78,6 +78,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
+                                    id="active"
                                     onChange={(e) => {
                                         setFieldValue('active', e.target.checked);
                                     }}
@@ -89,6 +90,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                         <Button
                             type="submit"
                             variant="contained"
+                            id="submitForm"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
                         >

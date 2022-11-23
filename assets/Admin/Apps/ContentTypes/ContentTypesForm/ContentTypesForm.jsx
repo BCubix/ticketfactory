@@ -100,7 +100,9 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                         />
 
                         {errors?.fields && typeof errors?.fields === 'string' && (
-                            <FormHelperText error>{errors.fields}</FormHelperText>
+                            <FormHelperText error id="fields-helper-text">
+                                {errors.fields}
+                            </FormHelperText>
                         )}
                     </Component.CmtFormBlock>
 
@@ -109,6 +111,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                             sx={{ marginRight: 2, marginTop: 1 }}
                             control={
                                 <Switch
+                                    id="active"
                                     checked={Boolean(values.active)}
                                     onChange={(e) => {
                                         setFieldValue('active', e.target.checked);
