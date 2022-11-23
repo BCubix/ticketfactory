@@ -1,8 +1,0 @@
-twig:
-    paths:
-        '%kernel.project_dir%/themes/Admin/default/templates': admin
-        '%kernel.project_dir%/themes/Website': website
-
-when@test:
-    twig:
-        strict_variables: true

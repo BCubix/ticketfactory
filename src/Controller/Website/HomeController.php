@@ -25,10 +25,8 @@ class HomeController extends WebsiteController
             throw new \Exception(Response::HTTP_NOT_FOUND, 1404, "Le id du thème n'appartient à aucun thème existant.");
         }
 
-        $themeName = $theme->getName();
-
-        return $this->render('@website/' . $themeName . '/templates/index.html.twig', [
-            'themeName' => $themeName,
+        return $this->render('@website/index.html.twig', [
+            'themeName' => $theme->getName(),
         ]);
     }
 }
