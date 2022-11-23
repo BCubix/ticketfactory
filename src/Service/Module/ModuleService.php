@@ -13,6 +13,7 @@ class ModuleService extends ModuleServiceAbstract
 
     public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
+    public const ZIP_SRC_FILE_BUNDLE_NOT_FOUND = "Le dossier src ne contient pas le fichier bundle.";
 
     /**
      * Call configuration function of a module.
@@ -59,6 +60,14 @@ class ModuleService extends ModuleServiceAbstract
             if ($key === 'assets') {
                 if (!isset($child[0]) || $child[0] !== 'index.js') {
                     throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_ASSETS_FILE_INDEX_NOT_FOUND);
+                }
+                continue;
+            }
+
+            // Check file bundle in src
+            if ($key === 'src') {
+                if (!isset($child[0]) || $child[0] !== $name . '.php') {
+                    throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_SRC_FILE_BUNDLE_NOT_FOUND);
                 }
                 continue;
             }
