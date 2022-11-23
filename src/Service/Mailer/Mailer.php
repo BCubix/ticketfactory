@@ -20,7 +20,7 @@ class Mailer
             ->from($this->sender)
             ->to($user->getEmail())
             ->subject('Réinitialisation du mot de passe')
-            ->htmlTemplate('Email/reset-password.html.twig')
+            ->htmlTemplate('Admin/default/Email/reset-password.html.twig')
             ->context([
                 'user' => $user,
                 'path' => $path

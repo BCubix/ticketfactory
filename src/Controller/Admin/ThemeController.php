@@ -49,9 +49,9 @@ class ThemeController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function choose(Request $request, ThemeService $themeService, int $themeId): View
     {
-        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'default_theme']);
+        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'main_theme']);
         if (null === $result || count($result['results']) !== 1) {
-            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
         }
 
         $parameter = $result['results'][0];

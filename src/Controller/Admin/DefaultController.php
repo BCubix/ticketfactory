@@ -7,10 +7,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    #[Route("{reactRouting}", name: 'home', defaults: ["reactRouting" => null], requirements: ["reactRouting" => '^(?!api\/).+'])]
+    #[Route("{reactRouting}", name: 'home_admin', defaults: ["reactRouting" => null], requirements: ["reactRouting" => '^(?!api\/).+'])]
     public function index(?string $reactRouting)
     {
-        return $this->render('Default/index.html.twig');
+        return $this->render('Admin/default/templates/index.html.twig');
     }
 }
 
