@@ -27,7 +27,7 @@ class HomeController extends WebsiteController
 
         $themeName = $theme->getName();
 
-        return $this->render('Website/' . $themeName . '/templates/index.html.twig', [
+        return $this->render('@website/' . $themeName . '/templates/index.html.twig', [
             'themeName' => $themeName,
         ]);
     }
