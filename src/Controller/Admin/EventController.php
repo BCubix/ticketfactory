@@ -10,8 +10,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
+#[Rest\Route('/api')]
 class EventController extends CrudController
 {
     protected const ENTITY_CLASS = Event::class;

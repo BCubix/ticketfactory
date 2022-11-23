@@ -11,27 +11,38 @@ return function (RoutingConfigurator $routes) {
            ->controller(['gesdinet.jwtrefreshtoken', 'refresh'])
     ;
 
+    $websiteControllersPath = [];
+
     $modulesActive = ModuleService::getAllActive();
     $moduleDir = (new ModuleService(__DIR__.'/../..'))->getDir();
     foreach ($modulesActive as $moduleActive) {
-        $controllersPath = $moduleDir . '/' . $moduleActive['name'].'/src/Controller/Admin';
+        $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Admin';
         if (is_dir($controllersPath)) {
             $routes
                 ->import($controllersPath, 'annotation')
                 ->prefix('/admin/api')
             ;
         }
+
+        $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Website';
+        if (is_dir($controllersPath)) {
+            $websiteControllersPath[] = $controllersPath;
+        }
     }
 
     $routes
         ->import('../../src/Controller/Admin', 'annotation')
-        ->prefix('/admin/api')
+        ->prefix('/admin')
     ;
 
     $routes
         ->import('.', 'uploader')
         ->prefix('/admin/api')
     ;
+
+    foreach ($websiteControllersPath as $controllersPath) {
+        $routes->import($controllersPath, 'annotation');
+    }
 
     $routes->import('../../src/Controller/Website', 'annotation');
 };

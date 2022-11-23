@@ -10,6 +10,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 
+#[Rest\Route('/api')]
 class PageController extends CrudController
 {
     protected const ENTITY_CLASS = Page::class;

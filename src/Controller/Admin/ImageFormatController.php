@@ -7,12 +7,10 @@ use App\Form\Admin\Media\ImageFormatType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
-use App\Exception\ApiException;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
 
+#[Rest\Route('/api')]
 class ImageFormatController extends CrudController
 {
     protected const ENTITY_CLASS = ImageFormat::class;

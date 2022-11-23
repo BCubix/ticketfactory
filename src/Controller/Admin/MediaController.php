@@ -11,8 +11,8 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
+#[Rest\Route('/api')]
 class MediaController extends CrudController
 {
     protected const ENTITY_CLASS = Media::class;

@@ -18,8 +18,8 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
+#[Rest\Route('/api')]
 class EventCategoryController extends CrudController
 {
     protected const ENTITY_CLASS = EventCategory::class;

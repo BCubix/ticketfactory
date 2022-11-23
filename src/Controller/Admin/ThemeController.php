@@ -14,6 +14,7 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Rest\Route('/api')]
 class ThemeController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce thème n'existe pas.";

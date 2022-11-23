@@ -10,6 +10,7 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Rest\Route('/api')]
 class DashboardController extends AdminController
 {
     #[Rest\Get('/dashboard')]
