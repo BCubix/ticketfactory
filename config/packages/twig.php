@@ -11,6 +11,10 @@ return static function (TwigConfig $twig) {
         $parameter = $result[0];
 
         $id = $parameter['param_value'];
+        if (null === $id) {
+            return;
+        }
+
         $result = Db::getInstance()->query("SELECT * FROM theme WHERE id = $id");
 
         $theme = $result[0];
@@ -19,6 +23,6 @@ return static function (TwigConfig $twig) {
         $twig->path('%kernel.project_dir%/themes/Website/' . $themeName . '/templates', 'website');
 
     } catch (\Exception $e) {
-        throw new \Exception("Erreur dans l'installation des twig du thème principal.");
+        throw new \Exception($e->getMessage());
     }
 };

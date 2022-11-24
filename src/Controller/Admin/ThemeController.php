@@ -67,6 +67,12 @@ class ThemeController extends AdminController
         $this->em->persist($parameter);
         $this->em->flush();
 
+        $this->log->log(0, 0, 'Updated object.', Parameter::class, $parameter->getId());
+
+        if (NULL === shell_exec('php ../bin/console cache:clear')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        }
+
         return $this->view(null, Response::HTTP_OK);
     }
 
@@ -89,6 +95,33 @@ class ThemeController extends AdminController
         $this->em->flush();
 
         $this->log->log(0, 0, 'Deleted object.', Theme::class, $themeId);
+
+        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'main_theme']);
+        if (null === $result || count($result['results']) !== 1) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
+        }
+
+        $parameter = $result['results'][0];
+
+        if ($themeId === intval($parameter->getParamValue())) {
+
+            $event = new CrudObjectInstantiatedEvent($parameter, 'edit');
+            $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+
+            $parameter->setParamValue(null);
+
+            $event = new CrudObjectValidatedEvent($parameter);
+            $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
+
+            $this->em->persist($parameter);
+            $this->em->flush();
+
+            $this->log->log(0, 0, 'Updated object.', Parameter::class, $parameter->getId());
+
+            if (NULL === shell_exec('php ../bin/console cache:clear')) {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+            }
+        }
 
         $themeService->deleteFolder($themeName);
 

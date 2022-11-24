@@ -35,7 +35,7 @@ export const ThemesList = () => {
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.parametersApi.getParametersByKey('main_theme');
-            if (!result.result || !result.parameters || result.parameters[0].paramValue === null) {
+            if (!result.result || !result.parameters) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.THEMES_BASE_PATH);
 
@@ -83,9 +83,6 @@ export const ThemesList = () => {
             setDeleteDialog(null);
         });
     }
-
-    if (themeId === null)
-        return <></>;
 
     return (
         <>
