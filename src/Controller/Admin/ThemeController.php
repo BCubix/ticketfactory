@@ -44,21 +44,21 @@ class ThemeController extends AdminController
         return $this->view($theme, Response::HTTP_OK);
     }
 
-
     #[Rest\Post('/themes/{themeId}/choose', requirements: ['themeId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function choose(Request $request, ThemeService $themeService, int $themeId): View
     {
-        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'main_theme']);
-        if (null === $result || count($result['results']) !== 1) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
+        $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
+        if (null === $theme) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $parameter = $result['results'][0];
+        $parameter = $this->getParamMainTheme();
 
         $event = new CrudObjectInstantiatedEvent($parameter, 'edit');
         $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
+        $oldThemeId = $parameter->getParamValue();
         $parameter->setParamValue($themeId);
 
         $event = new CrudObjectValidatedEvent($parameter);
@@ -69,11 +69,19 @@ class ThemeController extends AdminController
 
         $this->log->log(0, 0, 'Updated object.', Parameter::class, $parameter->getId());
 
-        if (NULL === shell_exec('php ../bin/console cache:clear')) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        if (null !== $oldThemeId) {
+            $oldTheme = $this->em->getRepository(Theme::class)->findOneForAdmin($oldThemeId);
+            if (null === $oldThemeId) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+            }
+
+            $themeService->modifyAssetsWebpack($oldTheme->getName(), false);
         }
 
-        return $this->view(null, Response::HTTP_OK);
+        $themeService->modifyAssetsWebpack($theme->getName(), true);
+        $themeService->clear();
+
+        return $this->view($theme, Response::HTTP_OK);
     }
 
     #[Rest\Delete('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
@@ -96,15 +104,9 @@ class ThemeController extends AdminController
 
         $this->log->log(0, 0, 'Deleted object.', Theme::class, $themeId);
 
-        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'main_theme']);
-        if (null === $result || count($result['results']) !== 1) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
-        }
-
-        $parameter = $result['results'][0];
+        $parameter = $this->getParamMainTheme();
 
         if ($themeId === intval($parameter->getParamValue())) {
-
             $event = new CrudObjectInstantiatedEvent($parameter, 'edit');
             $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
@@ -118,13 +120,21 @@ class ThemeController extends AdminController
 
             $this->log->log(0, 0, 'Updated object.', Parameter::class, $parameter->getId());
 
-            if (NULL === shell_exec('php ../bin/console cache:clear')) {
-                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
-            }
+            $themeService->modifyAssetsWebpack($themeName, false);
+            $themeService->clear();
         }
 
         $themeService->deleteFolder($themeName);
 
         return $this->view(null, Response::HTTP_OK);
+    }
+
+    private function getParamMainTheme() {
+        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'main_theme']);
+        if (null === $result || count($result['results']) !== 1) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+        }
+
+        return $result['results'][0];
     }
 }
