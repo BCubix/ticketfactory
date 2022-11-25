@@ -84,12 +84,12 @@ class Parameter
         return $this;
     }
 
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
 
@@ -108,7 +108,7 @@ class Parameter
         return $this;
     }
 
-    public function getParamValue(): string
+    public function getParamValue(): ?string
     {
         return $this->paramValue;
     }
@@ -120,7 +120,7 @@ class Parameter
         return $this;
     }
 
-    public function getAvailableValue(): array
+    public function getAvailableValue(): ?array
     {
         return $this->availableValue;
     }
@@ -132,7 +132,7 @@ class Parameter
         return $this;
     }
 
-    public function getValidations(): array
+    public function getValidations(): ?array
     {
         return $this->validations;
     }
@@ -144,36 +144,36 @@ class Parameter
         return $this;
     }
 
-    public function getTabName(): string
+    public function getTabName(): ?string
     {
         return $this->tabName;
     }
 
-    public function setTabName(string $tabName): self
+    public function setTabName(?string $tabName): self
     {
         $this->tabName = $tabName;
 
         return $this;
     }
 
-    public function getBlockName(): string
+    public function getBlockName(): ?string
     {
         return $this->blockName;
     }
 
-    public function setBlockName(string $blockName): self
+    public function setBlockName(?string $blockName): self
     {
         $this->blockName = $blockName;
 
         return $this;
     }
 
-    public function getBreakpointsValue(): string
+    public function getBreakpointsValue(): ?string
     {
         return $this->breakpointsValue;
     }
 
-    public function setBreakpointsValue(string $breakpointsValue): self
+    public function setBreakpointsValue(?string $breakpointsValue): self
     {
         $this->breakpointsValue = $breakpointsValue;
 
