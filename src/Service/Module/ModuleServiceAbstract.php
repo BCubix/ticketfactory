@@ -53,7 +53,7 @@ abstract class ModuleServiceAbstract
      * @param string $moduleFolderName
      * @return void
      */
-    public function deleteFolder(string $moduleFolderName)
+    public function deleteFolder(string $moduleFolderName): void
     {
         $this->removeDirectory($this->dir . '/' . $moduleFolderName);
     }
@@ -65,7 +65,7 @@ abstract class ModuleServiceAbstract
      * @return string name of extension
      * @throws ApiException
      */
-    public function unzip(string $zipName)
+    public function unzip(string $zipName): string
     {
         $zip = new \ZipArchive();
 
@@ -150,7 +150,7 @@ abstract class ModuleServiceAbstract
      * @return void
      * @throws ApiException
      */
-    protected abstract function checkTree(array $tree);
+    protected abstract function checkTree(array $tree): void;
 
     /**
      * Delete directory recursively.
@@ -158,7 +158,7 @@ abstract class ModuleServiceAbstract
      * @param string $path
      * @return void
      */
-    private function removeDirectory(string $path)
+    private function removeDirectory(string $path): void
     {
         if (!is_dir($path))
             return;
@@ -168,6 +168,18 @@ abstract class ModuleServiceAbstract
             is_dir($file) ? $this->removeDirectory($file) : unlink($file);
         }
         rmdir($path);
+    }
+
+    /**
+     * Clear cache, rerun...
+     *
+     * @return void
+     */
+    protected function clear(): void
+    {
+        if (NULL === shell_exec('php ../bin/console cache:clear')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        }
     }
 }
 

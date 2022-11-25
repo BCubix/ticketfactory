@@ -25,7 +25,7 @@ class ModuleService extends ModuleServiceAbstract
      * @throws \Exception
      * @throws FileNotFoundException
      */
-    public function callConfig(string $moduleFolderName, string $functionName)
+    public function callConfig(string $moduleFolderName, string $functionName): void
     {
         $moduleConfigFilePath = $this->dir . '/' . $moduleFolderName . '/' . $moduleFolderName . 'Config.php';
         if (!is_file($moduleConfigFilePath)) {
@@ -48,7 +48,7 @@ class ModuleService extends ModuleServiceAbstract
         }
     }
 
-    protected function checkTree(array $tree)
+    protected function checkTree(array $tree): void
     {
         // Name of module
         $name = array_key_first($tree);
@@ -84,6 +84,15 @@ class ModuleService extends ModuleServiceAbstract
                     throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
                 }
             }
+        }
+    }
+
+    public function clear(): void
+    {
+        parent::clear();
+
+        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
         }
     }
 }

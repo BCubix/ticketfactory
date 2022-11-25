@@ -38,4 +38,13 @@ class ThemeService extends ModuleServiceAbstract
                 static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($key) ? $child : $key));
         }
     }
+
+    public function clear(): void
+    {
+        parent::clear();
+
+        if (NULL === shell_exec('yarn run encore production')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande yarn run encore production a échoué.");
+        }
+    }
 }
