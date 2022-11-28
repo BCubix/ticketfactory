@@ -2,16 +2,21 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Parameter\Parameter;
 use App\Entity\Theme\Theme;
 use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
+use App\Manager\ParameterManager;
+use App\Service\Logger\Logger;
 use App\Service\Module\ThemeService;
+use App\Utils\FormErrorsCollector;
+use App\Utils\System;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,6 +24,17 @@ use Symfony\Component\HttpFoundation\Response;
 class ThemeController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce thème n'existe pas.";
+
+    protected $pm;
+    protected $ts;
+
+    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec, Logger $log, ParameterManager $pm, ThemeService $ts)
+    {
+        parent::__construct($ed, $em, $se, $fec, $log);
+
+        $this->pm = $pm;
+        $this->ts = $ts;
+    }
 
     #[Rest\Get('/themes')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
@@ -46,95 +62,79 @@ class ThemeController extends AdminController
 
     #[Rest\Post('/themes/{themeId}/choose', requirements: ['themeId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function choose(Request $request, ThemeService $themeService, int $themeId): View
+    public function choose(Request $request, int $themeId): View
     {
         $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
         if (null === $theme) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $parameter = $this->getParamMainTheme();
-
-        $event = new CrudObjectInstantiatedEvent($parameter, 'edit');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $parameter = $this->pm->get('main_theme');
 
         $oldThemeId = $parameter->getParamValue();
-        $parameter->setParamValue($themeId);
 
-        $event = new CrudObjectValidatedEvent($parameter);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
-
-        $this->em->persist($parameter);
+        $this->pm->set('main_theme', $themeId);
         $this->em->flush();
 
-        $this->log->log(0, 0, 'Updated object.', Parameter::class, $parameter->getId());
+        try {
+            if (null !== $oldThemeId) {
+                $oldTheme = $this->em->getRepository(Theme::class)->findOneForAdmin($oldThemeId);
+                if (null === $oldTheme) {
+                    throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+                }
 
-        if (null !== $oldThemeId) {
-            $oldTheme = $this->em->getRepository(Theme::class)->findOneForAdmin($oldThemeId);
-            if (null === $oldThemeId) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+                $this->ts->callConfig($oldTheme->getName(), 'uninstall');
             }
 
-            $themeService->modifyAssetsWebpack($oldTheme->getName(), false);
-        }
+            $this->ts->callConfig($theme->getName(), 'install');
+            $this->ts->clear();
+        } catch (\Exception $e) {
+            $this->pm->set('main_theme', $oldThemeId);
+            $this->em->flush();
 
-        $themeService->modifyAssetsWebpack($theme->getName(), true);
-        $themeService->clear();
+            throw $e;
+        }
 
         return $this->view($theme, Response::HTTP_OK);
     }
 
     #[Rest\Delete('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function delete(Request $request, ThemeService $themeService, int $themeId): View
+    public function delete(Request $request, int $themeId): View
     {
         $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
         if (null === $theme) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
+        $themeName = $theme->getName();
+        $parameter = $this->pm->get('main_theme');
+
+        if ($themeId === intval($parameter->getParamValue())) {
+            $this->pm->set('main_theme', null);
+            $this->em->flush();
+
+            try {
+                $this->ts->callConfig($themeName, 'uninstall');
+                $this->ts->clear();
+            } catch (\Exception $e) {
+                $this->pm->set('main_theme', $themeId);
+                $this->em->flush();
+
+                throw $e;
+            }
+        }
+
         $event = new CrudObjectInstantiatedEvent($theme, 'delete');
         $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
-        $themeId = $theme->getId();
-        $themeName = $theme->getName();
 
         $this->em->remove($theme);
         $this->em->flush();
 
         $this->log->log(0, 0, 'Deleted object.', Theme::class, $themeId);
 
-        $parameter = $this->getParamMainTheme();
-
-        if ($themeId === intval($parameter->getParamValue())) {
-            $event = new CrudObjectInstantiatedEvent($parameter, 'edit');
-            $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
-            $parameter->setParamValue(null);
-
-            $event = new CrudObjectValidatedEvent($parameter);
-            $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
-
-            $this->em->persist($parameter);
-            $this->em->flush();
-
-            $this->log->log(0, 0, 'Updated object.', Parameter::class, $parameter->getId());
-
-            $themeService->modifyAssetsWebpack($themeName, false);
-            $themeService->clear();
-        }
-
-        $themeService->deleteFolder($themeName);
+        System::rmdir($this->ts->getDir() . '/' . $themeName);
 
         return $this->view(null, Response::HTTP_OK);
-    }
-
-    private function getParamMainTheme() {
-        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => 'main_theme']);
-        if (null === $result || count($result['results']) !== 1) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
-        }
-
-        return $result['results'][0];
     }
 }
