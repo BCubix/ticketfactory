@@ -71,7 +71,7 @@ class ModuleController extends AdminController
             ModuleService::callConfig($module->getName(), 'uninstall');
             ModuleService::deleteModuleFolder($moduleName);
 
-            return $this->view(null, Response::HTTP_OK);
+            return $this->view(null, Response::HTTP_NO_CONTENT);
         }
 
         $event = new CrudObjectInstantiatedEvent($module, 'edit');

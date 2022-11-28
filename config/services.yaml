@@ -47,6 +47,6 @@ services:
             - { name: jms_serializer.event_subscriber }
 
     # Managers
-    App\Manager\ContentTypeManager:
+    App\Utils\PathGetter:
         arguments:
             $projectDir: '%kernel.project_dir%'

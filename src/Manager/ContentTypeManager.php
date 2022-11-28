@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\Content\ContentType;
 use App\Entity\Content\ContentTypeField;
 use App\Exception\ApiException;
+use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,19 +14,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ContentTypeManager extends AbstractManager
 {
-    private const TYPE_FILES_PATH = '/src/Form/Admin/Content/Types/*.php';
+    private const TYPE_FILES_PATH = 'src/Form/Admin/Content/Types/*.php';
     private const NAMESPACE_PATH = '\App\Form\Admin\Content\Types\\';
 
     private $ff;
-    private $projectDir;
+    private $pg;
     private $types;
 
-    public function __construct(EntityManagerInterface $em, FormFactoryInterface $ff, string $projectDir)
+    public function __construct(EntityManagerInterface $em, FormFactoryInterface $ff, PathGetter $pg)
     {
         parent::__construct($em);
 
         $this->ff = $ff;
-        $this->projectDir = $projectDir;
+        $this->pg = $pg;
         $this->types = $this->loadTypes();
     }
 
@@ -118,7 +119,7 @@ class ContentTypeManager extends AbstractManager
 
     private function loadTypes() {
         $types = [];
-        $files = glob($this->projectDir . self::TYPE_FILES_PATH);
+        $files = glob($this->pg->getProjectDir() . self::TYPE_FILES_PATH);
 
         foreach ($files as $file) {
             $className = explode('/', $file);

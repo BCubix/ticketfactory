@@ -53,4 +53,24 @@ class ImageFormatController extends CrudController
     {
         return parent::delete($request, $formatId);
     }
+
+    #[Rest\Post('/image-formats/{formatId}/generate', requirements: ['formatId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
+    {
+        if (null === $formatId) {
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+        } else {
+            $format = $this->em->getRepository(ImageFormat::class)->findOneForAdmin($mediaId);
+            if (null === $object) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
+            }
+
+            $formats = [$format];
+        }
+
+        $ifm->generateThumbnails($formats, $medias);
+
+        return $this->view(null, Response::HTTP_NO_CONTENT);
+    }
 }
