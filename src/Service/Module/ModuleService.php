@@ -30,41 +30,34 @@ class ModuleService extends ModuleServiceAbstract
         }
     }
 
-    protected function checkTree(array $tree): void
+    protected function checkNode($nodeKey, $nodeValue, $rootName): void
     {
-        // Name of module
-        $name = array_key_first($tree);
+        // Check index.js in assets
+        if ($nodeKey === 'assets') {
+            if (!isset($nodeValue[0]) || $nodeValue[0] !== 'index.js') {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_ASSETS_FILE_INDEX_NOT_FOUND);
+            }
+            return;
+        }
 
-        foreach (array_keys($tree[$name]) as $key) {
-            $child = $tree[$name][$key];
+        // Check file bundle in src
+        if ($nodeKey === 'src') {
+            if (!isset($nodeValue[0]) || $nodeValue[0] !== $rootName . '.php') {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_SRC_FILE_BUNDLE_NOT_FOUND);
+            }
+            return;
+        }
 
-            // Check index.js in assets
-            if ($key === 'assets') {
-                if (!isset($child[0]) || $child[0] !== 'index.js') {
-                    throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_ASSETS_FILE_INDEX_NOT_FOUND);
-                }
-                continue;
+        // Check files
+        if (is_numeric($nodeKey)) {
+            // Logo
+            if ($nodeValue === "logo.jpg" || $nodeValue === "logo.png") {
+                return;
             }
 
-            // Check file bundle in src
-            if ($key === 'src') {
-                if (!isset($child[0]) || $child[0] !== $name . '.php') {
-                    throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_SRC_FILE_BUNDLE_NOT_FOUND);
-                }
-                continue;
-            }
-
-            // Check files
-            if (is_numeric($key)) {
-                // Logo
-                if ($child === "logo.jpg" || $child === "logo.png") {
-                    continue;
-                }
-
-                // Configuration file
-                if ($child !== $name . 'Config.php') {
-                    throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
-                }
+            // Configuration file
+            if ($nodeValue !== $rootName . 'Config.php') {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
             }
         }
     }
