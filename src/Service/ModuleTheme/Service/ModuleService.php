@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Service\Module;
+namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
 use App\Service\Db\Db;
+use App\Service\ModuleTheme\Config\ModuleConfig;
 use App\Utils\System;
+
 use Symfony\Component\HttpFoundation\Response;
 
-class ModuleService extends ModuleServiceAbstract
+class ModuleService extends ServiceAbstract
 {
     protected const PATH = '/themes/Admin/default/modules';
     protected const CONFIG_CLASS = ModuleConfig::class;

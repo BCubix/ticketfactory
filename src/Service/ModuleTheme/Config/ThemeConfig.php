@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Module;
+namespace App\Service\ModuleTheme\Config;
 
 use App\Utils\FileManipulator;
 

@@ -7,7 +7,7 @@ use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Exception\ApiException;
 use App\Manager\ParameterManager;
 use App\Service\Logger\Logger;
-use App\Service\Module\ThemeService;
+use App\Service\ModuleTheme\Service\ThemeService;
 use App\Utils\FormErrorsCollector;
 use App\Utils\System;
 

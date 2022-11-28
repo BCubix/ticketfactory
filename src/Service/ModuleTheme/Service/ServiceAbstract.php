@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Module;
+namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
 use App\Utils\System;
@@ -9,7 +9,7 @@ use App\Utils\Zip;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class ModuleServiceAbstract
+abstract class ServiceAbstract
 {
     protected const PATH = null;
     protected const CONFIG_CLASS = null;

@@ -1,6 +1,7 @@
 <?php
 
-use App\Service\Module\ModuleService;
+use App\Service\ModuleTheme\Service\ModuleService;
+
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return function (RoutingConfigurator $routes) {

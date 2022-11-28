@@ -2,15 +2,14 @@
 
 namespace App\EventSubscriber\Admin;
 
-use App\Entity\Media\Media;
 use App\Entity\Media\ImageFormat;
+use App\Entity\Media\Media;
 use App\Entity\Module\Module;
-use App\Entity\Parameter\Parameter;
-
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
-use App\Service\Module\ModuleService;
-use App\Service\Module\ThemeService;
+use App\Service\ModuleTheme\Service\ModuleService;
+use App\Service\ModuleTheme\Service\ThemeService;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\UploadEvents;

@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Service\Module\ModuleService;
+use App\Service\ModuleTheme\Service\ModuleService;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Module;
+namespace App\Service\ModuleTheme\Config;
 
 use App\Service\Db\Db;
-
 use App\Utils\FileManipulator;
+
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
