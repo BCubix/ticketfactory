@@ -137,13 +137,7 @@ class FileUploader implements EventSubscriberInterface
         $this->em->flush();
 
         $this->moduleService->callConfig($name, 'install');
-
-        if (NULL === shell_exec('php ../bin/console cache:clear')) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
-        }
-        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
-        }
+        $this->moduleService->clear();
 
         return $response;
     }
