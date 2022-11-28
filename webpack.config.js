@@ -25,7 +25,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
-    .addEntry('app', './assets/index.js')
+    .addEntry('app', './assets/Admin/index.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -35,12 +35,12 @@ Encore
     .enableSingleRuntimeChunk()
 
     .addAliases({
-        '@': path.resolve(__dirname, 'assets'),
-        '@Apps': path.resolve(__dirname, 'assets/Apps'),
-        '@Components': path.resolve(__dirname, 'assets/Components'),
-        '@Redux': path.resolve(__dirname, 'assets/redux'),
-        '@Services': path.resolve(__dirname, 'assets/services'),
-        '@Style': path.resolve(__dirname, 'assets/Style'),
+        '@': path.resolve(__dirname, 'assets/Admin'),
+        '@Apps': path.resolve(__dirname, 'assets/Admin/Apps'),
+        '@Components': path.resolve(__dirname, 'assets/Admin/Components'),
+        '@Redux': path.resolve(__dirname, 'assets/Admin/redux'),
+        '@Services': path.resolve(__dirname, 'assets/Admin/services'),
+        '@Style': path.resolve(__dirname, 'assets/Admin/Style'),
     })
 
     /*

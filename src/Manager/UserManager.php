@@ -2,6 +2,8 @@
 
 namespace App\Manager;
 
+use App\Entity\User\User;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;

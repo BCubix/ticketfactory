@@ -18,6 +18,10 @@ class ModuleController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce module n'existe pas.";
 
+    private const ACTION_DISABLE = 0;
+    private const ACTION_UNINSTALL = 1;
+    private const ACTION_UNINSTALL_DELETE = 2;
+
     #[Rest\Get('/modules')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
@@ -43,20 +47,18 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Post('/modules/{moduleId}/active', requirements: ['moduleId' => '\d+'])]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function active(Request $request, ParamFetcher $paramFetcher, int $moduleId): View
+    public function active(Request $request, ModuleService $moduleService, int $moduleId): View
     {
         $module = $this->em->getRepository(Module::class)->findOneForAdmin($moduleId);
         if (null === $module) {
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $filters = $paramFetcher->get('filters');
-        $filters = empty($filters) ? [] : $filters;
+        $actionStr = $request->get('action');
+        $action = $actionStr !== null ? intval($actionStr) : null;
 
-        $deleteFolder = $filters['deleteFolder'] ?? null;
-        if ($deleteFolder) {
+        if ($action === self::ACTION_UNINSTALL_DELETE) {
             $event = new CrudObjectInstantiatedEvent($module, 'delete');
             $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
 
@@ -68,8 +70,8 @@ class ModuleController extends AdminController
 
             $this->log->log(0, 0, 'Deleted object.', Module::class, $moduleId);
 
-            ModuleService::callConfig($module->getName(), 'uninstall');
-            ModuleService::deleteModuleFolder($moduleName);
+            $moduleService->callConfig($module->getName(), 'uninstall');
+            $moduleService->deleteModuleFolder($moduleName);
 
             return $this->view(null, Response::HTTP_NO_CONTENT);
         }
@@ -87,17 +89,20 @@ class ModuleController extends AdminController
 
         $this->log->log(0, 0, 'Updated object.', Module::class, $module->getId());
 
-        $uninstall = $filters['uninstall'] ?? null;
-        if ($uninstall) {
-            ModuleService::callConfig($module->getName(), 'uninstall');
-        } else if (!$module->isActive()) {
-            ModuleService::callConfig($module->getName(), 'disable');
+        if ($action === static::ACTION_UNINSTALL) {
+            $moduleService->callConfig($module->getName(), 'uninstall');
+        } else if ($action === static::ACTION_DISABLE) {
+            $moduleService->callConfig($module->getName(), 'disable');
         } else {
-            ModuleService::callConfig($module->getName(), 'install');
+            $moduleService->callConfig($module->getName(), 'install');
         }
 
-        shell_exec('php ../bin/console cache:clear');
-        shell_exec('php ../bin/console doctrine:schema:update --force');
+        if (NULL === shell_exec('php ../bin/console cache:clear')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
+        }
+        if (NULL === shell_exec('php ../bin/console doctrine:schema:update --force')) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande doctrine:schema:update --force a échoué.");
+        }
 
         return $this->view($module, Response::HTTP_OK);
     }
