@@ -7,6 +7,7 @@ use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
 use App\Service\Module\ModuleService;
+use App\Utils\System;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -49,7 +50,7 @@ class ModuleController extends AdminController
 
     #[Rest\Post('/modules/{moduleId}/active', requirements: ['moduleId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function active(Request $request, ModuleService $moduleService, int $moduleId): View
+    public function active(Request $request, ModuleService $ms, int $moduleId): View
     {
         $module = $this->em->getRepository(Module::class)->findOneForAdmin($moduleId);
         if (null === $module) {
@@ -71,8 +72,9 @@ class ModuleController extends AdminController
 
             $this->log->log(0, 0, 'Deleted object.', Module::class, $moduleId);
 
-            $moduleService->callConfig($module->getName(), 'uninstall');
-            $moduleService->deleteFolder($moduleName);
+            $ms->callConfig($module->getName(), 'uninstall');
+
+            System::rmdir($ms->getDir() . '/' . $moduleName);
 
             return $this->view(null, Response::HTTP_OK);
         }
@@ -91,14 +93,14 @@ class ModuleController extends AdminController
         $this->log->log(0, 0, 'Updated object.', Module::class, $module->getId());
 
         if ($action === static::ACTION_UNINSTALL) {
-            $moduleService->callConfig($module->getName(), 'uninstall');
+            $ms->callConfig($module->getName(), 'uninstall');
         } else if ($action === static::ACTION_DISABLE) {
-            $moduleService->callConfig($module->getName(), 'disable');
+            $ms->callConfig($module->getName(), 'disable');
         } else {
-            $moduleService->callConfig($module->getName(), 'install');
+            $ms->callConfig($module->getName(), 'install');
         }
 
-        $moduleService->clear();
+        $ms->clear();
 
         return $this->view($module, Response::HTTP_OK);
     }
