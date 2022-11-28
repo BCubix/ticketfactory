@@ -3,28 +3,41 @@
 namespace App\Service\Module;
 
 use App\Exception\ApiException;
-use App\Service\Db\Db;
+use App\Utils\System;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class ModuleServiceAbstract
 {
     protected const PATH = null;
-    protected const MODULE_SERVICE_NAME = null;
+    protected const CONFIG_CLASS = null;
+    protected const CONFIG_PATH = '';
 
     public const PATH_REQUIRED           = "Veuillez renseigner la constante PATH.";
+    public const CONFIG_CLASS_REQUIRED   = "Veuillez renseigner la constante CONFIG_CLASS.";
+
     public const ZIP_FAIL_OPEN           = "L'ouverture du zip a échoué.";
     public const ZIP_FAIL_EXTRACT        = "L'extraction du zip a échoué.";
     public const ZIP_EMPTY               = "Le zip est vide.";
     public const ZIP_MUST_ONLY_ONE_DIR   = "Le zip doit contenir un et uniquement un seul dossier à la racine du zip.";
     public const ZIP_FIRST_DIR_NOT_FOUND = "Le zip doit contenir un dossier.";
 
+    protected $projectDir;
     protected $dir;
 
-    public function __construct($projectDir)
+    /**
+     * @throws \Exception
+     */
+    public function __construct(string $projectDir)
     {
         if (null === static::PATH) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::PATH_REQUIRED);
+            throw new \Exception(static::PATH_REQUIRED);
         }
+        if (null === static::CONFIG_CLASS) {
+            throw new \Exception(static::CONFIG_CLASS_REQUIRED);
+        }
+
+        $this->projectDir = $projectDir;
         $this->dir = $projectDir . static::PATH;
     }
 
@@ -34,28 +47,36 @@ abstract class ModuleServiceAbstract
     }
 
     /**
-     * Get all active extension by query in database.
+     * Call configuration function.
      *
-     * @return array List of active modules
-     */
-    public static function getAllActive(): array
-    {
-        try {
-            return Db::getInstance()->query("SELECT * FROM " . static::MODULE_SERVICE_NAME);
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    /**
-     * Delete extension folder.
+     * @param string $name
+     * @param string $functionName Function to call
      *
-     * @param string $moduleFolderName
      * @return void
+     * @throws \Exception
+     * @throws FileNotFoundException
      */
-    public function deleteFolder(string $moduleFolderName): void
+    public function callConfig(string $name, string $functionName): void
     {
-        $this->removeDirectory($this->dir . '/' . $moduleFolderName);
+        $configFilePath = $this->dir . "/$name" . static::CONFIG_PATH . "/{$name}Config.php";
+        if (!is_file($configFilePath)) {
+            throw new FileNotFoundException("Le fichier de configuration de $name n'existe pas.");
+        }
+
+        require_once $configFilePath;
+
+        if (!class_exists($name . 'Config')) {
+            throw new \Exception("Le fichier de configuration de $name ne contient pas la classe {$name}Config.");
+        }
+
+        $moduleObj = new ($name . 'Config')($this->projectDir, $this->dir);
+        if (get_parent_class($moduleObj) !== static::CONFIG_CLASS) {
+            throw new \Exception("La classe {$name}Config doit hériter de la classe " . static::CONFIG_CLASS . ".");
+        }
+
+        if (method_exists($moduleObj, $functionName)) {
+            $moduleObj->{$functionName}();
+        }
     }
 
     /**
@@ -153,33 +174,14 @@ abstract class ModuleServiceAbstract
     protected abstract function checkTree(array $tree): void;
 
     /**
-     * Delete directory recursively.
-     *
-     * @param string $path
-     * @return void
-     */
-    private function removeDirectory(string $path): void
-    {
-        if (!is_dir($path))
-            return;
-
-        $files = glob($path.'/*');
-        foreach ($files as $file) {
-            is_dir($file) ? $this->removeDirectory($file) : unlink($file);
-        }
-        rmdir($path);
-    }
-
-    /**
-     * Clear cache, rerun...
+     * Clear cache...
      *
      * @return void
+     * @throws \Exception
      */
-    protected function clear(): void
+    public function clear(): void
     {
-        if (NULL === shell_exec('php ../bin/console cache:clear')) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La commande cache:clear a échoué.");
-        }
+        System::exec('php ../bin/console cache:clear');
     }
 }
 
