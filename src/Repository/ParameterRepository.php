@@ -23,4 +23,14 @@ class ParameterRepository extends CrudRepository
     {
         parent::__construct($registry, Parameter::class);
     }
+
+    public function findOneByKeyForAdmin(string $key)
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.paramKey = :key')
+            ->setParameter('key', $key)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 }

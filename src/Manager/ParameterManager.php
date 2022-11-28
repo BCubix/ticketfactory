@@ -10,18 +10,22 @@ class ParameterManager extends AbstractManager
 {
     public function get(string $key): Parameter
     {
-        $result = $this->em->getRepository(Parameter::class)->findAllForAdmin(['paramKey' => $key]);
-        if (1 !== $result['total']) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404,
-                "Le paramètre avec la clé $key n'existe pas ou existe en plusieurs.");
+        $parameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($key);
+        if (null === $parameter) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le paramètre avec la clé $key n'existe pas.");
         }
-
-        return $result['results'][0];
+        return $parameter;
     }
 
     public function set(string $key, $newValue)
     {
-        $parameter = $this->get($key);
+        $parameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($key);
+        if (null === $parameter) {
+            $parameter = new Parameter();
+            $parameter->setName($key);
+            $parameter->setType('string');
+            $parameter->setParamKey($key);
+        }
 
         $availableValue = $parameter->getAvailableValue();
         if (null !== $availableValue && !in_array($newValue, $availableValue)) {
