@@ -8,13 +8,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ParameterManager extends AbstractManager
 {
-    public function get(string $key): Parameter
+    public function get(string $key)
     {
         $parameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($key);
         if (null === $parameter) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le paramètre avec la clé $key n'existe pas.");
         }
-        return $parameter;
+        return $parameter->getParamValue();
     }
 
     public function set(string $key, $newValue)

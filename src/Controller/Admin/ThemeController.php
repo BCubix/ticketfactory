@@ -69,9 +69,7 @@ class ThemeController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $parameter = $this->pm->get('main_theme');
-
-        $oldThemeId = $parameter->getParamValue();
+        $oldThemeId = $this->pm->get('main_theme');
 
         $this->pm->set('main_theme', $themeId);
         $this->em->flush();
@@ -108,9 +106,8 @@ class ThemeController extends AdminController
         }
 
         $themeName = $theme->getName();
-        $parameter = $this->pm->get('main_theme');
 
-        if ($themeId === intval($parameter->getParamValue())) {
+        if ($themeId === intval($this->pm->get('main_theme'))) {
             $this->pm->set('main_theme', null);
             $this->em->flush();
 
