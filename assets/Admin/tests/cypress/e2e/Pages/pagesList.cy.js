@@ -16,6 +16,7 @@ describe('Pages List Spec', () => {
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + PAGES_API_PATH + '*').as('getPages');
         cy.visit(Constant.PAGES_BASE_PATH);
+        cy.wait(500);
     });
 
     it('get List', () => {

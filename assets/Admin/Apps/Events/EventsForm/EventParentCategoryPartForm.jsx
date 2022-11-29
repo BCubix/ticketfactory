@@ -31,6 +31,7 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                 <Box display="flex" alignItems={'center'}>
                     <Checkbox
                         checked={values?.eventCategories?.includes(list.id)}
+                        id={`eventCategoriesValue-${list.id}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             handleCheckCategory(list.id);
@@ -40,6 +41,7 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                     <Box component="span" sx={{ ml: 'auto' }}>
                         <Radio
                             checked={values?.mainCategory === list.id}
+                            id={`mainCategoryValue-${list.id}`}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (!values?.eventCategories?.includes(list.id)) {
@@ -73,17 +75,16 @@ export const EventParentCategoryPartForm = ({
     return (
         <>
             <Box display="flex" justifyContent={'space-between'}>
-                <Typography variant="body1" sx={{ mt: 2 }}>
+                <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
                     Catégorie parente
                 </Typography>
-                <Typography variant="body1" sx={{ mt: 2 }}>
+                <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
                     Catégorie principale
                 </Typography>
             </Box>
             <TreeView
                 size="small"
                 id="categoriesParent"
-                value={values.parent}
                 label="Catégorie parent"
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpanded={[categoriesList.id?.toString()]}
@@ -92,9 +93,16 @@ export const EventParentCategoryPartForm = ({
             >
                 {displayCategoriesOptions(categoriesList, values, setFieldValue)}
             </TreeView>
-            <Typography sx={{ fontSize: 12 }} color="error">
-                {touched?.parent && errors?.parent}
-            </Typography>
+            {touched?.eventCategories && errors?.eventCategories && (
+                <Typography sx={{ fontSize: 12 }} color="error" id="eventCategories-helper-text">
+                    {touched?.eventCategories && errors?.eventCategories}
+                </Typography>
+            )}
+            {touched?.mainCategory && errors?.mainCategory && (
+                <Typography sx={{ fontSize: 12 }} color="error" id="mainCategory-helper-text">
+                    {touched?.mainCategory && errors?.mainCategory}
+                </Typography>
+            )}
         </>
     );
 };

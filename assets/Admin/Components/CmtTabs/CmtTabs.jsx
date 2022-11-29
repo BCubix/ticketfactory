@@ -13,7 +13,7 @@ function TabPanel(props) {
     );
 }
 
-export const CmtTabs = ({ list, tabValue = 0, containerStyle = {}}) => {
+export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
     const [value, setValue] = useState(tabValue);
     const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {}}) => {
                         ?.map((item, index) => (
                             <Tab
                                 label={item.label}
-                                id={item.label}
+                                id={item.id || item.label}
                                 key={index}
                                 onClick={() => {
                                     if (item.path) {

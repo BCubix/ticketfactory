@@ -6,7 +6,7 @@ import {
     USER_PASSWORD,
 } from '../../../cypress.constant';
 
-describe('Create Page Spec', () => {
+describe('Update Page Spec', () => {
     beforeEach(() => {
         cy.login(USER_EMAIL, USER_PASSWORD);
 

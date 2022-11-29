@@ -1,6 +1,15 @@
 import React from 'react';
-import { Checkbox, FormControl, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import {
+    Checkbox,
+    FormControl,
+    FormHelperText,
+    Grid,
+    InputLabel,
+    ListItemText,
+    MenuItem,
+    Select,
+} from '@mui/material';
+import { Component } from '@/AdminService/Component';
 
 export const EventMainPartForm = ({
     values,
@@ -27,6 +36,7 @@ export const EventMainPartForm = ({
                             label="Nom"
                             name="name"
                             error={touched.name && errors.name}
+                            required
                         />
                     </Grid>
 
@@ -45,8 +55,10 @@ export const EventMainPartForm = ({
                     </Grid>
 
                     <Grid item xs={12}>
-                        <InputLabel id="description">Description</InputLabel>
-                        <Component.LightEditorFormControl>
+                        <InputLabel id="description" required>
+                            Description
+                        </InputLabel>
+                        <Component.LightEditorFormControl id={`descriptionControl`}>
                             <Component.LightEditor
                                 labelId="description"
                                 value={values.description}
@@ -55,9 +67,11 @@ export const EventMainPartForm = ({
                                     setFieldValue('description', val);
                                 }}
                             />
-                            <FormHelperText error>
-                                {touched.description && errors.description}
-                            </FormHelperText>
+                            {touched.description && errors.description && (
+                                <FormHelperText error id="description-helper-text">
+                                    {errors.description}
+                                </FormHelperText>
+                            )}
                         </Component.LightEditorFormControl>
                     </Grid>
 
@@ -78,7 +92,11 @@ export const EventMainPartForm = ({
                                 }}
                             >
                                 {roomsList.map((item, index) => (
-                                    <MenuItem value={item.id} key={index}>
+                                    <MenuItem
+                                        value={item.id}
+                                        key={index}
+                                        id={`roomValue-${item.id}`}
+                                    >
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
                                 ))}
@@ -103,7 +121,11 @@ export const EventMainPartForm = ({
                                 }}
                             >
                                 {seasonsList.map((item, index) => (
-                                    <MenuItem value={item.id} key={index}>
+                                    <MenuItem
+                                        value={item.id}
+                                        key={index}
+                                        id={`seasonValue-${item.id}`}
+                                    >
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
                                 ))}
@@ -156,7 +178,11 @@ export const EventMainPartForm = ({
                                 }}
                             >
                                 {tagsList?.map((item, index) => (
-                                    <MenuItem value={item.id} key={index}>
+                                    <MenuItem
+                                        value={item.id}
+                                        key={index}
+                                        id={`eventTagsValue-${item.id}`}
+                                    >
                                         <Checkbox checked={values.tags.indexOf(item.id) > -1} />
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
