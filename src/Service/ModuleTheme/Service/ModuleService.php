@@ -7,12 +7,12 @@ use App\Service\Db\Db;
 use App\Service\ModuleTheme\Config\ModuleConfig;
 use App\Utils\System;
 
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 class ModuleService extends ServiceAbstract
 {
     protected const PATH = '/themes/Admin/default/config/modules';
-    protected const CONFIG_CLASS = ModuleConfig::class;
 
     public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
@@ -70,5 +70,38 @@ class ModuleService extends ServiceAbstract
 
         System::exec('php ../bin/console doctrine:schema:update --force');
         System::exec('yarn run encore production');
+    }
+
+    /**
+     * Call configuration function.
+     *
+     * @param string $name
+     * @param string $functionName Function to call
+     *
+     * @return void
+     * @throws \Exception
+     * @throws FileNotFoundException
+     */
+    public function callConfig(string $name, string $functionName): void
+    {
+        $configFilePath = $this->dir . "/$name/{$name}Config.php";
+        if (!is_file($configFilePath)) {
+            throw new FileNotFoundException("Le fichier de configuration de $name n'existe pas.");
+        }
+
+        require_once $configFilePath;
+
+        if (!class_exists($name . 'Config')) {
+            throw new \Exception("Le fichier de configuration de $name ne contient pas la classe {$name}Config.");
+        }
+
+        $moduleObj = new ($name . 'Config')($this->dir);
+        if (get_parent_class($moduleObj) !== ModuleConfig::class) {
+            throw new \Exception("La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
+        }
+
+        if (method_exists($moduleObj, $functionName)) {
+            $moduleObj->{$functionName}();
+        }
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
-use App\Service\ModuleTheme\Config\ThemeConfig;
+use App\Utils\FileManipulator;
 use App\Utils\System;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ThemeService extends ServiceAbstract
 {
     protected const PATH = '/themes/Website';
-    protected const CONFIG_CLASS = ThemeConfig::class;
-    protected const CONFIG_PATH = "/config";
 
     public const ZIP_FILES_OR_DIRS_NOT_CORRESPONDED = "Le zip contient des fichiers ou dossiers qui ne correspondent pas à l'architecture d'un thème";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
@@ -29,7 +27,7 @@ class ThemeService extends ServiceAbstract
         }
 
         if ($nodeKey === 'config') {
-            if (!isset($nodeValue[0]) || $nodeValue[0] !== $rootName . "Config.php") {
+            if (!isset($nodeValue[0]) || $nodeValue[0] !== "config.yaml") {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_CONFIG_FILE_NOT_FOUND);
             }
             return;
@@ -55,5 +53,39 @@ class ThemeService extends ServiceAbstract
         parent::clear();
 
         System::exec('yarn run encore production');
+    }
+
+    /**
+     * Inject or remove entry in webpack.
+     *
+     * @throws \Exception
+     */
+    public function entry(string $name, bool $remove)
+    {
+        $webpackFilePath = $this->projectDir . '/webpack.config.js';
+
+        $file = new FileManipulator($webpackFilePath);
+        $content = $file->getContent();
+
+        $needleAppEntry= ".addEntry('app', './themes/Admin/default/assets/index.js')";
+        $needleWebsiteEntry = ".addEntry('website', './themes/Website/" . $name . "/assets/index.js')";
+
+        // Find position of the end of app entry in content
+        $position = $file->getPosition($needleAppEntry) + strlen($needleAppEntry);
+        // Add content start the beginning content to the end of app entry
+        $newContent = substr($content, 0, $position);
+
+        if (!$remove) {
+            // Add website entry
+            $newContent .= PHP_EOL . "    " . $needleWebsiteEntry;
+        } else {
+            // Find position of the end of website entry in content
+            $position = $file->getPosition($needleWebsiteEntry) + strlen($needleWebsiteEntry);
+        }
+
+        // Add rest of content
+        $newContent .= substr($content, $position);
+
+        $file->setContent($newContent);
     }
 }

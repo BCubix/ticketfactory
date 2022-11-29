@@ -8,17 +8,22 @@ use App\Utils\FileManipulator;
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
-class ModuleConfig extends ConfigAbstract
+class ModuleConfig
 {
+    protected const NAME = null;
     protected const TABLES = [];
     protected const TRAITS = [];
 
+    protected $path;
     protected $loader;
 
-    public function __construct(string $projectDir, string $dir)
+    public function __construct(string $dir)
     {
-        parent::__construct($projectDir, $dir);
+        if (null === static::NAME) {
+            throw new \InvalidArgumentException("Veuillez renseigner le nom dans le fichier de configuration du dossier $dir.");
+        }
 
+        $this->path = $dir . '/' . static::NAME;
         $this->loader = new ClassLoader();
     }
 

@@ -83,10 +83,10 @@ class ThemeController extends AdminController
                     throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
                 }
 
-                $this->ts->callConfig($oldTheme->getName(), 'uninstall');
+                $this->ts->entry($oldTheme->getName(), true);
             }
 
-            $this->ts->callConfig($theme->getName(), 'install');
+            $this->ts->entry($theme->getName(), false);
             $this->ts->clear();
         } catch (\Exception $e) {
             $this->pm->set('main_theme', $oldThemeId);
@@ -115,7 +115,7 @@ class ThemeController extends AdminController
             $this->em->flush();
 
             try {
-                $this->ts->callConfig($themeName, 'uninstall');
+                $this->ts->entry($themeName, true);
                 $this->ts->clear();
             } catch (\Exception $e) {
                 $this->pm->set('main_theme', $themeId);

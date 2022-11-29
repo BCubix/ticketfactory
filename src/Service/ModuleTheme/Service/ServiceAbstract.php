@@ -12,11 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class ServiceAbstract
 {
     protected const PATH = null;
-    protected const CONFIG_CLASS = null;
-    protected const CONFIG_PATH = '';
 
-    public const PATH_REQUIRED         = "Veuillez renseigner la constante PATH.";
-    public const CONFIG_CLASS_REQUIRED = "Veuillez renseigner la constante CONFIG_CLASS.";
+    public const PATH_REQUIRED = "Veuillez renseigner la constante PATH.";
 
     protected $projectDir;
     protected $dir;
@@ -29,9 +26,6 @@ abstract class ServiceAbstract
         if (null === static::PATH) {
             throw new \Exception(static::PATH_REQUIRED);
         }
-        if (null === static::CONFIG_CLASS) {
-            throw new \Exception(static::CONFIG_CLASS_REQUIRED);
-        }
 
         $this->projectDir = $projectDir;
         $this->dir = $projectDir . static::PATH;
@@ -40,39 +34,6 @@ abstract class ServiceAbstract
     public function getDir(): string
     {
         return $this->dir;
-    }
-
-    /**
-     * Call configuration function.
-     *
-     * @param string $name
-     * @param string $functionName Function to call
-     *
-     * @return void
-     * @throws \Exception
-     * @throws FileNotFoundException
-     */
-    public function callConfig(string $name, string $functionName): void
-    {
-        $configFilePath = $this->dir . "/$name" . static::CONFIG_PATH . "/{$name}Config.php";
-        if (!is_file($configFilePath)) {
-            throw new FileNotFoundException("Le fichier de configuration de $name n'existe pas.");
-        }
-
-        require_once $configFilePath;
-
-        if (!class_exists($name . 'Config')) {
-            throw new \Exception("Le fichier de configuration de $name ne contient pas la classe {$name}Config.");
-        }
-
-        $moduleObj = new ($name . 'Config')($this->projectDir, $this->dir);
-        if (get_parent_class($moduleObj) !== static::CONFIG_CLASS) {
-            throw new \Exception("La classe {$name}Config doit hériter de la classe " . static::CONFIG_CLASS . ".");
-        }
-
-        if (method_exists($moduleObj, $functionName)) {
-            $moduleObj->{$functionName}();
-        }
     }
 
     /**
