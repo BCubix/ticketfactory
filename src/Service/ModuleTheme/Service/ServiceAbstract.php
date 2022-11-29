@@ -6,7 +6,6 @@ use App\Exception\ApiException;
 use App\Utils\System;
 use App\Utils\Zip;
 
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class ServiceAbstract
@@ -60,7 +59,16 @@ abstract class ServiceAbstract
 
         Zip::unzip($zipPath, $this->dir);
 
-        return array_key_first($tree);
+        $name = array_key_first($tree);
+
+        try {
+            $this->checkConfig($name);
+        } catch (\Exception $e) {
+            System::rmdir($this->dir . '/' . $name);
+            throw $e;
+        }
+
+        return $name;
     }
 
     /**
@@ -99,6 +107,16 @@ abstract class ServiceAbstract
      * @throws ApiException
      */
     protected abstract function checkNode($nodeKey, $nodeValue, string $rootName): void;
+
+    /**
+     * Verify file configuration.
+     *
+     * @param string $name
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected abstract function checkConfig(string $name): void;
 
     /**
      * Clear cache...

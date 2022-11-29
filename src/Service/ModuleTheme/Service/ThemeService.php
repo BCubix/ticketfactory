@@ -7,6 +7,7 @@ use App\Utils\FileManipulator;
 use App\Utils\System;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Yaml\Yaml;
 
 class ThemeService extends ServiceAbstract
 {
@@ -46,6 +47,25 @@ class ThemeService extends ServiceAbstract
 
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
             static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
+    }
+
+    protected function checkConfig(string $name): void
+    {
+        $config = Yaml::parseFile($this->dir . '/' . $name . '/config/config.yaml');
+        if (!$config) {
+            System::rmdir($this->dir . '/' . $name);
+            throw new \Exception("Le fichier de configuration du thème $name est vide.");
+        }
+
+        if (!isset($config['name'])) {
+            throw new \Exception("Le fichier de configuration du thème $name doit contenir 'name'.");
+        }
+        if (!isset($config['display_name'])) {
+            throw new \Exception("Le fichier de configuration du thème $name doit contenir 'display_name'.");
+        }
+        if (!isset($config['version'])) {
+            throw new \Exception("Le fichier de configuration du thème $name doit contenir 'display_name'.");
+        }
     }
 
     public function clear(): void
