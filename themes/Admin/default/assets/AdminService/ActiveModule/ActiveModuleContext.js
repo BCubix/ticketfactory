@@ -2,7 +2,7 @@ export function ActiveModuleContext(modulesActive) {
     if (!modulesActive)
         return;
 
-    const list = require.context(`@/../modules`, true, /\.*\/assets\/index.js$/);
+    const list = require.context(`@/../config/modules`, true, /\.*\/assets\/index.js$/);
 
     list.keys().map((item) => {
         const arrayPath = item.split('/');

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ModuleService extends ServiceAbstract
 {
-    protected const PATH = '/themes/Admin/default/modules';
+    protected const PATH = '/themes/Admin/default/config/modules';
     protected const CONFIG_CLASS = ModuleConfig::class;
 
     public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
