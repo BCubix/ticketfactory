@@ -126,6 +126,7 @@ export const ListTable = ({
                     {list?.map((item, index) => (
                         <TableRow
                             key={index}
+                            id={`tableElement-${item.id}`}
                             onClick={() => {
                                 if (onClick) {
                                     onClick(item?.id);

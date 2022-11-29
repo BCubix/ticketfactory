@@ -16,3 +16,4 @@ export const CONTENTS_API_PATH = '/contents';
 export const CONTENT_TYPES_API_PATH = '/content-types';
 export const CONTACT_REQUESTS_API_PATH = '/contact-requests';
 export const USERS_API_PATH = '/users';
+export const CATEGORIES_API_PATH = '/event-categories';
