@@ -100,7 +100,6 @@ export const CreateUserForm = ({ handleSubmit }) => {
                             error={touched.password && errors.password}
                             required
                         />
-                        {console.log(touched, errors)}
                         <Component.CmtTextField
                             type="password"
                             value={values.confirmPassword}
