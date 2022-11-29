@@ -1,6 +1,5 @@
 <?php
 
-use App\Entity\User\RefreshToken;
 use App\Service\Module\ModuleService;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
@@ -9,7 +8,7 @@ return function (RoutingConfigurator $routes) {
 
     $routes->add('admin_api_login_check', '/admin/api/login_check');
     $routes->add('gesdinet_jwt_refresh_token', '/admin/api/token/refresh')
-           ->controller([RefreshToken::class, 'refresh'])
+           ->controller(["gesdinet.jwtrefreshtoken", 'refresh'])
     ;
 
     $modulesActive = ModuleService::getModulesActive();

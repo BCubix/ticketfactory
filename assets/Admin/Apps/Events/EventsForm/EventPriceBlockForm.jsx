@@ -7,7 +7,7 @@ import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsPriceBlockForm = ({
@@ -133,7 +133,14 @@ export const EventsPriceBlockForm = ({
                                     blockIndex={index}
                                 />
 
-                                <FormHelperText error>{getBlockError(index)}</FormHelperText>
+                                {getBlockError(index) && (
+                                    <FormHelperText
+                                        error
+                                        id={`eventPriceBlocks-${index}-helper-text`}
+                                    >
+                                        {getBlockError(index)}
+                                    </FormHelperText>
+                                )}
 
                                 {values.multiplePriceBlock && (
                                     <Component.DeleteBlockFabButton

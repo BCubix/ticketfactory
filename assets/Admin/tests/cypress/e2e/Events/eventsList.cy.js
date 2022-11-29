@@ -20,6 +20,7 @@ describe('Events List Spec', () => {
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + EVENTS_API_PATH + '*').as('getEvents');
         cy.visit(Constant.EVENTS_BASE_PATH);
+        cy.wait(500);
     });
 
     it('get List', () => {

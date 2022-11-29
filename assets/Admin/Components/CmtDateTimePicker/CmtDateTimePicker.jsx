@@ -16,6 +16,7 @@ export const CmtDateTimePicker = ({
     inputVariant = 'standard',
     inputSize = 'normal',
     id = '',
+    required = false,
     ...rest
 }) => {
     const [open, setOpen] = useState(false);
@@ -75,6 +76,7 @@ export const CmtDateTimePicker = ({
                                 type="date"
                                 color="primary"
                                 id={id}
+                                required={required}
                             />
                         );
                     }}

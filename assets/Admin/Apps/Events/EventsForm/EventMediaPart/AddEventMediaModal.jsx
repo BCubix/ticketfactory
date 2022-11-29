@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -36,6 +36,7 @@ export const AddEventMediaModal = ({
                     <IconButton
                         aria-label="close"
                         onClick={closeModal}
+                        id="closeAddEventMediaModal"
                         sx={{
                             position: 'absolute',
                             right: 8,
@@ -55,6 +56,7 @@ export const AddEventMediaModal = ({
                                 <Component.CmtMediaElement
                                     key={index}
                                     onClick={() => setSelectedMedia(item)}
+                                    id={`mediaEventAddElementValue-${item.id}`}
                                     sx={{
                                         border: (theme) =>
                                             addedElements.includes(item.id)

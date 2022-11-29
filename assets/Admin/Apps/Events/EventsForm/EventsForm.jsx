@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, FormControlLabel, Switch, Box } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const EventsForm = ({
     handleSubmit,
@@ -24,32 +24,34 @@ export const EventsForm = ({
         eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
         mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
         description: Yup.string().required('Veuillez renseigner une description.'),
-        eventDateBlocks: Yup.array().of(
-            Yup.object().shape({
-                name: Yup.string()
-                    .required('Veuillez renseigner le nom du bloc.')
-                    .max(250, 'Le nom du bloc est trop long'),
-                eventDates: Yup.array()
-                    .of(
-                        Yup.object().shape({
-                            eventDate: Yup.string().required('Veuillez renseigner la date.'),
-                            state: Yup.string().required(
-                                'Veuillez renseigner le status de cette date.'
-                            ),
-                            reportDate: Yup.string().when('state', (state) => {
-                                if (state === 'delayed') {
-                                    return Yup.string().required(
-                                        'Veuillez renseigner la nouvelle date.'
-                                    );
-                                } else {
-                                    return Yup.string().nullable();
-                                }
-                            }),
-                        })
-                    )
-                    .min(1, 'Veuillez renseigner au moins une date.'),
-            })
-        ),
+        eventDateBlocks: Yup.array()
+            .of(
+                Yup.object().shape({
+                    name: Yup.string()
+                        .required('Veuillez renseigner le nom du bloc.')
+                        .max(250, 'Le nom du bloc est trop long'),
+                    eventDates: Yup.array()
+                        .of(
+                            Yup.object().shape({
+                                eventDate: Yup.string().required('Veuillez renseigner la date.'),
+                                state: Yup.string().required(
+                                    'Veuillez renseigner le status de cette date.'
+                                ),
+                                reportDate: Yup.string().when('state', (state) => {
+                                    if (state === 'delayed') {
+                                        return Yup.string().required(
+                                            'Veuillez renseigner la nouvelle date.'
+                                        );
+                                    } else {
+                                        return Yup.string().nullable();
+                                    }
+                                }),
+                            })
+                        )
+                        .min(1, 'Veuillez renseigner au moins une date.'),
+                })
+            )
+            .min(1, 'Veuillez renseigner au moins un bloc de dates.'),
         eventPriceBlocks: Yup.array().of(
             Yup.object().shape({
                 name: Yup.string()
@@ -126,6 +128,7 @@ export const EventsForm = ({
                         list={[
                             {
                                 label: 'Evènement',
+                                id: 'eventPartButton',
                                 component: (
                                     <Component.EventMainPartForm
                                         values={values}
@@ -144,6 +147,7 @@ export const EventsForm = ({
                             },
                             {
                                 label: 'Dates',
+                                id: 'datesPartButton',
                                 component: (
                                     <Component.EventsDateBlockForm
                                         values={values}
@@ -158,6 +162,7 @@ export const EventsForm = ({
                             },
                             {
                                 label: 'Tarifs',
+                                id: 'pricesPartButton',
                                 component: (
                                     <Component.EventsPriceBlockForm
                                         values={values}
@@ -172,6 +177,7 @@ export const EventsForm = ({
                             },
                             {
                                 label: 'Médias',
+                                id: 'mediasPartButton',
                                 component: (
                                     <Component.EventMediaPartForm
                                         values={values}
@@ -190,6 +196,7 @@ export const EventsForm = ({
                     <Box display="flex" justifyContent="flex-end">
                         <FormControlLabel
                             sx={{ marginRight: 2, marginTop: 1 }}
+                            id="active"
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
@@ -204,6 +211,7 @@ export const EventsForm = ({
                         <Button
                             type="submit"
                             variant="contained"
+                            id="submitForm"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
                         >

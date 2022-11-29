@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getMediaType } from '@Services/utils/getMediaType';
@@ -89,6 +89,7 @@ export const EventMediaPartForm = ({
                 values={values}
                 name={name}
                 setFieldValue={setFieldValue}
+                id="imageMediasEvent"
             />
             <Component.DisplayEventMediaElement
                 title="Autres contenus"
@@ -99,6 +100,7 @@ export const EventMediaPartForm = ({
                 values={values}
                 name={name}
                 setFieldValue={setFieldValue}
+                id="othersMediasEvent"
             />
 
             <Component.AddEventMediaModal

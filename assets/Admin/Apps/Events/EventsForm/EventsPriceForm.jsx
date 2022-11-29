@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Card, CardContent, Grid } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsPriceForm = ({
@@ -100,6 +100,7 @@ export const EventsPriceForm = ({
                             size="small"
                             color="primary"
                             variant="outlined"
+                            id="addPriceButton"
                             onClick={() => {
                                 push({ name: '', annotation: '', price: '' });
                             }}
