@@ -2,11 +2,12 @@
 
 namespace App\Manager;
 
-use App\Entity\ImageFormat;
+use App\Entity\Media\ImageFormat;
+use App\Entity\Media\Media;
 use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\File;
+use Symfony\Component\HttpFoundation\File\File;
 
 class MediaManager extends AbstractManager
 {
@@ -27,7 +28,6 @@ class MediaManager extends AbstractManager
     public function getFilePathFromFormat(File $mediaFile, Imageformat $format): ?string
     {
         $filePath = $mediaFile->getPath();
-        $filePath = $this->pg->getPublicDir() . $filePath;
 
         $fileName = $mediaFile->getFilename();
         $fileNameArr = explode('.', $fileName);

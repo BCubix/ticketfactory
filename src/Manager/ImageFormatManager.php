@@ -2,11 +2,13 @@
 
 namespace App\Manager;
 
-use App\Entity\ImageFormat;
+use App\Entity\Media\ImageFormat;
+use App\Entity\Media\Media;
+use App\Manager\MediaManager;
 use App\Manager\ParameterManager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\File;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class ImageFormatManager extends AbstractManager
@@ -22,7 +24,7 @@ class ImageFormatManager extends AbstractManager
         $this->mm = $mm;
     }
 
-    public function generateThumbnails(?array $formats, ?array $medias): bool
+    public function generateThumbnails(array $formats = null, array $medias = null): bool
     {
         if (null === $formats) {
             $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
@@ -40,7 +42,7 @@ class ImageFormatManager extends AbstractManager
                 continue;
             }
 
-            foreach ($formats as $format) {
+            foreach ($formats['results'] as $format) {
                 $sourceFile = $mediaFile->getRealPath();
                 $destinationFile = $this->mm->getFilePathFromFormat($mediaFile, $format);
                 $destW = $format->getLength();
@@ -55,7 +57,7 @@ class ImageFormatManager extends AbstractManager
         return $success;
     }
 
-    public function formatImage(string $sourceFile, string $destinationFile, int $destW, int $destH): ?bool
+    public function formatImage(string $sourceFile, string $destinationFile, int $canvW, int $canvH): ?bool
     {
         // Access file informations
         clearstatcache(true, $sourceFile);
@@ -64,8 +66,8 @@ class ImageFormatManager extends AbstractManager
         }
 
         // Getting file informations
-        list($srcType, $srcW, $srcH, $rotate) = $this->getImageDetails($sourceFile);
-        if ($srcW == 0 || $srcH == 0) {
+        list($srcType, $originW, $originH, $rotate) = $this->getImageDetails($sourceFile);
+        if ($originW == 0 || $originH == 0) {
             return null;
         }
 
@@ -78,51 +80,48 @@ class ImageFormatManager extends AbstractManager
         // Check if image must be cropped
         $crop = $this->pm->get('image_to_crop');
 
-        // Check the image quality
-        $quality = $this->pm->get('image_quality');
-
         // New dimensions initialisation
         $srcX  = 0;
         $srcY  = 0;
+        $srcW  = $originW;
+        $srcH  = $originH;
+
         $destX = 0;
         $destY = 0;
-        $diffW = $destW / $srcW;
-        $diffH = $destH / $srcH;
+        $destW = $canvW;
+        $destH = $canvH;
 
-        // The new image is bigger than the current one
-        if ($widthDiff > 1 && $heightDiff > 1) {
-            $destW = $srcW;
-            $destH = $srcH;
-        }
+        $diffW = $originW / $canvW;
+        $diffH = $originH / $canvH;
 
-        // Image must be cropped
-        elseif ($crop) {
+        if ($crop) {
             if ($diffW < $diffH) {
-                $srcW = round(($srcW / $diffW * $diffH));
-                $srcX = round(($srcW - ($srcW / $diffW * $diffH)) / 2);
-            } elseif ($diffH < $diffW) {
-                $srcH = round(($srcH / $diffH * $diffW));
-                $srcY = round(($srcH - ($srcH / $diffH * $diffW)) / 2);
-            }
-        }
-
-        // Image must be completed
-        else {
-            if ($diffW < $diffH) {
-                $destH = round($srcH * $destW / $srcW);
+                $srcH = floor($srcW * $destH / $destW);
             } else {
-                $destW = round(($srcW * $destH) / $srcH);
+                $srcW = floor($srcH * $destW / $destH);
             }
+
+            $srcX = ($originW / 2) - ($srcW / 2);
+            $srcY = ($originH / 2) - ($srcH / 2);
+        } else {
+            if ($diffW > $diffH) {
+                $destH = floor($srcH * $destW / $srcW);
+            } else {
+                $destW = floor($srcW * $destH / $srcH);
+            }
+
+            $destX = ($canvW / 2) - ($destW / 2);
+            $destY = ($canvH / 2) - ($destH / 2);
         }
 
         // @TODO : Check memory limit
 
 
         // Creation of a new empty canvas in $destImage
-        $this->createCanvas($destImage, $destW, $destH);
+        $this->createCanvas($destImage, $newType, $canvW, $canvH);
 
         // Get image content and rotate if needed
-        $srcImage = $this->create($type, $sourceFile);
+        $srcImage = $this->createImg($srcType, $sourceFile);
         if ($rotate) {
             $srcImage = imagerotate($srcImage, $rotate, 0);
         }
@@ -136,7 +135,7 @@ class ImageFormatManager extends AbstractManager
         return $newFile;
     }
 
-    public function create(int $type, string $filename): mixed
+    public function createImg(int $type, string $filename): mixed
     {
         switch ($type) {
             case IMAGETYPE_WEBP:
@@ -192,19 +191,19 @@ class ImageFormatManager extends AbstractManager
         return [$srcType, $srcW, $srcH, $rotate];
     }
 
-    private function createCanvas(&$destImage, int $destW, int $destH): void
+    private function createCanvas(&$destImage, int $type, int $canvW, int $canvH): void
     {
-        $destImage = imagecreatetruecolor($destW, $destH);
-        if ($type == IMAGETYPE_PNG) {
+        $destImage = imagecreatetruecolor($canvW, $canvH);
+        if ($type == IMAGETYPE_JPEG) {
+            $rgba = imagecolorallocate($destImage, 255, 255, 255);
+        } else {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
 
             $rgba = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
-        } else {
-            $rgba = imagecolorallocate($destImage, 255, 255, 255);
         }
 
-        imagefilledrectangle($destImage, 0, 0, $destW, $destH, $rgba);
+        imagefilledrectangle($destImage, 0, 0, $canvW, $canvH, $rgba);
     }
 
     public function write(string $type, $resource, string $filename): bool

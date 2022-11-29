@@ -33,7 +33,7 @@ class MediaRepository extends CrudRepository
         $mimes = MimeTypeMapping::getMimesFromType($type);
 
         return $this->createQueryBuilder('m')
-            ->where('m.mime IN (:mimes)')
+            ->where('m.documentType IN (:mimes)')
             ->setParameter('mimes', $mimes)
             ->getQuery()
             ->getResult()

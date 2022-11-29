@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Form\Admin\Media\ImageFormatType;
+use App\Manager\ImageFormatManager;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -54,7 +55,7 @@ class ImageFormatController extends CrudController
         return parent::delete($request, $formatId);
     }
 
-    #[Rest\Post('/image-formats/{formatId}/generate', requirements: ['formatId' => '\d+'])]
+    #[Rest\Post('/image-formats/generate/{formatId}', requirements: ['formatId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
     {
@@ -69,7 +70,7 @@ class ImageFormatController extends CrudController
             $formats = [$format];
         }
 
-        $ifm->generateThumbnails($formats, $medias);
+        $ifm->generateThumbnails($formats);
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
