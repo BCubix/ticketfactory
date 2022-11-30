@@ -16,6 +16,11 @@ class Module extends Datable
     /*** > Trait ***/
     /*** < Trait ***/
 
+    const ACTION_INSTALL = -1;
+    const ACTION_DISABLE = 0;
+    const ACTION_UNINSTALL = 1;
+    const ACTION_UNINSTALL_DELETE = 2;
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]

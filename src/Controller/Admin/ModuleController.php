@@ -3,15 +3,17 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Module\Module;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
-use App\Service\ModuleTheme\Service\ModuleService;
-use App\Utils\System;
+use App\Manager\ModuleManager;
+use App\Service\Logger\Logger;
+use App\Utils\FormErrorsCollector;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,9 +22,20 @@ class ModuleController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce module n'existe pas.";
 
-    private const ACTION_DISABLE = 0;
-    private const ACTION_UNINSTALL = 1;
-    private const ACTION_UNINSTALL_DELETE = 2;
+    private $mm;
+
+    public function __construct(
+        EventDispatcherInterface $ed,
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        ModuleManager $mm
+    ) {
+        parent::__construct($ed, $em, $se, $fec, $log);
+
+        $this->mm = $mm;
+    }
 
     #[Rest\Get('/modules')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
@@ -50,57 +63,21 @@ class ModuleController extends AdminController
 
     #[Rest\Post('/modules/{moduleId}/active', requirements: ['moduleId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function active(Request $request, ModuleService $ms, int $moduleId): View
+    public function active(Request $request, int $moduleId): View
     {
         $module = $this->em->getRepository(Module::class)->findOneForAdmin($moduleId);
         if (null === $module) {
-            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
         $actionStr = $request->get('action');
-        $action = $actionStr !== null ? intval($actionStr) : null;
+        $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
-        if ($action === self::ACTION_UNINSTALL_DELETE) {
-            $event = new CrudObjectInstantiatedEvent($module, 'delete');
-            $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
-            $moduleName = $module->getName();
-            $moduleId = $module->getId();
-
-            $this->em->remove($module);
-            $this->em->flush();
-
-            $this->log->log(0, 0, 'Deleted object.', Module::class, $moduleId);
-
-            $ms->callConfig($module->getName(), 'uninstall');
-
-            System::rmdir($ms->getDir() . '/' . $moduleName);
-
-            return $this->view(null, Response::HTTP_OK);
+        try {
+            $this->mm->doAction($module, $action);
+        } catch (\Exception $e) {
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
         }
-
-        $event = new CrudObjectInstantiatedEvent($module, 'edit');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
-        $module->setActive(!$module->isActive());
-
-        $event = new CrudObjectValidatedEvent($module);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
-
-        $this->em->persist($module);
-        $this->em->flush();
-
-        $this->log->log(0, 0, 'Updated object.', Module::class, $module->getId());
-
-        if ($action === static::ACTION_UNINSTALL) {
-            $ms->callConfig($module->getName(), 'uninstall');
-        } else if ($action === static::ACTION_DISABLE) {
-            $ms->callConfig($module->getName(), 'disable');
-        } else {
-            $ms->callConfig($module->getName(), 'install');
-        }
-
-        $ms->clear();
 
         return $this->view($module, Response::HTTP_OK);
     }
