@@ -59,16 +59,7 @@ abstract class ServiceAbstract
 
         Zip::unzip($zipPath, $this->dir);
 
-        $name = array_key_first($tree);
-
-        try {
-            $this->checkConfig($name);
-        } catch (\Exception $e) {
-            System::rmdir($this->dir . '/' . $name);
-            throw $e;
-        }
-
-        return $name;
+        return array_key_first($tree);
     }
 
     /**
@@ -107,16 +98,6 @@ abstract class ServiceAbstract
      * @throws ApiException
      */
     protected abstract function checkNode($nodeKey, $nodeValue, string $rootName): void;
-
-    /**
-     * Verify file configuration.
-     *
-     * @param string $name
-     *
-     * @return void
-     * @throws \Exception
-     */
-    protected abstract function checkConfig(string $name): void;
 
     /**
      * Clear cache...

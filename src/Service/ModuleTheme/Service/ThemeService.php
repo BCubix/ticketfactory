@@ -110,11 +110,4 @@ class ThemeService extends ServiceAbstract
     {
         $this->getConfig($name);
     }
-
-    public function clear(): void
-    {
-        parent::clear();
-
-        System::exec('yarn run encore production');
-    }
 }

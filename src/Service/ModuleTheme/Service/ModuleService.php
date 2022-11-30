@@ -45,9 +45,20 @@ class ModuleService extends ServiceAbstract
     public function callConfig(string $name, string $functionName): void
     {
         $configFilePath = $this->dir . "/$name/{$name}Config.php";
+        if (!is_file($configFilePath)) {
+            throw new FileNotFoundException("Le fichier de configuration de $name n'existe pas.");
+        }
+
         require_once $configFilePath;
 
+        if (!class_exists($name . 'Config')) {
+            throw new \Exception("Le fichier de configuration de $name ne contient pas la classe {$name}Config.");
+        }
+
         $moduleObj = new ($name . 'Config')($this->dir);
+        if (get_parent_class($moduleObj) !== ModuleConfig::class) {
+            throw new \Exception("La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
+        }
 
         if (!method_exists($moduleObj, $functionName)) {
             throw new \Exception("La classe {$name}Config ne contient pas la fonction $functionName.");
@@ -112,6 +123,5 @@ class ModuleService extends ServiceAbstract
         parent::clear();
 
         System::exec('php ../bin/console doctrine:schema:update --force');
-        System::exec('yarn run encore production');
     }
 }
