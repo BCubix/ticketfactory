@@ -14,8 +14,9 @@ export function ActiveModuleContext(modulesActive) {
         if (modulesActive.find(moduleActive => moduleActive.name === moduleName)) {
             const func = list(item).default;
 
-            if (typeof func === "function" && func.name === "active")
+            if (typeof func === "function") {
                 func();
+            }
         }
     });
 }
