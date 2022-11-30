@@ -4,8 +4,6 @@ namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Config\ThemeConfig;
-use App\Service\ModuleTheme\Config\utils\ArrayNode;
-use App\Service\ModuleTheme\Config\utils\Node;
 use App\Utils\FileManipulator;
 use App\Utils\System;
 
@@ -56,6 +54,27 @@ class ThemeService extends ServiceAbstract
         $file->setContent($newContent);
     }
 
+    /**
+     * Return the information from the theme config
+     *
+     * @param string $name
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getConfig(string $name): array
+    {
+        $config = Yaml::parseFile($this->dir . '/' . $name . '/config/config.yaml');
+        if (!$config) {
+            throw new \Exception("Le fichier de configuration du thème $name est vide.");
+        }
+
+        $processor = new Processor();
+        $themeConfig = new ThemeConfig();
+
+        return $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
+    }
+
     protected function checkNode($nodeKey, $nodeValue, $rootName): void
     {
         if ($nodeKey === 'assets') {
@@ -89,14 +108,7 @@ class ThemeService extends ServiceAbstract
 
     protected function checkConfig(string $name): void
     {
-        $config = Yaml::parseFile($this->dir . '/' . $name . '/config/config.yaml');
-        if (!$config) {
-            throw new \Exception("Le fichier de configuration du thème $name est vide.");
-        }
-
-        $processor = new Processor();
-        $themeConfig = new ThemeConfig();
-        $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
+        $this->getConfig($name);
     }
 
     public function clear(): void
