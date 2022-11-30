@@ -32,6 +32,30 @@ class ModuleService extends ServiceAbstract
         }
     }
 
+    /**
+     * Call configuration function.
+     *
+     * @param string $name
+     * @param string $functionName Function to call
+     *
+     * @return void
+     * @throws \Exception
+     * @throws FileNotFoundException
+     */
+    public function callConfig(string $name, string $functionName): void
+    {
+        $configFilePath = $this->dir . "/$name/{$name}Config.php";
+        require_once $configFilePath;
+
+        $moduleObj = new ($name . 'Config')($this->dir);
+
+        if (!method_exists($moduleObj, $functionName)) {
+            throw new \Exception("La classe {$name}Config ne contient pas la fonction $functionName.");
+        }
+
+        $moduleObj->{$functionName}();
+    }
+
     protected function checkNode($nodeKey, $nodeValue, $rootName): void
     {
         // Check index.js in assets
@@ -89,29 +113,5 @@ class ModuleService extends ServiceAbstract
 
         System::exec('php ../bin/console doctrine:schema:update --force');
         System::exec('yarn run encore production');
-    }
-
-    /**
-     * Call configuration function.
-     *
-     * @param string $name
-     * @param string $functionName Function to call
-     *
-     * @return void
-     * @throws \Exception
-     * @throws FileNotFoundException
-     */
-    public function callConfig(string $name, string $functionName): void
-    {
-        $configFilePath = $this->dir . "/$name/{$name}Config.php";
-        require_once $configFilePath;
-
-        $moduleObj = new ($name . 'Config')($this->dir);
-
-        if (!method_exists($moduleObj, $functionName)) {
-            throw new \Exception("La classe {$name}Config ne contient pas la fonction $functionName.");
-        }
-
-        $moduleObj->{$functionName}();
     }
 }
