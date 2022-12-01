@@ -6,8 +6,8 @@ use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Service\ThemeService;
-
 use App\Utils\System;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,21 +33,8 @@ class ThemeManager extends AbstractManager
         $config = $this->ts->getConfig($theme->getName());
         $modules = $config['global_settings']['modules'];
 
-        foreach ($modules['to_disable'] as $moduleName) {
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (null === $module || !$module->isActive()) {
-                continue;
-            }
-            $this->mm->doAction($module, Module::ACTION_DISABLE, false);
-        }
-
-        foreach ($modules['to_enable'] as $moduleName) {
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (null === $module || $module->isActive()) {
-                continue;
-            }
-            $this->mm->doAction($module, Module::ACTION_INSTALL, false);
-        }
+        $this->applyModulesConfig($modules['to_disable'], false, Module::ACTION_DISABLE);
+        $this->applyModulesConfig($modules['to_enable'], true, Module::ACTION_INSTALL);
 
         $this->pm->set('main_theme', $theme->getId());
         $this->em->flush();
@@ -93,14 +80,19 @@ class ThemeManager extends AbstractManager
 
         // Disable module actived
         $toDisable = $config['global_settings']['modules']['to_enable'];
-        foreach ($toDisable as $moduleName) {
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (null === $module || !$module->isActive()) {
-                continue;
-            }
-            $this->mm->doAction($module, Module::ACTION_DISABLE, false);
-        }
+        $this->applyModulesConfig($toDisable, false, Module::ACTION_DISABLE);
 
         $this->ts->entry($mainThemeName, true);
+    }
+
+    private function applyModulesConfig($modulesName, $activeCondition, $action)
+    {
+        foreach ($modulesName as $moduleName) {
+            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (null === $module || $module->isActive() === $activeCondition) {
+                continue;
+            }
+            $this->mm->doAction($module, $action, false);
+        }
     }
 }
