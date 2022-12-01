@@ -67,7 +67,7 @@ abstract class ServiceAbstract
      * @return void
      * @throws ApiException
      */
-    private function checkTree(array $tree): void
+    public function checkTree(array $tree): void
     {
         if (!$tree) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_EMPTY);

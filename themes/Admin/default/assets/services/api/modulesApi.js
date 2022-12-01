@@ -89,9 +89,9 @@ const modulesApi = {
         }
     },
 
-    activeModule: async (id) => {
+    activeModule: async (name) => {
         try {
-            const result = await axios.post(`/modules/${id}/active`);
+            const result = await axios.post(`/modules/${name}/active`);
 
             return { result: true, module: result.data };
         } catch (error) {
@@ -99,9 +99,9 @@ const modulesApi = {
         }
     },
 
-    disableModule: async (id, action) => {
+    disableModule: async (name, action) => {
         try {
-            const result = await axios.post(`/modules/${id}/active?action=${action}`);
+            const result = await axios.post(`/modules/${name}/active?action=${action}`);
 
             return { result: true, module: result.data };
         } catch (error) {

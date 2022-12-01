@@ -50,7 +50,7 @@ export const ModulesList = () => {
         setTimeout(() => window.location.reload(), 1000);
     }
 
-    const handleActive = async (id) => {
+    const handleActive = async (name) => {
         const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
@@ -58,7 +58,7 @@ export const ModulesList = () => {
             return;
         }
 
-        const result = await Api.modulesApi.activeModule(id);
+        const result = await Api.modulesApi.activeModule(name);
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             navigate(Constant.MODULES_BASE_PATH);
@@ -71,7 +71,7 @@ export const ModulesList = () => {
         setTimeout(() => window.location.reload(), 1000);
     }
 
-    const handleDisable = async (id, action) => {
+    const handleDisable = async (name, action) => {
         const check = await Api.authApi.checkIsAuth();
 
         if (!check.result) {
@@ -80,7 +80,7 @@ export const ModulesList = () => {
         }
 
         const result = await Api.modulesApi.disableModule(
-            id,
+            name,
             action === ACTION_DISABLE ? 0 : action === ACTION_UNINSTALL ? 1 : 2
         );
 
@@ -130,8 +130,8 @@ export const ModulesList = () => {
                         <Component.ListTable
                             table={TableColumn.ModulesList}
                             list={modules}
-                            onActive={(id) => handleActive(id, false)}
-                            onDisable={(id) => setDeleteDialog(id)}
+                            onActive={(name) => handleActive(name)}
+                            onDisable={(name) => setDeleteDialog(name)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeModulesFilters(newFilters))}
                         />

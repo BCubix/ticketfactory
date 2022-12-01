@@ -6,7 +6,9 @@ use App\Entity\Module\Module;
 use App\Exception\ApiException;
 use App\Manager\ModuleManager;
 use App\Service\Logger\Logger;
+use App\Service\ModuleTheme\Service\ModuleService;
 use App\Utils\FormErrorsCollector;
+use App\Utils\Tree;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -23,6 +25,7 @@ class ModuleController extends AdminController
     protected const NOT_FOUND_MESSAGE = "Ce module n'existe pas.";
 
     private $mm;
+    private $ms;
 
     public function __construct(
         EventDispatcherInterface $ed,
@@ -30,11 +33,13 @@ class ModuleController extends AdminController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        ModuleManager $mm
+        ModuleManager $mm,
+        ModuleService $ms
     ) {
         parent::__construct($ed, $em, $se, $fec, $log);
 
         $this->mm = $mm;
+        $this->ms = $ms;
     }
 
     #[Rest\Get('/modules')]
@@ -44,9 +49,21 @@ class ModuleController extends AdminController
     {
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
-        $modules = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
+        $objects = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
 
-        return $this->view($modules, Response::HTTP_OK);
+        // Add modules not in base so not installed
+        $modulesPath = glob($this->ms->getDir() . '/*', GLOB_ONLYDIR);
+        foreach ($modulesPath as $modulePath) {
+            $moduleName = basename($modulePath);
+
+            $result = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (!$result) {
+                $objects['results'][] = [ 'name' => $moduleName ];
+                $objects['total']++;
+            }
+        }
+
+        return $this->view($objects, Response::HTTP_OK);
     }
 
     #[Rest\Get('/modules/{moduleId}', requirements: ['moduleId' => '\d+'])]
@@ -61,25 +78,29 @@ class ModuleController extends AdminController
         return $this->view($module, Response::HTTP_OK);
     }
 
-    #[Rest\Post('/modules/{moduleId}/active', requirements: ['moduleId' => '\d+'])]
+    #[Rest\Post('/modules/{moduleName}/active', requirements: ['moduleName' => '.+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function active(Request $request, int $moduleId): View
+    public function active(Request $request, string $moduleName): View
     {
-        $module = $this->em->getRepository(Module::class)->findOneForAdmin($moduleId);
+        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
         if (null === $module) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+            if (!is_dir($this->ms->getDir() . '/' . $moduleName)) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+            }
+
+            $tree = Tree::build($this->ms->getDir() . '/' . $moduleName);
+            $tree = [ $moduleName => $tree ];
+            $this->ms->checkTree($tree);
+
+            $this->mm->createNewModule($moduleName);
+
+            return $this->view(null, Response::HTTP_OK);
         }
 
         $actionStr = $request->get('action');
         $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
-        try {
-            $this->mm->doAction($module, $action);
-        } catch (ApiException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
-        }
+        $this->mm->doAction($module, $action);
 
         return $this->view($module, Response::HTTP_OK);
     }

@@ -12,6 +12,7 @@ class ModuleService extends ServiceAbstract
 {
     protected const PATH = '/themes/Admin/default/config/modules';
 
+    public const ZIP_FILES_OR_DIRS_NOT_CORRESPONDED = "Le zip contient des fichiers ou dossiers qui ne correspondent pas à l'architecture d'un thème";
     public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
     public const ZIP_SRC_FILE_BUNDLE_NOT_FOUND = "Le dossier src ne contient pas le fichier bundle.";
@@ -86,6 +87,10 @@ class ModuleService extends ServiceAbstract
             return;
         }
 
+        if ($nodeKey === 'config') {
+            return;
+        }
+
         // Check files
         if (is_numeric($nodeKey)) {
             // Logo
@@ -97,6 +102,11 @@ class ModuleService extends ServiceAbstract
             if ($nodeValue !== $rootName . 'Config.php') {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
             }
+
+            return;
         }
+
+        throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
+            static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
     }
 }

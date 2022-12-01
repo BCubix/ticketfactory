@@ -156,7 +156,7 @@ export const ListTable = ({
                                             aria-label="Action"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                (item.active ? onDisable : onActive)(item.id);
+                                                (item.active ? onDisable : onActive)(item.name);
                                             }}
                                         >
                                             { item.active ? <UnpublishedIcon /> : <CheckCircleIcon /> }
