@@ -32,9 +32,9 @@ class ThemeManager extends AbstractManager
      * @param Theme $theme
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
-    public function active(Theme $theme)
+    public function active(Theme $theme): void
     {
         $this->disableMainTheme();
 
@@ -57,14 +57,14 @@ class ThemeManager extends AbstractManager
      * @param Theme $theme
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
-    public function delete(Theme $theme)
+    public function delete(Theme $theme): void
     {
         $themeName = $theme->getName();
 
         $mainThemeId = $this->pm->get('main_theme');
-        if ($mainThemeId === $theme->getId()) {
+        if (intval($mainThemeId) === $theme->getId()) {
             $this->disableMainTheme();
         }
 
@@ -79,9 +79,9 @@ class ThemeManager extends AbstractManager
      * Disable main theme
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
-    private function disableMainTheme()
+    private function disableMainTheme(): void
     {
         $mainThemeId = $this->pm->get('main_theme');
         if (null === $mainThemeId) {
@@ -110,14 +110,14 @@ class ThemeManager extends AbstractManager
     /**
      * Apply action on modules found in theme configuration
      *
-     * @param $modulesName
-     * @param $activeCondition
-     * @param $action
+     * @param array $modulesName
+     * @param bool $activeCondition
+     * @param int $action
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
-    private function applyModulesConfig($modulesName, $activeCondition, $action)
+    private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action): void
     {
         foreach ($modulesName as $moduleName) {
             $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);

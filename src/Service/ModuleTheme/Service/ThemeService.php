@@ -23,9 +23,13 @@ class ThemeService extends ServiceAbstract
     /**
      * Inject or remove entry in webpack.
      *
-     * @throws \Exception
+     * @param string $name
+     * @param bool $remove
+     *
+     * @return void
+     * @throws ApiException
      */
-    public function entry(string $name, bool $remove)
+    public function entry(string $name, bool $remove): void
     {
         $webpackFilePath = $this->projectDir . '/webpack.config.js';
 
@@ -60,13 +64,14 @@ class ThemeService extends ServiceAbstract
      * @param string $name
      *
      * @return array
-     * @throws \Exception
+     * @throws ApiException
      */
     public function getConfig(string $name): array
     {
         $config = Yaml::parseFile($this->dir . '/' . $name . '/config/config.yaml');
         if (!$config) {
-            throw new \Exception("Le fichier de configuration du thème $name est vide.");
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "Le fichier de configuration du thème $name est vide.");
         }
 
         $processor = new Processor();
@@ -75,7 +80,7 @@ class ThemeService extends ServiceAbstract
         return $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
     }
 
-    protected function checkNode($nodeKey, $nodeValue, $rootName): void
+    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
         if ($nodeKey === 'assets') {
             if (!isset($nodeValue[0]) || $nodeValue[0] !== "index.js") {

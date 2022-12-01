@@ -2,7 +2,9 @@
 
 namespace App\Utils;
 
-use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
+use App\Exception\ApiException;
+
+use Symfony\Component\HttpFoundation\Response;
 
 class System
 {
@@ -12,11 +14,12 @@ class System
      * @param string $path
      *
      * @return void
+     * @throws ApiException
      */
-    public static function rmdir(string $path)
+    public static function rmdir(string $path): void
     {
         if (!is_dir($path)) {
-            throw new DirectoryNotFoundException($path);
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $path);
         }
 
         $files = glob($path . '/*');
@@ -33,14 +36,15 @@ class System
      * @param string $command
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
-    public static function exec(string $command)
+    public static function exec(string $command): void
     {
         $output = [];
         exec($command, $output, $res);
         if (0 !== $res) {
-            throw new \Exception("La commande '$command' a échoué (code: $res) : " . implode(PHP_EOL, $output));
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "La commande '$command' a échoué (exit code: $res) : " . implode(PHP_EOL, $output));
         }
     }
 }

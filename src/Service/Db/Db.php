@@ -3,6 +3,7 @@
 namespace App\Service\Db;
 
 use App\Exception\ApiException;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class Db
@@ -14,8 +15,27 @@ class Db
     private $password;
     private $dbname;
 
+    private function __construct(string $host, string $user, string $password, string $dbname)
+    {
+        $this->host = $host;
+        $this->user = $user;
+        $this->password = $password;
+        $this->dbname = $dbname;
+    }
+
     /**
-     * @throws \Exception
+     * @return string
+     */
+    public function getDbname(): string
+    {
+        return $this->dbname;
+    }
+
+    /**
+     * Instance only one database
+     *
+     * @return Db
+     * @throws ApiException
      */
     public static function getInstance(): Db
     {
@@ -24,11 +44,13 @@ class Db
             $err = preg_match($pattern, $_ENV['DATABASE_URL'], $matches);
 
             if ($err === 0) {
-                throw new \Exception("La récupération des données de la database a échoué.");
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
+                    "La récupération des données de la database a échoué.");
             }
 
             if ($err === FALSE) {
-                throw new \Exception("Une erreur s'est produite lors de la récupération des données de la database.");
+                throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                    "Une erreur s'est produite lors de la récupération des données de la database.");
             }
 
             $host = $matches['host'];
@@ -42,19 +64,14 @@ class Db
         return static::$instance;
     }
 
-    private function __construct(string $host, string $user, string $password, string $dbname)
-    {
-        $this->host = $host;
-        $this->user = $user;
-        $this->password = $password;
-        $this->dbname = $dbname;
-    }
-
-    public function getDbname(): string
-    {
-        return $this->dbname;
-    }
-
+    /**
+     * Launch query SQL
+     *
+     * @param string $query
+     *
+     * @return array
+     * @throws ApiException
+     */
     public function query(string $query): array
     {
         $conn = new \mysqli($this->host, $this->user, $this->password, $this->dbname);

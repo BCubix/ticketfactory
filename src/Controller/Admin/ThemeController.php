@@ -70,13 +70,7 @@ class ThemeController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        try {
-            $this->tm->active($theme);
-        } catch (ApiException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
-        }
+        $this->tm->active($theme);
 
         return $this->view($theme, Response::HTTP_OK);
     }
@@ -90,13 +84,7 @@ class ThemeController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        try {
-            $this->tm->delete($theme);
-        } catch (ApiException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
-        }
+        $this->tm->delete($theme);
 
         return $this->view(null, Response::HTTP_OK);
     }

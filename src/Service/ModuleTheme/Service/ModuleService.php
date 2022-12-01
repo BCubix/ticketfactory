@@ -7,7 +7,6 @@ use App\Service\Db\Db;
 use App\Service\ModuleTheme\Config\ModuleConfig;
 use App\Utils\System;
 
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 class ModuleService extends ServiceAbstract
@@ -39,35 +38,38 @@ class ModuleService extends ServiceAbstract
      * @param string $functionName Function to call
      *
      * @return void
-     * @throws \Exception
-     * @throws FileNotFoundException
+     * @throws ApiException
      */
     public function callConfig(string $name, string $functionName): void
     {
         $configFilePath = $this->dir . "/$name/{$name}Config.php";
         if (!is_file($configFilePath)) {
-            throw new FileNotFoundException("Le fichier de configuration de $name n'existe pas.");
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
+                "Le fichier de configuration de $name n'existe pas.");
         }
 
         require_once $configFilePath;
 
         if (!class_exists($name . 'Config')) {
-            throw new \Exception("Le fichier de configuration de $name ne contient pas la classe {$name}Config.");
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "Le fichier de configuration de $name doit contenir la classe {$name}Config.");
         }
 
         $moduleObj = new ($name . 'Config')($this->dir);
         if (get_parent_class($moduleObj) !== ModuleConfig::class) {
-            throw new \Exception("La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
         }
 
         if (!method_exists($moduleObj, $functionName)) {
-            throw new \Exception("La classe {$name}Config ne contient pas la fonction $functionName.");
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
+                "La classe {$name}Config ne contient pas la fonction $functionName.");
         }
 
         $moduleObj->{$functionName}();
     }
 
-    protected function checkNode($nodeKey, $nodeValue, $rootName): void
+    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
         // Check index.js in assets
         if ($nodeKey === 'assets') {

@@ -2,11 +2,13 @@
 
 namespace App\Service\ModuleTheme\Config;
 
+use App\Exception\ApiException;
 use App\Service\Db\Db;
 use App\Utils\FileManipulator;
 
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ModuleConfig
 {
@@ -20,7 +22,7 @@ class ModuleConfig
     public function __construct(string $dir)
     {
         if (null === static::NAME) {
-            throw new \InvalidArgumentException("Veuillez renseigner le nom dans le fichier de configuration du dossier $dir.");
+            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501, "Veuillez renseigner le nom dans le fichier de configuration du dossier $dir.");
         }
 
         $this->path = $dir . '/' . static::NAME;
@@ -31,11 +33,11 @@ class ModuleConfig
      * Installation of database, ...
      *
      * @return void
-     * @throws \InvalidArgumentException
+     * @throws ApiException
      * @throws \ReflectionException
      * @throws DirectoryNotFoundException
      */
-    public function install()
+    public function install(): void
     {
         $this->register();
         $this->trait(false);
@@ -46,9 +48,9 @@ class ModuleConfig
      *
      * @return void
      * @throws \ReflectionException
-     * @throws \Exception
+     * @throws ApiException
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->disable();
 
@@ -63,7 +65,7 @@ class ModuleConfig
      * @return void
      * @throws \ReflectionException
      */
-    public function disable()
+    public function disable(): void
     {
         $this->trait(true);
         $this->unregister();
@@ -76,7 +78,7 @@ class ModuleConfig
      * @throws \InvalidArgumentException
      * @throws DirectoryNotFoundException
      */
-    public final function register()
+    public final function register(): void
     {
         // Namespace prefix of module
         $prefix = 'TicketFactory\\Module\\' . static::NAME . '\\';
@@ -96,7 +98,7 @@ class ModuleConfig
      *
      * @return void
      */
-    public final function unregister()
+    public final function unregister(): void
     {
         $this->loader->unregister();
     }
@@ -105,11 +107,12 @@ class ModuleConfig
      * Inject or remove trait in entity.
      *
      * @param bool $remove
+     *
      * @return void
+     * @throws ApiException
      * @throws \ReflectionException
-     * @throws \Exception
      */
-    private function trait(bool $remove)
+    private function trait(bool $remove): void
     {
         if (!static::TRAITS)
             return;

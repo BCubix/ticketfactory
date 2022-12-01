@@ -2,6 +2,10 @@
 
 namespace App\Utils;
 
+use App\Exception\ApiException;
+
+use Symfony\Component\HttpFoundation\Response;
+
 class Zip
 {
     public const ZIP_FAIL_OPEN           = "L'ouverture du zip a échoué.";
@@ -15,10 +19,11 @@ class Zip
      * @param string $zipPath
      * @param string $pathTo    Path to extract the zip
      * @param bool   $rmZipFile Remove the zip file if true
+     *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
-    public static function unzip(string $zipPath, string $pathTo, bool $rmZipFile = true)
+    public static function unzip(string $zipPath, string $pathTo, bool $rmZipFile = true): void
     {
         $zip = new \ZipArchive();
 
@@ -28,11 +33,11 @@ class Zip
         }
 
         if (TRUE !== $result) {
-            throw new \Exception(static::ZIP_FAIL_OPEN);
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, static::ZIP_FAIL_OPEN);
         }
 
         if (TRUE !== $zip->extractTo($pathTo)) {
-            throw new \Exception(static::ZIP_FAIL_EXTRACT);
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, static::ZIP_FAIL_EXTRACT);
         }
 
         $zip->close();
@@ -42,15 +47,16 @@ class Zip
      * Return a tree from zip
      *
      * @param string $zipPath
+     *
      * @return array
-     * @throws \Exception
+     * @throws ApiException
      */
     public static function getTreeFromZip(string $zipPath): array
     {
         $zip = new \ZipArchive();
 
         if (TRUE !== $zip->open($zipPath)) {
-            throw new \Exception(static::ZIP_FAIL_OPEN);
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, static::ZIP_FAIL_OPEN);
         }
 
         $tree = static::buildTreeFromZip($zip);
@@ -64,6 +70,7 @@ class Zip
      * Build a tree from zip
      *
      * @param \ZipArchive $zip
+     *
      * @return array
      */
     private static function buildTreeFromZip(\ZipArchive $zip): array

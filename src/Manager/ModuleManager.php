@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Module\Module;
+use App\Exception\ApiException;
 use App\Service\ModuleTheme\Service\ModuleService;
 use App\Utils\System;
 
@@ -34,7 +35,7 @@ class ModuleManager extends AbstractManager
      * @param bool $clear
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
     public function doAction(Module $module, int $action, bool $clear = true): void
     {

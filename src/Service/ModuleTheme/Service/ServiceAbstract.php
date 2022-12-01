@@ -17,13 +17,10 @@ abstract class ServiceAbstract
     protected $projectDir;
     protected $dir;
 
-    /**
-     * @throws \Exception
-     */
     public function __construct(string $projectDir)
     {
         if (null === static::PATH) {
-            throw new \Exception(static::PATH_REQUIRED);
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, static::PATH_REQUIRED);
         }
 
         $this->projectDir = $projectDir;
@@ -42,7 +39,7 @@ abstract class ServiceAbstract
      *
      * @return string name of first directory in zip
      * @throws ApiException
-     * @throws \Exception
+     * @throws ApiException
      */
     public function unzip(string $zipName): string
     {
@@ -97,13 +94,13 @@ abstract class ServiceAbstract
      * @return void
      * @throws ApiException
      */
-    protected abstract function checkNode($nodeKey, $nodeValue, string $rootName): void;
+    protected abstract function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void;
 
     /**
      * Clear cache...
      *
      * @return void
-     * @throws \Exception
+     * @throws ApiException
      */
     public function clear(): void
     {
