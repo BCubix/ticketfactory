@@ -75,6 +75,8 @@ class ModuleController extends AdminController
 
         try {
             $this->mm->doAction($module, $action);
+        } catch (ApiException $e) {
+            throw $e;
         } catch (\Exception $e) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
         }

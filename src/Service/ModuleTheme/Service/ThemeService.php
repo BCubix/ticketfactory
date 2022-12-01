@@ -106,8 +106,10 @@ class ThemeService extends ServiceAbstract
             static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
     }
 
-    protected function checkConfig(string $name): void
+    public function clear(): void
     {
-        $this->getConfig($name);
+        parent::clear();
+
+        System::exec('yarn run encore production');
     }
 }

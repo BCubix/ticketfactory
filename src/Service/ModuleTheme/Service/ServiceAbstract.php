@@ -108,6 +108,7 @@ abstract class ServiceAbstract
     public function clear(): void
     {
         System::exec('php ../bin/console cache:clear');
+        System::exec('php ../bin/console doctrine:schema:update --force');
     }
 }
 

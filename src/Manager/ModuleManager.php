@@ -31,18 +31,19 @@ class ModuleManager extends AbstractManager
      *
      * @param Module $module
      * @param int $action
+     * @param bool $clear
      *
      * @return void
      * @throws \Exception
      */
-    public function doAction(Module $module, int $action): void
+    public function doAction(Module $module, int $action, bool $clear = true): void
     {
         $moduleName = $module->getName();
 
         if ($action === Module::ACTION_UNINSTALL_DELETE) {
             $this->em->remove($module);
         } else {
-            $module->setActive(!$module->isActive());
+            $module->setActive($action === Module::ACTION_INSTALL);
             $this->em->persist($module);
         }
 
@@ -54,6 +55,8 @@ class ModuleManager extends AbstractManager
             System::rmdir($this->ms->getDir() . '/' . $moduleName);
         }
 
-        $this->ms->clear();
+        if ($clear) {
+            $this->ms->clear();
+        }
     }
 }

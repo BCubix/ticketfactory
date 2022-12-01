@@ -8,6 +8,10 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ParameterRepository extends CrudRepository
 {
+    protected const FILTERS = [
+        ['paramKey', 'o.paramKey', 'search'],
+    ];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Parameter::class);

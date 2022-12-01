@@ -40,7 +40,7 @@ class System
         $output = [];
         exec($command, $output, $res);
         if (0 !== $res) {
-            throw new \Exception("La commande '$command' a échoué : " . implode(PHP_EOL, $output));
+            throw new \Exception("La commande '$command' a échoué (code: $res) : " . implode(PHP_EOL, $output));
         }
     }
 }
