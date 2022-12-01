@@ -3,13 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Theme\Theme;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Exception\ApiException;
-use App\Manager\ParameterManager;
+use App\Manager\ThemeManager;
 use App\Service\Logger\Logger;
-use App\Service\ModuleTheme\Service\ThemeService;
 use App\Utils\FormErrorsCollector;
-use App\Utils\System;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -25,15 +22,19 @@ class ThemeController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce thème n'existe pas.";
 
-    protected $pm;
-    protected $ts;
+    protected $tm;
 
-    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec, Logger $log, ParameterManager $pm, ThemeService $ts)
-    {
+    public function __construct(
+        EventDispatcherInterface $ed,
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        ThemeManager $tm
+    ) {
         parent::__construct($ed, $em, $se, $fec, $log);
 
-        $this->pm = $pm;
-        $this->ts = $ts;
+        $this->tm = $tm;
     }
 
     #[Rest\Get('/themes')]
@@ -69,28 +70,12 @@ class ThemeController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $oldThemeId = $this->pm->get('main_theme');
-
-        $this->pm->set('main_theme', $themeId);
-        $this->em->flush();
-
         try {
-            if (null !== $oldThemeId) {
-                $oldTheme = $this->em->getRepository(Theme::class)->findOneForAdmin($oldThemeId);
-                if (null === $oldTheme) {
-                    throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
-                }
-
-                $this->ts->entry($oldTheme->getName(), true);
-            }
-
-            $this->ts->entry($theme->getName(), false);
-            $this->ts->clear();
-        } catch (\Exception $e) {
-            $this->pm->set('main_theme', $oldThemeId);
-            $this->em->flush();
-
+            $this->tm->active($theme);
+        } catch (ApiException $e) {
             throw $e;
+        } catch (\Exception $e) {
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
         }
 
         return $this->view($theme, Response::HTTP_OK);
@@ -105,32 +90,13 @@ class ThemeController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $themeName = $theme->getName();
-
-        if ($themeId === intval($this->pm->get('main_theme'))) {
-            $this->pm->set('main_theme', null);
-            $this->em->flush();
-
-            try {
-                $this->ts->entry($themeName, true);
-                $this->ts->clear();
-            } catch (\Exception $e) {
-                $this->pm->set('main_theme', $themeId);
-                $this->em->flush();
-
-                throw $e;
-            }
+        try {
+            $this->tm->delete($theme);
+        } catch (ApiException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $e->getMessage());
         }
-
-        $event = new CrudObjectInstantiatedEvent($theme, 'delete');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
-        $this->em->remove($theme);
-        $this->em->flush();
-
-        $this->log->log(0, 0, 'Deleted object.', Theme::class, $themeId);
-
-        System::rmdir($this->ts->getDir() . '/' . $themeName);
 
         return $this->view(null, Response::HTTP_OK);
     }

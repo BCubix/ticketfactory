@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Manager;
+
+use App\Entity\Module\Module;
+use App\Entity\Theme\Theme;
+use App\Exception\ApiException;
+use App\Service\ModuleTheme\Service\ThemeService;
+
+use App\Utils\System;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+class ThemeManager extends AbstractManager
+{
+    private $ts;
+    private $pm;
+    private $mm;
+
+    public function __construct(EntityManagerInterface $em, ThemeService $ts, ParameterManager $pm, ModuleManager $mm)
+    {
+        parent::__construct($em);
+
+        $this->ts = $ts;
+        $this->pm = $pm;
+        $this->mm = $mm;
+    }
+
+    public function active(Theme $theme)
+    {
+        $this->disableMainTheme();
+
+        $config = $this->ts->getConfig($theme->getName());
+        $modules = $config['global_settings']['modules'];
+
+        foreach ($modules['to_disable'] as $moduleName) {
+            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (null === $module || !$module->isActive()) {
+                continue;
+            }
+            $this->mm->doAction($module, Module::ACTION_DISABLE, false);
+        }
+
+        foreach ($modules['to_enable'] as $moduleName) {
+            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (null === $module || $module->isActive()) {
+                continue;
+            }
+            $this->mm->doAction($module, Module::ACTION_INSTALL, false);
+        }
+
+        $this->pm->set('main_theme', $theme->getId());
+        $this->em->flush();
+
+        $this->ts->entry($theme->getName(), false);
+        $this->ts->clear();
+    }
+
+    public function delete(Theme $theme)
+    {
+        $themeName = $theme->getName();
+
+        $mainThemeId = $this->pm->get('main_theme');
+        if ($mainThemeId === $theme->getId()) {
+            $this->disableMainTheme();
+        }
+
+        $this->em->remove($theme);
+        $this->em->flush();
+
+        System::rmdir($this->ts->getDir() . '/' . $themeName);
+        $this->ts->clear();
+    }
+
+    private function disableMainTheme()
+    {
+        $mainThemeId = $this->pm->get('main_theme');
+        if (null === $mainThemeId) {
+            return;
+        }
+
+        $mainTheme = $this->em->getRepository(Theme::class)->findOneForAdmin(intval($mainThemeId));
+        if (null === $mainTheme) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le thème (id: $mainThemeId) n'existe pas.");
+        }
+
+        $mainThemeName = $mainTheme->getName();
+
+        $this->pm->set('main_theme', null);
+        $this->em->flush();
+
+        $config = $this->ts->getConfig($mainThemeName);
+
+        // Disable module actived
+        $toDisable = $config['global_settings']['modules']['to_enable'];
+        foreach ($toDisable as $moduleName) {
+            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (null === $module || !$module->isActive()) {
+                continue;
+            }
+            $this->mm->doAction($module, Module::ACTION_DISABLE, false);
+        }
+
+        $this->ts->entry($mainThemeName, true);
+    }
+}
