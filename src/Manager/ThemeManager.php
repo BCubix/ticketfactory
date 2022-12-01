@@ -26,6 +26,14 @@ class ThemeManager extends AbstractManager
         $this->mm = $mm;
     }
 
+    /**
+     * Active theme
+     *
+     * @param Theme $theme
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function active(Theme $theme)
     {
         $this->disableMainTheme();
@@ -43,6 +51,14 @@ class ThemeManager extends AbstractManager
         $this->ts->clear();
     }
 
+    /**
+     * Delete theme
+     *
+     * @param Theme $theme
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function delete(Theme $theme)
     {
         $themeName = $theme->getName();
@@ -59,6 +75,12 @@ class ThemeManager extends AbstractManager
         $this->ts->clear();
     }
 
+    /**
+     * Disable main theme
+     *
+     * @return void
+     * @throws \Exception
+     */
     private function disableMainTheme()
     {
         $mainThemeId = $this->pm->get('main_theme');
@@ -85,6 +107,16 @@ class ThemeManager extends AbstractManager
         $this->ts->entry($mainThemeName, true);
     }
 
+    /**
+     * Apply action on modules found in theme configuration
+     *
+     * @param $modulesName
+     * @param $activeCondition
+     * @param $action
+     *
+     * @return void
+     * @throws \Exception
+     */
     private function applyModulesConfig($modulesName, $activeCondition, $action)
     {
         foreach ($modulesName as $moduleName) {
