@@ -81,6 +81,7 @@ export const ThemesList = () => {
 
             dispatch(getThemesAction());
             setDeleteDialog(null);
+            setTimeout(() => window.location.reload(), 1000);
         });
     }
 
