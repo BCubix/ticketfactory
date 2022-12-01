@@ -5,7 +5,6 @@ namespace App\Service\ModuleTheme\Service;
 use App\Exception\ApiException;
 use App\Service\Db\Db;
 use App\Service\ModuleTheme\Config\ModuleConfig;
-use App\Utils\System;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -99,12 +98,5 @@ class ModuleService extends ServiceAbstract
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
             }
         }
-    }
-
-    public function clear(): void
-    {
-        parent::clear();
-
-        System::exec('php ../bin/console doctrine:schema:update --force');
     }
 }

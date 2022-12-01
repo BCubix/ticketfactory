@@ -5,9 +5,10 @@ namespace App\Manager;
 use App\Entity\Module\Module;
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Service\ModuleService;
-use App\Utils\System;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleManager extends AbstractManager
 {
@@ -18,12 +19,14 @@ class ModuleManager extends AbstractManager
         Module::ACTION_UNINSTALL_DELETE => 'uninstall',
     ];
 
+    private $fs;
     private $ms;
 
-    public function __construct(EntityManagerInterface $em, ModuleService $ms)
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, ModuleService $ms)
     {
         parent::__construct($em);
 
+        $this->fs = $fs;
         $this->ms = $ms;
     }
 
@@ -36,6 +39,7 @@ class ModuleManager extends AbstractManager
      *
      * @return void
      * @throws ApiException
+     * @throws IOException
      */
     public function doAction(Module $module, int $action, bool $clear = true): void
     {
@@ -53,7 +57,7 @@ class ModuleManager extends AbstractManager
         $this->ms->callConfig($module->getName(), self::ACTIONS[$action]);
 
         if ($action === Module::ACTION_UNINSTALL_DELETE) {
-            System::rmdir($this->ms->getDir() . '/' . $moduleName);
+            $this->fs->remove($this->ms->getDir() . '/' . $moduleName);
         }
 
         if ($clear) {

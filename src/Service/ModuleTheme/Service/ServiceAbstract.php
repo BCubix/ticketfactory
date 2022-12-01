@@ -3,7 +3,7 @@
 namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
-use App\Utils\System;
+use App\Utils\Exec;
 use App\Utils\Zip;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -104,8 +104,8 @@ abstract class ServiceAbstract
      */
     public function clear(): void
     {
-        System::exec('php ../bin/console cache:clear');
-        System::exec('php ../bin/console doctrine:schema:update --force');
+        Exec::exec('php ../bin/console cache:clear');
+        Exec::exec('php ../bin/console doctrine:schema:update --force');
     }
 }
 

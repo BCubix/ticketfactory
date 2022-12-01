@@ -6,21 +6,24 @@ use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Service\ThemeService;
-use App\Utils\System;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 class ThemeManager extends AbstractManager
 {
+    private $fs;
     private $ts;
     private $pm;
     private $mm;
 
-    public function __construct(EntityManagerInterface $em, ThemeService $ts, ParameterManager $pm, ModuleManager $mm)
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, ThemeService $ts, ParameterManager $pm, ModuleManager $mm)
     {
         parent::__construct($em);
 
+        $this->fs = $fs;
         $this->ts = $ts;
         $this->pm = $pm;
         $this->mm = $mm;
@@ -33,6 +36,7 @@ class ThemeManager extends AbstractManager
      *
      * @return void
      * @throws ApiException
+     * @throws IOException
      */
     public function active(Theme $theme): void
     {
@@ -58,6 +62,7 @@ class ThemeManager extends AbstractManager
      *
      * @return void
      * @throws ApiException
+     * @throws IOException
      */
     public function delete(Theme $theme): void
     {
@@ -71,7 +76,7 @@ class ThemeManager extends AbstractManager
         $this->em->remove($theme);
         $this->em->flush();
 
-        System::rmdir($this->ts->getDir() . '/' . $themeName);
+        $this->fs->remove($this->ts->getDir() . '/' . $themeName);
         $this->ts->clear();
     }
 
@@ -80,6 +85,7 @@ class ThemeManager extends AbstractManager
      *
      * @return void
      * @throws ApiException
+     * @throws IOException
      */
     private function disableMainTheme(): void
     {
@@ -116,6 +122,7 @@ class ThemeManager extends AbstractManager
      *
      * @return void
      * @throws ApiException
+     * @throws IOException
      */
     private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action): void
     {

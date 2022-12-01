@@ -4,8 +4,8 @@ namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Config\ThemeConfig;
+use App\Utils\Exec;
 use App\Utils\FileManipulator;
-use App\Utils\System;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
@@ -115,6 +115,6 @@ class ThemeService extends ServiceAbstract
     {
         parent::clear();
 
-        System::exec('yarn run encore production');
+        Exec::exec('yarn run encore production');
     }
 }
