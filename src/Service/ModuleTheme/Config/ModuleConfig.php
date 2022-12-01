@@ -22,7 +22,8 @@ class ModuleConfig
     public function __construct(string $dir)
     {
         if (null === static::NAME) {
-            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501, "Veuillez renseigner le nom dans le fichier de configuration du dossier $dir.");
+            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
+                "Veuillez renseigner le nom dans le fichier de configuration du dossier $dir.");
         }
 
         $this->path = $dir . '/' . static::NAME;
@@ -75,8 +76,8 @@ class ModuleConfig
      * Register namespace for module autoload.
      *
      * @return void
+     * @throws ApiException
      * @throws \InvalidArgumentException
-     * @throws DirectoryNotFoundException
      */
     public final function register(): void
     {
@@ -86,7 +87,8 @@ class ModuleConfig
         // Path of src directory of module
         $path = $this->path . '/src';
         if (!is_dir($path)) {
-            throw new DirectoryNotFoundException("Le dossier src du module " . static::NAME . " n'existe pas.");
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "Le dossier src du module " . static::NAME . " n'existe pas.");
         }
 
         $this->loader->setPsr4($prefix, $path);

@@ -19,7 +19,7 @@ class System
     public static function rmdir(string $path): void
     {
         if (!is_dir($path)) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, $path);
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, "Le path $path n'est pas un dossier.");
         }
 
         $files = glob($path . '/*');
