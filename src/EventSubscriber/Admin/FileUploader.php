@@ -4,9 +4,9 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
+use App\Manager\ModuleManager;
 use App\Service\ModuleTheme\Service\ModuleService;
 use App\Service\ModuleTheme\Service\ThemeService;
 
@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\UploadEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,15 +32,19 @@ class FileUploader implements EventSubscriberInterface
 
     private $em;
     private $rootPath;
-    private $moduleService;
-    private $themeService;
+    private $ms;
+    private $ts;
+    private $fs;
+    private $mm;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $moduleService, ThemeService $themeService)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $ms, ThemeService $ts, Filesystem $fs, ModuleManager $mm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
-        $this->moduleService = $moduleService;
-        $this->themeService = $themeService;
+        $this->ms = $ms;
+        $this->ts = $ts;
+        $this->fs = $fs;
+        $this->mm = $mm;
     }
 
     public static function getSubscribedEvents(): array
@@ -116,27 +121,8 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->moduleService->unzip($response["filename"]);
-
-        // Check if a logo is present in module and get extension of logo
-        $modulePath = $this->moduleService->getDir() . '/' . $name;
-        $extension = null;
-        if (is_file($modulePath . '/' . 'logo.jpg')) {
-            $extension = 'jpg';
-        } else if (is_file($modulePath . '/' . 'logo.png')) {
-            $extension = 'png';
-        }
-
-        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($name) ?? new Module();
-        $module->setActive(true);
-        $module->setName($name);
-        $module->setLogoExtension($extension);
-
-        $this->em->persist($module);
-        $this->em->flush();
-
-        $this->moduleService->callConfig($name, 'install');
-        $this->moduleService->clear();
+        $name = $this->ms->unzip($response["filename"]);
+        $this->mm->createNewModule($name);
 
         return $response;
     }
@@ -147,7 +133,7 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->themeService->unzip($response["filename"]);
+        $name = $this->ts->unzip($response["filename"]);
 
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($name) ?? new Theme();
         $theme->setActive(true);
@@ -155,6 +141,22 @@ class FileUploader implements EventSubscriberInterface
 
         $this->em->persist($theme);
         $this->em->flush();
+
+        $modulesPath = glob($this->ts->getDir() . "/$name/config/modules/*");
+        foreach ($modulesPath as $modulePath) {
+            $moduleName = basename($modulePath);
+            // Module already exists
+            if (is_dir($this->ms->getDir() . '/' . $moduleName)) {
+                continue;
+            }
+
+            $this->fs->mirror($modulePath, $this->ms->getDir() . '/' . $moduleName);
+            $this->mm->createNewModule($moduleName, false);
+        }
+
+        if ($modulesPath) {
+            $this->ms->clear();
+        }
 
         return $response;
     }

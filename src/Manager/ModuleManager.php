@@ -64,4 +64,30 @@ class ModuleManager extends AbstractManager
             $this->ms->clear();
         }
     }
+
+    public function createNewModule(string $name, bool $clear = true): void
+    {
+        $modulePath = $this->ms->getDir() . '/' . $name;
+
+        $extension = null;
+        if (is_file($modulePath . '/' . 'logo.jpg')) {
+            $extension = 'jpg';
+        } else if (is_file($modulePath . '/' . 'logo.png')) {
+            $extension = 'png';
+        }
+
+        $module = new Module();
+        $module->setActive(true);
+        $module->setName($name);
+        $module->setLogoExtension($extension);
+
+        $this->em->persist($module);
+        $this->em->flush();
+
+        $this->ms->callConfig($name, 'install');
+
+        if ($clear) {
+            $this->ms->clear();
+        }
+    }
 }

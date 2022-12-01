@@ -71,13 +71,13 @@ class ThemeManager extends AbstractManager
         $mainThemeId = $this->pm->get('main_theme');
         if (intval($mainThemeId) === $theme->getId()) {
             $this->disableMainTheme();
+            $this->ts->clear();
         }
 
         $this->em->remove($theme);
         $this->em->flush();
 
         $this->fs->remove($this->ts->getDir() . '/' . $themeName);
-        $this->ts->clear();
     }
 
     /**
