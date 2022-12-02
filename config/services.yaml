@@ -51,7 +51,11 @@ services:
         arguments:
             $projectDir: '%kernel.project_dir%'
 
-    # Managers
+    App\Manager\ModuleManager:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    # Services
     App\Service\ModuleTheme\Service\ModuleService:
         arguments:
             $projectDir: '%kernel.project_dir%'

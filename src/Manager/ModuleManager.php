@@ -21,13 +21,15 @@ class ModuleManager extends AbstractManager
 
     private $fs;
     private $ms;
+    private $projectDir;
 
-    public function __construct(EntityManagerInterface $em, Filesystem $fs, ModuleService $ms)
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, ModuleService $ms, string $projectDir)
     {
         parent::__construct($em);
 
         $this->fs = $fs;
         $this->ms = $ms;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -41,17 +43,21 @@ class ModuleManager extends AbstractManager
     {
         $modulePath = $this->ms->getDir() . '/' . $name;
 
-        $extension = null;
-        if (is_file($modulePath . '/' . 'logo.jpg')) {
-            $extension = 'jpg';
-        } else if (is_file($modulePath . '/' . 'logo.png')) {
-            $extension = 'png';
-        }
-
         $module = new Module();
         $module->setActive(true);
         $module->setName($name);
-        $module->setLogoExtension($extension);
+
+        $ext = null;
+        if (is_file($modulePath . '/logo.png')) {
+            $ext = 'png';
+        } else if (is_file($modulePath . '/logo.jpg')) {
+            $ext = 'jpg';
+        }
+
+        if (null !== $ext) {
+            $this->fs->copy("$modulePath/logo.$ext", "$this->projectDir/public/modules/logos/$name.$ext");
+            $module->setLogoUrl("/modules/logos/$name.$ext");
+        }
 
         $this->em->persist($module);
         $this->em->flush();

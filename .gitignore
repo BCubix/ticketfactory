@@ -14,6 +14,7 @@
 /node_modules/
 /public/build/
 /public/uploads/
+/public/modules/
 npm-debug.log
 yarn-error.log
 yarn.lock
