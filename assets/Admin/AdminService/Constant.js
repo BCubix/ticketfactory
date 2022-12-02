@@ -8,6 +8,7 @@ const ConstantObj = {
     PARAMETERS_UPLOAD_URL: '/admin/api/_uploader/parameter/upload',
     MODULE_UPLOAD_URL: '/admin/api/_uploader/module/upload',
     ICONS_FILE_PATH: '/images/icons',
+    LOGOS_FILE_PATH: '/images/logos',
 
     REDIRECTION_TIME: 5000,
 

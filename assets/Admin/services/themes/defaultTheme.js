@@ -10,7 +10,8 @@ const breakpoints = createBreakpoints({
     },
 });
 
-const defaultFamily = 'Helvetica';
+const defaultFamily = 'Kumbh Sans';
+const titleDefaultFamily = 'Anton';
 
 const defaultTheme = {
     breakpoints: {
@@ -27,6 +28,8 @@ const defaultTheme = {
     direction: 'ltr',
 
     palette: {
+        titleDefaultFamily: titleDefaultFamily,
+
         type: 'light',
         common: {
             black: '#000',
@@ -34,21 +37,25 @@ const defaultTheme = {
             dark: '#020202',
         },
         primary: {
-            main: '#980B27',
-            dark: '#980B27',
-            light: '#980B27',
+            main: '#2E71B3',
+            dark: '#2E71B3',
+            light: '#2E71B3',
             contrastText: '#fff',
             publicMain: '#F9F1E4',
             family: defaultFamily,
         },
         secondary: {
-            main: '#02374D',
+            main: '#2E71B3',
             dark: '#16458F',
             light: '#1D5ABB',
             contrastText: '#fff',
         },
         tertiary: {
-            main: '#27E3B1',
+            main: '#FFC828',
+        },
+
+        fourth: {
+            main: '#FFF3E5',
         },
 
         status: {
@@ -102,7 +109,7 @@ const defaultTheme = {
             },
         },
 
-        cardBackground: '#F5F5F5',
+        cardBackground: '#EBF1FF',
 
         success: {
             main: '#8DCD03',
@@ -130,13 +137,17 @@ const defaultTheme = {
         },
 
         labelColor: 'rgba(0, 0, 0, 0.6)',
+
+        picto: {
+            pictoColor: '#2E71B3',
+        },
     },
 
     components: {
         MuiTypography: {
             styleOverrides: {
                 h1: {
-                    fontFamily: defaultFamily,
+                    fontFamily: titleDefaultFamily,
                     fontSize: 20,
                     fontWeight: '500',
                     [breakpoints.up('md')]: {
@@ -146,7 +157,7 @@ const defaultTheme = {
                 h2: {
                     fontFamily: defaultFamily,
                     fontSize: 18,
-                    fontWeight: 'bold',
+                    fontWeight: '500',
                     [breakpoints.up('md')]: {
                         fontSize: 20,
                     },
@@ -154,7 +165,7 @@ const defaultTheme = {
                 h3: {
                     fontFamily: defaultFamily,
                     fontSize: 16,
-                    fontWeight: 'bold',
+                    fontWeight: '500',
                     [breakpoints.up('md')]: {
                         fontSize: 18,
                     },
@@ -162,7 +173,7 @@ const defaultTheme = {
                 h4: {
                     fontFamily: defaultFamily,
                     fontSize: 16,
-                    fontWeight: 'bold',
+                    fontWeight: '500',
                 },
                 h5: {
                     fontFamily: defaultFamily,
