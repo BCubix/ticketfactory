@@ -30,6 +30,23 @@ class ThemeManager extends AbstractManager
     }
 
     /**
+     * Create new theme
+     *
+     * @param string $themeName
+     * @return Theme
+     */
+    public function createNewTheme(string $themeName): Theme
+    {
+        $theme = new Theme();
+        $theme->setName($themeName);
+
+        $this->em->persist($theme);
+        $this->em->flush();
+
+        return $theme;
+    }
+
+    /**
      * Active theme
      *
      * @param Theme $theme

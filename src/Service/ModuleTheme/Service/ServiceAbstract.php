@@ -4,8 +4,10 @@ namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
 use App\Utils\Exec;
+use App\Utils\Tree;
 use App\Utils\Zip;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class ServiceAbstract
@@ -33,7 +35,7 @@ abstract class ServiceAbstract
     }
 
     /**
-     * Unzip the zip which contains extension.
+     * Unzip the zip which contains a module or theme.
      *
      * @param string $zipName zip's name
      *
@@ -45,18 +47,55 @@ abstract class ServiceAbstract
     {
         $zipPath = $this->dir . '/' . $zipName;
 
-        $tree = Zip::getTreeFromZip($zipPath);
+        $fs = new Filesystem();
 
+        // Create tmp directory to unzip the zip
+        $tmpDirPath = $this->dir . '/tmp' . basename($zipName, '.zip');
+        $fs->mkdir($tmpDirPath);
+        Zip::unzip($zipPath, $tmpDirPath, false);
+
+        $tree = Tree::build($tmpDirPath);
         try {
+            // Check the architecture (tree) on tmp directory / zip
             $this->checkTree($tree);
-        } catch (\Exception $e) {
-            unlink($zipPath);
-            throw $e;
+        } finally {
+            // Rm tmp directory
+            $fs->remove($tmpDirPath);
         }
 
+        $name = array_key_first($tree);
+        if (is_dir($this->dir . '/' . $name)) {
+            unlink($zipPath);
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
+                "Le dossier " . $this->dir . '/' . $name . " existe déjà.");
+        }
+
+        // Finally unzip the real zip in dir
         Zip::unzip($zipPath, $this->dir);
 
         return array_key_first($tree);
+    }
+
+    /**
+     * Install : check the architecture, ...
+     *
+     * @param string $name
+     * @param array $tree
+     *
+     * @return void
+     * @throws ApiException
+     */
+    public function install(string $name, array $tree = []): array
+    {
+        $path = $this->dir . '/' . $name;
+        if (!is_dir($path)) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $path n'existe pas.");
+        }
+
+        $tree = [ $name => Tree::build($path) ];
+        $this->checkTree($tree);
+
+        return $tree;
     }
 
     /**
@@ -67,7 +106,7 @@ abstract class ServiceAbstract
      * @return void
      * @throws ApiException
      */
-    public function checkTree(array $tree): void
+    protected function checkTree(array $tree): void
     {
         if (!$tree) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_EMPTY);

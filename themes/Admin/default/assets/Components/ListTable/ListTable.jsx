@@ -170,7 +170,7 @@ export const ListTable = ({
                                             aria-label="Selection"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                onSelect(item.id);
+                                                onSelect(item.name);
                                             }}
                                         >
                                             <CheckCircleIcon />

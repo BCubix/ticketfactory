@@ -4,9 +4,9 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Manager\ModuleManager;
+use App\Manager\ThemeManager;
 use App\Service\ModuleTheme\Service\ModuleService;
 use App\Service\ModuleTheme\Service\ThemeService;
 
@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\UploadEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,17 +33,17 @@ class FileUploader implements EventSubscriberInterface
     private $rootPath;
     private $ms;
     private $ts;
-    private $fs;
     private $mm;
+    private $tm;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $ms, ThemeService $ts, Filesystem $fs, ModuleManager $mm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $ms, ThemeService $ts, ModuleManager $mm, ThemeManager $tm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
         $this->ms = $ms;
         $this->ts = $ts;
-        $this->fs = $fs;
         $this->mm = $mm;
+        $this->tm = $tm;
     }
 
     public static function getSubscribedEvents(): array
@@ -134,29 +133,7 @@ class FileUploader implements EventSubscriberInterface
         $response["filename"] = $event->getFile()->getFilename();
 
         $name = $this->ts->unzip($response["filename"]);
-
-        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($name) ?? new Theme();
-        $theme->setActive(true);
-        $theme->setName($name);
-
-        $this->em->persist($theme);
-        $this->em->flush();
-
-        $modulesPath = glob($this->ts->getDir() . "/$name/config/modules/*");
-        foreach ($modulesPath as $modulePath) {
-            $moduleName = basename($modulePath);
-            // Module already exists
-            if (is_dir($this->ms->getDir() . '/' . $moduleName)) {
-                continue;
-            }
-
-            $this->fs->mirror($modulePath, $this->ms->getDir() . '/' . $moduleName);
-            $this->mm->createNewModule($moduleName, false);
-        }
-
-        if ($modulesPath) {
-            $this->ms->clear();
-        }
+        $this->tm->createNewTheme($name);
 
         return $response;
     }

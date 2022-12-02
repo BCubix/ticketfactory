@@ -8,7 +8,6 @@ use App\Manager\ModuleManager;
 use App\Service\Logger\Logger;
 use App\Service\ModuleTheme\Service\ModuleService;
 use App\Utils\FormErrorsCollector;
-use App\Utils\Tree;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -84,17 +83,8 @@ class ModuleController extends AdminController
     {
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
         if (null === $module) {
-            if (!is_dir($this->ms->getDir() . '/' . $moduleName)) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
-            }
-
-            $tree = Tree::build($this->ms->getDir() . '/' . $moduleName);
-            $tree = [ $moduleName => $tree ];
-            $this->ms->checkTree($tree);
-
-            $this->mm->createNewModule($moduleName);
-
-            return $this->view(null, Response::HTTP_OK);
+            $this->ms->install($moduleName);
+            $module = $this->mm->createNewModule($moduleName);
         }
 
         $actionStr = $request->get('action');

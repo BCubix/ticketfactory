@@ -65,9 +65,9 @@ const themesApi = {
         }
     },
 
-    chooseTheme: async (id) => {
+    activeTheme: async (name) => {
         try {
-            await axios.post(`/themes/${id}/choose`);
+            await axios.post(`/themes/${name}/active`);
 
             return { result: true };
         } catch (error) {

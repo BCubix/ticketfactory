@@ -8,6 +8,7 @@ use App\Utils\Exec;
 use App\Utils\FileManipulator;
 
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 
@@ -116,5 +117,25 @@ class ThemeService extends ServiceAbstract
         parent::clear();
 
         Exec::exec('yarn run encore production');
+    }
+
+    public function install(string $name, array $tree = []): array
+    {
+        $tree = parent::install($name, $tree);
+
+        if (isset($tree['config']['modules'])) {
+            $ms = new ModuleService($this->projectDir);
+            $fs = new Filesystem();
+
+            foreach ($tree['config']['modules'] as $moduleName => $value) {
+                $targetDir = $ms->getDir() . '/' . $moduleName;
+                if (!is_dir($targetDir)) {
+                    $originDir = $this->dir . '/' . $name . '/config/modules/' . $moduleName;
+                    $fs->mirror($originDir, $targetDir);
+                }
+            }
+        }
+
+        return $tree;
     }
 }

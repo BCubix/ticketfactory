@@ -6,6 +6,7 @@ use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Manager\ThemeManager;
 use App\Service\Logger\Logger;
+use App\Service\ModuleTheme\Service\ThemeService;
 use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +15,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,6 +25,8 @@ class ThemeController extends AdminController
     protected const NOT_FOUND_MESSAGE = "Ce thème n'existe pas.";
 
     protected $tm;
+    protected $ts;
+    protected $fs;
 
     public function __construct(
         EventDispatcherInterface $ed,
@@ -30,11 +34,15 @@ class ThemeController extends AdminController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        ThemeManager $tm
+        ThemeManager $tm,
+        ThemeService $ts,
+        Filesystem $fs
     ) {
         parent::__construct($ed, $em, $se, $fec, $log);
 
         $this->tm = $tm;
+        $this->ts = $ts;
+        $this->fs = $fs;
     }
 
     #[Rest\Get('/themes')]
@@ -61,13 +69,14 @@ class ThemeController extends AdminController
         return $this->view($theme, Response::HTTP_OK);
     }
 
-    #[Rest\Post('/themes/{themeId}/choose', requirements: ['themeId' => '\d+'])]
+    #[Rest\Post('/themes/{themeName}/active', requirements: ['themeName' => '.+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function choose(Request $request, int $themeId): View
+    public function active(Request $request, string $themeName): View
     {
-        $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
+        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+            $this->ts->install($themeName);
+            $theme = $this->tm->createNewTheme($themeName);
         }
 
         $this->tm->active($theme);

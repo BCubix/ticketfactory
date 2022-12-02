@@ -53,9 +53,9 @@ export const ThemesList = () => {
         setTimeout(() => window.location.reload(), 1000);
     }
 
-    const handleSelect = async (id) => {
+    const handleSelect = async (name) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.themesApi.chooseTheme(id);
+            const result = await Api.themesApi.activeTheme(name);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.THEMES_BASE_PATH);
