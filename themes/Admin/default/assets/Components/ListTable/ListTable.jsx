@@ -177,7 +177,7 @@ export const ListTable = ({
                                             <CheckCircleIcon />
                                         </Component.ActionFabButton>)
                                     }
-                                    {(onRemove !== null) && (
+                                    {(onRemove !== null && (item.active === undefined || onDisable === null)) && (
                                         <Component.DeleteFabButton
                                             sx={{ marginInline: 1 }}
                                             color="error"

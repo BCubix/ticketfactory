@@ -35,6 +35,7 @@ export const ModulesList = () => {
     const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
+    const [removeDialog, setRemoveDialog] = useState(null);
     const [actionDelete, setActionDelete] = useState(ACTION_DISABLE);
 
     useEffect(() => {
@@ -132,6 +133,7 @@ export const ModulesList = () => {
                             list={modules}
                             onActive={(name) => handleActive(name)}
                             onDisable={(name) => setDeleteDialog(name)}
+                            onRemove={(name) => setRemoveDialog(name)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeModulesFilters(newFilters))}
                         />
@@ -227,6 +229,17 @@ export const ModulesList = () => {
                     </Box>
                 </DialogActions>
             </Dialog>
+            <Component.DeleteDialog
+                open={!!removeDialog}
+                onCancel={() => setRemoveDialog(null)}
+                onDelete={() => handleDisable(removeDialog, ACTION_UNINSTALL_DELETE)}
+            >
+                <Box textAlign="center" py={3}>
+                    <Typography>Êtes-vous sûr de vouloir supprimer ce module ?</Typography>
+
+                    <Typography>Cette action est irréversible.</Typography>
+                </Box>
+            </Component.DeleteDialog>
         </>
     );
 }
