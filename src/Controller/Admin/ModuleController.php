@@ -15,6 +15,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,8 +24,9 @@ class ModuleController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce module n'existe pas.";
 
-    private $mm;
-    private $ms;
+    protected $mm;
+    protected $ms;
+    protected $fs;
 
     public function __construct(
         EventDispatcherInterface $ed,
@@ -33,12 +35,14 @@ class ModuleController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         ModuleManager $mm,
-        ModuleService $ms
+        ModuleService $ms,
+        Filesystem $fs
     ) {
         parent::__construct($ed, $em, $se, $fec, $log);
 
         $this->mm = $mm;
         $this->ms = $ms;
+        $this->fs = $fs;
     }
 
     #[Rest\Get('/modules')]
@@ -83,16 +87,25 @@ class ModuleController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function active(Request $request, string $moduleName): View
     {
-        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-        if (null === $module) {
-            $this->ms->install($moduleName);
-            $module = $this->mm->createNewModule($moduleName);
-        }
-
         $actionStr = $request->get('action');
         $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
-        $this->mm->doAction($module, $action);
+        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+        if (null === $module) {
+            $modulePath = $this->ms->getDir() . '/' . $moduleName;
+            if (!is_dir($modulePath)) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $modulePath n'existe pas.");
+            }
+
+            if ($action === Module::ACTION_UNINSTALL_DELETE) {
+                $this->fs->remove($modulePath);
+            } else {
+                $this->ms->install($moduleName);
+                $module = $this->mm->createNewModule($moduleName);
+            }
+        } else {
+            $this->mm->doAction($module, $action);
+        }
 
         return $this->view($module, Response::HTTP_OK);
     }
