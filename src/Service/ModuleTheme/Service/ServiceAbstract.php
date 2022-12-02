@@ -54,26 +54,43 @@ abstract class ServiceAbstract
         $fs->mkdir($tmpDirPath);
         Zip::unzip($zipPath, $tmpDirPath, false);
 
-        $tree = Tree::build($tmpDirPath);
-        try {
-            // Check the architecture (tree) on tmp directory / zip
-            $this->checkTree($tree);
-        } finally {
-            // Rm tmp directory
-            $fs->remove($tmpDirPath);
+        $name = null;
+
+        // Check only one directory
+        $dir = new \DirectoryIterator($tmpDirPath);
+        $dirCount = 0;
+        foreach ($dir as $node) {
+            if ($node->isDot()) {
+                continue;
+            }
+            if ($node->isFile()) {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_FIRST_DIR_REQUIRED);
+            }
+            if ($node->isDir()) {
+                $name = $node->getBasename();
+                $dirCount++;
+            }
         }
 
-        $name = array_key_first($tree);
-        if (is_dir($this->dir . '/' . $name)) {
-            unlink($zipPath);
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
-                "Le dossier " . $this->dir . '/' . $name . " existe déjà.");
+        // Only one directory required in zip
+        if ($dirCount !== 1) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_FIRST_DIR_REQUIRED);
         }
+
+        // Rm tmp directory
+        $fs->remove($tmpDirPath);
 
         // Finally unzip the real zip in dir
         Zip::unzip($zipPath, $this->dir);
 
-        return array_key_first($tree);
+        try {
+            $this->install($name);
+        } catch (\Exception $e) {
+            $fs->remove($this->dir . '/' . $name);
+            throw $e;
+        }
+
+        return $name;
     }
 
     /**
