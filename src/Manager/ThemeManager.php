@@ -83,8 +83,6 @@ class ThemeManager extends AbstractManager
      */
     public function delete(Theme $theme): void
     {
-        $themeName = $theme->getName();
-
         $mainThemeId = $this->pm->get('main_theme');
         if (intval($mainThemeId) === $theme->getId()) {
             $this->disableMainTheme();
@@ -93,8 +91,6 @@ class ThemeManager extends AbstractManager
 
         $this->em->remove($theme);
         $this->em->flush();
-
-        $this->fs->remove($this->ts->getDir() . '/' . $themeName);
     }
 
     /**

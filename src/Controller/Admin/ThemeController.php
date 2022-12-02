@@ -84,16 +84,20 @@ class ThemeController extends AdminController
         return $this->view($theme, Response::HTTP_OK);
     }
 
-    #[Rest\Delete('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
+    #[Rest\Delete('/themes/{themeName}', requirements: ['themeName' => '.+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function delete(Request $request, int $themeId): View
+    public function delete(Request $request, string $themeName): View
     {
-        $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
-        if (null === $theme) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+        $themePath = $this->ts->getDir() . '/' . $themeName;
+
+        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
+        if (null !== $theme) {
+            $this->tm->delete($theme);
+        } else if (!is_dir($themePath)) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $themePath n'existe pas.");
         }
 
-        $this->tm->delete($theme);
+        $this->fs->remove($themePath);
 
         return $this->view(null, Response::HTTP_OK);
     }

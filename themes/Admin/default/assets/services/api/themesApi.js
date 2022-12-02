@@ -85,9 +85,9 @@ const themesApi = {
         }
     },
 
-    deleteTheme: async (id) => {
+    deleteTheme: async (name) => {
         try {
-            await axios.delete(`/themes/${id}`);
+            await axios.delete(`/themes/${name}`);
 
             return { result: true };
         } catch (error) {

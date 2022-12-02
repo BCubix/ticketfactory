@@ -69,9 +69,9 @@ export const ThemesList = () => {
         });
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (name) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.themesApi.deleteTheme(id);
+            const result = await Api.themesApi.deleteTheme(name);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.THEMES_BASE_PATH);
@@ -112,8 +112,8 @@ export const ThemesList = () => {
                             table={TableColumn.ThemesList}
                             list={themes}
                             themeId={themeId}
-                            onSelect={(id) => handleSelect(id)}
-                            onDelete={(id) => setDeleteDialog(id)}
+                            onSelect={(name) => handleSelect(name)}
+                            onRemove={(name) => setDeleteDialog(name)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changeThemesFilters(newFilters))}
                         />

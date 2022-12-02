@@ -58,6 +58,7 @@ export const ListTable = ({
     onClick = null,
     onDuplicate = null,
     onPreview = null,
+    onRemove = null,
     onSelect = null,
     themeId = null,
     changeFilters = null,
@@ -146,7 +147,7 @@ export const ListTable = ({
                                     <RenderFunction item={item} tableItem={tableItem} />
                                 </TableCell>
                             ))}
-                            {(onDelete !== null || onEdit !== null || (onActive !== null && onDisable !== null)) && (
+                            {(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null)) && (
                                 <TableCell component="th" scope="row">
                                     {(onActive !== null && onDisable !== null) && (
                                         (<Component.ActionFabButton
@@ -176,6 +177,20 @@ export const ListTable = ({
                                             <CheckCircleIcon />
                                         </Component.ActionFabButton>)
                                     }
+                                    {(onRemove !== null) && (
+                                        <Component.DeleteFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="error"
+                                            size="small"
+                                            aria-label="Supprimer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onRemove(item.name);
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </Component.DeleteFabButton>
+                                    )}
                                     {onEdit !== null &&
                                         (<Component.EditFabButton
                                             sx={{ marginInline: 1 }}
