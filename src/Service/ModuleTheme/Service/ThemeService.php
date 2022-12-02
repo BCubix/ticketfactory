@@ -123,11 +123,11 @@ class ThemeService extends ServiceAbstract
     {
         $tree = parent::install($name, $tree);
 
-        if (isset($tree['config']['modules'])) {
+        if (isset($tree[$name]['config']['modules'])) {
             $ms = new ModuleService($this->projectDir);
             $fs = new Filesystem();
 
-            foreach ($tree['config']['modules'] as $moduleName => $value) {
+            foreach ($tree[$name]['config']['modules'] as $moduleName => $value) {
                 $targetDir = $ms->getDir() . '/' . $moduleName;
                 if (!is_dir($targetDir)) {
                     $originDir = $this->dir . '/' . $name . '/config/modules/' . $moduleName;
