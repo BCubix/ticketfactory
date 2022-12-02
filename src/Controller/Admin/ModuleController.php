@@ -50,15 +50,17 @@ class ModuleController extends AdminController
         $filters = empty($filters) ? [] : $filters;
         $objects = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
 
-        // Add modules not in base so not installed
-        $modulesPath = glob($this->ms->getDir() . '/*', GLOB_ONLYDIR);
-        foreach ($modulesPath as $modulePath) {
-            $moduleName = basename($modulePath);
+        if (!isset($filters['active'])) {
+            // Add modules not in base so not installed
+            $modulesPath = glob($this->ms->getDir() . '/*', GLOB_ONLYDIR);
+            foreach ($modulesPath as $modulePath) {
+                $moduleName = basename($modulePath);
 
-            $result = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (!$result) {
-                $objects['results'][] = [ 'name' => $moduleName ];
-                $objects['total']++;
+                $result = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+                if (!$result) {
+                    $objects['results'][] = [ 'name' => $moduleName ];
+                    $objects['total']++;
+                }
             }
         }
 
