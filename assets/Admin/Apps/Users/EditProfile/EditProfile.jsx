@@ -22,11 +22,7 @@ export const EditProfile = () => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.usersApi.getOneUser(user?.id);
             if (!result.result) {
-                NotificationManager.error(
-                    "Une erreur s'est produite",
-                    'Erreur',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
                 navigate(Constant.USER_BASE_PATH);
                 return;
@@ -49,11 +45,7 @@ export const EditProfile = () => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.usersApi.editUser(id, values);
             if (result.result) {
-                NotificationManager.success(
-                    'Votre profile a bien été modifié.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.success('Votre profile a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
 
                 dispatch(getUsersAction());
                 navigate(Constant.USER_BASE_PATH);
@@ -65,5 +57,5 @@ export const EditProfile = () => {
         return <></>;
     }
 
-    return <Component.EditUserForm handleSubmit={handleSubmit} initialValues={profile} />;
+    return <Component.EditProfileForm handleSubmit={handleSubmit} initialValues={profile} />;
 };

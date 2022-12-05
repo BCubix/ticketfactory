@@ -12,11 +12,14 @@ import { Constant } from '@/AdminService/Constant';
 
 import { LayoutContext } from '@Components/CmtLayoutProvider/CmtLayoutProvider';
 
-import { logoutAction } from '@Redux/profile/profileSlice';
+import { logoutAction, profileSelector } from '@Redux/profile/profileSlice';
+import { ProfileButton } from './sc.ProfileButton';
+import { useSelector } from 'react-redux';
 
 export const Layout = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useSelector(profileSelector);
     const sideBarContextValues = useContext(LayoutContext);
 
     const handleLogout = async () => {
@@ -36,7 +39,7 @@ export const Layout = ({ children }) => {
                     </Button>
 
                     {user && (
-                        <ProfileButton size="small" sx={{ marginLeft: 'auto' }} component={Link} to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}>
+                        <ProfileButton size="small" sx={{ marginLeft: 'auto' }} component={Link} to={`${Constant.PROFILE_BASE_PATH}${Constant.EDIT_PATH}`}>
                             <PersonIcon />
                         </ProfileButton>
                     )}

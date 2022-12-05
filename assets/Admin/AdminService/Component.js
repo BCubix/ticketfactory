@@ -24,10 +24,7 @@ import { ContentTypeFieldArrayForm } from '@Apps/ContentTypes/ContentTypesForm/F
 import { FieldArrayElem } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/FieldArrayElem';
 import { MainPartFieldForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/MainPartFieldForm';
 import { ContentTypesForm } from '@Apps/ContentTypes/ContentTypesForm/ContentTypesForm';
-import {
-    FieldElemWrapper,
-    FieldFormControl,
-} from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
+import { FieldElemWrapper, FieldFormControl } from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
 import { ContentTypesFilters } from '@Apps/ContentTypes/ContentTypesList/ContentTypesFilters/ContentTypesFilters';
 import { ContentTypesList } from '@Apps/ContentTypes/ContentTypesList/ContentTypesList';
 import { CreateContentType } from '@Apps/ContentTypes/CreateContentType/CreateContentType';
@@ -36,10 +33,7 @@ import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
 import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
 import { AddEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/AddEventMediaModal';
 import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
-import {
-    DisplayMediaAddInformations,
-    DisplayMediaInformations,
-} from '@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations';
+import { DisplayMediaAddInformations, DisplayMediaInformations } from '@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations';
 import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
 import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
 import { EventDateRange } from '@Apps/Events/EventsForm/EventDateRange';
@@ -78,10 +72,7 @@ import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters'
 import { MediasList } from '@Apps/Medias/MediasList/MediasList';
 import { MediasMenu } from '@Apps/Medias/MediasMenu/MediasMenu';
 import { CreateMenu } from '@Apps/Menus/CreateMenu/CreateMenu';
-import {
-    DisplayMenuElement,
-    RenderElement,
-} from '@Apps/Menus/MenusList/MenuStructure/DisplayMenuElement';
+import { DisplayMenuElement, RenderElement } from '@Apps/Menus/MenusList/MenuStructure/DisplayMenuElement';
 import { MenuStructure } from '@Apps/Menus/MenusList/MenuStructure/MenuStructure';
 import { DraggableBox } from '@Apps/Menus/MenusList/MenuStructure/sc.DraggableBox';
 import { DroppableBox } from '@Apps/Menus/MenusList/MenuStructure/sc.DroppableBox';
@@ -128,6 +119,7 @@ import { EditUser } from '@Apps/Users/EditUser/EditUser';
 import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
 import { CreateUserForm } from '@Apps/Users/UserForm/CreateUserForm';
 import { EditUserForm } from '@Apps/Users/UserForm/EditUserForm';
+import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
 import { UserFilters } from '@Apps/Users/UserList/UserFilters/UserFilters';
 import { UserList } from '@Apps/Users/UserList/UserList';
 import { CmtBreadCrumb } from '@Components/CmtBreadCrumb/CmtBreadCrumb';
@@ -323,6 +315,7 @@ const ComponentObj = {
     EditProfile: EditProfile,
     CreateUserForm: CreateUserForm,
     EditUserForm: EditUserForm,
+    EditProfileForm: EditProfileForm,
     UserFilters: UserFilters,
     UserList: UserList,
 
