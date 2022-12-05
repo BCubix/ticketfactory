@@ -1,4 +1,4 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
@@ -76,6 +76,8 @@ const usersApi = {
             formData.append('firstName', data.firstName);
             formData.append('lastName', data.lastName);
             formData.append('plainPassword', data.password);
+            formData.append('active', data.active ? 1 : 0);
+            formData.append('roles', data.roles);
 
             const result = await axios.post('/users', formData);
 
@@ -92,6 +94,8 @@ const usersApi = {
             formData.append('email', data.email);
             formData.append('firstName', data.firstName);
             formData.append('lastName', data.lastName);
+            formData.append('active', data.active ? 1 : 0);
+            formData.append('roles', data.roles);
 
             if (data.password) {
                 formData.append('plainPassword', data.password);

@@ -1,171 +1,179 @@
-import { App } from "@/App";
-import { Routing } from "@/Routing";
-import { CategoriesForm } from "@Apps/Categories/CategoriesForm/CategoriesForm";
-import { ParentCategoryPartForm } from "@Apps/Categories/CategoriesForm/ParentCategoryPartForm";
-import { CategoriesList } from "@Apps/Categories/CategoriesList/CategoriesList";
-import { EditCategoryLink } from "@Apps/Categories/CategoriesList/sc.EditCategoryLink";
-import { CategoriesMenu } from "@Apps/Categories/CategoriesMenu/CategoriesMenu";
-import { CreateCategory } from "@Apps/Categories/CreateCategory/CreateCategory";
-import { EditCategory } from "@Apps/Categories/EditCategory/EditCategory";
-import { ChangePassword } from "@Apps/ChangePassword/ChangePassword";
-import { ContactRequestsForm } from "@Apps/ContactRequests/ContactRequestsForm/ContactRequestsForm";
+import { App } from '@/App';
+import { Routing } from '@/Routing';
+import { CategoriesForm } from '@Apps/Categories/CategoriesForm/CategoriesForm';
+import { ParentCategoryPartForm } from '@Apps/Categories/CategoriesForm/ParentCategoryPartForm';
+import { CategoriesList } from '@Apps/Categories/CategoriesList/CategoriesList';
+import { EditCategoryLink } from '@Apps/Categories/CategoriesList/sc.EditCategoryLink';
+import { CategoriesMenu } from '@Apps/Categories/CategoriesMenu/CategoriesMenu';
+import { CreateCategory } from '@Apps/Categories/CreateCategory/CreateCategory';
+import { EditCategory } from '@Apps/Categories/EditCategory/EditCategory';
+import { ChangePassword } from '@Apps/ChangePassword/ChangePassword';
+import { ContactRequestsForm } from '@Apps/ContactRequests/ContactRequestsForm/ContactRequestsForm';
+import { ContactRequestsFilters } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsFilters/ContactRequestsFilters';
+import { ContactRequestsList } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsList';
+import { CreateContactRequests } from '@Apps/ContactRequests/CreateContactRequest/CreateContactRequest';
+import { EditContactRequest } from '@Apps/ContactRequests/EditContactRequest/EditContactRequest';
+import { ContentsForm } from '@Apps/Contents/ContentsForm/ContentsForm';
+import { DisplayContentField } from '@Apps/Contents/ContentsForm/DisplayContentField';
+import { DisplayContentForm } from '@Apps/Contents/ContentsForm/DisplayContentForm';
+import { ContentsFilters } from '@Apps/Contents/ContentsList/ContentsFilters/ContentsFilters';
+import { ContentsList } from '@Apps/Contents/ContentsList/ContentsList';
+import { CreateContent } from '@Apps/Contents/CreateContent/CreateContent';
+import { EditContent } from '@Apps/Contents/EditContent/EditContent';
+import { ContentTypeFieldArrayForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/ContentTypeFieldArrayForm';
+import { FieldArrayElem } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/FieldArrayElem';
+import { MainPartFieldForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/MainPartFieldForm';
+import { ContentTypesForm } from '@Apps/ContentTypes/ContentTypesForm/ContentTypesForm';
 import {
-    ContactRequestsFilters
-} from "@Apps/ContactRequests/ContactRequestsList/ContactRequestsFilters/ContactRequestsFilters";
-import { ContactRequestsList } from "@Apps/ContactRequests/ContactRequestsList/ContactRequestsList";
-import { CreateContactRequests } from "@Apps/ContactRequests/CreateContactRequest/CreateContactRequest";
-import { EditContactRequest } from "@Apps/ContactRequests/EditContactRequest/EditContactRequest";
-import { ContentsForm } from "@Apps/Contents/ContentsForm/ContentsForm";
-import { DisplayContentField } from "@Apps/Contents/ContentsForm/DisplayContentField";
-import { DisplayContentForm } from "@Apps/Contents/ContentsForm/DisplayContentForm";
-import { ContentsFilters } from "@Apps/Contents/ContentsList/ContentsFilters/ContentsFilters";
-import { ContentsList } from "@Apps/Contents/ContentsList/ContentsList";
-import { CreateContent } from "@Apps/Contents/CreateContent/CreateContent";
-import { EditContent } from "@Apps/Contents/EditContent/EditContent";
-import { ContentTypeFieldArrayForm } from "@Apps/ContentTypes/ContentTypesForm/FieldArray/ContentTypeFieldArrayForm";
-import { FieldArrayElem } from "@Apps/ContentTypes/ContentTypesForm/FieldArray/FieldArrayElem";
-import { MainPartFieldForm } from "@Apps/ContentTypes/ContentTypesForm/FieldArray/MainPartFieldForm";
-import { ContentTypesForm } from "@Apps/ContentTypes/ContentTypesForm/ContentTypesForm";
-import { FieldElemWrapper, FieldFormControl } from "@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields";
-import { ContentTypesFilters } from "@Apps/ContentTypes/ContentTypesList/ContentTypesFilters/ContentTypesFilters";
-import { ContentTypesList } from "@Apps/ContentTypes/ContentTypesList/ContentTypesList";
-import { CreateContentType } from "@Apps/ContentTypes/CreateContentType/CreateContentType";
-import { EditContentType } from "@Apps/ContentTypes/EditContentType/EditContentType";
-import { CreateEvent } from "@Apps/Events/CreateEvent/CreateEvent";
-import { EditEvent } from "@Apps/Events/EditEvent/EditEvent";
-import { AddEventMediaModal } from "@Apps/Events/EventsForm/EventMediaPart/AddEventMediaModal";
-import { DisplayEventMediaElement } from "@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement";
+    FieldElemWrapper,
+    FieldFormControl,
+} from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
+import { ContentTypesFilters } from '@Apps/ContentTypes/ContentTypesList/ContentTypesFilters/ContentTypesFilters';
+import { ContentTypesList } from '@Apps/ContentTypes/ContentTypesList/ContentTypesList';
+import { CreateContentType } from '@Apps/ContentTypes/CreateContentType/CreateContentType';
+import { EditContentType } from '@Apps/ContentTypes/EditContentType/EditContentType';
+import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
+import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
+import { AddEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/AddEventMediaModal';
+import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
 import {
     DisplayMediaAddInformations,
-    DisplayMediaInformations
-} from "@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations";
-import { EditEventMediaModal } from "@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal";
-import { EventMediaPartForm } from "@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm";
-import { EventDateRange } from "@Apps/Events/EventsForm/EventDateRange";
-import { EventMainPartForm } from "@Apps/Events/EventsForm/EventMainPartForm";
-import { EventParentCategoryPartForm } from "@Apps/Events/EventsForm/EventParentCategoryPartForm";
-import { EventsPriceBlockForm } from "@Apps/Events/EventsForm/EventPriceBlockForm";
-import { EventsDateBlockForm } from "@Apps/Events/EventsForm/EventsDateBlockForm";
-import { EventsDateForm } from "@Apps/Events/EventsForm/EventsDateForm";
-import { EventsForm } from "@Apps/Events/EventsForm/EventsForm";
-import { EventsPriceForm } from "@Apps/Events/EventsForm/EventsPriceForm";
-import { EventsFilters } from "@Apps/Events/EventsList/EventsFilters/EventsFilters";
-import { EventsList } from "@Apps/Events/EventsList/EventsList";
-import { ForgotPassword } from "@Apps/ForgotPassword/ForgotPassword";
-import { FirstCardDashboard } from "@Apps/Home/FirstCardDashboard";
-import { GraphChildrenDashboard } from "@Apps/Home/GraphChildrenDashboard";
-import { Home } from "@Apps/Home/Home";
-import { MainDashboard } from "@Apps/Home/MainDashboard";
-import { GraphTabTitle } from "@Apps/Home/sc.Home";
-import { SecondCardDashboard } from "@Apps/Home/SecondCardDashboard";
-import { ThirdCardDashboard } from "@Apps/Home/ThirdCardDashboard";
-import { CreateImageFormat } from "@Apps/ImageFormat/CreateImageFormat/CreateImageFormat";
-import { EditImageFormat } from "@Apps/ImageFormat/EditImageFormat/EditImageFormat";
-import { ImageFormatForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatForm";
-import { ImageFormatsFilters } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters";
-import { ImageFormatsList } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatsList";
-import { Login } from "@Apps/Login/Login";
-import { LogsList, LogTags, LogUserName } from "@Apps/Logs/LogsList/LogsList";
-import { DropzoneWrapper } from "@Apps/Medias/Components/DropzoneWrapper";
-import { CreateMedia } from "@Apps/Medias/CreateMedia/CreateMedia";
-import { EditMedia } from "@Apps/Medias/EditMedia/EditMedia";
-import { MediaDataForm } from "@Apps/Medias/MediasForm/MediaDataForm";
-import { MediaImageForm } from "@Apps/Medias/MediasForm/MediaImageForm";
-import { MediasFilters } from "@Apps/Medias/MediasList/MediasFilters/MediasFilters";
-import { MediasSorters } from "@Apps/Medias/MediasList/MediasFilters/MediasSorters";
-import { RotatingIcons } from "@Apps/Medias/MediasList/MediasFilters/sc.Filters";
-import { MediasList } from "@Apps/Medias/MediasList/MediasList";
-import { MediasMenu } from "@Apps/Medias/MediasMenu/MediasMenu";
-import { CreateMenu } from "@Apps/Menus/CreateMenu/CreateMenu";
-import { DisplayMenuElement, RenderElement } from "@Apps/Menus/MenusList/MenuStructure/DisplayMenuElement";
-import { MenuStructure } from "@Apps/Menus/MenusList/MenuStructure/MenuStructure";
-import { DraggableBox } from "@Apps/Menus/MenusList/MenuStructure/sc.DraggableBox";
-import { DroppableBox } from "@Apps/Menus/MenusList/MenuStructure/sc.DroppableBox";
-import { MoveElementButton } from "@Apps/Menus/MenusList/MenuStructure/sc.MoveElementButton";
-import { AddMenuElement } from "@Apps/Menus/MenusList/AddMenuElement";
-import { MenuHeaderLine } from "@Apps/Menus/MenusList/MenuHeaderLine";
-import { MenusList } from "@Apps/Menus/MenusList/MenusList";
-import { UploadModule } from "@Apps/Modules/UploadModule/UploadModule";
-import { ModulesFilters } from "@Apps/Modules/ModulesList/ModulesFilters/ModulesFilters";
-import { ModulesList } from "@Apps/Modules/ModulesList/ModulesList";
-import { CreatePage } from "@Apps/Pages/CreatePage/CreatePage";
-import { EditPage } from "@Apps/Pages/EditPage/EditPage";
-import { PagesBlocksForm } from "@Apps/Pages/PagesForm/PagesBlocksForm";
-import { PagesForm } from "@Apps/Pages/PagesForm/PagesForm";
-import { PagesFilters } from "@Apps/Pages/PagesList/PagesFIlters/PagesFilters";
-import { PagesList } from "@Apps/Pages/PagesList/PagesList";
-import { ParametersBlockForm } from "@Apps/Parameters/ParametersForm/ParametersBlockForm";
-import { ParametersForm } from "@Apps/Parameters/ParametersForm/ParametersForm";
-import { ParametersMenu } from "@Apps/Parameters/ParametersMenu/ParametersMenu";
-import { CreateRedirection } from "@Apps/Redirections/CreateRedirection/CreateRedirection";
-import { EditRedirection } from "@Apps/Redirections/EditRedirection/EditRedirection";
-import { RedirectionsForm } from "@Apps/Redirections/RedirectionsForm/RedirectionsForm";
-import { RedirectionsFilters } from "@Apps/Redirections/RedirectionsList/RedirectionsFilters/RedirectionsFilters";
-import { RedirectionsList } from "@Apps/Redirections/RedirectionsList/RedirectionsList";
-import { CreateRoom } from "@Apps/Rooms/CreateRoom/CreateRoom";
-import { EditRoom } from "@Apps/Rooms/EditRoom/EditRoom";
-import { RoomsForm } from "@Apps/Rooms/RoomsForm/RoomsForm";
-import { RoomsMainPartForm } from "@Apps/Rooms/RoomsForm/RoomsMainPartForm";
-import { RoomsSeatingPlanPartForm } from "@Apps/Rooms/RoomsForm/RoomsSeatingPlansPartForm";
-import { RoomsFilters } from "@Apps/Rooms/RoomsList/RoomsFilters/RoomsFilters";
-import { RoomsList } from "@Apps/Rooms/RoomsList/RoomsList";
-import { CreateSeason } from "@Apps/Seasons/CreateSeason/CreateSeason";
-import { EditSeason } from "@Apps/Seasons/EditSeason/EditSeason";
-import { SeasonsForm } from "@Apps/Seasons/SeasonsForm/SeasonsForm";
-import { SeasonsFilters } from "@Apps/Seasons/SeasonsList/SeasonsFilters/SeasonsFilters";
-import { SeasonsList } from "@Apps/Seasons/SeasonsList/SeasonsList";
-import { CreateTag } from "@Apps/Tags/CreateTag/CreateTag";
-import { EditTag } from "@Apps/Tags/EditTag/EditTag";
-import { TagsForm } from "@Apps/Tags/TagsForm/TagsForm";
-import { TagsFilters } from "@Apps/Tags/TagsList/TagsFilters/TagsFilters";
-import { TagsList } from "@Apps/Tags/TagsList/TagsList";
-import { CreateUser } from "@Apps/Users/CreateUser/CreateUser";
-import { EditUser } from "@Apps/Users/EditUser/EditUser";
-import { CreateUserForm } from "@Apps/Users/UserForm/CreateUserForm";
-import { EditUserForm } from "@Apps/Users/UserForm/EditUserForm";
-import { UserFilters } from "@Apps/Users/UserList/UserFilters/UserFilters";
-import { UserList } from "@Apps/Users/UserList/UserList";
-import { CmtBreadCrumb } from "@Components/CmtBreadCrumb/CmtBreadCrumb";
-import { StyledBreadCrumb } from "@Components/CmtBreadCrumb/sc.StyledBreadCrumb";
+    DisplayMediaInformations,
+} from '@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations';
+import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
+import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
+import { EventDateRange } from '@Apps/Events/EventsForm/EventDateRange';
+import { EventMainPartForm } from '@Apps/Events/EventsForm/EventMainPartForm';
+import { EventParentCategoryPartForm } from '@Apps/Events/EventsForm/EventParentCategoryPartForm';
+import { EventsPriceBlockForm } from '@Apps/Events/EventsForm/EventPriceBlockForm';
+import { EventsDateBlockForm } from '@Apps/Events/EventsForm/EventsDateBlockForm';
+import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
+import { EventsForm } from '@Apps/Events/EventsForm/EventsForm';
+import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
+import { EventsFilters } from '@Apps/Events/EventsList/EventsFilters/EventsFilters';
+import { EventsList } from '@Apps/Events/EventsList/EventsList';
+import { ForgotPassword } from '@Apps/ForgotPassword/ForgotPassword';
+import { FirstCardDashboard } from '@Apps/Home/FirstCardDashboard';
+import { GraphChildrenDashboard } from '@Apps/Home/GraphChildrenDashboard';
+import { Home } from '@Apps/Home/Home';
+import { MainDashboard } from '@Apps/Home/MainDashboard';
+import { GraphTabTitle } from '@Apps/Home/sc.Home';
+import { SecondCardDashboard } from '@Apps/Home/SecondCardDashboard';
+import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
+import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
+import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
+import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatForm';
+import { ImageFormatsFilters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
+import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
+import { Login } from '@Apps/Login/Login';
+import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
+import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
+import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
+import { EditMedia } from '@Apps/Medias/EditMedia/EditMedia';
+import { MediaDataForm } from '@Apps/Medias/MediasForm/MediaDataForm';
+import { MediaImageForm } from '@Apps/Medias/MediasForm/MediaImageForm';
+import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
+import { MediasSorters } from '@Apps/Medias/MediasList/MediasFilters/MediasSorters';
+import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
+import { MediasList } from '@Apps/Medias/MediasList/MediasList';
+import { MediasMenu } from '@Apps/Medias/MediasMenu/MediasMenu';
+import { CreateMenu } from '@Apps/Menus/CreateMenu/CreateMenu';
 import {
-    ActionButton, ActionFabButton, AddBlockButton, AddBlockFabButton,
+    DisplayMenuElement,
+    RenderElement,
+} from '@Apps/Menus/MenusList/MenuStructure/DisplayMenuElement';
+import { MenuStructure } from '@Apps/Menus/MenusList/MenuStructure/MenuStructure';
+import { DraggableBox } from '@Apps/Menus/MenusList/MenuStructure/sc.DraggableBox';
+import { DroppableBox } from '@Apps/Menus/MenusList/MenuStructure/sc.DroppableBox';
+import { MoveElementButton } from '@Apps/Menus/MenusList/MenuStructure/sc.MoveElementButton';
+import { AddMenuElement } from '@Apps/Menus/MenusList/AddMenuElement';
+import { MenuHeaderLine } from '@Apps/Menus/MenusList/MenuHeaderLine';
+import { MenusList } from '@Apps/Menus/MenusList/MenusList';
+import { UploadModule } from '@Apps/Modules/UploadModule/UploadModule';
+import { ModulesFilters } from '@Apps/Modules/ModulesList/ModulesFilters/ModulesFilters';
+import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
+import { CreatePage } from '@Apps/Pages/CreatePage/CreatePage';
+import { EditPage } from '@Apps/Pages/EditPage/EditPage';
+import { PagesBlocksForm } from '@Apps/Pages/PagesForm/PagesBlocksForm';
+import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
+import { PagesFilters } from '@Apps/Pages/PagesList/PagesFIlters/PagesFilters';
+import { PagesList } from '@Apps/Pages/PagesList/PagesList';
+import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
+import { ParametersForm } from '@Apps/Parameters/ParametersForm/ParametersForm';
+import { ParametersMenu } from '@Apps/Parameters/ParametersMenu/ParametersMenu';
+import { CreateRedirection } from '@Apps/Redirections/CreateRedirection/CreateRedirection';
+import { EditRedirection } from '@Apps/Redirections/EditRedirection/EditRedirection';
+import { RedirectionsForm } from '@Apps/Redirections/RedirectionsForm/RedirectionsForm';
+import { RedirectionsFilters } from '@Apps/Redirections/RedirectionsList/RedirectionsFilters/RedirectionsFilters';
+import { RedirectionsList } from '@Apps/Redirections/RedirectionsList/RedirectionsList';
+import { CreateRoom } from '@Apps/Rooms/CreateRoom/CreateRoom';
+import { EditRoom } from '@Apps/Rooms/EditRoom/EditRoom';
+import { RoomsForm } from '@Apps/Rooms/RoomsForm/RoomsForm';
+import { RoomsMainPartForm } from '@Apps/Rooms/RoomsForm/RoomsMainPartForm';
+import { RoomsSeatingPlanPartForm } from '@Apps/Rooms/RoomsForm/RoomsSeatingPlansPartForm';
+import { RoomsFilters } from '@Apps/Rooms/RoomsList/RoomsFilters/RoomsFilters';
+import { RoomsList } from '@Apps/Rooms/RoomsList/RoomsList';
+import { CreateSeason } from '@Apps/Seasons/CreateSeason/CreateSeason';
+import { EditSeason } from '@Apps/Seasons/EditSeason/EditSeason';
+import { SeasonsForm } from '@Apps/Seasons/SeasonsForm/SeasonsForm';
+import { SeasonsFilters } from '@Apps/Seasons/SeasonsList/SeasonsFilters/SeasonsFilters';
+import { SeasonsList } from '@Apps/Seasons/SeasonsList/SeasonsList';
+import { CreateTag } from '@Apps/Tags/CreateTag/CreateTag';
+import { EditTag } from '@Apps/Tags/EditTag/EditTag';
+import { TagsForm } from '@Apps/Tags/TagsForm/TagsForm';
+import { TagsFilters } from '@Apps/Tags/TagsList/TagsFilters/TagsFilters';
+import { TagsList } from '@Apps/Tags/TagsList/TagsList';
+import { CreateUser } from '@Apps/Users/CreateUser/CreateUser';
+import { EditUser } from '@Apps/Users/EditUser/EditUser';
+import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
+import { CreateUserForm } from '@Apps/Users/UserForm/CreateUserForm';
+import { EditUserForm } from '@Apps/Users/UserForm/EditUserForm';
+import { UserFilters } from '@Apps/Users/UserList/UserFilters/UserFilters';
+import { UserList } from '@Apps/Users/UserList/UserList';
+import { CmtBreadCrumb } from '@Components/CmtBreadCrumb/CmtBreadCrumb';
+import { StyledBreadCrumb } from '@Components/CmtBreadCrumb/sc.StyledBreadCrumb';
+import {
+    ActionButton,
+    ActionFabButton,
+    AddBlockButton,
+    AddBlockFabButton,
     CreateButton,
     DeleteBlockFabButton,
     DeleteFabButton,
-    EditFabButton
-} from "@Components/CmtButton/sc.Buttons";
-import { CmtCard } from "@Components/CmtCard/sc.CmtCard";
-import { CmtDatePicker } from "@Components/CmtDatePicker/CmtDatePicker";
-import { CmtDateTimePicker } from "@Components/CmtDateTimePicker/CmtDateTimePicker";
-import { CmtDisplayMediaType } from "@Components/CmtDisplayMediaType/CmtDisplayMediaType";
-import { CmtEndPositionWrapper } from "@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper";
-import { CmtBooleanFilters } from "@Components/CmtFilters/CmtBooleanFilters";
-import { CmtCategoriesFilters } from "@Components/CmtFilters/CmtCategoriesFilters";
-import { CmtMultipleSelectFilters } from "@Components/CmtFilters/CmtMultipleSelectFilters";
-import { CmtSearchFilters } from "@Components/CmtFilters/CmtSearchFilters";
-import { CmtSimpleSelectFilters } from "@Components/CmtFilters/CmtSimpleSelectFilter";
-import { ClearBooleanButton } from "@Components/CmtFilters/sc.Filters";
-import { CmtFormBlock } from "@Components/CmtFormBlock/CmtFormBlock";
-import { CmtLayoutProvider } from "@Components/CmtLayoutProvider/CmtLayoutProvider";
-import { CmtMediaElement } from "@Components/CmtMediaElement/sc.MediaElement";
-import { CmtPageTitle } from "@Components/CmtPage/CmtPageTitle/CmtPageTitle";
-import { TitleTypography } from "@Components/CmtPage/CmtPageTitle/sc.TitleTypography";
-import { CmtPageWrapper } from "@Components/CmtPage/CmtPageWrapper/CmtPageWrapper";
-import { PageWrapper } from "@Components/CmtPage/CmtPageWrapper/sc.PageWrapper";
-import { CmtPagination } from "@Components/CmtPagination/CmtPagination";
-import { CmtPopover } from "@Components/CmtPopover/CmtPopover";
-import { CmtRemoveButton } from "@Components/CmtRemoveButton/CmtRemoveButton";
-import { CmtTabs } from "@Components/CmtTabs/CmtTabs";
-import { CmtTextField } from "@Components/CmtTextField/CmtTextField";
-import { CmtTimePicker } from "@Components/CmtTimePicker/CmtTimePicker";
-import { DeleteDialog } from "@Components/DeleteDialog/DeleteDialog";
-import { LightEditor } from "@Components/Editors/LightEditor/LightEditor";
-import { LightEditorFormControl } from "@Components/Editors/LightEditor/sc.LightEditorFormControl";
-import { Layout } from "@Components/Layout/Layout";
-import { ListTable } from "@Components/ListTable/ListTable";
-import { MenuTitle } from "@Components/SideMenu/sc.SideMenu";
-import { SideMenu } from "@Components/SideMenu/SideMenu";
-import { checkComponent, checkString } from "@Services/utils/check";
+    EditFabButton,
+} from '@Components/CmtButton/sc.Buttons';
+import { CmtCard } from '@Components/CmtCard/sc.CmtCard';
+import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
+import { CmtDateTimePicker } from '@Components/CmtDateTimePicker/CmtDateTimePicker';
+import { CmtDisplayMediaType } from '@Components/CmtDisplayMediaType/CmtDisplayMediaType';
+import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
+import { CmtBooleanFilters } from '@Components/CmtFilters/CmtBooleanFilters';
+import { CmtCategoriesFilters } from '@Components/CmtFilters/CmtCategoriesFilters';
+import { CmtMultipleSelectFilters } from '@Components/CmtFilters/CmtMultipleSelectFilters';
+import { CmtSearchFilters } from '@Components/CmtFilters/CmtSearchFilters';
+import { CmtSimpleSelectFilters } from '@Components/CmtFilters/CmtSimpleSelectFilter';
+import { ClearBooleanButton } from '@Components/CmtFilters/sc.Filters';
+import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
+import { CmtLayoutProvider } from '@Components/CmtLayoutProvider/CmtLayoutProvider';
+import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
+import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
+import { TitleTypography } from '@Components/CmtPage/CmtPageTitle/sc.TitleTypography';
+import { CmtPageWrapper } from '@Components/CmtPage/CmtPageWrapper/CmtPageWrapper';
+import { PageWrapper } from '@Components/CmtPage/CmtPageWrapper/sc.PageWrapper';
+import { CmtPagination } from '@Components/CmtPagination/CmtPagination';
+import { CmtPopover } from '@Components/CmtPopover/CmtPopover';
+import { CmtRemoveButton } from '@Components/CmtRemoveButton/CmtRemoveButton';
+import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
+import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
+import { CmtTimePicker } from '@Components/CmtTimePicker/CmtTimePicker';
+import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
+import { LightEditor } from '@Components/Editors/LightEditor/LightEditor';
+import { LightEditorFormControl } from '@Components/Editors/LightEditor/sc.LightEditorFormControl';
+import { Layout } from '@Components/Layout/Layout';
+import { ListTable } from '@Components/ListTable/ListTable';
+import { MenuTitle } from '@Components/SideMenu/sc.SideMenu';
+import { SideMenu } from '@Components/SideMenu/SideMenu';
+import { checkComponent, checkString } from '@Services/utils/check';
 
 const ComponentObj = {
     App: App,
@@ -312,6 +320,7 @@ const ComponentObj = {
 
     CreateUser: CreateUser,
     EditUser: EditUser,
+    EditProfile: EditProfile,
     CreateUserForm: CreateUserForm,
     EditUserForm: EditUserForm,
     UserFilters: UserFilters,
@@ -360,7 +369,7 @@ const ComponentObj = {
     ListTable: ListTable,
     MenuTitle: MenuTitle,
     SideMenu: SideMenu,
-}
+};
 
 /**
  * Component's getter.
@@ -372,7 +381,7 @@ export const Component = new Proxy(ComponentObj, {
         }
 
         return Reflect.get(target, key, receiver);
-    }
+    },
 });
 
 /**
