@@ -48,11 +48,9 @@ const TableColumnObj = {
         { name: 'height', label: 'Hauteur', width: '20%', sortable: true },
     ],
     ModulesList: [
-        { name: 'id', label: 'ID', width: '10%', sortable: true },
-        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         {
             label: 'Logo',
-            width: '15%',
+            width: '7%',
             renderFunction: (item) => {
                 if (item.logoUrl) {
                     try {
@@ -66,7 +64,10 @@ const TableColumnObj = {
                 );
             },
         },
-        { name: 'name', label: 'Nom', width: '55%', sortable: true },
+        { name: 'displayName', label: 'Nom', width: '10%', sortable: true },
+        { name: 'version', label: 'Version', width: '5%', sortable: true },
+        { name: 'author', label: 'Auteur', width: '10%', sortable: true },
+        { name: 'description', label: 'Description', width: '58%', sortable: true },
     ],
     PagesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },

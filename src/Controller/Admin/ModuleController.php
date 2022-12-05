@@ -54,6 +54,15 @@ class ModuleController extends AdminController
         $filters = empty($filters) ? [] : $filters;
         $objects = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
 
+        for ($i = 0; $i < $objects['total']; $i++) {
+            $object = $objects['results'][$i];
+            $objects['results'][$i] = $this->ms->callConfig($object->getName(), 'getInfo') + [
+                'active' => $object->isActive(),
+                'name' => $object->getName(),
+                'logoUrl' => $object->getLogoUrl(),
+            ];
+        }
+
         $projectDir = $this->getParameter('kernel.project_dir');
 
         if (!isset($filters['active'])) {
@@ -77,7 +86,10 @@ class ModuleController extends AdminController
 
                 $result = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
                 if (!$result) {
-                    $objects['results'][] = [ 'name' => $moduleName, 'logoUrl' => $ext ];
+                    $objects['results'][] = $this->ms->callConfig($moduleName, 'getInfo') + [
+                        'name' => $moduleName,
+                        'logoUrl' => $ext
+                    ];
                     $objects['total']++;
                 }
             }

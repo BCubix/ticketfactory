@@ -13,8 +13,19 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleConfig
 {
     protected const NAME = null;
+    protected const DISPLAY_NAME = null;
+    protected const DESCRIPTION = null;
+    protected const AUTHOR = null;
+    protected const VERSION = null;
+
     protected const TABLES = [];
     protected const TRAITS = [];
+
+    protected $name;
+    protected $displayName;
+    protected $description;
+    protected $author;
+    protected $version;
 
     protected $path;
     protected $loader;
@@ -25,9 +36,47 @@ class ModuleConfig
             throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
                 "Veuillez renseigner le nom dans le fichier de configuration du dossier $dir.");
         }
+        if (null === static::DISPLAY_NAME) {
+            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
+                "Veuillez renseigner le nom d'affichage dans le fichier de configuration du dossier $dir.");
+        }
+        if (null === static::DESCRIPTION) {
+            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
+                "Veuillez renseigner la description dans le fichier de configuration du dossier $dir.");
+        }
+        if (null === static::AUTHOR) {
+            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
+                "Veuillez renseigner le nom de l'author dans le fichier de configuration du dossier $dir.");
+        }
+        if (null === static::VERSION) {
+            throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
+                "Veuillez renseigner la version dans le fichier de configuration du dossier $dir.");
+        }
 
-        $this->path = $dir . '/' . static::NAME;
+        $this->name        = static::NAME;
+        $this->displayName = static::DISPLAY_NAME;
+        $this->description = static::DESCRIPTION;
+        $this->author      = static::AUTHOR;
+        $this->version     = static::VERSION;
+
+        $this->path   = $dir . '/' . static::NAME;
         $this->loader = new ClassLoader();
+    }
+
+    /**
+     * Get information of module
+     *
+     * @return array
+     */
+    public function getInfo(): array
+    {
+        return [
+            'name' => $this->name,
+            'displayName' => $this->displayName,
+            'description' => $this->description,
+            'author' => $this->author,
+            'version' => $this->version,
+        ];
     }
 
     /**

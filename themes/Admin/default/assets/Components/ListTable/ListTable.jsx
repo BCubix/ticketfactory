@@ -122,7 +122,8 @@ export const ListTable = ({
                                 )}
                             </TableCell>
                         ))}
-                        {(onDelete !== null || onEdit !== null) && <TableCell>Actions</TableCell>}
+                        {(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null))
+                            && <TableCell>Actions</TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>

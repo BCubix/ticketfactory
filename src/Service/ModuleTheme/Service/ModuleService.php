@@ -40,7 +40,7 @@ class ModuleService extends ServiceAbstract
      * @return void
      * @throws ApiException
      */
-    public function callConfig(string $name, string $functionName): void
+    public function callConfig(string $name, string $functionName): mixed
     {
         $configFilePath = $this->dir . "/$name/{$name}Config.php";
         if (!is_file($configFilePath)) {
@@ -66,7 +66,7 @@ class ModuleService extends ServiceAbstract
                 "La classe {$name}Config ne contient pas la fonction $functionName.");
         }
 
-        $moduleObj->{$functionName}();
+        return $moduleObj->{$functionName}();
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
