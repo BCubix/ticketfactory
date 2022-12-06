@@ -10,12 +10,12 @@ return static function (TwigConfig $twig) {
         $result = Db::getInstance()->query("SELECT * FROM parameter WHERE param_key = 'main_theme'");
         $parameter = $result[0];
 
-        $id = $parameter['param_value'];
-        if (null === $id) {
+        $name = $parameter['param_value'];
+        if (null === $name) {
             return;
         }
 
-        $result = Db::getInstance()->query("SELECT * FROM theme WHERE id = $id");
+        $result = Db::getInstance()->query("SELECT * FROM theme WHERE name = '$name'");
 
         $theme = $result[0];
         $themeName = $theme['name'];

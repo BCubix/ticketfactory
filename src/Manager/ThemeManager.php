@@ -65,7 +65,7 @@ class ThemeManager extends AbstractManager
         $this->applyModulesConfig($modules['to_disable'], false, Module::ACTION_DISABLE);
         $this->applyModulesConfig($modules['to_enable'], true, Module::ACTION_INSTALL);
 
-        $this->pm->set('main_theme', $theme->getId());
+        $this->pm->set('main_theme', $theme->getName());
         $this->em->flush();
 
         $this->ts->entry($theme->getName(), false);
@@ -83,8 +83,8 @@ class ThemeManager extends AbstractManager
      */
     public function delete(Theme $theme): void
     {
-        $mainThemeId = $this->pm->get('main_theme');
-        if (intval($mainThemeId) === $theme->getId()) {
+        $mainThemeName = $this->pm->get('main_theme');
+        if ($mainThemeName === $theme->getName()) {
             $this->disableMainTheme();
             $this->ts->clear();
         }
@@ -102,17 +102,15 @@ class ThemeManager extends AbstractManager
      */
     private function disableMainTheme(): void
     {
-        $mainThemeId = $this->pm->get('main_theme');
-        if (null === $mainThemeId) {
+        $mainThemeName = $this->pm->get('main_theme');
+        if (null === $mainThemeName) {
             return;
         }
 
-        $mainTheme = $this->em->getRepository(Theme::class)->findOneForAdmin(intval($mainThemeId));
+        $mainTheme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($mainThemeName);
         if (null === $mainTheme) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le thème (id: $mainThemeId) n'existe pas.");
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le thème $mainThemeName n'existe pas.");
         }
-
-        $mainThemeName = $mainTheme->getName();
 
         $this->pm->set('main_theme', null);
         $this->em->flush();

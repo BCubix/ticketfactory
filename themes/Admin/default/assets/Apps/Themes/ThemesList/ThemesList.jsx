@@ -30,7 +30,7 @@ export const ThemesList = () => {
     const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
-    const [themeId, setThemeId] = useState(null);
+    const [themeName, setThemeName] = useState(null);
 
     useEffect(() => {
         if (!loading && !themes && !error) {
@@ -46,7 +46,7 @@ export const ThemesList = () => {
                 return;
             }
 
-            setThemeId(parseInt(result.parameters[0].paramValue));
+            setThemeName(result.parameters[0].paramValue);
         });
     }, []);
 
@@ -122,7 +122,7 @@ export const ThemesList = () => {
                                         subheader={`Par ${theme.author.name} (${theme.version})`}
                                     />
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
-                                        {theme.id !== themeId && (
+                                        {theme.name !== themeName && (
                                             (<Component.ActionFabButton
                                                 sx={{ marginInline: 1 }}
                                                 color="primary"
