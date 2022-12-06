@@ -22,7 +22,7 @@ import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
 import { TableColumn } from "@/AdminService/TableColumn";
 
-import { changeModulesFilters, getModulesAction, modulesSelector } from '@Redux/modules/modulesSlice';
+import { getModulesAction, modulesSelector } from '@Redux/modules/modulesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
 
 const ACTION_DISABLE = "Désactiver";
@@ -30,7 +30,7 @@ const ACTION_UNINSTALL = "Désinstaller";
 const ACTION_UNINSTALL_DELETE = "Désinstaller & Supprimer";
 
 export const ModulesList = () => {
-    const { loading, modules, filters, total, error } = useSelector(modulesSelector);
+    const { loading, modules, error } = useSelector(modulesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
@@ -112,21 +112,12 @@ export const ModulesList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des modules{' '}
-                                {modules &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + modules.length
-                                    } sur ${total})`}
+                                Liste des modules
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                                 Upload
                             </Component.CreateButton>
                         </Box>
-
-                        <Component.ModulesFilters
-                            filters={filters}
-                            changeFilters={(values) => dispatch(changeModulesFilters(values))}
-                        />
 
                         <Component.ListTable
                             table={TableColumn.ModulesList}
@@ -134,21 +125,6 @@ export const ModulesList = () => {
                             onActive={(name) => handleActive(name)}
                             onDisable={(name) => setDeleteDialog(name)}
                             onRemove={(name) => setRemoveDialog(name)}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeModulesFilters(newFilters))}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changeModulesFilters({ ...filters }, newValue))
-                            }
-                            setLimit={(newValue) => {
-                                dispatch(changeModulesFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={modules?.length}
                         />
                     </CardContent>
                 </Component.CmtCard>
