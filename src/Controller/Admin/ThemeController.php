@@ -46,29 +46,15 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Get('/themes')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
-        $filters = $paramFetcher->get('filters');
-        $filters = empty($filters) ? [] : $filters;
-        $objects = $this->em->getRepository(Theme::class)->findAllForAdmin($filters);
+        $themes = $this->ts->getAllInDisk();
 
-        if (!isset($filters['active'])) {
-            // Add themes not in base so not installed
-            $themesPath = glob($this->ts->getDir() . '/*', GLOB_ONLYDIR);
-            foreach ($themesPath as $themePath) {
-                $themeName = basename($themePath);
-
-                $result = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
-                if (!$result) {
-                    $objects['results'][] = [ 'name' => $themeName ];
-                    $objects['total']++;
-                }
-            }
-        }
-
-        return $this->view($objects, Response::HTTP_OK);
+        return $this->view([
+            'results' => $themes,
+            'total' => count($themes)
+        ], Response::HTTP_OK);
     }
 
     #[Rest\Get('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
