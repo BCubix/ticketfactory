@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 
-import { ActiveModuleContext } from "@/AdminService/ActiveModule/ActiveModuleContext";
+import { ActiveModuleContext } from '@/AdminService/ActiveModule/ActiveModuleContext';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
 
-import { loginFailure } from "@Redux/profile/profileSlice";
+import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const ActiveModule = () => {
     const dispatch = useDispatch();
@@ -29,8 +29,7 @@ export const ActiveModule = () => {
         })();
     }, []);
 
-    if (!modulesActive)
-        return <></>;
+    if (!modulesActive) return <></>;
 
     return <Component.App />;
-}
+};

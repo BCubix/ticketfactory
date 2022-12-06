@@ -33,3 +33,8 @@ button:focus {
 .MuiFormLabel-asterisk {
     color: #B71C1C;
 }
+
+.required-input:after {
+    content: " *";
+    color: #B71C1C;
+}

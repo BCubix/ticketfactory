@@ -10,7 +10,7 @@ export const CmtTextField = ({
     handleBlur,
     name,
     required = false,
-    id = name,
+    id = name?.replaceAll('.', '-'),
     label,
     error,
     fullWidth = true,

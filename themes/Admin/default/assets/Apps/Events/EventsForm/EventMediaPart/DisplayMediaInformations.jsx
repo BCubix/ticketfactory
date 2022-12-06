@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Button, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const DisplayMediaAddInformations = ({
     onClose,
@@ -46,6 +46,7 @@ export const DisplayMediaAddInformations = ({
             <Button
                 variant={isSelected ? 'outlined' : 'contained'}
                 color={isSelected ? 'error' : 'primary'}
+                id="addRemoveFileMediaEvent"
                 onClick={() => {
                     let newValue = values.eventMedias;
 

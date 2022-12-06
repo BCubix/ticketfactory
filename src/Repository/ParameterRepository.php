@@ -24,6 +24,6 @@ class ParameterRepository extends CrudRepository
             ->setParameter('key', $key)
             ->getQuery()
             ->getOneOrNullResult()
-            ;
+        ;
     }
 }

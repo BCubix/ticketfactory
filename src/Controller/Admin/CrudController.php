@@ -132,7 +132,7 @@ abstract class CrudController extends AdminController
 
         $this->log->log(0, 0, 'Duplicated object.', $this->entityClass, $object->getId());
 
-        return $this->view($object, Response::HTTP_OK);
+        return $this->view($nObject, Response::HTTP_OK);
     }
 
     protected function delete(Request $request, int $id): View
@@ -152,6 +152,6 @@ abstract class CrudController extends AdminController
 
         $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
-        return $this->view(null, Response::HTTP_OK);
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 }

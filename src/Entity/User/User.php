@@ -20,6 +20,11 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     /*** > Trait ***/
     /*** < Trait ***/
 
+    const ROLE_TYPE = [
+        "ROLE_USER" => 'Utilisateur',
+        "ROLE_ADMIN" => "Admin"
+    ];
+
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Id]
@@ -49,6 +54,8 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastName;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'json')]
     private $roles = [];
 

@@ -4,7 +4,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import { Radio } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const DisplayEventMediaElement = ({
     title,
@@ -15,11 +15,12 @@ export const DisplayEventMediaElement = ({
     values,
     name,
     setFieldValue,
+    id,
 }) => {
     return (
         <Component.CmtFormBlock title={title}>
             <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
-                <Component.CmtMediaElement onClick={() => openAddModal(mediaType)}>
+                <Component.CmtMediaElement onClick={() => openAddModal(mediaType)} id={`${id}-add`}>
                     <Box className="placeholder">
                         <AddCircleOutlineOutlinedIcon />
                     </Box>
@@ -38,7 +39,11 @@ export const DisplayEventMediaElement = ({
                                 });
                             }}
                         >
-                            <Component.CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
+                            <Component.CmtDisplayMediaType
+                                media={item}
+                                width={'100%'}
+                                height={'auto'}
+                            />
                             {mediaType === 'Image' && (
                                 <Radio
                                     checked={values.eventMedias.at(valueIndex)?.mainImg}

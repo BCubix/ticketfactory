@@ -24,7 +24,7 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 import { objectResolver } from '@Services/utils/objectResolver';
 
@@ -130,6 +130,7 @@ export const ListTable = ({
                     {list?.map((item, index) => (
                         <TableRow
                             key={index}
+                            id={`tableElement-${item.id}`}
                             onClick={() => {
                                 if (onClick) {
                                     onClick(item?.id);
@@ -150,8 +151,8 @@ export const ListTable = ({
                             ))}
                             {(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null)) && (
                                 <TableCell component="th" scope="row">
-                                    {(onActive !== null && onDisable !== null) && (
-                                        (<Component.ActionFabButton
+                                    {onActive !== null && onDisable !== null && (
+                                        <Component.ActionFabButton
                                             sx={{ marginInline: 1 }}
                                             color="primary"
                                             size="small"
@@ -161,8 +162,12 @@ export const ListTable = ({
                                                 (item.active ? onDisable : onActive)(item.name);
                                             }}
                                         >
-                                            { item.active ? <UnpublishedIcon /> : <CheckCircleIcon /> }
-                                        </Component.ActionFabButton>)
+                                            {item.active ? (
+                                                <UnpublishedIcon />
+                                            ) : (
+                                                <CheckCircleIcon />
+                                            )}
+                                        </Component.ActionFabButton>
                                     )}
                                     {(onSelect !== null && item.id !== themeId) &&
                                         (<Component.ActionFabButton
@@ -204,32 +209,35 @@ export const ListTable = ({
                                             }}
                                         >
                                             <EditIcon />
-                                        </Component.EditFabButton>)
-                                    }
+                                        </Component.EditFabButton>
+                                    )}
 
                                     {contextualMenu ? (
                                         <Component.ActionFabButton
                                             sx={{ marginInline: 1 }}
                                             color="error"
                                             size="small"
-                                            aria-label="Supprimer"
+                                            id={`actionButton-${item.id}`}
+                                            aria-label="Menu contextuel"
                                             onClick={(e) => handleClick(e, item)}
                                         >
                                             <MoreHorizIcon />
                                         </Component.ActionFabButton>
-                                    ) : onDelete !== null && (
-                                        <Component.DeleteFabButton
-                                            sx={{ marginInline: 1 }}
-                                            color="error"
-                                            size="small"
-                                            aria-label="Supprimer"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onDelete(item.id);
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </Component.DeleteFabButton>
+                                    ) : (
+                                        onDelete !== null && (
+                                            <Component.DeleteFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="error"
+                                                size="small"
+                                                aria-label="Supprimer"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onDelete(item.id);
+                                                }}
+                                            >
+                                                <DeleteIcon />
+                                            </Component.DeleteFabButton>
+                                        )
                                     )}
                                 </TableCell>
                             )}
@@ -245,6 +253,7 @@ export const ListTable = ({
                                     setSelectedMenuItem(null);
                                     setAnchorEl(null);
                                 }}
+                                id={`deleteButton-${selectedMenuItem?.id}`}
                                 sx={{ color: theme.palette.error.main }}
                             >
                                 <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
@@ -253,6 +262,7 @@ export const ListTable = ({
                                 sx={{
                                     color: theme.palette.crud.action.textColor,
                                 }}
+                                id={`duplicateButton-${selectedMenuItem?.id}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
 
@@ -267,6 +277,7 @@ export const ListTable = ({
                                 Dupliquer
                             </MenuItem>
                             <MenuItem
+                                id={`previewButton-${selectedMenuItem?.id}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
 

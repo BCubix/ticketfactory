@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
     const redirectionSchema = Yup.object().shape({
@@ -90,7 +90,11 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                         required
                                     >
                                         {Constant.REDIRECTION_TYPES.map((item, index) => (
-                                            <MenuItem value={item.value} key={index}>
+                                            <MenuItem
+                                                value={item.value}
+                                                key={index}
+                                                id={`redirectionTypeValue-${item.value}`}
+                                            >
                                                 <ListItemText>{item.label}</ListItemText>
                                             </MenuItem>
                                         ))}
@@ -132,6 +136,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
+                                    id="active"
                                     onChange={(e) => {
                                         setFieldValue('active', e.target.checked);
                                     }}

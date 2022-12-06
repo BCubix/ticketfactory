@@ -116,6 +116,6 @@ class EventCategoryController extends CrudController
 
         $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
-        return $this->view(null, Response::HTTP_OK);
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -15,4 +15,4 @@ export const LightEditor = ({ value, onChange, className, ...rest }) => {
             {...rest}
         />
     );
-}
+};

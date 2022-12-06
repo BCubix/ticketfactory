@@ -8,7 +8,7 @@ import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsDateBlockForm = ({
@@ -62,6 +62,7 @@ export const EventsDateBlockForm = ({
                                 size="small"
                                 color="primary"
                                 variant="contained"
+                                id="useEventDateGroup"
                                 onClick={() => {
                                     if (values?.multipleDateBlock) {
                                         if (values?.eventDateBlocks?.length > 1) {
@@ -133,11 +134,19 @@ export const EventsDateBlockForm = ({
                                     setGenerateDate={setGenerateDate}
                                 />
 
-                                <FormHelperText error>{getBlockError(index)}</FormHelperText>
+                                {getBlockError(index) && (
+                                    <FormHelperText
+                                        error
+                                        id={`eventDateBlocks-${index}-helper-text`}
+                                    >
+                                        {getBlockError(index)}
+                                    </FormHelperText>
+                                )}
 
                                 {values.multipleDateBlock && (
                                     <Component.DeleteBlockFabButton
                                         size="small"
+                                        id={`removeEventDateBlock-${index}`}
                                         onClick={() => {
                                             remove(index);
                                         }}
@@ -150,6 +159,11 @@ export const EventsDateBlockForm = ({
                     </Box>
                 )}
             </FieldArray>
+            {errors?.eventDateBlocks && typeof errors?.eventDateBlocks === 'string' && (
+                <FormHelperText error id="eventDateBlocks-helper-text">
+                    {errors.eventDateBlocks}
+                </FormHelperText>
+            )}
             <Component.EventDateRange
                 open={generateDate}
                 setOpen={setGenerateDate}

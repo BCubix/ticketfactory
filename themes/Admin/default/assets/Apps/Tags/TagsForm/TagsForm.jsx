@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Button, FormControlLabel, FormHelperText, InputLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const TagsForm = ({ handleSubmit, initialValues = null }) => {
     const tagSchema = Yup.object().shape({
@@ -54,7 +54,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                         />
                         <InputLabel id="description">Description</InputLabel>
 
-                        <Component.LightEditorFormControl>
+                        <Component.LightEditorFormControl id="descriptionControl">
                             <Component.LightEditor
                                 labelId="description"
                                 value={values.description}
@@ -74,6 +74,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                             control={
                                 <Switch
                                     checked={values.active}
+                                    id="active"
                                     onChange={(e) => {
                                         setFieldValue('active', e.target.checked);
                                     }}
@@ -85,6 +86,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                         <Button
                             type="submit"
                             variant="contained"
+                            id="submitForm"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
                         >

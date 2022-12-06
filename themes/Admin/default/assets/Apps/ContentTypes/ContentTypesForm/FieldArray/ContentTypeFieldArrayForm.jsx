@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Card, CardContent, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const ContentTypeFieldArrayForm = ({
     values,
@@ -64,6 +64,7 @@ export const ContentTypeFieldArrayForm = ({
                         <Component.CmtEndPositionWrapper>
                             <Component.AddBlockButton
                                 size="small"
+                                id="addField"
                                 variant="outlined"
                                 color="primary"
                                 onClick={() => {

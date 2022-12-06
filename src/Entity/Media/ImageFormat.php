@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Repository\ImageFormatRepository;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,6 +30,12 @@ class ImageFormat extends Datable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
+
+    #[Gedmo\Slug(fields: ['name'])]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(length: 123, unique: true)]
+    private ?string $slug = null;
 
     #[Assert\PositiveOrZero(message: 'La hauteur de l\'image doit être un nombre supérieur ou égal à 0.')]
     #[Assert\NotBlank(message: 'La hauteur de l\'image doit être renseignée.')]
@@ -57,6 +64,18 @@ class ImageFormat extends Datable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

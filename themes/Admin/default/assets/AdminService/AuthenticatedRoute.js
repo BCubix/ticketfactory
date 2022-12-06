@@ -1,6 +1,6 @@
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { checkComponent, checkObject, checkString } from "@Services/utils/check";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { checkComponent, checkObject, checkString } from '@Services/utils/check';
 
 const AuthenticatedRouteObj = [
     () => ({ path: Constant.HOME_PATH, component: Component.Home, exact: true }),
@@ -8,6 +8,8 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.USER_BASE_PATH, component: Component.UserList }),
     () => ({ path: Constant.USER_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateUser }),
     () => ({ path: `${Constant.USER_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditUser }),
+
+    () => ({ path: `${Constant.PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, component: Component.EditProfile }),
 
     () => ({ path: Constant.EVENTS_BASE_PATH, component: Component.EventsList }),
     () => ({ path: Constant.EVENTS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateEvent }),
@@ -38,14 +40,14 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateImageFormat }),
     () => ({
         path: `${Constant.IMAGE_FORMATS_BASE_PATH}/:id${Constant.EDIT_PATH}`,
-        component: Component.EditImageFormat
+        component: Component.EditImageFormat,
     }),
 
     () => ({ path: Constant.CONTENT_TYPES_BASE_PATH, component: Component.ContentTypesList }),
     () => ({ path: Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateContentType }),
     () => ({
         path: `${Constant.CONTENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`,
-        component: Component.EditContentType
+        component: Component.EditContentType,
     }),
 
     () => ({ path: Constant.CONTENT_BASE_PATH, component: Component.ContentsList }),
@@ -55,18 +57,18 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.CONTACT_REQUEST_BASE_PATH, component: Component.ContactRequestsList }),
     () => ({
         path: Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH,
-        component: Component.CreateContactRequests
+        component: Component.CreateContactRequests,
     }),
     () => ({
         path: `${Constant.CONTACT_REQUEST_BASE_PATH}/:id${Constant.EDIT_PATH}`,
-        component: Component.EditContactRequest
+        component: Component.EditContactRequest,
     }),
 
     () => ({ path: Constant.REDIRECTIONS_BASE_PATH, component: Component.RedirectionsList }),
     () => ({ path: Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateRedirection }),
     () => ({
         path: `${Constant.REDIRECTIONS_BASE_PATH}/:id${Constant.EDIT_PATH}`,
-        component: Component.EditRedirection
+        component: Component.EditRedirection,
     }),
 
     () => ({ path: Constant.MENUS_BASE_PATH, component: Component.MenusList }),
@@ -93,8 +95,8 @@ export const AuthenticatedRoute = new Proxy(AuthenticatedRouteObj, {
         }
 
         const result = Reflect.get(target, key, receiver);
-        return typeof result === "function" && result.name === "" ? result() : result;
-    }
+        return typeof result === 'function' && result.name === '' ? result() : result;
+    },
 });
 
 /**
@@ -111,7 +113,7 @@ export function setAuthenticatedRoute(path, component, option = {}) {
     checkComponent(component);
     checkObject(option);
 
-    const index = AuthenticatedRouteObj.findIndex(route => route().path === path);
+    const index = AuthenticatedRouteObj.findIndex((route) => route().path === path);
     if (index === -1) {
         AuthenticatedRouteObj.push(() => ({
             path: path,

@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
     const imageFormatSchema = Yup.object().shape({
@@ -95,6 +95,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
+                                    id="active"
                                     onChange={(e) => {
                                         setFieldValue('active', e.target.checked);
                                     }}

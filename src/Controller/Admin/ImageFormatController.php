@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Form\Admin\Media\ImageFormatType;
+use App\Manager\ImageFormatManager;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -50,5 +51,25 @@ class ImageFormatController extends CrudController
     public function delete(Request $request, int $formatId): View
     {
         return parent::delete($request, $formatId);
+    }
+
+    #[Rest\Post('/image-formats/generate/{formatId}', requirements: ['formatId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
+    {
+        if (null === $formatId) {
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+        } else {
+            $format = $this->em->getRepository(ImageFormat::class)->findOneForAdmin($mediaId);
+            if (null === $object) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
+            }
+
+            $formats = [$format];
+        }
+
+        $ifm->generateThumbnails($formats);
+
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 }

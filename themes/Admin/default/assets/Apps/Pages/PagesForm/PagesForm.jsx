@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Box } from '@mui/system';
 import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const PagesForm = ({ handleSubmit, initialValues = null }) => {
     const pageSchema = Yup.object().shape({
@@ -78,6 +78,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                             control={
                                 <Switch
                                     checked={Boolean(values.active)}
+                                    id="active"
                                     onChange={(e) => {
                                         setFieldValue('active', e.target.checked);
                                     }}
@@ -89,6 +90,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                         <Button
                             type="submit"
                             variant="contained"
+                            id="submitForm"
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isSubmitting}
                         >
@@ -99,5 +101,4 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
             )}
         </Formik>
     );
-}
-
+};

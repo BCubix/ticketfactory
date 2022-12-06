@@ -1,4 +1,4 @@
-import { checkString } from '@Services/utils/check';
+import { checkString } from '../services/utils/check';
 
 const ConstantObj = {
     API_URL: 'http://localhost:8000/admin',
@@ -18,6 +18,7 @@ const ConstantObj = {
     MODIFY_PASSWORD_PATH: '/admin/modifier-mon-mot-de-passe',
 
     USER_BASE_PATH: '/admin/utilisateurs',
+    PROFILE_BASE_PATH: '/admin/profil',
     EVENTS_BASE_PATH: '/admin/evenements',
     CATEGORIES_BASE_PATH: '/admin/categories',
     ROOMS_BASE_PATH: '/admin/salles',
@@ -63,6 +64,11 @@ const ConstantObj = {
     CONTENT_MODULES_EXTENSION: 'FieldContentType',
 
     CANCELED_REQUEST_ERROR_CODE: 'ERR_CANCELED',
+
+    USER_ROLES: [
+        { label: 'Utilisateur', value: 'ROLE_USER' },
+        { label: 'Admin', value: 'ROLE_ADMIN' },
+    ],
 };
 
 ConstantObj.ALL_FILE_SUPPORTED = () =>

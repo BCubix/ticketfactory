@@ -2,10 +2,21 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    InputLabel,
+    ListItemText,
+    MenuItem,
+    Select,
+    Switch,
+} from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
+import { Constant } from '../../../AdminService/Constant';
 
 export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
     const userSchema = Yup.object().shape({
@@ -28,6 +39,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                     .required('Veuillez confirmer le mot de passe.');
             }
         }),
+        roles: Yup.string().required('Veuillez renseigner le rôle de cet utilisateur.'),
     });
 
     return (
@@ -36,8 +48,10 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                 firstName: initialValues?.firstName || '',
                 lastName: initialValues?.lastName || '',
                 email: initialValues?.email || '',
+                roles: initialValues?.roles?.at(0) || '',
                 password: '',
                 confirmPassword: '',
+                active: initialValues?.active || false,
             }}
             validationSchema={userSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -49,6 +63,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                 values,
                 errors,
                 touched,
+                setFieldValue,
                 handleChange,
                 handleBlur,
                 handleSubmit,
@@ -60,33 +75,74 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                     onSubmit={handleSubmit}
                 >
                     <Component.CmtFormBlock title={'Informations générales'}>
-                        <Component.CmtTextField
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            label="Email"
-                            name="email"
-                            error={touched.email && errors.email}
-                            required
-                        />
-                        <Component.CmtTextField
-                            value={values.firstName}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            label="Prénom"
-                            name="firstName"
-                            error={touched.firstName && errors.firstName}
-                            required
-                        />
-                        <Component.CmtTextField
-                            value={values.lastName}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            label="Nom"
-                            name="lastName"
-                            error={touched.lastName && errors.lastName}
-                            required
-                        />
+                        <Grid container spacing={4}>
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtTextField
+                                    value={values.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Email"
+                                    name="email"
+                                    error={touched.email && errors.email}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth sx={{ marginTop: 2 }}>
+                                    <InputLabel
+                                        id="userRolesLabel"
+                                        size="small"
+                                        className="required-input"
+                                    >
+                                        Rôles
+                                    </InputLabel>
+                                    <Select
+                                        labelId="userRolesLabel"
+                                        size="small"
+                                        variant="standard"
+                                        id="roles"
+                                        value={values.roles}
+                                        label="Rôles"
+                                        onChange={(e) => {
+                                            setFieldValue('roles', e.target.value);
+                                        }}
+                                    >
+                                        {Constant.USER_ROLES.map((item, index) => (
+                                            <MenuItem
+                                                value={item.value}
+                                                key={index}
+                                                id={`userRolesValue-${item.value}`}
+                                            >
+                                                <ListItemText>{item.label}</ListItemText>
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtTextField
+                                    value={values.firstName}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Prénom"
+                                    name="firstName"
+                                    error={touched.firstName && errors.firstName}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtTextField
+                                    value={values.lastName}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Nom"
+                                    name="lastName"
+                                    error={touched.lastName && errors.lastName}
+                                    required
+                                />
+                            </Grid>
+                        </Grid>
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Sécurité">
@@ -110,6 +166,21 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                         />
                     </Component.CmtFormBlock>
                     <Box display="flex" justifyContent={'flex-end'}>
+                        <FormControlLabel
+                            sx={{ marginRight: 2, marginTop: 1 }}
+                            control={
+                                <Switch
+                                    checked={Boolean(values.active)}
+                                    id="active"
+                                    onChange={(e) => {
+                                        setFieldValue('active', e.target.checked);
+                                    }}
+                                />
+                            }
+                            label={'Activé ?'}
+                            labelPlacement="start"
+                        />
+
                         <Button
                             type="submit"
                             variant="contained"
