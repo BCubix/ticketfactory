@@ -64,10 +64,10 @@ const TableColumnObj = {
                 );
             },
         },
-        { name: 'displayName', label: 'Nom', width: '10%', sortable: true },
-        { name: 'version', label: 'Version', width: '5%', sortable: true },
-        { name: 'author', label: 'Auteur', width: '10%', sortable: true },
-        { name: 'description', label: 'Description', width: '58%', sortable: true },
+        { name: 'displayName', label: 'Nom', width: '10%' },
+        { name: 'version', label: 'Version', width: '5%' },
+        { name: 'author', label: 'Auteur', width: '10%' },
+        { name: 'description', label: 'Description', width: '58%' },
     ],
     PagesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -98,21 +98,6 @@ const TableColumnObj = {
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
-    ],
-    ThemesList: [
-        { name: 'id', label: 'ID', width: '10%', sortable: true },
-        {
-            label: 'Preview',
-            width: '10%',
-            renderFunction: (item) => {
-                return (
-                    <Avatar>
-                        <ExtensionIcon />
-                    </Avatar>
-                );
-            },
-        },
-        { name: 'name', label: 'Nom', width: '70%', sortable: true },
     ],
     UserList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
