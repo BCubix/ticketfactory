@@ -110,16 +110,16 @@ export const ThemesList = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
                             {themes.map((theme, index) => (
                                 <Component.CmtCard sx={{ width: 300, marginInline: 3 }} key={index}>
-                                    <CardHeader
-                                        title={`${theme.name}`}
-                                        subheader={`Par ${theme.author.name}, version ${theme.version}`}
-                                    />
                                     <CardMedia
                                         component='img'
                                         alt='preview'
                                         height={250}
                                         image={theme.previewUrl}
                                         sx={{ objectFit: 'cover', objectPosition: 'top' }}
+                                    />
+                                    <CardHeader
+                                        title={`${theme.name}`}
+                                        subheader={`Par ${theme.author.name} (${theme.version})`}
                                     />
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
                                         {theme.id !== themeId && (
