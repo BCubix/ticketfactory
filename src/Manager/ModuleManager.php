@@ -6,6 +6,7 @@ use App\Entity\Module\Module;
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Service\ModuleService;
 
+use App\Utils\Exec;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -52,6 +53,7 @@ class ModuleManager extends AbstractManager
 
         if ($clear) {
             $this->ms->clear();
+            Exec::exec('yarn run encore production');
         }
 
         return $module;
