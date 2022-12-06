@@ -123,6 +123,7 @@ export const ThemesList = () => {
                                         alt='preview'
                                         height={250}
                                         image={theme.previewUrl}
+                                        sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                     />
                                     <CardContent>
                                         {theme.name}
