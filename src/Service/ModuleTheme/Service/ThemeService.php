@@ -86,6 +86,10 @@ class ThemeService extends ServiceAbstract
             return;
         }
 
+        if ($nodeValue === 'preview.jpg' || $nodeValue === 'preview.png') {
+            return;
+        }
+
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
             static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
     }
