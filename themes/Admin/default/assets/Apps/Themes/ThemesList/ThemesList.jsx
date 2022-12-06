@@ -3,9 +3,13 @@ import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Box } from '@mui/system';
 import {
+    CardActions,
     CardContent,
+    CardMedia,
     Dialog,
     DialogContent,
     DialogTitle,
@@ -15,7 +19,6 @@ import {
 import { Api } from "@/AdminService/Api";
 import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
 
 import { changeThemesFilters, getThemesAction, themesSelector } from '@Redux/themes/themesSlice';
 import { apiMiddleware } from "@Services/utils/apiMiddleware";
@@ -85,6 +88,10 @@ export const ThemesList = () => {
         });
     }
 
+    if (!themes) {
+        return <></>;
+    }
+
     return (
         <>
             <Component.CmtPageWrapper title={'Themes'}>
@@ -108,28 +115,49 @@ export const ThemesList = () => {
                             changeFilters={(values) => dispatch(changeThemesFilters(values))}
                         />
 
-                        <Component.ListTable
-                            table={TableColumn.ThemesList}
-                            list={themes}
-                            themeId={themeId}
-                            onSelect={(name) => handleSelect(name)}
-                            onRemove={(name) => setDeleteDialog(name)}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeThemesFilters(newFilters))}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changeThemesFilters({ ...filters }, newValue))
-                            }
-                            setLimit={(newValue) => {
-                                dispatch(changeThemesFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={themes?.length}
-                        />
+                        <Box sx={{ display: 'flex', flexDirection: 'row'}}>
+                            {themes.map((theme, index) => (
+                                <Component.CmtCard sx={{ width: 300, marginInline: 3 }} key={index}>
+                                    <CardMedia
+                                        component='img'
+                                        alt='preview'
+                                        height={250}
+                                        image={theme.previewUrl}
+                                    />
+                                    <CardContent>
+                                        {theme.name}
+                                    </CardContent>
+                                    <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
+                                        {theme.id !== themeId && (
+                                            (<Component.ActionFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="primary"
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleSelect(theme.name);
+                                                }}
+                                            >
+                                                <CheckCircleIcon />
+                                            </Component.ActionFabButton>)
+                                        )}
+                                        <Component.DeleteFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="error"
+                                            size="small"
+                                            aria-label="Supprimer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setDeleteDialog(theme.name);
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </Component.DeleteFabButton>
+                                    </CardActions>
+                                </Component.CmtCard>
+                            ))}
+                        </Box>
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
