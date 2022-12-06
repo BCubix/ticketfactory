@@ -9,7 +9,6 @@ import { Box } from '@mui/system';
 import {
     CardActions,
     CardContent,
-    CardHeader,
     CardMedia,
     Dialog,
     DialogContent,
@@ -109,7 +108,7 @@ export const ThemesList = () => {
 
                         <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
                             {themes.map((theme, index) => (
-                                <Component.CmtCard sx={{ width: 300, marginInline: 3 }} key={index}>
+                                <Component.CmtCard sx={{ width: 300, marginInline: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }} key={index}>
                                     <CardMedia
                                         component='img'
                                         alt='preview'
@@ -117,10 +116,14 @@ export const ThemesList = () => {
                                         image={theme.previewUrl}
                                         sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                     />
-                                    <CardHeader
-                                        title={`${theme.name}`}
-                                        subheader={`Par ${theme.author.name} (${theme.version})`}
-                                    />
+                                    <CardContent>
+                                        <Typography variant="h5" fontSize={15} align={'center'}>
+                                            {theme.name}
+                                        </Typography>
+                                        <Typography variant="subtitle1" color="text.secondary" fontSize={13} align={'center'}>
+                                            {`Par ${theme.author.name} (${theme.version})`}
+                                        </Typography>
+                                    </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
                                         {theme.name !== themeName && (
                                             (<Component.ActionFabButton
