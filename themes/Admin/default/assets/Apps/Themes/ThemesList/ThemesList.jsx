@@ -9,6 +9,7 @@ import { Box } from '@mui/system';
 import {
     CardActions,
     CardContent,
+    CardHeader,
     CardMedia,
     Dialog,
     DialogContent,
@@ -110,14 +111,13 @@ export const ThemesList = () => {
                             </Component.CreateButton>
                         </Box>
 
-                        <Component.ThemesFilters
-                            filters={filters}
-                            changeFilters={(values) => dispatch(changeThemesFilters(values))}
-                        />
-
-                        <Box sx={{ display: 'flex', flexDirection: 'row'}}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
                             {themes.map((theme, index) => (
                                 <Component.CmtCard sx={{ width: 300, marginInline: 3 }} key={index}>
+                                    <CardHeader
+                                        title={`${theme.name}`}
+                                        subheader={`Par ${theme.author.name}, version ${theme.version}`}
+                                    />
                                     <CardMedia
                                         component='img'
                                         alt='preview'
@@ -125,9 +125,6 @@ export const ThemesList = () => {
                                         image={theme.previewUrl}
                                         sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                     />
-                                    <CardContent>
-                                        {theme.name}
-                                    </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
                                         {theme.id !== themeId && (
                                             (<Component.ActionFabButton
