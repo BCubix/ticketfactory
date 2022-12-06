@@ -57,6 +57,13 @@ class ModuleController extends AdminController
         if (!isset($filters['active'])) {
             $modules = $this->ms->getAllInDisk();
 
+            for ($i = 0; $i < count($modules); $i++) {
+                $result = $this->em->getRepository(Module::class)->findOneByNameForAdmin($modules[$i]['name']);
+                if ($result) {
+                    $modules[$i] += [ 'active' => $result->isActive() ];
+                }
+            }
+
             $objects['results'] = $modules;
             $objects['total'] = count($modules);
         }

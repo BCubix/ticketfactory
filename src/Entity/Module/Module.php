@@ -33,11 +33,6 @@ class Module extends Datable
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private $logoUrl;
-
     public function getId(): int
     {
         return $this->id;
@@ -51,18 +46,6 @@ class Module extends Datable
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getLogoUrl()
-    {
-        return $this->logoUrl;
-    }
-
-    public function setLogoUrl(?string $logoUrl): self
-    {
-        $this->logoUrl = $logoUrl;
 
         return $this;
     }

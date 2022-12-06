@@ -41,23 +41,9 @@ class ModuleManager extends AbstractManager
      */
     public function createNewModule(string $name, bool $clear = true): Module
     {
-        $modulePath = $this->ms->getDir() . '/' . $name;
-
         $module = new Module();
         $module->setActive(true);
         $module->setName($name);
-
-        $ext = null;
-        if (is_file($modulePath . '/logo.png')) {
-            $ext = 'png';
-        } else if (is_file($modulePath . '/logo.jpg')) {
-            $ext = 'jpg';
-        }
-
-        if (null !== $ext) {
-            $this->fs->copy("$modulePath/logo.$ext", "$this->projectDir/public/modules/logos/$name.$ext");
-            $module->setLogoUrl("/modules/logos/$name.$ext");
-        }
 
         $this->em->persist($module);
         $this->em->flush();

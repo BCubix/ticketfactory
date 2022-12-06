@@ -2,7 +2,6 @@
 
 namespace App\Entity\Theme;
 
-use App\Entity\Datable;
 use App\Repository\ThemeRepository;
 
 use Doctrine\DBAL\Types\Types;
@@ -11,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
-class Theme extends Datable
+class Theme
 {
     /*** > Trait ***/
     /*** < Trait ***/
