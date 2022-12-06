@@ -1,20 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
     error: null,
     themes: null,
-    total: null,
-    filters: {
-        active: getBooleanFromString(sessionStorage.getItem('themesActiveFilter')),
-        name: sessionStorage.getItem('themesNameFilter') || '',
-        sort: sessionStorage.getItem('themesSort') || 'id ASC',
-        page: 1,
-        limit: 20,
-    },
 };
 
 const themesSlice = createSlice({
@@ -29,7 +20,6 @@ const themesSlice = createSlice({
             state.loading = false;
             state.error = null;
             state.themes = action.payload.themes;
-            state.total = action.payload.total;
         },
 
         getThemesFailure: (state, action) => {
@@ -41,22 +31,16 @@ const themesSlice = createSlice({
         resetThemes: (state) => {
             state = { ...initialState };
         },
-
-        updateThemesFilters: (state, action) => {
-            state.filters = action.payload.filters;
-        },
     },
 });
 
-export function getThemesAction(filters) {
-    return async (dispatch, getState) => {
+export function getThemesAction(data) {
+    return async (dispatch) => {
         try {
             dispatch(getThemes());
 
             apiMiddleware(dispatch, async () => {
-                const state = filters || getState().themes?.filters;
-
-                const themes = await Api.themesApi.getThemes(state);
+                const themes = await Api.themesApi.getThemes(data);
                 if (!themes.result) {
                     dispatch(getThemesFailure({ error: themes.error }));
 
@@ -71,20 +55,6 @@ export function getThemesAction(filters) {
     };
 }
 
-export function changeThemesFilters(filters, theme = 1) {
-    return async (dispatch) => {
-        sessionStorage.setItem('themesActiveFilter', filters?.active);
-        sessionStorage.setItem('themesNameFilter', filters?.name);
-        sessionStorage.setItem('themesSort', filters?.sort);
-
-        filters.theme = theme;
-
-        dispatch(updateThemesFilters({ filters: filters }));
-        dispatch(getThemesAction(filters));
-    };
-}
-
-export const { getThemes, getThemesSuccess, getThemesFailure, resetThemes, updateThemesFilters } =
-    themesSlice.actions;
+export const { getThemes, getThemesSuccess, getThemesFailure, resetThemes } = themesSlice.actions;
 export const themesSelector = (state) => state.themes;
 export default themesSlice.reducer;

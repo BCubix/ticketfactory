@@ -21,11 +21,11 @@ import { Api } from "@/AdminService/Api";
 import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
 
-import { changeThemesFilters, getThemesAction, themesSelector } from '@Redux/themes/themesSlice';
+import { getThemesAction, themesSelector } from '@Redux/themes/themesSlice';
 import { apiMiddleware } from "@Services/utils/apiMiddleware";
 
 export const ThemesList = () => {
-    const { loading, themes, filters, total, error } = useSelector(themesSelector);
+    const { loading, themes, error } = useSelector(themesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
@@ -100,11 +100,7 @@ export const ThemesList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des thèmes{' '}
-                                {themes &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + themes.length
-                                    } sur ${total})`}
+                                Liste des thèmes
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
                                 Upload

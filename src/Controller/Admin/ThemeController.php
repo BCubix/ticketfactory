@@ -11,7 +11,6 @@ use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -47,14 +46,10 @@ class ThemeController extends AdminController
 
     #[Rest\Get('/themes')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getAll(Request $request, ParamFetcher $paramFetcher): View
+    public function getAll(Request $request): View
     {
         $themes = $this->ts->getAllInDisk();
-
-        return $this->view([
-            'results' => $themes,
-            'total' => count($themes)
-        ], Response::HTTP_OK);
+        return $this->view($themes, Response::HTTP_OK);
     }
 
     #[Rest\Get('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
