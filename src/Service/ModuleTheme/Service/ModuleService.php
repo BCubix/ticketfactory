@@ -6,6 +6,7 @@ use App\Exception\ApiException;
 use App\Service\Db\Db;
 use App\Service\ModuleTheme\Config\ModuleConfig;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 class ModuleService extends ServiceAbstract
@@ -108,5 +109,31 @@ class ModuleService extends ServiceAbstract
 
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
             static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
+    }
+
+    public function getConfig(string $name): array
+    {
+        return $this->callConfig($name, 'getInfo');
+    }
+
+    public function getImage(string $name): array
+    {
+        $imagePathWithoutExt = $this->dir . "/$name/logo";
+        $imageUrlWithoutExt = "modules/$name/logo";
+
+        $ext = null;
+        if (is_file("$imagePathWithoutExt.png")) {
+            $ext = 'png';
+        } else if (is_file("$imagePathWithoutExt.jpg")) {
+            $ext = 'jpg';
+        }
+
+        if (null !== $ext) {
+            $fs = new Filesystem();
+            $fs->copy("$imagePathWithoutExt.$ext", "$this->projectDir/public/$imageUrlWithoutExt.$ext");
+            $ext = "/$imageUrlWithoutExt.$ext";
+        }
+
+        return [ 'logoUrl' => $ext ];
     }
 }

@@ -59,28 +59,6 @@ class ThemeService extends ServiceAbstract
         $file->setContent($newContent);
     }
 
-    /**
-     * Return the information from the theme config
-     *
-     * @param string $name
-     *
-     * @return array
-     * @throws ApiException
-     */
-    public function getConfig(string $name): array
-    {
-        $config = Yaml::parseFile($this->dir . '/' . $name . '/config/config.yaml');
-        if (!$config) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "Le fichier de configuration du thème $name est vide.");
-        }
-
-        $processor = new Processor();
-        $themeConfig = new ThemeConfig();
-
-        return $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
-    }
-
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
         if ($nodeKey === 'assets') {
@@ -137,5 +115,48 @@ class ThemeService extends ServiceAbstract
         }
 
         return $tree;
+    }
+
+    /**
+     * Return the information from the theme config
+     *
+     * @param string $name
+     *
+     * @return array
+     * @throws ApiException
+     */
+    public function getConfig(string $name): array
+    {
+        $config = Yaml::parseFile($this->dir . '/' . $name . '/config/config.yaml');
+        if (!$config) {
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "Le fichier de configuration du thème $name est vide.");
+        }
+
+        $processor = new Processor();
+        $themeConfig = new ThemeConfig();
+
+        return $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
+    }
+
+    public function getImage(string $name): array
+    {
+        $imagePathWithoutExt = $this->dir . "/$name/preview";
+        $imageUrlWithoutExt = "themes/$name/preview";
+
+        $ext = null;
+        if (is_file("$imagePathWithoutExt.png")) {
+            $ext = 'png';
+        } else if (is_file("$imagePathWithoutExt.jpg")) {
+            $ext = 'jpg';
+        }
+
+        if (null !== $ext) {
+            $fs = new Filesystem();
+            $fs->copy("$imagePathWithoutExt.$ext", "$this->projectDir/public/$imageUrlWithoutExt.$ext");
+            $ext = "/$imageUrlWithoutExt.$ext";
+        }
+
+        return [ 'previewUrl' => $ext ];
     }
 }

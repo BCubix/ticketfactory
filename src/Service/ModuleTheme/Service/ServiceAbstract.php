@@ -163,5 +163,40 @@ abstract class ServiceAbstract
         Exec::exec('php ../bin/console cache:clear');
         Exec::exec('php ../bin/console doctrine:schema:update --force');
     }
+
+    /**
+     * Get all in disk
+     *
+     * @return array
+     */
+    public function getAllInDisk(): array
+    {
+        $result = [];
+
+        $paths = glob($this->dir . '/*', GLOB_ONLYDIR);
+        foreach ($paths as $path) {
+            $name = basename($path);
+            $result[] = $this->getConfig($name) + $this->getImage($name);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the information from the config
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public abstract function getConfig(string $name): array;
+
+    /**
+     * Get image and copy in public directory
+     *
+     * @param string $name
+     * @return array
+     */
+    public abstract function getImage(string $name): array;
 }
 
