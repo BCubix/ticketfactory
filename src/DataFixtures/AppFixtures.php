@@ -103,6 +103,61 @@ class AppFixtures extends Fixture
         $parameter->setBreakpointsValue("xs-12 md-6");
         $om->persist($parameter);
 
+        $parameter = new Parameter();
+        $parameter->setName("Format des images");
+        $parameter->setType("string");
+        $parameter->setParamKey("image_format");
+        $parameter->setParamValue(0);
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $parameter = new Parameter();
+        $parameter->setName("Cropper ou compléter les images ?");
+        $parameter->setType("bool");
+        $parameter->setParamKey("image_to_crop");
+        $parameter->setParamValue(false);
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $parameter = new Parameter();
+        $parameter->setName("Qualité d'image WEBP");
+        $parameter->setType("int");
+        $parameter->setParamKey("image_webp_quality");
+        $parameter->setParamValue(90);
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $parameter = new Parameter();
+        $parameter->setName("Qualité d'image PNG");
+        $parameter->setType("int");
+        $parameter->setParamKey("image_png_quality");
+        $parameter->setParamValue(90);
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $parameter = new Parameter();
+        $parameter->setName("Qualité d'image JPG");
+        $parameter->setType("int");
+        $parameter->setParamKey("image_jpg_quality");
+        $parameter->setParamValue(90);
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
         // Default User
         $user = new User();
         $user->setActive(true);

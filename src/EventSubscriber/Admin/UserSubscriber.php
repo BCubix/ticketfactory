@@ -41,7 +41,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
 
         $admins = $this->um->getAdminUsers();
-        if (count($admins) <= 1) {
+        if (count($admins) == 1 && $admin[0]->getId() == $user->getId()) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer le dernier compte administrateur.');
         }
     }
