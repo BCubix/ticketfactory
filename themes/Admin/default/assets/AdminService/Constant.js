@@ -84,7 +84,7 @@ export const Constant = new Proxy(ConstantObj, {
         }
 
         const result = Reflect.get(target, key, receiver);
-        return typeof result === 'function' && result.name === '' ? result() : result;
+        return typeof result === 'function' && (result.name === '' || result.name === 'ALL_FILE_SUPPORTED') ? result() : result;
     },
 });
 
