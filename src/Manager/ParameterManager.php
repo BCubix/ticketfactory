@@ -20,7 +20,7 @@ class ParameterManager extends AbstractManager
         $this->pg = $pg;
     }
 
-    public function get(string $key): string
+    public function get(string $key): mixed
     {
         return $this->getParameterValue($this->getParameter($key));
     }

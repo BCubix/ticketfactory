@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Media\ImageFormat;
+use App\Exception\ApiException;
 use App\Form\Admin\Media\ImageFormatType;
 use App\Manager\ImageFormatManager;
 
@@ -10,6 +11,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class ImageFormatController extends CrudController
@@ -60,8 +62,8 @@ class ImageFormatController extends CrudController
         if (null === $formatId) {
             $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
         } else {
-            $format = $this->em->getRepository(ImageFormat::class)->findOneForAdmin($mediaId);
-            if (null === $object) {
+            $format = $this->em->getRepository(ImageFormat::class)->findOneForAdmin($formatId);
+            if (null === $format) {
                 throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
             }
 
