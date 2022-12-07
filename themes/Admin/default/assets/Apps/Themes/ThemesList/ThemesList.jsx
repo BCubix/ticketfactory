@@ -10,6 +10,7 @@ import {
     CardActions,
     CardContent,
     CardMedia,
+    CircularProgress,
     Dialog,
     DialogContent,
     DialogTitle,
@@ -29,6 +30,8 @@ export const ThemesList = () => {
     const navigate = useNavigate();
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
+    const [loadingDialog, setLoadingDialog] = useState(null);
+
     const [themeName, setThemeName] = useState(null);
 
     useEffect(() => {
@@ -58,6 +61,8 @@ export const ThemesList = () => {
 
     const handleSelect = async (name) => {
         apiMiddleware(dispatch, async () => {
+            setLoadingDialog(`Activation et installation du thème : ${name}`);
+
             const result = await Api.themesApi.activeTheme(name);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -65,6 +70,8 @@ export const ThemesList = () => {
 
                 return;
             }
+
+            setLoadingDialog(null);
 
             dispatch(getThemesAction());
             NotificationManager.success('Le thème choisi est devenue le thème principal.', 'Succès', Constant.REDIRECTION_TIME);
@@ -180,6 +187,18 @@ export const ThemesList = () => {
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
+            <Dialog
+                fullWidth
+                open={loadingDialog !== null}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+            >
+                <DialogTitle sx={{ fontSize: 20 }}>{loadingDialog}</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <CircularProgress />
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

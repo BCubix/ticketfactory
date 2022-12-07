@@ -7,6 +7,7 @@ import { Box } from '@mui/system';
 import {
     Button,
     CardContent,
+    CircularProgress,
     Dialog, DialogActions,
     DialogContent,
     DialogTitle,
@@ -37,6 +38,7 @@ export const ModulesList = () => {
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [removeDialog, setRemoveDialog] = useState(null);
     const [actionDelete, setActionDelete] = useState(ACTION_DISABLE);
+    const [loadingDialog, setLoadingDialog] = useState(null);
 
     useEffect(() => {
         if (!loading && !modules && !error) {
@@ -59,6 +61,8 @@ export const ModulesList = () => {
             return;
         }
 
+        setLoadingDialog(`Activation et installation du module : ${name}`);
+
         const result = await Api.modulesApi.activeModule(name);
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -66,6 +70,8 @@ export const ModulesList = () => {
 
             return;
         }
+
+        setLoadingDialog(null);
 
         NotificationManager.success('Le module a bien été activé.', 'Succès', Constant.REDIRECTION_TIME);
         dispatch(getModulesAction());
@@ -80,6 +86,16 @@ export const ModulesList = () => {
             return;
         }
 
+        setDeleteDialog(null);
+
+        if (action === ACTION_DISABLE) {
+            setLoadingDialog(`Désactivation du module : ${name}`);
+        } else if (action === ACTION_UNINSTALL) {
+            setLoadingDialog(`Désinstallation du module : ${name}`);
+        } else {
+            setLoadingDialog(`Désinstallation et suppression du module : ${name}`);
+        }
+
         const result = await Api.modulesApi.disableModule(
             name,
             action === ACTION_DISABLE ? 0 : action === ACTION_UNINSTALL ? 1 : 2
@@ -92,15 +108,15 @@ export const ModulesList = () => {
             return;
         }
 
+        setLoadingDialog(null);
+
         const message = result.module
             ? 'Le module a bien été désactivé.'
             : action === ACTION_UNINSTALL ? 'Le module a bien été désinstallé.' : 'Le module a bien été désinstallé et supprimer.';
 
         NotificationManager.success(message, 'Succès', Constant.REDIRECTION_TIME);
 
-        setDeleteDialog(null);
         setActionDelete(ACTION_DISABLE);
-
         dispatch(getModulesAction());
         setTimeout(() => window.location.reload(), 1000);
     }
@@ -216,6 +232,18 @@ export const ModulesList = () => {
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
+            <Dialog
+                fullWidth
+                open={loadingDialog !== null}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+            >
+                <DialogTitle sx={{ fontSize: 17 }}>{loadingDialog}</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <CircularProgress />
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
