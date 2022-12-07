@@ -49,7 +49,12 @@ class ImageFormat extends Datable
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'integer')]
-    private ?int $length = null;
+    private ?int $width = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $themeUse = null;
 
     public function getId(): ?int
     {
@@ -92,14 +97,26 @@ class ImageFormat extends Datable
         return $this;
     }
 
-    public function getLength(): ?int
+    public function getWidth(): ?int
     {
-        return $this->length;
+        return $this->width;
     }
 
-    public function setLength(int $length): self
+    public function setWidth(int $width): self
     {
-        $this->length = $length;
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function isThemeUse(): ?bool
+    {
+        return $this->themeUse;
+    }
+
+    public function setThemeUse(bool $themeUse): self
+    {
+        $this->themeUse = $themeUse;
 
         return $this;
     }

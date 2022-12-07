@@ -45,7 +45,7 @@ class ImageFormatManager extends AbstractManager
             foreach ($formats['results'] as $format) {
                 $sourceFile = $mediaFile->getRealPath();
                 $destinationFile = $this->mm->getFilePathFromFormat($mediaFile, $format);
-                $destW = $format->getLength();
+                $destW = $format->getWidth();
                 $destH = $format->getHeight();
 
                 if (!$this->formatImage($sourceFile, $destinationFile, $destW, $destH)) {
