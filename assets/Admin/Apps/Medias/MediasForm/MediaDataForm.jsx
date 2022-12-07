@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Button, FormControlLabel, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement }) => {
     const mediaSchema = Yup.object().shape({
@@ -28,16 +28,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                isSubmitting,
-            }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
                 <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
                     {mediaType === 'image' && (
                         <Component.CmtTextField
@@ -83,34 +74,16 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                         error={touched.description && errors.description}
                         sx={{ mt: 10 }}
                     />
+                    <Box display={'flex'} justifyContent="flex-end" sx={{ pb: 3, pt: 5 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />
+                    </Box>
 
-                    <Box display="flex" justifyContent={'flex-end'} sx={{ my: 5 }}>
-                        <Button
-                            color="error"
-                            onClick={deleteElement}
-                            sx={{ mt: 3, mb: 2, mr: 'auto' }}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ mb: 5, mt: 2 }}>
+                        <Button color="error" onClick={deleteElement} sx={{ mt: 3, mb: 2, mr: 'auto' }}>
                             Supprimer l'element
                         </Button>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+
+                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
                             Modifier
                         </Button>
                     </Box>

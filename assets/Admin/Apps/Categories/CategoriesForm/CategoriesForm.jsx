@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, Switch } from '@mui/material';
+import { Button, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -35,21 +35,8 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    component="form"
-                    onSubmit={handleSubmit}
-                    title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.name}
@@ -62,36 +49,13 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                         />
 
                         {values?.mustHaveParent && (
-                            <Component.ParentCategoryPartForm
-                                values={values}
-                                categoriesList={categoriesList}
-                                setFieldValue={setFieldValue}
-                                touched={touched}
-                                errors={errors}
-                            />
+                            <Component.ParentCategoryPartForm values={values} categoriesList={categoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
                         )}
                     </Component.CmtFormBlock>
 
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={values.active}
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} alignItems="center" sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Catégorie active ?" />
+                        <Button type="submit" variant="contained" disabled={isSubmitting}>
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

@@ -25,22 +25,8 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    title={`${initialValues ? 'Modification' : 'Création'} d'un tag`}
-                    component="form"
-                    onSubmit={handleSubmit}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
+                <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'un tag`} component="form" onSubmit={handleSubmit}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.name}
@@ -63,33 +49,13 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                                     setFieldValue('description', val);
                                 }}
                             />
-                            <FormHelperText error>
-                                {touched.description && errors.description}
-                            </FormHelperText>
+                            <FormHelperText error>{touched.description && errors.description}</FormHelperText>
                         </Component.LightEditorFormControl>
                     </Component.CmtFormBlock>
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={values.active}
-                                    id="active"
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            id="submitForm"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Tag actif ?" />
+
+                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

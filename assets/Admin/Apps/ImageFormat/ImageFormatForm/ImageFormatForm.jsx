@@ -9,15 +9,9 @@ import { Component } from '@/AdminService/Component';
 
 export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
     const imageFormatSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Veuillez renseigner le nom du format.')
-            .max(250, 'Le nom renseigné est trop long.'),
-        length: Yup.number()
-            .required('Veuillez renseigner la largeur du format.')
-            .min(1, 'Veuillez renseigner une largeur valide.'),
-        height: Yup.number()
-            .required('Veuillez renseigner la hauteur du format.')
-            .min(1, 'Veuillez renseigner une hauteur valide.'),
+        name: Yup.string().required('Veuillez renseigner le nom du format.').max(250, 'Le nom renseigné est trop long.'),
+        length: Yup.number().required('Veuillez renseigner la largeur du format.').min(1, 'Veuillez renseigner une largeur valide.'),
+        height: Yup.number().required('Veuillez renseigner la hauteur du format.').min(1, 'Veuillez renseigner une hauteur valide.'),
     });
 
     return (
@@ -34,21 +28,8 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    title={`${initialValues ? 'Modification' : 'Création'} d'un format`}
-                    component={'form'}
-                    onSubmit={handleSubmit}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+                <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'un format`} component={'form'} onSubmit={handleSubmit}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12}>
@@ -89,27 +70,10 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                         </Grid>
                     </Component.CmtFormBlock>
 
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    id="active"
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Format d'image actif ?" />
+
+                        <Button type="submit" variant="contained" disabled={isSubmitting}>
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

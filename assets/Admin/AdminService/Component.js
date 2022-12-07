@@ -166,6 +166,8 @@ import { ListTable } from '@Components/ListTable/ListTable';
 import { MenuTitle } from '@Components/SideMenu/sc.SideMenu';
 import { SideMenu } from '@Components/SideMenu/SideMenu';
 import { checkComponent, checkString } from '@Services/utils/check';
+import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
+import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
 
 const ComponentObj = {
     App: App,
@@ -342,6 +344,10 @@ const ComponentObj = {
     CmtSimpleSelectFilters: CmtSimpleSelectFilters,
     ClearBooleanButton: ClearBooleanButton,
 
+    CmtActiveField: CmtActiveField,
+    ActiveFieldBlock: ActiveFieldBlock,
+    SwitchActiveLabel: SwitchActiveLabel,
+    SwitchTextLabel: SwitchTextLabel,
     CmtFormBlock: CmtFormBlock,
     CmtLayoutProvider: CmtLayoutProvider,
     CmtMediaElement: CmtMediaElement,

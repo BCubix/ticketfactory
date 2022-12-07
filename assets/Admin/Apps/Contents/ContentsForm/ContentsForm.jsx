@@ -4,10 +4,10 @@ import * as Yup from 'yup';
 
 import { Box, Button, FormControlLabel, Switch } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import ContentModules from "@Apps/Contents/ContentsForm/ContentModules";
+import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
 
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType }) => {
     const [initValue, setInitValue] = useState(null);
@@ -28,9 +28,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         contentModule?.VALIDATION_LIST?.forEach((element) => {
             const elVal = valList.find((el) => el.name === element.name);
             if (elVal && element.test(elVal.value)) {
-                validation = validation[element.validationName](
-                    ...element.params({ name: contentType.title, value: elVal.value })
-                );
+                validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
             }
         });
 
@@ -41,14 +39,9 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         let validation = {};
 
         contentType.fields?.forEach((el) => {
-            const moduleName =
-                String(el.type).charAt(0).toUpperCase() +
-                el.type?.slice(1) +
-                Constant.CONTENT_MODULES_EXTENSION;
+            const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
 
-            validation[el.name] = getContentModules[moduleName]?.getValidation
-                ? getContentModules[moduleName].getValidation(el)
-                : getValidation(el, getContentModules[moduleName]);
+            validation[el.name] = getContentModules[moduleName]?.getValidation ? getContentModules[moduleName].getValidation(el) : getValidation(el, getContentModules[moduleName]);
         });
 
         return Yup.object().shape({ ...validation });
@@ -79,10 +72,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         let fields = {};
 
         selectedContentType?.fields?.forEach((el) => {
-            const moduleName =
-                String(el.type).charAt(0).toUpperCase() +
-                el.type?.slice(1) +
-                Constant.CONTENT_MODULES_EXTENSION;
+            const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
 
             fields[el.name] = formModules[moduleName]?.getInitialValue(el) || '';
         });
@@ -108,22 +98,8 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             }}
             validationSchema={contentValidationSchema}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    component="form"
-                    onSubmit={handleSubmit}
-                    title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.title}
@@ -150,26 +126,10 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                         />
                     </Component.CmtFormBlock>
 
-                    <Box display="flex" justifyContent="flex-end">
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Contenu actif ?" />
+
+                        <Button type="submit" variant="contained" disabled={isSubmitting}>
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
