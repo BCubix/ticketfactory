@@ -26,4 +26,14 @@ class ImageFormatRepository extends CrudRepository
     {
         parent::__construct($registry, ImageFormat::class);
     }
+
+    public function findOneByNameForAdmin(string $name)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
