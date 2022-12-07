@@ -158,6 +158,17 @@ class AppFixtures extends Fixture
         $parameter->setBreakpointsValue(null);
         $om->persist($parameter);
 
+        $parameter = new Parameter();
+        $parameter->setName("Thème principal");
+        $parameter->setType("string");
+        $parameter->setParamKey("main_theme");
+        $parameter->setParamValue(null);
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
         // Default User
         $user = new User();
         $user->setActive(true);
