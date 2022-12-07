@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Media\ImageFormat;
 use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
@@ -18,8 +19,9 @@ class ThemeManager extends AbstractManager
     private $ts;
     private $pm;
     private $mm;
+    private $ifm;
 
-    public function __construct(EntityManagerInterface $em, Filesystem $fs, ThemeService $ts, ParameterManager $pm, ModuleManager $mm)
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, ThemeService $ts, ParameterManager $pm, ModuleManager $mm, ImageFormatManager $ifm)
     {
         parent::__construct($em);
 
@@ -27,6 +29,7 @@ class ThemeManager extends AbstractManager
         $this->ts = $ts;
         $this->pm = $pm;
         $this->mm = $mm;
+        $this->ifm = $ifm;
     }
 
     /**
@@ -60,10 +63,14 @@ class ThemeManager extends AbstractManager
         $this->disableMainTheme();
 
         $config = $this->ts->getConfig($theme->getName());
-        $modules = $config['global_settings']['modules'];
+        $globalSettings = $config['global_settings'];
 
+        $modules = $globalSettings['modules'];
         $this->applyModulesConfig($modules['to_disable'], false, Module::ACTION_DISABLE);
         $this->applyModulesConfig($modules['to_enable'], true, Module::ACTION_INSTALL);
+
+        $imagesTypes = $globalSettings['images_types'];
+        $this->applyImagesTypesConfig($imagesTypes, true);
 
         $this->pm->set('main_theme', $theme->getName());
         $this->em->flush();
@@ -116,10 +123,15 @@ class ThemeManager extends AbstractManager
         $this->em->flush();
 
         $config = $this->ts->getConfig($mainThemeName);
+        $globalSettings = $config['global_settings'];
 
         // Disable module actived
-        $toDisable = $config['global_settings']['modules']['to_enable'];
+        $toDisable = $globalSettings['modules']['to_enable'];
         $this->applyModulesConfig($toDisable, false, Module::ACTION_DISABLE);
+
+        // Disable imageFormat of theme
+        $imagesTypes = $globalSettings['images_types'];
+        $this->applyImagesTypesConfig($imagesTypes, false);
 
         $this->ts->entry($mainThemeName, true);
     }
@@ -143,6 +155,46 @@ class ThemeManager extends AbstractManager
                 continue;
             }
             $this->mm->doAction($module, $action, false);
+        }
+    }
+
+    /**
+     * Activation of theme: Set new format if image format exists or create new format
+     * Deactivation of theme: Set false the themeUse of all image format
+     *
+     * @param array $imagesTypes
+     * @param bool $active
+     * 
+     * @return void
+     */
+    private function applyImagesTypesConfig(array $imagesTypes, bool $active)
+    {
+        foreach ($imagesTypes as $name => $format) {
+            $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneByNameForAdmin($name);
+
+            if (!$imageFormat) {
+                if ($active) {
+                    $imageFormat = new ImageFormat();
+                    $imageFormat->setName($name);
+                } else {
+                    throw new ApiException(Response::HTTP_NOT_FOUND, 1404,
+                        "Le format d'image $name n'existe plus, ce format est utilisé par le thème.");
+                }
+            }
+
+            if ($active) {
+                $imageFormat->setHeight($format['height']);
+                $imageFormat->setWidth($format['width']);
+            }
+            $imageFormat->setThemeUse($active);
+
+            $this->em->persist($imageFormat);
+        }
+
+        $this->em->flush();
+
+        if ($active) {
+            $this->ifm->generateThumbnails();
         }
     }
 }
