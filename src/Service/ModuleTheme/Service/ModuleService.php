@@ -118,7 +118,7 @@ class ModuleService extends ServiceAbstract
         return $this->callConfig($name, 'getInfo');
     }
 
-    public function getImage(string $name): array
+    protected function getImage(string $name): array
     {
         $imagePathWithoutExt = $this->dir . "/$name/logo";
         $imageUrlWithoutExt = "modules/$name/logo";

@@ -51,15 +51,14 @@ class HookService
     {
         $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
         if (null === $hook) {
-            $hook = new Hook();
+            return;
         }
 
         $methodName = 'hook' . $hookName;
 
         $modules = $hook->getModules();
         foreach ($modules as $module) {
-            $r = $this->ms->callConfig($module->getName(), $methodName, $hookArgs, $this);
-            dd($r);
+            $this->ms->callConfig($module->getName(), $methodName, $hookArgs, $this);
         }
     }
 }

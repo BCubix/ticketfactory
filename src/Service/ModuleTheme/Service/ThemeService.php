@@ -151,7 +151,7 @@ class ThemeService extends ServiceAbstract
         return $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
     }
 
-    public function getImage(string $name): array
+    protected function getImage(string $name): array
     {
         $imagePathWithoutExt = $this->dir . "/$name/preview";
         $imageUrlWithoutExt = "themes/$name/preview";
