@@ -88,8 +88,8 @@ class ModuleConfig
      *
      * @return void
      * @throws ApiException
-     * @throws \ReflectionException
      * @throws DirectoryNotFoundException
+     * @throws \ReflectionException
      */
     public function install(): void
     {
@@ -102,8 +102,8 @@ class ModuleConfig
      * Uninstallation of database, ...
      *
      * @return void
-     * @throws \ReflectionException
      * @throws ApiException
+     * @throws \ReflectionException
      */
     public function uninstall(): void
     {
@@ -214,7 +214,15 @@ class ModuleConfig
         }
     }
 
-    public function hook(bool $register)
+    /**
+     * Register or unregister hooks declared.
+     *
+     * @param bool $register
+     *
+     * @return void
+     * @throws ApiException
+     */
+    public function hook(bool $register): void
     {
         if (!static::HOOKS && null === $this->hs) {
             return;
