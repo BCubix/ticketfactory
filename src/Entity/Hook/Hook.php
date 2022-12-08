@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Entity\Module;
+namespace App\Entity\Hook;
 
-use App\Entity\Datable;
-use App\Entity\Hook\Hook;
-use App\Repository\ModuleRepository;
+use App\Entity\Module\Module;
+use App\Repository\HookRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,16 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity(repositoryClass: ModuleRepository::class)]
-class Module extends Datable
+#[ORM\Entity(repositoryClass: HookRepository::class)]
+class Hook
 {
     /*** > Trait ***/
     /*** < Trait ***/
-
-    const ACTION_INSTALL = -1;
-    const ACTION_DISABLE = 0;
-    const ACTION_UNINSTALL = 1;
-    const ACTION_UNINSTALL_DELETE = 2;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -36,12 +30,14 @@ class Module extends Datable
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 
-    #[ORM\ManyToMany(mappedBy: 'modules', targetEntity: Hook::class)]
-    private $hooks;
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'hooks')]
+    private $modules;
 
     public function __construct()
     {
-        $this->hooks = new ArrayCollection();
+        $this->modules = new ArrayCollection();
     }
 
     public function getId(): int
@@ -64,23 +60,26 @@ class Module extends Datable
     /**
      * @return Collection<int, Module>
      */
-    public function getHooks(): Collection
+    public function getModules(): Collection
     {
-        return $this->hooks;
+        return $this->modules;
     }
 
-    public function addHook(Hook $hook): self
+    public function addModule(Module $module): self
     {
-        if (!$this->hooks->contains($hook)) {
-            $this->hooks[] = $hook;
+        if (!$this->modules->contains($module)) {
+            $this->modules[] = $module;
+            $module->addHook($this);
         }
 
         return $this;
     }
 
-    public function removeHook(Hook $hook): self
+    public function removeModule(Module $module): self
     {
-        $this->hooks->removeElement($hook);
+        if ($this->modules->removeElement($module)) {
+            $module->removeHook($this);
+        }
 
         return $this;
     }
