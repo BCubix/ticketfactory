@@ -4,6 +4,7 @@ namespace App\Service\ModuleTheme\Config;
 
 use App\Exception\ApiException;
 use App\Service\Db\Db;
+use App\Service\Hook\HookService;
 use App\Utils\FileManipulator;
 
 use Composer\Autoload\ClassLoader;
@@ -20,6 +21,7 @@ class ModuleConfig
 
     protected const TABLES = [];
     protected const TRAITS = [];
+    protected const HOOKS  = [];
 
     protected $name;
     protected $displayName;
@@ -29,8 +31,9 @@ class ModuleConfig
 
     protected $path;
     protected $loader;
+    protected $hs;
 
-    public function __construct(string $dir)
+    public function __construct(string $dir, HookService $hs)
     {
         if (null === static::NAME) {
             throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
@@ -61,6 +64,7 @@ class ModuleConfig
 
         $this->path   = $dir . '/' . static::NAME;
         $this->loader = new ClassLoader();
+        $this->hs     = $hs;
     }
 
     /**
@@ -91,6 +95,7 @@ class ModuleConfig
     {
         $this->register();
         $this->trait(false);
+        $this->hook(true);
     }
 
     /**
@@ -119,6 +124,7 @@ class ModuleConfig
     {
         $this->trait(true);
         $this->unregister();
+        $this->hook(false);
     }
 
     /**
@@ -205,6 +211,21 @@ class ModuleConfig
             }
 
             $file->setContent($str);
+        }
+    }
+
+    public function hook(bool $register)
+    {
+        if (!static::HOOKS) {
+            return;
+        }
+
+        foreach (static::HOOKS as $hookName) {
+            if ($register) {
+                $this->hs->register($hookName, static::NAME);
+            } else {
+                $this->hs->unregister($hookName, static::NAME);
+            }
         }
     }
 }

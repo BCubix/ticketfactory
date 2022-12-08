@@ -4,6 +4,7 @@ namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
 use App\Service\Db\Db;
+use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Config\ModuleConfig;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,6 +18,15 @@ class ModuleService extends ServiceAbstract
     public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
     public const ZIP_SRC_FILE_BUNDLE_NOT_FOUND = "Le dossier src ne contient pas le fichier bundle.";
+
+    private $hs;
+
+    public function __construct(string $projectDir, HookService $hs)
+    {
+        parent::__construct($projectDir);
+
+        $this->hs = $hs;
+    }
 
     /**
      * Get all active module by query in database.
@@ -56,7 +66,7 @@ class ModuleService extends ServiceAbstract
                 "Le fichier de configuration de $name doit contenir la classe {$name}Config.");
         }
 
-        $moduleObj = new ($name . 'Config')($this->dir);
+        $moduleObj = new ($name . 'Config')($this->dir, $this->hs);
         if (get_parent_class($moduleObj) !== ModuleConfig::class) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
                 "La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
