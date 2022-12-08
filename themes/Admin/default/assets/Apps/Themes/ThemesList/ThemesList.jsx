@@ -53,7 +53,7 @@ export const ThemesList = () => {
     }, []);
 
     const handleSubmit = () => {
-        setCreateDialog(false);
+        setLoadingDialog(null);
         dispatch(getThemesAction());
         NotificationManager.success('Votre thème a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
         setTimeout(() => window.location.reload(), 1000);
@@ -173,7 +173,15 @@ export const ThemesList = () => {
             >
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
-                    <Component.UploadTheme handleSubmit={handleSubmit} />
+                    <Component.UploadTheme
+                        handleSubmit={handleSubmit}
+                        handleAdded={() => {
+                            setCreateDialog(false);
+                            setLoadingDialog(
+                                "Vérification et installation du fichier zip...\n" +
+                                "Activation et installation du thème...");
+                        }}
+                    />
                 </DialogContent>
             </Dialog>
             <Component.DeleteDialog

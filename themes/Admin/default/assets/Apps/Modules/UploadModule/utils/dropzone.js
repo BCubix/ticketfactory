@@ -6,13 +6,13 @@ import { Constant } from "@/AdminService/Constant";
 
 var countChunk = 0;
 
-export const intitializeDropzone = ({ logFail, onSuccess, id = null }) => {
+export const intitializeDropzone = ({ logFail, onSuccess, onAdded, id = null }) => {
     $('.js-dropzone').each(function (_, element) {
-        initDropzoneElement({ element, logFail, onSuccess, id });
+        initDropzoneElement({ element, logFail, onSuccess, onAdded, id });
     });
 }
 
-export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
+export const initDropzoneElement = ({ element, logFail, onSuccess, onAdded, id }) => {
     if (!element) {
         return;
     }
@@ -34,6 +34,8 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
         if (!check) {
             return;
         }
+
+        onAdded();
 
         $(element).find('.js-dropzone-label').hide();
     });

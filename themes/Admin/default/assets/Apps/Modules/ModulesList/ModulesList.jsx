@@ -47,7 +47,7 @@ export const ModulesList = () => {
     }, []);
 
     const handleSubmit = () => {
-        setCreateDialog(false);
+        setLoadingDialog(null);
         dispatch(getModulesAction());
         NotificationManager.success('Votre module a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
         setTimeout(() => window.location.reload(), 1000);
@@ -153,7 +153,15 @@ export const ModulesList = () => {
             >
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
-                    <Component.UploadModule handleSubmit={handleSubmit} />
+                    <Component.UploadModule
+                        handleSubmit={handleSubmit}
+                        handleAdded={() => {
+                            setCreateDialog(false);
+                            setLoadingDialog(
+                                "Vérification et installation du fichier zip...\n" +
+                                "Activation et installation du module...");
+                        }}
+                    />
                 </DialogContent>
             </Dialog>
             <Dialog

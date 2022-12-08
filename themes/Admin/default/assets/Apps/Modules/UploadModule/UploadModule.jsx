@@ -9,13 +9,14 @@ import { intitializeDropzone } from "@Apps/Modules/UploadModule/utils/dropzone";
 
 import { loginFailure } from "@Redux/profile/profileSlice";
 
-export const UploadModule = ({ handleSubmit }) => {
+export const UploadModule = ({ handleSubmit, handleAdded }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
         intitializeDropzone({
             logFail: (error) => dispatch(loginFailure({ error: error })),
             onSuccess: handleSubmit,
+            onAdded: handleAdded,
         });
     }, []);
 
