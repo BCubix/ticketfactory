@@ -19,15 +19,6 @@ class ModuleService extends ServiceAbstract
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
     public const ZIP_SRC_FILE_BUNDLE_NOT_FOUND = "Le dossier src ne contient pas le fichier bundle.";
 
-    private $hs;
-
-    public function __construct(string $projectDir, HookService $hs)
-    {
-        parent::__construct($projectDir);
-
-        $this->hs = $hs;
-    }
-
     /**
      * Get all active module by query in database.
      *
@@ -47,11 +38,12 @@ class ModuleService extends ServiceAbstract
      *
      * @param string $name
      * @param string $functionName Function to call
+     * @param HookService|null $hs
+     * @param array $args
      *
      * @return void
-     * @throws ApiException
      */
-    public function callConfig(string $name, string $functionName): mixed
+    public function callConfig(string $name, string $functionName, array $args = [], HookService $hs = null): mixed
     {
         $configFilePath = $this->dir . "/$name/{$name}Config.php";
         if (!is_file($configFilePath)) {
@@ -66,7 +58,7 @@ class ModuleService extends ServiceAbstract
                 "Le fichier de configuration de $name doit contenir la classe {$name}Config.");
         }
 
-        $moduleObj = new ($name . 'Config')($this->dir, $this->hs);
+        $moduleObj = new ($name . 'Config')($this->dir, $hs);
         if (get_parent_class($moduleObj) !== ModuleConfig::class) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
                 "La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
@@ -77,7 +69,7 @@ class ModuleService extends ServiceAbstract
                 "La classe {$name}Config ne contient pas la fonction $functionName.");
         }
 
-        return $moduleObj->{$functionName}();
+        return $moduleObj->{$functionName}($args);
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void

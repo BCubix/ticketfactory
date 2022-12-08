@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Module\Module;
 use App\Exception\ApiException;
+use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Service\ModuleService;
 
 use App\Utils\Exec;
@@ -22,15 +23,15 @@ class ModuleManager extends AbstractManager
 
     private $fs;
     private $ms;
-    private $projectDir;
+    private $hs;
 
-    public function __construct(EntityManagerInterface $em, Filesystem $fs, ModuleService $ms, string $projectDir)
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, ModuleService $ms, HookService $hs)
     {
         parent::__construct($em);
 
         $this->fs = $fs;
         $this->ms = $ms;
-        $this->projectDir = $projectDir;
+        $this->hs = $hs;
     }
 
     /**
@@ -49,7 +50,7 @@ class ModuleManager extends AbstractManager
         $this->em->persist($module);
         $this->em->flush();
 
-        $this->ms->callConfig($name, 'install');
+        $this->ms->callConfig($name, 'install', [], $this->hs);
 
         if ($clear) {
             $this->ms->clear();
@@ -83,7 +84,7 @@ class ModuleManager extends AbstractManager
 
         $this->em->flush();
 
-        $this->ms->callConfig($module->getName(), self::ACTIONS[$action]);
+        $this->ms->callConfig($module->getName(), self::ACTIONS[$action], [], $this->hs);
 
         if ($action === Module::ACTION_UNINSTALL_DELETE) {
             $this->fs->remove($this->ms->getDir() . '/' . $moduleName);

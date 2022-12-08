@@ -33,7 +33,7 @@ class ModuleConfig
     protected $loader;
     protected $hs;
 
-    public function __construct(string $dir, HookService $hs)
+    public function __construct(string $dir, ?HookService $hs)
     {
         if (null === static::NAME) {
             throw new ApiException(Response::HTTP_NOT_IMPLEMENTED, 1501,
@@ -216,7 +216,7 @@ class ModuleConfig
 
     public function hook(bool $register)
     {
-        if (!static::HOOKS) {
+        if (!static::HOOKS && null === $this->hs) {
             return;
         }
 

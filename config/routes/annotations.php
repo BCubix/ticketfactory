@@ -2,6 +2,7 @@
 
 use App\Service\ModuleTheme\Service\ModuleService;
 
+use App\Utils\PathGetter;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return function (RoutingConfigurator $routes) {
@@ -15,7 +16,7 @@ return function (RoutingConfigurator $routes) {
     $websiteControllersPath = [];
 
     $modulesActive = ModuleService::getAllActive();
-    $moduleDir = (new ModuleService(__DIR__.'/../..'))->getDir();
+    $moduleDir = (new PathGetter(__DIR__.'/../..'))->getModulesDir();
     foreach ($modulesActive as $moduleActive) {
         $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Admin';
         if (is_dir($controllersPath)) {

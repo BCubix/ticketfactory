@@ -21,6 +21,15 @@ class ThemeService extends ServiceAbstract
     public const ZIP_CONFIG_FILE_NOT_FOUND = "Le dossier config ne contient pas le fichier de configuration.";
     public const ZIP_TEMPLATES_INDEX_NOT_FOUND = "Le dossier templates ne contient pas le fichier index.html.twig.";
 
+    private $ms;
+
+    public function __construct(string $projectDir, ModuleService $ms)
+    {
+        parent::__construct($projectDir);
+
+        $this->ms = $ms;
+    }
+
     /**
      * Inject or remove entry in webpack.
      *
@@ -106,11 +115,10 @@ class ThemeService extends ServiceAbstract
         $tree = parent::install($name, $tree);
 
         if (isset($tree[$name]['config']['modules'])) {
-            $ms = new ModuleService($this->projectDir);
             $fs = new Filesystem();
 
             foreach ($tree[$name]['config']['modules'] as $moduleName => $value) {
-                $targetDir = $ms->getDir() . '/' . $moduleName;
+                $targetDir = $this->ms->getDir() . '/' . $moduleName;
                 if (!is_dir($targetDir)) {
                     $originDir = $this->dir . '/' . $name . '/config/modules/' . $moduleName;
                     $fs->mirror($originDir, $targetDir);

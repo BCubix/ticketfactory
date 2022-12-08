@@ -58,7 +58,7 @@ class HookService
 
         $modules = $hook->getModules();
         foreach ($modules as $module) {
-            $r = $this->ms->callConfig($module->getName(), $methodName, $hookArgs);
+            $r = $this->ms->callConfig($module->getName(), $methodName, $hookArgs, $this);
             dd($r);
         }
     }

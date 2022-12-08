@@ -11,12 +11,23 @@ class PathGetter
         $this->projectDir = $projectDir;
     }
 
-    public function getProjectDir()
+    public function getProjectDir(): string
     {
         return $this->projectDir . '/';
     }
 
-    public function getPublicDir() {
+    public function getPublicDir(): string
+    {
         return $this->projectDir . '/public/';
+    }
+
+    public function getModulesDir(): string
+    {
+        return $this->projectDir . '/themes/Admin/default/config/modules';
+    }
+
+    public function getThemesDir(): string
+    {
+        return $this->projectDir . '/themes/Website';
     }
 }
