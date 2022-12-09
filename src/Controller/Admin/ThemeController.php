@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Manager\ThemeManager;
+use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Service\ModuleTheme\Service\ThemeService;
 use App\Utils\FormErrorsCollector;
@@ -13,7 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,16 +28,16 @@ class ThemeController extends AdminController
     protected $fs;
 
     public function __construct(
-        EventDispatcherInterface $ed,
         EntityManagerInterface $em,
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
+        HookService $hs,
         ThemeManager $tm,
         ThemeService $ts,
         Filesystem $fs
     ) {
-        parent::__construct($ed, $em, $se, $fec, $log);
+        parent::__construct($em, $se, $fec, $log, $hs);
 
         $this->tm = $tm;
         $this->ts = $ts;
