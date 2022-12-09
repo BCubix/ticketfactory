@@ -6,30 +6,40 @@ use App\Entity\Media\ImageFormat;
 use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
+use App\Service\Hook\HookService;
+use App\Service\ModuleTheme\Service\ModuleService;
 use App\Service\ModuleTheme\Service\ThemeService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 class ThemeManager extends AbstractManager
 {
-    private $fs;
     private $ts;
     private $pm;
     private $mm;
     private $ifm;
+    private $hs;
+    private $ms;
 
-    public function __construct(EntityManagerInterface $em, Filesystem $fs, ThemeService $ts, ParameterManager $pm, ModuleManager $mm, ImageFormatManager $ifm)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        ThemeService $ts,
+        ParameterManager $pm,
+        ModuleManager $mm,
+        ImageFormatManager $ifm,
+        HookService $hs,
+        ModuleService $ms
+    ) {
         parent::__construct($em);
 
-        $this->fs = $fs;
         $this->ts = $ts;
         $this->pm = $pm;
         $this->mm = $mm;
         $this->ifm = $ifm;
+        $this->hs = $hs;
+        $this->ms = $ms;
     }
 
     /**
@@ -71,6 +81,9 @@ class ThemeManager extends AbstractManager
 
         $imagesTypes = $globalSettings['images_types'];
         $this->applyImagesTypesConfig($imagesTypes, true);
+
+        $hooks = $globalSettings['hooks']['modules_to_hook'];
+        $this->applyHooksConfig($hooks, true);
 
         $this->pm->set('main_theme', $theme->getName());
         $this->em->flush();
@@ -125,13 +138,17 @@ class ThemeManager extends AbstractManager
         $config = $this->ts->getConfig($mainThemeName);
         $globalSettings = $config['global_settings'];
 
-        // Disable module actived
+        // Disable active module
         $toDisable = $globalSettings['modules']['to_enable'];
         $this->applyModulesConfig($toDisable, false, Module::ACTION_DISABLE);
 
         // Disable imageFormat of theme
         $imagesTypes = $globalSettings['images_types'];
         $this->applyImagesTypesConfig($imagesTypes, false);
+
+        // Disable module register to hook
+        $hooks = $globalSettings['hooks']['modules_to_hook'];
+        $this->applyHooksConfig($hooks, false);
 
         $this->ts->entry($mainThemeName, true);
     }
@@ -195,6 +212,18 @@ class ThemeManager extends AbstractManager
 
         if ($active) {
             $this->ifm->generateThumbnails();
+        }
+    }
+
+    private function applyHooksConfig(array $modulesToHook, bool $register): void
+    {
+        foreach ($modulesToHook as $hookName => $modulesName) {
+            foreach ($modulesName as $moduleName) {
+                $moduleConfig = $this->ms->getModuleConfigInstance($moduleName);
+                $register
+                    ? $this->hs->register($hookName, $moduleConfig)
+                    : $this->hs->unregister($hookName, $moduleConfig);
+            }
         }
     }
 }

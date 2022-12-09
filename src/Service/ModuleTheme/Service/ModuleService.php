@@ -33,17 +33,7 @@ class ModuleService extends ServiceAbstract
         }
     }
 
-    /**
-     * Call configuration function.
-     *
-     * @param string $name
-     * @param string $functionName Function to call
-     * @param HookService|null $hs
-     * @param array $args
-     *
-     * @return void
-     */
-    public function callConfig(string $name, string $functionName, array $args = [], HookService $hs = null): mixed
+    public function getModuleConfigInstance(string $name, HookService $hs = null): ModuleConfig
     {
         $configFilePath = $this->dir . "/$name/{$name}Config.php";
         if (!is_file($configFilePath)) {
@@ -58,18 +48,29 @@ class ModuleService extends ServiceAbstract
                 "Le fichier de configuration de $name doit contenir la classe {$name}Config.");
         }
 
-        $moduleObj = new ($name . 'Config')($this->dir, $hs);
-        if (get_parent_class($moduleObj) !== ModuleConfig::class) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "La classe {$name}Config doit hériter de la classe " . ModuleConfig::class . ".");
-        }
+        return new ($name . 'Config')($this->dir, $hs);
+    }
 
-        if (!method_exists($moduleObj, $functionName)) {
+    /**
+     * Call configuration function.
+     *
+     * @param string $name
+     * @param string $functionName Function to call
+     * @param HookService|null $hs
+     * @param array $args
+     *
+     * @return void
+     */
+    public function callConfig(string $name, string $functionName, array $args = [], HookService $hs = null): mixed
+    {
+        $moduleConfig = $this->getModuleConfigInstance($name, $hs);
+
+        if (!method_exists($moduleConfig, $functionName)) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
                 "La classe {$name}Config ne contient pas la fonction $functionName.");
         }
 
-        return $moduleObj->{$functionName}(...$args);
+        return $moduleConfig->{$functionName}(...$args);
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void

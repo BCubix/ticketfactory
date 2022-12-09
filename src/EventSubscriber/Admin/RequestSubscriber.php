@@ -35,7 +35,10 @@ class RequestSubscriber implements EventSubscriberInterface
     {
         $modules = $this->em->getRepository(Module::class)->findAllForAdmin(['active' => true]);
         foreach ($modules['results'] as $module) {
-            $this->ms->callConfig($module->getName(), 'hook', [true], $this->hs);
+            $moduleConfig = $this->ms->getModuleConfigInstance($module->getName(), $this->hs);
+            foreach ($module->getHooks() as $hook) {
+                $this->hs->register($hook->getName(), $moduleConfig);
+            }
         }
     }
 }
