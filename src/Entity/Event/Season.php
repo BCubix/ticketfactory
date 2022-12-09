@@ -46,7 +46,7 @@ class Season extends Datable
     #[ORM\Column(type: 'integer')]
     private $beginYear;
 
-    #[ORM\OneToMany(mappedBy: 'season', targetEntity: Event::class)]
+    #[ORM\OneToMany(mappedBy: 'season', targetEntity: Event::class, cascade: ['persist', 'remove'])]
     private $events;
 
     #[JMS\Expose()]

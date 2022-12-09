@@ -1,11 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    LOCAL_URL,
-    REDIRECTIONS_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, LOCAL_URL, REDIRECTIONS_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Create Redirection Spec', () => {
     beforeEach(() => {
@@ -23,7 +17,7 @@ describe('Create Redirection Spec', () => {
         cy.get('#redirectTo').type(`${LOCAL_URL}/admin/evenements`);
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.wait('@createRedirection').then(({ response }) => {
             expect(response.statusCode).to.eq(201);

@@ -97,7 +97,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                     <Box display="flex" justifyContent={'flex-end'} sx={{ mt: 3, mb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Redirection active ?" />
 
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
