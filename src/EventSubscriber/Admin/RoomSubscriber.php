@@ -3,28 +3,30 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\Event\Room;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
+use App\Event\Admin\HookEvent;
+use App\Exception\ApiException;
+use App\Service\Hook\HookService;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoomSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
         return [
-            CrudObjectInstantiatedEvent::NAME => [['onRoomInstantiate', 0]]
+            HookService::normalize('instantiated.' . Room::class) => [['onRoomInstantiate', 0]]
         ];
     }
 
-    public function onRoomInstantiate(CrudObjectInstantiatedEvent $event)
+    public function onRoomInstantiate(HookEvent $event)
     {
-        $room = $event->getObject();
+        $room = $event->getParam('object');
         if (!$this->isSupported($room)) {
             return;
         }
 
-        if ($event->getState() !== 'delete') {
+        if ($event->getParam('state') !== 'delete') {
             return;
         }
 
@@ -33,7 +35,7 @@ class RoomSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function isSupported(Object $object)
+    private function isSupported(Object $object): bool
     {
         return (gettype($object) == "object" && get_class($object) == Room::class);
     }

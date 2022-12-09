@@ -2,9 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
+use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\CloneObject;
 use App\Utils\FormErrorsCollector;
@@ -28,13 +27,15 @@ abstract class CrudController extends AdminController
 
     protected $entityClass;
     protected $typeClass;
+    protected $hs;
 
-    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec, Logger $log)
+    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec, Logger $log, HookService $hs)
     {
         parent::__construct($ed, $em, $se, $fec, $log);
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;
+        $this->hs = $hs;
     }
 
     protected function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -60,8 +61,10 @@ abstract class CrudController extends AdminController
     {
         $object = new $this->entityClass();
 
-        $event = new CrudObjectInstantiatedEvent($object, 'add');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'add'
+        ]);
 
         $form = $this->createForm($this->typeClass, $object);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
@@ -73,8 +76,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $event = new CrudObjectValidatedEvent($object);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
+        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -91,8 +93,10 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $event = new CrudObjectInstantiatedEvent($object, 'edit');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'edit'
+        ]);
 
         $form = $this->createForm($this->typeClass, $object);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
@@ -104,8 +108,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $event = new CrudObjectValidatedEvent($object);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
+        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -122,8 +125,10 @@ abstract class CrudController extends AdminController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $event = new CrudObjectInstantiatedEvent($object, 'duplicate');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'duplicate'
+        ]);
 
         $nObject = CloneObject::cloneObject($object);
 
@@ -142,8 +147,10 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $event = new CrudObjectInstantiatedEvent($object, 'delete');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'delete'
+        ]);
 
         $objectId = $object->getId();
 

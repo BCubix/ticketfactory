@@ -3,28 +3,30 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\Event\Season;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
+use App\Event\Admin\HookEvent;
+use App\Exception\ApiException;
+use App\Service\Hook\HookService;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class SeasonSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
         return [
-            CrudObjectInstantiatedEvent::NAME => [['onSeasonInstantiate', 0]]
+            HookService::normalize('instantiated.' . Season::class) => [['onSeasonInstantiate', 0]]
         ];
     }
 
-    public function onSeasonInstantiate(CrudObjectInstantiatedEvent $event)
+    public function onSeasonInstantiate(HookEvent $event)
     {
-        $season = $event->getObject();
+        $season = $event->getParam('object');
         if (!$this->isSupported($season)) {
             return;
         }
 
-        if ($event->getState() !== 'delete') {
+        if ($event->getParam('state') !== 'delete') {
             return;
         }
 
@@ -33,7 +35,7 @@ class SeasonSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function isSupported(Object $object)
+    private function isSupported(Object $object): bool
     {
         return (gettype($object) == "object" && get_class($object) == Season::class);
     }

@@ -3,36 +3,30 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\Event\EventCategory;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
-use App\Manager\EventCategoryManager;
+use App\Event\Admin\HookEvent;
+use App\Exception\ApiException;
+use App\Service\Hook\HookService;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class EventCategorySubscriber implements EventSubscriberInterface
 {
-    private $ecm;
-
-    public function __construct(EventCategoryManager $ecm)
-    {
-        $this->ecm = $ecm;
-    }
-
     public static function getSubscribedEvents(): array
     {
         return [
-            CrudObjectInstantiatedEvent::NAME => [['onEventCategoryInstantiate', 0]]
+            HookService::normalize('instantiated.' . EventCategory::class) => [['onEventCategoryInstantiate', 0]]
         ];
     }
 
-    public function onEventCategoryInstantiate(CrudObjectInstantiatedEvent $event)
+    public function onEventCategoryInstantiate(HookEvent $event)
     {
-        $eventCategory = $event->getObject();
+        $eventCategory = $event->getParam('object');
         if (!$this->isSupported($eventCategory)) {
             return;
         }
 
-        if ($event->getState() !== 'delete') {
+        if ($event->getParam('state') !== 'delete') {
             return;
         }
 
@@ -41,7 +35,7 @@ class EventCategorySubscriber implements EventSubscriberInterface
         }
     }
 
-    private function isSupported(Object $object)
+    private function isSupported(Object $object): bool
     {
         return (gettype($object) == "object" && get_class($object) == EventCategory::class);
     }
