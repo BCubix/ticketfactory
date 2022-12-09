@@ -230,9 +230,9 @@ class ModuleConfig
 
         foreach (static::HOOKS as $hookName) {
             if ($register) {
-                $this->hs->register($hookName, static::NAME);
+                $this->hs->register($hookName, $this);
             } else {
-                $this->hs->unregister($hookName, static::NAME);
+                $this->hs->unregister($hookName, $this);
             }
         }
     }
