@@ -23,6 +23,11 @@ class HookService
         $this->em = $em;
     }
 
+    public static function normalize(string $hookName): string
+    {
+        return HookEvent::NAME . '.' . str_replace('\\', '.', strtolower($hookName));
+    }
+
     /**
      * Register hook in database: associate hook with module given.
      *
@@ -51,7 +56,7 @@ class HookService
         $this->em->persist($hook);
         $this->em->flush();
 
-        $this->ed->addListener('hook' . $hookName, [$moduleConfig, 'hook' . $hookName]);
+        $this->ed->addListener(static::normalize($hookName), [$moduleConfig, 'hook' . $hookName]);
     }
 
     /**
@@ -81,7 +86,7 @@ class HookService
         $this->em->persist($hook);
         $this->em->flush();
 
-        $this->ed->removeListener('hook' . $hookName, [$moduleConfig, 'hook' . $hookName]);
+        $this->ed->removeListener(static::normalize($hookName), [$moduleConfig, 'hook' . $hookName]);
     }
 
     /**
@@ -95,6 +100,6 @@ class HookService
     public function exec(string $hookName, array $hookArgs = []): void
     {
         $event = new HookEvent($hookArgs);
-        $this->ed->dispatch($event, 'hook' . $hookName);
+        $this->ed->dispatch($event, static::normalize($hookName));
     }
 }
