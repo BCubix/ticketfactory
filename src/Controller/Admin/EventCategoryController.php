@@ -5,8 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Event\EventCategory;
 use App\Form\Admin\Event\EventCategoryType;
 use App\Form\Admin\Filters\FilterEventCategoryType;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
 use App\Manager\EventCategoryManager;
+use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
 
@@ -35,9 +35,10 @@ class EventCategoryController extends CrudController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        EventCategoryManager $ecm
+        EventCategoryManager $ecm,
+        HookService $hs
     ) {
-        parent::__construct($ed, $em, $se, $fec, $log);
+        parent::__construct($ed, $em, $se, $fec, $log, $hs);
 
         $this->ecm = $ecm;
     }
@@ -99,8 +100,10 @@ class EventCategoryController extends CrudController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $event = new CrudObjectInstantiatedEvent($object, 'delete');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'delete'
+        ]);
 
         $objectId = $object->getId();
 

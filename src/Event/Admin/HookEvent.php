@@ -2,7 +2,9 @@
 
 namespace App\Event\Admin;
 
-class HookEvent
+use Symfony\Contracts\EventDispatcher\Event;
+
+class HookEvent extends Event
 {
     public const NAME = 'tf.hook';
 

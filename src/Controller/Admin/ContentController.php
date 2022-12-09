@@ -3,8 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Content\Content;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
 use App\Form\Admin\Content\ContentType;
 use App\Form\Admin\Filters\FilterContentType;
@@ -53,8 +51,10 @@ class ContentController extends CrudController
 
         $object = new $this->entityClass();
 
-        $event = new CrudObjectInstantiatedEvent($object, 'add');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'add'
+        ]);
 
         $form = $this->createForm($this->typeClass, $object, ['content_type' => $contentType]);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
@@ -66,8 +66,7 @@ class ContentController extends CrudController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $event = new CrudObjectValidatedEvent($object);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
+        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
 
         $object->setContentType($contentType);
 
@@ -88,8 +87,10 @@ class ContentController extends CrudController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $event = new CrudObjectInstantiatedEvent($object, 'edit');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
+        $this->hs->exec('instantiated.' . $this->entityClass, [
+            'object' => $object,
+            'state' => 'edit'
+        ]);
 
         $form = $this->createForm($this->typeClass, $object, ['content_type' => $object->getContentType()]);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
@@ -101,8 +102,7 @@ class ContentController extends CrudController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $event = new CrudObjectValidatedEvent($object);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
+        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
 
         $this->em->persist($object);
         $this->em->flush();

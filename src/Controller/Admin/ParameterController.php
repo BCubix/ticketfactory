@@ -4,8 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Parameter\Parameter;
 use App\Entity\Parameter\ParametersContainer;
-use App\Event\Admin\CrudObjectInstantiatedEvent;
-use App\Event\Admin\CrudObjectValidatedEvent;
 use App\Exception\ApiException;
 use App\Form\Admin\Parameter\ParametersContainerType;
 use App\Form\Admin\Parameter\ParameterType;
@@ -56,9 +54,6 @@ class ParameterController extends AdminController
             $parametersContainer->addParameter($parameter);
         }
 
-        $event = new CrudObjectInstantiatedEvent($parametersContainer, 'edit');
-        $this->ed->dispatch($event, CrudObjectInstantiatedEvent::NAME);
-
         $form = $this->createForm(ParametersContainerType::class,
             $parametersContainer);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
@@ -69,9 +64,6 @@ class ParameterController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
                 self::FORM_ERROR_MESSAGE, $errors);
         }
-
-        $event = new CrudObjectValidatedEvent($parametersContainer);
-        $this->ed->dispatch($event, CrudObjectValidatedEvent::NAME);
 
         foreach ($parameters as $parameter) {
             $this->em->persist($parameter);
