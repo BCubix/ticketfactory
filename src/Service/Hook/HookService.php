@@ -30,6 +30,7 @@ class HookService
      * @param ModuleConfig $moduleConfig
      *
      * @return void
+     * @throws ApiException
      */
     public function register(string $hookName, ModuleConfig $moduleConfig): void
     {
@@ -60,6 +61,7 @@ class HookService
      * @param ModuleConfig $moduleConfig
      *
      * @return void
+     * @throws ApiException
      */
     public function unregister(string $hookName, ModuleConfig $moduleConfig): void
     {
@@ -89,9 +91,8 @@ class HookService
      * @param array $hookArgs
      *
      * @return void
-     * @throws ApiException
      */
-    public function exec(string $hookName, array $hookArgs = [])
+    public function exec(string $hookName, array $hookArgs = []): void
     {
         $event = new HookEvent($hookArgs);
         $this->ed->dispatch($event, 'hook' . $hookName);
