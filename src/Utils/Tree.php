@@ -4,7 +4,14 @@ namespace App\Utils;
 
 class Tree
 {
-    public static function build(string $path)
+    /**
+     * Build a tree from path
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function build(string $path): array
     {
         $tree = [];
 
