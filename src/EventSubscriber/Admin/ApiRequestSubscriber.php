@@ -13,15 +13,15 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class ApiRequestSubscriber implements EventSubscriberInterface
 {
-    private $hs;
     private $em;
     private $ms;
+    private $hs;
 
-    public function __construct(EntityManagerInterface $em, HookService $hs, ModuleService $ms)
+    public function __construct(EntityManagerInterface $em, ModuleService $ms, HookService $hs)
     {
         $this->em = $em;
-        $this->hs = $hs;
         $this->ms = $ms;
+        $this->hs = $hs;
     }
 
     public static function getSubscribedEvents(): array

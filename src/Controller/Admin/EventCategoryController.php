@@ -30,15 +30,14 @@ class EventCategoryController extends CrudController
     protected $ecm;
 
     public function __construct(
-        EventDispatcherInterface $ed,
         EntityManagerInterface $em,
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        EventCategoryManager $ecm,
-        HookService $hs
+        HookService $hs,
+        EventCategoryManager $ecm
     ) {
-        parent::__construct($ed, $em, $se, $fec, $log, $hs);
+        parent::__construct($em, $se, $fec, $log, $hs);
 
         $this->ecm = $ecm;
     }

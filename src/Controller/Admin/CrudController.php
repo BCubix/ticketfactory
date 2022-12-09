@@ -9,11 +9,9 @@ use App\Utils\CloneObject;
 use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,15 +25,18 @@ abstract class CrudController extends AdminController
 
     protected $entityClass;
     protected $typeClass;
-    protected $hs;
 
-    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em, SerializerInterface $se, FormErrorsCollector $fec, Logger $log, HookService $hs)
-    {
-        parent::__construct($ed, $em, $se, $fec, $log);
+    public function __construct(
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        HookService $hs
+    ) {
+        parent::__construct($em, $se, $fec, $log, $hs);
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;
-        $this->hs = $hs;
     }
 
     protected function getAll(Request $request, ParamFetcher $paramFetcher): View
