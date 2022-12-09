@@ -83,7 +83,7 @@ class HookService
     }
 
     /**
-     * Exec hook: call the same hook function declare in multiple module associate by hook given.
+     * Exec hook: dispatch the hook event with parameters to all registered listeners.
      *
      * @param string $hookName
      * @param array $hookArgs

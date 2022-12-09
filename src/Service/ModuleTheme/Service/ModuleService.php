@@ -69,7 +69,7 @@ class ModuleService extends ServiceAbstract
                 "La classe {$name}Config ne contient pas la fonction $functionName.");
         }
 
-        return $moduleObj->{$functionName}($args);
+        return $moduleObj->{$functionName}(...$args);
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
