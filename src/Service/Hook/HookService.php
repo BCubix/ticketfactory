@@ -77,14 +77,12 @@ class HookService
 
         $moduleName = $moduleConfig->getInfo()['name'];
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-        if (null === $module) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module (nom: $moduleName) n'existe pas.");
+        if ($module) {
+            $hook->removeModule($module);
+
+            $this->em->persist($hook);
+            $this->em->flush();
         }
-
-        $hook->removeModule($module);
-
-        $this->em->persist($hook);
-        $this->em->flush();
 
         $this->ed->removeListener(static::normalize($hookName), [$moduleConfig, 'hook' . $hookName]);
     }
