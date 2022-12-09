@@ -168,7 +168,14 @@ class ThemeManager extends AbstractManager
     {
         foreach ($modulesName as $moduleName) {
             $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (null === $module || $module->isActive() === $activeCondition) {
+            if (null === $module) {
+                if (!is_dir($this->ms->getDir() . '/' . $moduleName)) {
+                    continue;
+                }
+
+                $this->ms->install($moduleName);
+                $module = $this->mm->createNewModule($moduleName);
+            } else if ($module->isActive() === $activeCondition) {
                 continue;
             }
             $this->mm->doAction($module, $action, false);
@@ -219,6 +226,11 @@ class ThemeManager extends AbstractManager
     {
         foreach ($modulesToHook as $hookName => $modulesName) {
             foreach ($modulesName as $moduleName) {
+                $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+                if (null === $module) {
+                    continue;
+                }
+
                 $moduleConfig = $this->ms->getModuleConfigInstance($moduleName);
                 $register
                     ? $this->hs->register($hookName, $moduleConfig)
