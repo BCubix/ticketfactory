@@ -33,7 +33,7 @@ class ApiRequestSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event)
     {
-        $modules = $this->em->getRepository(Module::class)->findAllForAdmin(['active' => 1]);
+        $modules = $this->em->getRepository(Module::class)->findAllForAdmin(['active' => true]);
         foreach ($modules['results'] as $module) {
             $this->ms->callConfig($module->getName(), 'hook', [true], $this->hs);
         }
