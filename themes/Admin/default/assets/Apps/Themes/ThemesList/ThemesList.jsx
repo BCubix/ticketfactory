@@ -184,6 +184,11 @@ export const ThemesList = () => {
                                 "Vérification et installation du fichier zip...\n" +
                                 "Activation et installation du thème...");
                         }}
+                        handleFail={(error) => {
+                            setLoadingDialog(null);
+                            NotificationManager.error(error.messagezone, 'Erreur', Constant.REDIRECTION_TIME * 2);
+                            navigate(Constant.THEMES_BASE_PATH);
+                        }}
                     />
                 </DialogContent>
             </Dialog>

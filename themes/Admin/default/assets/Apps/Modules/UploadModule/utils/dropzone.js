@@ -6,13 +6,13 @@ import { Constant } from "@/AdminService/Constant";
 
 var countChunk = 0;
 
-export const intitializeDropzone = ({ logFail, onSuccess, onAdded, id = null }) => {
+export const intitializeDropzone = ({ logFail, onSuccess, onAdded, onFail, id = null }) => {
     $('.js-dropzone').each(function (_, element) {
-        initDropzoneElement({ element, logFail, onSuccess, onAdded, id });
+        initDropzoneElement({ element, logFail, onSuccess, onAdded, onFail, id });
     });
 }
 
-export const initDropzoneElement = ({ element, logFail, onSuccess, onAdded, id }) => {
+export const initDropzoneElement = ({ element, logFail, onSuccess, onAdded, onFail, id }) => {
     if (!element) {
         return;
     }
@@ -66,6 +66,10 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, onAdded, id }
         if (id) {
             formData.append('id', id);
         }
+    });
+
+    dZone.on('error', function(file, response) {
+        onFail(response);
     });
 
     const checkAuth = async () => {

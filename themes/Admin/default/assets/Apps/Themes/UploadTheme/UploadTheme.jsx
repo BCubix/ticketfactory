@@ -9,7 +9,7 @@ import { intitializeDropzone } from "@Apps/Themes/UploadTheme/utils/dropzone";
 
 import { loginFailure } from "@Redux/profile/profileSlice";
 
-export const UploadTheme = ({ handleSubmit, handleAdded }) => {
+export const UploadTheme = ({ handleSubmit, handleAdded, handleFail }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -17,6 +17,7 @@ export const UploadTheme = ({ handleSubmit, handleAdded }) => {
             logFail: (error) => dispatch(loginFailure({ error: error })),
             onSuccess: handleSubmit,
             onAdded: handleAdded,
+            onFail: handleFail,
         });
     }, []);
 

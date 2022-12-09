@@ -161,6 +161,11 @@ export const ModulesList = () => {
                                 "Vérification et installation du fichier zip...\n" +
                                 "Activation et installation du module...");
                         }}
+                        handleFail={(error) => {
+                            setLoadingDialog(null);
+                            NotificationManager.error(error.messagezone, 'Erreur', Constant.REDIRECTION_TIME * 2);
+                            navigate(Constant.MODULES_BASE_PATH);
+                        }}
                     />
                 </DialogContent>
             </Dialog>
