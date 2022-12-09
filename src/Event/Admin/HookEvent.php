@@ -17,4 +17,9 @@ class HookEvent
     {
         return $this->params;
     }
+
+    public function getParam(string $paramName): mixed
+    {
+        return !isset($this->params[$paramName]) ? null : $this->params[$paramName];
+    }
 }
