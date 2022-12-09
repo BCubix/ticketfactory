@@ -81,6 +81,9 @@ export const ThemesList = () => {
 
     const handleDelete = async (name) => {
         apiMiddleware(dispatch, async () => {
+            setDeleteDialog(null);
+            setLoadingDialog(`Désinstallation et suppression du thème : ${name}`);
+
             const result = await Api.themesApi.deleteTheme(name);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -89,8 +92,8 @@ export const ThemesList = () => {
                 return;
             }
 
+            setLoadingDialog(null);
             dispatch(getThemesAction());
-            setDeleteDialog(null);
             setTimeout(() => window.location.reload(), 1000);
         });
     }
@@ -185,7 +188,7 @@ export const ThemesList = () => {
                 </DialogContent>
             </Dialog>
             <Component.DeleteDialog
-                open={deleteDialog ? true : false}
+                open={!!deleteDialog}
                 onCancel={() => setDeleteDialog(null)}
                 onDelete={() => handleDelete(deleteDialog)}
             >
