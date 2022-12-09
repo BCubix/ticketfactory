@@ -19,6 +19,7 @@ export const CmtActiveField = ({ values, setFieldValue, text, mr = null }) => {
                     setFieldValue('active', e.target.checked);
                 }}
                 size="small"
+                id="active"
             />
             <Component.SwitchActiveLabel component="span" variant="h6">
                 Activer

@@ -10,19 +10,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
-import {
-    Chip,
-    Menu,
-    MenuItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableSortLabel,
-    Typography,
-} from '@mui/material';
+import { Chip, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -107,11 +95,7 @@ export const ListTable = ({
                         {table.map((element, index) => (
                             <TableCell key={index} sx={{ width: element.width || 'auto' }}>
                                 {element.sortable ? (
-                                    <TableSortLabel
-                                        active={element.name === field}
-                                        direction={order.toLowerCase() || 'asc'}
-                                        onClick={() => handleSortClick(element.name)}
-                                    >
+                                    <TableSortLabel active={element.name === field} direction={order.toLowerCase() || 'asc'} onClick={() => handleSortClick(element.name)}>
                                         {element.label}
                                     </TableSortLabel>
                                 ) : (
@@ -145,9 +129,7 @@ export const ListTable = ({
                                     <RenderFunction item={item} tableItem={tableItem} />
                                 </TableCell>
                             ))}
-                            {(onDelete !== null ||
-                                onEdit !== null ||
-                                (onActive !== null && onDisable !== null)) && (
+                            {(onDelete !== null || onEdit !== null || (onActive !== null && onDisable !== null)) && (
                                 <TableCell component="th" scope="row">
                                     {onActive !== null && onDisable !== null && (
                                         <Component.ActionFabButton
@@ -160,11 +142,7 @@ export const ListTable = ({
                                                 (item.active ? onDisable : onActive)(item.id);
                                             }}
                                         >
-                                            {item.active ? (
-                                                <UnpublishedIcon />
-                                            ) : (
-                                                <CheckCircleIcon />
-                                            )}
+                                            {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
                                         </Component.ActionFabButton>
                                     )}
                                     {onEdit !== null && (
@@ -177,6 +155,7 @@ export const ListTable = ({
                                                 e.stopPropagation();
                                                 onEdit(item.id);
                                             }}
+                                            id={`editButton-${item.id}`}
                                         >
                                             <EditIcon />
                                         </Component.EditFabButton>
@@ -204,6 +183,7 @@ export const ListTable = ({
                                                     e.stopPropagation();
                                                     onDelete(item.id);
                                                 }}
+                                                id={`deleteButton-${item.id}`}
                                             >
                                                 <DeleteIcon />
                                             </Component.DeleteFabButton>

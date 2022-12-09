@@ -25,34 +25,23 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                             e.stopPropagation();
                             setFieldValue('parent', values?.parent === list.id ? '' : list.id);
                         }}
+                        id={`parentCategoryValue-${list.id}`}
                     />
                     {list?.name}
                 </Box>
             }
         >
-            {Array.isArray(list?.children) &&
-                list?.children?.map((item) =>
-                    displayCategoriesOptions(item, values, setFieldValue)
-                )}
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setFieldValue))}
         </TreeItem>
     );
 };
 
-export const ParentCategoryPartForm = ({
-    values,
-    categoriesList,
-    setFieldValue,
-    touched,
-    errors,
-}) => {
+export const ParentCategoryPartForm = ({ values, categoriesList, setFieldValue, touched, errors }) => {
     const theme = useTheme();
 
     return (
         <>
-            <Typography
-                variant="body1"
-                sx={{ fontWeight: 500, mt: 2, color: theme.palette.labelColor }}
-            >
+            <Typography variant="body1" sx={{ fontWeight: 500, mt: 2, color: theme.palette.labelColor }}>
                 Catégorie parente{' '}
                 <Typography component="span" className="MuiFormLabel-asterisk">
                     *
@@ -71,9 +60,11 @@ export const ParentCategoryPartForm = ({
             >
                 {displayCategoriesOptions(categoriesList, values, setFieldValue)}
             </TreeView>
-            <Typography sx={{ fontSize: 12 }} color="error">
-                {touched?.parent && errors?.parent}
-            </Typography>
+            {touched?.parent && errors?.parent && (
+                <Typography sx={{ fontSize: 12 }} color="error" id="parent-helper-text">
+                    {errors?.parent}
+                </Typography>
+            )}
         </>
     );
 };

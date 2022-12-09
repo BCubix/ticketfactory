@@ -43,12 +43,9 @@ const ConstantObj = {
     IMAGE_FILE_SUPPORTED: 'image/jpeg, image/png, image/gif, image/webp',
     AUDIO_FILE_SUPPORTED: 'audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav',
     VIDEO_FILE_SUPPORTED: 'video/mp4, video/webm, video/ogg, video/mpeg',
-    WORD_FILE_SUPPORTED:
-        'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    EXCEL_FILE_SUPPORTED:
-        'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    POWERPOINT_FILE_SUPPORTED:
-        'application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    WORD_FILE_SUPPORTED: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    EXCEL_FILE_SUPPORTED: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    POWERPOINT_FILE_SUPPORTED: 'application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation',
     PDF_FILE_SUPPORTED: 'application/pdf',
     TEXT_FILE_SUPPORTED: 'text/plain',
     ZIP_FILE_SUPPORTED: 'application/zip, application/x-zip-compressed',
@@ -82,7 +79,7 @@ export const Constant = new Proxy(ConstantObj, {
         }
 
         const result = Reflect.get(target, key, receiver);
-        return typeof result === 'function' && result.name === '' ? result() : result;
+        return typeof result === 'function' && (result.name === '' || result.name === 'ALL_FILE_SUPPORTED') ? result() : result;
     },
 });
 

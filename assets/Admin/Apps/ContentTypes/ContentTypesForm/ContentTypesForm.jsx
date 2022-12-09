@@ -2,11 +2,10 @@ import React, { useMemo } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
+import { Button, FormHelperText } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
 
@@ -23,21 +22,20 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                     title: Yup.string().required('Veuillez renseigner le titre de votre champ.'),
                     name: Yup.string().required('Veuillez renseigner le nom de votre champ.'),
                     type: Yup.string().required('Veuillez renseigner le type de votre champ.'),
-                    parameters: Yup.object().when('type', (type) => {
-                        if (!type) {
-                            return;
-                        }
+                    parameters: Yup.array().of(
+                        Yup.object().when('type', (type) => {
+                            if (!type) {
+                                return;
+                            }
 
-                        const moduleName = String(type).charAt(0).toUpperCase() + type?.slice(1) + Constant.CONTENT_TYPE_MODULES_EXTENSION;
-
-                        if (getContentTypesModules[moduleName]?.getValidation) {
-                            return Yup.object().shape({
-                                ...getContentTypesModules[moduleName].getValidation(),
-                            });
-                        } else {
-                            return Yup.object().nullable();
-                        }
-                    }),
+                            const moduleName = String(type).charAt(0).toUpperCase() + type?.slice(1) + CONTENT_TYPE_MODULES_EXTENSION;
+                            if (getContentTypesModules[moduleName]?.getValidation) {
+                                return Yup.object().shape({
+                                    ...getContentTypesModules[moduleName].getValidation(),
+                                });
+                            }
+                        })
+                    ),
                 })
             )
             .required('Veuillez renseigner un champ')
