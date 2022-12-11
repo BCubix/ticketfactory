@@ -13,7 +13,7 @@ export const copyData = (data) => {
         } else if (null !== value && typeof value === 'object') {
             newData[key] = copyData(value);
         } else {
-            newData[key] = value;
+            newData[key] = value !== null ? value : '';
         }
     });
 

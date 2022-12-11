@@ -1,18 +1,11 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    CONTACT_REQUESTS_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, CONTACT_REQUESTS_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Create Contact Request Spec', () => {
     beforeEach(() => {
         cy.login(USER_EMAIL, USER_PASSWORD);
 
-        cy.intercept('POST', ADMIN_API_BASE_PATH + CONTACT_REQUESTS_API_PATH).as(
-            'createContactRequest'
-        );
+        cy.intercept('POST', ADMIN_API_BASE_PATH + CONTACT_REQUESTS_API_PATH).as('createContactRequest');
         cy.visit(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH);
         cy.wait(500);
     });
@@ -24,7 +17,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.wait('@createContactRequest').then(({ response }) => {
             expect(response.statusCode).to.eq(201);
@@ -38,7 +31,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#firstName-helper-text').should('exist');
     });
@@ -50,7 +43,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#lastName-helper-text').should('exist');
     });
@@ -62,7 +55,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#email-helper-text').should('exist');
     });
@@ -74,7 +67,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#email-helper-text').should('exist');
     });
@@ -86,7 +79,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('bad phone');
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#phone-helper-text').should('exist');
     });
@@ -98,7 +91,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').focus().blur();
         cy.get('#subject').type('New Subject');
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#phone-helper-text').should('exist');
     });
@@ -110,7 +103,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').focus().blur();
         cy.get('#message').type('New Message');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#subject-helper-text').should('exist');
     });
@@ -122,7 +115,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#phone').type('0601020304');
         cy.get('#subject').type('New Subject');
         cy.get('#message').focus().blur();
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#message-helper-text').should('exist');
     });

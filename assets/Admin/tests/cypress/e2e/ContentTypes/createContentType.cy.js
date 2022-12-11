@@ -1,10 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    CONTENT_TYPES_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, CONTENT_TYPES_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Create Content Type Spec', () => {
     beforeEach(() => {
@@ -24,7 +19,7 @@ describe('Create Content Type Spec', () => {
         cy.get('#fields-0-helper').type('New instruction');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.wait('@createContentType').then(({ response }) => {
             expect(response.statusCode).to.eq(201);
@@ -40,14 +35,14 @@ describe('Create Content Type Spec', () => {
         cy.get('#fields-0-helper').type('New instruction');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#name-helper-text').should('exist');
     });
 
     it('Create Content Type (no Field)', () => {
         cy.get('#name').type('New Content type');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#fields-helper-text').should('exist');
     });
@@ -61,7 +56,7 @@ describe('Create Content Type Spec', () => {
         cy.get('#fields-0-helper').type('New instruction');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#fields-0-title-helper-text').should('exist');
     });
@@ -75,7 +70,7 @@ describe('Create Content Type Spec', () => {
         cy.get('#fields-0-helper').type('New instruction');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#fields-0-name-helper-text').should('exist');
     });
@@ -91,7 +86,7 @@ describe('Create Content Type Spec', () => {
         cy.get('#fields-0-helper').type('New instruction');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.wait('@createContentType').then(({ response }) => {
             expect(response.statusCode).to.eq(201);

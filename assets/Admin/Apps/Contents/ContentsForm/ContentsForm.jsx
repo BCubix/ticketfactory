@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Box, Button, FormControlLabel, Switch } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
@@ -129,7 +129,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Contenu actif ?" />
 
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

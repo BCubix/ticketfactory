@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControl, FormControlLabel, Grid, InputLabel, ListItemText, MenuItem, Select, Switch } from '@mui/material';
+import { Button, FormControl, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -135,7 +135,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Utilisateur actif ?" />
 
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             Modifier
                         </Button>
                     </Box>

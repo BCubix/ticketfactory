@@ -90,7 +90,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Type de contenu actif ?" />
 
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

@@ -86,7 +86,11 @@ export const CreateUserForm = ({ handleSubmit }) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    {touched.roles && errors.roles && <FormHelperText error>{errors.roles}</FormHelperText>}
+                                    {touched.roles && errors.roles && (
+                                        <FormHelperText error id="roles-helper-text">
+                                            {errors.roles}
+                                        </FormHelperText>
+                                    )}
                                 </FormControl>
                             </Grid>
 
@@ -140,7 +144,7 @@ export const CreateUserForm = ({ handleSubmit }) => {
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Utilisateur actif ?" />
 
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             Créer
                         </Button>
                     </Box>

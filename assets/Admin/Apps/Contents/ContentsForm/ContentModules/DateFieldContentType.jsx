@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 import { Box, Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
@@ -16,16 +16,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, setFieldTouched, name, errors, field, label, touched }) => {
     return (
         <Box sx={{ marginTop: 2 }}>
             <Component.CmtDatePicker
@@ -33,6 +24,10 @@ const FormComponent = ({
                 value={values[field.name]}
                 label={label}
                 setValue={(newValue) => {
+                    if (!newValue) {
+                        setFieldValue(name, '');
+                        return;
+                    }
                     setFieldValue(name, moment(newValue).format('YYYY-MM-DD'));
                 }}
                 onTouched={setFieldTouched}
@@ -64,9 +59,7 @@ const getValidation = (contentType) => {
     VALIDATION_LIST?.forEach((element) => {
         const elVal = valList.find((el) => el.name === element.name);
         if (elVal && element.test(elVal.value)) {
-            validation = validation[element.validationName](
-                ...element.params({ name: contentType.title, value: elVal.value })
-            );
+            validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
@@ -82,15 +75,9 @@ const getValidation = (contentType) => {
      *  We check if the minDate exist and defined and is after today date or disablePast doesn't exist or is false.
      *  Or if disablePast exist and defined.
      **/
-    if (
-        minDate &&
-        minDate.value &&
-        (moment().isBefore(moment(minDate.value)) || !disablePast || !disablePast?.value)
-    ) {
+    if (minDate && minDate.value && (moment().isBefore(moment(minDate.value)) || !disablePast || !disablePast?.value)) {
         validMinDate = moment(minDate.value);
-        validMinDateMessage = `La date doit être supérieur ou égal à ${validMinDate.format(
-            'DD-MM-YYYY'
-        )}`;
+        validMinDateMessage = `La date doit être supérieur ou égal à ${validMinDate.format('DD-MM-YYYY')}`;
     } else if (disablePast && disablePast.value) {
         validMinDate = moment();
         validMinDateMessage = `La date doit doit être supérieur ou égal à aujourd'hui`;
@@ -101,11 +88,7 @@ const getValidation = (contentType) => {
      *  Then we add to validation a test for the minimum date.
      **/
     if (validMinDate) {
-        validation = validation.test(
-            'minDate',
-            validMinDateMessage,
-            (val) => val && moment(val).isSameOrAfter(validMinDate, 'day')
-        );
+        validation = validation.test('minDate', validMinDateMessage, (val) => val && moment(val).isSameOrAfter(validMinDate, 'day'));
     }
 
     // We get the maxDate validation data and add a test to validation to check maximum Date if maxDate.value exist and is defined

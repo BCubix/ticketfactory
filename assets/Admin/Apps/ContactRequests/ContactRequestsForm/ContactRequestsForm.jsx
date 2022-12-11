@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -113,7 +113,7 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Demande de contact active ?" />
 
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>
