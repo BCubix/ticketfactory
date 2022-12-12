@@ -1,31 +1,21 @@
 <?php
 
-namespace App\EventSubscriber\Admin;
+namespace App\Hook;
 
 use App\Entity\User\User;
 use App\Event\Admin\HookEvent;
 use App\Exception\ApiException;
 use App\Manager\UserManager;
-use App\Service\Hook\HookService;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserSubscriber implements EventSubscriberInterface
+class UserHook
 {
     private $um;
 
     public function __construct(UserManager $um)
     {
         $this->um = $um;
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            HookService::normalize('instantiated.' . User::class) => [['onUserInstantiate', 0]],
-            HookService::normalize('validated.' . User::class) => [['onUserValidate', 0]]
-        ];
     }
 
     public function onUserInstantiate(HookEvent $event)

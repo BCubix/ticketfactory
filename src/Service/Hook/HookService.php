@@ -29,6 +29,18 @@ class HookService
     }
 
     /**
+     * Register hook
+     *
+     * @param string $hookName
+     * @param array $listener
+     *
+     * @return void
+     */
+    public function registerHook(string $hookName, array $listener) {
+        $this->ed->addListener(static::normalize($hookName), $listener);
+    }
+
+    /**
      * Register hook in database: associate hook with module given.
      *
      * @param string $hookName

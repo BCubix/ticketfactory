@@ -32,10 +32,6 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
-    App\EventSubscriber\Admin\UserSubscriber:
-        tags:
-            - { name: kernel.event_subscriber, event: tf.object.validated }
-
     App\EventSubscriber\Admin\FileUploader:
         arguments:
             $rootPath: '%kernel.project_dir%'

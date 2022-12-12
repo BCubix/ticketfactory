@@ -1,24 +1,15 @@
 <?php
 
-namespace App\EventSubscriber\Admin;
+namespace App\Hook;
 
 use App\Entity\Event\EventCategory;
 use App\Event\Admin\HookEvent;
 use App\Exception\ApiException;
-use App\Service\Hook\HookService;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class EventCategorySubscriber implements EventSubscriberInterface
+class EventCategoryHook
 {
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            HookService::normalize('instantiated.' . EventCategory::class) => [['onEventCategoryInstantiate', 0]]
-        ];
-    }
-
     public function onEventCategoryInstantiate(HookEvent $event)
     {
         $eventCategory = $event->getParam('object');

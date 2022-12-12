@@ -1,24 +1,15 @@
 <?php
 
-namespace App\EventSubscriber\Admin;
+namespace App\Hook;
 
 use App\Entity\Event\Season;
 use App\Event\Admin\HookEvent;
 use App\Exception\ApiException;
-use App\Service\Hook\HookService;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class SeasonSubscriber implements EventSubscriberInterface
+class SeasonHook
 {
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            HookService::normalize('instantiated.' . Season::class) => [['onSeasonInstantiate', 0]]
-        ];
-    }
-
     public function onSeasonInstantiate(HookEvent $event)
     {
         $season = $event->getParam('object');

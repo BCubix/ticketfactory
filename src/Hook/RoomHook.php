@@ -1,24 +1,15 @@
 <?php
 
-namespace App\EventSubscriber\Admin;
+namespace App\Hook;
 
 use App\Entity\Event\Room;
 use App\Event\Admin\HookEvent;
 use App\Exception\ApiException;
-use App\Service\Hook\HookService;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoomSubscriber implements EventSubscriberInterface
+class RoomHook
 {
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            HookService::normalize('instantiated.' . Room::class) => [['onRoomInstantiate', 0]]
-        ];
-    }
-
     public function onRoomInstantiate(HookEvent $event)
     {
         $room = $event->getParam('object');
