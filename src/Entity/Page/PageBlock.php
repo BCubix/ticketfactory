@@ -2,12 +2,17 @@
 
 namespace App\Entity\Page;
 
+use App\Entity\Datable;
+use App\Entity\JsonDoctrineSerializable;
+use App\Repository\PageBlockRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity]
-class PageBlock
+#[ORM\Entity(repositoryClass: PageBlockRepository::class)]
+class PageBlock extends Datable implements JsonDoctrineSerializable
 {
     /*** > Trait ***/
     /*** < Trait ***/
@@ -19,29 +24,68 @@ class PageBlock
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Assert\NotBlank(message: 'Le contenu doit être renseigné.')]
+    #[Assert\NotBlank(message: 'Le nom du bloc doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $content;
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[Assert\NotNull(message: 'Cet élément doit être renseigné.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column]
+    private ?bool $saveAsModel = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $columns = [];
 
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'pageBlocks')]
-    #[ORM\JoinColumn(nullable: false)]
     private $page;
+
+
+    public function __construct()
+    {
+        $this->active  = true;
+    }
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getContent(): ?string
+    public function getName(): ?string
     {
-        return $this->content;
+        return $this->name;
     }
 
-    public function setContent(string $content): self
+    public function setName(string $name): self
     {
-        $this->content = $content;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function isSaveAsModel(): ?bool
+    {
+        return $this->saveAsModel;
+    }
+
+    public function setSaveAsModel(bool $saveAsModel): self
+    {
+        $this->saveAsModel = $saveAsModel;
+
+        return $this;
+    }
+
+    public function getColumns(): array
+    {
+        return $this->columns;
+    }
+
+    public function setColumns(array $columns): self
+    {
+        $this->columns = $columns;
 
         return $this;
     }
@@ -56,5 +100,29 @@ class PageBlock
         $this->page = $page;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $columns = [];
+        foreach ($this->columns as $column) {
+            $columns[] = $column->jsonSerialize();
+        }
+
+        $this->columns = $columns;
+
+        return $this->columns;
+    }
+
+    public static function jsonDeserialize($data): self
+    {
+        $columns = [];
+        foreach ($data->columns as $column) {
+            $columns[] = PageColumn::jsonDeserialize($column);
+        }
+
+        $data->columns = $columns;
+
+        return $data;
     }
 }
