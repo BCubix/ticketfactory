@@ -1,25 +1,26 @@
-import authApi from "@Services/api/authApi";
-import categoriesApi from "@Services/api/categoriesApi";
-import config from "@Services/api/config";
-import contactRequestsApi from "@Services/api/contactRequestsApi";
-import contentTypesApi from "@Services/api/contentTypesApi";
-import contentsApi from "@Services/api/contentsApi";
-import dashboardApi from "@Services/api/dashboardApi";
-import eventsApi from "@Services/api/eventsApi";
-import imageFormatsApi from "@Services/api/imageFormatsApi";
-import logsApi from "@Services/api/logsApi";
-import mediasApi from "@Services/api/mediasApi";
-import menusApi from "@Services/api/menusApi";
-import modulesApi from "@Services/api/modulesApi";
-import pagesApi from "@Services/api/pagesApi";
-import parametersApi from "@Services/api/parametersApi";
-import profileApi from "@Services/api/profileApi";
-import redirectionsApi from "@Services/api/redirectionsApi";
-import roomsApi from "@Services/api/roomsApi";
-import seasonsApi from "@Services/api/seasonsApi";
-import tagsApi from "@Services/api/tagsApi";
-import usersApi from "@Services/api/usersApi";
-import { checkObject, checkString } from "@Services/utils/check";
+import authApi from '@Services/api/authApi';
+import categoriesApi from '@Services/api/categoriesApi';
+import config from '@Services/api/config';
+import contactRequestsApi from '@Services/api/contactRequestsApi';
+import contentTypesApi from '@Services/api/contentTypesApi';
+import contentsApi from '@Services/api/contentsApi';
+import dashboardApi from '@Services/api/dashboardApi';
+import eventsApi from '@Services/api/eventsApi';
+import imageFormatsApi from '@Services/api/imageFormatsApi';
+import logsApi from '@Services/api/logsApi';
+import mediasApi from '@Services/api/mediasApi';
+import menusApi from '@Services/api/menusApi';
+import modulesApi from '@Services/api/modulesApi';
+import pageBlocksApi from '@Services/api/pageBlocksApi';
+import pagesApi from '@Services/api/pagesApi';
+import parametersApi from '@Services/api/parametersApi';
+import profileApi from '@Services/api/profileApi';
+import redirectionsApi from '@Services/api/redirectionsApi';
+import roomsApi from '@Services/api/roomsApi';
+import seasonsApi from '@Services/api/seasonsApi';
+import tagsApi from '@Services/api/tagsApi';
+import usersApi from '@Services/api/usersApi';
+import { checkObject, checkString } from '@Services/utils/check';
 
 const ApiObj = {
     authApi: authApi,
@@ -35,6 +36,7 @@ const ApiObj = {
     mediasApi: mediasApi,
     menusApi: menusApi,
     modulesApi: modulesApi,
+    pageBlocksApi: pageBlocksApi,
     pagesApi: pagesApi,
     parametersApi: parametersApi,
     profileApi: profileApi,
@@ -43,7 +45,7 @@ const ApiObj = {
     seasonsApi: seasonsApi,
     tagsApi: tagsApi,
     usersApi: usersApi,
-}
+};
 
 /**
  * Api's getter.
@@ -55,7 +57,7 @@ export const Api = new Proxy(ApiObj, {
         }
 
         return Reflect.get(target, key, receiver);
-    }
+    },
 });
 
 /**

@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Box } from '@mui/system';
-import { Button, FormControlLabel, FormHelperText, Switch } from '@mui/material';
+import { Button, FormHelperText } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 

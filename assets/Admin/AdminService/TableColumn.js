@@ -69,6 +69,10 @@ const TableColumnObj = {
         },
         { name: 'name', label: 'Nom', width: '55%', sortable: true },
     ],
+    PageBlocksList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '80%', sortable: true },
+    ],
     PagesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },

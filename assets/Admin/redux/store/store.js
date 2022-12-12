@@ -18,6 +18,7 @@ import dashboardReducer from '@Redux/dashboard/dashboardSlice';
 import pagesReducer from '@Redux/pages/pagesSlice';
 import parametersReducer from '@Redux/parameters/parametersSlice';
 import modulesReducer from '@Redux/modules/modulesSlice';
+import pageBlocksReducer from '@Redux/pageBlocks/pageBlocksSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -38,7 +39,8 @@ const reducer = {
     pages: pagesReducer,
     parameters: parametersReducer,
     modules: modulesReducer,
-}
+    pageBlocks: pageBlocksReducer,
+};
 
 const store = configureStore({
     reducer: { ...reducer },
@@ -48,7 +50,7 @@ store.asyncReducers = {};
 
 store.injectReducer = (key, asyncReducer) => {
     store.asyncReducers[key] = asyncReducer;
-    store.replaceReducer(createReducer(store.asyncReducers))
+    store.replaceReducer(createReducer(store.asyncReducers));
 };
 
 function createReducer(asyncReducers) {

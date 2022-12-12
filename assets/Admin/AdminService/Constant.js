@@ -32,6 +32,7 @@ const ConstantObj = {
     REDIRECTIONS_BASE_PATH: '/admin/redirections',
     MENUS_BASE_PATH: '/admin/menus',
     PAGES_BASE_PATH: '/admin/pages',
+    PAGE_BLOCKS_BASE_PATH: '/admin/page-blocks',
     PARAMETERS_BASE_PATH: '/admin/parametres',
     MODULES_BASE_PATH: '/admin/modules',
 

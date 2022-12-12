@@ -86,9 +86,16 @@ import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
 import { CreatePage } from '@Apps/Pages/CreatePage/CreatePage';
 import { EditPage } from '@Apps/Pages/EditPage/EditPage';
 import { PagesBlocksForm } from '@Apps/Pages/PagesForm/PagesBlocksForm';
+import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 import { PagesFilters } from '@Apps/Pages/PagesList/PagesFIlters/PagesFilters';
 import { PagesList } from '@Apps/Pages/PagesList/PagesList';
+import { PagesMenu } from '@Apps/Pages/PagesMenu/PagesMenu';
+import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
+import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
+import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
+import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
+import { PageBlocksList } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
 import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
 import { ParametersForm } from '@Apps/Parameters/ParametersForm/ParametersForm';
 import { ParametersMenu } from '@Apps/Parameters/ParametersMenu/ParametersMenu';
@@ -281,6 +288,14 @@ const ComponentObj = {
     PagesForm: PagesForm,
     PagesFilters: PagesFilters,
     PagesList: PagesList,
+    PagesMenu: PagesMenu,
+
+    CreatePageBlock: CreatePageBlock,
+    EditPageBlock: EditPageBlock,
+    PageBlocksForm: PageBlocksForm,
+    PageBlockColumnPart: PageBlockColumnPart,
+    PageBlocksFilters: PageBlocksFilters,
+    PageBlocksList: PageBlocksList,
 
     ParametersBlockForm: ParametersBlockForm,
     ParametersForm: ParametersForm,
