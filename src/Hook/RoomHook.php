@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoomHook
 {
-    public function onRoomInstantiate(HookEvent $event)
+    public function hookRoomInstantiated(HookEvent $event)
     {
         $room = $event->getParam('object');
         if (!$this->isSupported($room)) {

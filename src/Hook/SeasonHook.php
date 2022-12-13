@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SeasonHook
 {
-    public function onSeasonInstantiate(HookEvent $event)
+    public function hookSeasonInstantiated(HookEvent $event)
     {
         $season = $event->getParam('object');
         if (!$this->isSupported($season)) {

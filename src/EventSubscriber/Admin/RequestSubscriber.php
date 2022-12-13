@@ -2,49 +2,38 @@
 
 namespace App\EventSubscriber\Admin;
 
-use App\Entity\Event\EventCategory;
-use App\Entity\Event\Room;
 use App\Entity\Module\Module;
-use App\Entity\User\User;
-use App\Hook\EventCategoryHook;
-use App\Hook\RoomHook;
-use App\Hook\SeasonHook;
-use App\Hook\UserHook;
 use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Service\ModuleService;
+use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestSubscriber implements EventSubscriberInterface
 {
+    private $pg;
     private $em;
     private $ms;
     private $hs;
-    private $ech;
-    private $rh;
-    private $sh;
-    private $uh;
+    private $container;
 
     public function __construct(
+        PathGetter $pg,
         EntityManagerInterface $em,
         ModuleService $ms,
         HookService $hs,
-        EventCategoryHook $ech,
-        RoomHook $rh,
-        SeasonHook $sh,
-        UserHook $uh
+        ContainerInterface $container
     ) {
+        $this->pg = $pg;
         $this->em = $em;
         $this->ms = $ms;
         $this->hs = $hs;
 
-        $this->ech = $ech;
-        $this->rh = $rh;
-        $this->sh = $sh;
-        $this->uh = $uh;
+        $this->container = $container;
     }
 
     public static function getSubscribedEvents(): array
@@ -56,6 +45,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event)
     {
+        // Register hook module
         $modules = $this->em->getRepository(Module::class)->findAllForAdmin(['active' => true]);
         foreach ($modules['results'] as $module) {
             $moduleConfig = $this->ms->getModuleConfigInstance($module->getName(), $this->hs);
@@ -64,22 +54,40 @@ class RequestSubscriber implements EventSubscriberInterface
             }
         }
 
-        $hookSystem = [
-            'instantiated' => [
-                EventCategory::class => [ $this->ech, 'onEventCategoryInstantiate' ],
-                Room::class          => [ $this->rh,  'onRoomInstantiate' ],
-                SeasonHook::class    => [ $this->sh,  'onSeasonInstantiate' ],
-                User::class          => [ $this->uh,  'onUserInstantiate' ],
-            ],
-            'validated'   => [
-                User::class          => [ $this->uh, 'onUserValidate' ],
-            ],
-        ];
+        // Register hook system
+        $hooksSystem = $this->getAllHookSystem();
+        foreach ($hooksSystem as $hookSystem) {
+            $hookInstance = $hookSystem['hookInstance'];
 
-        foreach ($hookSystem as $name => $hooks) {
-            foreach ($hooks as $class => $listener) {
-                $this->hs->registerHook($name . '.' . $class, $listener);
+            foreach ($hookSystem['hookMethods'] as $hookMethod) {
+                $this->hs->registerHook($hookMethod, $hookInstance);
             }
         }
+    }
+
+    private function getAllHookSystem(): array
+    {
+        $hookSystem = [];
+
+        $hookFilesPath = glob($this->pg->getHooksDir() . '/*');
+        foreach ($hookFilesPath as $hookFilePath) {
+            // Get classname
+            $path = explode('/', $hookFilePath);
+            $hookClassName = basename(array_pop($path), '.php');
+
+            // Get instance and hook methods
+            $hookInstance = $this->container->get('App\\Hook\\' . $hookClassName);
+            $hookMethods = array_filter(get_class_methods($hookInstance), function ($methodName) {
+                return str_starts_with($methodName, 'hook');
+            });
+
+            // Add in result
+            $hookSystem[] = [
+                'hookInstance' => $hookInstance,
+                'hookMethods'  => $hookMethods,
+            ];
+        }
+
+        return $hookSystem;
     }
 }

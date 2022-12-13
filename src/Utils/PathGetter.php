@@ -30,4 +30,9 @@ class PathGetter
     {
         return $this->projectDir . '/themes/Website';
     }
+
+    public function getHooksDir(): string
+    {
+        return $this->projectDir . '/src/Hook';
+    }
 }

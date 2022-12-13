@@ -25,6 +25,7 @@ abstract class CrudController extends AdminController
 
     protected $entityClass;
     protected $typeClass;
+    protected $entityClassName;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -37,6 +38,9 @@ abstract class CrudController extends AdminController
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;
+
+        $path = explode('\\', $this->entityClass);
+        $this->entityClassName = array_pop($path);
     }
 
     protected function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -62,7 +66,7 @@ abstract class CrudController extends AdminController
     {
         $object = new $this->entityClass();
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state' => 'add'
         ]);
@@ -77,7 +81,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
+        $this->hs->exec($this->entityClassName . 'Validated', ['object' => $object]);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -94,7 +98,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state' => 'edit'
         ]);
@@ -109,7 +113,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
+        $this->hs->exec($this->entityClassName . 'Validated', ['object' => $object]);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -126,7 +130,7 @@ abstract class CrudController extends AdminController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state' => 'duplicate'
         ]);
@@ -148,7 +152,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state' => 'delete'
         ]);

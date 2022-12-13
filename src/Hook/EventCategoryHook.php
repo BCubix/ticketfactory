@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EventCategoryHook
 {
-    public function onEventCategoryInstantiate(HookEvent $event)
+    public function hookEventCategoryInstantiated(HookEvent $event)
     {
         $eventCategory = $event->getParam('object');
         if (!$this->isSupported($eventCategory)) {

@@ -18,7 +18,7 @@ class UserHook
         $this->um = $um;
     }
 
-    public function onUserInstantiate(HookEvent $event)
+    public function hookUserInstantiated(HookEvent $event)
     {
         $user = $event->getParam('object');
         if (!$this->isSupported($user)) {
@@ -35,7 +35,7 @@ class UserHook
         }
     }
 
-    public function onUserValidate(HookEvent $event)
+    public function hookUserValidated(HookEvent $event)
     {
         $user = $event->getParam('object');
         if (!$this->isSupported($user)) {

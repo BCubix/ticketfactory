@@ -25,19 +25,20 @@ class HookService
 
     public static function normalize(string $hookName): string
     {
-        return HookEvent::NAME . '.' . str_replace('\\', '.', strtolower($hookName));
+        return 'hook' . $hookName;
     }
 
     /**
      * Register hook
      *
      * @param string $hookName
-     * @param array $listener
+     * @param mixed $classInstance
      *
      * @return void
      */
-    public function registerHook(string $hookName, array $listener) {
-        $this->ed->addListener(static::normalize($hookName), $listener);
+    public function registerHook(string $hookName, mixed $classInstance): void
+    {
+        $this->ed->addListener($hookName, [ $classInstance, $hookName ]);
     }
 
     /**
