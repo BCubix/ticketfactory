@@ -1,6 +1,7 @@
 import React from "react";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AppRegistration from "@mui/icons-material/AppRegistration";
 import AssistantIcon from '@mui/icons-material/Assistant';
 import BusinessIcon from "@mui/icons-material/Business";
 import CallMissedOutgoingIcon from "@mui/icons-material/CallMissedOutgoing";
@@ -16,7 +17,6 @@ import SourceIcon from "@mui/icons-material/Source";
 import TocIcon from "@mui/icons-material/Toc";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import WidgetsIcon from "@mui/icons-material/Widgets";
-
 import { Constant } from "@/AdminService/Constant";
 import { checkArray, checkObject, checkPosition, checkString } from "@Services/utils/check";
 
@@ -46,6 +46,7 @@ const MenuObj = [
         title: 'ADMINISTRATION',
         menu: [
             { name: 'Thèmes', link: Constant.THEMES_BASE_PATH, icon: <AssistantIcon/> },
+            { name: 'Hooks', link: Constant.HOOKS_BASE_PATH, icon: <AppRegistration/> },
             { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon/> },
             { name: 'Contacts', link: Constant.CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon/> },
             { name: 'Utilisateurs', link: Constant.USER_BASE_PATH, icon: <PersonIcon/> },

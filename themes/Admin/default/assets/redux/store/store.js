@@ -19,6 +19,7 @@ import pagesReducer from '@Redux/pages/pagesSlice';
 import parametersReducer from '@Redux/parameters/parametersSlice';
 import modulesReducer from '@Redux/modules/modulesSlice';
 import themesReducer from '@Redux/themes/themesSlice';
+import hooksReducer from '@Redux/hooks/hooksSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -40,6 +41,7 @@ const reducer = {
     parameters: parametersReducer,
     modules: modulesReducer,
     themes: themesReducer,
+    hooks: hooksReducer,
 }
 
 const store = configureStore({

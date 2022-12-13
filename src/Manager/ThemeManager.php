@@ -174,7 +174,7 @@ class ThemeManager extends AbstractManager
                 }
 
                 $this->ms->install($moduleName);
-                $module = $this->mm->createNewModule($moduleName);
+                $module = $this->mm->createNewModule($moduleName, false);
             } else if ($module->isActive() === $activeCondition) {
                 continue;
             }

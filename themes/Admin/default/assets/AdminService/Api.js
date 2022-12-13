@@ -20,6 +20,7 @@ import seasonsApi from "@Services/api/seasonsApi";
 import tagsApi from "@Services/api/tagsApi";
 import themesApi from "@Services/api/themesApi";
 import usersApi from "@Services/api/usersApi";
+import hooksApi from "@Services/api/hooksApi";
 import { checkObject, checkString } from "@Services/utils/check";
 
 const ApiObj = {
@@ -45,6 +46,7 @@ const ApiObj = {
     tagsApi: tagsApi,
     themesApi: themesApi,
     usersApi: usersApi,
+    hooksApi: hooksApi,
 }
 
 /**

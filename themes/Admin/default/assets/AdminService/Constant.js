@@ -36,6 +36,7 @@ const ConstantObj = {
     PARAMETERS_BASE_PATH: '/admin/parametres',
     MODULES_BASE_PATH: '/admin/modules',
     THEMES_BASE_PATH: '/admin/themes',
+    HOOKS_BASE_PATH: '/admin/hooks',
 
     EDIT_PATH: '/modifier',
     CREATE_PATH: '/nouveau',

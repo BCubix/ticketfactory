@@ -54,6 +54,7 @@ import { MainDashboard } from '@Apps/Home/MainDashboard';
 import { GraphTabTitle } from '@Apps/Home/sc.Home';
 import { SecondCardDashboard } from '@Apps/Home/SecondCardDashboard';
 import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
+import { HooksList } from "@Apps/Hooks/HooksList/HooksList";
 import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatForm';
@@ -236,6 +237,8 @@ const ComponentObj = {
     GraphTabTitle: GraphTabTitle,
     SecondCardDashboard: SecondCardDashboard,
     ThirdCardDashboard: ThirdCardDashboard,
+
+    HooksList: HooksList,
 
     CreateImageFormat: CreateImageFormat,
     EditImageFormat: EditImageFormat,

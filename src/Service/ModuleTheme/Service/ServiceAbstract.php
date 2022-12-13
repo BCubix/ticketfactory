@@ -197,6 +197,6 @@ abstract class ServiceAbstract
      * @param string $name
      * @return array
      */
-    protected abstract function getImage(string $name): array;
+    public abstract function getImage(string $name): array;
 }
 

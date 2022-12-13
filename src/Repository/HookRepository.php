@@ -21,4 +21,13 @@ class HookRepository extends CrudRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findAllHookModuleForAdmin()
+    {
+        return $this->createQueryBuilder('u')
+            ->innerJoin('u.modules', 't')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
