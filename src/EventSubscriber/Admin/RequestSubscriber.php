@@ -60,7 +60,7 @@ class RequestSubscriber implements EventSubscriberInterface
             $hookInstance = $hookSystem['hookInstance'];
 
             foreach ($hookSystem['hookMethods'] as $hookMethod) {
-                $this->hs->registerHook($hookMethod, $hookInstance);
+                $this->hs->register($hookMethod, $hookInstance);
             }
         }
     }
