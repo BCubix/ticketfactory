@@ -47,19 +47,45 @@ class HookController extends AdminController
     {
         $result = [];
 
-        $hooks = $this->em->getRepository(Hook::class)->findAllHookModuleForAdmin();
-        foreach ($hooks as $hook) {
-            $modules = [];
-            foreach ($hook->getModules() as $module) {
-                $moduleName = $module->getName();
-                $modules[] = $this->ms->getConfig($moduleName)
-                    + $this->ms->getImage($moduleName);
+        $modules = $this->ms->getAllInDisk();
+        $hooks = $this->em->getRepository(Hook::class)->findAllForAdmin();
+
+        foreach ($hooks['results'] as $hook) {
+            for ($i = 0; $i < count($result); ++$i) {
+                if ($result[$i]['name'] === $hook->getName()) {
+                    break;
+                }
             }
 
-            $result[] = [
-                'name' => $hook->getName(),
-                'modules' => $modules,
-            ];
+            if ($i === count($result)) {
+                $result[] = [
+                    'name' => $hook->getName(),
+                    'modules' => [],
+                ];
+            }
+
+            $module = $hook->getModule();
+            if (null !== $module) {
+                $moduleName = $module->getName();
+                $r = array_filter($modules, function ($moduleInfos) use ($moduleName) {
+                    return $moduleInfos['name'] === $moduleName;
+                });
+
+                if (count($r) !== 1) {
+                    dd($moduleName);
+                }
+                $module = [ ...array_pop($r), 'position' => $hook->getPosition()];
+                $result[$i]['modules'][] = $module;
+            }
+        }
+
+        for ($i = 0; $i < count($result); ++$i) {
+            usort($result[$i]['modules'], function ($a, $b) {
+                if ($a['position'] === $b['position']) {
+                    return 0;
+                }
+                return $a['position'] < $b['position'] ? -1 : 1;
+            });
         }
 
         return $result;

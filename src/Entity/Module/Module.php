@@ -36,7 +36,9 @@ class Module extends Datable
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 
-    #[ORM\ManyToMany(mappedBy: 'modules', targetEntity: Hook::class)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Hook::class, orphanRemoval: true,  cascade: ['persist', 'remove'])]
     private $hooks;
 
     public function __construct()
@@ -73,6 +75,7 @@ class Module extends Datable
     {
         if (!$this->hooks->contains($hook)) {
             $this->hooks[] = $hook;
+            $hook->setModule($this);
         }
 
         return $this;
@@ -80,7 +83,11 @@ class Module extends Datable
 
     public function removeHook(Hook $hook): self
     {
-        $this->hooks->removeElement($hook);
+        if ($this->hooks->removeElement($hook)) {
+            if ($hook->getModule() === $this) {
+                $hook->setModule(null);
+            }
+        }
 
         return $this;
     }

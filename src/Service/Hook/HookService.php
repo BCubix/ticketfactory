@@ -40,14 +40,8 @@ class HookService
      * @return void
      * @throws ApiException
      */
-    public function register(string $hookName, mixed $classInstance): void
+    public function register(string $hookName, mixed $classInstance, int $position = 0): void
     {
-        $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
-        if (null === $hook) {
-            $hook = new Hook();
-            $hook->setName($hookName);
-        }
-
         if ($classInstance instanceof ModuleConfig) {
             $moduleName = $classInstance->getInfo()['name'];
             $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
@@ -55,11 +49,20 @@ class HookService
                 throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module (nom: $moduleName) n'existe pas.");
             }
 
-            $hook->addModule($module);
+            $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
+        } else {
+            $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
         }
 
-        $this->em->persist($hook);
-        $this->em->flush();
+        if (null === $hook) {
+            $hook = new Hook();
+            $hook->setName($hookName);
+            $hook->setPosition($position);
+            $hook->setModule($classInstance instanceof ModuleConfig ? $module : null);
+
+            $this->em->persist($hook);
+            $this->em->flush();
+        }
 
         $this->ed->addListener(static::normalize($hookName), [
             $classInstance,
@@ -76,21 +79,24 @@ class HookService
      */
     public function unregister(string $hookName, mixed $classInstance): void
     {
-        $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
+        if ($classInstance instanceof ModuleConfig) {
+            $moduleName = $classInstance->getInfo()['name'];
+            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (null === $module) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module (nom: $moduleName) n'existe pas.");
+            }
+
+            $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
+        } else {
+            $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
+        }
+
         if (null === $hook) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le hook (nom: $hookName) n'existe pas.");
         }
 
-        if ($classInstance instanceof ModuleConfig) {
-            $moduleName = $classInstance->getInfo()['name'];
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if ($module) {
-                $hook->removeModule($module);
-
-                $this->em->persist($hook);
-                $this->em->flush();
-            }
-        }
+        $this->em->remove($hook);
+        $this->em->flush();
 
         $this->ed->removeListener(static::normalize($hookName),[
             $classInstance,

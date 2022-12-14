@@ -5,8 +5,6 @@ namespace App\Entity\Hook;
 use App\Entity\Module\Module;
 use App\Repository\HookRepository;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -32,13 +30,13 @@ class Hook
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'hooks')]
-    private $modules;
+    #[ORM\ManyToOne(inversedBy: 'hooks', targetEntity: Module::class)]
+    private $module;
 
-    public function __construct()
-    {
-        $this->modules = new ArrayCollection();
-    }
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: Types::INTEGER)]
+    private $position;
 
     public function getId(): int
     {
@@ -57,29 +55,26 @@ class Hook
         return $this;
     }
 
-    /**
-     * @return Collection<int, Module>
-     */
-    public function getModules(): Collection
+    public function getModule(): ?Module
     {
-        return $this->modules;
+        return $this->module;
     }
 
-    public function addModule(Module $module): self
+    public function setModule(?Module $module): self
     {
-        if (!$this->modules->contains($module)) {
-            $this->modules[] = $module;
-            $module->addHook($this);
-        }
+        $this->module = $module;
 
         return $this;
     }
 
-    public function removeModule(Module $module): self
+    public function getPosition(): int
     {
-        if ($this->modules->removeElement($module)) {
-            $module->removeHook($this);
-        }
+        return $this->position;
+    }
+
+    public function setPosition($position): self
+    {
+        $this->position = $position;
 
         return $this;
     }
