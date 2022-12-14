@@ -36,6 +36,8 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
     #[ORM\Column]
     private ?bool $saveAsModel = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'json')]
     private array $columns = [];
 

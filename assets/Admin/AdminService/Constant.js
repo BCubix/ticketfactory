@@ -65,6 +65,8 @@ const ConstantObj = {
         { label: 'Utilisateur', value: 'ROLE_USER' },
         { label: 'Admin', value: 'ROLE_ADMIN' },
     ],
+
+    PAGE_BLOCKS_FORMATS: [[12], [6, 6], [4, 8], [8, 4], [4, 4, 4], [3, 6, 3]],
 };
 
 ConstantObj.ALL_FILE_SUPPORTED = () =>

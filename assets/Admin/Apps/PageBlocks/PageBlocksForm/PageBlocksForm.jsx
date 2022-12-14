@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Component } from '@/AdminService/Component';
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Box } from '@mui/system';
 
-export const PageBlocksForm = ({ handleSubmit, initialValues = null }) => {
+export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues = null }) => {
     const [view, setView] = useState('xl');
+    const initValues = initialValues || modelValues;
 
     const pageBlockSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de votre block.').max(250, 'Le nom renseigné est trop long.'),
@@ -15,9 +16,9 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null }) => {
     return (
         <Formik
             initialValues={{
-                name: initialValues?.name || '',
+                name: initValues?.name || '',
                 columns:
-                    initialValues?.columns?.map((element) => ({
+                    initValues?.columns?.map((element) => ({
                         content: element?.content || '',
                         xs: element?.xs || 12,
                         s: element?.s || 12,
@@ -49,7 +50,7 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null }) => {
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Contenu" position="relative">
-                        <Box display="flex" sx={{ paddingLeft: 8 }}>
+                        <Box sx={{ paddingLeft: 5 }} minHeight={200}>
                             <ToggleButtonGroup
                                 orientation="vertical"
                                 value={view}
@@ -81,6 +82,11 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null }) => {
                             <Component.PageBlockColumnPart values={values} media={view} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched} />
                         </Box>
                     </Component.CmtFormBlock>
+                    <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
+                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
+                            {initialValues ? 'Modifier' : 'Créer'}
+                        </Button>
+                    </Box>
                 </Component.CmtPageWrapper>
             )}
         </Formik>

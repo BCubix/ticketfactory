@@ -22,7 +22,7 @@ const FILTERS_SORT_TAB = [
 const pageBlocksApi = {
     getPageBlocks: async (filters) => {
         try {
-            /*let params = {};
+            let params = {};
 
             createFilterParams(filters, FILTERS_SORT_TAB, params);
 
@@ -37,38 +37,9 @@ const pageBlocksApi = {
                 signal: controller.signal,
             });
 
-            controller = null;*/
+            controller = null;
 
-            const results = [
-                {
-                    id: 1,
-                    name: 'Bloc 1',
-                    saveAsModel: true,
-                    columns: [
-                        {
-                            content: '<p>Je suis un premier mini bloc !</p>',
-                            xs: 12,
-                            s: 12,
-                            m: 12,
-                            l: 12,
-                            xl: 12,
-                            position: 1,
-                        },
-                        {
-                            content: '<p>Je suis un deuxième mini bloc !</p>',
-                            xs: 12,
-                            s: 12,
-                            m: 12,
-                            l: 12,
-                            xl: 12,
-                            position: 2,
-                        },
-                    ],
-                },
-            ];
-
-            //return { result: true, pageBlocks: result.data?.results, total: result?.data?.total };
-            return { result: true, pageBlocks: results, total: results.length };
+            return { result: true, pageBlocks: result.data?.results, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, pageBlocks: [], total: 0 };
@@ -105,6 +76,16 @@ const pageBlocksApi = {
             const formData = new FormData();
 
             formData.append('name', data?.name);
+            formData.append('saveAsModel', 1);
+
+            data.columns.forEach((column, index) => {
+                formData.append(`columns[${index}][content]`, column.content);
+                formData.append(`columns[${index}][xs]`, column.xs);
+                formData.append(`columns[${index}][s]`, column.s);
+                formData.append(`columns[${index}][m]`, column.m);
+                formData.append(`columns[${index}][l]`, column.l);
+                formData.append(`columns[${index}][xl]`, column.xl);
+            });
 
             const result = await axios.post('/page-blocks', formData);
 
@@ -119,6 +100,16 @@ const pageBlocksApi = {
             const formData = new FormData();
 
             formData.append('name', data?.name);
+            formData.append('saveAsModel', 1);
+
+            data.columns.forEach((column, index) => {
+                formData.append(`columns[${index}][content]`, column.content);
+                formData.append(`columns[${index}][xs]`, column.xs);
+                formData.append(`columns[${index}][s]`, column.s);
+                formData.append(`columns[${index}][m]`, column.m);
+                formData.append(`columns[${index}][l]`, column.l);
+                formData.append(`columns[${index}][xl]`, column.xl);
+            });
 
             const result = await axios.post(`/page-blocks/${id}`, formData);
 

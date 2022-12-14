@@ -10,11 +10,6 @@ import { Component } from '@/AdminService/Component';
 export const PagesForm = ({ handleSubmit, initialValues = null }) => {
     const pageSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
-        pageBlocks: Yup.array().of(
-            Yup.object().shape({
-                content: Yup.string().required('Veuillez renseigner le contenu de votre bloc.'),
-            })
-        ),
     });
 
     return (
@@ -22,7 +17,19 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
             initialValues={{
                 active: initialValues?.active || false,
                 title: initialValues?.title || '',
-                pageBlocks: initialValues?.pageBlocks || [],
+                pageBlocks:
+                    initialValues?.pageBlocks?.map((pageBlock) => ({
+                        name: pageBlock.name,
+                        saveAsModel: false,
+                        columns: pageBlock?.columns?.map((column) => ({
+                            content: column?.content,
+                            xs: column?.xs || 12,
+                            s: column?.s || 12,
+                            m: column?.m || 12,
+                            l: column?.l || 12,
+                            xl: column?.xl || 12,
+                        })),
+                    })) || [],
             }}
             validationSchema={pageSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -44,7 +51,15 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Blocs">
-                        <Component.PagesBlocksForm values={values} errors={errors} touched={touched} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched} />
+                        <Component.PagesBlocksPart
+                            values={values}
+                            errors={errors}
+                            touched={touched}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            handleChange={handleChange}
+                            handleBlur={handleBlur}
+                        />
 
                         {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}
                     </Component.CmtFormBlock>

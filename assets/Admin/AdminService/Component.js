@@ -85,7 +85,7 @@ import { ModulesFilters } from '@Apps/Modules/ModulesList/ModulesFilters/Modules
 import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
 import { CreatePage } from '@Apps/Pages/CreatePage/CreatePage';
 import { EditPage } from '@Apps/Pages/EditPage/EditPage';
-import { PagesBlocksForm } from '@Apps/Pages/PagesForm/PagesBlocksForm';
+import { PagesBlocksPart } from '@Apps/Pages/PagesForm/PagesBlocksPart';
 import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 import { PagesFilters } from '@Apps/Pages/PagesList/PagesFIlters/PagesFilters';
@@ -175,6 +175,7 @@ import { SideMenu } from '@Components/SideMenu/SideMenu';
 import { checkComponent, checkString } from '@Services/utils/check';
 import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
+import { CreatePageBlockFormat } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
 
 const ComponentObj = {
     App: App,
@@ -284,13 +285,14 @@ const ComponentObj = {
 
     CreatePage: CreatePage,
     EditPage: EditPage,
-    PagesBlocksForm: PagesBlocksForm,
+    PagesBlocksPart: PagesBlocksPart,
     PagesForm: PagesForm,
     PagesFilters: PagesFilters,
     PagesList: PagesList,
     PagesMenu: PagesMenu,
 
     CreatePageBlock: CreatePageBlock,
+    CreatePageBlockFormat: CreatePageBlockFormat,
     EditPageBlock: EditPageBlock,
     PageBlocksForm: PageBlocksForm,
     PageBlockColumnPart: PageBlockColumnPart,
