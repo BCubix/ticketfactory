@@ -6,5 +6,5 @@ export const DroppableBox = styled(Box)`
     border: ${(props) =>
         props.isDraggingOver && !props.isDragging ? '2px dashed #D3D3D3' : 'none'};
     z-index: 10;
-    width: 400px;
+    width: ${(props) => props.width || '400px' };
 `;
