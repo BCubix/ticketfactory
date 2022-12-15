@@ -12,6 +12,14 @@ class HookRepository extends CrudRepository
         parent::__construct($registry, Hook::class);
     }
 
+    public function findAllHooksForAdmin()
+    {
+        return $this->createQueryBuilder('u')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findOneByNameForAdmin(string $name)
     {
         return $this->createQueryBuilder('u')
@@ -19,6 +27,17 @@ class HookRepository extends CrudRepository
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    public function findAllByNameForAdmin(string $name)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.name = :name')
+            ->setParameter('name', $name)
+            ->orderBy('u.position', 'ASC')
+            ->getQuery()
+            ->getResult()
         ;
     }
 

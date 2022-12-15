@@ -48,9 +48,9 @@ class HookController extends AdminController
         $result = [];
 
         $modules = $this->ms->getAllInDisk();
-        $hooks = $this->em->getRepository(Hook::class)->findAllForAdmin();
+        $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
 
-        foreach ($hooks['results'] as $hook) {
+        foreach ($hooks as $hook) {
             for ($i = 0; $i < count($result); ++$i) {
                 if ($result[$i]['name'] === $hook->getName()) {
                     break;
@@ -121,43 +121,32 @@ class HookController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function update(Request $request, string $hookName): View
     {
-        $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
-        if (null === $hook) {
+        $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($hookName);
+        if (null === $hooks) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Ce hook n'existe pas.");
         }
 
-        $hookData = $request->request->all();
+        $srcPosition = $request->get('src');
+        $destPosition = $request->get('dest');
 
-        $modules = [];
-        foreach ($hookData['modules'] as $module) {
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($module['name']);
-            if (null === $module) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module " . $module['name'] . " n'existe pas.");
+        if (null === $srcPosition || null === $destPosition) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La requête n'a pas les informations requis.");
+        }
+
+        if ($srcPosition > $destPosition) {
+            for ($i = $destPosition; $i < $srcPosition; ++$i) {
+                $hooks[$i]->setPosition($i + 1);
+                $this->em->persist($hooks[$i]);
             }
-            $modules[] = $module;
+        } else {
+            for ($i = $srcPosition + 1; $i < $destPosition + 1; ++$i) {
+                $hooks[$i]->setPosition($i - 1);
+                $this->em->persist($hooks[$i]);
+            }
         }
+        $hooks[$srcPosition]->setPosition($destPosition);
+        $this->em->persist($hooks[$srcPosition]);
 
-        $modulesNameBefore = array_map(function ($module) {
-            return $module->getName();
-        }, $hook->getModules()->toArray());
-
-        $modulesNameAfter = array_map(function ($module) {
-            return $module->getName();
-        }, $modules);
-
-        if (array_diff($modulesNameBefore, $modulesNameAfter)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Les modules ne correspondent pas aux modules du hook.");
-        }
-
-        foreach ($hook->getModules() as $module) {
-            $hook->removeModule($module);
-        }
-
-        foreach ($modules as $module) {
-            $hook->addModule($module);
-        }
-
-        $this->em->persist($hook);
         $this->em->flush();
 
         return $this->view($this->getAllHookModule(), Response::HTTP_OK);

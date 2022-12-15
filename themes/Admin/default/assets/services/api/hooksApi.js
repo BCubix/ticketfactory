@@ -11,15 +11,9 @@ const hooksApi = {
         }
     },
 
-    updateHook: async (name, data) => {
+    updateHookModules: async (name, srcPosition, destPosition) => {
         try {
-            let formData = new FormData();
-
-            data.modules.forEach((module, index) => {
-                formData.append(`modules[${index}][name]`, module.name);
-            });
-
-            const result = await axios.post(`/hooks/${name}`, formData);
+            const result = await axios.post(`/hooks/${name}?src=${srcPosition}&dest=${destPosition}`);
 
             return { result: true, hooks: result?.data };
         } catch (error) {

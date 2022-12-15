@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
 
+import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { Box } from '@mui/system';
 import {
     Avatar,
@@ -9,16 +12,11 @@ import {
 } from '@mui/material';
 
 import { Component } from "@/AdminService/Component";
-
-import { getHooksAction, hooksSelector, updateHooksAction } from '@Redux/hooks/hooksSlice';
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import UnpublishedIcon from "@mui/icons-material/Unpublished";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
-import { NotificationManager } from "react-notifications";
 import { Constant } from "@/AdminService/Constant";
-import { getContentsAction } from "@Redux/contents/contentsSlice";
 import { Api } from "@/AdminService/Api";
+
+import { getHooksAction, hooksSelector } from '@Redux/hooks/hooksSlice';
+import { apiMiddleware } from "@Services/utils/apiMiddleware";
 
 export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
@@ -36,23 +34,11 @@ export const HooksList = () => {
         }
 
         let hookName = result.destination.droppableId;
-        let indexSrc = Number(result.draggableId);
+        let indexSrc = result.source.index;
         let indexDest = result.destination.index;
 
-        const hookIndex = hooks.findIndex(hook => hook.name === hookName);
-
-        let newHook = {
-            name: hooks[hookIndex].name,
-            modules: [ ...hooks[hookIndex].modules ]
-        };
-
-        const tmp = newHook.modules[indexDest];
-        newHook.modules[indexDest] = newHook.modules[indexSrc];
-        newHook.modules[indexSrc] = tmp;
-
-        //dispatch(updateHooksAction(newHook.name, newHook));
         apiMiddleware(dispatch, async () => {
-            const result = await Api.hooksApi.updateHook(newHook.name, newHook);
+            const result = await Api.hooksApi.updateHookModules(hookName, indexSrc, indexDest);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             } else {
@@ -129,7 +115,7 @@ export const HooksList = () => {
                                                         {modules.map((module, index) => (
                                                             <Draggable
                                                                 key={index}
-                                                                draggableId={index.toString()}
+                                                                draggableId={module.name}
                                                                 index={index}
                                                                 isCombineEnabled
                                                                 ignoreContainerClipping
