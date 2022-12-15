@@ -55,27 +55,6 @@ export function getHooksAction(data) {
     };
 }
 
-export function updateHooksAction(name, data) {
-    return async (dispatch) => {
-        try {
-            dispatch(getHooks());
-
-            apiMiddleware(dispatch, async () => {
-                const hooks = await Api.hooksApi.updateHook(name, data);
-                if (!hooks.result) {
-                    dispatch(getHooksFailure({ error: hooks.error }));
-
-                    return;
-                }
-
-                dispatch(getHooksSuccess({ hooks: hooks.hooks, total: hooks.total }));
-            });
-        } catch (error) {
-            dispatch(getHooksFailure({ error: error.message || error }));
-        }
-    };
-}
-
 export const { getHooks, getHooksSuccess, getHooksFailure, resetHooks } = hooksSlice.actions;
 export const hooksSelector = (state) => state.hooks;
 export default hooksSlice.reducer;

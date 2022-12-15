@@ -53,15 +53,4 @@ class HookRepository extends CrudRepository
             ->getOneOrNullResult()
         ;
     }
-
-    public function findAllByModuleNameForAdmin(string $moduleName)
-    {
-        return $this->createQueryBuilder('u')
-            ->innerJoin('u.module', 'm')
-            ->where('m.name = :moduleName')
-            ->setParameter('moduleName', $moduleName)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 }

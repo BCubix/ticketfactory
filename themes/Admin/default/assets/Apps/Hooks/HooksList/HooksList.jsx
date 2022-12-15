@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { Box } from '@mui/system';
@@ -17,10 +18,12 @@ import { Api } from "@/AdminService/Api";
 
 import { getHooksAction, hooksSelector } from '@Redux/hooks/hooksSlice';
 import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!loading && !hooks && !error) {
@@ -77,6 +80,12 @@ export const HooksList = () => {
                             <Typography component="h2" variant="h5" fontSize={20}>
                                 Liste des hooks
                             </Typography>
+                            <Component.CreateButton
+                                variant="contained"
+                                onClick={() => navigate(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH)}
+                            >
+                                Nouveau
+                            </Component.CreateButton>
                         </Box>
 
                         {hooks.map(({ name, modules }, indexHook) => (
@@ -85,8 +94,10 @@ export const HooksList = () => {
                                     <Table sx={{ minWidth: 650, marginTop: 10 }}>
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell sx={{ width: '7%' }}>
+                                                <TableCell sx={{ width: '5%' }}>
                                                     {name}
+                                                </TableCell>
+                                                <TableCell sx={{ width: '5%' }}>
                                                 </TableCell>
                                                 <TableCell sx={{ width: '10%' }}>
                                                 </TableCell>
@@ -94,7 +105,7 @@ export const HooksList = () => {
                                                 </TableCell>
                                                 <TableCell sx={{ width: '10%' }}>
                                                 </TableCell>
-                                                <TableCell sx={{ width: '58%' }}>
+                                                <TableCell sx={{ width: '55%' }}>
                                                 </TableCell>
                                                 <TableCell sx={{ width: '10%' }}>
                                                 </TableCell>
@@ -115,7 +126,7 @@ export const HooksList = () => {
                                                         {modules.map((module, index) => (
                                                             <Draggable
                                                                 key={index}
-                                                                draggableId={module.name}
+                                                                draggableId={index.toString()}
                                                                 index={index}
                                                                 isCombineEnabled
                                                                 ignoreContainerClipping
@@ -124,9 +135,26 @@ export const HooksList = () => {
                                                                     <TableRow
                                                                         ref={provided.innerRef}
                                                                         {...provided.draggableProps}
-                                                                        {...provided.dragHandleProps}
                                                                         isDragging={snapshot.isDragging}
                                                                     >
+                                                                        <TableCell>
+                                                                            <Box
+                                                                                height="100%"
+                                                                                sx={{
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    height: 30,
+                                                                                    width: 30,
+                                                                                    borderRadius: 1,
+                                                                                    cursor: 'pointer',
+                                                                                    border: (theme) => `1px solid ${theme.palette.crud.action.textColor}`,
+                                                                                }}
+                                                                                {...provided.dragHandleProps}
+                                                                            >
+                                                                                <MoreHorizIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
+                                                                            </Box>
+                                                                        </TableCell>
                                                                         <TableCell>
                                                                             <Avatar src={module.logoUrl}/>
                                                                         </TableCell>
