@@ -32,7 +32,7 @@ export const HooksList = () => {
         }
     }, []);
 
-    const handleDragEnd = async (result) => {
+    /*const handleDragEnd = async (result) => {
         if (!result.destination) {
             return;
         }
@@ -49,7 +49,7 @@ export const HooksList = () => {
                 dispatch(getHooksAction());
             }
         });
-    };
+    };*/
 
     const handleDisable = async (hookName, moduleName) => {
         apiMiddleware(dispatch, async () => {
@@ -91,112 +91,12 @@ export const HooksList = () => {
                         </Box>
 
                         {hooks.map(({ name, modules }, indexHook) => (
-                            <>
-                                <TableContainer>
-                                    <Table sx={{ minWidth: 650, marginTop: 10 }}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell sx={{ width: '5%' }}>
-                                                    {name}
-                                                </TableCell>
-                                                <TableCell sx={{ width: '5%' }}>
-                                                </TableCell>
-                                                <TableCell sx={{ width: '10%' }}>
-                                                </TableCell>
-                                                <TableCell sx={{ width: '5%' }}>
-                                                </TableCell>
-                                                <TableCell sx={{ width: '10%' }}>
-                                                </TableCell>
-                                                <TableCell sx={{ width: '55%' }}>
-                                                </TableCell>
-                                                <TableCell sx={{ width: '10%' }}>
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
-                                            <Droppable
-                                                droppableId={name}
-                                                isCombineEnabled
-                                                ignoreContainerClipping
-                                            >
-                                                {(provided, snapshot) => (
-                                                    <TableBody
-                                                        {...provided.droppableProps}
-                                                        ref={provided.innerRef}
-                                                        isDraggingOver={snapshot.isDraggingOver}
-                                                    >
-                                                        {modules.map((module, index) => (
-                                                            <Draggable
-                                                                key={index}
-                                                                draggableId={index.toString()}
-                                                                index={index}
-                                                                isCombineEnabled
-                                                                ignoreContainerClipping
-                                                            >
-                                                                {(provided, snapshot) => (
-                                                                    <TableRow
-                                                                        ref={provided.innerRef}
-                                                                        {...provided.draggableProps}
-                                                                        isDragging={snapshot.isDragging}
-                                                                    >
-                                                                        <TableCell>
-                                                                            <Box
-                                                                                height="100%"
-                                                                                sx={{
-                                                                                    display: 'flex',
-                                                                                    alignItems: 'center',
-                                                                                    justifyContent: 'center',
-                                                                                    height: 30,
-                                                                                    width: 30,
-                                                                                    borderRadius: 1,
-                                                                                    cursor: 'pointer',
-                                                                                    border: (theme) => `1px solid ${theme.palette.crud.action.textColor}`,
-                                                                                }}
-                                                                                {...provided.dragHandleProps}
-                                                                            >
-                                                                                <MoreHorizIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
-                                                                            </Box>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                            <Avatar src={module.logoUrl}/>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                            <Typography>{module.displayName}</Typography>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                            <Typography>{module.version}</Typography>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                            <Typography>{module.author}</Typography>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                            <Typography>{module.description}</Typography>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                            <Component.ActionFabButton
-                                                                                sx={{ marginInline: 1 }}
-                                                                                color="primary"
-                                                                                size="small"
-                                                                                aria-label="Action"
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    setDeleteDialog([name, module.name]);
-                                                                                }}
-                                                                            >
-                                                                                <UnpublishedIcon />
-                                                                            </Component.ActionFabButton>                                                                        </TableCell>
-                                                                    </TableRow>
-                                                                )}
-                                                            </Draggable>
-                                                        ))}
-                                                        {provided.placeholder}
-                                                    </TableBody>
-                                                )}
-                                            </Droppable>
-                                        </DragDropContext>
-                                    </Table>
-                                </TableContainer>
-                            </>
+                            <Component.HookTable
+                                hookName={name}
+                                modules={modules}
+                                setDeleteDialog={setDeleteDialog}
+                                key={indexHook}
+                            />
                         ))}
                     </CardContent>
                 </Component.CmtCard>

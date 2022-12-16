@@ -54,6 +54,9 @@ import { MainDashboard } from '@Apps/Home/MainDashboard';
 import { GraphTabTitle } from '@Apps/Home/sc.Home';
 import { SecondCardDashboard } from '@Apps/Home/SecondCardDashboard';
 import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
+import { HookTable } from "@Apps/Hooks/HooksList/HookTable/HookTable";
+import { HookTableBody } from "@Apps/Hooks/HooksList/HookTable/HookTableBody";
+import { HookTableBodyRow } from "@Apps/Hooks/HooksList/HookTable/HookTableBodyRow";
 import { HooksList } from "@Apps/Hooks/HooksList/HooksList";
 import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
@@ -238,6 +241,9 @@ const ComponentObj = {
     SecondCardDashboard: SecondCardDashboard,
     ThirdCardDashboard: ThirdCardDashboard,
 
+    HookTable: HookTable,
+    HookTableBody: HookTableBody,
+    HookTableBodyRow: HookTableBodyRow,
     HooksList: HooksList,
 
     CreateImageFormat: CreateImageFormat,
