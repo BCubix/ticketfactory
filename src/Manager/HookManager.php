@@ -87,6 +87,25 @@ class HookManager extends AbstractManager
     /**
      * Get all modules by hook
      *
+     * Example :
+     *    [
+     *        [
+     *            'name'    => 'hookName1',
+     *            'modules' => [
+     *                [
+     *                    'name'        => 'moduleName1',
+     *                    'displayName' => 'Nom d'affichage du module',
+     *                    'description' => 'Description du module',
+     *                    'author'      => 'Nom d'auteur',
+     *                    'version'     => '1.0.0',
+     *                    'position'    => 0
+     *                ],
+     *                ...
+     *            ],
+     *        ],
+     *        ...
+     *    ];
+     *
      * @return array
      */
     private function getAllModulesByHookList(): array

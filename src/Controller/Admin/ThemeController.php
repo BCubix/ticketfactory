@@ -49,6 +49,11 @@ class ThemeController extends AdminController
     public function getAll(Request $request): View
     {
         $themes = $this->ts->getAllInDisk();
+
+        for ($i = 0; $i < count($themes); ++$i) {
+            unset($themes[$i]['global_settings']);
+        }
+
         return $this->view($themes, Response::HTTP_OK);
     }
 
