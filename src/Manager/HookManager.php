@@ -104,16 +104,16 @@ class HookManager extends AbstractManager
                 }
             }
 
-            // Create new hook list
-            if ($i === count($result)) {
-                $result[] = [
-                    'name' => $hook->getName(),
-                    'modules' => [],
-                ];
-            }
-
             $module = $hook->getModule();
             if (null !== $module) {
+                // Create new hook list
+                if ($i === count($result)) {
+                    $result[] = [
+                        'name' => $hook->getName(),
+                        'modules' => [],
+                    ];
+                }
+
                 $moduleName = $module->getName();
 
                 // Search config of the module
