@@ -57,10 +57,11 @@ class ModuleController extends AdminController
         if (!isset($filters['active'])) {
             $modules = $this->ms->getAllInDisk();
 
+            // Add active for each module
             for ($i = 0; $i < count($modules); $i++) {
-                $result = $this->em->getRepository(Module::class)->findOneByNameForAdmin($modules[$i]['name']);
-                if ($result) {
-                    $modules[$i] += [ 'active' => $result->isActive() ];
+                $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($modules[$i]['name']);
+                if ($module) {
+                    $modules[$i] += [ 'active' => $module->isActive() ];
                 }
             }
 
@@ -92,6 +93,7 @@ class ModuleController extends AdminController
 
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
         if (null === $module) {
+            // Find module in disk (not already install)
             $modulePath = $this->ms->getDir() . '/' . $moduleName;
             if (!is_dir($modulePath)) {
                 throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $modulePath n'existe pas.");
@@ -99,7 +101,8 @@ class ModuleController extends AdminController
 
             if ($action === Module::ACTION_UNINSTALL_DELETE) {
                 $this->fs->remove($modulePath);
-            } else {
+            } else { // Active module
+                // Check and install the module
                 $this->ms->install($moduleName);
                 $module = $this->mm->createNewModule($moduleName);
             }

@@ -173,6 +173,7 @@ class ThemeManager extends AbstractManager
                     continue;
                 }
 
+                // Module install from disk
                 $this->ms->install($moduleName);
                 $module = $this->mm->createNewModule($moduleName, false);
             } else if ($module->isActive() === $activeCondition) {
@@ -229,6 +230,7 @@ class ThemeManager extends AbstractManager
             foreach ($modulesName as $moduleName) {
                 $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
                 if (null === $module) {
+                    // Ignore if module don't exists
                     continue;
                 }
 

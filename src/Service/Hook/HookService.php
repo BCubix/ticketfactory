@@ -32,15 +32,16 @@ class HookService
     }
 
     /**
-     * Register hook
+     * Get hook according to the instance
      *
      * @param string $hookName
      * @param mixed $classInstance
+     * @param Module|null $module
      *
-     * @return void
+     * @return Hook|null
      * @throws ApiException
      */
-    public function register(string $hookName, mixed $classInstance, int $position = 0): void
+    private function getHook(string $hookName, mixed $classInstance, ?Module &$module = null): ?Hook
     {
         if ($classInstance instanceof ModuleConfig) {
             $moduleName = $classInstance->getInfo()['name'];
@@ -54,7 +55,24 @@ class HookService
             $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
         }
 
+        return $hook;
+    }
+
+    /**
+     * Register hook
+     *
+     * @param string $hookName
+     * @param mixed $classInstance
+     * @param int $position
+     *
+     * @return void
+     * @throws ApiException
+     */
+    public function register(string $hookName, mixed $classInstance, int $position = 0): void
+    {
+        $hook = $this->getHook($hookName, $classInstance, $module);
         if (null === $hook) {
+            // Register new hook in database
             $hook = new Hook();
             $hook->setName($hookName);
             $hook->setPosition($position);
@@ -75,28 +93,17 @@ class HookService
      *
      * @param string $hookName
      * @param mixed $classInstance
+     *
      * @return void
+     * @throws ApiException
      */
     public function unregister(string $hookName, mixed $classInstance): void
     {
-        if ($classInstance instanceof ModuleConfig) {
-            $moduleName = $classInstance->getInfo()['name'];
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (null === $module) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module (nom: $moduleName) n'existe pas.");
-            }
-
-            $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
-        } else {
-            $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
+        $hook = $this->getHook($hookName, $classInstance);
+        if (null !== $hook) {
+            $this->em->remove($hook);
+            $this->em->flush();
         }
-
-        if (null === $hook) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le hook (nom: $hookName) n'existe pas.");
-        }
-
-        $this->em->remove($hook);
-        $this->em->flush();
 
         $this->ed->removeListener(static::normalize($hookName),[
             $classInstance,

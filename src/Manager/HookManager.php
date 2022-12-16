@@ -31,7 +31,7 @@ class HookManager extends AbstractManager
     }
 
     /**
-     * Disable hook : update position of module in the same hook
+     * Disable hook : down all hook position after the removeHook
      *
      * @param Hook $removeHook
      *
@@ -66,16 +66,20 @@ class HookManager extends AbstractManager
     public function updateHook(array $hooks, int $srcPosition, int $destPosition): void
     {
         if ($srcPosition > $destPosition) {
+            // Up position all hook between dest include to src exclude
             for ($i = $destPosition; $i < $srcPosition; ++$i) {
                 $hooks[$i]->setPosition($i + 1);
                 $this->em->persist($hooks[$i]);
             }
         } else {
+            // Down position of all hook between src exclude to dest include
             for ($i = $srcPosition + 1; $i < $destPosition + 1; ++$i) {
                 $hooks[$i]->setPosition($i - 1);
                 $this->em->persist($hooks[$i]);
             }
         }
+
+        // Update new position of the src hook
         $hooks[$srcPosition]->setPosition($destPosition);
         $this->em->persist($hooks[$srcPosition]);
     }
