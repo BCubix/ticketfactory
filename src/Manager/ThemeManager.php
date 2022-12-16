@@ -225,6 +225,7 @@ class ThemeManager extends AbstractManager
     private function applyHooksConfig(array $modulesToHook, bool $register): void
     {
         foreach ($modulesToHook as $hookName => $modulesName) {
+            $position = 0;
             foreach ($modulesName as $moduleName) {
                 $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
                 if (null === $module) {
@@ -233,7 +234,7 @@ class ThemeManager extends AbstractManager
 
                 $moduleConfig = $this->ms->getModuleConfigInstance($moduleName);
                 $register
-                    ? $this->hs->register($hookName, $moduleConfig)
+                    ? $this->hs->register($hookName, $moduleConfig, $position++)
                     : $this->hs->unregister($hookName, $moduleConfig);
             }
         }
