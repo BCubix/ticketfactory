@@ -36,7 +36,9 @@ const MenuObj = [
             { name: 'Menus', link: Constant.MENUS_BASE_PATH, icon: <MenuIcon/> },
             { name: 'Pages', link: Constant.PAGES_BASE_PATH, icon: <DescriptionIcon/> },
             { name: 'Redirections', link: Constant.REDIRECTIONS_BASE_PATH, icon: <CallMissedOutgoingIcon/> },
+            { name: 'Thèmes', link: Constant.THEMES_BASE_PATH, icon: <AssistantIcon/> },
             { name: 'Modules', link: Constant.MODULES_BASE_PATH, icon: <ViewModuleIcon/> },
+            { name: 'Hooks', link: Constant.HOOKS_BASE_PATH, icon: <AppRegistration/> },
             { name: 'Bibliothèque médias', link: Constant.MEDIAS_BASE_PATH, icon: <PermMediaIcon/> },
             { name: 'Contenus', link: Constant.CONTENT_BASE_PATH, icon: <SourceIcon/> },
             { name: 'Types de contenus', link: Constant.CONTENT_TYPES_BASE_PATH, icon: <WidgetsIcon/> },
@@ -45,8 +47,6 @@ const MenuObj = [
     () => ({
         title: 'ADMINISTRATION',
         menu: [
-            { name: 'Thèmes', link: Constant.THEMES_BASE_PATH, icon: <AssistantIcon/> },
-            { name: 'Hooks', link: Constant.HOOKS_BASE_PATH, icon: <AppRegistration/> },
             { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon/> },
             { name: 'Contacts', link: Constant.CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon/> },
             { name: 'Utilisateurs', link: Constant.USER_BASE_PATH, icon: <PersonIcon/> },
