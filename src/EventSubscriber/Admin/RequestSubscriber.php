@@ -2,7 +2,7 @@
 
 namespace App\EventSubscriber\Admin;
 
-use App\Entity\Module\Module;
+use App\Entity\Hook\Hook;
 use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Service\ModuleService;
 use App\Utils\PathGetter;
@@ -46,11 +46,16 @@ class RequestSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event)
     {
         // Register hook module
-        $modules = $this->em->getRepository(Module::class)->findAllForAdmin(['active' => true]);
-        foreach ($modules['results'] as $module) {
-            $moduleConfig = $this->ms->getModuleConfigInstance($module->getName(), $this->hs);
-            foreach ($module->getHooks() as $hook) {
-                $this->hs->register($hook->getName(), $moduleConfig);
+        $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
+        foreach ($hooks as $hook) {
+            $module = $hook->getModule();
+            if (null !== $module) {
+                if (!$module->isActive()) {
+                    return;
+                }
+
+                $moduleConfig = $this->ms->getModuleConfigInstance($module->getName(), $this->hs);
+                $this->hs->register($hook->getName(), $moduleConfig, $hook->getPosition());
             }
         }
 
