@@ -41,7 +41,7 @@ class ModuleManager extends AbstractManager
      * @param bool $clear
      * @return Module
      */
-    public function createNewModule(string $name, bool $clear = true): Module
+    public function createNewModule(string $name, bool $actionAndClear = true): Module
     {
         $module = new Module();
         $module->setActive(true);
@@ -50,9 +50,9 @@ class ModuleManager extends AbstractManager
         $this->em->persist($module);
         $this->em->flush();
 
-        $this->ms->callConfig($name, 'install', [], $this->hs);
+        if ($actionAndClear) {
+            $this->ms->callConfig($name, 'install', [], $this->hs);
 
-        if ($clear) {
             $this->ms->clear();
             Exec::exec('yarn run encore production');
         }
