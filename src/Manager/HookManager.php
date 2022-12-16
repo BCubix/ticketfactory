@@ -31,6 +31,56 @@ class HookManager extends AbstractManager
     }
 
     /**
+     * Disable hook : update position of module in the same hook
+     *
+     * @param Hook $removeHook
+     *
+     * @return void
+     */
+    public function disableHook(Hook $removeHook): void
+    {
+        $removeHookPosition = $removeHook->getPosition();
+
+        $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($removeHook->getName());
+        foreach ($hooks as $hook) {
+            $position = $hook->getPosition();
+            if ($position > $removeHookPosition) {
+                $hook->setPosition($position - 1);
+                $this->em->persist($hook);
+            }
+        }
+
+        $this->em->remove($removeHook);
+    }
+
+    /**
+     * Update hook: Change the src hook position to the dest position
+     * Update position of module in the same hook
+     *
+     * @param array $hooks Same name, different module
+     * @param int $srcPosition
+     * @param int $destPosition
+     *
+     * @return void
+     */
+    public function updateHook(array $hooks, int $srcPosition, int $destPosition): void
+    {
+        if ($srcPosition > $destPosition) {
+            for ($i = $destPosition; $i < $srcPosition; ++$i) {
+                $hooks[$i]->setPosition($i + 1);
+                $this->em->persist($hooks[$i]);
+            }
+        } else {
+            for ($i = $srcPosition + 1; $i < $destPosition + 1; ++$i) {
+                $hooks[$i]->setPosition($i - 1);
+                $this->em->persist($hooks[$i]);
+            }
+        }
+        $hooks[$srcPosition]->setPosition($destPosition);
+        $this->em->persist($hooks[$srcPosition]);
+    }
+
+    /**
      * Get all modules by hook
      *
      * @return array
@@ -83,6 +133,7 @@ class HookManager extends AbstractManager
      * Sort hooks list by position in each hook
      *
      * @param array $result
+     *
      * @return void
      */
     private function sortByPosition(array &$result): void

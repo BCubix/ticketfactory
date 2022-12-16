@@ -58,18 +58,7 @@ class HookController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Ce hook n'existe pas.");
         }
 
-        $removeHookPosition = $removeHook->getPosition();
-
-        $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($hookName);
-        foreach ($hooks as $hook) {
-            $position = $hook->getPosition();
-            if ($position > $removeHookPosition) {
-                $hook->setPosition($position - 1);
-                $this->em->persist($hook);
-            }
-        }
-
-        $this->em->remove($removeHook);
+        $this->hm->disableHook($removeHook);
         $this->em->flush();
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
@@ -91,20 +80,7 @@ class HookController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La requête n'a pas les informations requis.");
         }
 
-        if ($srcPosition > $destPosition) {
-            for ($i = $destPosition; $i < $srcPosition; ++$i) {
-                $hooks[$i]->setPosition($i + 1);
-                $this->em->persist($hooks[$i]);
-            }
-        } else {
-            for ($i = $srcPosition + 1; $i < $destPosition + 1; ++$i) {
-                $hooks[$i]->setPosition($i - 1);
-                $this->em->persist($hooks[$i]);
-            }
-        }
-        $hooks[$srcPosition]->setPosition($destPosition);
-        $this->em->persist($hooks[$srcPosition]);
-
+        $this->hm->updateHook($hooks, $srcPosition, $destPosition);
         $this->em->flush();
 
         return $this->view($hooks[$srcPosition], Response::HTTP_OK);
