@@ -95,26 +95,32 @@ class HookController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function disable(Request $request, string $hookName): View
     {
-        $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
-        if (null === $hook) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Ce hook n'existe pas.");
-        }
-
         $moduleName = $request->get('module-name');
-        if (null === $moduleName) {
-            return $this->view(null, Response::HTTP_NO_CONTENT);
-        }
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
         if (null === $module) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module " . $moduleName . " n'existe pas.");
         }
 
-        $hook->removeModule($module);
+        $removeHook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
+        if (null === $removeHook) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Ce hook n'existe pas.");
+        }
 
-        $this->em->persist($hook);
+        $removeHookPosition = $removeHook->getPosition();
+
+        $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($hookName);
+        foreach ($hooks as $hook) {
+            $position = $hook->getPosition();
+            if ($position > $removeHookPosition) {
+                $hook->setPosition($position - 1);
+                $this->em->persist($hook);
+            }
+        }
+
+        $this->em->remove($removeHook);
         $this->em->flush();
 
-        return $this->view($hook, Response::HTTP_NO_CONTENT);
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 
     #[Rest\Post('/hooks/{hookName}', requirements: ['hookName' => '.+'])]
