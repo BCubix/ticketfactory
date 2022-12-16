@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +24,7 @@ export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
         if (!loading && !hooks && !error) {
@@ -64,6 +65,7 @@ export const HooksList = () => {
 
                 dispatch(getHooksAction());
             }
+            setDeleteDialog(null);
         });
     }
 
@@ -178,7 +180,7 @@ export const HooksList = () => {
                                                                                 aria-label="Action"
                                                                                 onClick={(e) => {
                                                                                     e.stopPropagation();
-                                                                                    handleDisable(name, module.name);
+                                                                                    setDeleteDialog([name, module.name]);
                                                                                 }}
                                                                             >
                                                                                 <UnpublishedIcon />
@@ -199,6 +201,18 @@ export const HooksList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
+            <Component.DeleteDialog
+                open={deleteDialog !== null}
+                onCancel={() => setDeleteDialog(null)}
+                onDelete={() => handleDisable(...deleteDialog)}
+                deleteText="Désactiver"
+            >
+                <Box textAlign="center" py={3}>
+                    <Typography>Êtes-vous sûr de vouloir désactiver ce hook ?</Typography>
+
+                    <Typography>Cette action est irréversible.</Typography>
+                </Box>
+            </Component.DeleteDialog>
         </>
     );
 }
