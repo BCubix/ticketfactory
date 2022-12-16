@@ -1,7 +1,7 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { Avatar, TableCell, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
@@ -23,7 +23,7 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
                     {...provided.draggableProps}
                     isDragging={snapshot.isDragging}
                 >
-                    <TableCell>
+                    <TableCell sx={{ width: '1%' }}>
                         <Box
                             height="100%"
                             sx={{
@@ -32,31 +32,28 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
                                 justifyContent: 'center',
                                 height: 30,
                                 width: 30,
-                                borderRadius: 1,
                                 cursor: 'pointer',
-                                border: (theme) => `1px solid ${theme.palette.crud.action.textColor}`,
                             }}
                             {...provided.dragHandleProps}
                         >
-                            <MoreHorizIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
+                            <DragHandleIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
                         </Box>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ width: '5%' }}>
                         <Avatar src={module.logoUrl}/>
                     </TableCell>
-                    <TableCell>
-                        <Typography>{module.displayName}</Typography>
+                    <TableCell sx={{ width: '10%' }}>
+                        <Typography>
+                            {module.displayName}
+                        </Typography>
+                        <Typography variant="subtitle1" color="text.secondary" fontSize={13}>
+                            {`v${module.version}`}
+                        </Typography>
                     </TableCell>
-                    <TableCell>
-                        <Typography>{module.version}</Typography>
-                    </TableCell>
-                    <TableCell>
-                        <Typography>{module.author}</Typography>
-                    </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ width: '70%' }}>
                         <Typography>{module.description}</Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ width: '10%' }}>
                         <Component.ActionFabButton
                             sx={{ marginInline: 1 }}
                             color="primary"

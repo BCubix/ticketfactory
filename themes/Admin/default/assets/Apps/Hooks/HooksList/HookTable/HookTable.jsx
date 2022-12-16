@@ -1,29 +1,15 @@
 import React from "react";
-import { Table, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Table, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Component } from "@/AdminService/Component";
 
 export const HookTable = ({ hookName, modules, setDeleteDialog}) => {
     return (
-        <TableContainer>
+        <TableContainer sx={{ mt: 0 }}>
             <Table sx={{ minWidth: 650, marginTop: 10 }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{ width: '5%' }}>
-                            {hookName}
-                        </TableCell>
-                        <TableCell sx={{ width: '5%' }}>
-                        </TableCell>
-                        <TableCell sx={{ width: '10%' }}>
-                        </TableCell>
-                        <TableCell sx={{ width: '5%' }}>
-                        </TableCell>
-                        <TableCell sx={{ width: '10%' }}>
-                        </TableCell>
-                        <TableCell sx={{ width: '55%' }}>
-                        </TableCell>
-                        <TableCell sx={{ width: '10%' }}>
-                        </TableCell>
-                    </TableRow>
+                <TableHead sx={{ width: '100%' }}>
+                    <Typography variant="h5" fontSize={15} sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        {hookName}
+                    </Typography>
                 </TableHead>
 
                 <Component.HookTableBody
