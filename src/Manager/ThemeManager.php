@@ -70,9 +70,15 @@ class ThemeManager extends AbstractManager
      */
     public function active(Theme $theme): void
     {
-        $this->disableMainTheme();
+        $mainThemeName = $this->pm->get('main_theme');
+        $themeName = $theme->getName();
+        if ($themeName === $mainThemeName) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
+        } else {
+            $this->disableMainTheme();
+        }
 
-        $config = $this->ts->getConfig($theme->getName());
+        $config = $this->ts->getConfig($themeName);
         $globalSettings = $config['global_settings'];
 
         $modules = $globalSettings['modules'];
@@ -85,10 +91,10 @@ class ThemeManager extends AbstractManager
         $hooks = $globalSettings['hooks']['modules_to_hook'];
         $this->applyHooksConfig($hooks, true);
 
-        $this->pm->set('main_theme', $theme->getName());
+        $this->pm->set('main_theme', $themeName);
         $this->em->flush();
 
-        $this->ts->entry($theme->getName(), false);
+        $this->ts->entry($themeName, false);
         $this->ts->clear();
     }
 
@@ -104,9 +110,11 @@ class ThemeManager extends AbstractManager
     public function delete(Theme $theme): void
     {
         $mainThemeName = $this->pm->get('main_theme');
-        if ($mainThemeName === $theme->getName()) {
+        $themeName = $theme->getName();
+        if ($themeName === $mainThemeName) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
+        } else {
             $this->disableMainTheme();
-            $this->ts->clear();
         }
 
         $this->em->remove($theme);
@@ -123,17 +131,11 @@ class ThemeManager extends AbstractManager
     private function disableMainTheme(): void
     {
         $mainThemeName = $this->pm->get('main_theme');
-        if (null === $mainThemeName) {
-            return;
-        }
 
         $mainTheme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($mainThemeName);
         if (null === $mainTheme) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le thème $mainThemeName n'existe pas.");
         }
-
-        $this->pm->set('main_theme', null);
-        $this->em->flush();
 
         $config = $this->ts->getConfig($mainThemeName);
         $globalSettings = $config['global_settings'];

@@ -162,7 +162,7 @@ class AppFixtures extends Fixture
         $parameter->setName("Thème principal");
         $parameter->setType("string");
         $parameter->setParamKey("main_theme");
-        $parameter->setParamValue(null);
+        $parameter->setParamValue("default");
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
         $parameter->setBlockName(null);

@@ -136,31 +136,33 @@ export const ThemesList = () => {
                                     </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
                                         {theme.name !== themeName && (
-                                            (<Component.ActionFabButton
-                                                sx={{ marginInline: 1 }}
-                                                color="primary"
-                                                size="small"
-                                                aria-label="Selection"
-                                                onClick={(e) => {
+                                            <>
+                                                <Component.ActionFabButton
+                                                    sx={{ marginInline: 1 }}
+                                                    color="primary"
+                                                    size="small"
+                                                    aria-label="Selection"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleSelect(theme.name);
+                                                    }}
+                                                >
+                                                    <CheckCircleIcon />
+                                                </Component.ActionFabButton>
+                                                <Component.DeleteFabButton
+                                                    sx={{ marginInline: 1 }}
+                                                    color="error"
+                                                    size="small"
+                                                    aria-label="Supprimer"
+                                                    onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleSelect(theme.name);
+                                                    setDeleteDialog(theme.name);
                                                 }}
-                                            >
-                                                <CheckCircleIcon />
-                                            </Component.ActionFabButton>)
+                                                    >
+                                                    <DeleteIcon />
+                                                </Component.DeleteFabButton>
+                                            </>
                                         )}
-                                        <Component.DeleteFabButton
-                                            sx={{ marginInline: 1 }}
-                                            color="error"
-                                            size="small"
-                                            aria-label="Supprimer"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setDeleteDialog(theme.name);
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </Component.DeleteFabButton>
                                     </CardActions>
                                 </Component.CmtCard>
                             ))}
