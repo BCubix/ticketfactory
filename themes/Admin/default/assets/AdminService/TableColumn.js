@@ -43,9 +43,10 @@ const TableColumnObj = {
     ImageFormatsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'themeUse', label: 'Utilisé par le thème principal ?', type: 'bool', width: '10%' },
         { name: 'name', label: 'Nom', width: '30%', sortable: true },
-        { name: 'length', label: 'Largeur', width: '20%', sortable: true },
-        { name: 'height', label: 'Hauteur', width: '20%', sortable: true },
+        { name: 'width', label: 'Largeur', width: '15%', sortable: true },
+        { name: 'height', label: 'Hauteur', width: '15%', sortable: true },
     ],
     ModulesList: [
         {
