@@ -74,12 +74,19 @@ class ThemeController extends AdminController
     public function active(Request $request, string $themeName): View
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
-        if (null === $theme) {
-            $this->ts->install($themeName);
-            $theme = $this->tm->createNewTheme($themeName);
-        }
 
-        $this->tm->active($theme);
+        $this->em->getConnection()->beginTransaction();
+        try {
+            if (null === $theme) {
+                $this->ts->install($themeName);
+                $theme = $this->tm->createNewTheme($themeName);
+            }
+
+            $this->tm->active($theme);
+        } catch (\Exception $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
+        }
 
         return $this->view($theme, Response::HTTP_OK);
     }
@@ -91,13 +98,20 @@ class ThemeController extends AdminController
         $themePath = $this->ts->getDir() . '/' . $themeName;
 
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
-        if (null !== $theme) {
-            $this->tm->delete($theme);
-        } else if (!is_dir($themePath)) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $themePath n'existe pas.");
-        }
 
-        $this->fs->remove($themePath);
+        $this->em->getConnection()->beginTransaction();
+        try {
+            if (null !== $theme) {
+                $this->tm->delete($theme);
+            } else if (!is_dir($themePath)) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $themePath n'existe pas.");
+            }
+
+            $this->fs->remove($themePath);
+        } catch (\Exception $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
+        }
 
         return $this->view(null, Response::HTTP_OK);
     }

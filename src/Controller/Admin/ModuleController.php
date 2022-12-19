@@ -92,22 +92,29 @@ class ModuleController extends AdminController
         $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-        if (null === $module) {
-            // Find module in disk (not already install)
-            $modulePath = $this->ms->getDir() . '/' . $moduleName;
-            if (!is_dir($modulePath)) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $modulePath n'existe pas.");
-            }
 
-            if ($action === Module::ACTION_UNINSTALL_DELETE) {
-                $this->fs->remove($modulePath);
-            } else { // Active module
-                // Check and install the module
-                $this->ms->install($moduleName);
-                $module = $this->mm->createNewModule($moduleName);
+        $this->em->getConnection()->beginTransaction();
+        try {
+            if (null !== $module) {
+                $this->mm->doAction($module, $action);
+            } else {
+                // Find module in disk (not already install)
+                $modulePath = $this->ms->getDir() . '/' . $moduleName;
+                if (!is_dir($modulePath)) {
+                    throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $modulePath n'existe pas.");
+                }
+
+                if ($action === Module::ACTION_UNINSTALL_DELETE) {
+                    $this->fs->remove($modulePath);
+                } else { // Active module
+                    // Check and install the module
+                    $this->ms->install($moduleName);
+                    $module = $this->mm->createNewModule($moduleName);
+                }
             }
-        } else {
-            $this->mm->doAction($module, $action);
+        } catch (\Exception $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
         }
 
         return $this->view($module, Response::HTTP_OK);
