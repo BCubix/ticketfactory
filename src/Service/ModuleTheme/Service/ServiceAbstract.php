@@ -56,29 +56,31 @@ abstract class ServiceAbstract
 
         $name = null;
 
-        // Check only one directory
-        $dir = new \DirectoryIterator($tmpDirPath);
-        $dirCount = 0;
-        foreach ($dir as $node) {
-            if ($node->isDot()) {
-                continue;
+        try {
+            // Check only one directory
+            $dir = new \DirectoryIterator($tmpDirPath);
+            $dirCount = 0;
+            foreach ($dir as $node) {
+                if ($node->isDot()) {
+                    continue;
+                }
+                if ($node->isFile()) {
+                    throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_FIRST_DIR_REQUIRED);
+                }
+                if ($node->isDir()) {
+                    $name = $node->getBasename();
+                    $dirCount++;
+                }
             }
-            if ($node->isFile()) {
+
+            // Only one directory required in zip
+            if ($dirCount !== 1) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_FIRST_DIR_REQUIRED);
             }
-            if ($node->isDir()) {
-                $name = $node->getBasename();
-                $dirCount++;
-            }
+        } finally {
+            // Rm tmp directory
+            $fs->remove($tmpDirPath);
         }
-
-        // Only one directory required in zip
-        if ($dirCount !== 1) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_FIRST_DIR_REQUIRED);
-        }
-
-        // Rm tmp directory
-        $fs->remove($tmpDirPath);
 
         // Finally unzip the real zip in dir
         Zip::unzip($zipPath, $this->dir);
