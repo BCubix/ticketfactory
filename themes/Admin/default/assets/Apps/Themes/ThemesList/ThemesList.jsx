@@ -43,7 +43,6 @@ export const ThemesList = () => {
             const result = await Api.parametersApi.getParametersByKey('main_theme');
             if (!result.result || !result.parameters) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.THEMES_BASE_PATH);
 
                 return;
             }
@@ -66,8 +65,6 @@ export const ThemesList = () => {
             const result = await Api.themesApi.activeTheme(name);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.THEMES_BASE_PATH);
-
                 return;
             }
 
@@ -87,14 +84,11 @@ export const ThemesList = () => {
             const result = await Api.themesApi.deleteTheme(name);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.THEMES_BASE_PATH);
-
                 return;
             }
 
             setLoadingDialog(null);
             dispatch(getThemesAction());
-            setTimeout(() => window.location.reload(), 1000);
         });
     }
 
@@ -188,8 +182,7 @@ export const ThemesList = () => {
                         }}
                         handleFail={(error) => {
                             setLoadingDialog(null);
-                            NotificationManager.error(error.messagezone, 'Erreur', Constant.REDIRECTION_TIME * 2);
-                            navigate(Constant.THEMES_BASE_PATH);
+                            NotificationManager.error(error.message, 'Erreur', Constant.REDIRECTION_TIME * 2);
                         }}
                     />
                 </DialogContent>

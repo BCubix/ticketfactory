@@ -28,6 +28,10 @@ const hooksSlice = createSlice({
             state.hooks = null;
         },
 
+        setHooks: (state, action) => {
+            state.hooks = action.payload.hooks;
+        },
+
         resetHooks: (state) => {
             state = { ...initialState };
         },
@@ -55,6 +59,27 @@ export function getHooksAction(data) {
     };
 }
 
-export const { getHooks, getHooksSuccess, getHooksFailure, resetHooks } = hooksSlice.actions;
+export function updateHooksAction(hookName, indexSrc, indexDest) {
+    return async (dispatch) => {
+        try {
+            dispatch(getHooks());
+
+            apiMiddleware(dispatch, async () => {
+                const hooks = await Api.hooksApi.updateHookModules(hookName, indexSrc, indexDest);
+                if (!hooks.result) {
+                    dispatch(getHooksFailure({ error: hooks.error }));
+
+                    return;
+                }
+
+                dispatch(getHooksSuccess({ hooks: hooks.hooks, total: hooks.total }));
+            });
+        } catch (error) {
+            dispatch(getHooksFailure({ error: error.message || error }));
+        }
+    };
+}
+
+export const { getHooks, getHooksSuccess, getHooksFailure, setHooks, resetHooks } = hooksSlice.actions;
 export const hooksSelector = (state) => state.hooks;
 export default hooksSlice.reducer;

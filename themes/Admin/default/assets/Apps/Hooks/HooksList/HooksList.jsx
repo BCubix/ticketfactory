@@ -12,8 +12,9 @@ import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
 import { Api } from "@/AdminService/Api";
 
-import { getHooksAction, hooksSelector } from '@Redux/hooks/hooksSlice';
+import { getHooksAction, hooksSelector, setHooks, updateHooksAction } from '@Redux/hooks/hooksSlice';
 import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { copyData } from "@Services/utils/copyData";
 
 export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
@@ -26,6 +27,24 @@ export const HooksList = () => {
             dispatch(getHooksAction());
         }
     }, []);
+
+    const handleDragEnd = async (result) => {
+        if (!result.destination) {
+            return;
+        }
+
+        let hookName = result.destination.droppableId;
+        let indexSrc = result.source.index;
+        let indexDest = result.destination.index;
+        let svHooks = Object.values(copyData(hooks));
+
+        const index = svHooks.findIndex(e => e.name === hookName);
+        const [module] = svHooks[index].modules.splice(indexSrc, 1);
+        svHooks[index].modules.splice(indexDest, 0, module);
+
+        dispatch(setHooks({ hooks: svHooks }));
+        dispatch(updateHooksAction(hookName, indexSrc, indexDest));
+    };
 
     const handleDisable = async (hookName, moduleName) => {
         apiMiddleware(dispatch, async () => {
@@ -66,6 +85,7 @@ export const HooksList = () => {
                         hookName={name}
                         modules={modules}
                         setDeleteDialog={setDeleteDialog}
+                        handleDragEnd={handleDragEnd}
                         key={indexHook}
                     />
                 ))}

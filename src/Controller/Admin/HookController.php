@@ -83,6 +83,6 @@ class HookController extends AdminController
         $this->hm->updateHook($hooks, $srcPosition, $destPosition);
         $this->em->flush();
 
-        return $this->view($hooks[$srcPosition], Response::HTTP_OK);
+        return $this->view($this->hm->getAllModulesByHook(), Response::HTTP_OK);
     }
 }
