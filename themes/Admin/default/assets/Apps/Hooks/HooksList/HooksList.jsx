@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
-import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import { Box } from '@mui/system';
 import {
-    Avatar,
-    CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Typography
 } from '@mui/material';
 
@@ -18,7 +14,6 @@ import { Api } from "@/AdminService/Api";
 
 import { getHooksAction, hooksSelector } from '@Redux/hooks/hooksSlice';
 import { apiMiddleware } from "@Services/utils/apiMiddleware";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
@@ -31,6 +26,7 @@ export const HooksList = () => {
             dispatch(getHooksAction());
         }
     }, []);
+
     const handleDisable = async (hookName, moduleName) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.hooksApi.disableModule(hookName, moduleName);

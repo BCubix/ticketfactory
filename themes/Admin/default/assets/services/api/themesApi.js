@@ -1,21 +1,11 @@
 import axios from '@Services/api/config';
 
 const themesApi = {
-    getThemes: async (filters) => {
+    getThemes: async () => {
         try {
             const result = await axios.get('/themes');
 
             return { result: true, themes: result?.data };
-        } catch (error) {
-            return { result: false, error: error?.response?.data };
-        }
-    },
-
-    getOneTheme: async (id) => {
-        try {
-            const result = await axios.get(`/themes/${id}`);
-
-            return { result: true, theme: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
