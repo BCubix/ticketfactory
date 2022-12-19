@@ -15,7 +15,8 @@ class HookRepository extends CrudRepository
     public function findAllHooksForAdmin()
     {
         return $this->createQueryBuilder('u')
-            ->orderBy('u.position', 'ASC')
+            ->orderBy('u.name', 'ASC')
+            ->addOrderBy('u.position', 'ASC')
             ->getQuery()
             ->getResult()
         ;

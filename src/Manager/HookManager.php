@@ -18,14 +18,67 @@ class HookManager extends AbstractManager
     }
 
     /**
-     * Get all modules by hook and sort by position for each hook
+     * Get all modules by hook sorted by position for each hook
+     *
+     * Example :
+     *    [
+     *        [
+     *            'name'    => 'hookName1',
+     *            'modules' => [
+     *                [
+     *                    'name'        => 'moduleName1',
+     *                    'displayName' => 'Nom d'affichage du module',
+     *                    'description' => 'Description du module',
+     *                    'author'      => 'Nom d'auteur',
+     *                    'version'     => '1.0.0',
+     *                    'position'    => 0
+     *                ],
+     *                ...
+     *            ],
+     *        ],
+     *        ...
+     *    ];
      *
      * @return array
      */
     public function getAllModulesByHook(): array
     {
-        $result = $this->getAllModulesByHookList();
-        $this->sortByPosition($result);
+        $result = [];
+
+        $modules = $this->ms->getAllInDisk();
+        $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
+
+        $hookName = null;
+        $indexResult = -1;
+        foreach ($hooks as $hook) {
+            $module = $hook->getModule();
+            if (null === $module) {
+                continue;
+            }
+
+            if ($hookName !== $hook->getName()) {
+                $hookName = $hook->getName();
+
+                $indexResult++;
+                $result[] = [
+                    'name' => $hookName,
+                    'modules' => [],
+                ];
+            }
+
+            $moduleName = $module->getName();
+            // Search config of the module
+            $moduleConfigArray = array_filter($modules, function ($moduleInfos) use ($moduleName) {
+                return $moduleInfos['name'] === $moduleName;
+            });
+
+            // Add module in the hook list
+            // (Must be count($r) === 1 so we can use array_pop)
+            $result[$indexResult]['modules'][] = [
+                ...array_pop($moduleConfigArray),  // all module config (name, displayName, ...)
+                'position' => $hook->getPosition()        // position of the module in the hook
+            ];
+        }
 
         return $result;
     }
@@ -82,92 +135,5 @@ class HookManager extends AbstractManager
         // Update new position of the src hook
         $hooks[$srcPosition]->setPosition($destPosition);
         $this->em->persist($hooks[$srcPosition]);
-    }
-
-    /**
-     * Get all modules by hook
-     *
-     * Example :
-     *    [
-     *        [
-     *            'name'    => 'hookName1',
-     *            'modules' => [
-     *                [
-     *                    'name'        => 'moduleName1',
-     *                    'displayName' => 'Nom d'affichage du module',
-     *                    'description' => 'Description du module',
-     *                    'author'      => 'Nom d'auteur',
-     *                    'version'     => '1.0.0',
-     *                    'position'    => 0
-     *                ],
-     *                ...
-     *            ],
-     *        ],
-     *        ...
-     *    ];
-     *
-     * @return array
-     */
-    private function getAllModulesByHookList(): array
-    {
-        $result = [];
-
-        $modules = $this->ms->getAllInDisk();
-        $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
-
-        foreach ($hooks as $hook) {
-            // Get index of hook with same name in array result
-            for ($i = 0; $i < count($result); ++$i) {
-                if ($result[$i]['name'] === $hook->getName()) {
-                    break;
-                }
-            }
-
-            $module = $hook->getModule();
-            if (null !== $module) {
-                // Create new hook list
-                if ($i === count($result)) {
-                    $result[] = [
-                        'name' => $hook->getName(),
-                        'modules' => [],
-                    ];
-                }
-
-                $moduleName = $module->getName();
-
-                // Search config of the module
-                $moduleConfigArray = array_filter($modules, function ($moduleInfos) use ($moduleName) {
-                    return $moduleInfos['name'] === $moduleName;
-                });
-
-                // Add module in the hook list
-                // (Must be count($r) === 1 so we can use array_pop)
-                $result[$i]['modules'][] = [
-                    ...array_pop($moduleConfigArray),  // all module config (name, displayName, ...)
-                    'position' => $hook->getPosition()        // position of the module in the hook
-                ];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Sort hooks list by position in each hook
-     *
-     * @param array $result
-     *
-     * @return void
-     */
-    private function sortByPosition(array &$result): void
-    {
-        for ($i = 0; $i < count($result); ++$i) {
-            usort($result[$i]['modules'], function ($a, $b) {
-                if ($a['position'] === $b['position']) {
-                    return 0;
-                }
-                return $a['position'] < $b['position'] ? -1 : 1;
-            });
-        }
     }
 }

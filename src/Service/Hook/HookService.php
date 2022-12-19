@@ -85,7 +85,7 @@ class HookService
         $this->ed->addListener(static::normalize($hookName), [
             $classInstance,
             static::normalize($hookName)
-        ], $position);
+        ]);
     }
 
     /**
