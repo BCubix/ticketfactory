@@ -55,7 +55,7 @@ class HookController extends AdminController
 
         $removeHook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
         if (null === $removeHook) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Ce hook n'existe pas.");
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le hook $hookName (module: $moduleName) n'existe pas.");
         }
 
         $this->hm->disableHook($removeHook);

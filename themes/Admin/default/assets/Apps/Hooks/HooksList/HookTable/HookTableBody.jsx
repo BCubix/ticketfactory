@@ -21,7 +21,7 @@ export const HookTableBody = ({ hookName, modules, setDeleteDialog, handleDragEn
                     >
                         {modules.map((module, index) => (
                             <Component.HookTableBodyRow
-                                name={hookName}
+                                hookName={hookName}
                                 module={module}
                                 index={index}
                                 setDeleteDialog={setDeleteDialog}
