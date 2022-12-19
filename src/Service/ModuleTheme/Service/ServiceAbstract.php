@@ -83,6 +83,10 @@ abstract class ServiceAbstract
         }
 
         // Finally unzip the real zip in dir
+        if (is_dir($this->dir . '/' . $name)) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $name existe déjà.");
+        }
+
         Zip::unzip($zipPath, $this->dir);
 
         try {
