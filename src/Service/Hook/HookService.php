@@ -32,46 +32,23 @@ class HookService
     }
 
     /**
-     * Get hook according to the instance
-     *
-     * @param string $hookName
-     * @param mixed $classInstance
-     * @param Module|null $module
-     *
-     * @return Hook|null
-     * @throws ApiException
-     */
-    private function getHook(string $hookName, mixed $classInstance, ?Module &$module = null): ?Hook
-    {
-        if ($classInstance instanceof ModuleConfig) {
-            $moduleName = $classInstance->getInfo()['name'];
-            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-            if (null === $module) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module (nom: $moduleName) n'existe pas.");
-            }
-
-            $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
-        } else {
-            $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
-        }
-
-        return $hook;
-    }
-
-    /**
      * Register hook
      *
      * @param string $hookName
      * @param mixed $classInstance
-     * @param int $position
+     * @param int|null $position
      *
      * @return void
      * @throws ApiException
      */
-    public function register(string $hookName, mixed $classInstance, int $position = 0): void
+    public function register(string $hookName, mixed $classInstance, ?int $position = null): void
     {
         $hook = $this->getHook($hookName, $classInstance, $module);
         if (null === $hook) {
+            if ($position === null) {
+                $position = $this->getPosition($hookName);
+            }
+
             // Register new hook in database
             $hook = new Hook();
             $hook->setName($hookName);
@@ -123,5 +100,49 @@ class HookService
     {
         $event = new HookEvent($hookArgs);
         $this->ed->dispatch($event, static::normalize($hookName));
+    }
+
+    /**
+     * Get hook according to the instance
+     *
+     * @param string $hookName
+     * @param mixed $classInstance
+     * @param Module|null $module
+     *
+     * @return Hook|null
+     * @throws ApiException
+     */
+    private function getHook(string $hookName, mixed $classInstance, ?Module &$module = null): ?Hook
+    {
+        if ($classInstance instanceof ModuleConfig) {
+            $moduleName = $classInstance->getInfo()['name'];
+            $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+            if (null === $module) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module (nom: $moduleName) n'existe pas.");
+            }
+
+            $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
+        } else {
+            $hook = $this->em->getRepository(Hook::class)->findOneByNameForAdmin($hookName);
+        }
+
+        return $hook;
+    }
+
+    /**
+     * Get the position of hook when add in list
+     *
+     * @param string $hookName
+     *
+     * @return int
+     */
+    private function getPosition(string $hookName): int
+    {
+        $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($hookName);
+        if ($hooks) {
+            $lastHook = array_pop($hooks);
+            return $lastHook->getPosition() + 1;
+        }
+        return 0;
     }
 }

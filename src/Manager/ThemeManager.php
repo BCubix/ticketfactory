@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Hook\Hook;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
@@ -252,6 +253,11 @@ class ThemeManager extends AbstractManager
                 $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
                 if (null === $module) {
                     // Ignore if module doesn't exist
+                    continue;
+                }
+
+                $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
+                if (null !== $hook && $register || null === $hook && !$register) {
                     continue;
                 }
 

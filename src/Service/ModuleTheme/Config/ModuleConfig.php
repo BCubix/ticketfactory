@@ -95,6 +95,7 @@ class ModuleConfig
     {
         $this->register();
         $this->trait(false);
+        $this->hooks(true);
     }
 
     /**
@@ -121,6 +122,7 @@ class ModuleConfig
      */
     public function disable(): void
     {
+        $this->hooks(false);
         $this->trait(true);
         $this->unregister();
     }
@@ -209,6 +211,29 @@ class ModuleConfig
             }
 
             $file->setContent($str);
+        }
+    }
+
+    /**
+     * Register or unregister hooks
+     *
+     * @param bool $register
+     *
+     * @return void
+     * @throws ApiException
+     */
+    private function hooks(bool $register): void
+    {
+        if (!static::HOOKS || null === $this->hs) {
+            return;
+        }
+
+        foreach (static::HOOKS as $hookName) {
+            if ($register) {
+                $this->hs->register($hookName, $this);
+            } else {
+                $this->hs->unregister($hookName, $this);
+            }
         }
     }
 }
