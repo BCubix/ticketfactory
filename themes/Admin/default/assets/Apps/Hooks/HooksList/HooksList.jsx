@@ -31,26 +31,6 @@ export const HooksList = () => {
             dispatch(getHooksAction());
         }
     }, []);
-
-    /*const handleDragEnd = async (result) => {
-        if (!result.destination) {
-            return;
-        }
-
-        let hookName = result.destination.droppableId;
-        let indexSrc = result.source.index;
-        let indexDest = result.destination.index;
-
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.hooksApi.updateHookModules(hookName, indexSrc, indexDest);
-            if (!result.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-            } else {
-                dispatch(getHooksAction());
-            }
-        });
-    };*/
-
     const handleDisable = async (hookName, moduleName) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.hooksApi.disableModule(hookName, moduleName);
@@ -75,32 +55,25 @@ export const HooksList = () => {
 
     return (
         <>
-            <Component.CmtPageWrapper title={'Hooks'}>
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des hooks
-                            </Typography>
-                            <Component.CreateButton
-                                variant="contained"
-                                onClick={() => navigate(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH)}
-                            >
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
-                        {hooks.map(({ name, modules }, indexHook) => (
-                            <Component.HookTable
-                                hookName={name}
-                                modules={modules}
-                                setDeleteDialog={setDeleteDialog}
-                                key={indexHook}
-                            />
-                        ))}
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
+            <Component.PageWrapper>
+                <Box display="flex" justifyContent="space-between">
+                    <Component.CmtPageTitle>Hooks</Component.CmtPageTitle>
+                    <Component.CreateButton
+                        variant="contained"
+                        onClick={() => navigate(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH)}
+                    >
+                        Nouveau
+                    </Component.CreateButton>
+                </Box>
+                {hooks.map(({ name, modules }, indexHook) => (
+                    <Component.HookTable
+                        hookName={name}
+                        modules={modules}
+                        setDeleteDialog={setDeleteDialog}
+                        key={indexHook}
+                    />
+                ))}
+            </Component.PageWrapper>
             <Component.DeleteDialog
                 open={deleteDialog !== null}
                 onCancel={() => setDeleteDialog(null)}

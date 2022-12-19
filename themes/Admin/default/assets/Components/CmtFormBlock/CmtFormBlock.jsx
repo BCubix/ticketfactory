@@ -3,7 +3,7 @@ import { useTheme } from '@emotion/react';
 import { CardContent, CardHeader } from '@mui/material';
 import { Component } from "@/AdminService/Component";
 
-export const CmtFormBlock = ({ title, children, marginBlock = 3, ...rest }) => {
+export const CmtFormBlock = ({ title, children, paddingContent = null, marginBlock = 3, ...rest }) => {
     const theme = useTheme();
 
     return (
@@ -23,7 +23,9 @@ export const CmtFormBlock = ({ title, children, marginBlock = 3, ...rest }) => {
                     borderTopRightRadius: '4px',
                 }}
             />
-            <CardContent>{children}</CardContent>
+            <CardContent sx={{ ...(paddingContent !== null && { padding: paddingContent, "&:last-child": { paddingBottom: 0 } })}}>
+                {children}
+            </CardContent>
         </Component.CmtCard>
     );
 };

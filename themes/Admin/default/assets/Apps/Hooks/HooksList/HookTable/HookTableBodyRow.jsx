@@ -39,6 +39,11 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
                             <DragHandleIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
                         </Box>
                     </TableCell>
+                    <TableCell sx={{ width: '3%' }}>
+                        <Typography>
+                            {index + 1}
+                        </Typography>
+                    </TableCell>
                     <TableCell sx={{ width: '5%' }}>
                         <Avatar src={module.logoUrl}/>
                     </TableCell>
