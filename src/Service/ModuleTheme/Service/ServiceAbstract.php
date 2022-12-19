@@ -176,6 +176,7 @@ abstract class ServiceAbstract
         $paths = glob($this->dir . '/*', GLOB_ONLYDIR);
         foreach ($paths as $path) {
             $name = basename($path);
+            // The next + is used to concat the two arrays
             $result[] = $this->getConfig($name) + $this->getImage($name);
         }
 

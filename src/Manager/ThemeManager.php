@@ -230,7 +230,7 @@ class ThemeManager extends AbstractManager
             foreach ($modulesName as $moduleName) {
                 $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
                 if (null === $module) {
-                    // Ignore if module don't exists
+                    // Ignore if module doesn't exist
                     continue;
                 }
 
