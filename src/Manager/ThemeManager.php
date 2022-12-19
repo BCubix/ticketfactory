@@ -93,6 +93,7 @@ class ThemeManager extends AbstractManager
 
         $this->pm->set('main_theme', $themeName);
         $this->em->flush();
+        $this->em->getConnection()->commit();
 
         $this->ts->entry($themeName, false);
         try {
@@ -121,6 +122,7 @@ class ThemeManager extends AbstractManager
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
         } else {
             $this->disableMainTheme();
+            $this->em->getConnection()->commit();
             try {
                 $this->ts->clear();
             } catch (\Exception $e) {
@@ -131,6 +133,7 @@ class ThemeManager extends AbstractManager
 
         $this->em->remove($theme);
         $this->em->flush();
+        $this->em->getConnection()->commit();
     }
 
     /**
@@ -184,6 +187,10 @@ class ThemeManager extends AbstractManager
             $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
             if (null === $module) {
                 if (!is_dir($this->ms->getDir() . '/' . $moduleName)) {
+                    continue;
+                }
+
+                if ($action !== Module::ACTION_INSTALL) {
                     continue;
                 }
 

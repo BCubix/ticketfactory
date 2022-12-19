@@ -83,7 +83,6 @@ class ThemeController extends AdminController
             }
 
             $this->tm->active($theme);
-            $this->em->getConnection()->commit();
         } catch (\Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;
@@ -109,7 +108,6 @@ class ThemeController extends AdminController
             }
 
             $this->fs->remove($themePath);
-            $this->em->getConnection()->commit();
         } catch (\Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;
