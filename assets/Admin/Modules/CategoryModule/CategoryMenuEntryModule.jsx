@@ -3,18 +3,11 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    Checkbox,
-    Typography,
-} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
 
@@ -37,21 +30,14 @@ const DisplayCategories = ({ category, selectedAdd, setSelectedAdd }) => {
                     setSelectedAdd([...newValue]);
                 }}
             >
-                <Typography component="span">
+                <Typography component="span" id={`categoriesMenuEntryValue-${category?.id}`}>
                     <Checkbox checked={selectedAdd?.some((el) => el.id === category.id)} />
                     {category?.name}
                 </Typography>
             </Box>
 
             {Array.isArray(category?.children) &&
-                category?.children?.map((item, index) => (
-                    <DisplayCategories
-                        key={index}
-                        category={item}
-                        selectedAdd={selectedAdd}
-                        setSelectedAdd={setSelectedAdd}
-                    />
-                ))}
+                category?.children?.map((item, index) => <DisplayCategories key={index} category={item} selectedAdd={selectedAdd} setSelectedAdd={setSelectedAdd} />)}
         </>
     );
 };
@@ -73,11 +59,7 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
         const result = await Api.categoriesApi.getCategories();
 
         if (!result?.result) {
-            NotificationManager.error(
-                'Une erreur est survenue, essayez de rafraichir la page.',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
         }
 
         setList(result.categories);
@@ -89,15 +71,11 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
 
     return (
         <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="categories-menus-elements-header">
                 <Typography>Catégories</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <DisplayCategories
-                    category={list}
-                    selectedAdd={selectedAdd}
-                    setSelectedAdd={setSelectedAdd}
-                />
+                <DisplayCategories category={list} selectedAdd={selectedAdd} setSelectedAdd={setSelectedAdd} />
 
                 <Box display="flex" justifyContent={'flex-end'}>
                     <Button
@@ -118,6 +96,7 @@ export const MenuEntryModule = ({ addElementToMenu }) => {
                             addElementToMenu(submitList);
                             setSelectedAdd([]);
                         }}
+                        id="categoriesMenuEntrySubmit"
                     >
                         Ajouter
                     </Button>

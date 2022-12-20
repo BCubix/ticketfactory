@@ -18,4 +18,9 @@ describe('Create Menu Spec', () => {
             expect(response.statusCode).to.eq(201);
         });
     });
+
+    it('Create Menu check validation', () => {
+        cy.get('#name').focus().blur();
+        cy.get('#name-helper-text').should('exist');
+    });
 });
