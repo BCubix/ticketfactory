@@ -85,6 +85,7 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.THEMES_BASE_PATH, component: Component.ThemesList }),
 
     () => ({ path: Constant.HOOKS_BASE_PATH, component: Component.HooksList }),
+    () => ({ path: Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateHook }),
 ];
 
 /**

@@ -54,6 +54,8 @@ import { MainDashboard } from '@Apps/Home/MainDashboard';
 import { GraphTabTitle } from '@Apps/Home/sc.Home';
 import { SecondCardDashboard } from '@Apps/Home/SecondCardDashboard';
 import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
+import { CreateHook } from "@Apps/Hooks/CreateHook/CreateHook";
+import { HooksForm } from "@Apps/Hooks/HooksForm/HooksForm";
 import { HookTable } from "@Apps/Hooks/HooksList/HookTable/HookTable";
 import { HookTableBody } from "@Apps/Hooks/HooksList/HookTable/HookTableBody";
 import { HookTableBodyRow } from "@Apps/Hooks/HooksList/HookTable/HookTableBodyRow";
@@ -241,6 +243,8 @@ const ComponentObj = {
     SecondCardDashboard: SecondCardDashboard,
     ThirdCardDashboard: ThirdCardDashboard,
 
+    CreateHook: CreateHook,
+    HooksForm: HooksForm,
     HookTable: HookTable,
     HookTableBody: HookTableBody,
     HookTableBodyRow: HookTableBodyRow,

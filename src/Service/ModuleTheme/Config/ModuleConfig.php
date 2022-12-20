@@ -80,6 +80,7 @@ class ModuleConfig
             'description' => $this->description,
             'author' => $this->author,
             'version' => $this->version,
+            'hooks' => static::HOOKS,
         ];
     }
 
