@@ -64,18 +64,19 @@ class ThemeManager extends AbstractManager
      * Active theme
      *
      * @param Theme $theme
+     * @param bool $firstTheme
      *
      * @return void
      * @throws ApiException
      * @throws IOException
      */
-    public function active(Theme $theme): void
+    public function active(Theme $theme, bool $firstTheme = false): void
     {
         $mainThemeName = $this->pm->get('main_theme');
         $themeName = $theme->getName();
         if ($themeName === $mainThemeName) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
-        } else {
+        } else if ($firstTheme) {
             $this->disableMainTheme();
         }
 
