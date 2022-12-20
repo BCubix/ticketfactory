@@ -15,6 +15,22 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
         setSize(column[media]);
     }, [media, column]);
 
+    const checkIsNewLine = () => {
+        let newLine = 0;
+
+        for (let i = 0; i < index; i++) {
+            newLine = newLine + Number(values?.columns?.at(i)[media]);
+            if (newLine > 12) {
+                newLine = Number(values?.columns?.at(i)[media]);
+            } else if (newLine === 12) {
+                newLine = 0;
+            }
+        }
+
+        return newLine === 0 || newLine + Number(values?.columns?.at(index)[media]) > 12;
+    };
+
+    const isNewLine = checkIsNewLine();
     return (
         <Draggable key={`columns.${index}`} draggableId={`columns.${index}`} index={index}>
             {(provided, snapshot) => (
@@ -22,12 +38,13 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                     item
                     key={index}
                     xs={column[media]}
-                    sx={{ minHeight: 150, marginTop: 4, marginLeft: 0, marginRight: -12, paddingRight: 12 }}
+                    sx={{ minHeight: 150, marginTop: 4, display: 'flex', overflowX: 'hidden' }}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     isDragging={snapshot.isDragging}
                 >
-                    <Component.CmtCard sx={{ border: '1px solid #C4C4C4', overflowX: 'hidden' }}>
+                    {isNewLine && <AddContentBox index={index - 1} values={values} setFieldValue={setFieldValue} baseName={baseName} />}
+                    <Component.CmtCard sx={{ border: '1px solid #C4C4C4', overflowX: 'hidden', width: '100%', minWidth: 0 }}>
                         <Box display="flex" justifyContent="space-between" flexWrap="wrap" padding={3}>
                             <IconButton
                                 height="100%"
@@ -44,7 +61,7 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                             >
                                 <DragIndicatorOutlinedIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
                             </IconButton>
-                            <Box display="flex" alignItems={'center'} position="relative">
+                            <Box display="flex" alignItems={'center'} position="relative" flexWrap={'wrap'}>
                                 <Typography component="span" variant="h5">
                                     Taille :
                                 </Typography>
@@ -55,7 +72,7 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                                     className="numberTypeField-noArrow"
                                     sx={{
                                         marginInline: 3,
-                                        width: 30,
+                                        width: 20,
                                         marginBlock: 0,
                                         '& input': {
                                             padding: 0,
@@ -114,6 +131,7 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                             />
                         </Component.LightEditorFormControl>
                     </Component.CmtCard>
+                    <AddContentBox index={index} values={values} setFieldValue={setFieldValue} baseName={baseName} />
                 </Grid>
             )}
         </Draggable>
@@ -123,6 +141,31 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
 const AddContentBox = ({ index, values, setFieldValue, baseName }) => {
     const [displayAdd, setDisplayAdd] = useState(null);
 
+    const handleAddContentBox = () => {
+        let size = 0;
+
+        for (let i = 0; i < index + 1; i++) {
+            size += Number(values?.columns?.at(i)?.xl);
+            if (size > 12) {
+                size = Number(values?.columns?.at(i)?.xl);
+            } else if (size === 12) {
+                size = 0;
+            }
+        }
+
+        let newColumns = values.columns;
+        newColumns.splice(index + 1, 0, {
+            content: '',
+            xs: 12,
+            s: 12,
+            m: 12,
+            l: 12,
+            xl: 12 - size,
+        });
+
+        setFieldValue(`${baseName}columns`, newColumns);
+    };
+
     return (
         <Box
             onMouseEnter={() => setDisplayAdd(index)}
@@ -131,21 +174,9 @@ const AddContentBox = ({ index, values, setFieldValue, baseName }) => {
             flexDirection={'column'}
             justifyContent="center"
             alignItems={'center'}
-            width={30}
-            sx={{ cursor: 'pointer', transition: '.3s', marginTop: 4 }}
+            sx={{ cursor: 'pointer', width: 30, flexShrink: 0 }}
             onClick={() => {
-                let newColumns = values.columns;
-
-                newColumns.splice(index + 1, 0, {
-                    content: '',
-                    xs: 12,
-                    s: 12,
-                    m: 12,
-                    l: 12,
-                    xl: 12,
-                });
-
-                setFieldValue(`${baseName}columns`, newColumns);
+                handleAddContentBox();
             }}
         >
             {displayAdd === index && (
@@ -160,8 +191,6 @@ const AddContentBox = ({ index, values, setFieldValue, baseName }) => {
 };
 
 export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouched, baseName = '' }) => {
-    const [count, setCount] = useState(0);
-
     const handleDragEnd = (result) => {
         if (!result.destination) {
             return;
@@ -169,10 +198,8 @@ export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouc
 
         let draggableId = result.source.index;
         let destId = result.destination.index;
-        <div className=""></div>;
 
         const tmp = values.columns[destId];
-        console.log(result);
         setFieldValue(`${baseName}columns.${destId}`, values.columns[draggableId]);
         setFieldValue(`${baseName}columns.${draggableId}`, tmp);
     };
@@ -183,26 +210,19 @@ export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouc
                 <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
                     <Droppable direction="horizontal" droppableId="columns" type="columns" isCombineEnabled ignoreContainerClipping>
                         {(provided, snapshot) => (
-                            <Grid container {...provided.droppableProps} ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver} sx={{ minWidth: 1300 }}>
-                                <AddContentBox index={-1} values={values} setFieldValue={setFieldValue} baseName={baseName} />
+                            <Grid container {...provided.droppableProps} ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver} sx={{ minWidth: 1300, paddingLeft: 2 }}>
                                 {values?.columns?.map((column, index) => (
-                                    <>
-                                        <PageBlockColumnElem
-                                            media={media}
-                                            index={index}
-                                            column={column}
-                                            key={index}
-                                            values={values}
-                                            setFieldValue={setFieldValue}
-                                            setFieldTouched={setFieldTouched}
-                                            remove={remove}
-                                            baseName={baseName}
-                                        />
-                                        <AddContentBox index={index} values={values} setFieldValue={setFieldValue} baseName={baseName} />
-                                        {/* <AddContentBoxSup count={count} setCount={setCount} size={column[media]}>
-                                            <AddContentBox index={index} values={values} setFieldValue={setFieldValue} baseName={baseName} />
-                                        </AddContentBoxSup> */}
-                                    </>
+                                    <PageBlockColumnElem
+                                        media={media}
+                                        index={index}
+                                        column={column}
+                                        key={index}
+                                        values={values}
+                                        setFieldValue={setFieldValue}
+                                        setFieldTouched={setFieldTouched}
+                                        remove={remove}
+                                        baseName={baseName}
+                                    />
                                 ))}
                                 {provided.placeholder}
                             </Grid>
@@ -212,15 +232,4 @@ export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouc
             )}
         </FieldArray>
     );
-};
-
-const AddContentBoxSup = ({ count, setCount, size, children }) => {
-    if (count + size >= 12) {
-        setCount(size % 12);
-        return children;
-    }
-
-    setCount(count + size);
-
-    return <></>;
 };

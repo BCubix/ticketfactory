@@ -25,7 +25,6 @@ export const CreatePageBlockFormat = ({ name, setName, formatIndex, setFormatInd
         <>
             <Box display="flex" flexDirection={'column'}>
                 <Component.CmtTextField sx={{ maxWidth: 400 }} value={name} onChange={(event) => setName(event.target.value)} label="Nom du bloc" />
-                {console.log(saveAsModel)}
                 {displaySave && (
                     <FormControlLabel
                         size="small"

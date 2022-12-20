@@ -50,7 +50,7 @@ class MenuEntry
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Assert\Choice(callback: getTypesKeys, message: 'Vous devez choisir un type valide.')]
+    #[Assert\Choice(callback: 'getTypesKeys', message: 'Vous devez choisir un type valide.')]
     #[Assert\NotBlank(message: 'Le type de l\'élément doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]

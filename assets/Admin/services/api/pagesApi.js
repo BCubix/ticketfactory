@@ -77,7 +77,7 @@ const pagesApi = {
                 formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
 
                 block.columns.forEach((column, columnIndex) => {
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content);
+                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content || '');
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);
@@ -106,7 +106,7 @@ const pagesApi = {
                 formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
 
                 block.columns.forEach((column, columnIndex) => {
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content);
+                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content || '');
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);

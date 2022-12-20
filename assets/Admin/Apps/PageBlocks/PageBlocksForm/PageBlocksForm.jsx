@@ -29,7 +29,6 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues
             }}
             validationSchema={pageBlockSchema}
             onSubmit={(values, { setSubmitting }) => {
-                console.log(values);
                 if (handleSubmit) {
                     handleSubmit(values);
                 }
@@ -57,7 +56,7 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues
                                 exclusive
                                 onChange={(e, newValue) => setView(newValue)}
                                 size="small"
-                                sx={{ position: 'absolute', top: 60, left: 0 }}
+                                sx={{ position: 'absolute', top: '50%', transform: 'translate(-50%)', left: 0 }}
                             >
                                 <ToggleButton value="xs" aria-label="XS">
                                     XS

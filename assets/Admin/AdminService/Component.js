@@ -93,6 +93,7 @@ import { PagesList } from '@Apps/Pages/PagesList/PagesList';
 import { PagesMenu } from '@Apps/Pages/PagesMenu/PagesMenu';
 import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
 import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
+import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
 import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
 import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
 import { PageBlocksList } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
@@ -286,6 +287,7 @@ const ComponentObj = {
     CreatePage: CreatePage,
     EditPage: EditPage,
     PagesBlocksPart: PagesBlocksPart,
+    ImportPageBlock: ImportPageBlock,
     PagesForm: PagesForm,
     PagesFilters: PagesFilters,
     PagesList: PagesList,

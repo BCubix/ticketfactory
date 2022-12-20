@@ -1,37 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FieldArray } from 'formik';
 
 import AddIcon from '@mui/icons-material/Add';
-import {
-    Card,
-    CardContent,
-    Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControlLabel,
-    Grid,
-    InputLabel,
-    Radio,
-    Tab,
-    Tabs,
-    ToggleButton,
-    ToggleButtonGroup,
-    Typography,
-} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, FormControlLabel, Grid, InputLabel, Tab, Tabs, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Constant } from '@/AdminService/Constant';
+import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { GetPageBlockColumn } from '../../PageBlocks/CreatePageBlock/CreatePageBlockFormat';
 import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
+import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { useDispatch } from 'react-redux';
 
 const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
+    const dispatch = useDispatch();
+
     const [newBlockMode, setNewBlockMode] = useState('create');
 
     const [name, setName] = useState('');
     const [saveAsModel, setSaveAsModel] = useState(false);
     const [formatIndex, setFormatIndex] = useState(0);
+
+    const [pageBlocks, setPageBlocks] = useState(null);
+    const [selectedBlock, setSelectedBlock] = useState(0);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.pageBlocksApi.getAllPageBlocks();
+            if (result?.result) {
+                setPageBlocks(result?.pageBlocks);
+            }
+        });
+    }, []);
 
     const handleCreate = () => {
         const columns = [];
@@ -39,14 +41,32 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
             columns.push(GetPageBlockColumn(value));
         });
 
-        console.log(saveAsModel);
         push({
             name: name,
             saveAsModel: saveAsModel,
             columns: columns,
         });
-
+        resetChoice();
         close();
+    };
+
+    const handleImport = () => {
+        const pageBlock = pageBlocks[selectedBlock];
+
+        if (!pageBlock) {
+            return;
+        }
+
+        push({ name: pageBlock.name, saveAsModel: false, columns: [...pageBlock.columns] });
+        resetChoice();
+        close();
+    };
+
+    const resetChoice = () => {
+        setSelectedBlock(0);
+        setName('');
+        setSaveAsModel(false);
+        setFormatIndex(0);
     };
 
     return (
@@ -64,24 +84,29 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
 
             <DialogContent sx={{ minHeight: 300 }}>
                 {newBlockMode === 'create' && (
-                    <>
-                        <Component.CreatePageBlockFormat
-                            name={name}
-                            setName={setName}
-                            formatIndex={formatIndex}
-                            setFormatIndex={setFormatIndex}
-                            displaySave={true}
-                            saveAsModel={saveAsModel}
-                            setSaveAsModel={setSaveAsModel}
-                        />
-                    </>
+                    <Component.CreatePageBlockFormat
+                        name={name}
+                        setName={setName}
+                        formatIndex={formatIndex}
+                        setFormatIndex={setFormatIndex}
+                        displaySave={true}
+                        saveAsModel={saveAsModel}
+                        setSaveAsModel={setSaveAsModel}
+                    />
                 )}
+                {newBlockMode === 'import' && <Component.ImportPageBlock pageBlocks={pageBlocks} selectedBlock={selectedBlock} setSelectedBlock={setSelectedBlock} />}
             </DialogContent>
 
             <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Component.CreateButton variant="contained" onClick={handleCreate}>
-                    Créer
-                </Component.CreateButton>
+                {newBlockMode === 'create' ? (
+                    <Component.CreateButton variant="contained" onClick={handleCreate}>
+                        Créer
+                    </Component.CreateButton>
+                ) : (
+                    <Component.CreateButton variant="contained" onClick={handleImport} disabled={newBlockMode === 'import' && !pageBlocks}>
+                        Importer
+                    </Component.CreateButton>
+                )}
             </DialogActions>
         </Dialog>
     );
@@ -100,7 +125,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                             <CardContent>
                                 <InputLabel>Bloc n°{index + 1}</InputLabel>
 
-                                <Grid container spacing={4} sx={{ paddingLeft: 13 }}>
+                                <Grid container spacing={4} sx={{ paddingLeft: 15 }}>
                                     <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center' }}>
                                         <Component.CmtTextField
                                             value={pageBlock.name}
@@ -133,7 +158,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                         exclusive
                                         onChange={(e, newValue) => setView(newValue)}
                                         size="small"
-                                        sx={{ position: 'absolute', top: 60, left: 0 }}
+                                        sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
                                     >
                                         <ToggleButton value="xs" aria-label="XS">
                                             XS
@@ -162,6 +187,15 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                         setFieldTouched={setFieldTouched}
                                         baseName={`pageBlocks.${index}.`}
                                     />
+
+                                    <Component.DeleteBlockFabButton
+                                        size="small"
+                                        onClick={() => {
+                                            remove(index);
+                                        }}
+                                    >
+                                        <DeleteIcon />
+                                    </Component.DeleteBlockFabButton>
                                 </Box>
                             </CardContent>
                         </Card>
