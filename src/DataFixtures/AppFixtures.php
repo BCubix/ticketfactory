@@ -4,7 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Parameter\Parameter;
+use App\Entity\Theme\Theme;
 use App\Entity\User\User;
+use App\Manager\ThemeManager;
 use App\Manager\UserManager;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,10 +15,12 @@ use Doctrine\Persistence\ObjectManager;
 class AppFixtures extends Fixture
 {
     private $um;
+    private $tm;
 
-    public function __construct(UserManager $um)
+    public function __construct(UserManager $um, ThemeManager $tm)
     {
         $this->um = $um;
+        $this->tm = $tm;
     }
 
     public function load(ObjectManager $om): void
@@ -169,6 +173,10 @@ class AppFixtures extends Fixture
         $parameter->setBreakpointsValue(null);
         $om->persist($parameter);
 
+        $theme = new Theme();
+        $theme->setName('default');
+        $om->persist($parameter);
+
         // Default User
         $user = new User();
         $user->setActive(true);
@@ -180,5 +188,7 @@ class AppFixtures extends Fixture
         $this->um->upgradePassword($user);
 
         $om->flush();
+
+        $this->tm->active($theme, true);
     }
 }
