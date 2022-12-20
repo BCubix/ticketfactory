@@ -40,6 +40,6 @@ export const CreateHook = () => {
         return <></>;
     }
 
-    return <Component.HooksForm handleSubmit={handleSubmit} modules={modulesActive} />;
+    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} />;
 }
 

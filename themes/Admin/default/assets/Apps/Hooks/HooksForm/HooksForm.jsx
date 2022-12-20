@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -7,17 +7,27 @@ import { Box } from "@mui/system";
 import {
     Button,
     FormControl,
-    FormControlLabel,
+    FormHelperText,
     Grid,
     InputLabel,
     ListItemText,
     MenuItem,
     Select,
-    Switch
 } from "@mui/material";
 
-export const HooksForm = ({ handleSubmit, modules }) => {
-    const [indexModule, setIndexModule] = useState(0);
+export const HooksForm = ({ handleSubmit, modulesActive }) => {
+    const moduleSchema = Yup.object().shape({
+        moduleName: Yup.string().required('Veuillez selectionner un module.'),
+        hookName: Yup.string().required('Veuillez selectionner un hook.'),
+    });
+
+    const modules = useMemo(() => {
+        const modules = {};
+        modulesActive.map(({ name, displayName, hooks }) => {
+            modules[name] = { displayName: displayName, hooks: hooks };
+        });
+        return modules;
+    }, [modulesActive]);
 
     return (
         <Formik
@@ -25,6 +35,7 @@ export const HooksForm = ({ handleSubmit, modules }) => {
                 moduleName: '',
                 hookName: '',
             }}
+            validationSchema={moduleSchema}
             onSubmit={(values, { setSubmitting }) => {
                 console.log(values);
                 //handleSubmit(values);
@@ -51,7 +62,7 @@ export const HooksForm = ({ handleSubmit, modules }) => {
                         <Grid container spacing={4}>
                             <Grid item xs={12} sm={12} md={12} lg={12}>
                                 <FormControl fullWidth sx={{ marginBlock: 3 }}>
-                                    <InputLabel id={`module-label`} size="small">
+                                    <InputLabel id={`module-label`} size="small" required>
                                         Module
                                     </InputLabel>
                                     <Select
@@ -62,21 +73,24 @@ export const HooksForm = ({ handleSubmit, modules }) => {
                                         label={'Module'}
                                         value={values.moduleName}
                                         onChange={(e) => {
-                                            console.log('target', e.target.innerText);
+                                            setFieldValue('hookName', '');
                                             setFieldValue('moduleName', e.target.value);
                                         }}
                                     >
-                                        {modules?.map(({ name, displayName }, index) => (
-                                            <MenuItem name={name} value={name} key={index}>
+                                        {Object.entries(modules).map(([name, { displayName }], index) => (
+                                            <MenuItem value={name} key={index}>
                                                 <ListItemText>{displayName}</ListItemText>
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors?.moduleName && typeof errors?.moduleName === 'string' && (
+                                        <FormHelperText error>{errors.moduleName}</FormHelperText>
+                                    )}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={12} md={12} lg={12}>
                                 <FormControl fullWidth sx={{ marginBlock: 3 }}>
-                                    <InputLabel id={`hook-label`} size="small">
+                                    <InputLabel id={`hook-label`} size="small" required>
                                         Hook
                                     </InputLabel>
                                     <Select
@@ -90,12 +104,15 @@ export const HooksForm = ({ handleSubmit, modules }) => {
                                             setFieldValue('hookName', e.target.value);
                                         }}
                                     >
-                                        {indexModule < modules.length && modules[indexModule].hooks.map(({ name, displayName }, index) => (
+                                        {values.moduleName !== '' && modules[values.moduleName].hooks.map((name, index) => (
                                             <MenuItem value={name} key={index}>
-                                                <ListItemText>{displayName}</ListItemText>
+                                                <ListItemText>{name}</ListItemText>
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    {errors?.hookName && typeof errors?.hookName === 'string' && (
+                                        <FormHelperText error>{errors.hookName}</FormHelperText>
+                                    )}
                                 </FormControl>
                             </Grid>
                         </Grid>
