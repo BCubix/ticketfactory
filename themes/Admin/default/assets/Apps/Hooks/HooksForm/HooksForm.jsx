@@ -15,7 +15,7 @@ import {
     Select,
 } from "@mui/material";
 
-export const HooksForm = ({ handleSubmit, modulesActive }) => {
+export const HooksForm = ({ handleSubmit, modulesActive, hooksList }) => {
     const moduleSchema = Yup.object().shape({
         moduleName: Yup.string().required('Veuillez selectionner un module.'),
         hookName: Yup.string().required('Veuillez selectionner un hook.'),
@@ -23,9 +23,24 @@ export const HooksForm = ({ handleSubmit, modulesActive }) => {
 
     const modules = useMemo(() => {
         const modules = {};
+
         modulesActive.map(({ name, displayName, hooks }) => {
-            modules[name] = { displayName: displayName, hooks: hooks };
+            let newHooks = [];
+
+            hooks.forEach(hookName => {
+                if (undefined === hooksList.find(hook => hookName === hook.name && undefined !== hook.modules.find(module => name === module.name))) {
+                    newHooks.push(hookName);
+                }
+            });
+
+            if (newHooks.length > 0) {
+                modules[name] = {
+                    displayName: displayName,
+                    hooks: newHooks
+                };
+            }
         });
+
         return modules;
     }, [modulesActive]);
 
@@ -37,8 +52,7 @@ export const HooksForm = ({ handleSubmit, modulesActive }) => {
             }}
             validationSchema={moduleSchema}
             onSubmit={(values, { setSubmitting }) => {
-                console.log(values);
-                //handleSubmit(values);
+                handleSubmit(values);
                 setSubmitting(false);
             }}
         >

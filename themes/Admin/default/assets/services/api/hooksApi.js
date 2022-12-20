@@ -11,6 +11,21 @@ const hooksApi = {
         }
     },
 
+    createHook: async (data) => {
+        try {
+            let formData = new FormData();
+
+            formData.append('hookName', data.hookName);
+            formData.append('moduleName', data.moduleName);
+
+            const result = await axios.post(`/hooks`, formData);
+
+            return { result: true, hooks: result?.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     updateHookModules: async (name, srcPosition, destPosition) => {
         try {
             const result = await axios.post(`/hooks/${name}?src=${srcPosition}&dest=${destPosition}`);
@@ -29,7 +44,7 @@ const hooksApi = {
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
-    }
+    },
 };
 
 export default hooksApi;

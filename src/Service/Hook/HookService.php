@@ -136,7 +136,7 @@ class HookService
      *
      * @return int
      */
-    private function getPosition(string $hookName): int
+    public function getPosition(string $hookName): int
     {
         $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($hookName);
         if ($hooks) {

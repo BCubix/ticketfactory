@@ -43,6 +43,35 @@ class HookController extends AdminController
         return $this->view($result, Response::HTTP_OK);
     }
 
+    #[Rest\Post('/hooks')]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function add(Request $request): View
+    {
+        $rq = $request->request->all();
+        $hookName = $rq['hookName'];
+        $moduleName = $rq['moduleName'];
+
+        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+        if (null === $module) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module " . $moduleName . " n'existe pas.");
+        }
+
+        $hook = $this->em->getRepository(Hook::class)->findOneByNameAndModuleNameForAdmin($hookName, $moduleName);
+        if (null !== $hook) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le hook " . $hookName . " (module: $moduleName) existe déjà.");
+        }
+
+        $hook = new Hook();
+        $hook->setName($hookName);
+        $hook->setModule($module);
+        $hook->setPosition($this->hs->getPosition($hookName));
+
+        $this->em->persist($hook);
+        $this->em->flush();
+
+        return $this->view($hook, Response::HTTP_OK);
+    }
+
     #[Rest\Post('/hooks/{hookName}/disable', requirements: ['hookName' => '.+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function disable(Request $request, string $hookName): View
