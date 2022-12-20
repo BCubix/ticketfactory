@@ -52,24 +52,31 @@ class ModuleController extends AdminController
     {
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
-        $objects = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
 
-        if (!isset($filters['active'])) {
-            $modules = $this->ms->getAllInDisk();
+        $filters['sortField'] = 'name';
+        $filters['sortOrder'] = 'ASC';
+        $modules = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
 
-            // Add active for each module
-            for ($i = 0; $i < count($modules); $i++) {
-                $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($modules[$i]['name']);
-                if ($module) {
-                    $modules[$i] += [ 'active' => $module->isActive() ];
-                }
+        $modulesInDisk = $this->ms->getAllInDisk();
+        $indexDisk = 0;
+        $lenDisk = count($modulesInDisk);
+
+        for ($i = 0; $i < $modules['total']; ++$i) {
+            $moduleName = $modules['results'][$i]->getName();
+            while ($indexDisk < $lenDisk && $moduleName !== $modulesInDisk[$indexDisk]['name']) {
+                $indexDisk++;
+            }
+            if ($indexDisk === $lenDisk) {
+                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module $moduleName n'a pas de dossier enregistré.");
             }
 
-            $objects['results'] = $modules;
-            $objects['total'] = count($modules);
+            $modules['results'][$i] = [
+                ...$modulesInDisk[$indexDisk],
+                'active' => $modules['results'][$i]->isActive()
+            ];
         }
 
-        return $this->view($objects, Response::HTTP_OK);
+        return $this->view($modules, Response::HTTP_OK);
     }
 
     #[Rest\Get('/modules/{moduleId}', requirements: ['moduleId' => '\d+'])]
