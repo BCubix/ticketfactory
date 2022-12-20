@@ -121,15 +121,6 @@ class ThemeManager extends AbstractManager
         $themeName = $theme->getName();
         if ($themeName === $mainThemeName) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
-        } else {
-            $this->disableMainTheme();
-            $this->em->getConnection()->commit();
-            try {
-                $this->ts->clear();
-            } catch (\Exception $e) {
-                $this->ts->entry($mainThemeName, false);
-                throw $e;
-            }
         }
 
         $this->em->remove($theme);
