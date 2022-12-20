@@ -1,10 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    IMAGE_FORMATS_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, IMAGE_FORMATS_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Create Contact Request Spec', () => {
     beforeEach(() => {
@@ -22,7 +17,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#height').type('500');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.wait('@createImageFormat').then(({ response }) => {
             expect(response.statusCode).to.eq(201);
@@ -36,7 +31,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#height').type('500');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#name-helper-text').should('exist');
     });
@@ -48,7 +43,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#height').type('500');
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#length-helper-text').should('exist');
     });
@@ -60,7 +55,7 @@ describe('Create Contact Request Spec', () => {
         cy.get('#height').focus().blur();
         cy.get('#active').click();
 
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#height-helper-text').should('exist');
     });

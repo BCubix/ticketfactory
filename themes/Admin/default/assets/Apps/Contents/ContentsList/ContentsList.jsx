@@ -3,25 +3,13 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    Button,
-    CardContent,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
+import { Button, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
 import { changeContentsFilters, contentsSelector, getContentsAction } from '@Redux/contents/contentsSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
@@ -72,11 +60,7 @@ export const ContentsList = () => {
             const result = await Api.contentsApi.duplicateContent(id);
 
             if (result?.result) {
-                NotificationManager.success(
-                    'Le contenu a bien été dupliqué.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.success('Le contenu a bien été dupliqué.', 'Succès', Constant.REDIRECTION_TIME);
 
                 dispatch(getContentsAction());
             } else {
@@ -93,21 +77,14 @@ export const ContentsList = () => {
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
                                 Liste des contenus{' '}
-                                {contents &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + contents.length
-                                    } sur ${total})`}
+                                {contents && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contents.length} sur ${total})`}
                             </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createContentButton">
                                 Nouveau
                             </Component.CreateButton>
                         </Box>
 
-                        <Component.ContentsFilters
-                            filters={filters}
-                            changeFilters={(values) => dispatch(changeContentsFilters(values))}
-                            list={contentTypes}
-                        />
+                        <Component.ContentsFilters filters={filters} changeFilters={(values) => dispatch(changeContentsFilters(values))} list={contentTypes} />
 
                         <Component.ListTable
                             filters={filters}
@@ -120,9 +97,7 @@ export const ContentsList = () => {
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
                             }}
-                            changeFilters={(newFilters) =>
-                                dispatch(changeContentsFilters(newFilters))
-                            }
+                            changeFilters={(newFilters) => dispatch(changeContentsFilters(newFilters))}
                             onDelete={(id) => setDeleteDialog(id)}
                         />
 
@@ -130,9 +105,7 @@ export const ContentsList = () => {
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changeContentsFilters({ ...filters }, newValue))
-                            }
+                            setPage={(newValue) => dispatch(changeContentsFilters({ ...filters }, newValue))}
                             setLimit={(newValue) => {
                                 dispatch(changeContentsFilters({ ...filters, limit: newValue }));
                             }}
@@ -142,12 +115,7 @@ export const ContentsList = () => {
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
 
-            <Dialog
-                open={createDialog}
-                onClose={() => setCreateDialog(false)}
-                fullWidth
-                maxWidth="sm"
-            >
+            <Dialog open={createDialog} onClose={() => setCreateDialog(false)} fullWidth maxWidth="sm">
                 <DialogTitle sx={{ fontSize: 20 }}>Créer un contenu</DialogTitle>
                 <DialogContent dividers>
                     <FormControl fullWidth sx={{ marginTop: 3 }}>
@@ -158,15 +126,15 @@ export const ContentsList = () => {
                             labelId={`contentType-label`}
                             variant="standard"
                             size="small"
-                            id={`contentType`}
+                            id={`selectContentType`}
                             value={formContentType}
                             onChange={(e) => {
                                 setFormContentType(e.target.value);
                             }}
                             label="Type de contenus"
                         >
-                            {contentTypes?.contentTypes?.map((typeList, typeIndex) => (
-                                <MenuItem key={typeIndex} value={typeList?.id}>
+                            {contentTypes?.map((typeList, typeIndex) => (
+                                <MenuItem key={typeIndex} value={typeList?.id} id={`selectContentTypeValue-${typeList.id}`}>
                                     {typeList?.name}
                                 </MenuItem>
                             ))}
@@ -175,12 +143,7 @@ export const ContentsList = () => {
                 </DialogContent>
 
                 <DialogActions>
-                    <Box
-                        width="100%"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
+                    <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                         <Button
                             color="error"
                             onClick={() => {
@@ -195,15 +158,9 @@ export const ContentsList = () => {
                             color="primary"
                             onClick={() => {
                                 if (formContentType !== '') {
-                                    navigate(
-                                        `${Constant.CONTENT_BASE_PATH}${Constant.CREATE_PATH}?contentType=${formContentType}`
-                                    );
+                                    navigate(`${Constant.CONTENT_BASE_PATH}${Constant.CREATE_PATH}?contentType=${formContentType}`);
                                 } else {
-                                    NotificationManager.error(
-                                        'Vous devez renseigner le type de contenu.',
-                                        'Erreur',
-                                        Constant.REDIRECTION_TIME
-                                    );
+                                    NotificationManager.error('Vous devez renseigner le type de contenu.', 'Erreur', Constant.REDIRECTION_TIME);
                                 }
                             }}
                             id="validateDialog"
@@ -214,15 +171,9 @@ export const ContentsList = () => {
                 </DialogActions>
             </Dialog>
 
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
-            >
+            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer ce type de contenus ?
-                    </Typography>
+                    <Typography component="p">Êtes-vous sûr de vouloir supprimer ce type de contenus ?</Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>

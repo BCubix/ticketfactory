@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { Box, Typography } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
@@ -14,16 +14,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, setFieldTouched, name, errors, field, label, touched }) => {
     return (
         <Box sx={{ marginTop: 2 }}>
             <Component.CmtDateTimePicker
@@ -31,6 +22,10 @@ const FormComponent = ({
                 value={values[field.name]}
                 label={label}
                 setValue={(newValue) => {
+                    if (!newValue) {
+                        setFieldValue(name, '');
+                        return;
+                    }
                     setFieldValue(name, moment(newValue).format('YYYY-MM-DD HH:mm'));
                 }}
                 onTouched={setFieldTouched}
@@ -62,9 +57,7 @@ const getValidation = (contentType) => {
     VALIDATION_LIST?.forEach((element) => {
         const elVal = valList.find((el) => el.name === element.name);
         if (elVal && element.test(elVal.value)) {
-            validation = validation[element.validationName](
-                ...element.params({ name: contentType.title, value: elVal.value })
-            );
+            validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
@@ -80,15 +73,9 @@ const getValidation = (contentType) => {
      *  We check if the minDate exist and defined and is after today date or disablePast doesn't exist or is false.
      *  Or if disablePast exist and defined.
      **/
-    if (
-        minDate &&
-        minDate.value &&
-        (moment().isBefore(moment(minDate.value)) || !disablePast || !disablePast?.value)
-    ) {
+    if (minDate && minDate.value && (moment().isBefore(moment(minDate.value)) || !disablePast || !disablePast?.value)) {
         validMinDate = moment(minDate.value);
-        validMinDateMessage = `La date doit être supérieur ou égal à ${validMinDate.format(
-            'DD-MM-YYYY'
-        )}`;
+        validMinDateMessage = `La date doit être supérieur ou égal à ${validMinDate.format('DD-MM-YYYY')}`;
     } else if (disablePast && disablePast.value) {
         validMinDate = moment();
         validMinDateMessage = `La date doit doit être supérieur ou égal à aujourd'hui`;
@@ -99,29 +86,17 @@ const getValidation = (contentType) => {
      *  Then we add to validation a test for the minimum date.
      **/
     if (validMinDate) {
-        validation = validation.test(
-            'minDate',
-            validMinDateMessage,
-            (val) => val && moment(val).isSameOrAfter(validMinDate, 'day')
-        );
+        validation = validation.test('minDate', validMinDateMessage, (val) => val && moment(val).isSameOrAfter(validMinDate, 'day'));
     }
 
     // We get the minHour validation data and add a test to validation to check minimum Hour if minHour.value exist and is defined
     const minHour = valList.find((el) => el.name === 'minHour');
     if (minHour && minHour.value) {
-        validation = validation.test(
-            'minHour',
-            `L'heure doit être supérieur ou égal à ${moment(minHour.value, 'HH:mm').format(
-                'HH:mm'
-            )}`,
-            (val) => {
-                const valHour = moment(val, 'HH:mm').format('HH:mm');
+        validation = validation.test('minHour', `L'heure doit être supérieur ou égal à ${moment(minHour.value, 'HH:mm').format('HH:mm')}`, (val) => {
+            const valHour = moment(val, 'HH:mm').format('HH:mm');
 
-                return (
-                    val && moment(valHour, 'HH:mm').isSameOrAfter(moment(minHour.value, 'HH:mm'))
-                );
-            }
-        );
+            return val && moment(valHour, 'HH:mm').isSameOrAfter(moment(minHour.value, 'HH:mm'));
+        });
     }
 
     // We get the maxDate validation data and add a test to validation to check maximum Date if maxDate.value exist and is defined
@@ -137,19 +112,11 @@ const getValidation = (contentType) => {
     // We get the maxHour validation data and add a test to validation to check maximum Hour if maxHour.value exist and is defined
     const maxHour = valList.find((el) => el.name === 'maxHour');
     if (maxHour && maxHour.value) {
-        validation = validation.test(
-            'maxHour',
-            `L'heure doit être inférieur ou égal à ${moment(maxHour.value, 'HH:mm').format(
-                'HH:mm'
-            )}`,
-            (val) => {
-                const valHour = moment(val, 'HH:mm').format('HH:mm');
+        validation = validation.test('maxHour', `L'heure doit être inférieur ou égal à ${moment(maxHour.value, 'HH:mm').format('HH:mm')}`, (val) => {
+            const valHour = moment(val, 'HH:mm').format('HH:mm');
 
-                return (
-                    val && moment(valHour, 'HH:mm').isSameOrBefore(moment(maxHour.value, 'HH:mm'))
-                );
-            }
-        );
+            return val && moment(valHour, 'HH:mm').isSameOrBefore(moment(maxHour.value, 'HH:mm'));
+        });
     }
 
     return validation;

@@ -15,7 +15,7 @@ export const CmtDateTimePicker = ({
     onTouched = null,
     inputVariant = 'standard',
     inputSize = 'normal',
-    id = '',
+    id = name?.replaceAll('.', '-'),
     required = false,
     ...rest
 }) => {

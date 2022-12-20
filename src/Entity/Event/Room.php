@@ -57,7 +57,7 @@ class Room extends Datable
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: SeatingPlan::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $seatingPlans;
 
-    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Event::class)]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Event::class, cascade: ['persist', 'remove'])]
     private $events;
 
     #[JMS\Expose()]

@@ -1,10 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    USERS_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, USERS_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Create User Spec', () => {
     beforeEach(() => {
@@ -17,11 +12,13 @@ describe('Create User Spec', () => {
 
     it('Create User', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.wait('@createUser').then(({ response }) => {
             expect(response.statusCode).to.eq(201);
@@ -30,88 +27,115 @@ describe('Create User Spec', () => {
 
     it('Create User (bad Email)', () => {
         cy.get('#email').type('email2');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#email-helper-text').should('exist');
     });
 
     it('Create User (no Email)', () => {
         cy.get('#email').focus().blur();
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#email-helper-text').should('exist');
     });
 
+    it('Create User (no roles)', () => {
+        cy.get('#email').type('email2@gmail.com');
+        cy.get('#firstName').type('FirstName 2');
+        cy.get('#lastName').type('LastName 2');
+        cy.get('#password').type('Password!02');
+        cy.get('#confirmPassword').type('Password!02');
+        cy.get('#submitForm').click();
+
+        cy.get('#roles-helper-text').should('exist');
+    });
+
     it('Create User (bad password)', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('bad password');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#password-helper-text').should('exist');
     });
 
     it('Create User (no password)', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#password').focus().blur();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#password-helper-text').should('exist');
     });
 
     it('Create User (no firstName)', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').focus().blur();
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#firstName-helper-text').should('exist');
     });
 
     it('Create User (no lastName)', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').focus().blur();
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').type('Password!02');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#lastName-helper-text').should('exist');
     });
 
     it('Create User (no confirmPassword)', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').focus().blur();
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#confirmPassword-helper-text').should('exist');
     });
 
     it('Create User (bad confirmPassword)', () => {
         cy.get('#email').type('email2@gmail.com');
+        cy.get('#roles').click();
+        cy.get('#userRolesValue-ROLE_USER').click();
         cy.get('#firstName').type('FirstName 2');
         cy.get('#lastName').type('LastName 2');
         cy.get('#password').type('Password!02');
         cy.get('#confirmPassword').type('badConfirmPassword');
-        cy.get('[type="submit"]').click();
+        cy.get('#submitForm').click();
 
         cy.get('#confirmPassword-helper-text').should('exist');
     });

@@ -12,7 +12,7 @@ class ContentTypeFieldDateTimeType extends ContentTypeFieldAbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'format' => 'dd/MM/yyyy HH:mm',
+            'format'         => 'yyyy-MM-dd HH:mm',
             'html5' => false,
             'widget' => 'single_text'
         ]);

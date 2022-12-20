@@ -2,17 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import {
-    Button,
-    FormControl,
-    FormControlLabel,
-    Grid,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Select,
-    Switch,
-} from '@mui/material';
+import { Button, FormControl, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -22,9 +12,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
     const userSchema = Yup.object().shape({
         firstName: Yup.string().required('Veuillez renseigner le prénom.'),
         lastName: Yup.string().required('Veuillez renseigner le nom.'),
-        email: Yup.string()
-            .email('Email invalide.')
-            .required("Veuillez renseigner l'adresse email."),
+        email: Yup.string().email('Email invalide.').required("Veuillez renseigner l'adresse email."),
         password: Yup.string()
             .nullable()
             .min(10, 'Votre mot de passe doit contenir au moins 10 caractères.')
@@ -59,21 +47,8 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                setFieldValue,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    title="Modification d'un utilisateur"
-                    component="form"
-                    onSubmit={handleSubmit}
-                >
+            {({ values, errors, touched, setFieldValue, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+                <Component.CmtPageWrapper title="Modification d'un utilisateur" component="form" onSubmit={handleSubmit}>
                     <Component.CmtFormBlock title={'Informations générales'}>
                         <Grid container spacing={4}>
                             <Grid item xs={12} sm={6}>
@@ -89,11 +64,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth sx={{ marginTop: 2 }}>
-                                    <InputLabel
-                                        id="userRolesLabel"
-                                        size="small"
-                                        className="required-input"
-                                    >
+                                    <InputLabel id="userRolesLabel" size="small" className="required-input">
                                         Rôles
                                     </InputLabel>
                                     <Select
@@ -108,11 +79,7 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                                         }}
                                     >
                                         {Constant.USER_ROLES.map((item, index) => (
-                                            <MenuItem
-                                                value={item.value}
-                                                key={index}
-                                                id={`userRolesValue-${item.value}`}
-                                            >
+                                            <MenuItem value={item.value} key={index} id={`userRolesValue-${item.value}`}>
                                                 <ListItemText>{item.label}</ListItemText>
                                             </MenuItem>
                                         ))}
@@ -165,28 +132,10 @@ export const EditUserForm = ({ handleSubmit, initialValues = null }) => {
                             error={touched.confirmPassword && errors.confirmPassword}
                         />
                     </Component.CmtFormBlock>
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    id="active"
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Utilisateur actif ?" />
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             Modifier
                         </Button>
                     </Box>

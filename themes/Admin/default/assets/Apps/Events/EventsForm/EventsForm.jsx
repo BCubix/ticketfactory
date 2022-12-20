@@ -4,22 +4,13 @@ import * as Yup from 'yup';
 import { Button, FormControlLabel, Switch, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-export const EventsForm = ({
-    handleSubmit,
-    initialValues = null,
-    categoriesList,
-    roomsList,
-    seasonsList,
-    tagsList,
-}) => {
+export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList, roomsList, seasonsList, tagsList }) => {
     if (!categoriesList || !roomsList || !seasonsList || !tagsList) {
         return <></>;
     }
 
     const eventSchema = Yup.object().shape({
-        name: Yup.string()
-            .required("Veuillez renseigner le nom de l'évènement.")
-            .max(250, "Le nom de l'évènement est trop long"),
+        name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
         chapo: Yup.string().required('Veuillez renseigner le chapô.'),
         eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
         mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
@@ -27,21 +18,15 @@ export const EventsForm = ({
         eventDateBlocks: Yup.array()
             .of(
                 Yup.object().shape({
-                    name: Yup.string()
-                        .required('Veuillez renseigner le nom du bloc.')
-                        .max(250, 'Le nom du bloc est trop long'),
+                    name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom du bloc est trop long'),
                     eventDates: Yup.array()
                         .of(
                             Yup.object().shape({
                                 eventDate: Yup.string().required('Veuillez renseigner la date.'),
-                                state: Yup.string().required(
-                                    'Veuillez renseigner le status de cette date.'
-                                ),
+                                state: Yup.string().required('Veuillez renseigner le status de cette date.'),
                                 reportDate: Yup.string().when('state', (state) => {
                                     if (state === 'delayed') {
-                                        return Yup.string().required(
-                                            'Veuillez renseigner la nouvelle date.'
-                                        );
+                                        return Yup.string().required('Veuillez renseigner la nouvelle date.');
                                     } else {
                                         return Yup.string().nullable();
                                     }
@@ -54,16 +39,12 @@ export const EventsForm = ({
             .min(1, 'Veuillez renseigner au moins un bloc de dates.'),
         eventPriceBlocks: Yup.array().of(
             Yup.object().shape({
-                name: Yup.string()
-                    .required('Veuillez renseigner le nom du bloc.')
-                    .max(250, 'Le nom du bloc est trop long'),
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom du bloc est trop long'),
                 eventPrices: Yup.array()
                     .of(
                         Yup.object().shape({
                             name: Yup.string().required('Veuillez renseigner le nom du tarif.'),
-                            price: Yup.number()
-                                .required('Veuillez renseigner le prix')
-                                .min(0, 'Veuillez renseigner un prix valide.'),
+                            price: Yup.number().required('Veuillez renseigner le prix').min(0, 'Veuillez renseigner un prix valide.'),
                         })
                     )
                     .min(1, 'Veuillez renseigner au moins un prix.'),
@@ -78,15 +59,9 @@ export const EventsForm = ({
                 name: initialValues?.name || '',
                 chapo: initialValues?.chapo || '',
                 description: initialValues?.description || '',
-                eventDateBlocks: initialValues?.eventDateBlocks || [
-                    { name: 'Dates', eventDates: [] },
-                ],
-                eventPriceBlocks: initialValues?.eventPriceBlocks || [
-                    { name: 'Tarifs', eventPrices: [] },
-                ],
-                eventCategories: initialValues?.eventCategories
-                    ? initialValues?.eventCategories?.map((el) => el.id)
-                    : [],
+                eventDateBlocks: initialValues?.eventDateBlocks || [{ name: 'Dates', eventDates: [] }],
+                eventPriceBlocks: initialValues?.eventPriceBlocks || [{ name: 'Tarifs', eventPrices: [] }],
+                eventCategories: initialValues?.eventCategories ? initialValues?.eventCategories?.map((el) => el.id) : [],
                 room: initialValues?.room?.id || '',
                 season: initialValues?.season?.id || '',
                 tags: initialValues?.tags ? initialValues?.tags?.map((el) => el.id) : [],
@@ -107,22 +82,8 @@ export const EventsForm = ({
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                setFieldTouched,
-                setFieldValue,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    component="form"
-                    onSubmit={handleSubmit}
-                    title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}
-                >
+            {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}>
                     <Component.CmtTabs
                         containerStyle={{ mt: 3 }}
                         list={[
@@ -193,28 +154,10 @@ export const EventsForm = ({
                         ]}
                     />
 
-                    <Box display="flex" justifyContent="flex-end">
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            id="active"
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            id="submitForm"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Evènement actif ?" />
+
+                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

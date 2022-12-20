@@ -33,6 +33,7 @@ const ConstantObj = {
     REDIRECTIONS_BASE_PATH: '/admin/redirections',
     MENUS_BASE_PATH: '/admin/menus',
     PAGES_BASE_PATH: '/admin/pages',
+    PAGE_BLOCKS_BASE_PATH: '/admin/page-blocks',
     PARAMETERS_BASE_PATH: '/admin/parametres',
     MODULES_BASE_PATH: '/admin/modules',
     THEMES_BASE_PATH: '/admin/themes',
@@ -46,12 +47,9 @@ const ConstantObj = {
     IMAGE_FILE_SUPPORTED: 'image/jpeg, image/png, image/gif, image/webp',
     AUDIO_FILE_SUPPORTED: 'audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav',
     VIDEO_FILE_SUPPORTED: 'video/mp4, video/webm, video/ogg, video/mpeg',
-    WORD_FILE_SUPPORTED:
-        'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    EXCEL_FILE_SUPPORTED:
-        'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    POWERPOINT_FILE_SUPPORTED:
-        'application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    WORD_FILE_SUPPORTED: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    EXCEL_FILE_SUPPORTED: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    POWERPOINT_FILE_SUPPORTED: 'application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation',
     PDF_FILE_SUPPORTED: 'application/pdf',
     TEXT_FILE_SUPPORTED: 'text/plain',
     ZIP_FILE_SUPPORTED: 'application/zip, application/x-zip-compressed',
@@ -70,6 +68,8 @@ const ConstantObj = {
         { label: 'Utilisateur', value: 'ROLE_USER' },
         { label: 'Admin', value: 'ROLE_ADMIN' },
     ],
+
+    PAGE_BLOCKS_FORMATS: [[12], [6, 6], [4, 8], [8, 4], [4, 4, 4], [3, 6, 3]],
 };
 
 ConstantObj.ALL_FILE_SUPPORTED = () =>

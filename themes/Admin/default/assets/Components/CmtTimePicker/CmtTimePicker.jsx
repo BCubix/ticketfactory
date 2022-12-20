@@ -14,7 +14,7 @@ export const CmtTimePicker = ({
     onTouched = null,
     inputVariant = 'standard',
     inputSize = 'normal',
-    id = '',
+    id = name?.replaceAll('.', '-'),
     required = false,
     maxWidth = '100%',
     ...rest
@@ -37,7 +37,7 @@ export const CmtTimePicker = ({
                     open={open}
                     value={value ? moment(value, 'HH:mm') : null}
                     onChange={(date) => {
-                        setValue(date);
+                        setValue(date ? date : null);
                     }}
                     onOpen={() => {
                         setOpen(true);

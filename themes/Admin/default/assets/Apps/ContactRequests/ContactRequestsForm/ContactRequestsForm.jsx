@@ -2,24 +2,19 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
     const contactRequestSchema = Yup.object().shape({
         firstName: Yup.string().required('Veuillez renseigner le prénom.'),
         lastName: Yup.string().required('Veuillez renseigner le nom.'),
-        email: Yup.string()
-            .required("Veuillez renseigner l'adresse email.")
-            .email('Email invalide'),
+        email: Yup.string().required("Veuillez renseigner l'adresse email.").email('Email invalide'),
         phone: Yup.string()
             .required('Veuillez renseigner le numéro de téléphone.')
-            .matches(
-                /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-                'Le numéro est invalide.'
-            ),
+            .matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Le numéro est invalide.'),
         subject: Yup.string().required("Veuillez renseigner l'object de la demande."),
         message: Yup.string().required('Veuillez renseigner le message.'),
     });
@@ -41,23 +36,8 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    component="form"
-                    onSubmit={handleSubmit}
-                    title={`${
-                        initialValues ? 'Modification' : 'Création'
-                    } d'une demande de contact`}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une demande de contact`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -130,26 +110,10 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Demande de contact active ?" />
+
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

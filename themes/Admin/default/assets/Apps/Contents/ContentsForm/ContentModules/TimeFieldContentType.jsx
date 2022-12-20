@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 import { Box, Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
@@ -16,16 +16,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, setFieldTouched, name, errors, field, label, touched }) => {
     return (
         <Box sx={{ marginTop: 2 }}>
             <Component.CmtTimePicker
@@ -33,6 +24,10 @@ const FormComponent = ({
                 value={values[field.name]}
                 label={label}
                 setValue={(newValue) => {
+                    if (!newValue) {
+                        setFieldValue(name, '');
+                        return;
+                    }
                     setFieldValue(name, moment(newValue).format('HH:mm'));
                 }}
                 onTouched={setFieldTouched}
@@ -63,53 +58,31 @@ const getValidation = (contentType) => {
     VALIDATION_LIST?.forEach((element) => {
         const elVal = valList.find((el) => el.name === element.name);
         if (elVal && element.test(elVal.value)) {
-            validation = validation[element.validationName](
-                ...element.params({ name: contentType.title, value: elVal.value })
-            );
+            validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
     // Add test to validation to check if time is valid
-    validation = validation.test(
-        'isValid',
-        'Date invalide',
-        (val) => val && moment(val, 'HH:mm').isValid()
-    );
+    validation = validation.test('isValid', 'Date invalide', (val) => val && moment(val, 'HH:mm').isValid());
 
     // We get the minHour validation data and add a test to validation to check minimum Hour if minHour.value exist and is defined
     const minHour = valList.find((el) => el.name === 'minHour');
     if (minHour && minHour.value) {
-        validation = validation.test(
-            'minHour',
-            `L'heure doit être supérieur ou égal à ${moment(minHour.value, 'HH:mm').format(
-                'HH:mm'
-            )}`,
-            (val) => {
-                const valHour = moment(val, 'HH:mm').format('HH:mm');
+        validation = validation.test('minHour', `L'heure doit être supérieur ou égal à ${moment(minHour.value, 'HH:mm').format('HH:mm')}`, (val) => {
+            const valHour = moment(val, 'HH:mm').format('HH:mm');
 
-                return (
-                    val && moment(valHour, 'HH:mm').isSameOrAfter(moment(minHour.value, 'HH:mm'))
-                );
-            }
-        );
+            return val && moment(valHour, 'HH:mm').isSameOrAfter(moment(minHour.value, 'HH:mm'));
+        });
     }
 
     // We get the maxHour validation data and add a test to validation to check maximum Hour if maxHour.value exist and is defined
     const maxHour = valList.find((el) => el.name === 'maxHour');
     if (maxHour && maxHour.value) {
-        validation = validation.test(
-            'maxHour',
-            `L'heure doit être inférieur ou égal à ${moment(maxHour.value, 'HH:mm').format(
-                'HH:mm'
-            )}`,
-            (val) => {
-                const valHour = moment(val, 'HH:mm').format('HH:mm');
+        validation = validation.test('maxHour', `L'heure doit être inférieur ou égal à ${moment(maxHour.value, 'HH:mm').format('HH:mm')}`, (val) => {
+            const valHour = moment(val, 'HH:mm').format('HH:mm');
 
-                return (
-                    val && moment(valHour, 'HH:mm').isSameOrBefore(moment(maxHour.value, 'HH:mm'))
-                );
-            }
-        );
+            return val && moment(valHour, 'HH:mm').isSameOrBefore(moment(maxHour.value, 'HH:mm'));
+        });
     }
 
     return validation;

@@ -10,19 +10,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
-import {
-    Chip,
-    Menu,
-    MenuItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableSortLabel,
-    Typography,
-} from '@mui/material';
+import { Chip, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -110,11 +98,7 @@ export const ListTable = ({
                         {table.map((element, index) => (
                             <TableCell key={index} sx={{ width: element.width || 'auto' }}>
                                 {element.sortable ? (
-                                    <TableSortLabel
-                                        active={element.name === field}
-                                        direction={order.toLowerCase() || 'asc'}
-                                        onClick={() => handleSortClick(element.name)}
-                                    >
+                                    <TableSortLabel active={element.name === field} direction={order.toLowerCase() || 'asc'} onClick={() => handleSortClick(element.name)}>
                                         {element.label}
                                     </TableSortLabel>
                                 ) : (
@@ -162,11 +146,7 @@ export const ListTable = ({
                                                 (item.active ? onDisable : onActive)(item.name);
                                             }}
                                         >
-                                            {item.active ? (
-                                                <UnpublishedIcon />
-                                            ) : (
-                                                <CheckCircleIcon />
-                                            )}
+                                            {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
                                         </Component.ActionFabButton>
                                     )}
                                     {(onSelect !== null && item.id !== themeId) &&
@@ -207,6 +187,7 @@ export const ListTable = ({
                                                 e.stopPropagation();
                                                 onEdit(item.id);
                                             }}
+                                            id={`editButton-${item.id}`}
                                         >
                                             <EditIcon />
                                         </Component.EditFabButton>
@@ -234,6 +215,7 @@ export const ListTable = ({
                                                     e.stopPropagation();
                                                     onDelete(item.id);
                                                 }}
+                                                id={`deleteButton-${item.id}`}
                                             >
                                                 <DeleteIcon />
                                             </Component.DeleteFabButton>

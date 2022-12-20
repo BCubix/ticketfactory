@@ -20,6 +20,7 @@ import parametersReducer from '@Redux/parameters/parametersSlice';
 import modulesReducer from '@Redux/modules/modulesSlice';
 import themesReducer from '@Redux/themes/themesSlice';
 import hooksReducer from '@Redux/hooks/hooksSlice';
+import pageBlocksReducer from '@Redux/pageBlocks/pageBlocksSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -42,7 +43,8 @@ const reducer = {
     modules: modulesReducer,
     themes: themesReducer,
     hooks: hooksReducer,
-}
+    pageBlocks: pageBlocksReducer,
+};
 
 const store = configureStore({
     reducer: { ...reducer },
@@ -52,7 +54,7 @@ store.asyncReducers = {};
 
 store.injectReducer = (key, asyncReducer) => {
     store.asyncReducers[key] = asyncReducer;
-    store.replaceReducer(createReducer(store.asyncReducers))
+    store.replaceReducer(createReducer(store.asyncReducers));
 };
 
 function createReducer(asyncReducers) {

@@ -74,9 +74,13 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.MENUS_BASE_PATH, component: Component.MenusList }),
     () => ({ path: Constant.MENUS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateMenu }),
 
-    () => ({ path: Constant.PAGES_BASE_PATH, component: Component.PagesList }),
+    () => ({ path: Constant.PAGES_BASE_PATH, component: Component.PagesMenu, tabValue: 0 }),
     () => ({ path: Constant.PAGES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreatePage }),
     () => ({ path: `${Constant.PAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditPage }),
+
+    () => ({ path: Constant.PAGE_BLOCKS_BASE_PATH, component: Component.PagesMenu, tabValue: 1 }),
+    () => ({ path: Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreatePageBlock }),
+    () => ({ path: `${Constant.PAGE_BLOCKS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditPageBlock }),
 
     () => ({ path: Constant.PARAMETERS_BASE_PATH, component: Component.ParametersMenu }),
 

@@ -8,9 +8,7 @@ import { Component } from '@/AdminService/Component';
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     const seasonsSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Veuillez renseigner le nom de la saison.')
-            .max(250, 'Le nom renseigné est trop long.'),
+        name: Yup.string().required('Veuillez renseigner le nom de la saison.').max(250, 'Le nom renseigné est trop long.'),
         beginYear: Yup.number()
             .required("Veuillez renseigner l'année de début.")
             .min(1970, 'Veuillez renseigner une année valide.')
@@ -30,21 +28,8 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    component="form"
-                    onSubmit={handleSubmit}
-                    title={`${initialValues ? 'Modification' : 'Création'} d'une saison`}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une saison`}>
                     <Component.CmtFormBlock title={'Informations générales'}>
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6}>
@@ -72,28 +57,10 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    id="active"
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            id="submitForm"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Saison active ?" />
+
+                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

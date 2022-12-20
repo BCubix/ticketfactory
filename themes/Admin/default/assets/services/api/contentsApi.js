@@ -1,6 +1,7 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { copyData } from '../utils/copyData';
 
 var controller = null;
 
@@ -48,7 +49,7 @@ const serializeData = (element, name, formData) => {
                 serializeData(el, `${name}[${key}][${index}]`, formData);
             });
         } else {
-            formData.append(`${name}[${key}]`, value);
+            formData.append(`${name}[${key}]`, value !== null ? value : '');
         }
     });
 };
@@ -86,8 +87,9 @@ const contentsApi = {
     getOneContent: async (id) => {
         try {
             const result = await axios.get(`/contents/${id}`);
+            const data = copyData(result?.data);
 
-            return { result: true, content: result.data };
+            return { result: true, content: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

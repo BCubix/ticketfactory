@@ -1,0 +1,12 @@
+
+.pageBlockEditor {
+    & .ck-content {
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+    }
+    & .ck-toolbar {
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+}

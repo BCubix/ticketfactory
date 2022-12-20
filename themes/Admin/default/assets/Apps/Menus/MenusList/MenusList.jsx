@@ -5,9 +5,9 @@ import { Formik } from 'formik';
 
 import { Box, Button, Grid, Typography } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { getMenusAction, menusSelector } from '@Redux/menus/menusSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
@@ -97,16 +97,7 @@ export const MenusList = () => {
                     setSubmitting(false);
                 }}
             >
-                {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    setFieldValue,
-                    isSubmitting,
-                }) => (
+                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
                     <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
                         <Component.MenuHeaderLine
                             selectedMenu={initialValues}
@@ -153,16 +144,12 @@ export const MenusList = () => {
                                             disabled={isSubmitting}
                                             color="error"
                                             onClick={() => setDeleteDialog(!deleteDialog)}
+                                            id="deleteMenuButton"
                                         >
                                             Supprimer
                                         </Button>
 
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            sx={{ mt: 3, mb: 2 }}
-                                            disabled={isSubmitting}
-                                        >
+                                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
                                             Modifier
                                         </Button>
                                     </Box>
@@ -170,19 +157,11 @@ export const MenusList = () => {
                             </Grid>
                         )}
 
-                        <Component.DeleteDialog
-                            open={deleteDialog ? true : false}
-                            onCancel={() => setDeleteDialog(null)}
-                            onDelete={() => handleDelete(deleteDialog)}
-                        >
+                        <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                             <Box textAlign="center" py={3}>
-                                <Typography component="p">
-                                    Êtes-vous sûr de vouloir supprimer ce menu ?
-                                </Typography>
+                                <Typography component="p">Êtes-vous sûr de vouloir supprimer ce menu ?</Typography>
 
-                                <Typography component="p">
-                                    Cette action est irréversible.
-                                </Typography>
+                                <Typography component="p">Cette action est irréversible.</Typography>
                             </Box>
                         </Component.DeleteDialog>
                     </Component.CmtPageWrapper>

@@ -2,18 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import {
-    Button,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Grid,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Select,
-    Switch,
-} from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -25,17 +14,11 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
         redirectFrom: Yup.string()
             .required("Veuillez renseigner l'url à rediriger.")
             .max(1000, "l'url renseigné est trop longue.")
-            .matches(
-                /^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
-                'Url invalide'
-            ),
+            .matches(/^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, 'Url invalide'),
         redirectTo: Yup.string()
             .required("Veuillez renseigner l'url de destination.")
             .max(1000, "l'url renseigné est trop longue.")
-            .matches(
-                /^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
-                'Url invalide'
-            ),
+            .matches(/^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, 'Url invalide'),
     });
 
     return (
@@ -52,21 +35,8 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                isSubmitting,
-            }) => (
-                <Component.CmtPageWrapper
-                    component="form"
-                    onSubmit={handleSubmit}
-                    title={`${initialValues ? 'Modification' : 'Création'} d'une redirection`}
-                >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une redirection`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6} lg={4}>
@@ -90,18 +60,12 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                                         required
                                     >
                                         {Constant.REDIRECTION_TYPES.map((item, index) => (
-                                            <MenuItem
-                                                value={item.value}
-                                                key={index}
-                                                id={`redirectionTypeValue-${item.value}`}
-                                            >
+                                            <MenuItem value={item.value} key={index} id={`redirectionTypeValue-${item.value}`}>
                                                 <ListItemText>{item.label}</ListItemText>
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    <FormHelperText error>
-                                        {touched.redirectType && errors.redirectType}
-                                    </FormHelperText>
+                                    <FormHelperText error>{touched.redirectType && errors.redirectType}</FormHelperText>
                                 </FormControl>
                             </Grid>
 
@@ -130,27 +94,10 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>
-                    <Box display="flex" justifyContent={'flex-end'}>
-                        <FormControlLabel
-                            sx={{ marginRight: 2, marginTop: 1 }}
-                            control={
-                                <Switch
-                                    checked={Boolean(values.active)}
-                                    id="active"
-                                    onChange={(e) => {
-                                        setFieldValue('active', e.target.checked);
-                                    }}
-                                />
-                            }
-                            label={'Activé ?'}
-                            labelPlacement="start"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                    <Box display="flex" justifyContent={'flex-end'} sx={{ mt: 3, mb: 2 }}>
+                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Redirection active ?" />
+
+                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
                             {initialValues ? 'Modifier' : 'Créer'}
                         </Button>
                     </Box>

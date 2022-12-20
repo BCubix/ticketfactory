@@ -31,10 +31,21 @@ button:focus {
 }
 
 .MuiFormLabel-asterisk {
-    color: #B71C1C;
+    color: #b71c1c;
 }
 
 .required-input:after {
-    content: " *";
-    color: #B71C1C;
+    content: ' *';
+    color: #b71c1c;
+}
+
+.numberTypeField-noArrow {
+    & input::-webkit-outer-spin-button,
+    & input::-webkit-inner-spin-button {
+        display: 'none';
+    }
+
+    & input[type='number'] {
+        mozappearance: 'textfield';
+    }
 }

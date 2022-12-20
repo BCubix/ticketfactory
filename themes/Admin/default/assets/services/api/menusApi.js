@@ -26,6 +26,7 @@ const menusApi = {
             let formData = new FormData();
 
             formData.append('name', data.name);
+            formData.append('menuType', 'none');
 
             const result = await axios.post('/menus', formData);
 
@@ -40,8 +41,8 @@ const menusApi = {
             let formData = new FormData();
 
             formData.append('name', data.name);
-            formData.append('menuType', data.menuType || null);
-            formData.append('value', data.value || null);
+            formData.append('menuType', data.menuType || 'none');
+            formData.append('value', data.value || '');
 
             data?.children?.forEach((el, index) => {
                 serializeMenuData(el, `children[${index}]`, formData);

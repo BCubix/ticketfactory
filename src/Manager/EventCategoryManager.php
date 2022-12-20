@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Content\EventCategory;
+use App\Entity\Event\EventCategory;
 
 use Doctrine\ORM\EntityManagerInterface;
 

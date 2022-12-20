@@ -1,10 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    SEASONS_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, SEASONS_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Seasons List Spec', () => {
     beforeEach(() => {
@@ -16,6 +11,7 @@ describe('Seasons List Spec', () => {
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + SEASONS_API_PATH + '*').as('getSeasons');
         cy.visit(Constant.SEASONS_BASE_PATH);
+        cy.wait(500);
     });
 
     it('get List', () => {

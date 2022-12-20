@@ -91,10 +91,18 @@ import { ModulesFilters } from '@Apps/Modules/ModulesList/ModulesFilters/Modules
 import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
 import { CreatePage } from '@Apps/Pages/CreatePage/CreatePage';
 import { EditPage } from '@Apps/Pages/EditPage/EditPage';
-import { PagesBlocksForm } from '@Apps/Pages/PagesForm/PagesBlocksForm';
+import { PagesBlocksPart } from '@Apps/Pages/PagesForm/PagesBlocksPart';
+import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 import { PagesFilters } from '@Apps/Pages/PagesList/PagesFIlters/PagesFilters';
 import { PagesList } from '@Apps/Pages/PagesList/PagesList';
+import { PagesMenu } from '@Apps/Pages/PagesMenu/PagesMenu';
+import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
+import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
+import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
+import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
+import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
+import { PageBlocksList } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
 import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
 import { ParametersForm } from '@Apps/Parameters/ParametersForm/ParametersForm';
 import { ParametersMenu } from '@Apps/Parameters/ParametersMenu/ParametersMenu';
@@ -174,6 +182,9 @@ import { ListTable } from '@Components/ListTable/ListTable';
 import { MenuTitle } from '@Components/SideMenu/sc.SideMenu';
 import { SideMenu } from '@Components/SideMenu/SideMenu';
 import { checkComponent, checkString } from '@Services/utils/check';
+import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
+import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
+import { CreatePageBlockFormat } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
 
 const ComponentObj = {
     App: App,
@@ -290,10 +301,20 @@ const ComponentObj = {
 
     CreatePage: CreatePage,
     EditPage: EditPage,
-    PagesBlocksForm: PagesBlocksForm,
+    PagesBlocksPart: PagesBlocksPart,
+    ImportPageBlock: ImportPageBlock,
     PagesForm: PagesForm,
     PagesFilters: PagesFilters,
     PagesList: PagesList,
+    PagesMenu: PagesMenu,
+
+    CreatePageBlock: CreatePageBlock,
+    CreatePageBlockFormat: CreatePageBlockFormat,
+    EditPageBlock: EditPageBlock,
+    PageBlocksForm: PageBlocksForm,
+    PageBlockColumnPart: PageBlockColumnPart,
+    PageBlocksFilters: PageBlocksFilters,
+    PageBlocksList: PageBlocksList,
 
     ParametersBlockForm: ParametersBlockForm,
     ParametersForm: ParametersForm,
@@ -360,6 +381,10 @@ const ComponentObj = {
     CmtSimpleSelectFilters: CmtSimpleSelectFilters,
     ClearBooleanButton: ClearBooleanButton,
 
+    CmtActiveField: CmtActiveField,
+    ActiveFieldBlock: ActiveFieldBlock,
+    SwitchActiveLabel: SwitchActiveLabel,
+    SwitchTextLabel: SwitchTextLabel,
     CmtFormBlock: CmtFormBlock,
     CmtLayoutProvider: CmtLayoutProvider,
     CmtMediaElement: CmtMediaElement,

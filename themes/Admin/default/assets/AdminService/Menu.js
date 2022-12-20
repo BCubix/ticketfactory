@@ -1,33 +1,34 @@
-import React from "react";
+import React from 'react';
 
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import BusinessIcon from "@mui/icons-material/Business";
-import CallMissedOutgoingIcon from "@mui/icons-material/CallMissedOutgoing";
-import CategoryIcon from "@mui/icons-material/Category";
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import DescriptionIcon from "@mui/icons-material/Description";
-import EmailIcon from "@mui/icons-material/Email";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import BusinessIcon from '@mui/icons-material/Business';
+import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
+import CategoryIcon from '@mui/icons-material/Category';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import DescriptionIcon from '@mui/icons-material/Description';
+import EmailIcon from '@mui/icons-material/Email';
 import ExtensionIcon from '@mui/icons-material/Extension';
-import MenuIcon from "@mui/icons-material/Menu";
-import PermMediaIcon from "@mui/icons-material/PermMedia";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
-import SourceIcon from "@mui/icons-material/Source";
-import TocIcon from "@mui/icons-material/Toc";
+import MenuIcon from '@mui/icons-material/Menu';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
+import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SourceIcon from '@mui/icons-material/Source';
+import TocIcon from '@mui/icons-material/Toc';
 import TvIcon from '@mui/icons-material/Tv';
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import WidgetsIcon from "@mui/icons-material/Widgets";
-import { Constant } from "@/AdminService/Constant";
-import { checkArray, checkObject, checkPosition, checkString } from "@Services/utils/check";
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+
+import { Constant } from '@/AdminService/Constant';
+import { checkArray, checkObject, checkPosition, checkString } from '@Services/utils/check';
 
 const MenuObj = [
     () => ({
         title: 'PROGRAMMATION',
         menu: [
-            { name: 'Evènement', link: Constant.EVENTS_BASE_PATH, icon: <ConfirmationNumberIcon/> },
-            { name: 'Catégories', link: Constant.CATEGORIES_BASE_PATH, icon: <CategoryIcon/> },
-            { name: 'Salles', link: Constant.ROOMS_BASE_PATH, icon: <BusinessIcon/> },
-            { name: 'Saisons', link: Constant.SEASONS_BASE_PATH, icon: <AccessTimeIcon/> },
+            { name: 'Evènements', link: Constant.EVENTS_BASE_PATH, icon: <ConfirmationNumberIcon /> },
+            { name: 'Catégories', link: Constant.CATEGORIES_BASE_PATH, icon: <CategoryIcon /> },
+            { name: 'Salles', link: Constant.ROOMS_BASE_PATH, icon: <BusinessIcon /> },
+            { name: 'Saisons', link: Constant.SEASONS_BASE_PATH, icon: <AccessTimeIcon /> },
         ],
     }),
     () => ({
@@ -47,10 +48,10 @@ const MenuObj = [
     () => ({
         title: 'ADMINISTRATION',
         menu: [
-            { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon/> },
-            { name: 'Contacts', link: Constant.CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon/> },
-            { name: 'Utilisateurs', link: Constant.USER_BASE_PATH, icon: <PersonIcon/> },
-            { name: 'Logs', link: Constant.LOGS_BASE_PATH, icon: <TocIcon/> },
+            { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon /> },
+            { name: 'Contacts', link: Constant.CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon /> },
+            { name: 'Utilisateurs', link: Constant.USER_BASE_PATH, icon: <PersonIcon /> },
+            { name: 'Logs', link: Constant.LOGS_BASE_PATH, icon: <TocIcon /> },
         ],
     }),
 ];
@@ -65,8 +66,8 @@ export const Menu = new Proxy(MenuObj, {
         }
 
         const result = Reflect.get(target, key, receiver);
-        return typeof result === "function" && result.name === "" ? result() : result;
-    }
+        return typeof result === 'function' && result.name === '' ? result() : result;
+    },
 });
 
 /**
@@ -153,7 +154,7 @@ export function setSubMenu(position, title, name, link, icon) {
     checkString(link);
     checkObject(icon);
 
-    const index = MenuObj.findIndex(menu => menu().title === title);
+    const index = MenuObj.findIndex((menu) => menu().title === title);
     if (index === -1) {
         throw new Error(`The title '${title}' must be in Menu.`);
     }
@@ -189,7 +190,7 @@ export function insertSubMenu(position, title, name, link, icon) {
     checkString(link);
     checkObject(icon);
 
-    const index = MenuObj.findIndex(menu => menu().title === title);
+    const index = MenuObj.findIndex((menu) => menu().title === title);
     if (index === -1) {
         throw new Error(`The title '${title}' must be in Menu.`);
     }

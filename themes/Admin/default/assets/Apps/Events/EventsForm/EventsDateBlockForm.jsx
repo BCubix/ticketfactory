@@ -11,15 +11,7 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsDateBlockForm = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    handleBlur,
-    handleChange,
-    touched,
-    errors,
-}) => {
+export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
     const [generateDate, setGenerateDate] = useState(null);
 
@@ -38,12 +30,7 @@ export const EventsDateBlockForm = ({
     };
 
     const getBlockError = (index) => {
-        const err = getNestedFormikError(
-            touched?.eventDateBlocks,
-            errors?.eventDateBlocks,
-            index,
-            'eventDates'
-        );
+        const err = getNestedFormikError(touched?.eventDateBlocks, errors?.eventDateBlocks, index, 'eventDates');
 
         if (typeof err === 'string') {
             return err;
@@ -77,9 +64,7 @@ export const EventsDateBlockForm = ({
                                 }}
                             >
                                 <WorkspacesIcon sx={{ marginRight: 1 }} />
-                                {values?.multipleDateBlock
-                                    ? 'Ne plus utiliser les groupes'
-                                    : 'Utiliser les groupes'}
+                                {values?.multipleDateBlock ? 'Ne plus utiliser les groupes' : 'Utiliser les groupes'}
                             </Component.ActionButton>
 
                             {values?.multipleDateBlock && (
@@ -98,11 +83,7 @@ export const EventsDateBlockForm = ({
                             )}
                         </Box>
                         {values?.eventDateBlocks?.map((item, index) => (
-                            <Component.CmtFormBlock
-                                marginBlock={7}
-                                title={values?.multipleDateBlock ? '' : item?.name}
-                                key={index}
-                            >
+                            <Component.CmtFormBlock marginBlock={7} title={values?.multipleDateBlock ? '' : item?.name} key={index}>
                                 {values?.multipleDateBlock && (
                                     <Box mb={4}>
                                         <Component.CmtTextField
@@ -112,12 +93,7 @@ export const EventsDateBlockForm = ({
                                             required
                                             label="Nom"
                                             name={`eventDateBlocks.${index}.name`}
-                                            error={getNestedFormikError(
-                                                touched?.eventDateBlocks,
-                                                errors?.eventDateBlocks,
-                                                index,
-                                                'name'
-                                            )}
+                                            error={getNestedFormikError(touched?.eventDateBlocks, errors?.eventDateBlocks, index, 'name')}
                                         />
                                     </Box>
                                 )}
@@ -135,10 +111,7 @@ export const EventsDateBlockForm = ({
                                 />
 
                                 {getBlockError(index) && (
-                                    <FormHelperText
-                                        error
-                                        id={`eventDateBlocks-${index}-helper-text`}
-                                    >
+                                    <FormHelperText error id={`eventDateBlocks-${index}-helper-text`}>
                                         {getBlockError(index)}
                                     </FormHelperText>
                                 )}
@@ -185,12 +158,8 @@ export const EventsDateBlockForm = ({
                 }}
             >
                 <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Êtes-vous sûr de ne plus vouloir utiliser les groupes ?
-                    </Typography>
-                    <Typography component="p">
-                        Attention, seul le premier groupe ne sera pas supprimé.
-                    </Typography>
+                    <Typography component="p">Êtes-vous sûr de ne plus vouloir utiliser les groupes ?</Typography>
+                    <Typography component="p">Attention, seul le premier groupe ne sera pas supprimé.</Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
