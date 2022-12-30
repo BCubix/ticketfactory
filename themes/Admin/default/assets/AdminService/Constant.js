@@ -34,6 +34,7 @@ const ConstantObj = {
     MENUS_BASE_PATH: '/admin/menus',
     PAGES_BASE_PATH: '/admin/pages',
     PAGE_BLOCKS_BASE_PATH: '/admin/page-blocks',
+    PAGE_HISTORY_BASE_PATH: '/admin/historique-de-page',
     PARAMETERS_BASE_PATH: '/admin/parametres',
     MODULES_BASE_PATH: '/admin/modules',
     THEMES_BASE_PATH: '/admin/themes',

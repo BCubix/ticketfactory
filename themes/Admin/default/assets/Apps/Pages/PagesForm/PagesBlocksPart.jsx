@@ -139,6 +139,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                     </Grid>
 
                                     <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                        {console.log(pageBlock)}
                                         <FormControlLabel
                                             size="small"
                                             value={pageBlock.saveAsModel}
@@ -147,7 +148,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                             }}
                                             label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieur'}
                                             labelPlacement="end"
-                                            control={<Checkbox />}
+                                            control={<Checkbox checked={Boolean(pageBlock.saveAsModel)} />}
                                         />
                                     </Grid>
                                 </Grid>

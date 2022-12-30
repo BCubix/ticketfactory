@@ -6,8 +6,12 @@ import { Box } from '@mui/system';
 import { Button, FormHelperText } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
+import { useNavigate } from 'react-router-dom';
+import { Constant } from '@/AdminService/Constant';
 
 export const PagesForm = ({ handleSubmit, initialValues = null }) => {
+    const navigate = useNavigate();
+
     const pageSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
     });
@@ -38,7 +42,22 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une page`}>
+                <Component.CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'une page`}
+                    actionButton={
+                        initialValues && (
+                            <Component.ActionButton
+                                variant="contained"
+                                sx={{ marginLeft: 'auto' }}
+                                onClick={() => navigate(Constant.PAGE_HISTORY_BASE_PATH + `/${initialValues?.id}`)}
+                            >
+                                Historique de la page
+                            </Component.ActionButton>
+                        )
+                    }
+                >
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.title}

@@ -103,7 +103,7 @@ class ModuleService extends ServiceAbstract
             }
 
             // Configuration file
-            if ($nodeValue !== $rootName . 'Config.php') {
+            if ($nodeValue !== $rootName . 'Config.php' && $nodeValue !== strtolower($rootName) . '.html.twig') {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
             }
 

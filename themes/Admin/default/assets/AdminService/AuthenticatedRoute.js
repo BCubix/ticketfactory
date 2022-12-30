@@ -82,6 +82,8 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreatePageBlock }),
     () => ({ path: `${Constant.PAGE_BLOCKS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditPageBlock }),
 
+    () => ({ path: `${Constant.PAGE_HISTORY_BASE_PATH}/:id`, component: Component.PageHistory }),
+
     () => ({ path: Constant.PARAMETERS_BASE_PATH, component: Component.ParametersMenu }),
 
     () => ({ path: Constant.MODULES_BASE_PATH, component: Component.ModulesList }),

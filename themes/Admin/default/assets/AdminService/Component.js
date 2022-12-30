@@ -54,12 +54,12 @@ import { MainDashboard } from '@Apps/Home/MainDashboard';
 import { GraphTabTitle } from '@Apps/Home/sc.Home';
 import { SecondCardDashboard } from '@Apps/Home/SecondCardDashboard';
 import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
-import { CreateHook } from "@Apps/Hooks/CreateHook/CreateHook";
-import { HooksForm } from "@Apps/Hooks/HooksForm/HooksForm";
-import { HookTable } from "@Apps/Hooks/HooksList/HookTable/HookTable";
-import { HookTableBody } from "@Apps/Hooks/HooksList/HookTable/HookTableBody";
-import { HookTableBodyRow } from "@Apps/Hooks/HooksList/HookTable/HookTableBodyRow";
-import { HooksList } from "@Apps/Hooks/HooksList/HooksList";
+import { CreateHook } from '@Apps/Hooks/CreateHook/CreateHook';
+import { HooksForm } from '@Apps/Hooks/HooksForm/HooksForm';
+import { HookTable } from '@Apps/Hooks/HooksList/HookTable/HookTable';
+import { HookTableBody } from '@Apps/Hooks/HooksList/HookTable/HookTableBody';
+import { HookTableBodyRow } from '@Apps/Hooks/HooksList/HookTable/HookTableBodyRow';
+import { HooksList } from '@Apps/Hooks/HooksList/HooksList';
 import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatForm';
@@ -100,6 +100,7 @@ import { PagesMenu } from '@Apps/Pages/PagesMenu/PagesMenu';
 import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
 import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
 import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
+import { PageHistory } from '@Apps/Pages/PageHistory/PageHistory';
 import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
 import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
 import { PageBlocksList } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
@@ -128,8 +129,8 @@ import { EditTag } from '@Apps/Tags/EditTag/EditTag';
 import { TagsForm } from '@Apps/Tags/TagsForm/TagsForm';
 import { TagsFilters } from '@Apps/Tags/TagsList/TagsFilters/TagsFilters';
 import { TagsList } from '@Apps/Tags/TagsList/TagsList';
-import { UploadTheme } from "@Apps/Themes/UploadTheme/UploadTheme";
-import { ThemesList } from "@Apps/Themes/ThemesList/ThemesList";
+import { UploadTheme } from '@Apps/Themes/UploadTheme/UploadTheme';
+import { ThemesList } from '@Apps/Themes/ThemesList/ThemesList';
 import { CreateUser } from '@Apps/Users/CreateUser/CreateUser';
 import { EditUser } from '@Apps/Users/EditUser/EditUser';
 import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
@@ -307,6 +308,8 @@ const ComponentObj = {
     PagesFilters: PagesFilters,
     PagesList: PagesList,
     PagesMenu: PagesMenu,
+
+    PageHistory: PageHistory,
 
     CreatePageBlock: CreatePageBlock,
     CreatePageBlockFormat: CreatePageBlockFormat,

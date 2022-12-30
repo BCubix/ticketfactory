@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./",
+      "paths": {
+        "@Apps/*": ["themes/Admin/default/assets/Apps/*"],
+        "@Components/*": ["themes/Admin/default/assets/Components/*"],
+        "@Redux/*": ["themes/Admin/default/assets/redux/*"],
+        "@Services/*": ["themes/Admin/default/assets/services/*"],
+        "@Style/*": ["themes/Admin/default/assets/Style/*"],
+        "@/*": ["themes/Admin/default/assets/*"]
+      }
+    },
+    "exclude": ["dist", "vendor", "var"]
+  }

@@ -13,6 +13,7 @@ import menusApi from '@Services/api/menusApi';
 import modulesApi from '@Services/api/modulesApi';
 import pageBlocksApi from '@Services/api/pageBlocksApi';
 import pagesApi from '@Services/api/pagesApi';
+import pageHistoryApi from '@Services/api/pageHistoryApi';
 import parametersApi from '@Services/api/parametersApi';
 import profileApi from '@Services/api/profileApi';
 import redirectionsApi from '@Services/api/redirectionsApi';
@@ -40,6 +41,7 @@ const ApiObj = {
     modulesApi: modulesApi,
     pageBlocksApi: pageBlocksApi,
     pagesApi: pagesApi,
+    pageHistoryApi: pageHistoryApi,
     parametersApi: parametersApi,
     profileApi: profileApi,
     redirectionsApi: redirectionsApi,
