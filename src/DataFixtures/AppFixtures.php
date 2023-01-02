@@ -163,6 +163,17 @@ class AppFixtures extends Fixture
         $om->persist($parameter);
 
         $parameter = new Parameter();
+        $parameter->setName("Thème principal (admin)");
+        $parameter->setType("string");
+        $parameter->setParamKey("admin_main_theme");
+        $parameter->setParamValue("default");
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $parameter = new Parameter();
         $parameter->setName("Thème principal");
         $parameter->setType("string");
         $parameter->setParamKey("main_theme");

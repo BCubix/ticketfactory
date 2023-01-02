@@ -20,7 +20,6 @@ class Kernel extends BaseKernel
     {
         $configDir = $this->getConfigDir();
 
-        $container->import($configDir.'/{packages}/twig.php');
         $container->import($configDir.'/{packages}/*.yaml');
         $container->import($configDir.'/{packages}/'.$this->environment.'/*.yaml');
 
