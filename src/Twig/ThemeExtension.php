@@ -25,11 +25,11 @@ class ThemeExtension extends AbstractExtension
 
     public function adminTemplates(string $twigFilename): string
     {
-        return "Admin/" . $this->tm->getAdminMainTheme() . "/templates/" . $twigFilename;
+        return $this->tm->getAdminTemplatesPath() . $twigFilename;
     }
 
     public function websiteTemplates(string $twigFilename): string
     {
-        return "Website/" . $this->tm->getWebsiteMainTheme() . "/templates/" . $twigFilename;
+        return $this->tm->getWebsiteTemplatesPath() . $twigFilename;
     }
 }

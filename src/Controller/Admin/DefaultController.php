@@ -19,6 +19,6 @@ class DefaultController extends AbstractController
     #[Route("{reactRouting}", name: 'home_admin', defaults: ["reactRouting" => null], requirements: ["reactRouting" => '^(?!api\/).+'])]
     public function index(?string $reactRouting)
     {
-        return $this->render('Admin/' . $this->tm->getAdminMainTheme() . '/templates/Default/index.html.twig');
+        return $this->render($this->tm->getAdminTemplatesPath() . 'Default/index.html.twig');
     }
 }

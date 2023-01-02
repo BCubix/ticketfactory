@@ -43,14 +43,14 @@ class ThemeManager extends AbstractManager
         $this->ms = $ms;
     }
 
-    public function getAdminMainTheme()
+    public function getAdminTemplatesPath(): string
     {
-        return $this->pm->get('admin_main_theme');
+        return "Admin/" . $this->pm->get('admin_main_theme') . "/templates/";
     }
 
-    public function getWebsiteMainTheme()
+    public function getWebsiteTemplatesPath(): string
     {
-        return $this->pm->get('main_theme');
+        return "Website/" . $this->pm->get('main_theme') . "/templates/";
     }
 
     /**
