@@ -119,7 +119,6 @@ class ModuleController extends AdminController
                     $module = $this->mm->createNewModule($moduleName);
                 }
             }
-            $this->em->getConnection()->commit();
         } catch (\Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;
