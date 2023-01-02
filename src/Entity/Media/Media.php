@@ -17,9 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Media extends Datable
 {
     /*** > Trait ***/
-    /*** > Module: News ***/
-    use \TicketFactory\Module\News\Entity\News\MediaTrait;
-    /*** < Module: News ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
