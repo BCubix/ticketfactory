@@ -4,7 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Parameter\Parameter;
+use App\Entity\Theme\Theme;
 use App\Entity\User\User;
+use App\Manager\ThemeManager;
 use App\Manager\UserManager;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,10 +15,12 @@ use Doctrine\Persistence\ObjectManager;
 class AppFixtures extends Fixture
 {
     private $um;
+    private $tm;
 
-    public function __construct(UserManager $um)
+    public function __construct(UserManager $um, ThemeManager $tm)
     {
         $this->um = $um;
+        $this->tm = $tm;
     }
 
     public function load(ObjectManager $om): void
@@ -159,6 +163,17 @@ class AppFixtures extends Fixture
         $om->persist($parameter);
 
         $parameter = new Parameter();
+        $parameter->setName("Thème principal (admin)");
+        $parameter->setType("string");
+        $parameter->setParamKey("admin_main_theme");
+        $parameter->setParamValue("default");
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName(null);
+        $parameter->setBlockName(null);
+        $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $parameter = new Parameter();
         $parameter->setName("Thème principal");
         $parameter->setType("string");
         $parameter->setParamKey("main_theme");
@@ -167,6 +182,10 @@ class AppFixtures extends Fixture
         $parameter->setTabName(null);
         $parameter->setBlockName(null);
         $parameter->setBreakpointsValue(null);
+        $om->persist($parameter);
+
+        $theme = new Theme();
+        $theme->setName('default');
         $om->persist($parameter);
 
         // Default User
@@ -180,5 +199,7 @@ class AppFixtures extends Fixture
         $this->um->upgradePassword($user);
 
         $om->flush();
+
+        $this->tm->active($theme, true);
     }
 }

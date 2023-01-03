@@ -9,7 +9,7 @@ class HomeController extends WebsiteController
     #[Route("/", name: 'home_website')]
     public function index()
     {
-        return $this->render('@website/index.html.twig');
+        return $this->websiteRender('index.html.twig');
     }
 }
 
