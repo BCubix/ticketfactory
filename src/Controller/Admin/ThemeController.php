@@ -84,7 +84,9 @@ class ThemeController extends AdminController
 
             $this->tm->active($theme);
         } catch (\Exception $e) {
-            $this->em->getConnection()->rollBack();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->rollBack();
+            }
             throw $e;
         }
 
@@ -109,7 +111,9 @@ class ThemeController extends AdminController
 
             $this->ts->uninstall($themeName);
         } catch (\Exception $e) {
-            $this->em->getConnection()->rollBack();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->rollBack();
+            }
             throw $e;
         }
 

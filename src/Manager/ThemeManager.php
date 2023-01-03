@@ -66,6 +66,9 @@ class ThemeManager extends AbstractManager
 
         $this->em->persist($theme);
         $this->em->flush();
+        if ($this->em->getConnection()->isTransactionActive()) {
+            $this->em->getConnection()->commit();
+        }
 
         return $theme;
     }
@@ -107,6 +110,9 @@ class ThemeManager extends AbstractManager
 
         $this->pm->set('main_theme', $themeName);
         $this->em->flush();
+        if ($this->em->getConnection()->isTransactionActive()) {
+            $this->em->getConnection()->commit();
+        }
 
         $this->ts->entry($themeName, false);
         try {
@@ -137,6 +143,9 @@ class ThemeManager extends AbstractManager
 
         $this->em->remove($theme);
         $this->em->flush();
+        if ($this->em->getConnection()->isTransactionActive()) {
+            $this->em->getConnection()->commit();
+        }
     }
 
     /**
@@ -238,9 +247,11 @@ class ThemeManager extends AbstractManager
             $imageFormat->setThemeUse($active);
 
             $this->em->persist($imageFormat);
+            $this->em->flush();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->commit();
+            }
         }
-
-        $this->em->flush();
 
         if ($active) {
             $this->ifm->generateThumbnails();

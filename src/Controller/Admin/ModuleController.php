@@ -120,7 +120,9 @@ class ModuleController extends AdminController
                 }
             }
         } catch (\Exception $e) {
-            $this->em->getConnection()->rollBack();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->rollBack();
+            }
             throw $e;
         }
 

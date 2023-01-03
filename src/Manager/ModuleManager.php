@@ -49,7 +49,9 @@ class ModuleManager extends AbstractManager
 
         $this->em->persist($module);
         $this->em->flush();
-        $this->em->getConnection()->commit();
+        if ($this->em->getConnection()->isTransactionActive()) {
+            $this->em->getConnection()->commit();
+        }
 
         if ($actionAndClear) {
             $this->ms->callConfig($name, 'install', [], $this->hs);
@@ -84,7 +86,9 @@ class ModuleManager extends AbstractManager
         }
 
         $this->em->flush();
-        $this->em->getConnection()->commit();
+        if ($this->em->getConnection()->isTransactionActive()) {
+            $this->em->getConnection()->commit();
+        }
 
         $this->ms->callConfig($module->getName(), self::ACTIONS[$action], [], $this->hs);
 
