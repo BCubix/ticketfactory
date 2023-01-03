@@ -18,3 +18,6 @@ export const CONTACT_REQUESTS_API_PATH = '/contact-requests';
 export const USERS_API_PATH = '/users';
 export const CATEGORIES_API_PATH = '/event-categories';
 export const MENUS_API_PATH = '/menus';
+export const MEDIAS_UPLOAD_API_PATH = '/_uploader/media/upload';
+
+export const IMAGE_UPLOAD_FILE_NAME = 'TicketFactoryLogo.jpg';

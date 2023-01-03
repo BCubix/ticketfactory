@@ -99,11 +99,11 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
 
             <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>
                 {newBlockMode === 'create' ? (
-                    <Component.CreateButton variant="contained" onClick={handleCreate}>
+                    <Component.CreateButton id="createBlockSubmit" variant="contained" onClick={handleCreate}>
                         Créer
                     </Component.CreateButton>
                 ) : (
-                    <Component.CreateButton variant="contained" onClick={handleImport} disabled={newBlockMode === 'import' && !pageBlocks}>
+                    <Component.CreateButton id="importBlockSubmit" variant="contained" onClick={handleImport} disabled={newBlockMode === 'import' && !pageBlocks}>
                         Importer
                     </Component.CreateButton>
                 )}
@@ -139,7 +139,6 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                     </Grid>
 
                                     <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                        {console.log(pageBlock)}
                                         <FormControlLabel
                                             size="small"
                                             value={pageBlock.saveAsModel}

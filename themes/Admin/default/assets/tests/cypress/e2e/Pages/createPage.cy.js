@@ -1,10 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    PAGES_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, PAGES_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Create Page Spec', () => {
     beforeEach(() => {
@@ -17,8 +12,14 @@ describe('Create Page Spec', () => {
 
     it('Create Page', () => {
         cy.get('#title').type('New Page');
+
         cy.get('#addContentButton').click();
-        cy.get('#pageBlocks-0-contentControl .ck-content').type('New content');
+        cy.get('#createBlock-1').click();
+        cy.get('#createBlockSubmit').click();
+
+        cy.get('#pageBlocks-0-name').clear().type('blockName');
+        cy.get('#pageBlocks-0-columns-0-contentControl .ck-content').type('New content');
+
         cy.get('#active').click();
 
         cy.get('#submitForm').click();
@@ -30,23 +31,18 @@ describe('Create Page Spec', () => {
 
     it('Create Page (no title)', () => {
         cy.get('#title').focus().blur();
-        cy.get('#addContentButton').click();
-        cy.get('#pageBlocks-0-contentControl .ck-content').type('New content');
-        cy.get('#active').click();
-
-        cy.get('#submitForm').click();
-
         cy.get('#title-helper-text').should('exist');
     });
 
-    it('Create Page (no content into first block)', () => {
+    it('Create Page (no name into first block)', () => {
         cy.get('#title').type('New Page');
+
         cy.get('#addContentButton').click();
-        cy.get('#pageBlocks-0-contentControl .ck-content').focus().blur();
-        cy.get('#active').click();
+        cy.get('#createBlock-1').click();
+        cy.get('#createBlockSubmit').click();
 
-        cy.get('#submitForm').click();
+        cy.get('#pageBlocks-0-name').focus().blur();
 
-        cy.get('#pageBlocks-0-content-helper-text').should('exist');
+        cy.get('#pageBlocks-0-name-helper-text').should('exist');
     });
 });

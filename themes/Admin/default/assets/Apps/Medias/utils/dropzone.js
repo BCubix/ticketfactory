@@ -1,7 +1,7 @@
 import Dropzone from 'dropzone';
 import $ from 'jquery';
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 var countChunk = 0;
 
@@ -25,6 +25,7 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
         uploadprogress: function (file, progress, byteSent) {
             $(element).find('.dz-upload').width(`${progress}%`);
         },
+        hiddenInputContainer: `#${element.id}`,
     });
 
     dZone.on('addedfile', async (file) => {

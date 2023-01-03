@@ -120,7 +120,7 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                                 <DeleteIcon />
                             </Component.DeleteFabButton>
                         </Box>
-                        <Component.LightEditorFormControl className="pageBlockEditor">
+                        <Component.LightEditorFormControl className="pageBlockEditor" id={`${baseName.replaceAll('.', '-')}columns-${index}-contentControl`}>
                             <Component.LightEditor
                                 labelId={`${baseName}columns-${index}-content-label`}
                                 value={values?.columns?.at(index)?.content}

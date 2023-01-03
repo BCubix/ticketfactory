@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, Switch } from '@mui/material';
+import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -79,11 +79,11 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                     </Box>
 
                     <Box display="flex" justifyContent={'flex-end'} sx={{ mb: 5, mt: 2 }}>
-                        <Button color="error" onClick={deleteElement} sx={{ mt: 3, mb: 2, mr: 'auto' }}>
+                        <Button id="deleteButton" color="error" onClick={deleteElement} sx={{ mt: 3, mb: 2, mr: 'auto' }}>
                             Supprimer l'element
                         </Button>
 
-                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
+                        <Button id="submitForm" type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
                             Modifier
                         </Button>
                     </Box>

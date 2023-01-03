@@ -78,7 +78,9 @@ export const CreatePageBlock = () => {
                     <Component.CreatePageBlockFormat name={name} setName={setName} formatIndex={formatIndex} setFormatIndex={setFormatIndex} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCreate}>Créer</Button>
+                    <Button id="createBlockSubmit" onClick={handleCreate}>
+                        Créer
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>

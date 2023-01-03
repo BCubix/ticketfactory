@@ -14,6 +14,11 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
 
     const pageSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
+        pageBlocks: Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
+            })
+        ),
     });
 
     return (

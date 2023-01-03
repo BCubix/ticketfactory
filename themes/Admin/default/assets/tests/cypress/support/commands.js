@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-file-upload';
+
 Cypress.Commands.add('login', (email, password) => {
     cy.intercept('POST', '/admin/api/login_check').as('loginCheck');
     cy.visit('/admin/connexion');

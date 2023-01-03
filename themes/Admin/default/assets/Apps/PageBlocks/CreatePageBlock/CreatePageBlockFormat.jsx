@@ -43,7 +43,7 @@ export const CreatePageBlockFormat = ({ name, setName, formatIndex, setFormatInd
                 <RadioGroup row name="Format" value={formatIndex} onChange={(event) => setFormatIndex(Number(event.target.value))}>
                     <Grid container spacing={4} sx={{ width: '100%' }}>
                         {Constant.PAGE_BLOCKS_FORMATS.map((values, index) => (
-                            <Grid item xs={6} md={4} xl={2}>
+                            <Grid key={index} item xs={6} md={4} xl={2}>
                                 <Grid container spacing={0} sx={{ height: '4rem', display: 'flex', justifyContent: 'center' }}>
                                     {values.map((value) => (
                                         <Grid item xl={value} height={'100%'}>
@@ -52,6 +52,7 @@ export const CreatePageBlockFormat = ({ name, setName, formatIndex, setFormatInd
                                     ))}
                                     <FormControlLabel
                                         value={index}
+                                        id={`createBlock-${index}`}
                                         control={<Radio />}
                                         label={
                                             <Typography component="span" variant="body2">
