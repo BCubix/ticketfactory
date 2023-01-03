@@ -95,19 +95,19 @@ class ThemeController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, string $themeName): View
     {
-        $themePath = $this->ts->getDir() . '/' . $themeName;
-
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
 
         $this->em->getConnection()->beginTransaction();
         try {
+            $themePath = $this->ts->getDir() . '/' . $themeName;
+
             if (null !== $theme) {
                 $this->tm->delete($theme);
             } else if (!is_dir($themePath)) {
                 throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $themePath n'existe pas.");
             }
 
-            $this->fs->remove($themePath);
+            $this->ts->uninstall($themeName);
         } catch (\Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;

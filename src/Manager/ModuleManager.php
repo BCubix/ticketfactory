@@ -89,7 +89,7 @@ class ModuleManager extends AbstractManager
         $this->ms->callConfig($module->getName(), self::ACTIONS[$action], [], $this->hs);
 
         if ($action === Module::ACTION_UNINSTALL_DELETE) {
-            $this->fs->remove($this->ms->getDir() . '/' . $moduleName);
+            $this->ms->uninstall($moduleName);
         }
 
         if ($clear) {

@@ -112,7 +112,7 @@ class ModuleController extends AdminController
                 }
 
                 if ($action === Module::ACTION_UNINSTALL_DELETE) {
-                    $this->fs->remove($modulePath);
+                    $this->ms->uninstall($moduleName);
                 } else { // Active module
                     // Check and install the module
                     $this->ms->install($moduleName);
