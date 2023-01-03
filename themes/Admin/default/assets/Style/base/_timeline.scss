@@ -11,8 +11,15 @@
     transform: rotate(-90deg);
     text-align: center;
     min-width: 50px;
+    flex-grow: 0;
 }
 
 .timelineIcon {
     transform: rotate(-90deg);
+}
+
+.timelineItem {
+    &::before {
+        display: none;
+    }
 }

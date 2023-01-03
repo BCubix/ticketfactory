@@ -3,16 +3,14 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
-import { getRoomsAction, roomsSelector } from '@Redux/rooms/roomsSlice';
-import { getSeasonsAction, seasonsSelector } from '@Redux/seasons/seasonsSlice';
-import { getTagsAction, tagsSelector } from '@Redux/tags/tagsSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditEvent = () => {
     const dispatch = useDispatch();
@@ -20,37 +18,35 @@ export const EditEvent = () => {
     const { id } = useParams();
     const [event, setEvent] = useState(null);
     const categoriesData = useSelector(categoriesSelector);
-    const roomsData = useSelector(roomsSelector);
-    const seasonsData = useSelector(seasonsSelector);
-    const tagsData = useSelector(tagsSelector);
+    const [roomsData, setRoomsData] = useState(null);
+    const [seasonsData, setSeasonsData] = useState(null);
+    const [tagsData, setTagsData] = useState(null);
 
     useEffect(() => {
         if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
             dispatch(getCategoriesAction());
         }
 
-        if (!roomsData.loading && !roomsData.categories && !roomsData.error) {
-            dispatch(getRoomsAction());
-        }
+        apiMiddleware(dispatch, async () => {
+            const tmpRooms = await Api.roomsApi.getAllRooms();
+            const tmpSeasons = await Api.seasonsApi.getAllSeasons();
+            const tmpTags = await Api.tagsApi.getAllTags();
 
-        if (!seasonsData.loading && !seasonsData.categories && !seasonsData.error) {
-            dispatch(getSeasonsAction());
-        }
-
-        if (!tagsData.loading && !tagsData.categories && !tagsData.error) {
-            dispatch(getTagsAction());
-        }
+            setRoomsData(tmpRooms);
+            setSeasonsData(tmpSeasons);
+            setTagsData(tmpTags);
+        });
     }, []);
 
     useEffect(() => {
-        if (categoriesData.error || roomsData.error || seasonsData.error) {
+        if (categoriesData?.error || roomsData?.error || seasonsData?.error || tagsData?.error) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
             navigate(Constant.EVENTS_BASE_PATH);
 
             return;
         }
-    }, [categoriesData, roomsData, seasonsData]);
+    }, [categoriesData, roomsData, seasonsData, tagsData]);
 
     const getEvent = async (id) => {
         const check = await Api.authApi.checkIsAuth();
@@ -95,11 +91,7 @@ export const EditEvent = () => {
         const result = await Api.eventsApi.editEvent(id, { active, ...data });
 
         if (result.result) {
-            NotificationManager.success(
-                "L'évènement a bien été modifié.",
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success("L'évènement a bien été modifié.", 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getEventsAction());
 
@@ -107,7 +99,7 @@ export const EditEvent = () => {
         }
     };
 
-    if (!event) {
+    if (!event || !categoriesData || !roomsData || !seasonsData || !tagsData) {
         return <></>;
     }
 

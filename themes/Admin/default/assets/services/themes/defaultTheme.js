@@ -37,7 +37,7 @@ const defaultTheme = {
             main: '#980B27',
             dark: '#980B27',
             light: '#980B27',
-            contrastText: '#fff',
+            contrastText: '#FFFFFF',
             publicMain: '#F9F1E4',
             family: defaultFamily,
         },
@@ -45,7 +45,7 @@ const defaultTheme = {
             main: '#02374D',
             dark: '#16458F',
             light: '#1D5ABB',
-            contrastText: '#fff',
+            contrastText: '#FFFFFF',
         },
         tertiary: {
             main: '#27E3B1',

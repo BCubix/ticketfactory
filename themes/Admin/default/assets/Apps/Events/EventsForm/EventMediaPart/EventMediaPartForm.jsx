@@ -9,13 +9,7 @@ import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getMediaType } from '@Services/utils/getMediaType';
 
-export const EventMediaPartForm = ({
-    values,
-    handleChange,
-    errors,
-    setFieldValue,
-    name = 'eventMedias',
-}) => {
+export const EventMediaPartForm = ({ values, handleChange, errors, setFieldValue, name = 'eventMedias' }) => {
     const dispatch = useDispatch();
     const [openAddModal, setOpenAddModal] = useState(null);
     const [editDialog, setEditDialog] = useState(null);
@@ -26,19 +20,13 @@ export const EventMediaPartForm = ({
         apiMiddleware(dispatch, async () => {
             const result = await Api.mediasApi.getAllMedias();
             if (!result?.result) {
-                NotificationManager.error(
-                    'Une erreur est survenue, essayez de rafraichir la page.',
-                    'Erreur',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
-            const images =
-                result?.medias?.filter((el) => getMediaType(el.documentType) === 'image') || [];
+            const images = result?.medias?.filter((el) => getMediaType(el.documentType) === 'image') || [];
             setImageMedias(images);
 
-            const others =
-                result?.medias?.filter((el) => getMediaType(el.documentType) !== 'image') || [];
+            const others = result?.medias?.filter((el) => getMediaType(el.documentType) !== 'image') || [];
             setOtherMedias(others);
         });
     };
@@ -110,6 +98,7 @@ export const EventMediaPartForm = ({
                 values={values}
                 name={name}
                 setFieldValue={setFieldValue}
+                onAddNewMedia={getMedias}
             />
 
             <Component.EditEventMediaModal

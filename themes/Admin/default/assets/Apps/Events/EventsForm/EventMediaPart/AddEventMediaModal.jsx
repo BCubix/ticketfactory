@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+import { NotificationManager } from 'react-notifications';
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -10,20 +11,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const AddEventMediaModal = ({
-    open,
-    closeModal,
-    mediaList,
-    values,
-    name,
-    setFieldValue,
-}) => {
+export const AddEventMediaModal = ({ open, closeModal, mediaList, values, name, setFieldValue, onAddNewMedia }) => {
     const [selectedMedia, setSelectedMedia] = useState(null);
+    const [createDialog, setCreateDialog] = useState(false);
     const addedElements = values.eventMedias?.map((el) => el.id) || [];
 
     useEffect(() => {
         setSelectedMedia(null);
     }, [open]);
+
+    const handleSubmit = () => {
+        setCreateDialog(false);
+        onAddNewMedia();
+        NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', REDIRECTION_TIME);
+    };
 
     return (
         <Dialog open={open} onClose={closeModal} fullScreen TransitionComponent={Transition}>
@@ -50,18 +51,18 @@ export const AddEventMediaModal = ({
             </DialogTitle>
             <Box height="100%" width={'100%'} sx={{ padding: 0 }}>
                 <Grid container sx={{ height: '100%' }}>
-                    <Grid item xs={12} md={9}>
-                        <Box display="flex" px={5} py={10} flexWrap="wrap">
+                    <Grid item xs={12} md={9} px={5} py={5}>
+                        <Component.CreateButton variant="contained" sx={{ marginLeft: 2 }} onClick={() => setCreateDialog(true)}>
+                            Créer un nouveau média
+                        </Component.CreateButton>
+                        <Box display="flex" pt={5} flexWrap="wrap">
                             {mediaList?.map((item, index) => (
                                 <Component.CmtMediaElement
                                     key={index}
                                     onClick={() => setSelectedMedia(item)}
                                     id={`mediaEventAddElementValue-${item.id}`}
                                     sx={{
-                                        border: (theme) =>
-                                            addedElements.includes(item.id)
-                                                ? `1px solid ${theme.palette.primary.main}`
-                                                : '',
+                                        border: (theme) => (addedElements.includes(item.id) ? `1px solid ${theme.palette.primary.main}` : ''),
                                     }}
                                 >
                                     <Component.CmtDisplayMediaType media={item} width={'100%'} />
@@ -69,12 +70,7 @@ export const AddEventMediaModal = ({
                             ))}
                         </Box>
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        md={3}
-                        sx={{ borderLeft: '1px solid #d3d3d3', height: '100%' }}
-                    >
+                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%' }}>
                         <Component.DisplayMediaAddInformations
                             onClose={() => setSelectedMedia(null)}
                             selectedMedia={selectedMedia}
@@ -85,6 +81,12 @@ export const AddEventMediaModal = ({
                     </Grid>
                 </Grid>
             </Box>
+            <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
+                <DialogTitle sx={{ fontSize: 20 }}>Ajouter un fichier</DialogTitle>
+                <DialogContent>
+                    <Component.CreateMedia handleSubmit={handleSubmit} />
+                </DialogContent>
+            </Dialog>
         </Dialog>
     );
 };

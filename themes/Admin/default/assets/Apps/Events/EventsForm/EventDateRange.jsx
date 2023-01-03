@@ -3,20 +3,10 @@ import { Formik } from 'formik';
 import moment from 'moment';
 import * as Yup from 'yup';
 
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControl,
-    FormHelperText,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, FormControl, FormHelperText, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const DAY_LIST = [
     { label: 'Lundi', value: 'lundi' },
@@ -61,12 +51,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
         endDate: Yup.date()
             .required('Veuillez renseigner la date de fin')
             .test('isValid', 'Date invalide', (val) => val && moment(val).isValid())
-            .when(
-                'beginDate',
-                (beginDate, schema) =>
-                    beginDate &&
-                    schema.min(beginDate, 'La date de fin doit être supérieur à la date de début')
-            ),
+            .when('beginDate', (beginDate, schema) => beginDate && schema.min(beginDate, 'La date de fin doit être supérieur à la date de début')),
         hour: Yup.string().required("Veuillez renseigner l'heure de début"),
     });
 
@@ -86,28 +71,14 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                     setSubmitting(false);
                 }}
             >
-                {({
-                    values,
-                    errors,
-                    touched,
-                    setFieldTouched,
-                    setFieldValue,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting,
-                }) => (
+                {({ values, errors, touched, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
                     <Box component="form" onSubmit={handleSubmit}>
                         <DialogContent dividers sx={{ padding: 5 }}>
                             <Typography component="h1" variant="h4">
                                 Générer des dates selon la règle:
                             </Typography>
 
-                            <Box
-                                className="flex"
-                                flexWrap={'wrap'}
-                                alignItems="center"
-                                marginTop={5}
-                            >
+                            <Box className="flex" flexWrap={'wrap'} alignItems="center" marginTop={5}>
                                 <Typography marginRight={5}>Tous les </Typography>
 
                                 <FormControl sx={{ maxWidth: 100 }} fullWidth>
@@ -127,9 +98,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    <FormHelperText error>
-                                        {touched.day && errors.day}
-                                    </FormHelperText>
+                                    <FormHelperText error>{touched.day && errors.day}</FormHelperText>
                                 </FormControl>
 
                                 <Typography marginInline={5}> entre le </Typography>
@@ -139,10 +108,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                                     maxWidth={100}
                                     value={values.beginDate}
                                     setValue={(newValue) => {
-                                        setFieldValue(
-                                            'beginDate',
-                                            moment(newValue).format('YYYY-MM-DD')
-                                        );
+                                        setFieldValue('beginDate', moment(newValue).format('YYYY-MM-DD'));
                                     }}
                                     name="beginDate"
                                     onTouched={setFieldTouched}
@@ -159,10 +125,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                                     maxWidth={100}
                                     value={values.endDate}
                                     setValue={(newValue) => {
-                                        setFieldValue(
-                                            'endDate',
-                                            moment(newValue).format('YYYY-MM-DD')
-                                        );
+                                        setFieldValue('endDate', moment(newValue).format('YYYY-MM-DD'));
                                     }}
                                     onTouched={setFieldTouched}
                                     name="endDate"
@@ -191,25 +154,11 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                         </DialogContent>
 
                         <DialogActions>
-                            <Box
-                                width="100%"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="space-between"
-                            >
-                                <Button
-                                    color="error"
-                                    onClick={() => setOpen(false)}
-                                    id="cancelDialog"
-                                >
+                            <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                                <Button color="error" onClick={() => setOpen(null)} id="cancelDialog">
                                     Annuler
                                 </Button>
-                                <Button
-                                    color="primary"
-                                    type="submit"
-                                    id="validateDialog"
-                                    disabled={isSubmitting}
-                                >
+                                <Button color="primary" type="submit" id="validateDialog" disabled={isSubmitting}>
                                     Générer
                                 </Button>
                             </Box>

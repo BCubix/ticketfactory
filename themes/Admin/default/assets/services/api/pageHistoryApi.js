@@ -8,20 +8,160 @@ const pageHistoryApi = {
                     id: 10760,
                     entityKeyword: 'page',
                     entityId: 9,
-                    revisionDate: '2022-12-21T10:54:08+01:00',
+                    revisionDate: '2021-01-01T10:54:08+01:00',
                     fields: {
-                        title: ['Ceci est le titre.', 'Ceci est le nouveau titre.'],
-                        active: [false, true],
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
                     },
                 },
                 {
-                    id: 10766,
+                    id: 10761,
                     entityKeyword: 'page',
                     entityId: 9,
-                    revisionDate: '2022-12-21T11:04:14+01:00',
+                    revisionDate: '2021-01-01T10:54:15+01:00',
                     fields: {
-                        name: ['Nouvel Evénement', 'Nouvel Evénement bis'],
-                        slug: ['nouvel-evenement', 'nouvel-evenement-bis'],
+                        title: {
+                            before: 'Ceci est le titrekQDHGFQD<.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-02T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-04T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-07T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-11T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-16T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-22T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-01-29T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
+                    },
+                },
+                {
+                    id: 10760,
+                    entityKeyword: 'page',
+                    entityId: 9,
+                    revisionDate: '2021-05-29T10:54:08+01:00',
+                    fields: {
+                        title: {
+                            before: 'Ceci est le titre.',
+                            after: 'Ceci est le nouveau titre.',
+                        },
+                        active: {
+                            before: false,
+                            after: true,
+                        },
                     },
                 },
             ];

@@ -163,6 +163,7 @@ import { CmtSearchFilters } from '@Components/CmtFilters/CmtSearchFilters';
 import { CmtSimpleSelectFilters } from '@Components/CmtFilters/CmtSimpleSelectFilter';
 import { ClearBooleanButton } from '@Components/CmtFilters/sc.Filters';
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
+import { CmtHistoryDate } from '@Components/CmtHistoryDate/CmtHistoryDate';
 import { CmtLayoutProvider } from '@Components/CmtLayoutProvider/CmtLayoutProvider';
 import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
 import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
@@ -390,6 +391,7 @@ const ComponentObj = {
     SwitchTextLabel: SwitchTextLabel,
     CmtFormBlock: CmtFormBlock,
     CmtLayoutProvider: CmtLayoutProvider,
+    CmtHistoryDate: CmtHistoryDate,
     CmtMediaElement: CmtMediaElement,
     CmtPageTitle: CmtPageTitle,
     TitleTypography: TitleTypography,
