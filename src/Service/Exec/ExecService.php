@@ -10,6 +10,12 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class ExecService
 {
+    /**
+     * Exec a command
+     *
+     * @param array $command
+     * @return array
+     */
     public static function exec(array $command): array
     {
         $app = $GLOBALS['app'];
@@ -38,18 +44,18 @@ class ExecService
         ];
     }
 
-    public static function execClearCache(): void
+    public static function execClearCache(): array
     {
-        static::exec([
+        return static::exec([
             'command' => 'cache:clear'
         ]);
     }
 
-    public static function execMigrationUpdate(string $migrationClass, bool $up): void
+    public static function execMigrationUpdate(string $migrationClass, bool $up): array
     {
         $action = $up ? '--up' : '--down';
 
-        static::exec([
+        return static::exec([
             'command'          => 'doctrine:migrations:execute',
             'versions'         => [ $migrationClass ],
             '--no-interaction' => true,
