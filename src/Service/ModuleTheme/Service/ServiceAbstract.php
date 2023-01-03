@@ -3,7 +3,7 @@
 namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
-use App\Utils\Exec;
+use App\Service\Exec\ExecService;
 use App\Utils\Tree;
 use App\Utils\Zip;
 
@@ -166,8 +166,7 @@ abstract class ServiceAbstract
      */
     public function clear(): void
     {
-        Exec::exec('php ../bin/console cache:clear');
-        Exec::exec('php ../bin/console doctrine:schema:update --force');
+        ExecService::execClearCache();
     }
 
     /**
