@@ -12,7 +12,8 @@ class ExecService
 {
     public static function exec(array $command): array
     {
-        $kernel = $GLOBALS['app'];
+        $app = $GLOBALS['app'];
+        $kernel = $app instanceof Application ? $app->getKernel() : $app;
         $newKernel = new Kernel($kernel->getEnvironment(), $kernel->isDebug());
 
         $application = new Application($newKernel);
@@ -21,7 +22,11 @@ class ExecService
         $input = new ArrayInput($command);
         $output = new BufferedOutput();
 
-        $code = $application->run($input, $output);
+        try {
+            $code = $application->run($input, $output);
+        } catch (\Exception $e) {
+            $code = 1;
+        }
 
         $output = $output->fetch();
 

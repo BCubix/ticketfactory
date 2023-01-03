@@ -45,7 +45,7 @@ class ThemeManager extends AbstractManager
 
     public function getAdminTemplatesPath(): string
     {
-        return "Admin/" . $this->pm->get('admin_main_theme') . "/templates/";
+        return "Admin/" . $this->pm->get('admin_theme') . "/templates/";
     }
 
     public function getWebsiteTemplatesPath(): string
@@ -107,7 +107,6 @@ class ThemeManager extends AbstractManager
 
         $this->pm->set('main_theme', $themeName);
         $this->em->flush();
-        $this->em->getConnection()->commit();
 
         $this->ts->entry($themeName, false);
         try {
@@ -138,7 +137,6 @@ class ThemeManager extends AbstractManager
 
         $this->em->remove($theme);
         $this->em->flush();
-        $this->em->getConnection()->commit();
     }
 
     /**
