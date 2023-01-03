@@ -3,7 +3,7 @@
 namespace App\Service\ModuleTheme\Config;
 
 use App\Exception\ApiException;
-use App\Service\Db\Db;
+use App\Service\Exec\ExecService;
 use App\Service\Hook\HookService;
 use App\Utils\FileManipulator;
 
@@ -19,7 +19,6 @@ class ModuleConfig
     protected const AUTHOR = null;
     protected const VERSION = null;
 
-    protected const TABLES = [];
     protected const TRAITS = [];
     protected const HOOKS  = [];
 
@@ -91,12 +90,14 @@ class ModuleConfig
      * @throws ApiException
      * @throws DirectoryNotFoundException
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function install(): void
     {
         $this->register();
         $this->trait(false);
         $this->hooks(true);
+        $this->migrate(true);
     }
 
     /**
@@ -105,14 +106,12 @@ class ModuleConfig
      * @return void
      * @throws ApiException
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function uninstall(): void
     {
         $this->disable();
-
-        foreach (static::TABLES as $table) {
-            Db::getInstance()->query("DROP TABLE ${table};");
-        }
+        $this->migrate(false);
     }
 
     /**
@@ -235,6 +234,24 @@ class ModuleConfig
             } else {
                 $this->hs->unregister($hookName, $this);
             }
+        }
+    }
+
+    /**
+     * Update database with migration
+     *
+     * @param bool $up
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function migrate(bool $up): void
+    {
+        $migrationClassname = 'Version' . $this->name;
+        $migrationClass     = "DoctrineMigrations\\" . $migrationClassname;
+
+        if (is_file($this->path . '/config/migrations/' . $migrationClassname.  '.php')) {
+            ExecService::execMigrationUpdate($migrationClass, $up);
         }
     }
 }
