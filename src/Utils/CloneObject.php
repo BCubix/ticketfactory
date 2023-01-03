@@ -42,7 +42,6 @@ class CloneObject
         $reflect = new \ReflectionClass($newObject);
         $props = $reflect->getProperties();
         $className = $reflect->getName();
-        $class = new $className();
 
         foreach ($props as $prop) {
             $name = $prop->getName();

@@ -38,7 +38,7 @@ class Module extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Hook::class, orphanRemoval: true,  cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Hook::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $hooks;
 
     public function __construct()

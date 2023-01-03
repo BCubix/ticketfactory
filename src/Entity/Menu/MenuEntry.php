@@ -88,7 +88,7 @@ class MenuEntry
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private $children;
 

@@ -33,7 +33,7 @@ class EventDateBlock
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins une date.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'eventDateBlock', targetEntity: EventDate::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'eventDateBlock', targetEntity: EventDate::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventDates;
 
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventDateBlocks')]

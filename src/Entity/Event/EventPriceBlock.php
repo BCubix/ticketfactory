@@ -33,7 +33,7 @@ class EventPriceBlock
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'eventPriceBlock', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'eventPriceBlock', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventPrices;
 
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPriceBlocks')]

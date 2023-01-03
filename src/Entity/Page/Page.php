@@ -34,7 +34,7 @@ class Page extends Datable
     #[Assert\Valid]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $pageBlocks;
 
     #[JMS\Expose()]

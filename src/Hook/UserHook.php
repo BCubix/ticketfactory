@@ -21,15 +21,8 @@ class UserHook
     public function hookUserInstantiated(HookEvent $event)
     {
         $user = $event->getParam('object');
-        if (!$this->isSupported($user)) {
-            return;
-        }
-
-        if ($event->getParam('state') !== 'delete') {
-            return;
-        }
-
         $admins = $this->um->getAdminUsers();
+
         if (count($admins) == 1 && $admins[0]->getId() == $user->getId()) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer le dernier compte administrateur.');
         }
@@ -37,16 +30,7 @@ class UserHook
 
     public function hookUserValidated(HookEvent $event)
     {
-        $user = $event->getParam('object');
-        if (!$this->isSupported($user)) {
-            return;
-        }
-
+        $user = $event->getParam('vObject');
         $this->um->upgradePassword($user);
-    }
-
-    private function isSupported(Object $object): bool
-    {
-        return (gettype($object) == "object" && get_class($object) == User::class);
     }
 }

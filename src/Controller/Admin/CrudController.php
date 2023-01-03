@@ -65,10 +65,11 @@ abstract class CrudController extends AdminController
     protected function add(Request $request): View
     {
         $object = new $this->entityClass();
+        $iObject = CloneObject::cloneObject($object);
 
         $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'add'
+            'state'  => 'add'
         ]);
 
         $form = $this->createForm($this->typeClass, $object);
@@ -81,7 +82,11 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec($this->entityClassName . 'Validated', ['object' => $object]);
+        $this->hs->exec($this->entityClassName . 'Validated', [
+            'iObject' => $iObject,
+            'vObject' => $object,
+            'state'   => 'add'
+        ]);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -98,9 +103,11 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
+        $iObject = CloneObject::cloneObject($object);
+
         $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'edit'
+            'state'  => 'edit'
         ]);
 
         $form = $this->createForm($this->typeClass, $object);
@@ -113,7 +120,11 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec($this->entityClassName . 'Validated', ['object' => $object]);
+        $this->hs->exec($this->entityClassName . 'Validated', [
+            'iObject' => $iObject,
+            'vObject' => $object,
+            'state'   => 'edit'
+        ]);
 
         $this->em->persist($object);
         $this->em->flush();
@@ -132,7 +143,7 @@ abstract class CrudController extends AdminController
 
         $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'duplicate'
+            'state'  => 'duplicate'
         ]);
 
         $nObject = CloneObject::cloneObject($object);
@@ -154,7 +165,7 @@ abstract class CrudController extends AdminController
 
         $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'delete'
+            'state'  => 'delete'
         ]);
 
         $objectId = $object->getId();
