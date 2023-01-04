@@ -30,6 +30,21 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
         return newLine === 0 || newLine + Number(values?.columns?.at(index)[media]) > 12;
     };
 
+    const handleChangeSize = (index) => {
+        let newValue = size;
+
+        if (newValue < 1) {
+            newValue = 1;
+            setSize(newValue);
+        } else if (newValue > 12) {
+            newValue = 12;
+            setSize(newValue);
+        }
+
+        setFieldValue(`${baseName}columns.${index}.${media}`, newValue);
+        setFieldTouched(`${baseName}columns.${index}.${media}`, true, false);
+    };
+
     const isNewLine = checkIsNewLine();
     return (
         <Draggable key={`columns.${index}`} draggableId={`columns.${index}`} index={index}>
@@ -88,20 +103,14 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
 
                                         setSize(newValue);
                                     }}
-                                    onBlur={() => {
-                                        let newValue = size;
-
-                                        if (newValue < 1) {
-                                            newValue = 1;
-                                            setSize(newValue);
-                                        } else if (newValue > 12) {
-                                            newValue = 12;
-                                            setSize(newValue);
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleChangeSize(index);
                                         }
-
-                                        setFieldValue(`${baseName}columns.${index}.${media}`, newValue);
-                                        setFieldTouched(`${baseName}columns.${index}.${media}`, true, false);
                                     }}
+                                    onBlur={() => handleChangeSize(index)}
                                     name={`${baseName}columns.${index}.${media}`}
                                 />
                                 <Typography component="span" variant="h5">
