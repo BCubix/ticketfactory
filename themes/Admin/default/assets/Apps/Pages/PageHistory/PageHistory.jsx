@@ -7,28 +7,9 @@ import { Constant } from '@/AdminService/Constant';
 import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Component } from '@/AdminService/Component';
-import { Button, CardContent, Grid, Paper, Slider, Typography } from '@mui/material';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
+import { CardContent, Grid, Slider, Typography } from '@mui/material';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
-
-const getRangeDate = () => {
-    let range = [];
-    let limitMin = moment().subtract('20', 'day');
-    let limitMax = moment().add('20', 'day');
-
-    while (limitMin.isSameOrBefore(limitMax, 'day')) {
-        range.push(limitMin.format('DD-MM-YYYY HH:mm'));
-        limitMin.add('1', 'day');
-    }
-
-    return range;
-};
 
 export const PageHistory = () => {
     const dispatch = useDispatch();
@@ -38,8 +19,6 @@ export const PageHistory = () => {
     const [pageHistory, setPageHistory] = useState(null);
     const [selectedHistory, setSelectedHistory] = useState(null);
     const [loading, setLoading] = useState(false);
-
-    const [rangeDate, setRangeDate] = useState(getRangeDate());
 
     useEffect(() => {
         if (!id) {
@@ -56,7 +35,7 @@ export const PageHistory = () => {
             }
 
             setPageHistory(result.pageHistory || []);
-            setSelectedHistory(result.pageHistory.length > 0 ? result.pageHistory.length : null);
+            setSelectedHistory(result.pageHistory.length > 0 ? result.pageHistory.length - 1 : null);
         });
     }, [id]);
 
@@ -94,47 +73,9 @@ export const PageHistory = () => {
 
     const history = pageHistory?.at(selectedHistory);
 
-    console.log(rangeDate, pageHistory, selectedHistory);
     return (
         <Component.CmtPageWrapper title="Historique de page">
-            {/*  <Box display="flex" justifyContent={'space-between'} alignItems="center" sx={{ marginBlock: 5 }}>
-                <Timeline className="timeline">
-                    {rangeDate?.map((item, index) => (
-                        <TimelineItem key={index}>
-                            <TimelineSeparator>
-                                <TimelineConnector />
-                                <TimelineDot />
-                            </TimelineSeparator>
-                            <TimelineContent className={'timelineContentContainer'}>
-                                <Paper className={'timelineContent'}>
-                                    <Typography>{item}</Typography>
-                                </Paper>
-                            </TimelineContent>
-                        </TimelineItem>
-                    ))}
-                </Timeline>
-            </Box> */}
-
-            <Box display="flex" justifyContent={'space-between'} alignItems="center" sx={{ marginBlock: 5 }}>
-                <Component.ActionButton variant="contained" disabled={selectedHistory === 0} onClick={() => setSelectedHistory(selectedHistory - 1)}>
-                    Précédent
-                </Component.ActionButton>
-
-                <Slider
-                    sx={{ maxWidth: 300, width: pageHistory.length * 50 }}
-                    marks={pageHistory.map((_, index) => ({ value: index }))}
-                    value={selectedHistory}
-                    onChange={(_, newValue) => {
-                        setSelectedHistory(newValue);
-                    }}
-                    min={0}
-                    max={pageHistory.length}
-                />
-
-                <Component.ActionButton variant="contained" disabled={selectedHistory === pageHistory?.length} onClick={() => setSelectedHistory(selectedHistory + 1)}>
-                    Suivant
-                </Component.ActionButton>
-            </Box>
+            <Component.CmtHistoryDate historyList={pageHistory} selectedHistory={selectedHistory} setSelectedHistory={setSelectedHistory} />
 
             <Component.CmtCard>
                 <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -154,9 +95,9 @@ export const PageHistory = () => {
                             </Typography>
                             <Grid container spacing={4} sx={{ marginBottom: 5 }}>
                                 <DisplayHistoryValue
-                                    isModified={history?.fields?.title[0] !== history?.fields?.title[1]}
-                                    oldValue={history?.fields?.title[0]}
-                                    newValue={history?.fields?.title[1]}
+                                    isModified={history?.fields?.title.before !== history?.fields?.title.after}
+                                    oldValue={history?.fields?.title.before}
+                                    newValue={history?.fields?.title.after}
                                 />
                             </Grid>
                         </Box>
@@ -169,9 +110,9 @@ export const PageHistory = () => {
                             </Typography>
                             <Grid container spacing={4} sx={{ marginBottom: 5 }}>
                                 <DisplayHistoryValue
-                                    isModified={history?.fields?.active[0] !== history?.fields?.active[1]}
-                                    oldValue={history?.fields?.active[0] ? 'Activé' : 'Désactivé'}
-                                    newValue={history?.fields?.active[1] ? 'Activé' : 'Désactivé'}
+                                    isModified={history?.fields?.active.before !== history?.fields?.active.after}
+                                    oldValue={history?.fields?.active.before ? 'Activé' : 'Désactivé'}
+                                    newValue={history?.fields?.active.after ? 'Activé' : 'Désactivé'}
                                 />
                             </Grid>
                         </Box>

@@ -1,5 +1,6 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
+import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 var controller = null;
@@ -55,7 +56,7 @@ const serializeData = (element, name, formData) => {
 };
 
 const deserializeData = (data) => {
-    const newData = data;
+    const newData = copyData(data);
 
     newData?.fields?.forEach((field, fieldIndex) => {
         newData.fields[fieldIndex].options = field?.options?.reduce(

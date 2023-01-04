@@ -51,7 +51,7 @@ export const Layout = ({ children }) => {
             </AppBar>
             <Box sx={{ display: 'flex' }}>
                 <Component.SideMenu />
-                <Box component="main" sx={{ flexGrow: 1, marginTop: '64px' }}>
+                <Box component="main" sx={{ flexGrow: 1, marginTop: '64px', minWidth: 0 }}>
                     {children}
                 </Box>
             </Box>

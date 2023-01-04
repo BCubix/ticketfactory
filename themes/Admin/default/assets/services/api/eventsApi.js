@@ -1,7 +1,8 @@
 import moment from 'moment';
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import axios from '@Services/api/config';
+import { copyData } from '@Services/utils/copyData';
 
 var controller = null;
 
@@ -91,8 +92,9 @@ const eventsApi = {
     getOneEvent: async (id) => {
         try {
             const result = await axios.get(`/events/${id}`);
+            const data = copyData(result?.data);
 
-            return { result: true, event: result.data };
+            return { result: true, event: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -114,24 +116,12 @@ const eventsApi = {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
 
                 dateBlock?.eventDates?.forEach((date, ind) => {
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][eventDate]`,
-                        moment(date.eventDate).format('YYYY-MM-DD HH:mm')
-                    );
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][annotation]`,
-                        date.annotation
-                    );
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][state]`,
-                        date.state
-                    );
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][eventDate]`, moment(date.eventDate).format('YYYY-MM-DD HH:mm'));
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][annotation]`, date.annotation);
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][state]`, date.state);
 
                     if (date.reportDate) {
-                        formData.append(
-                            `eventDateBlocks[${index}][eventDates][${ind}][reportDate]`,
-                            moment(date.reportDate).format('YYYY-MM-DD HH:mm')
-                        );
+                        formData.append(`eventDateBlocks[${index}][eventDates][${ind}][reportDate]`, moment(date.reportDate).format('YYYY-MM-DD HH:mm'));
                     }
                 });
             });
@@ -140,18 +130,9 @@ const eventsApi = {
                 formData.append(`eventPriceBlocks[${index}][name]`, priceBlock.name);
 
                 priceBlock?.eventPrices.forEach((price, ind) => {
-                    formData.append(
-                        `eventPriceBlocks[${index}][eventPrices][${ind}][name]`,
-                        price.name
-                    );
-                    formData.append(
-                        `eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`,
-                        price.annotation
-                    );
-                    formData.append(
-                        `eventPriceBlocks[${index}][eventPrices][${ind}][price]`,
-                        price.price
-                    );
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][name]`, price.name);
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`, price.annotation);
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][price]`, price.price);
                 });
             });
 
@@ -166,10 +147,7 @@ const eventsApi = {
             data.eventMedias?.forEach((eventMedia, index) => {
                 formData.append(`eventMedias[${index}][media]`, eventMedia.id);
                 formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
-                formData.append(
-                    `eventMedias[${index}][position]`,
-                    eventMedia.position || index + 1
-                );
+                formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
 
             const result = await axios.post('/events', formData);
@@ -196,24 +174,12 @@ const eventsApi = {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
 
                 dateBlock?.eventDates?.forEach((date, ind) => {
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][eventDate]`,
-                        moment(date.eventDate).format('YYYY-MM-DD HH:mm')
-                    );
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][annotation]`,
-                        date.annotation
-                    );
-                    formData.append(
-                        `eventDateBlocks[${index}][eventDates][${ind}][state]`,
-                        date.state
-                    );
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][eventDate]`, moment(date.eventDate).format('YYYY-MM-DD HH:mm'));
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][annotation]`, date.annotation);
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][state]`, date.state);
 
                     if (date.reportDate) {
-                        formData.append(
-                            `eventDateBlocks[${index}][eventDates][${ind}][reportDate]`,
-                            moment(date.reportDate).format('YYYY-MM-DD HH:mm')
-                        );
+                        formData.append(`eventDateBlocks[${index}][eventDates][${ind}][reportDate]`, moment(date.reportDate).format('YYYY-MM-DD HH:mm'));
                     }
                 });
             });
@@ -222,18 +188,9 @@ const eventsApi = {
                 formData.append(`eventPriceBlocks[${index}][name]`, priceBlock.name);
 
                 priceBlock?.eventPrices.forEach((price, ind) => {
-                    formData.append(
-                        `eventPriceBlocks[${index}][eventPrices][${ind}][name]`,
-                        price.name
-                    );
-                    formData.append(
-                        `eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`,
-                        price.annotation
-                    );
-                    formData.append(
-                        `eventPriceBlocks[${index}][eventPrices][${ind}][price]`,
-                        price.price
-                    );
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][name]`, price.name);
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`, price.annotation);
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][price]`, price.price);
                 });
             });
 
@@ -248,10 +205,7 @@ const eventsApi = {
             data.eventMedias?.forEach((eventMedia, index) => {
                 formData.append(`eventMedias[${index}][media]`, eventMedia.id);
                 formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
-                formData.append(
-                    `eventMedias[${index}][position]`,
-                    eventMedia.position || index + 1
-                );
+                formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
 
             const result = await axios.post(`/events/${id}`, formData);
