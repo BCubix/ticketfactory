@@ -195,18 +195,21 @@ class VersionnedEntityManager extends AbstractManager
     private function restoreFieldsVersion(Object &$object, array $fields): void
     {
         foreach ($fields as $fName => $fValues) {
-            $reflectionProperty = new \ReflectionProperty(ClassUtils::getClass($entity), $fName);
+            $reflectionProperty = new \ReflectionProperty(ClassUtils::getClass($object), $fName);
             $reflectionProperty->setAccessible(true);
 
+            // Simple element
             if (isset($fValues['after'])) {
                 $reflectionProperty->setValue($object, $fValues['after']);
-            } else {
-                $getMethod = 'get' . ucfirst(substr($fName, 0, -1));
-                foreach ($object->$getMethod() as &$childObject) {
-                    foreach ($fValues as $fValue) {
-                        $this->restoreFieldsVersion($childObject, $fValue);
-                        break;
-                    }
+                continue;
+            }
+            
+            // Collection element
+            $getMethod = 'get' . ucfirst(substr($fName, 0, -1)) . 's';
+            foreach ($object->$getMethod() as &$childObject) {
+                foreach ($fValues as $fValue) {
+                    $this->restoreFieldsVersion($childObject, $fValue);
+                    break;
                 }
             }
         }

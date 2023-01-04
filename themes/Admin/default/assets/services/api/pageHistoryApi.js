@@ -3,7 +3,7 @@ import axios from '@Services/api/config';
 const pageHistoryApi = {
     getOnePageHistory: async (id) => {
         try {
-            const pageHistory = [
+            /* const pageHistory = [
                 {
                     id: 10760,
                     entityKeyword: 'page',
@@ -166,8 +166,8 @@ const pageHistoryApi = {
                 },
             ];
 
-            return { result: true, pageHistory: pageHistory };
-            const result = await axios.get(`/pages/${id}`);
+            return { result: true, pageHistory: pageHistory }; */
+            const result = await axios.get(`/versions/page/${id}`);
 
             return { result: true, pageHistory: result.data };
         } catch (error) {
@@ -177,7 +177,7 @@ const pageHistoryApi = {
 
     restoreHistory: async (id) => {
         try {
-            const result = await axios.post(`/history/page/${id}`);
+            const result = await axios.post(`/versions/page/${id}`);
 
             return { result: true, pageHistory: result?.data };
         } catch (error) {

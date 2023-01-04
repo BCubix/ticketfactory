@@ -127,12 +127,12 @@ const DisplayHistoryValue = ({ isModified, oldValue, newValue }) => {
     return (
         <>
             <Grid item xs={12} sm={6}>
-                <Box sx={{ borderRadius: 1, paddingBlock: 1, paddingInline: 3, ...(isModified && { backgroundColor: (theme) => theme.palette.error.light }) }}>
+                <Box sx={{ borderRadius: 1, paddingBlock: 1, paddingInline: 3, ...(isModified && oldValue && { backgroundColor: (theme) => theme.palette.error.light }) }}>
                     <Typography>{oldValue}</Typography>
                 </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <Box sx={{ borderRadius: 1, paddingBlock: 1, paddingInline: 3, ...(isModified && { backgroundColor: (theme) => theme.palette.success.light }) }}>
+                <Box sx={{ borderRadius: 1, paddingBlock: 1, paddingInline: 3, ...(isModified && newValue && { backgroundColor: (theme) => theme.palette.success.light }) }}>
                     <Typography>{newValue}</Typography>
                 </Box>
             </Grid>
