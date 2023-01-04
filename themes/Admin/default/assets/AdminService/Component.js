@@ -186,6 +186,10 @@ import { checkComponent, checkString } from '@Services/utils/check';
 import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
 import { CreatePageBlockFormat } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
+import { LanguagesList } from '@Apps/Languages/LanguagesList/LanguagesList';
+import { CreateLanguage } from '@Apps/Languages/CreateLanguage/CreateLanguage';
+import { EditLanguage } from '@Apps/Languages/EditLanguage/EditLanguage';
+import { LanguagesForm } from '@Apps/Languages/LanguagesForm/LanguagesForm';
 
 const ComponentObj = {
     App: App,
@@ -322,6 +326,11 @@ const ComponentObj = {
     ParametersBlockForm: ParametersBlockForm,
     ParametersForm: ParametersForm,
     ParametersMenu: ParametersMenu,
+
+    LanguagesList: LanguagesList,
+    CreateLanguage: CreateLanguage,
+    EditLanguage: EditLanguage,
+    LanguagesForm: LanguagesForm,
 
     CreateRedirection: CreateRedirection,
     EditRedirection: EditRedirection,

@@ -4,13 +4,17 @@ import { Formik } from 'formik';
 import { Box } from '@mui/system';
 import { Button } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const ParametersForm = ({ handleSubmit, parameters }) => {
     const tabs = useMemo(() => {
         const tabs = [];
 
         parameters?.forEach((parameter) => {
+            if (!parameter?.tabName) {
+                return;
+            }
+
             const indexTab = tabs.findIndex((tab) => tab.tabName === parameter.tabName);
             if (indexTab === -1) {
                 tabs.push({
@@ -24,9 +28,7 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
                 });
             } else {
                 const blocks = tabs[indexTab].blocks;
-                const indexBlock = blocks.findIndex(
-                    (block) => block.blockName === parameter.blockName
-                );
+                const indexBlock = blocks.findIndex((block) => block.blockName === parameter.blockName);
                 if (indexBlock === -1) {
                     blocks.push({
                         blockName: parameter.blockName,
@@ -58,17 +60,7 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                isSubmitting,
-            }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtPageWrapper title="Paramètres" component="form" onSubmit={handleSubmit}>
                     <Component.CmtTabs
                         tabValue={0}
@@ -91,12 +83,7 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
                         })}
                     />
                     <Box display="flex" justifyContent="flex-end">
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={isSubmitting}
-                        >
+                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
                             Enregistrer
                         </Button>
                     </Box>
@@ -104,4 +91,4 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
             )}
         </Formik>
     );
-}
+};

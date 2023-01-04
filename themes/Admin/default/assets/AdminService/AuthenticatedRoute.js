@@ -86,6 +86,10 @@ const AuthenticatedRouteObj = [
 
     () => ({ path: Constant.PARAMETERS_BASE_PATH, component: Component.ParametersMenu }),
 
+    () => ({ path: Constant.LANGUAGES_BASE_PATH, component: Component.LanguagesList }),
+    () => ({ path: Constant.LANGUAGES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateLanguage }),
+    () => ({ path: `${Constant.LANGUAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditLanguage }),
+
     () => ({ path: Constant.MODULES_BASE_PATH, component: Component.ModulesList }),
 
     () => ({ path: Constant.THEMES_BASE_PATH, component: Component.ThemesList }),

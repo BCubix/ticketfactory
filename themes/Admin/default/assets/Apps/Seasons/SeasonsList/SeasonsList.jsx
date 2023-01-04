@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import { Box, CardContent, Typography } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
 import { changeSeasonsFilters, getSeasonsAction, seasonsSelector } from '@Redux/seasons/seasonsSlice';
 
@@ -39,11 +38,7 @@ export const SeasonsList = () => {
             const result = await Api.seasonsApi.duplicateSeason(id);
 
             if (result?.result) {
-                NotificationManager.success(
-                    'La saison a bien été dupliquée.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.success('La saison a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
 
                 dispatch(getSeasonsAction());
             } else {
@@ -59,24 +54,14 @@ export const SeasonsList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des saisons{' '}
-                                {seasons &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + seasons.length
-                                    } sur ${total})`}
+                                Liste des saisons {seasons && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + seasons.length} sur ${total})`}
                             </Typography>
-                            <Component.CreateButton
-                                variant="contained"
-                                onClick={() => navigate(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH)}
-                            >
+                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH)}>
                                 Nouveau
                             </Component.CreateButton>
                         </Box>
 
-                        <Component.SeasonsFilters
-                            filters={filters}
-                            changeFilters={(values) => dispatch(changeSeasonsFilters(values))}
-                        />
+                        <Component.SeasonsFilters filters={filters} changeFilters={(values) => dispatch(changeSeasonsFilters(values))} />
 
                         <Component.ListTable
                             contextualMenu
@@ -90,18 +75,14 @@ export const SeasonsList = () => {
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
-                            changeFilters={(newFilters) =>
-                                dispatch(changeSeasonsFilters(newFilters))
-                            }
+                            changeFilters={(newFilters) => dispatch(changeSeasonsFilters(newFilters))}
                         />
 
                         <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changeSeasonsFilters({ ...filters }, newValue))
-                            }
+                            setPage={(newValue) => dispatch(changeSeasonsFilters({ ...filters }, newValue))}
                             setLimit={(newValue) => {
                                 dispatch(changeSeasonsFilters({ ...filters, limit: newValue }));
                             }}
@@ -110,15 +91,9 @@ export const SeasonsList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
-            >
+            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette salle ?
-                    </Typography>
+                    <Typography component="p">Êtes-vous sûr de vouloir supprimer cette salle ?</Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>

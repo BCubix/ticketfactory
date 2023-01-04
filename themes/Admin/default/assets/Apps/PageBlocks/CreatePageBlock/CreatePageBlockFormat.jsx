@@ -32,7 +32,7 @@ export const CreatePageBlockFormat = ({ name, setName, formatIndex, setFormatInd
                         onChange={(e) => {
                             setSaveAsModel(e.target.checked);
                         }}
-                        label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieur'}
+                        label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieure'}
                         labelPlacement="end"
                         control={<Checkbox />}
                     />

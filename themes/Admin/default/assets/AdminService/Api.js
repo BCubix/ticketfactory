@@ -8,6 +8,7 @@ import dashboardApi from '@Services/api/dashboardApi';
 import eventsApi from '@Services/api/eventsApi';
 import imageFormatsApi from '@Services/api/imageFormatsApi';
 import logsApi from '@Services/api/logsApi';
+import languagesApi from '@Services/api/languagesApi';
 import mediasApi from '@Services/api/mediasApi';
 import menusApi from '@Services/api/menusApi';
 import modulesApi from '@Services/api/modulesApi';
@@ -36,6 +37,7 @@ const ApiObj = {
     eventsApi: eventsApi,
     imageFormatsApi: imageFormatsApi,
     logsApi: logsApi,
+    languagesApi: languagesApi,
     mediasApi: mediasApi,
     menusApi: menusApi,
     modulesApi: modulesApi,

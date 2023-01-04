@@ -36,6 +36,7 @@ const ConstantObj = {
     PAGE_BLOCKS_BASE_PATH: '/admin/page-blocks',
     PAGE_HISTORY_BASE_PATH: '/admin/historique-de-page',
     PARAMETERS_BASE_PATH: '/admin/parametres',
+    LANGUAGES_BASE_PATH: '/admin/langues',
     MODULES_BASE_PATH: '/admin/modules',
     THEMES_BASE_PATH: '/admin/themes',
     HOOKS_BASE_PATH: '/admin/hooks',

@@ -55,7 +55,6 @@ export function getModulesAction(data) {
     };
 }
 
-export const { getModules, getModulesSuccess, getModulesFailure, resetModules } =
-    modulesSlice.actions;
+export const { getModules, getModulesSuccess, getModulesFailure, resetModules } = modulesSlice.actions;
 export const modulesSelector = (state) => state.modules;
 export default modulesSlice.reducer;

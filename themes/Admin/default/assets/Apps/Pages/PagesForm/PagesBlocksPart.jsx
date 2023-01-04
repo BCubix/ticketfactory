@@ -145,7 +145,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                             onChange={(e) => {
                                                 setFieldValue(`pageBlocks.${index}.saveAsModel`, e.target.checked);
                                             }}
-                                            label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieur'}
+                                            label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieure'}
                                             labelPlacement="end"
                                             control={<Checkbox checked={Boolean(pageBlock.saveAsModel)} />}
                                         />

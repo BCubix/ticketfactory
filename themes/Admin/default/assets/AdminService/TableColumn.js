@@ -112,6 +112,12 @@ const TableColumnObj = {
         { name: 'email', label: 'Adresse Email', width: '20%', sortable: true },
         { name: 'roles', label: 'Rôle', width: '20%', sortable: true },
     ],
+    LanguagesList: [
+        { name: 'id', label: 'ID', width: '10%' },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+        { name: 'name', label: 'Nom', width: '40%' },
+        { name: 'isoCode', label: 'Code ISO', width: '30%' },
+    ],
 };
 
 /**

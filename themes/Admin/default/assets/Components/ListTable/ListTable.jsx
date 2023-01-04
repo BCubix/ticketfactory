@@ -51,6 +51,7 @@ export const ListTable = ({
     themeId = null,
     changeFilters = null,
     contextualMenu = false,
+    disableDeleteFunction = null,
 }) => {
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -106,8 +107,9 @@ export const ListTable = ({
                                 )}
                             </TableCell>
                         ))}
-                        {(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null))
-                            && <TableCell>Actions</TableCell>}
+                        {(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null)) && (
+                            <TableCell>Actions</TableCell>
+                        )}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -149,8 +151,8 @@ export const ListTable = ({
                                             {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
                                         </Component.ActionFabButton>
                                     )}
-                                    {(onSelect !== null && item.id !== themeId) &&
-                                        (<Component.ActionFabButton
+                                    {onSelect !== null && item.id !== themeId && (
+                                        <Component.ActionFabButton
                                             sx={{ marginInline: 1 }}
                                             color="primary"
                                             size="small"
@@ -161,9 +163,9 @@ export const ListTable = ({
                                             }}
                                         >
                                             <CheckCircleIcon />
-                                        </Component.ActionFabButton>)
-                                    }
-                                    {(onRemove !== null && (item.active === undefined || onDisable === null)) && (
+                                        </Component.ActionFabButton>
+                                    )}
+                                    {onRemove !== null && (item.active === undefined || onDisable === null) && (
                                         <Component.DeleteFabButton
                                             sx={{ marginInline: 1 }}
                                             color="error"
@@ -173,12 +175,13 @@ export const ListTable = ({
                                                 e.stopPropagation();
                                                 onRemove(item.name);
                                             }}
+                                            disabled={() => (disableDeleteFunction ? disableDeleteFunction(item) : false)}
                                         >
                                             <DeleteIcon />
                                         </Component.DeleteFabButton>
                                     )}
-                                    {onEdit !== null &&
-                                        (<Component.EditFabButton
+                                    {onEdit !== null && (
+                                        <Component.EditFabButton
                                             sx={{ marginInline: 1 }}
                                             color="primary"
                                             size="small"
@@ -216,6 +219,7 @@ export const ListTable = ({
                                                     onDelete(item.id);
                                                 }}
                                                 id={`deleteButton-${item.id}`}
+                                                disabled={Boolean(disableDeleteFunction ? disableDeleteFunction(item) : false)}
                                             >
                                                 <DeleteIcon />
                                             </Component.DeleteFabButton>

@@ -7,6 +7,7 @@ const initialState = {
     loading: false,
     error: null,
     imageFormats: null,
+    total: null,
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('imageFormatsActiveFilter')),
         name: sessionStorage.getItem('imageFormatsNameFilter') || '',
@@ -35,6 +36,7 @@ const imageFormatsSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
             state.imageFormats = null;
+            state.total = null;
         },
 
         resetImageFormats: (state) => {
@@ -88,12 +90,6 @@ export function changeImageFormatsFilters(filters, page = 1) {
     };
 }
 
-export const {
-    getImageFormats,
-    getImageFormatsSuccess,
-    getImageFormatsFailure,
-    resetImageFormats,
-    updateImageFormatsFilters,
-} = imageFormatsSlice.actions;
+export const { getImageFormats, getImageFormatsSuccess, getImageFormatsFailure, resetImageFormats, updateImageFormatsFilters } = imageFormatsSlice.actions;
 export const imageFormatsSelector = (state) => state.imageFormats;
 export default imageFormatsSlice.reducer;
