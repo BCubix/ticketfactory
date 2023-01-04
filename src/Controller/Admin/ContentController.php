@@ -8,6 +8,7 @@ use App\Form\Admin\Content\ContentType;
 use App\Form\Admin\Filters\FilterContentType;
 use App\Manager\ContentTypeManager;
 use App\Service\Logger\Logger;
+use App\Utils\CloneObject;
 use App\Utils\FormErrorsCollector;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -50,10 +51,11 @@ class ContentController extends CrudController
         }
 
         $object = new $this->entityClass();
+        $iObject = CloneObject::cloneObject($object);
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'add'
+            'state'  => 'add'
         ]);
 
         $form = $this->createForm($this->typeClass, $object, ['content_type' => $contentType]);
@@ -66,7 +68,11 @@ class ContentController extends CrudController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
+        $this->hs->exec($this->entityClassName . 'Validated', [
+            'iObject' => $iObject,
+            'vObject' => $object,
+            'state'   => 'add'
+        ]);
 
         $object->setContentType($contentType);
 
@@ -87,7 +93,9 @@ class ContentController extends CrudController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $iObject = CloneObject::cloneObject($object);
+
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state' => 'edit'
         ]);
@@ -102,7 +110,11 @@ class ContentController extends CrudController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec('validated.' . $this->entityClass, ['object' => $object]);
+        $this->hs->exec($this->entityClassName . 'Validated', [
+            'iObject' => $iObject,
+            'vObject' => $object,
+            'state'   => 'edit'
+        ]);
 
         $this->em->persist($object);
         $this->em->flush();

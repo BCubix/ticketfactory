@@ -13,21 +13,8 @@ class RoomHook
     public function hookRoomInstantiated(HookEvent $event)
     {
         $room = $event->getParam('object');
-        if (!$this->isSupported($room)) {
-            return;
-        }
-
-        if ($event->getParam('state') !== 'delete') {
-            return;
-        }
-
         if (count($room->getEvents()) > 0) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer cette salle car des événements y sont rattachés.');
         }
-    }
-
-    private function isSupported(Object $object): bool
-    {
-        return (gettype($object) == "object" && get_class($object) == Room::class);
     }
 }

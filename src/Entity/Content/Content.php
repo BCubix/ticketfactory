@@ -31,7 +31,7 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[Gedmo\Slug(fields: ['title'])]
+    #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 123, unique: true)]

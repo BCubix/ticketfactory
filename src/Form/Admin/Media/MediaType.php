@@ -22,6 +22,7 @@ class MediaType extends AbstractType
             ->add('description',          TextType::class,            [])
             ->add('legend',               TextType::class,            [])
             ->add('title',                TextType::class,            [])
+            ->add('slug',                 TextType::class,            [])
         ;
     }
 

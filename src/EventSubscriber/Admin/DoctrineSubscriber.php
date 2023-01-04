@@ -16,7 +16,7 @@ class DoctrineSubscriber implements EventSubscriber
         return [
             Events::prePersist,
             Events::preUpdate,
-            Events::postLoad,
+            Events::postLoad
         ];
     }
 

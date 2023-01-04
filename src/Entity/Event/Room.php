@@ -33,7 +33,7 @@ class Room extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'])]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 123, unique: true)]
@@ -57,7 +57,7 @@ class Room extends Datable
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: SeatingPlan::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $seatingPlans;
 
-    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Event::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Event::class)]
     private $events;
 
     #[JMS\Expose()]

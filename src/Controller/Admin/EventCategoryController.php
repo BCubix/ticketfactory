@@ -99,9 +99,9 @@ class EventCategoryController extends CrudController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec('instantiated.' . $this->entityClass, [
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'delete'
+            'state'  => 'delete'
         ]);
 
         $objectId = $object->getId();

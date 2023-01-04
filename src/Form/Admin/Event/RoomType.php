@@ -19,6 +19,7 @@ class RoomType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [])
             ->add('seatsNb',              IntegerType::class,         [])
             ->add('area',                 IntegerType::class,         [])
             ->add('seatingPlans',         CollectionType::class,      [

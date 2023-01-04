@@ -19,6 +19,7 @@ class ContentType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('title',                TextType::class,            [])
+            ->add('slug',                 TextType::class,            [])
             ->add('fields',               ContentFieldsType::class,   [
                 'content_type' => $contentType
             ])
