@@ -30,6 +30,9 @@ class VersionnedEntityManager extends AbstractManager
         }
 
         $changeSet = $this->compareObjects($newEntity, $oldEntity);
+        if (isset($changeSet['createdAt'])) {
+            unset($changeSet['createdAt']);
+        }
         if (isset($changeSet['updatedAt'])) {
             unset($changeSet['updatedAt']);
         }
@@ -98,15 +101,14 @@ class VersionnedEntityManager extends AbstractManager
 
     protected function compareObjects(Object $newEntity, Object $oldEntity): array
     {
-        if (!property_exists($newEntity, 'id')) {
-            return [];
-        }
+        if (property_exists($newEntity, 'id')) {
+            $key = $this->getKeyword($newEntity) . '-' . $newEntity->getId();
+            if (false !== array_search($key, $this->parsedObjects)) {
+                return [];
+            }
 
-        $key = $this->getKeyword($newEntity) . '-' . $newEntity->getId();
-        if (false !== array_search($key, $this->parsedObjects)) {
-            return [];
+            $this->parsedObjects[] = $key;
         }
-        $this->parsedObjects[] = $key;
 
         $changeSet = [];
 
@@ -148,30 +150,42 @@ class VersionnedEntityManager extends AbstractManager
     {
         $changeSet = [];
 
-        foreach ($newCollection as $newElement) {
-            foreach ($oldCollection as $oldElement) {
-                if (gettype($newElement) != gettype($oldElement)) {
-                    $changeSet[] = ['before' => $newElement, 'after' => $oldElement];
-                    break;
+        $refCollection = $newCollection;
+        $othCollection = $oldCollection;
+        $refIsNew = true;
+
+        if (count($refCollection) < count($othCollection)) {
+            $refCollection = $oldCollection;
+            $othCollection = $newCollection;
+            $refIsNew = false;
+        }
+
+        foreach ($refCollection as $key => $refElement) {
+            $othElement = $othCollection->get($key);
+            $newElement = ($refIsNew ? $refElement : $othElement);
+            $oldElement = ($refIsNew ? $othElement : $refElement);
+
+            if (gettype($oldElement) != gettype($newElement)) {
+                $changeSet[] = ['before' => $oldElement, 'after' => $newElement];
+                break;
+            }
+
+            if (is_object($newElement)) {
+                if ($newElement instanceof Collection) {
+                    $childChangeSet = $this->compareCollections($newElement, $oldElement);
+                } else {
+                    $childChangeSet = $this->compareObjects($newElement, $oldElement);
                 }
 
-                if (is_object($newElement)) {
-                    if ($newElement instanceof Collection) {
-                        $childChangeSet = $this->compareCollections($newElement, $oldElement);
-                    } else {
-                        $childChangeSet = $this->compareObjects($newElement, $oldElement);
-                    }
-
-                    if (count($childChangeSet) > 0) {
-                        $changeSet[] = $childChangeSet;
-                    }
-                    break;
+                if (count($childChangeSet) > 0) {
+                    $changeSet[] = $childChangeSet;
                 }
+                break;
+            }
 
-                if ($newElement != $oldElement) {
-                    $changeSet[] = ['before' => $newElement, 'after' => $oldElement];
-                    break;
-                }
+            if ($newElement != $oldElement) {
+                $changeSet[] = ['before' => $newElement, 'after' => $oldElement];
+                break;
             }
         }
 

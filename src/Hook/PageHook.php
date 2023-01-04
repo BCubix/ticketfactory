@@ -14,11 +14,11 @@ class PageHook
         $this->vem = $vem;
     }
 
-    public function hookPageValidated(HookEvent $event)
+    public function hookPageSaved(HookEvent $event)
     {
         $iObject = $event->getParam('iObject');
-        $vObject = $event->getParam('vObject');
+        $sObject = $event->getParam('sObject');
 
-        $this->vem->checkVersionnedEntity($vObject, $iObject);
+        $this->vem->checkVersionnedEntity($sObject, $iObject);
     }
 }

@@ -91,6 +91,12 @@ abstract class CrudController extends AdminController
         $this->em->persist($object);
         $this->em->flush();
 
+        $this->hs->exec($this->entityClassName . 'Saved', [
+            'iObject' => $iObject,
+            'sObject' => $object,
+            'state'   => 'add'
+        ]);
+
         $this->log->log(0, 0, 'Created object.', $this->entityClass, $object->getId());
 
         return $this->view($object, Response::HTTP_CREATED);
@@ -128,6 +134,12 @@ abstract class CrudController extends AdminController
 
         $this->em->persist($object);
         $this->em->flush();
+
+        $this->hs->exec($this->entityClassName . 'Saved', [
+            'iObject' => $iObject,
+            'sObject' => $object,
+            'state'   => 'edit'
+        ]);
 
         $this->log->log(0, 0, 'Updated object.', $this->entityClass, $object->getId());
 

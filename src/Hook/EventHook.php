@@ -14,11 +14,11 @@ class EventHook
         $this->vem = $vem;
     }
 
-    public function hookEventValidated(HookEvent $event)
+    public function hookEventSaved(HookEvent $event)
     {
         $iObject = $event->getParam('iObject');
-        $vObject = $event->getParam('vObject');
+        $sObject = $event->getParam('sObject');
 
-        $this->vem->checkVersionnedEntity($vObject, $iObject);
+        $this->vem->checkVersionnedEntity($sObject, $iObject);
     }
 }
