@@ -139,4 +139,27 @@ class ModuleService extends ServiceAbstract
 
         return [ 'logoUrl' => $ext ];
     }
+
+    public function install(string $name, array $tree = []): array
+    {
+        $result = parent::install($name, $tree);
+
+        $originFile = "$this->dir/$name/config/migrations/Version$name.php";
+        $targetFile = "$this->projectDir/migrations/Version$name.php";
+
+        if (is_file($originFile)) {
+            $fs = new Filesystem();
+            $fs->copy($originFile, $targetFile);
+        }
+
+        return $result;
+    }
+
+    public function uninstall(string $name): void
+    {
+        parent::uninstall($name);
+
+        $fs = new Filesystem();
+        $fs->remove("$this->projectDir/migrations/Version$name.php");
+    }
 }

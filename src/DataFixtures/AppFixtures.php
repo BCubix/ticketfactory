@@ -8,6 +8,7 @@ use App\Entity\Theme\Theme;
 use App\Entity\User\User;
 use App\Manager\ThemeManager;
 use App\Manager\UserManager;
+use App\Service\ModuleTheme\Service\ThemeService;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -16,11 +17,13 @@ class AppFixtures extends Fixture
 {
     private $um;
     private $tm;
+    private $ts;
 
-    public function __construct(UserManager $um, ThemeManager $tm)
+    public function __construct(UserManager $um, ThemeManager $tm, ThemeService $ts)
     {
         $this->um = $um;
         $this->tm = $tm;
+        $this->ts = $ts;
     }
 
     public function load(ObjectManager $om): void
@@ -165,7 +168,7 @@ class AppFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Thème principal (admin)");
         $parameter->setType("string");
-        $parameter->setParamKey("admin_main_theme");
+        $parameter->setParamKey("admin_theme");
         $parameter->setParamValue("default");
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -186,7 +189,7 @@ class AppFixtures extends Fixture
 
         $theme = new Theme();
         $theme->setName('default');
-        $om->persist($parameter);
+        $om->persist($theme);
 
         // Default User
         $user = new User();
@@ -200,6 +203,7 @@ class AppFixtures extends Fixture
 
         $om->flush();
 
+        $this->ts->install($theme->getName());
         $this->tm->active($theme, true);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Service\ModuleTheme\Service;
 
 use App\Exception\ApiException;
-use App\Utils\Exec;
+use App\Service\Exec\ExecService;
 use App\Utils\Tree;
 use App\Utils\Zip;
 
@@ -84,7 +84,7 @@ abstract class ServiceAbstract
 
         // Finally unzip the real zip in dir
         if (is_dir($this->dir . '/' . $name)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $name existe déjà.");
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le module/thème $name existe déjà.");
         }
 
         Zip::unzip($zipPath, $this->dir);
@@ -92,7 +92,7 @@ abstract class ServiceAbstract
         try {
             $this->install($name);
         } catch (\Exception $e) {
-            $fs->remove($this->dir . '/' . $name);
+            $this->uninstall($name);
             throw $e;
         }
 
@@ -119,6 +119,12 @@ abstract class ServiceAbstract
         $this->checkTree($tree);
 
         return $tree;
+    }
+
+    public function uninstall(string $name): void
+    {
+        $fs = new Filesystem();
+        $fs->remove($this->dir . '/' . $name);
     }
 
     /**
@@ -166,8 +172,7 @@ abstract class ServiceAbstract
      */
     public function clear(): void
     {
-        Exec::exec('php ../bin/console cache:clear');
-        Exec::exec('php ../bin/console doctrine:schema:update --force');
+        ExecService::execClearCache();
     }
 
     /**

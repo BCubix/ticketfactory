@@ -112,16 +112,17 @@ class ModuleController extends AdminController
                 }
 
                 if ($action === Module::ACTION_UNINSTALL_DELETE) {
-                    $this->fs->remove($modulePath);
+                    $this->ms->uninstall($moduleName);
                 } else { // Active module
                     // Check and install the module
                     $this->ms->install($moduleName);
                     $module = $this->mm->createNewModule($moduleName);
                 }
             }
-            $this->em->getConnection()->commit();
         } catch (\Exception $e) {
-            $this->em->getConnection()->rollBack();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->rollBack();
+            }
             throw $e;
         }
 

@@ -24,6 +24,6 @@ abstract class WebsiteController extends AbstractFOSRestController
 
     protected function websiteRender(string $twigFilename): Response
     {
-        return $this->render('Website/' . $this->tm->getWebsiteMainTheme() . '/templates/' . $twigFilename);
+        return $this->render($this->tm->getWebsiteTemplatesPath() . $twigFilename);
     }
 }
