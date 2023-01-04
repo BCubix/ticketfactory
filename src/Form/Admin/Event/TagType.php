@@ -18,6 +18,7 @@ class TagType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [])
             ->add('description',          TextareaType::class,        [])
         ;
     }

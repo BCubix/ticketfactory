@@ -34,7 +34,7 @@ class EventCategory extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'])]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 123, unique: true)]
