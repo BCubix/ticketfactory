@@ -3,18 +3,18 @@
 namespace App\Manager;
 
 use App\Entity\Hook\Hook;
-use App\Service\ModuleTheme\Service\ModuleService;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 class HookManager extends AbstractManager
 {
-    private $ms;
+    private $mm;
 
-    public function __construct(EntityManagerInterface $em, ModuleService $ms)
+    public function __construct(EntityManagerInterface $em, ModuleManager2 $mm)
     {
         parent::__construct($em);
 
-        $this->ms = $ms;
+        $this->mm = $mm;
     }
 
     /**
@@ -45,7 +45,7 @@ class HookManager extends AbstractManager
     {
         $result = [];
 
-        $modules = $this->ms->getAllInDisk();
+        $modules = $this->mm->getAllInDisk();
         $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
 
         $hookName = null;

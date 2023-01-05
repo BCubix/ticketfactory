@@ -1,8 +1,8 @@
 <?php
 
-use App\Service\ModuleTheme\Service\ModuleService;
-
+use App\Service\Db\Db;
 use App\Utils\PathGetter;
+
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return function (RoutingConfigurator $routes) {
@@ -15,7 +15,11 @@ return function (RoutingConfigurator $routes) {
 
     $websiteControllersPath = [];
 
-    $modulesActive = ModuleService::getAllActive();
+    try {
+        $modulesActive = Db::getInstance()->query("SELECT * FROM module WHERE active = '1'");
+    } catch (\Exception $e) {
+        $modulesActive = [];
+    }
     $moduleDir = (new PathGetter(__DIR__.'/../..'))->getModulesDir();
     foreach ($modulesActive as $moduleActive) {
         $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Admin';

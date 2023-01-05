@@ -2,7 +2,8 @@
 
 namespace App;
 
-use App\Service\ModuleTheme\Service\ModuleService;
+use App\Service\Db\Db;
+use App\Utils\PathGetter;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -35,15 +36,22 @@ class Kernel extends BaseKernel
     {
         $bundles = require $this->getBundlesPath();
 
-        $modulesActive = ModuleService::getAllActive();
-        $moduleService = new ModuleService($this->getProjectDir());
-        $moduleDir = $moduleService->getDir();
+        try {
+            $modulesActive = Db::getInstance()->query("SELECT * FROM module WHERE active = '1'");
+        } catch (\Exception $e) {
+            $modulesActive = [];
+        }
+
+        $pg = new PathGetter($this->getProjectDir());
+        $moduleDir = $pg->getModulesDir();
 
         // Add active modules in bundles list
         foreach ($modulesActive as $moduleActive) {
             $moduleName = $moduleActive['name'];
 
             // Register first the namespace of module
+            // TODO: modify call config
+            break;
             $moduleService->callConfig($moduleName, 'register');
 
             // Find file bundle in module

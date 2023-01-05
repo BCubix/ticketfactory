@@ -2,7 +2,8 @@
 
 namespace App\Twig;
 
-use App\Manager\ThemeManager;
+use App\Manager\ThemeManager2;
+
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -10,7 +11,7 @@ class ThemeExtension extends AbstractExtension
 {
     private $tm;
 
-    public function __construct(ThemeManager $tm)
+    public function __construct(ThemeManager2 $tm)
     {
         $this->tm = $tm;
     }

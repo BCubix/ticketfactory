@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Manager\ThemeManager;
+use App\Manager\ThemeManager2;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +11,7 @@ class DefaultController extends AbstractController
 {
     protected $tm;
 
-    public function __construct(ThemeManager $tm)
+    public function __construct(ThemeManager2 $tm)
     {
         $this->tm = $tm;
     }

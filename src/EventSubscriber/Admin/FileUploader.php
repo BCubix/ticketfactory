@@ -4,11 +4,11 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
+use App\Entity\Module\Module;
+use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
-use App\Manager\ModuleManager;
-use App\Manager\ThemeManager;
-use App\Service\ModuleTheme\Service\ModuleService;
-use App\Service\ModuleTheme\Service\ThemeService;
+use App\Manager\ModuleManager2;
+use App\Manager\ThemeManager2;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
@@ -31,17 +31,13 @@ class FileUploader implements EventSubscriberInterface
 
     private $em;
     private $rootPath;
-    private $ms;
-    private $ts;
     private $mm;
     private $tm;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $ms, ThemeService $ts, ModuleManager $mm, ThemeManager $tm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager2 $mm, ThemeManager2 $tm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
-        $this->ms = $ms;
-        $this->ts = $ts;
         $this->mm = $mm;
         $this->tm = $tm;
     }
@@ -120,8 +116,8 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->ms->unzip($response["filename"]);
-        $this->mm->createNewModule($name);
+        $name = $this->mm->unzip($response["filename"]);
+        $this->mm->active($name, Module::ACTION_INSTALL, true);
 
         return $response;
     }
@@ -132,8 +128,13 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->ts->unzip($response["filename"]);
-        $this->tm->createNewTheme($name);
+        $name = $this->tm->unzip($response["filename"]);
+
+        $theme = new Theme();
+        $theme->setName($name);
+
+        $this->em->persist($theme);
+        $this->em->flush();
 
         return $response;
     }

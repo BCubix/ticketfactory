@@ -50,12 +50,3 @@ services:
     App\Utils\PathGetter:
         arguments:
             $projectDir: '%kernel.project_dir%'
-
-    # Services
-    App\Service\ModuleTheme\Service\ModuleService:
-        arguments:
-            $projectDir: '%kernel.project_dir%'
-
-    App\Service\ModuleTheme\Service\ThemeService:
-        arguments:
-            $projectDir: '%kernel.project_dir%'

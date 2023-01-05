@@ -7,7 +7,6 @@ use App\Exception\ApiException;
 use App\Manager\ModuleManager2;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
-use App\Service\ModuleTheme\Service\ModuleService;
 use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +14,6 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,8 +23,6 @@ class ModuleController extends AdminController
     protected const NOT_FOUND_MESSAGE = "Ce module n'existe pas.";
 
     protected $mm;
-    protected $ms;
-    protected $fs;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -34,15 +30,11 @@ class ModuleController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        ModuleManager2 $mm,
-        ModuleService $ms,
-        Filesystem $fs
+        ModuleManager2 $mm
     ) {
         parent::__construct($em, $se, $fec, $log, $hs);
 
         $this->mm = $mm;
-        $this->ms = $ms;
-        $this->fs = $fs;
     }
 
     #[Rest\Get('/modules')]
