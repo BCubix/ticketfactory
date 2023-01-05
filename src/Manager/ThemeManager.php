@@ -101,9 +101,10 @@ class ThemeManager extends ModuleThemeManager
 
         if (isset($tree[$objectName]['config']['modules'])) {
             foreach ($tree[$objectName]['config']['modules'] as $moduleName => $value) {
+                $originDir = $this->dir . '/' . $objectName . '/config/modulesToDeploy/' . $moduleName;
                 $targetDir = $this->pg->getModulesDir() . '/' . $moduleName;
-                if (!is_dir($targetDir)) {
-                    $originDir = $this->dir . '/' . $objectName . '/config/modules/' . $moduleName;
+
+                if (is_dir($originDir) && !is_dir($targetDir)) {
                     $this->fs->mirror($originDir, $targetDir);
                 }
             }
