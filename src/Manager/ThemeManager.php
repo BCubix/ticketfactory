@@ -31,16 +31,23 @@ class ThemeManager extends ModuleThemeManager
     private $ifm;
     private $hs;
 
-    public function __construct(EntityManagerInterface $em, PathGetter $pg, Filesystem $fs, ParameterManager $pm, ModuleManager $mm, ImageFormatManager $ifm, HookService $hs)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        PathGetter             $pg,
+        Filesystem             $fs,
+        ParameterManager       $pm,
+        ModuleManager          $mm,
+        ImageFormatManager     $ifm,
+        HookService            $hs
+    ) {
         parent::__construct($em, $pg, $fs);
 
         $this->dir = $this->pg->getThemesDir();
 
-        $this->pm = $pm;
-        $this->mm = $mm;
+        $this->pm  = $pm;
+        $this->mm  = $mm;
         $this->ifm = $ifm;
-        $this->hs = $hs;
+        $this->hs  = $hs;
     }
 
     public function getAll(array $filters = []): array
@@ -65,7 +72,7 @@ class ThemeManager extends ModuleThemeManager
         $processor = new Processor();
         $themeConfig = new ThemeConfig();
 
-        return $processor->processConfiguration($themeConfig, [ 'theme' => $config ]);
+        return $processor->processConfiguration($themeConfig, ['theme' => $config]);
     }
 
     public function getImage(string $objectName): array
@@ -85,7 +92,7 @@ class ThemeManager extends ModuleThemeManager
             $ext = "/$imageUrlWithoutExt.$ext";
         }
 
-        return [ 'previewUrl' => $ext ];
+        return ['previewUrl' => $ext];
     }
 
     public function install(string $objectName): array
@@ -105,7 +112,7 @@ class ThemeManager extends ModuleThemeManager
         return $tree;
     }
 
-    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName)
+    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
         if ($nodeKey === 'assets') {
             if (!isset($nodeValue[0]) || $nodeValue[0] !== "index.js") {
@@ -147,16 +154,35 @@ class ThemeManager extends ModuleThemeManager
         Exec::exec('yarn run encore production');
     }
 
+    /**
+     * Get admin templates path.
+     *
+     * @return string
+     */
     public function getAdminTemplatesPath(): string
     {
         return "Admin/" . $this->pm->get('admin_theme') . "/templates/";
     }
 
+    /**
+     * Get website templates path.
+     *
+     * @return string
+     */
     public function getWebsiteTemplatesPath(): string
     {
         return "Website/" . $this->pm->get('main_theme') . "/templates/";
     }
 
+    /**
+     * Inject or remove entry in webpack.
+     *
+     * @param string $name
+     * @param bool   $remove
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function entry(string $name, bool $remove): void
     {
         $webpackFilePath = $this->pg->getProjectDir() . 'webpack.config.js';
@@ -164,7 +190,7 @@ class ThemeManager extends ModuleThemeManager
         $file = new FileManipulator($webpackFilePath);
         $content = $file->getContent();
 
-        $needleAppEntry= ".addEntry('app', './themes/Admin/default/assets/index.js')";
+        $needleAppEntry = ".addEntry('app', './themes/Admin/default/assets/index.js')";
         $needleWebsiteEntry = ".addEntry('website', './themes/Website/" . $name . "/assets/index.js')";
 
         // Find position of the end of app entry in content
@@ -186,6 +212,18 @@ class ThemeManager extends ModuleThemeManager
         $file->setContent($newContent);
     }
 
+    /**
+     * Active theme with disable old main theme.
+     *
+     * Active theme not installed : install, add in database, apply config and clear.
+     * Active theme installed     : apply config and clear.
+     *
+     * @param string $themeName
+     * @param bool   $firstTheme
+     *
+     * @return Theme
+     * @throws \Exception
+     */
     public function active(string $themeName, bool $firstTheme = false): Theme
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
@@ -237,6 +275,14 @@ class ThemeManager extends ModuleThemeManager
         return $theme;
     }
 
+    /**
+     * Delete theme in database and in project.
+     *
+     * @param string $themeName
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function delete(string $themeName): void
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
@@ -258,6 +304,12 @@ class ThemeManager extends ModuleThemeManager
         $this->deleteInDisk($themeName);
     }
 
+    /**
+     * Disable main theme.
+     *
+     * @return void
+     * @throws \Exception
+     */
     private function disableMainTheme(): void
     {
         $mainThemeName = $this->pm->get('main_theme');
@@ -283,6 +335,16 @@ class ThemeManager extends ModuleThemeManager
         $this->applyHooksConfig($hooks, false);
     }
 
+    /**
+     * Apply action on modules found in theme configuration.
+     *
+     * @param array $modulesName
+     * @param bool  $activeCondition
+     * @param int   $action
+     *
+     * @return void
+     * @throws \Exception
+     */
     private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action): void
     {
         foreach ($modulesName as $moduleName) {
@@ -290,7 +352,17 @@ class ThemeManager extends ModuleThemeManager
         }
     }
 
-    private function applyImagesTypesConfig(array $imagesTypes, bool $active)
+    /**
+     * Activation of theme  : Set new format if image format exists or create new format
+     * Deactivation of theme: Set false the themeUse of all image format
+     *
+     * @param array $imagesTypes
+     * @param bool  $active
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function applyImagesTypesConfig(array $imagesTypes, bool $active): void
     {
         foreach ($imagesTypes as $name => $format) {
             $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneByNameForAdmin($name);
@@ -320,6 +392,15 @@ class ThemeManager extends ModuleThemeManager
         }
     }
 
+    /**
+     * Apply hook configuration : register or unregister hook.
+     *
+     * @param array $modulesToHook
+     * @param bool  $register
+     *
+     * @return void
+     * @throws \Exception
+     */
     private function applyHooksConfig(array $modulesToHook, bool $register): void
     {
         foreach ($modulesToHook as $hookName => $modulesName) {

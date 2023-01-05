@@ -25,11 +25,25 @@ abstract class ModuleThemeManager extends AbstractManager
         $this->fs = $fs;
     }
 
+    /**
+     * Return list of objects with configuration info.
+     *
+     * @param array $filters
+     *
+     * @return array
+     * @throws \Exception
+     */
     public function getAll(array $filters = []): array
     {
         return $this->getAllInDisk();
     }
 
+    /**
+     * Return list of objects with configuration info.
+     *
+     * @return array
+     * @throws \Exception
+     */
     public function getAllInDisk(): array
     {
         $result = [];
@@ -44,9 +58,33 @@ abstract class ModuleThemeManager extends AbstractManager
         return $result;
     }
 
+    /**
+     * Return the information of object from the config.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     * @throws \Exception
+     */
     public abstract function getConfiguration(string $objectName): array;
+
+    /**
+     * Get image and copy in public directory.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     */
     public abstract function getImage(string $objectName): array;
 
+    /**
+     * Unzip the zip which contains a module or theme.
+     *
+     * @param string $zipName
+     *
+     * @return string name of first directory in zip / name of object
+     * @throws \Exception
+     */
     public function unzip(string $zipName): string
     {
         $zipPath = $this->dir . '/' . $zipName;
@@ -101,11 +139,27 @@ abstract class ModuleThemeManager extends AbstractManager
         return $name;
     }
 
+    /**
+     * Install : check the architecture, ...
+     *
+     * @param string $objectName
+     *
+     * @return array
+     * @throws \Exception
+     */
     public function install(string $objectName): array
     {
         return $this->check($objectName);
     }
 
+    /**
+     * Check the architecture.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     * @throws \Exception
+     */
     public function check(string $objectName): array
     {
         $path = $this->dir . '/' . $objectName;
@@ -113,12 +167,20 @@ abstract class ModuleThemeManager extends AbstractManager
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $path n'existe pas.");
         }
 
-        $tree = [ $objectName => Tree::build($path) ];
+        $tree = [$objectName => Tree::build($path)];
         $this->checkTree($tree);
 
         return $tree;
     }
 
+    /**
+     * Verify tree, so verify the architecture of zip.
+     *
+     * @param array $tree
+     *
+     * @return void
+     * @throws \Exception
+     */
     protected function checkTree(array $tree): void
     {
         if (!$tree) {
@@ -136,8 +198,26 @@ abstract class ModuleThemeManager extends AbstractManager
         }
     }
 
-    protected abstract function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName);
+    /**
+     * Verify node, so verify if the file or the directory corresponds to the architecture.
+     *
+     * @param int|string $nodeKey
+     * @param string|array $nodeValue
+     * @param string $rootName
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected abstract function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void;
 
+    /**
+     * Delete the directory of object (module or theme) and other files configurations.
+     *
+     * @param string $objectName
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function deleteInDisk(string $objectName): void
     {
         $path = $this->dir . '/' . $objectName;
@@ -148,6 +228,12 @@ abstract class ModuleThemeManager extends AbstractManager
         $this->fs->remove($this->dir . '/' . $objectName);
     }
 
+    /**
+     * Clear cache and update project.
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function clear(): void
     {
         ExecService::execClearCache();

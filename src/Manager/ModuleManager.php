@@ -34,61 +34,8 @@ class ModuleManager extends ModuleThemeManager
         parent::__construct($em, $pg, $fs);
 
         $this->dir = $this->pg->getModulesDir();
+
         $this->hs = $hs;
-    }
-
-    public function active(string $moduleName, int $action, bool $active)
-    {
-        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-
-        $modulePath = $this->dir . '/' . $moduleName;
-        if (!is_dir($modulePath)) {
-            if (null !== $module) {
-                $this->em->remove($module);
-                $this->em->flush();
-            }
-            return null;
-        }
-
-        if (null === $module) {
-            switch ($action) {
-                case Module::ACTION_UNINSTALL_DELETE:
-                    $this->deleteInDisk($moduleName);
-                    break;
-                case Module::ACTION_INSTALL:
-                    $this->install($moduleName);
-
-                    $module = new Module();
-                    $module->setName($moduleName);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        if (null !== $module) {
-            if ($action === Module::ACTION_UNINSTALL_DELETE) {
-                // Important: Call uninstallation before delete module
-                $this->callConfig($moduleName, self::ACTIONS[$action]);
-
-                $this->em->remove($module);
-                $this->em->flush();
-
-                $this->deleteInDisk($moduleName);
-                $this->clear();
-            } else if ($active !== $module->isActive()) { // Ignore if already same active
-                $module->setActive($active);
-
-                $this->em->persist($module);
-                $this->em->flush();
-
-                // Important: Call config after install module
-                $this->callConfig($moduleName, self::ACTIONS[$action]);
-                $this->clear();
-            }
-        }
-
-        return $module;
     }
 
     public function getAll(array $filters = []): array
@@ -163,7 +110,7 @@ class ModuleManager extends ModuleThemeManager
             $ext = "/$imageUrlWithoutExt.$ext";
         }
 
-        return [ 'logoUrl' => $ext ];
+        return ['logoUrl' => $ext];
     }
 
     public function install(string $objectName): array
@@ -179,7 +126,7 @@ class ModuleManager extends ModuleThemeManager
         return $result;
     }
 
-    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName)
+    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
         // Check index.js in assets
         if ($nodeKey === 'assets') {
@@ -227,6 +174,80 @@ class ModuleManager extends ModuleThemeManager
         $this->fs->remove("{$this->pg->getProjectDir()}migrations/Version$objectName.php");
     }
 
+    /**
+     * Active module.
+     *
+     * @param string $moduleName
+     * @param int $action
+     * @param bool $active
+     *
+     * @return Module|null
+     * @throws \Exception
+     */
+    public function active(string $moduleName, int $action, bool $active): Module|null
+    {
+        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
+
+        $modulePath = $this->dir . '/' . $moduleName;
+        if (!is_dir($modulePath)) {
+            if (null !== $module) {
+                $this->em->remove($module);
+                $this->em->flush();
+            }
+            return null;
+        }
+
+        if (null === $module) {
+            switch ($action) {
+                case Module::ACTION_UNINSTALL_DELETE:
+                    $this->deleteInDisk($moduleName);
+                    break;
+                case Module::ACTION_INSTALL:
+                    $this->install($moduleName);
+
+                    $module = new Module();
+                    $module->setName($moduleName);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (null !== $module) {
+            if ($action === Module::ACTION_UNINSTALL_DELETE) {
+                // Important: Call uninstallation before delete module
+                $this->callConfig($moduleName, self::ACTIONS[$action]);
+
+                $this->em->remove($module);
+                $this->em->flush();
+
+                $this->deleteInDisk($moduleName);
+                $this->clear();
+            } else if ($active !== $module->isActive()) { // Ignore if already same active
+                $module->setActive($active);
+
+                $this->em->persist($module);
+                $this->em->flush();
+
+                // Important: Call config after install module
+                $this->callConfig($moduleName, self::ACTIONS[$action]);
+                $this->clear();
+            }
+        }
+
+        return $module;
+    }
+
+    /**
+     * Call module configuration function.
+     *
+     * @param string $name
+     * @param string $functionName
+     * @param array $args
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public function callConfig(string $name, string $functionName, array $args = []): mixed
     {
         $moduleConfig = $this->getModuleConfigInstance($name);
@@ -239,6 +260,14 @@ class ModuleManager extends ModuleThemeManager
         return $moduleConfig->{$functionName}(...$args);
     }
 
+    /**
+     * Get instance of module configuration class.
+     *
+     * @param string $name
+     *
+     * @return ModuleConfig
+     * @throws \Exception
+     */
     public function getModuleConfigInstance(string $name): ModuleConfig
     {
         return GetClass::getClass($this->dir . "/$name/{$name}Config.php",
