@@ -6,6 +6,7 @@ use App\Entity\Module\Module;
 use App\Exception\ApiException;
 use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Config\ModuleConfig;
+use App\Utils\GetClass;
 use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -240,19 +241,7 @@ class ModuleManager extends ModuleThemeManager
 
     public function getModuleConfigInstance(string $name): ModuleConfig
     {
-        $configFilePath = $this->dir . "/$name/{$name}Config.php";
-        if (!is_file($configFilePath)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
-                "Le fichier de configuration de $name n'existe pas.");
-        }
-
-        require_once $configFilePath;
-
-        if (!class_exists($name . 'Config')) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "Le fichier de configuration de $name doit contenir la classe {$name}Config.");
-        }
-
-        return new ($name . 'Config')($this->dir, $this->hs);
+        return GetClass::getClass($this->dir . "/$name/{$name}Config.php",
+            $name . 'Config', [$this->dir, $this->hs]);
     }
 }

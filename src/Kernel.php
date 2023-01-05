@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Service\Db\Db;
+use App\Utils\GetClass;
 use App\Utils\PathGetter;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -50,9 +51,9 @@ class Kernel extends BaseKernel
             $moduleName = $moduleActive['name'];
 
             // Register first the namespace of module
-            // TODO: modify call config
-            break;
-            $moduleService->callConfig($moduleName, 'register');
+            $moduleConfig = GetClass::getClass($moduleDir . "/$moduleName/{$moduleName}Config.php",
+                "{$moduleName}Config", [ $moduleDir, null ]);
+            $moduleConfig->register();
 
             // Find file bundle in module
             $bundleFilePath = $moduleDir . '/' . $moduleName . '/src/' . $moduleName . '.php';
