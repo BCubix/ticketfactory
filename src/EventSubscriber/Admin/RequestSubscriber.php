@@ -51,7 +51,7 @@ class RequestSubscriber implements EventSubscriberInterface
             $module = $hook->getModule();
             if (null !== $module) {
                 if (!$module->isActive()) {
-                    return;
+                    continue;
                 }
 
                 $moduleConfig = $this->ms->getModuleConfigInstance($module->getName(), $this->hs);
