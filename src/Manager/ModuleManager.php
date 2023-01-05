@@ -193,6 +193,9 @@ class ModuleManager extends ModuleThemeManager
             if (null !== $module) {
                 $this->em->remove($module);
                 $this->em->flush();
+                if ($this->em->getConnection()->isTransactionActive()) {
+                    $this->em->getConnection()->commit();
+                }
             }
             return null;
         }
@@ -220,6 +223,9 @@ class ModuleManager extends ModuleThemeManager
 
                 $this->em->remove($module);
                 $this->em->flush();
+                if ($this->em->getConnection()->isTransactionActive()) {
+                    $this->em->getConnection()->commit();
+                }
 
                 $this->deleteInDisk($moduleName);
                 $this->clear();
@@ -228,6 +234,9 @@ class ModuleManager extends ModuleThemeManager
 
                 $this->em->persist($module);
                 $this->em->flush();
+                if ($this->em->getConnection()->isTransactionActive()) {
+                    $this->em->getConnection()->commit();
+                }
 
                 // Important: Call config after install module
                 $this->callConfig($moduleName, self::ACTIONS[$action]);

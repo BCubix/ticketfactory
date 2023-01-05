@@ -235,6 +235,9 @@ class ThemeManager extends ModuleThemeManager
 
             $this->em->persist($theme);
             $this->em->flush();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->commit();
+            }
         }
 
         $mainThemeName = $this->pm->get('main_theme');
@@ -261,6 +264,9 @@ class ThemeManager extends ModuleThemeManager
 
         $this->pm->set('main_theme', $themeName);
         $this->em->flush();
+        if ($this->em->getConnection()->isTransactionActive()) {
+            $this->em->getConnection()->commit();
+        }
 
         $this->entry($mainThemeName, true);
         $this->entry($themeName, false);
@@ -385,6 +391,9 @@ class ThemeManager extends ModuleThemeManager
 
             $this->em->persist($imageFormat);
             $this->em->flush();
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->commit();
+            }
         }
 
         if ($active) {

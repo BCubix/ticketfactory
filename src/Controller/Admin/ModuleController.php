@@ -69,7 +69,14 @@ class ModuleController extends AdminController
         $actionStr = $request->get('action');
         $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
-        $module = $this->mm->active($moduleName, $action, $action === Module::ACTION_INSTALL);
+        try {
+            $module = $this->mm->active($moduleName, $action, $action === Module::ACTION_INSTALL);
+        } catch (\Exception $e) {
+            if ($this->em->getConnection()->isTransactionActive()) {
+                $this->em->getConnection()->rollBack();
+            }
+            throw $e;
+        }
 
         return $this->view($module, Response::HTTP_OK);
     }
