@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Module\Module;
 use App\Exception\ApiException;
-use App\Manager\ModuleManager2;
+use App\Manager\ModuleManager;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
@@ -30,7 +30,7 @@ class ModuleController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        ModuleManager2 $mm
+        ModuleManager $mm
     ) {
         parent::__construct($em, $se, $fec, $log, $hs);
 

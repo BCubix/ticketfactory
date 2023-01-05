@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
-use App\Manager\ThemeManager2;
+use App\Manager\ThemeManager;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
@@ -29,7 +29,7 @@ class ThemeController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        ThemeManager2 $tm
+        ThemeManager $tm
     ) {
         parent::__construct($em, $se, $fec, $log, $hs);
 

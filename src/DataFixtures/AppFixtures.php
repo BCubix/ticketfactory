@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Event\EventCategory;
 use App\Entity\Parameter\Parameter;
 use App\Entity\User\User;
-use App\Manager\ThemeManager2;
+use App\Manager\ThemeManager;
 use App\Manager\UserManager;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -16,7 +16,7 @@ class AppFixtures extends Fixture
     private $um;
     private $tm;
 
-    public function __construct(UserManager $um, ThemeManager2 $tm)
+    public function __construct(UserManager $um, ThemeManager $tm)
     {
         $this->um = $um;
         $this->tm = $tm;

@@ -10,7 +10,7 @@ class HookManager extends AbstractManager
 {
     private $mm;
 
-    public function __construct(EntityManagerInterface $em, ModuleManager2 $mm)
+    public function __construct(EntityManagerInterface $em, ModuleManager $mm)
     {
         parent::__construct($em);
 

@@ -7,8 +7,8 @@ use App\Entity\Media\Media;
 use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
-use App\Manager\ModuleManager2;
-use App\Manager\ThemeManager2;
+use App\Manager\ModuleManager;
+use App\Manager\ThemeManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
@@ -34,7 +34,7 @@ class FileUploader implements EventSubscriberInterface
     private $mm;
     private $tm;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager2 $mm, ThemeManager2 $tm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;

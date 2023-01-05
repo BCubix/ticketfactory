@@ -2,7 +2,7 @@
 
 namespace App\Controller\Website;
 
-use App\Manager\ThemeManager2;
+use App\Manager\ThemeManager;
 use App\Service\Hook\HookService;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +15,7 @@ abstract class WebsiteController extends AbstractFOSRestController
     protected $hs;
     protected $tm;
 
-    public function __construct(EntityManagerInterface $em, HookService $hs, ThemeManager2 $tm)
+    public function __construct(EntityManagerInterface $em, HookService $hs, ThemeManager $tm)
     {
         $this->em = $em;
         $this->hs = $hs;

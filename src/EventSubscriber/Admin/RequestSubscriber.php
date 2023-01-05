@@ -3,7 +3,7 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\Hook\Hook;
-use App\Manager\ModuleManager2;
+use App\Manager\ModuleManager;
 use App\Service\Hook\HookService;
 use App\Utils\PathGetter;
 
@@ -22,11 +22,11 @@ class RequestSubscriber implements EventSubscriberInterface
     private $container;
 
     public function __construct(
-        PathGetter $pg,
+        PathGetter             $pg,
         EntityManagerInterface $em,
-        ModuleManager2 $mm,
-        HookService $hs,
-        ContainerInterface $container
+        ModuleManager          $mm,
+        HookService            $hs,
+        ContainerInterface     $container
     ) {
         $this->pg = $pg;
         $this->em = $em;
