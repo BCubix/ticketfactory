@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Module\Module;
 use App\Exception\ApiException;
-use App\Manager\ModuleManager;
+use App\Manager\ModuleManager2;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Service\ModuleTheme\Service\ModuleService;
@@ -34,7 +34,7 @@ class ModuleController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        ModuleManager $mm,
+        ModuleManager2 $mm,
         ModuleService $ms,
         Filesystem $fs
     ) {
@@ -53,28 +53,7 @@ class ModuleController extends AdminController
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
 
-        $filters['sortField'] = 'name';
-        $filters['sortOrder'] = 'ASC';
-        $modules = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
-
-        $modulesInDisk = $this->ms->getAllInDisk();
-        $indexDisk = 0;
-        $lenDisk = count($modulesInDisk);
-
-        for ($i = 0; $i < $modules['total']; ++$i) {
-            $moduleName = $modules['results'][$i]->getName();
-            while ($indexDisk < $lenDisk && $moduleName !== $modulesInDisk[$indexDisk]['name']) {
-                $indexDisk++;
-            }
-            if ($indexDisk === $lenDisk) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module $moduleName n'a pas de dossier enregistré.");
-            }
-
-            $modules['results'][$i] = [
-                ...$modulesInDisk[$indexDisk],
-                'active' => $modules['results'][$i]->isActive()
-            ];
-        }
+        $modules = $this->mm->getAll($filters);
 
         return $this->view($modules, Response::HTTP_OK);
     }
@@ -98,33 +77,7 @@ class ModuleController extends AdminController
         $actionStr = $request->get('action');
         $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
-        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-
-        $this->em->getConnection()->beginTransaction();
-        try {
-            if (null !== $module) {
-                $this->mm->doAction($module, $action);
-            } else {
-                // Find module in disk (not already install)
-                $modulePath = $this->ms->getDir() . '/' . $moduleName;
-                if (!is_dir($modulePath)) {
-                    throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $modulePath n'existe pas.");
-                }
-
-                if ($action === Module::ACTION_UNINSTALL_DELETE) {
-                    $this->ms->uninstall($moduleName);
-                } else { // Active module
-                    // Check and install the module
-                    $this->ms->install($moduleName);
-                    $module = $this->mm->createNewModule($moduleName);
-                }
-            }
-        } catch (\Exception $e) {
-            if ($this->em->getConnection()->isTransactionActive()) {
-                $this->em->getConnection()->rollBack();
-            }
-            throw $e;
-        }
+        $module = $this->mm->active($moduleName, $action, $action === Module::ACTION_INSTALL);
 
         return $this->view($module, Response::HTTP_OK);
     }
