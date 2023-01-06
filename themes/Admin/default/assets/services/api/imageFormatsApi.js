@@ -71,7 +71,7 @@ const imageFormatsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
-            formData.append('length', data.length);
+            formData.append('width', data.width);
             formData.append('height', data.height);
 
             const result = await axios.post('/image-formats', formData);
@@ -88,7 +88,7 @@ const imageFormatsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
-            formData.append('length', data.length);
+            formData.append('width', data.width);
             formData.append('height', data.height);
 
             const result = await axios.post(`/image-formats/${id}`, formData);
