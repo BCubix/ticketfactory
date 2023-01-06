@@ -110,6 +110,24 @@ const imageFormatsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    generateImageFormat: async (data, chunkMediaIndex) => {
+        try {
+            let url = '/image-formats/generate'
+            if (data.formatId !== -1) {
+                url += `/${data.formatId}`;
+            }
+
+            url += `?deleteOldThumbnails=${data.deleteOldThumbnails ? 1 : 0}`
+            url += `&chunkMediaIndex=${chunkMediaIndex}`
+
+            const result = await axios.post(url);
+
+            return { result: true, imageFormat: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    }
 };
 
 export default imageFormatsApi;

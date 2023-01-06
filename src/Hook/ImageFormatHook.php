@@ -26,7 +26,7 @@ class ImageFormatHook
             return;
         }
 
-        $result = $this->ifm->deleteThumbnails([$imageFormat]);
+        $result = $this->ifm->deleteThumbnails([ 'results' => [ $imageFormat] ]);
         if (!$result) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
                 "Une erreur s'est produite lors de la suppression du format d'images : " . $imageFormat->getName());

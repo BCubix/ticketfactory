@@ -63,6 +63,7 @@ import { HooksList } from '@Apps/Hooks/HooksList/HooksList';
 import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatForm';
+import { ImageFormatGenerateForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatGenerateForm";
 import { ImageFormatsFilters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
 import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { Login } from '@Apps/Login/Login';
@@ -270,6 +271,7 @@ const ComponentObj = {
     CreateImageFormat: CreateImageFormat,
     EditImageFormat: EditImageFormat,
     ImageFormatForm: ImageFormatForm,
+    ImageFormatGenerateForm: ImageFormatGenerateForm,
     ImageFormatsFilters: ImageFormatsFilters,
     ImageFormatsList: ImageFormatsList,
 
