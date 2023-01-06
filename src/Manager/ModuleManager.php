@@ -205,12 +205,14 @@ class ModuleManager extends ModuleThemeManager
                 case Module::ACTION_UNINSTALL_DELETE:
                     $this->deleteInDisk($moduleName);
                     break;
+
                 case Module::ACTION_INSTALL:
                     $this->install($moduleName);
 
                     $module = new Module();
                     $module->setName($moduleName);
                     break;
+
                 default:
                     break;
             }

@@ -106,7 +106,7 @@ class HookController extends AdminController
         $destPosition = $request->get('dest');
 
         if (null === $srcPosition || null === $destPosition) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La requête n'a pas les informations requis.");
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La requête n'a pas les informations requises.");
         }
 
         $this->hm->updateHook($hooks, $srcPosition, $destPosition);

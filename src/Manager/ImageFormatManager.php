@@ -206,7 +206,7 @@ class ImageFormatManager extends AbstractManager
         imagefilledrectangle($destImage, 0, 0, $canvW, $canvH, $rgba);
     }
 
-    public function write(string $type, $resource, string $filename): bool
+    private function write(string $type, $resource, string $filename): bool
     {
         switch ($type) {
             case IMAGETYPE_WEBP:

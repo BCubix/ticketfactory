@@ -17,7 +17,7 @@ class GetClass
      * @return mixed
      * @throws ApiException
      */
-    public static function getClass(string $path, string $className, array $args = [])
+    public static function getClass(string $path, string $className, array $args = []): mixed
     {
         if (!is_file($path)) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,

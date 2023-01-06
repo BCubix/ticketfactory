@@ -12,6 +12,7 @@ use App\Manager\ThemeManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
+use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Oneup\UploaderBundle\UploadEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -49,7 +50,7 @@ class FileUploader implements EventSubscriberInterface
         ];
     }
 
-    public function onUpload(PostPersistEvent $event)
+    public function onUpload(PostPersistEvent $event): ResponseInterface
     {
         $route = $event->getRequest()->get("_route");
 
@@ -66,7 +67,7 @@ class FileUploader implements EventSubscriberInterface
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
     }
 
-    public function mediaUpload(PostPersistEvent $event)
+    public function mediaUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
@@ -101,7 +102,7 @@ class FileUploader implements EventSubscriberInterface
         return $response;
     }
 
-    public function parameterUpload(PostPersistEvent $event)
+    public function parameterUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
@@ -110,7 +111,7 @@ class FileUploader implements EventSubscriberInterface
         return $response;
     }
 
-    public function moduleUpload(PostPersistEvent $event)
+    public function moduleUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
@@ -122,7 +123,7 @@ class FileUploader implements EventSubscriberInterface
         return $response;
     }
 
-    public function themeUpload(PostPersistEvent $event)
+    public function themeUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
