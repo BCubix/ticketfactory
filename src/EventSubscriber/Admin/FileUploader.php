@@ -9,6 +9,7 @@ use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
+use App\Service\Hook\HookService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
@@ -34,13 +35,15 @@ class FileUploader implements EventSubscriberInterface
     private $rootPath;
     private $mm;
     private $tm;
+    private $hs;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookService $hs)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
         $this->mm = $mm;
         $this->tm = $tm;
+        $this->hs = $hs;
     }
 
     public static function getSubscribedEvents(): array
@@ -98,6 +101,11 @@ class FileUploader implements EventSubscriberInterface
         $this->em->flush();
 
         $this->moveFile($media, $event->getRequest()->get('filePath') . "/");
+
+        $this->hs->exec('MediaSaved', [
+            'sObject' => $media,
+            'state'   => 'add'
+        ]);
 
         return $response;
     }
