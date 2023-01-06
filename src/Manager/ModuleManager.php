@@ -40,6 +40,7 @@ class ModuleManager extends ModuleThemeManager
 
     public function getAll(array $filters = []): array
     {
+        $filters['page'] = !isset($filters['page']) ? 0 : $filters['page'];
         $filters['sortField'] = 'name';
         $filters['sortOrder'] = 'ASC';
         $modules = $this->em->getRepository(Module::class)->findAllForAdmin($filters);

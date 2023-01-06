@@ -60,7 +60,7 @@ class ImageFormatController extends CrudController
     public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
     {
         if (null === $formatId) {
-            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         } else {
             $format = $this->em->getRepository(ImageFormat::class)->findOneForAdmin($formatId);
             if (null === $format) {

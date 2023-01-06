@@ -29,7 +29,7 @@ class ImageFormatManager extends AbstractManager
     public function generateThumbnails(array $formats = null, array $medias = null): bool
     {
         if (null === $formats) {
-            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         }
 
         if (null === $medias) {
@@ -63,8 +63,7 @@ class ImageFormatManager extends AbstractManager
     {
         $deleteAll = null === $formats;
         if (null === $formats) {
-            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
-            $formats = $formats['results'];
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         }
 
         if (null === $medias) {
@@ -86,7 +85,7 @@ class ImageFormatManager extends AbstractManager
                     $this->fs->remove(dirname($mediaPath));
                 } else {
                     // Rm only format request
-                    foreach ($formats as $format) {
+                    foreach ($formats['results'] as $format) {
                         $mediaThumbnailPath = $this->mm->getFilePathFromFormat($mediaFile, $format);
                         $this->fs->remove($mediaThumbnailPath);
                     }
