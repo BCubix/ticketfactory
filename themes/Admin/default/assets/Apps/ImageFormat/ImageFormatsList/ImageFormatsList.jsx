@@ -100,7 +100,9 @@ export const ImageFormatsList = () => {
                     <Typography component="p">
                         Êtes-vous sûr de vouloir supprimer ce format d'image ?
                     </Typography>
-
+                    <Typography component="p">
+                        Les miniatures seront supprimées.
+                    </Typography>
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>

@@ -64,6 +64,7 @@ class ImageFormatManager extends AbstractManager
         $deleteAll = null === $formats;
         if (null === $formats) {
             $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+            $formats = $formats['results'];
         }
 
         if (null === $medias) {
@@ -85,7 +86,7 @@ class ImageFormatManager extends AbstractManager
                     $this->fs->remove(dirname($mediaPath));
                 } else {
                     // Rm only format request
-                    foreach ($formats['results'] as $format) {
+                    foreach ($formats as $format) {
                         $mediaThumbnailPath = $this->mm->getFilePathFromFormat($mediaFile, $format);
                         $this->fs->remove($mediaThumbnailPath);
                     }
