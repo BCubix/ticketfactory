@@ -21,6 +21,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                 active: initialValues?.active || false,
                 width: initialValues?.width || '',
                 height: initialValues?.height || '',
+                themeUse: initialValues?.themeUse || false,
             }}
             validationSchema={imageFormatSchema}
             onSubmit={async (values, { setSubmitting }) => {

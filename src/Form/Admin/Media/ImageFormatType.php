@@ -21,6 +21,7 @@ class ImageFormatType extends AbstractType
             ->add('name',                 TextType::class,            [])
             ->add('width',                IntegerType::class,         [])
             ->add('height',               IntegerType::class,         [])
+            ->add('themeUse',             CheckboxType::class,        ['false_values' => ['0']])
         ;
     }
 
