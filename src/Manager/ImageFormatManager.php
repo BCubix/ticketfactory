@@ -249,14 +249,18 @@ class ImageFormatManager extends AbstractManager
 
     private function write(string $type, $resource, string $filename): bool
     {
+        $filenameWithoutExt = substr($filename, 0, strrpos($filename, '.'));
         switch ($type) {
             case IMAGETYPE_WEBP:
+                $filename = $filenameWithoutExt . '.webp';
                 $quality = (int) $this->pm->get('image_webp_quality') ?? 75;
                 $success = imagewebp($resource, $filename, $quality);
                 break;
 
             case IMAGETYPE_PNG:
+                $filename = $filenameWithoutExt . '.png';
                 $quality = (int) $this->pm->get('image_png_quality') ?? 75;
+                $quality = (int) ($quality * 9 / 100);
                 $success = imagepng($resource, $filename, $quality);
                 break;
 
@@ -264,6 +268,7 @@ class ImageFormatManager extends AbstractManager
             default:
                 imageinterlace($resource, 1);
 
+                $filename = $filenameWithoutExt . '.jpg';
                 $quality = (int) $this->pm->get('image_jpg_quality') ?? 90;
                 $success = imagejpeg($resource, $filename, $quality);
                 break;
