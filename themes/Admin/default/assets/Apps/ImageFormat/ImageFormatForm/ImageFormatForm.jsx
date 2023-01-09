@@ -1,4 +1,5 @@
 import React from 'react';
+import slugify from 'react-slugify';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -10,6 +11,7 @@ import { Component } from '@/AdminService/Component';
 export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
     const imageFormatSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du format.').max(250, 'Le nom renseigné est trop long.'),
+        slug: Yup.string().required('Veuillez renseigner le slug du format.').max(250, 'Le slug renseigné est trop long.'),
         width: Yup.number().required('Veuillez renseigner la largeur du format.').min(1, 'Veuillez renseigner une largeur valide.'),
         height: Yup.number().required('Veuillez renseigner la hauteur du format.').min(1, 'Veuillez renseigner une hauteur valide.'),
     });
@@ -18,6 +20,7 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
         <Formik
             initialValues={{
                 name: initialValues?.name || '',
+                slug: initialValues?.slug || '',
                 active: initialValues?.active || false,
                 width: initialValues?.width || '',
                 height: initialValues?.height || '',
@@ -33,14 +36,29 @@ export const ImageFormatForm = ({ handleSubmit, initialValues = null }) => {
                 <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'un format`} component={'form'} onSubmit={handleSubmit}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <Component.CmtTextField
                                     value={values.name}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setFieldValue('slug', slugify(e.target.value));
+                                    }}
                                     onBlur={handleBlur}
                                     label="Nom du type d'image"
                                     name="name"
                                     error={touched.name && errors.name}
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtTextField
+                                    value={values.slug}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Slug du type d'image"
+                                    name="slug"
+                                    error={touched.slug && errors.slug}
                                     required
                                 />
                             </Grid>

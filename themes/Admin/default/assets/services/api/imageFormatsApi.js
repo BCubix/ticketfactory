@@ -71,6 +71,7 @@ const imageFormatsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('slug', data.slug);
             formData.append('width', data.width);
             formData.append('height', data.height);
             formData.append('themeUse', data.themeUse ? 1 : 0);
@@ -89,6 +90,7 @@ const imageFormatsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('slug', data.slug);
             formData.append('width', data.width);
             formData.append('height', data.height);
             formData.append('themeUse', data.themeUse ? 1 : 0);
