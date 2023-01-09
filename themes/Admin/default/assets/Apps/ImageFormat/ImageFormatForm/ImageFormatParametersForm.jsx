@@ -11,7 +11,7 @@ const IMAGETYPE_WEBP = "18";
 const IMAGETYPE_PNG = "3";
 const IMAGETYPE_JPG = "2";
 
-export const ImageFormatParameterForm = ({ initialValues = null, handleSubmit }) => {
+export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }) => {
     const imageFormatsParameterSchema = Yup.object().shape({
         image_webp_quality: Yup.number().required('Veuillez renseigner la qualité d\'image WEBP.')
             .min(0, 'Veuillez renseigner un nombre valide.')

@@ -40,14 +40,13 @@ export const ThemesList = () => {
         }
 
         apiMiddleware(dispatch, async () => {
-            const result = await Api.parametersApi.getParametersByKey('main_theme');
-            if (!result.result || !result.parameters) {
+            const result = await Api.parametersApi.getParameterValueByKey('main_theme');
+            if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
                 return;
             }
 
-            setThemeName(result.parameters[0].paramValue);
+            setThemeName(result.paramValue);
         });
     }, []);
 

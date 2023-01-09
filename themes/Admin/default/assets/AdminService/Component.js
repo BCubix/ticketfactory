@@ -64,9 +64,9 @@ import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateIma
 import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatForm';
 import { ImageFormatGenerateForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatGenerateForm";
-import { ImageFormatParameterForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatParameterForm";
+import { ImageFormatParametersForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatParametersForm";
 import { ImageFormatsFilters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
-import { ImageFormatParameter } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatParameter";
+import { ImageFormatParameters } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatParameters";
 import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { Login } from '@Apps/Login/Login';
 import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
@@ -274,9 +274,9 @@ const ComponentObj = {
     EditImageFormat: EditImageFormat,
     ImageFormatForm: ImageFormatForm,
     ImageFormatGenerateForm: ImageFormatGenerateForm,
-    ImageFormatParameterForm: ImageFormatParameterForm,
+    ImageFormatParametersForm: ImageFormatParametersForm,
     ImageFormatsFilters: ImageFormatsFilters,
-    ImageFormatParameter: ImageFormatParameter,
+    ImageFormatParameters: ImageFormatParameters,
     ImageFormatsList: ImageFormatsList,
 
     Login: Login,

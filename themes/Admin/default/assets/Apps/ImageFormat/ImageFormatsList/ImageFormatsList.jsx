@@ -148,7 +148,7 @@ export const ImageFormatsList = () => {
                     </CardContent>
                 </Component.CmtCard>
 
-                <Component.ImageFormatParameter />
+                <Component.ImageFormatParameters />
 
                 <Component.ImageFormatGenerateForm
                     imageFormats={imageFormats}

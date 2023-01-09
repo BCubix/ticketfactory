@@ -18,6 +18,7 @@ class ImageFormatType extends AbstractType
     {
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
+            ->add('slug',                 TextType::class,            [])
             ->add('name',                 TextType::class,            [])
             ->add('width',                IntegerType::class,         [])
             ->add('height',               IntegerType::class,         [])

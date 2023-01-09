@@ -5,17 +5,7 @@ const parametersApi = {
         try {
             const result = await axios.get('/parametres');
 
-            return { result: true, parameters: result.data?.results };
-        } catch (error) {
-            return { result: false, error: error?.response?.data };
-        }
-    },
-
-    getParametersByKey: async (key) => {
-        try {
-            const result = await axios.get(`/parametres?filters[paramKey]=${key}`);
-
-            return { result: true, parameters: result.data?.results };
+            return { result: true, parameters: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
@@ -25,7 +15,7 @@ const parametersApi = {
         try {
             const result = await axios.get(`/parametres/${key}`);
 
-            return { result: true, parameter: result.data };
+            return { result: true, paramValue: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

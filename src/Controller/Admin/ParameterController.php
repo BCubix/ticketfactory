@@ -10,7 +10,6 @@ use App\Form\Admin\Parameter\ParameterType;
 
 use App\Manager\ParameterManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,15 +24,10 @@ class ParameterController extends AdminController
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
 
     #[Rest\Get('/parametres')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getAll(Request $request, ParamFetcher $paramFetcher): View
+    public function getAll(Request $request, ParameterManager $pm): View
     {
-        $filters = $paramFetcher->get('filters');
-        $filters = empty($filters) ? [] : $filters;
-        $objects = $this->em->getRepository(static::ENTITY_CLASS)->findAllForAdmin($filters);
-
-        return $this->view($objects, Response::HTTP_OK);
+        return $this->view($pm->getAll(), Response::HTTP_OK);
     }
 
     #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
