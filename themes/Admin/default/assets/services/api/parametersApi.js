@@ -26,6 +26,7 @@ const parametersApi = {
             let formData = new FormData();
 
             data.parameters.forEach((parameter, index) => {
+                formData.append(`parameters[${index}][id]`, parameter.id);
                 formData.append(`parameters[${index}][paramValue]`, parameter.paramValue);
             });
 

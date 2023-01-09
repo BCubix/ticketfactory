@@ -36,27 +36,31 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function edit(Request $request, ParamFetcher $paramFetcher)
+    public function edit(Request $request): View
     {
-        $filters = $paramFetcher->get('filters');
-        $filters = empty($filters) ? [] : $filters;
-        $parameters = $this->em->getRepository(static::ENTITY_CLASS)->findAllForAdmin($filters);
-        if (null === $parameters) {
-            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+        $parameters = $request->request->all();
+        if (!isset($parameters['parameters'])) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
+                self::FORM_ERROR_MESSAGE);
         }
 
-        $parameters = $parameters["results"];
-
         $parametersContainer = new ParametersContainer();
-        foreach ($parameters as $parameter) {
+        for ($i = 0; $i < count($parameters['parameters']); ++$i) {
+            $parameterRequest = $parameters['parameters'][$i];
+
+            $parameter = $this->em->getRepository(static::ENTITY_CLASS)->findOneForAdmin($parameterRequest['id']);
+            if (null === $parameter) {
+                throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+            }
+
             $parametersContainer->addParameter($parameter);
+            $parameters['parameters'][$i] = [ "paramValue" => $parameterRequest["paramValue"] ];
         }
 
         $form = $this->createForm(ParametersContainerType::class,
             $parametersContainer);
-        $fields = array_replace_recursive($request->request->all(), $request->files->all());
+        $fields = array_replace_recursive($parameters, $request->files->all());
         $form->submit($fields);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
@@ -64,6 +68,8 @@ class ParameterController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
                 self::FORM_ERROR_MESSAGE, $errors);
         }
+
+        $parameters = $parametersContainer->getParameters();
 
         foreach ($parameters as $parameter) {
             $this->em->persist($parameter);
