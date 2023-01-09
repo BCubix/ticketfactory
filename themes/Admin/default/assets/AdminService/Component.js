@@ -66,6 +66,7 @@ import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatFo
 import { ImageFormatGenerateForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatGenerateForm";
 import { ImageFormatParametersForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatParametersForm";
 import { ImageFormatsFilters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
+import { ImageFormatGenerate } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatGenerate";
 import { ImageFormatParameters } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatParameters";
 import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { Login } from '@Apps/Login/Login';
@@ -276,6 +277,7 @@ const ComponentObj = {
     ImageFormatGenerateForm: ImageFormatGenerateForm,
     ImageFormatParametersForm: ImageFormatParametersForm,
     ImageFormatsFilters: ImageFormatsFilters,
+    ImageFormatGenerate: ImageFormatGenerate,
     ImageFormatParameters: ImageFormatParameters,
     ImageFormatsList: ImageFormatsList,
 

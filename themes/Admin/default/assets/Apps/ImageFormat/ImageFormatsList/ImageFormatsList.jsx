@@ -31,25 +31,11 @@ export const ImageFormatsList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
-    const [percentageDialog, setPercentageDialog] = useState(false);
-    const [percentage, setPercentage] = useState(0);
-    const [medias, setMedias] = useState([]);
 
     useEffect(() => {
         if (!loading && !imageFormats && !error) {
             dispatch(getImageFormatsAction());
         }
-
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getMedias({ page: 0 });
-            if (!result.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-                return;
-            }
-
-            setMedias(result.medias);
-        });
     }, []);
 
     const handleDelete = async (id) => {
@@ -60,37 +46,9 @@ export const ImageFormatsList = () => {
         setDeleteDialog(null);
     };
 
-    const handleSubmitGenerate = async (values) => {
-        const mediaLength = medias.length;
-
-        const nbRequest = parseInt(mediaLength / 10) + (mediaLength % 10 > 0);
-        const percentageByRequest = 100 / nbRequest;
-
-        setPercentageDialog(true);
-
-        let success = true;
-        for (let i = 0; i < nbRequest; ++i) {
-            await apiMiddleware(dispatch, async () => {
-                const result = await Api.imageFormatsApi.generateImageFormat(values, i);
-                success = success && result.result;
-                setPercentage((percentage) => percentage + percentageByRequest);
-            });
-        }
-
-        await new Promise(r => setTimeout(r, 1000));
-        setPercentageDialog(false);
-        setPercentage(0);
-
-        if (!success) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-        } else {
-            NotificationManager.success(
-                'Les médias ont bien été généré.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
-        }
-    };
+    if (null === imageFormats) {
+        return <></>;
+    }
 
     return (
         <>
@@ -149,24 +107,8 @@ export const ImageFormatsList = () => {
                 </Component.CmtCard>
 
                 <Component.ImageFormatParameters />
-
-                <Component.ImageFormatGenerateForm
-                    imageFormats={imageFormats}
-                    handleSubmit={handleSubmitGenerate}
-                />
+                <Component.ImageFormatGenerate />
             </Component.CmtPageWrapper>
-            <Dialog
-                fullWidth
-                open={percentageDialog}
-                sx={{ display: 'flex', justifyContent: 'center' }}
-            >
-                <DialogTitle sx={{ fontSize: 17 }}>Génération des formats</DialogTitle>
-                <DialogContent>
-                    <Box sx={{ width: '100%' }}>
-                        <LinearProgress variant="determinate" value={percentage} />
-                    </Box>
-                </DialogContent>
-            </Dialog>
             <Component.DeleteDialog
                 open={deleteDialog ? true : false}
                 onCancel={() => setDeleteDialog(null)}
