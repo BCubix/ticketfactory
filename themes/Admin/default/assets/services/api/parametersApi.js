@@ -21,12 +21,22 @@ const parametersApi = {
         }
     },
 
+    getParameterValueByKey: async (key) => {
+        try {
+            const result = await axios.get(`/parametres/${key}`);
+
+            return { result: true, parameter: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     editParameters: async (data) => {
         try {
             let formData = new FormData();
 
             data.parameters.forEach((parameter, index) => {
-                formData.append(`parameters[${index}][id]`, parameter.id);
+                formData.append(`parameters[${index}][paramKey]`, parameter.paramKey);
                 formData.append(`parameters[${index}][paramValue]`, parameter.paramValue);
             });
 

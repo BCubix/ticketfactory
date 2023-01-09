@@ -8,6 +8,7 @@ use App\Exception\ApiException;
 use App\Form\Admin\Parameter\ParametersContainerType;
 use App\Form\Admin\Parameter\ParameterType;
 
+use App\Manager\ParameterManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
@@ -35,9 +36,16 @@ class ParameterController extends AdminController
         return $this->view($objects, Response::HTTP_OK);
     }
 
+    #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getValue(Request $request, string $parameterKey, ParameterManager $pm): View
+    {
+        return $this->view($pm->get($parameterKey), Response::HTTP_OK);
+    }
+
     #[Rest\Post('/parametres')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function edit(Request $request): View
+    public function edit(Request $request, ParameterManager $pm): View
     {
         $parameters = $request->request->all();
         if (!isset($parameters['parameters'])) {
@@ -49,13 +57,10 @@ class ParameterController extends AdminController
         for ($i = 0; $i < count($parameters['parameters']); ++$i) {
             $parameterRequest = $parameters['parameters'][$i];
 
-            $parameter = $this->em->getRepository(static::ENTITY_CLASS)->findOneForAdmin($parameterRequest['id']);
-            if (null === $parameter) {
-                throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
-            }
-
+            $parameter = $pm->getParameter($parameterRequest['paramKey']);
             $parametersContainer->addParameter($parameter);
-            $parameters['parameters'][$i] = [ "paramValue" => $parameterRequest["paramValue"] ];
+
+            $parameters['parameters'][$i] = [ 'paramValue' => $parameterRequest['paramValue'] ];
         }
 
         $form = $this->createForm(ParametersContainerType::class,
