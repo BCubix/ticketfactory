@@ -97,7 +97,7 @@ export function setMenu(position, title, menu = []) {
         checkObject(icon);
     }
 
-    MenuObj[position] = () => ({
+    MenuObj[position - 1] = () => ({
         title: title,
         menu: menu,
     });
@@ -164,7 +164,7 @@ export function setSubMenu(position, title, name, link, icon) {
         throw new Error(`The position ${position} must be less than length of menu`);
     }
 
-    menu.menu[position] = { name: name, link: link, icon: icon };
+    menu.menu[position - 1] = { name: name, link: link, icon: icon };
 
     MenuObj[index] = () => ({
         title: menu.title,
