@@ -7,6 +7,8 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
+import { changeSlug } from '@Services/utils/changeSlug';
+
 export const TagsForm = ({ handleSubmit, initialValues = null }) => {
     const tagSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du tag.'),
@@ -27,22 +29,29 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                 setSubmitting(false);
             }}
         >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
+            {({ values, errors, touched, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'un tag`} component="form" onSubmit={handleSubmit}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.name}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                setFieldValue('name', e.target.value);
+                                if (!values.editSlug && !initialValues) {
+                                    setFieldValue('slug', changeSlug(e.target.value));
+                                }
+                            }}
                             onBlur={handleBlur}
                             label="Nom"
                             name="name"
                             error={touched.name && errors.name}
-                            sx={{ marginBottom: 3 }}
+                            sx={{ marginBottom: 2 }}
                             required
                         />
                         <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
 
-                        <InputLabel id="description">Description</InputLabel>
+                        <InputLabel id="description" sx={{ marginTop: 3 }}>
+                            Description
+                        </InputLabel>
                         <Component.LightEditorFormControl id="descriptionControl">
                             <Component.LightEditor
                                 labelId="description"

@@ -8,6 +8,7 @@ import { Button, FormHelperText } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { useNavigate } from 'react-router-dom';
 import { Constant } from '@/AdminService/Constant';
+import { changeSlug } from '@Services/utils/changeSlug';
 
 export const PagesForm = ({ handleSubmit, initialValues = null }) => {
     const navigate = useNavigate();
@@ -39,6 +40,8 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                             xl: column?.xl || 12,
                         })),
                     })) || [],
+                slug: initialValues?.slug || '',
+                editSlug: false,
             }}
             validationSchema={pageSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -66,12 +69,18 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.title}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                setFieldValue('title', e.target.value);
+                                if (!values.editSlug && !initialValues) {
+                                    setFieldValue('slug', changeSlug(e.target.value));
+                                }
+                            }}
                             onBlur={handleBlur}
                             label="Titre de la page"
                             name="title"
                             error={touched.title && errors.title}
                         />
+                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Blocs">

@@ -74,6 +74,8 @@ export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList,
                         position: el.position,
                         id: el.media?.id,
                     })) || [],
+                slug: initialValues?.slug || '',
+                editSlug: false,
             }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -103,6 +105,7 @@ export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList,
                                         seasonsList={seasonsList}
                                         categoriesList={categoriesList}
                                         tagsList={tagsList}
+                                        editMode={Boolean(initialValues)}
                                     />
                                 ),
                             },

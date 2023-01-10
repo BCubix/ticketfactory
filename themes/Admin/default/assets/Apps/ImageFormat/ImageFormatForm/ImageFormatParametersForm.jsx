@@ -1,30 +1,31 @@
 import React from 'react';
 import { Formik } from 'formik';
 
-import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, Switch, Typography } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, Switch, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
-import * as Yup from "yup";
+import { Component } from '@/AdminService/Component';
+import * as Yup from 'yup';
 
-const IMAGETYPE_WEBP = "18";
-const IMAGETYPE_PNG = "3";
-const IMAGETYPE_JPG = "2";
+const IMAGETYPE_WEBP = '18';
+const IMAGETYPE_PNG = '3';
+const IMAGETYPE_JPG = '2';
 
 export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }) => {
     const imageFormatsParameterSchema = Yup.object().shape({
-        image_webp_quality: Yup.number().required('Veuillez renseigner la qualité d\'image WEBP.')
+        image_webp_quality: Yup.number()
+            .required("Veuillez renseigner la qualité d'image WEBP.")
             .min(0, 'Veuillez renseigner un nombre valide.')
             .max(100, 'Veuillez renseigner un nombre valide.'),
-        image_png_quality: Yup.number().required('Veuillez renseigner la qualité d\'image PNG.')
+        image_png_quality: Yup.number()
+            .required("Veuillez renseigner la qualité d'image PNG.")
             .min(0, 'Veuillez renseigner un nombre valide.')
             .max(100, 'Veuillez renseigner un nombre valide.'),
-        image_jpg_quality: Yup.number().required('Veuillez renseigner la qualité d\'image JPG.')
+        image_jpg_quality: Yup.number()
+            .required("Veuillez renseigner la qualité d'image JPG.")
             .min(0, 'Veuillez renseigner un nombre valide.')
             .max(100, 'Veuillez renseigner un nombre valide.'),
     });
-
-    console.log(initialValues);
 
     return (
         <Formik
@@ -41,17 +42,7 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                 setSubmitting(false);
             }}
         >
-            {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  setFieldValue,
-                  setFieldTouched,
-                  isSubmitting
-              }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtFormBlock title="Paramètres des images" sx={{ mt: 5 }}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={4} md={4}>
@@ -121,9 +112,7 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                             Supprimer les anciennes miniatures
                         </FormLabel>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography>
-                                Compléter avec des espaces blancs
-                            </Typography>
+                            <Typography>Compléter avec des espaces blancs</Typography>
                             <Switch
                                 label="Supprimer les anciennes miniatures"
                                 variant="standard"
@@ -132,9 +121,7 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                                     setFieldValue('image_to_crop', e.target.checked);
                                 }}
                             />
-                            <Typography>
-                                Rogner les images
-                            </Typography>
+                            <Typography>Rogner les images</Typography>
                         </Stack>
                     </FormControl>
 

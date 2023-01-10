@@ -1,8 +1,11 @@
 import moment from 'moment';
+
 import { Constant } from '@/AdminService/Constant';
-import { createFilterParams } from '@Services/utils/createFilterParams';
+
 import axios from '@Services/api/config';
+import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
+import { changeSlug } from '@Services/utils/changeSlug';
 
 var controller = null;
 
@@ -111,6 +114,7 @@ const eventsApi = {
             formData.append('room', data.room);
             formData.append('season', data.season);
             formData.append('mainCategory', data.mainCategory);
+            formData.append('slug', changeSlug(data.slug));
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
@@ -169,6 +173,7 @@ const eventsApi = {
             formData.append('room', data.room);
             formData.append('season', data.season);
             formData.append('mainCategory', data.mainCategory);
+            formData.append('slug', changeSlug(data.slug));
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);

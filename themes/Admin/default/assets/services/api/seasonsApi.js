@@ -1,5 +1,6 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
+import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 var controller = null;
@@ -84,6 +85,7 @@ const seasonsApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('beginYear', data.beginYear);
+            formData.append('slug', changeSlug(data.slug));
 
             const result = await axios.post('/seasons', formData);
 
@@ -100,6 +102,7 @@ const seasonsApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('beginYear', data.beginYear);
+            formData.append('slug', changeSlug(data.slug));
 
             const result = await axios.post(`/seasons/${id}`, formData);
 

@@ -1,5 +1,7 @@
-import { createFilterParams } from '@Services/utils/createFilterParams';
 import axios from '@Services/api/config';
+import { createFilterParams } from '@Services/utils/createFilterParams';
+import { changeSlug } from '@Services/utils/changeSlug';
+
 import { Constant } from '@/AdminService/Constant';
 
 var controller = null;
@@ -71,6 +73,7 @@ const pagesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
+            formData.append('slug', changeSlug(data.slug));
 
             data.pageBlocks.forEach((block, index) => {
                 formData.append(`pageBlocks[${index}][name]`, block.name);
@@ -100,6 +103,7 @@ const pagesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
+            formData.append('slug', changeSlug(data.slug));
 
             data.pageBlocks.forEach((block, index) => {
                 formData.append(`pageBlocks[${index}][name]`, block.name);

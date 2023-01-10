@@ -1,5 +1,7 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
+
 import axios from '@Services/api/config';
+import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 var controller = null;
@@ -82,6 +84,7 @@ const roomsApi = {
             formData.append('name', data.name);
             formData.append('area', data.area);
             formData.append('seatsNb', data.seatsNb);
+            formData.append('slug', changeSlug(data.slug));
 
             data.seatingPlans.forEach((plan, index) => {
                 formData.append(`seatingPlans[${index}][name]`, plan.name);
@@ -103,6 +106,7 @@ const roomsApi = {
             formData.append('name', data.name);
             formData.append('area', data.area);
             formData.append('seatsNb', data.seatsNb);
+            formData.append('slug', changeSlug(data.slug));
 
             data.seatingPlans.forEach((plan, index) => {
                 formData.append(`seatingPlans[${index}][name]`, plan.name);

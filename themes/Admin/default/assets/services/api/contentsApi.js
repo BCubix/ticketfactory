@@ -103,7 +103,7 @@ const contentsApi = {
 
             formData.append('active', data.active);
             formData.append('title', data.title);
-            formData.append('slug', data.slug);
+            formData.append('slug', changeSlug(data.slug));
 
             Object.entries(data.fields)?.map(([key, value]) => {
                 serializeData(value, `fields[${key}]`, formData);

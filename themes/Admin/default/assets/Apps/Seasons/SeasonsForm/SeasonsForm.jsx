@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { Button, Grid, Box } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
+import { changeSlug } from '@Services/utils/changeSlug';
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     const seasonsSchema = Yup.object().shape({
@@ -21,6 +22,8 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                 name: initialValues?.name || '',
                 active: initialValues?.active || false,
                 beginYear: initialValues?.beginYear || '',
+                slug: initialValues?.slug || '',
+                editSlug: false,
             }}
             validationSchema={seasonsSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -35,13 +38,19 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
                             <Grid item xs={12} md={6}>
                                 <Component.CmtTextField
                                     value={values.name}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        setFieldValue('name', e.target.value);
+                                        if (!values.editSlug && !initialValues) {
+                                            setFieldValue('slug', changeSlug(e.target.value));
+                                        }
+                                    }}
                                     onBlur={handleBlur}
                                     label="Nom"
                                     name="name"
                                     error={touched.name && errors.name}
                                     required
                                 />
+                                <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <Component.CmtTextField

@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { NotificationManager } from "react-notifications";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch } from 'react-redux';
 
-import { Dialog, DialogContent, DialogTitle, LinearProgress } from "@mui/material";
-import { Box } from "@mui/system";
+import { Dialog, DialogContent, DialogTitle, LinearProgress } from '@mui/material';
+import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const ImageFormatGenerate = () => {
     const dispatch = useDispatch();
@@ -26,7 +26,6 @@ export const ImageFormatGenerate = () => {
                 return;
             }
 
-            console.log(result.imageFormats);
             setImageFormats(result.imageFormats);
         });
 
@@ -58,7 +57,7 @@ export const ImageFormatGenerate = () => {
         }
 
         // Add small sleep for get last show up 100% in progress
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 1000));
 
         setPercentageDialog(false);
         setPercentage(0);
@@ -66,11 +65,7 @@ export const ImageFormatGenerate = () => {
         if (!success) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
         } else {
-            NotificationManager.success(
-                'Les médias ont bien été généré.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('Les médias ont bien été généré.', 'Succès', Constant.REDIRECTION_TIME);
         }
     };
 
@@ -80,15 +75,8 @@ export const ImageFormatGenerate = () => {
 
     return (
         <>
-            <Component.ImageFormatGenerateForm
-                imageFormats={imageFormats}
-                handleSubmit={handleSubmit}
-            />
-            <Dialog
-                fullWidth
-                open={percentageDialog}
-                sx={{ display: 'flex', justifyContent: 'center' }}
-            >
+            <Component.ImageFormatGenerateForm imageFormats={imageFormats} handleSubmit={handleSubmit} />
+            <Dialog fullWidth open={percentageDialog} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DialogTitle sx={{ fontSize: 17 }}>Génération des formats</DialogTitle>
                 <DialogContent>
                     <Box sx={{ width: '100%' }}>

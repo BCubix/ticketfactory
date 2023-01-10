@@ -1,5 +1,7 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
+
 import axios from '@Services/api/config';
+import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 var controller = null;
@@ -81,6 +83,7 @@ const tagsApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('description', data.description);
+            formData.append('slug', changeSlug(data.slug));
 
             const result = await axios.post('/tags', formData);
 
@@ -97,6 +100,7 @@ const tagsApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('description', data.description);
+            formData.append('slug', changeSlug(data.slug));
 
             const result = await axios.post(`/tags/${id}`, formData);
 

@@ -27,6 +27,8 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
                 seatsNb: initialValues?.seatsNb || '',
                 area: initialValues?.area || '',
                 seatingPlans: initialValues?.seatingPlans || [],
+                slug: initialValues?.slug || '',
+                editSlug: false,
             }}
             validationSchema={roomsSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -36,7 +38,15 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
                 <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'une salle`} component="form" onSubmit={handleSubmit}>
-                    <Component.RoomsMainPartForm values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} />
+                    <Component.RoomsMainPartForm
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        setFieldValue={setFieldValue}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        editMode={Boolean(initialValues)}
+                    />
 
                     <Component.RoomsSeatingPlanPartForm values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} />
 

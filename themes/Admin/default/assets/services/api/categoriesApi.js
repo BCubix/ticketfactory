@@ -1,4 +1,5 @@
 import axios from '@Services/api/config';
+import { changeSlug } from '@Services/utils/changeSlug';
 
 const categoriesApi = {
     getCategories: async () => {
@@ -28,6 +29,7 @@ const categoriesApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('parent', data.parent);
+            formData.append('slug', changeSlug(data.slug));
 
             const result = await axios.post('/event-categories', formData);
 
@@ -44,6 +46,7 @@ const categoriesApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('parent', data.parent);
+            formData.append('slug', changeSlug(data.slug));
 
             const result = await axios.post(`/event-categories/${id}`, formData);
 

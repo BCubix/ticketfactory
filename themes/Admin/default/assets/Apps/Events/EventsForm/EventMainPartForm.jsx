@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-    Checkbox,
-    FormControl,
-    FormHelperText,
-    Grid,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Select,
-} from '@mui/material';
+
+import { Checkbox, FormControl, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
+
 import { Component } from '@/AdminService/Component';
+
+import { changeSlug } from '@Services/utils/changeSlug';
 
 export const EventMainPartForm = ({
     values,
@@ -23,6 +18,7 @@ export const EventMainPartForm = ({
     seasonsList,
     categoriesList,
     tagsList,
+    editMode,
 }) => {
     return (
         <>
@@ -31,13 +27,20 @@ export const EventMainPartForm = ({
                     <Grid item xs={12}>
                         <Component.CmtTextField
                             value={values.name}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                setFieldValue('name', e.target.value);
+                                if (!values.editSlug && !editMode) {
+                                    setFieldValue('slug', changeSlug(e.target.value));
+                                }
+                            }}
                             onBlur={handleBlur}
                             label="Nom"
                             name="name"
                             error={touched.name && errors.name}
                             required
+                            sx={{ marginBottom: 6 }}
                         />
+                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                     </Grid>
 
                     <Grid item xs={12}>
@@ -51,6 +54,7 @@ export const EventMainPartForm = ({
                             multiline
                             rows={4}
                             required
+                            sx={{ marginTop: 1 }}
                         />
                     </Grid>
 
@@ -92,11 +96,7 @@ export const EventMainPartForm = ({
                                 }}
                             >
                                 {roomsList.map((item, index) => (
-                                    <MenuItem
-                                        value={item.id}
-                                        key={index}
-                                        id={`roomValue-${item.id}`}
-                                    >
+                                    <MenuItem value={item.id} key={index} id={`roomValue-${item.id}`}>
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
                                 ))}
@@ -121,11 +121,7 @@ export const EventMainPartForm = ({
                                 }}
                             >
                                 {seasonsList.map((item, index) => (
-                                    <MenuItem
-                                        value={item.id}
-                                        key={index}
-                                        id={`seasonValue-${item.id}`}
-                                    >
+                                    <MenuItem value={item.id} key={index} id={`seasonValue-${item.id}`}>
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
                                 ))}
@@ -138,13 +134,7 @@ export const EventMainPartForm = ({
             <Component.CmtFormBlock title="Catégories">
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={6}>
-                        <Component.EventParentCategoryPartForm
-                            values={values}
-                            categoriesList={categoriesList}
-                            setFieldValue={setFieldValue}
-                            touched={touched}
-                            errors={errors}
-                        />
+                        <Component.EventParentCategoryPartForm values={values} categoriesList={categoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
                     </Grid>
 
                     <Grid item xs={12} md={6}>
@@ -178,11 +168,7 @@ export const EventMainPartForm = ({
                                 }}
                             >
                                 {tagsList?.map((item, index) => (
-                                    <MenuItem
-                                        value={item.id}
-                                        key={index}
-                                        id={`eventTagsValue-${item.id}`}
-                                    >
+                                    <MenuItem value={item.id} key={index} id={`eventTagsValue-${item.id}`}>
                                         <Checkbox checked={values.tags.indexOf(item.id) > -1} />
                                         <ListItemText>{item.name}</ListItemText>
                                     </MenuItem>
