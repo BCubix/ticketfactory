@@ -1,4 +1,4 @@
-import { checkArray, checkObject, checkString } from "@Services/utils/check";
+import { checkFunction, checkString } from "@Services/utils/check";
 import React from "react";
 import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
@@ -109,24 +109,14 @@ export const Tab = new Proxy(TabObj, {
 /**
  * Tab's setter.
  *
- * @param  {string}  name
- * @param  {Array}   tabList
+ * @param  {string}   name
+ * @param  {function} tabListFunction
  *
  * @throws {Error} Parameters are not corresponded of type script.
  */
-export function setTab(name, tabList = []) {
+export function setTab(name, tabListFunction) {
     checkString(name);
-    checkArray(tabList);
+    checkFunction(tabListFunction);
 
-    tabList.forEach((obj) => {
-        checkObject(obj);
-
-        Object.keys(obj).forEach((key) => {
-            if (!keys.find((keyRule) => keyRule === key)) {
-                throw new Error(`${key} must be in Tab's keys.`);
-            }
-        });
-    });
-
-    TabObj[name] = tabList;
+    TabObj[name] = tabListFunction;
 }
