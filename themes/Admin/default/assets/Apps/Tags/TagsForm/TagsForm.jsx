@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, FormHelperText, InputLabel, Switch } from '@mui/material';
+import { Button, FormHelperText, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -18,6 +18,8 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                 name: initialValues?.name || '',
                 active: initialValues?.active || false,
                 description: initialValues?.description || '',
+                slug: initialValues?.slug || '',
+                editSlug: false,
             }}
             validationSchema={tagSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -38,8 +40,9 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
                             sx={{ marginBottom: 3 }}
                             required
                         />
-                        <InputLabel id="description">Description</InputLabel>
+                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
 
+                        <InputLabel id="description">Description</InputLabel>
                         <Component.LightEditorFormControl id="descriptionControl">
                             <Component.LightEditor
                                 labelId="description"
