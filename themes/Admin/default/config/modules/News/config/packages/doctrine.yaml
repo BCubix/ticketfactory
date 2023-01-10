@@ -1,0 +1,8 @@
+doctrine:
+    orm:
+        mappings:
+            News:
+                is_bundle: true
+                dir: 'Entity'
+                prefix: 'TicketFactory\Module\News\Entity'
+                alias: TicketFactory\Module\News
