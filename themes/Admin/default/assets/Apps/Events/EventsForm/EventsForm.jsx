@@ -1,8 +1,9 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, FormControlLabel, Switch, Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
+import { Tab } from '@/AdminService/Tab';
 
 export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList, roomsList, seasonsList, tagsList }) => {
     if (!categoriesList || !roomsList || !seasonsList || !tagsList) {
@@ -88,73 +89,8 @@ export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList,
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}>
                     <Component.CmtTabs
                         containerStyle={{ mt: 3 }}
-                        list={[
-                            {
-                                label: 'Evènement',
-                                id: 'eventPartButton',
-                                component: (
-                                    <Component.EventMainPartForm
-                                        values={values}
-                                        handleChange={handleChange}
-                                        handleBlur={handleBlur}
-                                        touched={touched}
-                                        errors={errors}
-                                        setFieldTouched={setFieldTouched}
-                                        setFieldValue={setFieldValue}
-                                        roomsList={roomsList}
-                                        seasonsList={seasonsList}
-                                        categoriesList={categoriesList}
-                                        tagsList={tagsList}
-                                        editMode={Boolean(initialValues)}
-                                    />
-                                ),
-                            },
-                            {
-                                label: 'Dates',
-                                id: 'datesPartButton',
-                                component: (
-                                    <Component.EventsDateBlockForm
-                                        values={values}
-                                        setFieldValue={setFieldValue}
-                                        setFieldTouched={setFieldTouched}
-                                        touched={touched}
-                                        errors={errors}
-                                        handleBlur={handleBlur}
-                                        handleChange={handleChange}
-                                    />
-                                ),
-                            },
-                            {
-                                label: 'Tarifs',
-                                id: 'pricesPartButton',
-                                component: (
-                                    <Component.EventsPriceBlockForm
-                                        values={values}
-                                        setFieldValue={setFieldValue}
-                                        setFieldTouched={setFieldTouched}
-                                        touched={touched}
-                                        errors={errors}
-                                        handleBlur={handleBlur}
-                                        handleChange={handleChange}
-                                    />
-                                ),
-                            },
-                            {
-                                label: 'Médias',
-                                id: 'mediasPartButton',
-                                component: (
-                                    <Component.EventMediaPartForm
-                                        values={values}
-                                        setFieldValue={setFieldValue}
-                                        setFieldTouched={setFieldTouched}
-                                        touched={touched}
-                                        errors={errors}
-                                        handleBlur={handleBlur}
-                                        handleChange={handleChange}
-                                    />
-                                ),
-                            },
-                        ]}
+                        list={Tab.EventsFormTabList(values, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue,
+                            roomsList, seasonsList, categoriesList, tagsList, initialValues)}
                     />
 
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
