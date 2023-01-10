@@ -9,6 +9,8 @@ import { Constant } from '@/AdminService/Constant';
 
 import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
 
+import { changeSlug } from '@Services/utils/changeSlug';
+
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType }) => {
     const [initValue, setInitValue] = useState(null);
 
@@ -59,9 +61,11 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         if (initialValues) {
             setInitValue({
                 active: initialValues?.active || false,
+                slug: initialValues?.slug || '',
                 fields: { ...initialValues?.fields },
                 title: initialValues?.title || '',
                 contentType: initialValues?.contentType?.id || selectedContentType?.id,
+                editSlug: false,
             });
 
             return;
@@ -79,9 +83,11 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
         setInitValue({
             active: false,
+            slug: '',
             fields: fields,
             title: '',
             contentType: selectedContentType?.id,
+            editSlug: false,
         });
     }, []);
 
@@ -103,13 +109,19 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
                             value={values.title}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                setFieldValue('title', e.target.value);
+                                if (!values.editSlug && !initialValues) {
+                                    setFieldValue('slug', changeSlug(e.target.value));
+                                }
+                            }}
                             onBlur={handleBlur}
                             label="Titre du contenu"
                             name="title"
                             error={touched.title && errors.title}
                             required
                         />
+                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Formulaire">

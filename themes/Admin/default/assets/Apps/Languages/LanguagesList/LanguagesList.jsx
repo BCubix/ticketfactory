@@ -56,7 +56,6 @@ export const LanguagesList = () => {
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             disableDeleteFunction={(item) => {
-                                console.log(item);
                                 return Boolean(item.isDefault);
                             }}
                         />

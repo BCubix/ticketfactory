@@ -2,6 +2,7 @@ import { checkString } from '../services/utils/check';
 
 const ConstantObj = {
     API_URL: 'http://localhost:8000/admin',
+    FRONT_URL: 'http://localhost:8000',
     MEDIA_FILE_BASE_URL: 'http://localhost:8000',
     PARAMETER_FILE_BASE_URL: 'http://localhost:8000/uploads/parameter',
     MEDIA_UPLOAD_URL: '/admin/api/_uploader/media/upload',

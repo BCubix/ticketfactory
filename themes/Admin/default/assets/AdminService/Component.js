@@ -175,6 +175,7 @@ import { CmtPopover } from '@Components/CmtPopover/CmtPopover';
 import { CmtRemoveButton } from '@Components/CmtRemoveButton/CmtRemoveButton';
 import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
 import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
+import { CmtSlugInput } from '@Components/CmtSlugInput/CmtSlugInput';
 import { CmtTimePicker } from '@Components/CmtTimePicker/CmtTimePicker';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { LightEditor } from '@Components/Editors/LightEditor/LightEditor';
@@ -411,6 +412,7 @@ const ComponentObj = {
     CmtRemoveButton: CmtRemoveButton,
     CmtTabs: CmtTabs,
     CmtTextField: CmtTextField,
+    CmtSlugInput: CmtSlugInput,
     CmtTimePicker: CmtTimePicker,
     DeleteDialog: DeleteDialog,
     LightEditor: LightEditor,

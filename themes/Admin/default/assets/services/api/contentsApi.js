@@ -1,7 +1,9 @@
 import { Constant } from '@/AdminService/Constant';
+
 import axios from '@Services/api/config';
+import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-import { copyData } from '../utils/copyData';
+import { copyData } from '@Services/utils/copyData';
 
 var controller = null;
 
@@ -101,6 +103,7 @@ const contentsApi = {
 
             formData.append('active', data.active);
             formData.append('title', data.title);
+            formData.append('slug', data.slug);
 
             Object.entries(data.fields)?.map(([key, value]) => {
                 serializeData(value, `fields[${key}]`, formData);
@@ -120,6 +123,7 @@ const contentsApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
+            formData.append('slug', changeSlug(data.slug));
 
             Object.entries(data.fields)?.map(([key, value]) => {
                 serializeData(value, `fields[${key}]`, formData);

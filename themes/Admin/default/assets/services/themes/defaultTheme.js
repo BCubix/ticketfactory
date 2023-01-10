@@ -110,7 +110,7 @@ const defaultTheme = {
             dark: '#5D9405',
         },
         info: {
-            main: '#FFAB00',
+            main: '#0288D1',
             light: '#9BE7FD',
             dark: '#0356AF',
         },
