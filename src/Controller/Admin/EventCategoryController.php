@@ -94,7 +94,7 @@ class EventCategoryController extends CrudController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, int $categoryId): View
     {
-        $object = $this->em->getRepository($this->entityClass)->findAllForAdmin([], $categoryId);
+        $object = $this->em->getRepository($this->entityClass)->findAllForAdmin(['page' => 0], $categoryId);
         if (null === $object) {
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }

@@ -20,6 +20,19 @@ class ParameterManager extends AbstractManager
         $this->pg = $pg;
     }
 
+    public function getAll()
+    {
+        $parameters = $this->em->getRepository(Parameter::class)->findAllForAdminArray();
+        for ($i = 0; $i < count($parameters); ++$i) {
+            if ($parameters[$i]['type'] === 'upload') {
+                continue;
+            }
+            $parameters[$i]['paramValue'] = $this->get($parameters[$i]['paramKey']);
+        }
+
+        return $parameters;
+    }
+
     public function get(string $key): mixed
     {
         return $this->getParameterValue($this->getParameter($key));
@@ -59,6 +72,10 @@ class ParameterManager extends AbstractManager
     {
         $format = $parameter->getType();
         $value  = $parameter->getParamValue();
+
+        if (null === $value || "null" === $value) {
+            return null;
+        }
 
         switch($format) {
             case 'int':

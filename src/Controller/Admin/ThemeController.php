@@ -7,14 +7,12 @@ use App\Exception\ApiException;
 use App\Manager\ThemeManager;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
-use App\Service\ModuleTheme\Service\ThemeService;
 use App\Utils\FormErrorsCollector;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,8 +22,6 @@ class ThemeController extends AdminController
     protected const NOT_FOUND_MESSAGE = "Ce thème n'existe pas.";
 
     protected $tm;
-    protected $ts;
-    protected $fs;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -33,26 +29,18 @@ class ThemeController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        ThemeManager $tm,
-        ThemeService $ts,
-        Filesystem $fs
+        ThemeManager $tm
     ) {
         parent::__construct($em, $se, $fec, $log, $hs);
 
         $this->tm = $tm;
-        $this->ts = $ts;
-        $this->fs = $fs;
     }
 
     #[Rest\Get('/themes')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function getAll(Request $request): View
     {
-        $themes = $this->ts->getAllInDisk();
-
-        for ($i = 0; $i < count($themes); ++$i) {
-            unset($themes[$i]['global_settings']);
-        }
+        $themes = $this->tm->getAll();
 
         return $this->view($themes, Response::HTTP_OK);
     }
@@ -73,16 +61,9 @@ class ThemeController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function active(Request $request, string $themeName): View
     {
-        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
-
         $this->em->getConnection()->beginTransaction();
         try {
-            if (null === $theme) {
-                $this->ts->install($themeName);
-                $theme = $this->tm->createNewTheme($themeName);
-            }
-
-            $this->tm->active($theme);
+            $theme = $this->tm->active($themeName);
         } catch (\Exception $e) {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();
@@ -97,19 +78,9 @@ class ThemeController extends AdminController
     #[Rest\View(serializerGroups: ['tf_admin'])]
     public function delete(Request $request, string $themeName): View
     {
-        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
-
         $this->em->getConnection()->beginTransaction();
         try {
-            $themePath = $this->ts->getDir() . '/' . $themeName;
-
-            if (null !== $theme) {
-                $this->tm->delete($theme);
-            } else if (!is_dir($themePath)) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $themePath n'existe pas.");
-            }
-
-            $this->ts->uninstall($themeName);
+            $this->tm->delete($themeName);
         } catch (\Exception $e) {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();

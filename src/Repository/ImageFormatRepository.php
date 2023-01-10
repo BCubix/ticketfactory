@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Media\ImageFormat;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ImageFormatRepository extends CrudRepository
@@ -19,7 +18,7 @@ class ImageFormatRepository extends CrudRepository
         'active' => 'o.active',
         'name' => 'o.name',
         'height' => 'o.height',
-        'length' => 'o.length'
+        'width' => 'o.width'
     ];
 
     public function __construct(ManagerRegistry $registry)

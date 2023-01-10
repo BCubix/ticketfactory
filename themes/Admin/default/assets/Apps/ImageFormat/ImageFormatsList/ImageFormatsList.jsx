@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { NotificationManager } from "react-notifications";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CardContent, Typography } from '@mui/material';
+
+import {
+    CardContent,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    LinearProgress,
+    Typography
+} from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Api } from "@/AdminService/Api";
@@ -14,9 +23,11 @@ import {
     getImageFormatsAction,
     imageFormatsSelector,
 } from '@Redux/imageFormats/imageFormatSlice';
+import { apiMiddleware } from "@Services/utils/apiMiddleware";
 
 export const ImageFormatsList = () => {
     const { loading, imageFormats, filters, total, error } = useSelector(imageFormatsSelector);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -34,6 +45,10 @@ export const ImageFormatsList = () => {
 
         setDeleteDialog(null);
     };
+
+    if (null === imageFormats) {
+        return <></>;
+    }
 
     return (
         <>
@@ -90,6 +105,9 @@ export const ImageFormatsList = () => {
                         />
                     </CardContent>
                 </Component.CmtCard>
+
+                <Component.ImageFormatParameters />
+                <Component.ImageFormatGenerate />
             </Component.CmtPageWrapper>
             <Component.DeleteDialog
                 open={deleteDialog ? true : false}
@@ -100,7 +118,9 @@ export const ImageFormatsList = () => {
                     <Typography component="p">
                         Êtes-vous sûr de vouloir supprimer ce format d'image ?
                     </Typography>
-
+                    <Typography component="p">
+                        Les miniatures seront supprimées.
+                    </Typography>
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>

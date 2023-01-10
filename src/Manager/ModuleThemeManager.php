@@ -1,57 +1,97 @@
 <?php
 
-namespace App\Service\ModuleTheme\Service;
+namespace App\Manager;
 
 use App\Exception\ApiException;
 use App\Service\Exec\ExecService;
+use App\Utils\PathGetter;
 use App\Utils\Tree;
 use App\Utils\Zip;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class ServiceAbstract
+abstract class ModuleThemeManager extends AbstractManager
 {
-    protected const PATH = null;
-
-    public const PATH_REQUIRED = "Veuillez renseigner la constante PATH.";
-
-    protected $projectDir;
     protected $dir;
+    protected $pg;
+    protected $fs;
 
-    public function __construct(string $projectDir)
+    public function __construct(EntityManagerInterface $em, PathGetter $pg, Filesystem $fs)
     {
-        if (null === static::PATH) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500, static::PATH_REQUIRED);
+        parent::__construct($em);
+        $this->pg = $pg;
+        $this->fs = $fs;
+    }
+
+    /**
+     * Return list of objects with configuration info.
+     *
+     * @param array $filters
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getAll(array $filters = []): array
+    {
+        return $this->getAllInDisk();
+    }
+
+    /**
+     * Return list of objects with configuration info.
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllInDisk(): array
+    {
+        $result = [];
+
+        $paths = glob($this->dir . '/*', GLOB_ONLYDIR);
+        foreach ($paths as $path) {
+            $objectName = basename($path);
+            // The next + is used to concat the two arrays
+            $result[] = $this->getConfiguration($objectName) + $this->getImage($objectName);
         }
 
-        $this->projectDir = $projectDir;
-        $this->dir = $projectDir . static::PATH;
+        return $result;
     }
 
-    public function getDir(): string
-    {
-        return $this->dir;
-    }
+    /**
+     * Return the information of object from the config.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public abstract function getConfiguration(string $objectName): array;
+
+    /**
+     * Get image and copy in public directory.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     */
+    public abstract function getImage(string $objectName): array;
 
     /**
      * Unzip the zip which contains a module or theme.
      *
-     * @param string $zipName zip's name
+     * @param string $zipName
      *
-     * @return string name of first directory in zip
-     * @throws ApiException
-     * @throws ApiException
+     * @return string name of first directory in zip / name of object
+     * @throws \Exception
      */
     public function unzip(string $zipName): string
     {
         $zipPath = $this->dir . '/' . $zipName;
 
-        $fs = new Filesystem();
-
         // Create tmp directory to unzip the zip
         $tmpDirPath = $this->dir . '/tmp' . basename($zipName, '.zip');
-        $fs->mkdir($tmpDirPath);
+        $this->fs->mkdir($tmpDirPath);
         Zip::unzip($zipPath, $tmpDirPath, false);
 
         $name = null;
@@ -79,7 +119,7 @@ abstract class ServiceAbstract
             }
         } finally {
             // Rm tmp directory
-            $fs->remove($tmpDirPath);
+            $this->fs->remove($tmpDirPath);
         }
 
         // Finally unzip the real zip in dir
@@ -92,7 +132,7 @@ abstract class ServiceAbstract
         try {
             $this->install($name);
         } catch (\Exception $e) {
-            $this->uninstall($name);
+            $this->deleteInDisk($name);
             throw $e;
         }
 
@@ -102,29 +142,35 @@ abstract class ServiceAbstract
     /**
      * Install : check the architecture, ...
      *
-     * @param string $name
-     * @param array $tree
+     * @param string $objectName
      *
-     * @return void
-     * @throws ApiException
+     * @return array
+     * @throws \Exception
      */
-    public function install(string $name, array $tree = []): array
+    public function install(string $objectName): array
     {
-        $path = $this->dir . '/' . $name;
+        return $this->check($objectName);
+    }
+
+    /**
+     * Check the architecture.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function check(string $objectName): array
+    {
+        $path = $this->dir . '/' . $objectName;
         if (!is_dir($path)) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $path n'existe pas.");
         }
 
-        $tree = [ $name => Tree::build($path) ];
+        $tree = [$objectName => Tree::build($path)];
         $this->checkTree($tree);
 
         return $tree;
-    }
-
-    public function uninstall(string $name): void
-    {
-        $fs = new Filesystem();
-        $fs->remove($this->dir . '/' . $name);
     }
 
     /**
@@ -133,7 +179,7 @@ abstract class ServiceAbstract
      * @param array $tree
      *
      * @return void
-     * @throws ApiException
+     * @throws \Exception
      */
     protected function checkTree(array $tree): void
     {
@@ -154,61 +200,42 @@ abstract class ServiceAbstract
 
     /**
      * Verify node, so verify if the file or the directory corresponds to the architecture.
-
-     * @param int|string   $nodeKey
+     *
+     * @param int|string $nodeKey
      * @param string|array $nodeValue
-     * @param string       $rootName
+     * @param string $rootName
      *
      * @return void
-     * @throws ApiException
+     * @throws \Exception
      */
     protected abstract function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void;
 
     /**
-     * Clear cache...
+     * Delete the directory of object (module or theme) and other files configurations.
+     *
+     * @param string $objectName
      *
      * @return void
-     * @throws ApiException
+     * @throws \Exception
+     */
+    public function deleteInDisk(string $objectName): void
+    {
+        $path = $this->dir . '/' . $objectName;
+        if (!is_dir($path)) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $path n'existe pas.");
+        }
+
+        $this->fs->remove($this->dir . '/' . $objectName);
+    }
+
+    /**
+     * Clear cache and update project.
+     *
+     * @return void
+     * @throws \Exception
      */
     public function clear(): void
     {
         ExecService::execClearCache();
     }
-
-    /**
-     * Get all in disk
-     *
-     * @return array
-     */
-    public function getAllInDisk(): array
-    {
-        $result = [];
-
-        $paths = glob($this->dir . '/*', GLOB_ONLYDIR);
-        foreach ($paths as $path) {
-            $name = basename($path);
-            // The next + is used to concat the two arrays
-            $result[] = $this->getConfig($name) + $this->getImage($name);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return the information from the config
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public abstract function getConfig(string $name): array;
-
-    /**
-     * Get image and copy in public directory
-     *
-     * @param string $name
-     * @return array
-     */
-    public abstract function getImage(string $name): array;
 }
-

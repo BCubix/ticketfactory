@@ -4,14 +4,16 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
+use App\Entity\Module\Module;
+use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
-use App\Service\ModuleTheme\Service\ModuleService;
-use App\Service\ModuleTheme\Service\ThemeService;
+use App\Service\Hook\HookService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
+use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Oneup\UploaderBundle\UploadEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -31,19 +33,17 @@ class FileUploader implements EventSubscriberInterface
 
     private $em;
     private $rootPath;
-    private $ms;
-    private $ts;
     private $mm;
     private $tm;
+    private $hs;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleService $ms, ThemeService $ts, ModuleManager $mm, ThemeManager $tm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookService $hs)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
-        $this->ms = $ms;
-        $this->ts = $ts;
         $this->mm = $mm;
         $this->tm = $tm;
+        $this->hs = $hs;
     }
 
     public static function getSubscribedEvents(): array
@@ -53,7 +53,7 @@ class FileUploader implements EventSubscriberInterface
         ];
     }
 
-    public function onUpload(PostPersistEvent $event)
+    public function onUpload(PostPersistEvent $event): ResponseInterface
     {
         $route = $event->getRequest()->get("_route");
 
@@ -70,7 +70,7 @@ class FileUploader implements EventSubscriberInterface
         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
     }
 
-    public function mediaUpload(PostPersistEvent $event)
+    public function mediaUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
@@ -102,10 +102,15 @@ class FileUploader implements EventSubscriberInterface
 
         $this->moveFile($media, $event->getRequest()->get('filePath') . "/");
 
+        $this->hs->exec('MediaSaved', [
+            'sObject' => $media,
+            'state'   => 'add'
+        ]);
+
         return $response;
     }
 
-    public function parameterUpload(PostPersistEvent $event)
+    public function parameterUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
@@ -114,26 +119,31 @@ class FileUploader implements EventSubscriberInterface
         return $response;
     }
 
-    public function moduleUpload(PostPersistEvent $event)
+    public function moduleUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->ms->unzip($response["filename"]);
-        $this->mm->createNewModule($name);
+        $name = $this->mm->unzip($response["filename"]);
+        $this->mm->active($name, Module::ACTION_INSTALL, true);
 
         return $response;
     }
 
-    public function themeUpload(PostPersistEvent $event)
+    public function themeUpload(PostPersistEvent $event): ResponseInterface
     {
         $response = $event->getResponse();
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->ts->unzip($response["filename"]);
-        $this->tm->createNewTheme($name);
+        $name = $this->tm->unzip($response["filename"]);
+
+        $theme = new Theme();
+        $theme->setName($name);
+
+        $this->em->persist($theme);
+        $this->em->flush();
 
         return $response;
     }

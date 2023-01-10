@@ -23,7 +23,7 @@ class PathGetter
 
     public function getModulesDir(): string
     {
-        return $this->projectDir . '/themes/Admin/default/config/modules';
+        return $this->projectDir . '/modules';
     }
 
     public function getThemesDir(): string

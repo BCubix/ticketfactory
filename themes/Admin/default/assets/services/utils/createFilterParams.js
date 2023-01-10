@@ -6,7 +6,7 @@ export const createFilterParams = (values, filterList, params) => {
     filterList.forEach((element) => {
         const filter = values[element.name];
 
-        if (filter || filter === false) {
+        if (filter === 0 || (filter || filter === false)) {
             if (element.transformFilter) {
                 element.transformFilter(params, filter);
             } else {

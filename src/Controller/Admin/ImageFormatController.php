@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Media\ImageFormat;
+use App\Entity\Media\Media;
 use App\Exception\ApiException;
 use App\Form\Admin\Media\ImageFormatType;
 use App\Manager\ImageFormatManager;
@@ -60,17 +61,34 @@ class ImageFormatController extends CrudController
     public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
     {
         if (null === $formatId) {
-            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         } else {
             $format = $this->em->getRepository(ImageFormat::class)->findOneForAdmin($formatId);
             if (null === $format) {
                 throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
             }
 
-            $formats = [$format];
+            $formats = [ 'results' => [ $format ] ];
         }
 
-        $ifm->generateThumbnails($formats);
+        $medias = $this->em->getRepository(Media::class)->findAllForAdmin(['page' => 0]);
+        $mediasChunks = array_chunk($medias['results'], 10);
+
+        $chunkMediaIndex = $request->get('chunkMediaIndex');
+        if ($chunkMediaIndex >= count($mediasChunks)) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
+                "La position pour la liste de chunk des medias par 10 est incorrecte.");
+        }
+
+        $medias = $mediasChunks[intval($chunkMediaIndex)];
+
+        $deleteOldThumbnailsStr = $request->get('deleteOldThumbnails');
+        $deleteOldThumbnails = $deleteOldThumbnailsStr === "1";
+        if ($deleteOldThumbnails) {
+            $ifm->deleteThumbnails($formats, $medias);
+        }
+
+        $ifm->generateThumbnails($formats, $medias);
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }

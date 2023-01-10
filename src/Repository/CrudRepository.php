@@ -12,7 +12,7 @@ abstract class CrudRepository extends AbstractRepository
         parent::__construct($registry, $className);
     }
 
-    public function findAllForAdmin(array $filters = [])
+    public function findAllForAdmin(array $filters): array
     {
         list($limit, $page, $sortField, $sortOrder) = $this->getSortParameters($filters);
 

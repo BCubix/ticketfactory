@@ -8,8 +8,8 @@ use App\Exception\ApiException;
 use App\Form\Admin\Parameter\ParametersContainerType;
 use App\Form\Admin\Parameter\ParameterType;
 
+use App\Manager\ParameterManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,39 +24,42 @@ class ParameterController extends AdminController
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
 
     #[Rest\Get('/parametres')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getAll(Request $request, ParamFetcher $paramFetcher): View
+    public function getAll(Request $request, ParameterManager $pm): View
     {
-        $filters = $paramFetcher->get('filters');
-        $filters = empty($filters) ? [] : $filters;
-        $objects = $this->em->getRepository(static::ENTITY_CLASS)->findAllForAdmin($filters);
+        return $this->view($pm->getAll(), Response::HTTP_OK);
+    }
 
-        return $this->view($objects, Response::HTTP_OK);
+    #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getValue(Request $request, string $parameterKey, ParameterManager $pm): View
+    {
+        return $this->view($pm->get($parameterKey), Response::HTTP_OK);
     }
 
     #[Rest\Post('/parametres')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function edit(Request $request, ParamFetcher $paramFetcher)
+    public function edit(Request $request, ParameterManager $pm): View
     {
-        $filters = $paramFetcher->get('filters');
-        $filters = empty($filters) ? [] : $filters;
-        $parameters = $this->em->getRepository(static::ENTITY_CLASS)->findAllForAdmin($filters);
-        if (null === $parameters) {
-            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+        $parameters = $request->request->all();
+        if (!isset($parameters['parameters'])) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
+                self::FORM_ERROR_MESSAGE);
         }
 
-        $parameters = $parameters["results"];
-
         $parametersContainer = new ParametersContainer();
-        foreach ($parameters as $parameter) {
+        for ($i = 0; $i < count($parameters['parameters']); ++$i) {
+            $parameterRequest = $parameters['parameters'][$i];
+
+            $parameter = $pm->getParameter($parameterRequest['paramKey']);
             $parametersContainer->addParameter($parameter);
+
+            $parameters['parameters'][$i] = [ 'paramValue' => $parameterRequest['paramValue'] ];
         }
 
         $form = $this->createForm(ParametersContainerType::class,
             $parametersContainer);
-        $fields = array_replace_recursive($request->request->all(), $request->files->all());
+        $fields = array_replace_recursive($parameters, $request->files->all());
         $form->submit($fields);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
@@ -64,6 +67,8 @@ class ParameterController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
                 self::FORM_ERROR_MESSAGE, $errors);
         }
+
+        $parameters = $parametersContainer->getParameters();
 
         foreach ($parameters as $parameter) {
             $this->em->persist($parameter);

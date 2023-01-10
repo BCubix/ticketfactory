@@ -4,10 +4,10 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Manager\MediaManager;
-use App\Manager\ParameterManager;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
@@ -15,19 +15,21 @@ class ImageFormatManager extends AbstractManager
 {
     private $pm;
     private $mm;
+    private $fs;
 
-    public function __construct(EntityManagerInterface $em, ParameterManager $pm, MediaManager $mm)
+    public function __construct(EntityManagerInterface $em, ParameterManager $pm, MediaManager $mm, Filesystem $fs)
     {
         parent::__construct($em);
 
         $this->pm = $pm;
         $this->mm = $mm;
+        $this->fs = $fs;
     }
 
     public function generateThumbnails(array $formats = null, array $medias = null): bool
     {
         if (null === $formats) {
-            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([]);
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         }
 
         if (null === $medias) {
@@ -51,6 +53,45 @@ class ImageFormatManager extends AbstractManager
                 if (!$this->formatImage($sourceFile, $destinationFile, $destW, $destH)) {
                     $success = false;
                 }
+            }
+        }
+
+        return $success;
+    }
+
+    public function deleteThumbnails(array $formats = null, array $medias = null): bool
+    {
+        $deleteAll = null === $formats;
+        if (null === $formats) {
+            $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
+        }
+
+        if (null === $medias) {
+            $medias = $this->em->getRepository(Media::class)->findByTypeForAdmin('Image');
+        }
+
+        $success = true;
+        foreach ($medias as $media) {
+            $mediaPath = $this->mm->getFilePathFromDocumentUrl($media);
+            try {
+                $mediaFile = new File($mediaPath, true);
+            } catch (FileNotFoundException $fnfe) {
+                continue;
+            }
+
+            try {
+                if ($deleteAll) {
+                    // Rm the original media directory
+                    $this->fs->remove(dirname($mediaPath));
+                } else {
+                    // Rm only format request
+                    foreach ($formats['results'] as $format) {
+                        $mediaThumbnailPath = $this->mm->getFilePathFromFormat($mediaFile, $format);
+                        $this->fs->remove($mediaThumbnailPath);
+                    }
+                }
+            } catch (IOException $ioe) {
+                $success = false;
             }
         }
 
@@ -206,16 +247,20 @@ class ImageFormatManager extends AbstractManager
         imagefilledrectangle($destImage, 0, 0, $canvW, $canvH, $rgba);
     }
 
-    public function write(string $type, $resource, string $filename): bool
+    private function write(string $type, $resource, string $filename): bool
     {
+        $filenameWithoutExt = substr($filename, 0, strrpos($filename, '.'));
         switch ($type) {
             case IMAGETYPE_WEBP:
+                $filename = $filenameWithoutExt . '.webp';
                 $quality = (int) $this->pm->get('image_webp_quality') ?? 75;
                 $success = imagewebp($resource, $filename, $quality);
                 break;
 
             case IMAGETYPE_PNG:
+                $filename = $filenameWithoutExt . '.png';
                 $quality = (int) $this->pm->get('image_png_quality') ?? 75;
+                $quality = (int) ($quality * 9 / 100);
                 $success = imagepng($resource, $filename, $quality);
                 break;
 
@@ -223,6 +268,7 @@ class ImageFormatManager extends AbstractManager
             default:
                 imageinterlace($resource, 1);
 
+                $filename = $filenameWithoutExt . '.jpg';
                 $quality = (int) $this->pm->get('image_jpg_quality') ?? 90;
                 $success = imagejpeg($resource, $filename, $quality);
                 break;

@@ -3,8 +3,8 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\Hook\Hook;
+use App\Manager\ModuleManager;
 use App\Service\Hook\HookService;
-use App\Service\ModuleTheme\Service\ModuleService;
 use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,20 +17,20 @@ class RequestSubscriber implements EventSubscriberInterface
 {
     private $pg;
     private $em;
-    private $ms;
+    private $mm;
     private $hs;
     private $container;
 
     public function __construct(
-        PathGetter $pg,
+        PathGetter             $pg,
         EntityManagerInterface $em,
-        ModuleService $ms,
-        HookService $hs,
-        ContainerInterface $container
+        ModuleManager          $mm,
+        HookService            $hs,
+        ContainerInterface     $container
     ) {
         $this->pg = $pg;
         $this->em = $em;
-        $this->ms = $ms;
+        $this->mm = $mm;
         $this->hs = $hs;
 
         $this->container = $container;
@@ -51,10 +51,10 @@ class RequestSubscriber implements EventSubscriberInterface
             $module = $hook->getModule();
             if (null !== $module) {
                 if (!$module->isActive()) {
-                    return;
+                    continue;
                 }
 
-                $moduleConfig = $this->ms->getModuleConfigInstance($module->getName(), $this->hs);
+                $moduleConfig = $this->mm->getModuleConfigInstance($module->getName(), $this->hs);
                 $this->hs->register($hook->getName(), $moduleConfig, $hook->getPosition());
             }
         }
