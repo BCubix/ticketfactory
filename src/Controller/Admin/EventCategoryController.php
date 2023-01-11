@@ -6,6 +6,7 @@ use App\Entity\Event\EventCategory;
 use App\Form\Admin\Event\EventCategoryType;
 use App\Form\Admin\Filters\FilterEventCategoryType;
 use App\Manager\EventCategoryManager;
+use App\Manager\LanguageManager;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
@@ -35,9 +36,10 @@ class EventCategoryController extends CrudController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        EventCategoryManager $ecm
+        EventCategoryManager $ecm,
+        LanguageManager $lm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs);
+        parent::__construct($em, $se, $fec, $log, $hs, $lm);
 
         $this->ecm = $ecm;
     }

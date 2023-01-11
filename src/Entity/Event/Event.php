@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\Language\Language;
 use App\Repository\EventRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -34,17 +36,20 @@ class Event extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Assert\NotBlank(message: 'Le chapô doit être renseigné.')]
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $chapo = null;
-
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
+    #[Assert\NotBlank(message: 'Le chapô doit être renseigné.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $chapo = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -100,6 +105,10 @@ class Event extends Datable
     #[JMS\Groups(['tf_admin'])]
     public $frontUrl;
 
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
 
     public function __construct()
     {
@@ -128,18 +137,6 @@ class Event extends Datable
         return $this;
     }
 
-    public function getChapo(): ?string
-    {
-        return $this->chapo;
-    }
-
-    public function setChapo(?string $chapo): self
-    {
-        $this->chapo = $chapo;
-
-        return $this;
-    }
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -148,6 +145,30 @@ class Event extends Datable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
+    public function getChapo(): ?string
+    {
+        return $this->chapo;
+    }
+
+    public function setChapo(?string $chapo): self
+    {
+        $this->chapo = $chapo;
 
         return $this;
     }
@@ -334,6 +355,18 @@ class Event extends Datable
                 $eventMedia->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

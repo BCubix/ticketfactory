@@ -6,6 +6,7 @@ use App\Entity\Hook\Hook;
 use App\Entity\Module\Module;
 use App\Exception\ApiException;
 use App\Manager\HookManager;
+use App\Manager\LanguageManager;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
@@ -28,7 +29,8 @@ class HookController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        HookManager $hm
+        HookManager $hm,
+        LanguageManager $lm
     ) {
         parent::__construct($em, $se, $fec, $log, $hs);
 

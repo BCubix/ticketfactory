@@ -6,10 +6,18 @@ use App\Entity\JsonDoctrineSerializable;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 
 class DoctrineSubscriber implements EventSubscriber
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
@@ -23,6 +31,7 @@ class DoctrineSubscriber implements EventSubscriber
     public function prePersist($args): void
     {
         $entity = $args->getEntity();
+
         if ($entity instanceof (JsonDoctrineSerializable::class)) {
             $entity->jsonSerialize();
         }

@@ -7,6 +7,8 @@ use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\CloneObject;
 use App\Utils\FormErrorsCollector;
+use App\Manager\LanguageManager;
+
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -32,9 +34,10 @@ abstract class CrudController extends AdminController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs
+        HookService $hs,
+        LanguageManager $lm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs);
+        parent::__construct($em, $se, $fec, $log, $hs, $lm);
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;
@@ -81,6 +84,8 @@ abstract class CrudController extends AdminController
 
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
+
+        $this->tm->setTranslationsProperties($object);
 
         $this->hs->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
@@ -188,5 +193,15 @@ abstract class CrudController extends AdminController
         $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
+    }
+
+    protected function getTranslated(Request $request, int $id): View
+    {
+        $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($id);
+        if (null === $object) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+        }
+
+        return $this->view($object, Response::HTTP_OK);
     }
 }

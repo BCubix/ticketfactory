@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Language\Language;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +16,9 @@ abstract class CrudRepository extends AbstractRepository
 
     public function findAllForAdmin(array $filters): array
     {
+        //dd($this->_class->fieldMappings);
+        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
+
         list($limit, $page, $sortField, $sortOrder) = $this->getSortParameters($filters);
 
         $results = $this->createQueryBuilder('o');

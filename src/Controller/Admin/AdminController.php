@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Service\Hook\HookService;
 use App\Service\Logger\Logger;
 use App\Utils\FormErrorsCollector;
+use App\Manager\LanguageManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -17,13 +18,15 @@ abstract class AdminController extends AbstractFOSRestController
     protected $fec;
     protected $log;
     protected $hs;
+    protected $lm;
 
     public function __construct(
         EntityManagerInterface $em,
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs
+        HookService $hs,
+        LanguageManager $lm,
     ) {
         $this->em = $em;
         $this->se = $se;
