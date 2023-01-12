@@ -2,12 +2,14 @@
 
 namespace App\Entity\Event;
 
+use App\Repository\SeatingPlanRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: SeatingPlanRepository::class)]
 class SeatingPlan
 {
     /*** > Trait ***/
