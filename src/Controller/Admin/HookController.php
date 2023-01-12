@@ -32,7 +32,7 @@ class HookController extends AdminController
         HookManager $hm,
         LanguageManager $lm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs);
+        parent::__construct($em, $se, $fec, $log, $hs, $lm);
 
         $this->hm = $hm;
     }
