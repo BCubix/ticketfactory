@@ -52,18 +52,11 @@ const store = configureStore({
     reducer: { ...reducer },
 });
 
-store.asyncReducers = {};
+store.asyncReducers = { ...reducer };
 
 store.injectReducer = (key, asyncReducer) => {
     store.asyncReducers[key] = asyncReducer;
-    store.replaceReducer(createReducer(store.asyncReducers));
+    store.replaceReducer(combineReducers(store.asyncReducers));
 };
-
-function createReducer(asyncReducers) {
-    return combineReducers({
-        ...reducer,
-        ...asyncReducers,
-    });
-}
 
 export default store;
