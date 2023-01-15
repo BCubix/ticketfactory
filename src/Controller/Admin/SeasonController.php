@@ -61,4 +61,11 @@ class SeasonController extends CrudController
     {
         return parent::delete($request, $seasonId);
     }
+
+    #[Rest\Get('/seasons/{seasonId}/translated/{languageId}', requirements: ['seasonId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $seasonId, int $languageId): View
+    {
+        return parent::getTranslated($request, $seasonId, $languageId);
+    }
 }

@@ -74,6 +74,8 @@ const pagesApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             data.pageBlocks.forEach((block, index) => {
                 formData.append(`pageBlocks[${index}][name]`, block.name);
@@ -104,6 +106,8 @@ const pagesApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             data.pageBlocks.forEach((block, index) => {
                 formData.append(`pageBlocks[${index}][name]`, block.name);

@@ -4,11 +4,13 @@ namespace App\Entity\Content;
 
 use App\Entity\Datable;
 use App\Entity\JsonDoctrineSerializable;
+use App\Entity\Language\Language;
 use App\Repository\ContentRepository;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
@@ -39,6 +41,11 @@ class Content extends Datable implements JsonDoctrineSerializable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column]
     private array $fields = [];
 
@@ -47,6 +54,12 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[ORM\ManyToOne(targetEntity: ContentType::class, inversedBy: 'contents')]
     #[ORM\JoinColumn(nullable: false)]
     private $contentType;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'contents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -78,6 +91,18 @@ class Content extends Datable implements JsonDoctrineSerializable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
 
         return $this;
     }
@@ -115,5 +140,17 @@ class Content extends Datable implements JsonDoctrineSerializable
     public static function jsonDeserialize($data): self
     {
         return $data;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
     }
 }

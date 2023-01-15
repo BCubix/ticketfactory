@@ -197,7 +197,7 @@ abstract class CrudController extends AdminController
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 
-    protected function getTranslated(Request $request, int $id): View
+    protected function getTranslated(Request $request, int $id, int $languageId): View
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($id);
         if (null === $object) {

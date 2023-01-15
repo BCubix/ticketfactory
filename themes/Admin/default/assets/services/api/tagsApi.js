@@ -2,7 +2,9 @@ import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
+import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
 
 var controller = null;
 
@@ -44,7 +46,9 @@ const tagsApi = {
 
             controller = null;
 
-            return { result: true, tags: result.data?.results, total: result?.data?.total };
+            const translatedList = sortTranslatedObject(result.data?.results);
+
+            return { result: true, tags: translatedList, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, tags: [], total: 0 };
@@ -84,6 +88,8 @@ const tagsApi = {
             formData.append('name', data.name);
             formData.append('description', data.description);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             const result = await axios.post('/tags', formData);
 
@@ -101,6 +107,8 @@ const tagsApi = {
             formData.append('name', data.name);
             formData.append('description', data.description);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             const result = await axios.post(`/tags/${id}`, formData);
 
@@ -115,6 +123,17 @@ const tagsApi = {
             await axios.delete(`/tags/${id}`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id, languageId) => {
+        try {
+            const result = await axios.get(`/tags/${id}/translated/${languageId}`);
+            const data = copyData(result?.data);
+
+            return { result: true, tag: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

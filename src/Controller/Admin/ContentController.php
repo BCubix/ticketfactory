@@ -130,4 +130,11 @@ class ContentController extends CrudController
     {
         return parent::delete($request, $contentId);
     }
+
+    #[Rest\Get('/contents/{contentId}/translated/{languageId}', requirements: ['contentId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $contentId, int $languageId): View
+    {
+        return parent::getTranslated($request, $contentId, $languageId);
+    }
 }

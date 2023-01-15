@@ -29,6 +29,7 @@ export const ListTableContextualMenu = ({
         return <></>;
     }
 
+    console.log(selectedMenuItem);
     return (
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem
@@ -57,40 +58,44 @@ export const ListTableContextualMenu = ({
                     <TranslateIcon sx={{ marginRight: 2 }} /> Traduire
                 </MenuItem>
             )}
-            <MenuItem
-                sx={{
-                    color: theme.palette.crud.action.textColor,
-                }}
-                id={`duplicateButton-${selectedMenuItem?.id}`}
-                onClick={(e) => {
-                    e.stopPropagation();
+            {onDuplicate && (
+                <MenuItem
+                    sx={{
+                        color: theme.palette.crud.action.textColor,
+                    }}
+                    id={`duplicateButton-${selectedMenuItem?.id}`}
+                    onClick={(e) => {
+                        e.stopPropagation();
 
-                    if (onDuplicate) {
-                        onDuplicate(selectedMenuItem.id);
-                        setSelectedMenuItem(null);
-                        setAnchorEl(null);
-                    }
-                }}
-            >
-                <ContentCopyIcon sx={{ marginRight: 2 }} />
-                Dupliquer
-            </MenuItem>
-            <MenuItem
-                id={`previewButton-${selectedMenuItem?.id}`}
-                onClick={(e) => {
-                    e.stopPropagation();
+                        if (onDuplicate) {
+                            onDuplicate(selectedMenuItem.id);
+                            setSelectedMenuItem(null);
+                            setAnchorEl(null);
+                        }
+                    }}
+                >
+                    <ContentCopyIcon sx={{ marginRight: 2 }} />
+                    Dupliquer
+                </MenuItem>
+            )}
+            {onPreview && (
+                <MenuItem
+                    id={`previewButton-${selectedMenuItem?.id}`}
+                    onClick={(e) => {
+                        e.stopPropagation();
 
-                    if (onPreview) {
-                        onPreview(selectedMenuItem.id);
-                        setSelectedMenuItem(null);
-                        setAnchorEl(null);
-                    }
-                }}
-                sx={{ color: '#4A148C' }}
-            >
-                <VisibilityIcon sx={{ marginRight: 2 }} />
-                Prévisualiser
-            </MenuItem>
+                        if (onPreview) {
+                            onPreview(selectedMenuItem.id);
+                            setSelectedMenuItem(null);
+                            setAnchorEl(null);
+                        }
+                    }}
+                    sx={{ color: '#4A148C' }}
+                >
+                    <VisibilityIcon sx={{ marginRight: 2 }} />
+                    Prévisualiser
+                </MenuItem>
+            )}
         </Menu>
     );
 };

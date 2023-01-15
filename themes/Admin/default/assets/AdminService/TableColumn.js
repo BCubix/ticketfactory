@@ -2,6 +2,7 @@ import React from 'react';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { Avatar } from '@mui/material';
 import { checkArray, checkObject, checkString } from '@Services/utils/check';
+import ReactCountryFlag from 'react-country-flag';
 
 const keys = ['name', 'label', 'width', 'type', 'sortable', 'renderFunction'];
 
@@ -32,13 +33,14 @@ const TableColumnObj = {
         { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
     ],
     EventsList: [
-        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'id', label: 'ID', width: '5%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'name', label: 'Nom', width: '20%', sortable: true },
         { name: 'mainCategory.name', label: 'Catégorie', width: '10%', sortable: true },
         { name: 'room.name', label: 'Salle', width: '10%', sortable: true },
-        { name: 'season.name', label: 'Saison', width: '20%', sortable: true },
+        { name: 'season.name', label: 'Saison', width: '10%', sortable: true },
         { name: 'tags.0.name', label: 'Tags', width: '10%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '10%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     ImageFormatsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -102,7 +104,8 @@ const TableColumnObj = {
     TagsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
+        { name: 'name', label: 'Nom de la catégorie', width: '50%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     UserList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },

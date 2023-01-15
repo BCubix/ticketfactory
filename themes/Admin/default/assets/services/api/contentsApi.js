@@ -104,6 +104,8 @@ const contentsApi = {
             formData.append('active', data.active);
             formData.append('title', data.title);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             Object.entries(data.fields)?.map(([key, value]) => {
                 serializeData(value, `fields[${key}]`, formData);
@@ -124,6 +126,8 @@ const contentsApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             Object.entries(data.fields)?.map(([key, value]) => {
                 serializeData(value, `fields[${key}]`, formData);

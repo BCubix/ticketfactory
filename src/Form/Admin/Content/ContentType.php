@@ -3,11 +3,15 @@
 namespace App\Form\Admin\Content;
 
 use App\Entity\Content\Content;
+use App\Entity\Language\Language;
+use App\Repository\LanguageRepository;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentType extends AbstractType
@@ -23,6 +27,18 @@ class ContentType extends AbstractType
             ->add('fields',               ContentFieldsType::class,   [
                 'content_type' => $contentType
             ])
+            ->add('lang',                 EntityType::class,          [
+                'class'         => Language::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (LanguageRepository $lr) {
+                    return $lr
+                        ->createQueryBuilder('l')
+                        ->orderBy('l.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('languageGroup',        UuidType::class,            [])
         ;
     }
 

@@ -248,9 +248,9 @@ const eventsApi = {
         }
     },
 
-    getTranslated: async (id) => {
+    getTranslated: async (id, languageId) => {
         try {
-            const result = await axios.get(`/events/${id}/translated`);
+            const result = await axios.get(`/events/${id}/translated/${languageId}`);
             const data = copyData(result?.data);
 
             return { result: true, event: data };

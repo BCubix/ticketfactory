@@ -60,4 +60,11 @@ class PageBlockController extends CrudController
     {
         return parent::delete($request, $blockId);
     }
+
+    #[Rest\Get('/page-blocks/{pageBlockId}/translated/{languageId}', requirements: ['pageBlockId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $pageBlockId, int $languageId): View
+    {
+        return parent::getTranslated($request, $pageBlockId, $languageId);
+    }
 }

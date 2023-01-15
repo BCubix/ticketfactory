@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { Table, TableBody, TableContainer } from '@mui/material';
 
 import { languagesSelector } from '@Redux/languages/languagesSlice';
 
 import { ListTableHead } from './ListTableHead';
-import { ListTableCellButtons } from './ListTableCellButtons';
 import { ListTableContextualMenu } from './ListTableContextualMenu';
+import { ListTableBodyLine } from './ListTableBodyLine';
 import { ListTableTranslateDialog } from './ListTableTranslateDialog';
-import { RenderCellFunction } from './RenderCellFunction';
 
 /**
  *
@@ -53,6 +52,7 @@ export const ListTable = ({
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedMenuItem, setSelectedMenuItem] = useState(null);
     const [translateItem, setTranslateItem] = useState(false);
+    const [expendElementTranslation, setExpendElementTranslation] = useState(null);
 
     const handleClick = (event, selectedMenu) => {
         event.stopPropagation();
@@ -65,13 +65,21 @@ export const ListTable = ({
         setSelectedMenuItem(null);
     };
 
+    const defaultLanguage = useMemo(() => {
+        if (!languagesData?.languages) {
+            return null;
+        }
+
+        return languagesData?.languages?.find((el) => el.isDefault);
+    }, [languagesData?.languages]);
+
     if (!table || table?.length === 0 || !list || list.length === 0) {
         return <></>;
     }
 
     return (
         <TableContainer>
-            <Table sx={{ minWidth: 650, marginTop: 5 }}>
+            <Table sx={{ minWidth: 650, marginTop: 5, transition: '.3s' }}>
                 <ListTableHead
                     table={table}
                     filters={filters}
@@ -80,36 +88,24 @@ export const ListTable = ({
                 />
                 <TableBody>
                     {list?.map((item, index) => (
-                        <TableRow
+                        <ListTableBodyLine
+                            item={item}
                             key={index}
-                            id={`tableElement-${item.id}`}
-                            onClick={() => {
-                                if (onClick) {
-                                    onClick(item?.id);
-                                }
-                            }}
-                            sx={onClick ? { cursor: 'pointer' } : {}}
-                        >
-                            {table.map((tableItem, ind) => (
-                                <TableCell component="th" scope="row" key={ind}>
-                                    <RenderCellFunction item={item} tableItem={tableItem} />
-                                </TableCell>
-                            ))}
-
-                            <ListTableCellButtons
-                                item={item}
-                                onDelete={onDelete}
-                                onEdit={onEdit}
-                                onRemove={onRemove}
-                                onSelect={onSelect}
-                                onActive={onActive}
-                                onDisable={onDisable}
-                                disableDeleteFunction={disableDeleteFunction}
-                                contextualMenu={contextualMenu}
-                                themeId={themeId}
-                                handleClick={handleClick}
-                            />
-                        </TableRow>
+                            table={table}
+                            onClick={onClick}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
+                            onRemove={onRemove}
+                            onSelect={onSelect}
+                            onActive={onActive}
+                            onDisable={onDisable}
+                            disableDeleteFunction={disableDeleteFunction}
+                            contextualMenu={contextualMenu}
+                            themeId={themeId}
+                            handleClick={handleClick}
+                            expendElementTranslation={expendElementTranslation}
+                            setExpendElementTranslation={setExpendElementTranslation}
+                        />
                     ))}
 
                     <ListTableContextualMenu
@@ -120,7 +116,7 @@ export const ListTable = ({
                         onDelete={onDelete}
                         selectedMenuItem={selectedMenuItem}
                         setSelectedMenuItem={setSelectedMenuItem}
-                        onTranslate={onTranslate}
+                        onTranslate={defaultLanguage?.id === selectedMenuItem?.lang?.id ? onTranslate : null}
                         languagesData={languagesData}
                         setTranslateItem={setTranslateItem}
                         onDuplicate={onDuplicate}

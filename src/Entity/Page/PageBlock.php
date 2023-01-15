@@ -4,10 +4,12 @@ namespace App\Entity\Page;
 
 use App\Entity\Datable;
 use App\Entity\JsonDoctrineSerializable;
+use App\Entity\Language\Language;
 use App\Repository\PageBlockRepository;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -30,6 +32,11 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[Assert\NotNull(message: 'Cet élément doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -43,6 +50,12 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
 
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'pageBlocks')]
     private $page;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'pageBlocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
 
     public function __construct()
@@ -68,6 +81,18 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+    
     public function isSaveAsModel(): ?bool
     {
         return $this->saveAsModel;
@@ -126,5 +151,17 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
         $data->columns = $columns;
 
         return $data;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
     }
 }

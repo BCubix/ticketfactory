@@ -3,6 +3,7 @@
 namespace App\Entity\Page;
 
 use App\Entity\Datable;
+use App\Entity\Language\Language;
 use App\Repository\PageRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: PageRepository::class)]
@@ -38,11 +40,22 @@ class Page extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[Assert\Valid]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $pageBlocks;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'pages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -83,6 +96,18 @@ class Page extends Datable
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
     public function getPageBlocks(): Collection
     {
         return $this->pageBlocks;
@@ -105,6 +130,18 @@ class Page extends Datable
                 $pageBlock->setPage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

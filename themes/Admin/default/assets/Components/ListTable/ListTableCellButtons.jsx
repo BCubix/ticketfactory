@@ -7,10 +7,25 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import { Component } from '@/AdminService/Component';
 
-export const ListTableCellButtons = ({ item, onDelete, onEdit, onRemove, onSelect, onActive, onDisable, disableDeleteFunction, contextualMenu, themeId, handleClick }) => {
+export const ListTableCellButtons = ({
+    item,
+    onDelete,
+    onEdit,
+    onRemove,
+    onSelect,
+    onActive,
+    onDisable,
+    disableDeleteFunction,
+    contextualMenu,
+    themeId,
+    handleClick,
+    expendElementTranslation,
+    setExpendElementTranslation,
+}) => {
     if (onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null)) {
         return (
             <TableCell component="th" scope="row">
@@ -101,6 +116,22 @@ export const ListTableCellButtons = ({ item, onDelete, onEdit, onRemove, onSelec
                             <DeleteIcon />
                         </Component.DeleteFabButton>
                     )
+                )}
+
+                {item?.translatedElements?.length > 0 && (
+                    <Component.ActionFabButton
+                        sx={{ marginInline: 1 }}
+                        color="error"
+                        size="small"
+                        id={`actionButton-${item.id}`}
+                        aria-label="Menu contextuel"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setExpendElementTranslation(expendElementTranslation?.id === item?.id ? null : item);
+                        }}
+                    >
+                        <ArrowDownwardIcon sx={{ transition: '.3s', transform: expendElementTranslation?.id === item?.id && 'rotate(-180deg)' }} />
+                    </Component.ActionFabButton>
                 )}
             </TableCell>
         );

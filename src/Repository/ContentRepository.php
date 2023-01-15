@@ -8,10 +8,22 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ContentRepository extends CrudRepository
 {
+    protected const SELECTS = [
+        'el' => null
+    ];
+
+    protected const JOINS = [
+        ['leftJoin', 'o.lang', 'el']
+    ];
+
+    protected const IS_TRANSLATABLE = true;
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['title', 'o.title', 'search'],
-        ['contentType', 'o.contentType', 'in']
+        ['contentType', 'o.contentType', 'in'],
+        ['lang', 'el.id', 'in'],
+        ['languageGroup', 'o.languageGroup', 'equals']
     ];
 
     protected const SORTS = [

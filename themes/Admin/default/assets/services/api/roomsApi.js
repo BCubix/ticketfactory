@@ -85,6 +85,8 @@ const roomsApi = {
             formData.append('area', data.area);
             formData.append('seatsNb', data.seatsNb);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             data.seatingPlans.forEach((plan, index) => {
                 formData.append(`seatingPlans[${index}][name]`, plan.name);
@@ -107,6 +109,8 @@ const roomsApi = {
             formData.append('area', data.area);
             formData.append('seatsNb', data.seatsNb);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             data.seatingPlans.forEach((plan, index) => {
                 formData.append(`seatingPlans[${index}][name]`, plan.name);

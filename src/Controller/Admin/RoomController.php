@@ -61,4 +61,11 @@ class RoomController extends CrudController
     {
         return parent::delete($request, $roomId);
     }
+
+    #[Rest\Get('/rooms/{roomId}/translated/{languageId}', requirements: ['roomId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $roomId, int $languageId): View
+    {
+        return parent::getTranslated($request, $roomId, $languageId);
+    }
 }

@@ -30,7 +30,7 @@ class LanguageManager extends AbstractManager
             $list = $objects;
         }
 
-        if (isset($filters['lang']) || !property_exists($list[0], 'languageGroup')) {
+        if (isset($filters['lang']) || count($list) === 0 || !property_exists($list[0], 'languageGroup')) {
             return $objects;
         }
 

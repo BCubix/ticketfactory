@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\Language\Language;
 use App\Repository\TagRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -41,11 +43,24 @@ class Tag extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'tags')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'tags')]
     private $events;
+
+
 
 
     public function __construct()
@@ -83,6 +98,18 @@ class Tag extends Datable
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -91,6 +118,18 @@ class Tag extends Datable
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

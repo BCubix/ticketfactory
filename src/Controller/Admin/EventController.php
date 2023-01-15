@@ -62,10 +62,10 @@ class EventController extends CrudController
         return parent::delete($request, $eventId);
     }
 
-    #[Rest\Get('/events/{eventId}/translated', requirements: ['eventId' => '\d+'])]
+    #[Rest\Get('/events/{eventId}/translated/{languageId}', requirements: ['eventId' => '\d+', 'languageId' => '\d+'])]
     #[Rest\View(serializerGroups: ['tf_admin'])]
-    public function getTranslated(Request $request, int $eventId): View
+    public function getTranslated(Request $request, int $eventId, int $languageId): View
     {
-        return parent::getTranslated($request, $eventId);
+        return parent::getTranslated($request, $eventId, $languageId);
     }
 }

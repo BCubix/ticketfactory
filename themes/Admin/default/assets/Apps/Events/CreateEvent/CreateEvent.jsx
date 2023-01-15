@@ -38,17 +38,19 @@ export const CreateEvent = () => {
             setSeasonsData(tmpSeasons);
             setTagsData(tmpTags);
 
-            if (eventId && languageId) {
-                let event = await Api.eventsApi.getTranslated(eventId);
-                if (!event?.result) {
-                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                    navigate(Constant.EVENTS_BASE_PATH);
-                    return;
-                }
-
-                event.event.lang = parseInt(languageId);
-                setInitialValues(event.event);
+            if (!eventId || !languageId) {
+                return;
             }
+
+            let event = await Api.eventsApi.getTranslated(eventId, languageId);
+            if (!event?.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.EVENTS_BASE_PATH);
+                return;
+            }
+
+            event.event.lang = parseInt(languageId);
+            setInitialValues(event.event);
         });
     }, []);
 

@@ -86,6 +86,8 @@ const seasonsApi = {
             formData.append('name', data.name);
             formData.append('beginYear', data.beginYear);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             const result = await axios.post('/seasons', formData);
 
@@ -103,6 +105,8 @@ const seasonsApi = {
             formData.append('name', data.name);
             formData.append('beginYear', data.beginYear);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             const result = await axios.post(`/seasons/${id}`, formData);
 

@@ -54,4 +54,11 @@ class TagController extends CrudController
     {
         return parent::delete($request, $tagId);
     }
+
+    #[Rest\Get('/tags/{tagId}/translated/{languageId}', requirements: ['tagId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $tagId, int $languageId): View
+    {
+        return parent::getTranslated($request, $tagId, $languageId);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\Language\Language;
 use App\Repository\SeasonRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -39,6 +41,11 @@ class Season extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[Assert\GreaterThan(value: "1970", message: 'Vous devez renseigner une année de saison valide.')]
     #[Assert\NotBlank(message: 'L\'année de début de saison doit être renseignée.')]
     #[JMS\Expose()]
@@ -48,6 +55,12 @@ class Season extends Datable
 
     #[ORM\OneToMany(mappedBy: 'season', targetEntity: Event::class)]
     private $events;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'seasons')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -84,6 +97,18 @@ class Season extends Datable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
 
         return $this;
     }
@@ -126,6 +151,18 @@ class Season extends Datable
                 $event->setSeason(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

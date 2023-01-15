@@ -60,4 +60,11 @@ class PageController extends CrudController
     {
         return parent::delete($request, $pageId);
     }
+
+    #[Rest\Get('/pages/{pageId}/translated/{languageId}', requirements: ['pageId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $pageId, int $languageId): View
+    {
+        return parent::getTranslated($request, $pageId, $languageId);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\Language\Language;
 use App\Repository\RoomRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -39,6 +41,11 @@ class Room extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[Assert\PositiveOrZero(message: 'Le nombre de sièges de la salle doit être un nombre supérieur ou égal à 0.')]
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -62,8 +69,13 @@ class Room extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    public $frontUrl;
+    #[ORM\ManyToOne(inversedBy: 'rooms')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    public $frontUrl;
 
     public function __construct()
     {
@@ -97,6 +109,18 @@ class Room extends Datable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
 
         return $this;
     }
@@ -181,6 +205,18 @@ class Room extends Datable
                 $event->setRoom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

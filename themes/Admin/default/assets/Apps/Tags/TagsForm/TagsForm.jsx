@@ -9,7 +9,9 @@ import { Component } from '@/AdminService/Component';
 
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const TagsForm = ({ handleSubmit, initialValues = null }) => {
+export const TagsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
+    const initValues = translateInitialValues || initialValues;
+
     const tagSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du tag.'),
     });
@@ -17,10 +19,12 @@ export const TagsForm = ({ handleSubmit, initialValues = null }) => {
     return (
         <Formik
             initialValues={{
-                name: initialValues?.name || '',
-                active: initialValues?.active || false,
-                description: initialValues?.description || '',
-                slug: initialValues?.slug || '',
+                name: initValues?.name || '',
+                active: initValues?.active || false,
+                description: initValues?.description || '',
+                slug: initValues?.slug || '',
+                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}
             validationSchema={tagSchema}
