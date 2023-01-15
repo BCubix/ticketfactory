@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { useTheme } from '@emotion/react';
 
@@ -9,12 +10,37 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import TranslateIcon from '@mui/icons-material/Translate';
 
-import { Chip, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Typography } from '@mui/material';
+import {
+    Button,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    InputLabel,
+    Menu,
+    MenuItem,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TableSortLabel,
+    Typography,
+} from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { objectResolver } from '@Services/utils/objectResolver';
+
+import { languagesSelector } from '@Redux/languages/languagesSlice';
+import { Box } from '@mui/system';
 
 /**
  *
@@ -41,6 +67,7 @@ export const ListTable = ({
     filters,
     onActive = null,
     onDelete = null,
+    onTranslate = null,
     onDisable = null,
     onEdit = null,
     onClick = null,
@@ -54,8 +81,11 @@ export const ListTable = ({
     disableDeleteFunction = null,
 }) => {
     const theme = useTheme();
+    const languagesData = useSelector(languagesSelector);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+    const [translateItem, setTranslateItem] = useState(false);
+    const [translateLanguage, setTranslateLanguage] = useState('');
     const open = Boolean(anchorEl);
     const field = filters?.sort ? filters?.sort?.split(' ')[0] : '';
     const order = filters?.sort ? filters?.sort?.split(' ')[1] : '';
@@ -244,6 +274,20 @@ export const ListTable = ({
                             >
                                 <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
                             </MenuItem>
+                            {null !== onTranslate && null !== languagesData?.total && languagesData?.total > 1 && (
+                                <MenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setAnchorEl(null);
+                                        setTranslateItem(selectedMenuItem);
+                                        setSelectedMenuItem(null);
+                                    }}
+                                    id={`translateButton-${selectedMenuItem?.id}`}
+                                    sx={{ color: theme.palette.crud.action.textColor }}
+                                >
+                                    <TranslateIcon sx={{ marginRight: 2 }} /> Traduire
+                                </MenuItem>
+                            )}
                             <MenuItem
                                 sx={{
                                     color: theme.palette.crud.action.textColor,
@@ -282,6 +326,61 @@ export const ListTable = ({
                     )}
                 </TableBody>
             </Table>
+            <Dialog open={Boolean(translateItem)} onClose={() => setTranslateItem(null)} maxWidth="sm" fullWidth>
+                <DialogTitle sx={{ fontSize: 20 }}>Traduction</DialogTitle>
+                <DialogContent dividers>
+                    <FormControl fullWidth sx={{ marginTop: 3 }}>
+                        <InputLabel id={`translate-label`} size="small">
+                            Langue
+                        </InputLabel>
+                        <Select
+                            labelId={`translate-label`}
+                            variant="standard"
+                            size="small"
+                            id={`translateLanguage`}
+                            value={translateLanguage}
+                            onChange={(e) => {
+                                setTranslateLanguage(e.target.value);
+                            }}
+                            label="Langue de traduction"
+                        >
+                            {languagesData?.languages
+                                ?.filter((el) => el.id !== translateItem?.lang?.id)
+                                ?.map((language, index) => (
+                                    <MenuItem key={index} value={language?.id} id={`selectTranslateLanguage-${language?.id}`}>
+                                        {language?.name} ({language?.isoCode})
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                        <Button
+                            color="error"
+                            onClick={() => {
+                                setTranslateItem(null);
+                            }}
+                            id="cancelDialog"
+                        >
+                            Annuler
+                        </Button>
+                        <Button
+                            color="primary"
+                            onClick={() => {
+                                if (translateLanguage !== '') {
+                                    onTranslate(translateItem?.id, translateLanguage);
+                                } else {
+                                    NotificationManager.error('Veuillez renseigner la langue.', 'Erreur', Constant.REDIRECTION_TIME);
+                                }
+                            }}
+                            id="validateDialog"
+                        >
+                            Suivant
+                        </Button>
+                    </Box>
+                </DialogActions>
+            </Dialog>
         </TableContainer>
     );
 };

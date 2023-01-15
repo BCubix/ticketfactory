@@ -5,7 +5,9 @@ import { Button, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Tab } from '@/AdminService/Tab';
 
-export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList, roomsList, seasonsList, tagsList }) => {
+export const EventsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, categoriesList, roomsList, seasonsList, tagsList }) => {
+    const initValues = translateInitialValues || initialValues;
+
     if (!categoriesList || !roomsList || !seasonsList || !tagsList) {
         return <></>;
     }
@@ -56,27 +58,29 @@ export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList,
     return (
         <Formik
             initialValues={{
-                active: initialValues?.active || false,
-                name: initialValues?.name || '',
-                chapo: initialValues?.chapo || '',
-                description: initialValues?.description || '',
-                eventDateBlocks: initialValues?.eventDateBlocks || [{ name: 'Dates', eventDates: [] }],
-                eventPriceBlocks: initialValues?.eventPriceBlocks || [{ name: 'Tarifs', eventPrices: [] }],
-                eventCategories: initialValues?.eventCategories ? initialValues?.eventCategories?.map((el) => el.id) : [],
-                room: initialValues?.room?.id || '',
-                season: initialValues?.season?.id || '',
-                tags: initialValues?.tags ? initialValues?.tags?.map((el) => el.id) : [],
-                mainCategory: initialValues?.mainCategory?.id || '',
-                multiplePriceBlock: initialValues?.eventPriceBlocks?.length > 1 || false,
-                multipleDateBlock: initialValues?.eventDateBlocks?.length > 1 || false,
+                active: initValues?.active || false,
+                name: initValues?.name || '',
+                chapo: initValues?.chapo || '',
+                description: initValues?.description || '',
+                eventDateBlocks: initValues?.eventDateBlocks || [{ name: 'Dates', eventDates: [] }],
+                eventPriceBlocks: initValues?.eventPriceBlocks || [{ name: 'Tarifs', eventPrices: [] }],
+                eventCategories: initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [],
+                room: initValues?.room?.id || '',
+                season: initValues?.season?.id || '',
+                tags: initValues?.tags ? initValues?.tags?.map((el) => el.id) : [],
+                mainCategory: initValues?.mainCategory?.id || '',
+                multiplePriceBlock: initValues?.eventPriceBlocks?.length > 1 || false,
+                multipleDateBlock: initValues?.eventDateBlocks?.length > 1 || false,
                 eventMedias:
-                    initialValues?.eventMedias?.map((el) => ({
+                    initValues?.eventMedias?.map((el) => ({
                         mainImg: el.mainImg,
                         position: el.position,
                         id: el.media?.id,
                     })) || [],
-                slug: initialValues?.slug || '',
+                slug: initValues?.slug || '',
                 editSlug: false,
+                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
             }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -89,8 +93,20 @@ export const EventsForm = ({ handleSubmit, initialValues = null, categoriesList,
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}>
                     <Component.CmtTabs
                         containerStyle={{ mt: 3 }}
-                        list={Tab.EventsFormTabList(values, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue,
-                            roomsList, seasonsList, categoriesList, tagsList, initialValues)}
+                        list={Tab.EventsFormTabList(
+                            values,
+                            handleChange,
+                            handleBlur,
+                            touched,
+                            errors,
+                            setFieldTouched,
+                            setFieldValue,
+                            roomsList,
+                            seasonsList,
+                            categoriesList,
+                            tagsList,
+                            initialValues
+                        )}
                     />
 
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>

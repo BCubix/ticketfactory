@@ -42,6 +42,8 @@ class Event extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
@@ -98,16 +100,18 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events')]
     private $tags;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
     public $frontUrl;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Language $lang = null;
 
 
     public function __construct()
@@ -305,6 +309,19 @@ class Event extends Datable
         return $this;
     }
 
+    
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Tag>
      */
@@ -355,18 +372,6 @@ class Event extends Datable
                 $eventMedia->setEvent(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getLang(): ?Language
-    {
-        return $this->lang;
-    }
-
-    public function setLang(?Language $lang): self
-    {
-        $this->lang = $lang;
 
         return $this;
     }

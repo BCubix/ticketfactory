@@ -9,7 +9,6 @@ import { Constant } from '@/AdminService/Constant';
 
 import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditEvent = () => {
@@ -49,25 +48,16 @@ export const EditEvent = () => {
     }, [categoriesData, roomsData, seasonsData, tagsData]);
 
     const getEvent = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.eventsApi.getOneEvent(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.EVENTS_BASE_PATH);
+                return;
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.eventsApi.getOneEvent(id);
-
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-            navigate(Constant.EVENTS_BASE_PATH);
-
-            return;
-        }
-
-        setEvent(result.event);
+            setEvent(result.event);
+        });
     };
 
     useEffect(() => {

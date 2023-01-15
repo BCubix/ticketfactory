@@ -7,10 +7,11 @@ import 'moment/locale/fr';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
 import { getParametersAction, parametersSelector } from '@Redux/parameters/parametersSlice';
+import { getLanguagesAction, languagesSelector } from '@Redux/languages/languagesSlice';
 
 import defaultTheme from '@Services/themes/defaultTheme';
 
@@ -19,6 +20,7 @@ import '@Style/index.scss';
 export const App = () => {
     const { connected, loading } = useSelector(profileSelector);
     const parametersData = useSelector(parametersSelector);
+    const languagesData = useSelector(languagesSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -28,11 +30,17 @@ export const App = () => {
     }, []);
 
     useEffect(() => {
-        if (!connected || parametersData?.parameters || parametersData?.loading) {
+        if (!connected) {
             return;
         }
 
-        dispatch(getParametersAction());
+        if (!parametersData?.parameters && !parametersData?.loading) {
+            dispatch(getParametersAction());
+        }
+
+        if (!languagesData?.parameters && !languagesData?.loading) {
+            dispatch(getLanguagesAction());
+        }
     }, [connected]);
 
     return (

@@ -7,16 +7,19 @@ use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
+use App\Entity\Language\Language;
 use App\Repository\EventCategoryRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\TagRepository;
+use App\Repository\LanguageRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -100,13 +103,25 @@ class EventType extends AbstractType
                     ;
                 }
             ])
-            ->add('eventMedias',           CollectionType::class,      [
-                'entry_type'   => EventMediaType::class,
-                'allow_add'    => true,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'by_reference' => false
+            ->add('eventMedias',          CollectionType::class,      [
+                'entry_type'    => EventMediaType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'delete_empty'  => true,
+                'by_reference'  => false
             ])
+            ->add('lang',                 EntityType::class,          [
+                'class'         => Language::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (LanguageRepository $lr) {
+                    return $lr
+                        ->createQueryBuilder('l')
+                        ->orderBy('l.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('languageGroup',        UuidType::class,            [])
         ;
     }
 

@@ -115,6 +115,8 @@ const eventsApi = {
             formData.append('season', data.season);
             formData.append('mainCategory', data.mainCategory);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
@@ -174,6 +176,8 @@ const eventsApi = {
             formData.append('season', data.season);
             formData.append('mainCategory', data.mainCategory);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
@@ -236,6 +240,17 @@ const eventsApi = {
             await axios.post(`/events/${id}/duplicate`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id) => {
+        try {
+            const result = await axios.get(`/events/${id}/translated`);
+            const data = copyData(result?.data);
+
+            return { result: true, event: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
