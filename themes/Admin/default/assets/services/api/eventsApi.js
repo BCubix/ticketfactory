@@ -6,6 +6,7 @@ import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
 import { changeSlug } from '@Services/utils/changeSlug';
+import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
 
 var controller = null;
 
@@ -82,7 +83,9 @@ const eventsApi = {
 
             controller = null;
 
-            return { result: true, events: result.data?.results, total: result?.data?.total };
+            const translatedList = sortTranslatedObject(result.data?.results);
+
+            return { result: true, events: translatedList, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, events: [], total: 0 };

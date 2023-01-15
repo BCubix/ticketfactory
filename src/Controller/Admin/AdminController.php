@@ -33,5 +33,6 @@ abstract class AdminController extends AbstractFOSRestController
         $this->fec = $fec;
         $this->log = $log;
         $this->hs = $hs;
+        $this->lm = $lm;
     }
 }

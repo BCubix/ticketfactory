@@ -52,6 +52,8 @@ abstract class CrudController extends AdminController
         $filters = empty($filters) ? [] : $filters;
         $objects = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters);
 
+        $objects = $this->lm->getAllTranslations($objects, $this->entityClass, $filters);
+
         return $this->view($objects, Response::HTTP_OK);
     }
 
@@ -85,7 +87,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        //$this->lm->setTranslationsProperties($object);
+        $this->lm->setTranslationsProperties($object);
 
         $this->hs->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,

@@ -21,4 +21,39 @@ class LanguageManager extends AbstractManager
             $entity->setLang($defaultLanguage);
         }
     }
+
+    public function getAllTranslations($objects, $entityClass, $filters)
+    {
+        if (isset($objects['results'])) {
+            $list = $objects['results'];
+        } else {
+            $list = $objects;
+        }
+
+        if (isset($filters['lang']) || !property_exists($list[0], 'languageGroup')) {
+            return $objects;
+        }
+
+        $results = [];
+        $repository = $this->em->getRepository($entityClass);
+
+        foreach($list as $element) {
+            $results[] = $element;
+
+            $translated = $repository->findTranslatedElementsForAdmin($element->getLanguageGroup()->toBinary());
+            if (count($translated) > 0) {
+                foreach($translated as $translatedElement) {
+                    $results[] = $translatedElement;
+                }
+            }
+        }
+
+        if (isset($objects['results'])) {
+            $objects['results'] = $results;
+        } else {
+            $objects = $results;
+        }
+
+        return $objects;
+    }
 }

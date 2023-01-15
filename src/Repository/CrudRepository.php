@@ -16,7 +16,6 @@ abstract class CrudRepository extends AbstractRepository
 
     public function findAllForAdmin(array $filters): array
     {
-        //dd($this->_class->fieldMappings);
         $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
 
         list($limit, $page, $sortField, $sortOrder) = $this->getSortParameters($filters);
@@ -57,6 +56,13 @@ abstract class CrudRepository extends AbstractRepository
             ;
         }
 
+        if (static::IS_TRANSLATABLE && !isset($filters['lang'])) {
+            $results
+                ->andWhere('el.id = :defaultLangId')
+                ->setParameter("defaultLangId", $defaultLanguage->getId())
+            ;
+        }
+
         if ($page != 0) {
             $results = $results
                 ->setFirstResult(($page - 1) * $limit)
@@ -83,6 +89,32 @@ abstract class CrudRepository extends AbstractRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    public function findTranslatedElementsForAdmin(string $languageGroup)
+    {
+        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
+
+        $results = $this->createQueryBuilder('o');
+
+        foreach (static::JOINS as $joinArray) {
+            $joinType = $joinArray[0];
+
+            if (isset($joinArray[3])) {
+                $results->$joinType($joinArray[1], $joinArray[2], 'WITH', $joinArray[3]);
+            } else {
+                $results->$joinType($joinArray[1], $joinArray[2]);
+            }
+        }
+
+        return $results
+            ->where('o.languageGroup = :languageGroup')
+            ->setParameter('languageGroup', $languageGroup)
+            ->andWhere('el.id != :defaultLanguageId')
+            ->setParameter('defaultLanguageId', $defaultLanguage->getId())
+            ->getQuery()
+            ->getResult()
         ;
     }
 }

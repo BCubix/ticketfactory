@@ -11,6 +11,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
     protected const JOINS   = [];
     protected const FILTERS = [];
     protected const SORTS   = ['id' => 'o.id'];
+    protected const IS_TRANSLATABLE = false;
 
     private const OPERATOR_MAPPING = [
         'equals' => ['='],

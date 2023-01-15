@@ -12,14 +12,16 @@ class EventRepository extends CrudRepository
         'ec' => null,
         'es' => null,
         'es' => null,
-        'et' => null
+        'et' => null,
+        'el' => null
     ];
 
     protected const JOINS = [
         ['leftJoin', 'o.mainCategory', 'ec'],
         ['leftJoin', 'o.season', 'es'],
         ['leftJoin', 'o.room', 'er'],
-        ['leftJoin', 'o.tags', 'et']
+        ['leftJoin', 'o.tags', 'et'],
+        ['leftJoin', 'o.lang', 'el']
     ];
 
     protected const FILTERS = [
@@ -29,6 +31,8 @@ class EventRepository extends CrudRepository
         ['season', 'es.id', 'in'],
         ['room', 'er.id', 'in'],
         ['tags', 'et.id', 'in'],
+        ['lang', 'el.id', 'in'],
+        ['languageGroup', 'o.languageGroup', 'equals']
     ];
 
     protected const SORTS = [
@@ -38,8 +42,10 @@ class EventRepository extends CrudRepository
         'category' => 'ec.name',
         'season' => 'es.name',
         'room' => 'er.name',
-        'tags' => 'et.name'
+        'tags' => 'et.name',
     ];
+
+    protected const IS_TRANSLATABLE = true;
 
     public function __construct(ManagerRegistry $registry)
     {
