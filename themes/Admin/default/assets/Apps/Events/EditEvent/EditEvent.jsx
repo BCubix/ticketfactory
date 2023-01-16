@@ -9,6 +9,7 @@ import { Constant } from '@/AdminService/Constant';
 
 import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
+
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditEvent = () => {
@@ -26,15 +27,7 @@ export const EditEvent = () => {
             dispatch(getCategoriesAction());
         }
 
-        apiMiddleware(dispatch, async () => {
-            const tmpRooms = await Api.roomsApi.getAllRooms();
-            const tmpSeasons = await Api.seasonsApi.getAllSeasons();
-            const tmpTags = await Api.tagsApi.getAllTags();
-
-            setRoomsData(tmpRooms);
-            setSeasonsData(tmpSeasons);
-            setTagsData(tmpTags);
-        });
+        apiMiddleware(dispatch, async () => {});
     }, []);
 
     useEffect(() => {
@@ -57,6 +50,11 @@ export const EditEvent = () => {
             }
 
             setEvent(result.event);
+
+            const defaultLanguageId = result?.event?.lang?.id;
+            Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
+            Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
+            Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
         });
     };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
@@ -6,7 +6,7 @@ import { Box } from '@mui/system';
 
 import { Constant } from '@/AdminService/Constant';
 
-export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, languagesData, onTranslate }) => {
+export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, languageList, onTranslate }) => {
     const [translateLanguage, setTranslateLanguage] = useState('');
 
     return (
@@ -28,13 +28,11 @@ export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, lang
                         }}
                         label="Langue de traduction"
                     >
-                        {languagesData?.languages
-                            ?.filter((el) => el.id !== translateItem?.lang?.id)
-                            ?.map((language, index) => (
-                                <MenuItem key={index} value={language?.id} id={`selectTranslateLanguage-${language?.id}`}>
-                                    {language?.name} ({language?.isoCode})
-                                </MenuItem>
-                            ))}
+                        {languageList?.map((language, index) => (
+                            <MenuItem key={index} value={language?.id} id={`selectTranslateLanguage-${language?.id}`}>
+                                {language?.name} ({language?.isoCode})
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
             </DialogContent>

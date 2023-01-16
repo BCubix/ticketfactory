@@ -9,12 +9,15 @@ import { Constant } from '@/AdminService/Constant';
 
 import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
+import { languagesSelector } from '@Redux/languages/languagesSlice';
+
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateEvent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const categoriesData = useSelector(categoriesSelector);
+    const languagesData = useSelector(languagesSelector);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
@@ -30,26 +33,25 @@ export const CreateEvent = () => {
         }
 
         apiMiddleware(dispatch, async () => {
-            const tmpRooms = await Api.roomsApi.getAllRooms();
-            const tmpSeasons = await Api.seasonsApi.getAllSeasons();
-            const tmpTags = await Api.tagsApi.getAllTags();
+            const defaultLanguageId = languageId || languagesData?.languages?.find((el) => el.isDefault)?.id;
 
-            setRoomsData(tmpRooms);
-            setSeasonsData(tmpSeasons);
-            setTagsData(tmpTags);
+            Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
+            Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
+            Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
 
             if (!eventId || !languageId) {
                 return;
             }
 
-            let event = await Api.eventsApi.getTranslated(eventId, languageId);
-            if (!event?.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.EVENTS_BASE_PATH);
-                return;
-            }
+            Api.eventsApi.getTranslated(eventId, languageId).then((event) => {
+                if (!event?.result) {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                    navigate(Constant.EVENTS_BASE_PATH);
+                    return;
+                }
 
-            setInitialValues(event.event);
+                setInitialValues(event.event);
+            });
         });
     }, []);
 

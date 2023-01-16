@@ -65,6 +65,21 @@ export const ListTable = ({
         setSelectedMenuItem(null);
     };
 
+    const languageList = useMemo(() => {
+        const list = translateItem || selectedMenuItem;
+
+        if (!list || !list?.lang) {
+            return [];
+        }
+
+        let listId = [];
+        listId.push(list?.lang?.id);
+
+        list?.translatedElements?.forEach((el) => listId.push(el.lang.id));
+
+        return languagesData?.languages?.filter((el) => !listId.includes(el.id));
+    }, [translateItem, selectedMenuItem, languagesData?.languages]);
+
     const defaultLanguage = useMemo(() => {
         if (!languagesData?.languages) {
             return null;
@@ -117,13 +132,13 @@ export const ListTable = ({
                         selectedMenuItem={selectedMenuItem}
                         setSelectedMenuItem={setSelectedMenuItem}
                         onTranslate={defaultLanguage?.id === selectedMenuItem?.lang?.id ? onTranslate : null}
-                        languagesData={languagesData}
+                        languageList={languageList}
                         setTranslateItem={setTranslateItem}
                         onDuplicate={onDuplicate}
                         onPreview={onPreview}
                     />
 
-                    <ListTableTranslateDialog translateItem={translateItem} setTranslateItem={setTranslateItem} languagesData={languagesData} onTranslate={onTranslate} />
+                    <ListTableTranslateDialog translateItem={translateItem} setTranslateItem={setTranslateItem} languageList={languageList} onTranslate={onTranslate} />
                 </TableBody>
             </Table>
         </TableContainer>

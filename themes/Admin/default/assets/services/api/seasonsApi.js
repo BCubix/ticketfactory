@@ -60,9 +60,13 @@ const seasonsApi = {
         }
     },
 
-    getAllSeasons: async () => {
+    getAllSeasons: async (filters) => {
         try {
             let params = { 'filters[page]': 0 };
+
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
 
             const result = await axios.get('/seasons', { params: params });
 

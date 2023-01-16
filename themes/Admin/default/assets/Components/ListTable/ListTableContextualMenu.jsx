@@ -17,7 +17,7 @@ export const ListTableContextualMenu = ({
     selectedMenuItem,
     setSelectedMenuItem,
     onTranslate,
-    languagesData,
+    languageList,
     setTranslateItem,
     onDuplicate,
     onPreview,
@@ -43,7 +43,7 @@ export const ListTableContextualMenu = ({
             >
                 <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
             </MenuItem>
-            {null !== onTranslate && null !== languagesData?.total && languagesData?.total > 1 && (
+            {null !== onTranslate && languageList?.length > 0 && (
                 <MenuItem
                     onClick={(e) => {
                         e.stopPropagation();
