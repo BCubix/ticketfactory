@@ -30,7 +30,7 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
                 area: initValues?.area || '',
                 seatingPlans: initValues?.seatingPlans || [],
                 slug: initValues?.slug || '',
-                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}

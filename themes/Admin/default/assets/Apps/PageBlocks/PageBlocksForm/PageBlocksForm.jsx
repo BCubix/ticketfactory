@@ -26,7 +26,7 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues
                         l: element?.l || 12,
                         xl: element?.xl || 12,
                     })) || [],
-                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
             }}
             validationSchema={pageBlockSchema}

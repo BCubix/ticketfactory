@@ -79,7 +79,7 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                     })) || [],
                 slug: initValues?.slug || '',
                 editSlug: false,
-                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
             }}
             validationSchema={eventSchema}

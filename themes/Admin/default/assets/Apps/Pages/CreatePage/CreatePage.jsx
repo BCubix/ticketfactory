@@ -32,7 +32,6 @@ export const CreatePage = () => {
                 return;
             }
 
-            page.page.lang = parseInt(languageId);
             setInitialValues(page.page);
         });
     }, []);

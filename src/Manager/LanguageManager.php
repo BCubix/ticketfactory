@@ -56,4 +56,22 @@ class LanguageManager extends AbstractManager
 
         return $objects;
     }
+
+    public function translateElement($object, $languageId)
+    {
+        $language = $this->em->getRepository(Language::class)->findOneForAdmin($languageId);
+        if (null === $language) {
+            return null;
+        }
+
+        if ($object->getLang()->getId() === $language->getId()) {
+            $object->setLanguageGroup(null);
+        }
+
+        $object->setLang($language);
+
+        self::setTranslationsProperties($object);
+
+        return $object;
+    }
 }

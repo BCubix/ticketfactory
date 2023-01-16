@@ -32,7 +32,6 @@ export const CreateRoom = () => {
                 return;
             }
 
-            room.room.lang = parseInt(languageId);
             setInitialValues(room.room);
         });
     }, []);

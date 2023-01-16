@@ -32,7 +32,6 @@ export const CreateTag = () => {
                 return;
             }
 
-            tag.tag.lang = parseInt(languageId);
             setInitialValues(tag.tag);
         });
     }, []);

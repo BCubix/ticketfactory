@@ -67,7 +67,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                 fields: { ...initVal?.fields },
                 title: initVal?.title || '',
                 contentType: initVal?.contentType?.id || selectedContentType?.id,
-                lang: translateInitialValues?.lang || initVal?.lang?.id || '',
+                lang: initVal?.lang?.id || '',
                 languageGroup: initVal?.languageGroup || '',
                 editSlug: false,
             });

@@ -32,7 +32,6 @@ export const CreateSeason = () => {
                 return;
             }
 
-            season.season.lang = parseInt(languageId);
             setInitialValues(season.season);
         });
     }, []);

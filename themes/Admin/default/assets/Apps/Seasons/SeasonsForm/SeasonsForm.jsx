@@ -25,7 +25,7 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null, translateIniti
                 active: initValues?.active || false,
                 beginYear: initValues?.beginYear || '',
                 slug: initValues?.slug || '',
-                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}

@@ -23,7 +23,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null, translateInitialV
                 active: initValues?.active || false,
                 description: initValues?.description || '',
                 slug: initValues?.slug || '',
-                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}

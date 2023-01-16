@@ -49,7 +49,6 @@ export const CreateEvent = () => {
                 return;
             }
 
-            event.event.lang = parseInt(languageId);
             setInitialValues(event.event);
         });
     }, []);

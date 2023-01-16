@@ -204,6 +204,13 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
+        $this->hs->exec($this->entityClassName . 'Instantiated', [
+            'object' => $object,
+            'state'  => 'delete'
+        ]);
+
+        $result = $this->lm->translateElement($object, $languageId);
+
         return $this->view($object, Response::HTTP_OK);
     }
 }

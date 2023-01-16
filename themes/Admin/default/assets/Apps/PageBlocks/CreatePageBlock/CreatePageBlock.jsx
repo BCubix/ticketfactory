@@ -47,7 +47,6 @@ export const CreatePageBlock = () => {
                 return;
             }
 
-            pageBlock.pageBlock.lang = parseInt(languageId);
             setInitialValues(pageBlock.pageBlock);
         });
     }, []);

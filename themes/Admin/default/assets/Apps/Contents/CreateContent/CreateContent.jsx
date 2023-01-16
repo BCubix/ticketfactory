@@ -48,7 +48,6 @@ export const CreateContent = () => {
                 return;
             }
 
-            content.content.lang = parseInt(languageId);
             setInitialValues(content.content);
         });
     }, []);
