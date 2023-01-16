@@ -2,7 +2,9 @@ import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
+import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
 
 var controller = null;
 
@@ -44,7 +46,9 @@ const roomsApi = {
 
             controller = null;
 
-            return { result: true, rooms: result.data?.results, total: result?.data?.total };
+            const translatedList = sortTranslatedObject(result.data?.results);
+
+            return { result: true, rooms: translatedList, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, rooms: [], total: 0 };
@@ -139,6 +143,17 @@ const roomsApi = {
             await axios.post(`/rooms/${id}/duplicate`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id, languageId) => {
+        try {
+            const result = await axios.get(`/rooms/${id}/translated/${languageId}`);
+            const data = copyData(result?.data);
+
+            return { result: true, room: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -13,6 +13,29 @@ import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 export const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [initialValues, setInitialValues] = useState(null);
+
+    const [queryParameters] = useSearchParams();
+    const pageId = queryParameters.get('pageId');
+    const languageId = queryParameters.get('languageId');
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            if (!pageId || !languageId) {
+                return;
+            }
+
+            let page = await Api.pagesApi.getTranslated(pageId, languageId);
+            if (!page?.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            page.page.lang = parseInt(languageId);
+            setInitialValues(page.page);
+        });
+    }, []);
 
     function handleSubmit(values) {
         apiMiddleware(dispatch, async () => {
@@ -25,5 +48,9 @@ export const CreatePage = () => {
         });
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} />;
+    if (pageId && !initialValues) {
+        return <></>;
+    }
+
+    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} />;
 };

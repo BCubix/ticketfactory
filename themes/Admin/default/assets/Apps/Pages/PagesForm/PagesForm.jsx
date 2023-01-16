@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { Constant } from '@/AdminService/Constant';
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const PagesForm = ({ handleSubmit, initialValues = null }) => {
+export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
+    const initValues = translateInitialValues || initialValues;
     const navigate = useNavigate();
 
     const pageSchema = Yup.object().shape({
@@ -25,10 +26,10 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
     return (
         <Formik
             initialValues={{
-                active: initialValues?.active || false,
-                title: initialValues?.title || '',
+                active: initValues?.active || false,
+                title: initValues?.title || '',
                 pageBlocks:
-                    initialValues?.pageBlocks?.map((pageBlock) => ({
+                    initValues?.pageBlocks?.map((pageBlock) => ({
                         name: pageBlock.name,
                         saveAsModel: false,
                         columns: pageBlock?.columns?.map((column) => ({
@@ -39,9 +40,13 @@ export const PagesForm = ({ handleSubmit, initialValues = null }) => {
                             l: column?.l || 12,
                             xl: column?.xl || 12,
                         })),
+                        lang: pageBlock?.lang?.id || '',
+                        languageGroup: pageBlock?.languageGroup || '',
                     })) || [],
-                slug: initialValues?.slug || '',
+                slug: initValues?.slug || '',
                 editSlug: false,
+                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
             }}
             validationSchema={pageSchema}
             onSubmit={(values, { setSubmitting }) => {

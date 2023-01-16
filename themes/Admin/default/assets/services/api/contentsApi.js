@@ -4,6 +4,7 @@ import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
+import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
 
 var controller = null;
 
@@ -76,7 +77,9 @@ const contentsApi = {
 
             controller = null;
 
-            return { result: true, contents: result.data?.results, total: result?.data?.total };
+            const translatedList = sortTranslatedObject(result.data?.results);
+
+            return { result: true, contents: translatedList, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, contents: [], total: 0 };
@@ -156,6 +159,17 @@ const contentsApi = {
             await axios.post(`/contents/${id}/duplicate`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id, languageId) => {
+        try {
+            const result = await axios.get(`/contents/${id}/translated/${languageId}`);
+            const data = copyData(result?.data);
+
+            return { result: true, content: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

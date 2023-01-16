@@ -8,10 +8,10 @@ import { CardContent, Typography } from '@mui/material';
 
 import { changePagesFilters } from '@Redux/pages/pagesSlice';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
 import { getPagesAction, pagesSelector } from '@Redux/pages/pagesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
@@ -31,32 +31,18 @@ export const PagesList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        await Api.pagesApi.deletePage(id);
-
-        dispatch(getPagesAction());
-
-        setDeleteDialog(null);
+        apiMiddleware(dispatch, async () => {
+            await Api.pagesApi.deletePage(id);
+            dispatch(getPagesAction());
+            setDeleteDialog(null);
+        });
     };
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.pagesApi.duplicatePage(id);
-
             if (result?.result) {
-                NotificationManager.success(
-                    'La page a bien été dupliquée.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
-
+                NotificationManager.success('La page a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getPagesAction());
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -71,24 +57,14 @@ export const PagesList = () => {
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
                             <Typography component="h2" variant="h5" fontSize={20}>
-                                Liste des pages{' '}
-                                {pages &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + pages.length
-                                    } sur ${total})`}
+                                Liste des pages {pages && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + pages.length} sur ${total})`}
                             </Typography>
-                            <Component.CreateButton
-                                variant="contained"
-                                onClick={() => navigate(Constant.PAGES_BASE_PATH + Constant.CREATE_PATH)}
-                            >
+                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.PAGES_BASE_PATH + Constant.CREATE_PATH)}>
                                 Nouveau
                             </Component.CreateButton>
                         </Box>
 
-                        <Component.PagesFilters
-                            filters={filters}
-                            changeFilters={(values) => dispatch(changePagesFilters(values))}
-                        />
+                        <Component.PagesFilters filters={filters} changeFilters={(values) => dispatch(changePagesFilters(values))} />
 
                         <Component.ListTable
                             contextualMenu
@@ -100,6 +76,9 @@ export const PagesList = () => {
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
                             }}
+                            onTranslate={(id, languageId) => {
+                                navigate(`${Constant.PAGES_BASE_PATH}${Constant.CREATE_PATH}?pageId=${id}&languageId=${languageId}`);
+                            }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changePagesFilters(newFilters))}
@@ -109,9 +88,7 @@ export const PagesList = () => {
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changePagesFilters({ ...filters }, newValue))
-                            }
+                            setPage={(newValue) => dispatch(changePagesFilters({ ...filters }, newValue))}
                             setLimit={(newValue) => {
                                 dispatch(changePagesFilters({ ...filters, limit: newValue }));
                             }}
@@ -120,11 +97,7 @@ export const PagesList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
-            >
+            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
                     <Typography>Êtes-vous sûr de vouloir supprimer cette page ?</Typography>
 
@@ -133,4 +106,4 @@ export const PagesList = () => {
             </Component.DeleteDialog>
         </>
     );
-}
+};

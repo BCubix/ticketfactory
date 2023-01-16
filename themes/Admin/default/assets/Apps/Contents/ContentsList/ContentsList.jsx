@@ -32,7 +32,6 @@ export const ContentsList = () => {
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.contentTypesApi.getAllContentTypes();
-
             if (result?.result) {
                 setContentTypes(result?.contentTypes);
             }
@@ -41,27 +40,21 @@ export const ContentsList = () => {
 
     const handleDelete = async (id) => {
         const check = await Api.authApi.checkIsAuth();
-
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
-
             return;
         }
 
         await Api.contentsApi.deleteContent(id);
-
         dispatch(getContentsAction());
-
         setDeleteDialog(null);
     };
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.contentsApi.duplicateContent(id);
-
             if (result?.result) {
                 NotificationManager.success('Le contenu a bien été dupliqué.', 'Succès', Constant.REDIRECTION_TIME);
-
                 dispatch(getContentsAction());
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -96,6 +89,9 @@ export const ContentsList = () => {
                             }}
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
+                            }}
+                            onTranslate={(id, languageId) => {
+                                navigate(`${Constant.CONTENT_BASE_PATH}${Constant.CREATE_PATH}?contentId=${id}&languageId=${languageId}`);
                             }}
                             changeFilters={(newFilters) => dispatch(changeContentsFilters(newFilters))}
                             onDelete={(id) => setDeleteDialog(id)}

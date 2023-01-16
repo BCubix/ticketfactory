@@ -24,8 +24,9 @@ const TableColumnObj = {
     ContentsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'title', label: 'Titre', width: '40%', sortable: true },
+        { name: 'title', label: 'Titre', width: '20%', sortable: true },
         { name: 'contentType.name', label: 'Type de contenu', width: '30%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     ContentTypesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -74,13 +75,15 @@ const TableColumnObj = {
     ],
     PageBlocksList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom', width: '80%', sortable: true },
+        { name: 'name', label: 'Nom', width: '60%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     PagesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'title', label: 'Titre', width: '50%', sortable: true },
+        { name: 'title', label: 'Titre', width: '30%', sortable: true },
         { name: 'slug', label: 'Url', width: '20%' },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     RedirectionsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -92,14 +95,16 @@ const TableColumnObj = {
     RoomsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom', width: '30%', sortable: true },
-        { name: 'seatsNb', label: 'Nombre de places', width: '20%', sortable: true },
-        { name: 'area', label: 'Superficie', width: '20%', sortable: true },
+        { name: 'name', label: 'Nom', width: '20%', sortable: true },
+        { name: 'seatsNb', label: 'Nombre de places', width: '15%', sortable: true },
+        { name: 'area', label: 'Superficie', width: '15%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     SeasonsList: [
         { name: 'id', label: 'ID', width: '20%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '20%', sortable: true },
-        { name: 'name', label: 'Nom de la catégorie', width: '50%', sortable: true },
+        { name: 'name', label: 'Nom de la catégorie', width: '30%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
     ],
     TagsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },

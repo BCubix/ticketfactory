@@ -28,7 +28,7 @@ export const CreateTag = () => {
             let tag = await Api.tagsApi.getTranslated(tagId, languageId);
             if (!tag?.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.EVENTS_BASE_PATH);
+                navigate(Constant.TAGS_BASE_PATH);
                 return;
             }
 

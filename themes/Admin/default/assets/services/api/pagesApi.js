@@ -3,6 +3,8 @@ import { createFilterParams } from '@Services/utils/createFilterParams';
 import { changeSlug } from '@Services/utils/changeSlug';
 
 import { Constant } from '@/AdminService/Constant';
+import { copyData } from '@Services/utils/copyData';
+import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
 
 var controller = null;
 
@@ -47,7 +49,9 @@ const pagesApi = {
 
             controller = null;
 
-            return { result: true, pages: result?.data?.results, total: result?.data?.total };
+            const translatedList = sortTranslatedObject(result.data?.results);
+
+            return { result: true, pages: translatedList, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, pages: [], total: 0 };
@@ -80,6 +84,8 @@ const pagesApi = {
             data.pageBlocks.forEach((block, index) => {
                 formData.append(`pageBlocks[${index}][name]`, block.name);
                 formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
+                formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
+                formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
 
                 block.columns.forEach((column, columnIndex) => {
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content || '');
@@ -145,6 +151,17 @@ const pagesApi = {
             await axios.post(`/pages/${id}/duplicate`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id, languageId) => {
+        try {
+            const result = await axios.get(`/pages/${id}/translated/${languageId}`);
+            const data = copyData(result?.data);
+
+            return { result: true, page: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

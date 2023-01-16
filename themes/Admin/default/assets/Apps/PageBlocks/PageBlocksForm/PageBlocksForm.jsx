@@ -5,9 +5,9 @@ import { Component } from '@/AdminService/Component';
 import { Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Box } from '@mui/system';
 
-export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues = null }) => {
+export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues = null, translateInitialValues = null }) => {
     const [view, setView] = useState('xl');
-    const initValues = initialValues || modelValues;
+    const initValues = translateInitialValues || initialValues || modelValues;
 
     const pageBlockSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de votre block.').max(250, 'Le nom renseigné est trop long.'),
@@ -26,6 +26,8 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues
                         l: element?.l || 12,
                         xl: element?.xl || 12,
                     })) || [],
+                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
             }}
             validationSchema={pageBlockSchema}
             onSubmit={(values, { setSubmitting }) => {

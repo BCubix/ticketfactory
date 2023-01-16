@@ -19,6 +19,6 @@ class PageHook
         $iObject = $event->getParam('iObject');
         $sObject = $event->getParam('sObject');
 
-        $this->vem->checkVersionnedEntity($sObject, $iObject);
+        //$this->vem->checkVersionnedEntity($sObject, $iObject);
     }
 }

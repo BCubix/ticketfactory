@@ -11,7 +11,7 @@ import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
 
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType }) => {
+export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType, translateInitialValues = null }) => {
     const [initValue, setInitValue] = useState(null);
 
     const getContentModules = useMemo(() => {
@@ -58,13 +58,17 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
     });
 
     useEffect(() => {
-        if (initialValues) {
+        let initVal = translateInitialValues || initialValues;
+
+        if (initVal) {
             setInitValue({
-                active: initialValues?.active || false,
-                slug: initialValues?.slug || '',
-                fields: { ...initialValues?.fields },
-                title: initialValues?.title || '',
-                contentType: initialValues?.contentType?.id || selectedContentType?.id,
+                active: initVal?.active || false,
+                slug: initVal?.slug || '',
+                fields: { ...initVal?.fields },
+                title: initVal?.title || '',
+                contentType: initVal?.contentType?.id || selectedContentType?.id,
+                lang: translateInitialValues?.lang || initVal?.lang?.id || '',
+                languageGroup: initVal?.languageGroup || '',
                 editSlug: false,
             });
 
@@ -87,6 +91,8 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             fields: fields,
             title: '',
             contentType: selectedContentType?.id,
+            lang: '',
+            languageGroup: '',
             editSlug: false,
         });
     }, []);

@@ -7,7 +7,9 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
+export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
+    const initValues = translateInitialValues || initialValues;
+
     const roomsSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la salle.').max(250, 'Le nom renseigné est trop long.'),
         seatsNb: Yup.number().required('Veuillez renseigner le nombre de place.').min(1, 'Veuillez renseigner un nombre valide.'),
@@ -22,12 +24,14 @@ export const RoomsForm = ({ handleSubmit, initialValues = null }) => {
     return (
         <Formik
             initialValues={{
-                name: initialValues?.name || '',
-                active: initialValues?.active || false,
-                seatsNb: initialValues?.seatsNb || '',
-                area: initialValues?.area || '',
-                seatingPlans: initialValues?.seatingPlans || [],
-                slug: initialValues?.slug || '',
+                name: initValues?.name || '',
+                active: initValues?.active || false,
+                seatsNb: initValues?.seatsNb || '',
+                area: initValues?.area || '',
+                seatingPlans: initValues?.seatingPlans || [],
+                slug: initValues?.slug || '',
+                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}
             validationSchema={roomsSchema}

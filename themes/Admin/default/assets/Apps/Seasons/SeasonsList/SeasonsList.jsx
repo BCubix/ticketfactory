@@ -36,10 +36,8 @@ export const SeasonsList = () => {
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.seasonsApi.duplicateSeason(id);
-
             if (result?.result) {
                 NotificationManager.success('La saison a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
-
                 dispatch(getSeasonsAction());
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -72,6 +70,9 @@ export const SeasonsList = () => {
                             }}
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
+                            }}
+                            onTranslate={(id, languageId) => {
+                                navigate(`${Constant.SEASONS_BASE_PATH}${Constant.CREATE_PATH}?seasonId=${id}&languageId=${languageId}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}

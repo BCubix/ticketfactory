@@ -27,28 +27,18 @@ export const PageBlocksList = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        await Api.pageBlocksApi.deletePageBlock(id);
-
-        dispatch(getPageBlocksAction());
-
-        setDeleteDialog(null);
+        apiMiddleware(dispatch, async () => {
+            await Api.pageBlocksApi.deletePageBlock(id);
+            dispatch(getPageBlocksAction());
+            setDeleteDialog(null);
+        });
     };
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.pageBlocksApi.duplicatePageBlock(id);
-
             if (result?.result) {
                 NotificationManager.success('Le bloc a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
-
                 dispatch(getPageBlocksAction());
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -82,6 +72,9 @@ export const PageBlocksList = () => {
                             }}
                             onEdit={(id) => {
                                 navigate(`${Constant.PAGE_BLOCKS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                            }}
+                            onTranslate={(id, languageId) => {
+                                navigate(`${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}?pageBlockId=${id}&languageId=${languageId}`);
                             }}
                             filters={filters}
                             changeFilters={(newFilters) => dispatch(changePageBlocksFilters(newFilters))}

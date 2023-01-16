@@ -1,7 +1,9 @@
 import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
+import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
 
 var controller = null;
 
@@ -46,7 +48,9 @@ const seasonsApi = {
 
             controller = null;
 
-            return { result: true, seasons: result.data?.results, total: result?.data?.total };
+            const translatedList = sortTranslatedObject(result.data?.results);
+
+            return { result: true, seasons: translatedList, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, seasons: [], total: 0 };
@@ -131,6 +135,17 @@ const seasonsApi = {
             await axios.post(`/seasons/${id}/duplicate`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id, languageId) => {
+        try {
+            const result = await axios.get(`/seasons/${id}/translated/${languageId}`);
+            const data = copyData(result?.data);
+
+            return { result: true, season: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

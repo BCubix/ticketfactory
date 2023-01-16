@@ -1,38 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
 import { getSeasonsAction } from '@Redux/seasons/seasonsSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateSeason = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [initialValues, setInitialValues] = useState(null);
+
+    const [queryParameters] = useSearchParams();
+    const seasonId = queryParameters.get('seasonId');
+    const languageId = queryParameters.get('languageId');
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            if (!seasonId || !languageId) {
+                return;
+            }
+
+            let season = await Api.seasonsApi.getTranslated(seasonId, languageId);
+            if (!season?.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.SEASONS_BASE_PATH);
+                return;
+            }
+
+            season.season.lang = parseInt(languageId);
+            setInitialValues(season.season);
+        });
+    }, []);
 
     const handleSubmit = async (values) => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.seasonsApi.createSeason(values);
-
-        if (result.result) {
-            NotificationManager.success('La saison a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
-
-            dispatch(getSeasonsAction());
-
-            navigate(Constant.SEASONS_BASE_PATH);
-        }
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.seasonsApi.createSeason(values);
+            if (result.result) {
+                NotificationManager.success('La saison a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(getSeasonsAction());
+                navigate(Constant.SEASONS_BASE_PATH);
+            }
+        });
     };
 
-    return <Component.SeasonsForm handleSubmit={handleSubmit} />;
+    if (seasonId && !initialValues) {
+        return <></>;
+    }
+
+    return <Component.SeasonsForm handleSubmit={handleSubmit} translateInitialValues={initialValues} />;
 };

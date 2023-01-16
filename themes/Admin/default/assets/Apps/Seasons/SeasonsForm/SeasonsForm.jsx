@@ -7,7 +7,9 @@ import { Button, Grid, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
+export const SeasonsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
+    const initValues = translateInitialValues || initialValues;
+
     const seasonsSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la saison.').max(250, 'Le nom renseigné est trop long.'),
         beginYear: Yup.number()
@@ -19,10 +21,12 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null }) => {
     return (
         <Formik
             initialValues={{
-                name: initialValues?.name || '',
-                active: initialValues?.active || false,
-                beginYear: initialValues?.beginYear || '',
-                slug: initialValues?.slug || '',
+                name: initValues?.name || '',
+                active: initValues?.active || false,
+                beginYear: initValues?.beginYear || '',
+                slug: initValues?.slug || '',
+                lang: translateInitialValues?.lang || initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}
             validationSchema={seasonsSchema}

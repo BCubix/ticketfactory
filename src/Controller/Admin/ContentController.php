@@ -68,6 +68,8 @@ class ContentController extends CrudController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
+        $this->lm->setTranslationsProperties($object);
+
         $this->hs->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,

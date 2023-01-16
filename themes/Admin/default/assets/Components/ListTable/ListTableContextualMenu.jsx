@@ -29,7 +29,6 @@ export const ListTableContextualMenu = ({
         return <></>;
     }
 
-    console.log(selectedMenuItem);
     return (
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem
