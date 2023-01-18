@@ -1,7 +1,7 @@
-import { checkFunction, checkString } from "@Services/utils/check";
-import React from "react";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { checkFunction, checkString } from '@Services/utils/check';
+import React from 'react';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 const keys = ['label', 'component', 'path', 'id'];
 
@@ -22,8 +22,7 @@ const TabObj = {
         { label: 'Pages', component: <Component.PagesList />, path: Constant.PAGES_BASE_PATH },
         { label: 'Blocs', component: <Component.PageBlocksList />, path: Constant.PAGE_BLOCKS_BASE_PATH },
     ],
-    EventsFormTabList: (values, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue, roomsList,
-                        seasonsList, categoriesList, tagsList, initialValues) => [
+    EventsFormTabList: (values, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue, roomsList, seasonsList, categoriesList, tagsList, initialValues) => [
         {
             label: 'Evènement',
             id: 'eventPartButton',
@@ -56,6 +55,7 @@ const TabObj = {
                     errors={errors}
                     handleBlur={handleBlur}
                     handleChange={handleChange}
+                    initialValues={initialValues}
                 />
             ),
         },
@@ -71,6 +71,7 @@ const TabObj = {
                     errors={errors}
                     handleBlur={handleBlur}
                     handleChange={handleChange}
+                    initialValues={initialValues}
                 />
             ),
         },

@@ -2,7 +2,7 @@ import React from 'react';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { Avatar } from '@mui/material';
 import { checkArray, checkObject, checkString } from '@Services/utils/check';
-import ReactCountryFlag from 'react-country-flag';
+import { Component } from '@/AdminService/Component';
 
 const keys = ['name', 'label', 'width', 'type', 'sortable', 'renderFunction'];
 
@@ -26,7 +26,7 @@ const TableColumnObj = {
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'title', label: 'Titre', width: '20%', sortable: true },
         { name: 'contentType.name', label: 'Type de contenu', width: '30%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     ContentTypesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -41,7 +41,7 @@ const TableColumnObj = {
         { name: 'room.name', label: 'Salle', width: '10%', sortable: true },
         { name: 'season.name', label: 'Saison', width: '10%', sortable: true },
         { name: 'tags.0.name', label: 'Tags', width: '10%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '10%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '10%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     ImageFormatsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -76,14 +76,14 @@ const TableColumnObj = {
     PageBlocksList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'name', label: 'Nom', width: '60%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     PagesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'title', label: 'Titre', width: '30%', sortable: true },
         { name: 'slug', label: 'Url', width: '20%' },
-        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     RedirectionsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -98,19 +98,19 @@ const TableColumnObj = {
         { name: 'name', label: 'Nom', width: '20%', sortable: true },
         { name: 'seatsNb', label: 'Nombre de places', width: '15%', sortable: true },
         { name: 'area', label: 'Superficie', width: '15%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     SeasonsList: [
         { name: 'id', label: 'ID', width: '20%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '20%', sortable: true },
         { name: 'name', label: 'Nom de la catégorie', width: '30%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     TagsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'name', label: 'Nom de la catégorie', width: '50%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <ReactCountryFlag countryCode={item?.lang?.isoCode} /> },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     UserList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },

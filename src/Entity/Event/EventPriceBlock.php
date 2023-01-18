@@ -2,10 +2,12 @@
 
 namespace App\Entity\Event;
 
+use App\Entity\Language\Language;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -29,6 +31,11 @@ class EventPriceBlock
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
@@ -39,6 +46,12 @@ class EventPriceBlock
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPriceBlocks')]
     #[ORM\JoinColumn(nullable: false)]
     private $event;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'eventPriceBlocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
 
     public function __construct()
@@ -60,6 +73,18 @@ class EventPriceBlock
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
 
         return $this;
     }
@@ -102,6 +127,18 @@ class EventPriceBlock
     public function setEvent(?Event $event): self
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

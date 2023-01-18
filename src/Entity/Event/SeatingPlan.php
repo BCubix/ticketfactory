@@ -2,8 +2,10 @@
 
 namespace App\Entity\Event;
 
+use App\Entity\Language\Language;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -27,9 +29,16 @@ class SeatingPlan
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'seatingPlans')]
     #[ORM\JoinColumn(nullable: false)]
     private $room;
+
+    #[ORM\ManyToOne(inversedBy: 'seatingPlans')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
 
     public function getId(): ?int
@@ -49,6 +58,18 @@ class SeatingPlan
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
     public function getRoom(): ?Room
     {
         return $this->room;
@@ -57,6 +78,18 @@ class SeatingPlan
     public function setRoom(?Room $room): self
     {
         $this->room = $room;
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

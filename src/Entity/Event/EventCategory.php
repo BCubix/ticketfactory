@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\Language\Language;
 use App\Repository\EventCategoryRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Gedmo\Tree(type: 'nested')]
@@ -33,6 +35,11 @@ class EventCategory extends Datable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
@@ -63,6 +70,12 @@ class EventCategory extends Datable
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $parent;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'eventCategories')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
@@ -105,6 +118,18 @@ class EventCategory extends Datable
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -130,6 +155,18 @@ class EventCategory extends Datable
     public function setParent(?self $parent): self
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }
@@ -201,6 +238,13 @@ class EventCategory extends Datable
         return $this;
     }
 
+    public function resetMainEvents(): self
+    {
+        $this->mainEvents = new ArrayCollection();
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Event>
      */
@@ -224,6 +268,13 @@ class EventCategory extends Datable
         if ($this->events->removeElement($event)) {
             $event->removeEventCategory($this);
         }
+
+        return $this;
+    }
+
+    public function resetEvents(): self
+    {
+        $this->events = new ArrayCollection();
 
         return $this;
     }

@@ -2,10 +2,12 @@
 
 namespace App\Entity\Event;
 
+use App\Entity\Language\Language;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
@@ -21,6 +23,11 @@ class EventDateBlock
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom du bloc doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du bloc doit être renseigné.')]
@@ -40,6 +47,12 @@ class EventDateBlock
     #[ORM\JoinColumn(nullable: false)]
     private $event;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'eventDateBlocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
 
     public function __construct()
     {
@@ -50,6 +63,18 @@ class EventDateBlock
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -102,6 +127,18 @@ class EventDateBlock
     public function setEvent(?Event $event): self
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

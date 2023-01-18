@@ -6,10 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
 import { categoriesSelector } from '@Redux/categories/categoriesSlice';
 import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
@@ -103,11 +103,7 @@ export const CategoriesList = () => {
             const result = await Api.categoriesApi.duplicateCategory(id);
 
             if (result?.result) {
-                NotificationManager.success(
-                    'La catégorie a bien été dupliquée.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.success('La catégorie a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
 
                 dispatch(getCategoriesAction());
             } else {
@@ -121,12 +117,7 @@ export const CategoriesList = () => {
             <Component.CmtPageWrapper title="Catégories">
                 <Box display="flex" alignItems="center" pt={5}>
                     <Component.CmtBreadCrumb list={path} />
-                    <Box
-                        pl={3}
-                        onClick={() =>
-                            navigate(`${Constant.CATEGORIES_BASE_PATH}/${id || categories.id}${Constant.EDIT_PATH}`)
-                        }
-                    >
+                    <Box pl={3} onClick={() => navigate(`${Constant.CATEGORIES_BASE_PATH}/${id || categories.id}${Constant.EDIT_PATH}`)}>
                         <Component.EditCategoryLink component="span" variant="body1">
                             Modifier
                         </Component.EditCategoryLink>
@@ -139,10 +130,7 @@ export const CategoriesList = () => {
                             <Typography component="h2" variant="h5" fontSize={20}>
                                 Liste des catégories
                             </Typography>
-                            <Component.CreateButton
-                                variant="contained"
-                                onClick={() => navigate(Constant.CATEGORIES_BASE_PATH + Constant.CREATE_PATH)}
-                            >
+                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CATEGORIES_BASE_PATH + Constant.CREATE_PATH)}>
                                 Nouveau
                             </Component.CreateButton>
                         </Box>
@@ -161,6 +149,9 @@ export const CategoriesList = () => {
                             onDuplicate={(id) => {
                                 handleDuplicate(id);
                             }}
+                            onTranslate={(id, languageId) => {
+                                navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}`);
+                            }}
                         />
                     </CardContent>
                 </Component.CmtCard>
@@ -177,8 +168,7 @@ export const CategoriesList = () => {
             >
                 <Box textAlign="center" py={3}>
                     <Typography component="p">
-                        Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie ou
-                        souhaitez-vous les rattacher à la catégorie parente ?
+                        Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie ou souhaitez-vous les rattacher à la catégorie parente ?
                     </Typography>
 
                     <Box className="flex row-center" mt={5}>
@@ -197,11 +187,7 @@ export const CategoriesList = () => {
                             }}
                         >
                             <FormControlLabel value={true} control={<Radio />} label={'Suprimer'} />
-                            <FormControlLabel
-                                value={false}
-                                control={<Radio />}
-                                label={'Rattacher à la catégorie parente'}
-                            />
+                            <FormControlLabel value={false} control={<Radio />} label={'Rattacher à la catégorie parente'} />
                         </RadioGroup>
                     </Box>
                 </Box>

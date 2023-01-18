@@ -92,11 +92,38 @@ abstract class CrudRepository extends AbstractRepository
         ;
     }
 
-    public function findTranslatedElementsForAdmin(string $languageGroup)
+    public function findTranslatedElementsForAdmin(array $languageGroupList, $filters)
     {
         $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
+        $results = $this->createQueryBuilder('o')->addSelect('el');
 
-        $results = $this->createQueryBuilder('o');
+        foreach (static::JOINS as $joinArray) {
+            $joinType = $joinArray[0];
+
+            if (isset($joinArray[3])) {
+                $results->$joinType($joinArray[1], $joinArray[2], 'WITH', $joinArray[3]);
+            } else {
+                $results->$joinType($joinArray[1], $joinArray[2]);
+            }
+        }
+
+        list($limit, $page, $sortField, $sortOrder) = $this->getSortParameters($filters);
+
+        return $results
+            ->andWhere('o.languageGroup IN (:languageGroupList)')
+            ->setParameter('languageGroupList', $languageGroupList)
+            ->addOrderBy($sortField, $sortOrder)
+            ->addOrderBy('o.languageGroup', "ASC")
+            ->addOrderBy('el.isDefault', 'DESC')
+            ->addOrderBy('el.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findOneByLanguageForAdmin(int $languageId, string $languageGroup)
+    {
+        $results = $this->createQueryBuilder('o')->addSelect('el');
 
         foreach (static::JOINS as $joinArray) {
             $joinType = $joinArray[0];
@@ -111,10 +138,10 @@ abstract class CrudRepository extends AbstractRepository
         return $results
             ->where('o.languageGroup = :languageGroup')
             ->setParameter('languageGroup', $languageGroup)
-            ->andWhere('el.id != :defaultLanguageId')
-            ->setParameter('defaultLanguageId', $defaultLanguage->getId())
+            ->andWhere('el.id = :languageId')
+            ->setParameter('languageId', $languageId)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
 }

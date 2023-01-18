@@ -118,6 +118,8 @@ const pagesApi = {
             data.pageBlocks.forEach((block, index) => {
                 formData.append(`pageBlocks[${index}][name]`, block.name);
                 formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
+                formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
+                formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
 
                 block.columns.forEach((column, columnIndex) => {
                     formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content || '');

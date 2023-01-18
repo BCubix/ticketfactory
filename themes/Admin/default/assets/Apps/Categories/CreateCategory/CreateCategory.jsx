@@ -1,35 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateCategory = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const categoriesData = useSelector(categoriesSelector);
+    const [categoriesData, setCategoriesData] = useState(null);
+    const [initialValues, setInitialValues] = useState(null);
+
+    const [queryParameters] = useSearchParams();
+    const categoryId = queryParameters.get('categoryId');
+    const languageId = queryParameters.get('languageId');
 
     useEffect(() => {
-        if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
-            dispatch(getCategoriesAction());
-        }
+        apiMiddleware(dispatch, async () => {
+            Api.categoriesApi.getCategories({ lang: languageId }).then((categoriesList) => {
+                if (!categoriesList.result) {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                    navigate(Constant.CATEGORIES_BASE_PATH);
+                    return;
+                }
+
+                setCategoriesData(categoriesList);
+            });
+
+            if (!categoryId || !languageId || initialValues) {
+                return;
+            }
+
+            Api.categoriesApi.getTranslated(categoryId, languageId).then((category) => {
+                if (!category?.result) {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                    navigate(Constant.CATEGORIES_BASE_PATH);
+                    return;
+                }
+
+                setInitialValues(category.category);
+            });
+        });
     }, []);
-
-    useEffect(() => {
-        if (categoriesData.error) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-            navigate(Constant.EVENTS_BASE_PATH);
-
-            return;
-        }
-    }, [categoriesData]);
 
     const handleSubmit = async (values) => {
         const check = await Api.authApi.checkIsAuth();
@@ -43,19 +61,15 @@ export const CreateCategory = () => {
         const result = await Api.categoriesApi.createCategory(values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La catégorie a bien été créée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
-
+            NotificationManager.success('La catégorie a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
             dispatch(getCategoriesAction());
-
             navigate(Constant.CATEGORIES_BASE_PATH);
         }
     };
 
-    return (
-        <Component.CategoriesForm handleSubmit={handleSubmit} categoriesList={categoriesData.categories} />
-    );
+    if (categoryId && !initialValues) {
+        return <></>;
+    }
+
+    return <Component.CategoriesForm handleSubmit={handleSubmit} categoriesList={categoriesData?.categories} translateInitialValues={initialValues} />;
 };

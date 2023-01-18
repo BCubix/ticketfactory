@@ -62,8 +62,16 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                 name: initValues?.name || '',
                 chapo: initValues?.chapo || '',
                 description: initValues?.description || '',
-                eventDateBlocks: initValues?.eventDateBlocks || [{ name: 'Dates', eventDates: [] }],
-                eventPriceBlocks: initValues?.eventPriceBlocks || [{ name: 'Tarifs', eventPrices: [] }],
+                eventDateBlocks: initValues?.eventDateBlocks?.map((el) => ({
+                    ...el,
+                    lang: el?.lang?.id || '',
+                    eventDates: el.eventDates?.map((date) => ({ ...date, lang: date.lang.id || '' })),
+                })) || [{ name: 'Dates', eventDates: [], lang: initValues?.lang?.id || '' }],
+                eventPriceBlocks: initValues?.eventPriceBlocks?.map((el) => ({
+                    ...el,
+                    lang: el?.lang?.id || '',
+                    eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
+                })) || [{ name: 'Tarifs', eventPrices: [], lang: initValues?.lang?.id || '' }],
                 eventCategories: initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [],
                 room: initValues?.room?.id || '',
                 season: initValues?.season?.id || '',
@@ -105,7 +113,7 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                             seasonsList,
                             categoriesList,
                             tagsList,
-                            initialValues
+                            initValues
                         )}
                     />
 

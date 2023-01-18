@@ -20,11 +20,11 @@ export const CreateRoom = () => {
     const languageId = queryParameters.get('languageId');
 
     useEffect(() => {
-        apiMiddleware(dispatch, async () => {
-            if (!roomId || !languageId) {
-                return;
-            }
+        if (!roomId || !languageId) {
+            return;
+        }
 
+        apiMiddleware(dispatch, async () => {
             let room = await Api.roomsApi.getTranslated(roomId, languageId);
             if (!room?.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);

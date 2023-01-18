@@ -6,8 +6,13 @@ use App\Entity\Content\Content;
 use App\Entity\Datable;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
+use App\Entity\Event\EventDate;
+use App\Entity\Event\EventDateBlock;
+use App\Entity\Event\EventPrice;
+use App\Entity\Event\EventPriceBlock;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
+use App\Entity\Event\SeatingPlan;
 use App\Entity\Event\Tag;
 use App\Entity\Page\Page;
 use App\Entity\Page\PageBlock;
@@ -68,6 +73,24 @@ class Language extends Datable
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Content::class, orphanRemoval: true)]
     private Collection $contents;
 
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventDateBlock::class, orphanRemoval: true)]
+    private Collection $eventDateBlocks;
+
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventDate::class, orphanRemoval: true)]
+    private Collection $eventDates;
+
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventPriceBlock::class, orphanRemoval: true)]
+    private Collection $eventPriceBlocks;
+
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventPrice::class, orphanRemoval: true)]
+    private Collection $eventPrices;
+
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: SeatingPlan::class, orphanRemoval: true)]
+    private Collection $seatingPlans;
+
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventCategory::class, orphanRemoval: true)]
+    private Collection $eventCategories;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -78,6 +101,11 @@ class Language extends Datable
         $this->pages = new ArrayCollection();
         $this->pageBlocks = new ArrayCollection();
         $this->contents = new ArrayCollection();
+        $this->eventDateBlocks = new ArrayCollection();
+        $this->eventDates = new ArrayCollection();
+        $this->eventPriceBlocks = new ArrayCollection();
+        $this->eventPrices = new ArrayCollection();
+        $this->seatingPlans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -325,6 +353,186 @@ class Language extends Datable
             // set the owning side to null (unless already changed)
             if ($content->getLang() === $this) {
                 $content->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventDateBlock>
+     */
+    public function getEventDateBlocks(): Collection
+    {
+        return $this->eventDateBlocks;
+    }
+
+    public function addEventDateBlock(EventDateBlock $eventDateBlock): self
+    {
+        if (!$this->eventDateBlocks->contains($eventDateBlock)) {
+            $this->eventDateBlocks->add($eventDateBlock);
+            $eventDateBlock->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventDateBlock(EventDateBlock $eventDateBlock): self
+    {
+        if ($this->eventDateBlocks->removeElement($eventDateBlock)) {
+            // set the owning side to null (unless already changed)
+            if ($eventDateBlock->getLang() === $this) {
+                $eventDateBlock->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventDate>
+     */
+    public function getEventDates(): Collection
+    {
+        return $this->eventDates;
+    }
+
+    public function addEventDate(EventDate $eventDate): self
+    {
+        if (!$this->eventDates->contains($eventDate)) {
+            $this->eventDates->add($eventDate);
+            $eventDate->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventDate(EventDate $eventDate): self
+    {
+        if ($this->eventDates->removeElement($eventDate)) {
+            // set the owning side to null (unless already changed)
+            if ($eventDate->getLang() === $this) {
+                $eventDate->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventPriceBlock>
+     */
+    public function getEventPriceBlocks(): Collection
+    {
+        return $this->eventPriceBlocks;
+    }
+
+    public function addEventPriceBlock(EventPriceBlock $eventPriceBlock): self
+    {
+        if (!$this->eventPriceBlocks->contains($eventPriceBlock)) {
+            $this->eventPriceBlocks->add($eventPriceBlock);
+            $eventPriceBlock->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventPriceBlock(EventPriceBlock $eventPriceBlock): self
+    {
+        if ($this->eventPriceBlocks->removeElement($eventPriceBlock)) {
+            // set the owning side to null (unless already changed)
+            if ($eventPriceBlock->getLang() === $this) {
+                $eventPriceBlock->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventPrice>
+     */
+    public function getEventPrices(): Collection
+    {
+        return $this->eventPrices;
+    }
+
+    public function addEventPrice(EventPrice $eventPrice): self
+    {
+        if (!$this->eventPrices->contains($eventPrice)) {
+            $this->eventPrices->add($eventPrice);
+            $eventPrice->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventPrice(EventPrice $eventPrice): self
+    {
+        if ($this->eventPrices->removeElement($eventPrice)) {
+            // set the owning side to null (unless already changed)
+            if ($eventPrice->getLang() === $this) {
+                $eventPrice->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SeatingPlan>
+     */
+    public function getSeatingPlans(): Collection
+    {
+        return $this->seatingPlans;
+    }
+
+    public function addSeatingPlan(SeatingPlan $seatingPlan): self
+    {
+        if (!$this->seatingPlans->contains($seatingPlan)) {
+            $this->seatingPlans->add($seatingPlan);
+            $seatingPlan->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeatingPlan(SeatingPlan $seatingPlan): self
+    {
+        if ($this->seatingPlans->removeElement($seatingPlan)) {
+            // set the owning side to null (unless already changed)
+            if ($seatingPlan->getLang() === $this) {
+                $seatingPlan->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventCategory>
+     */
+    public function getEventCategories(): Collection
+    {
+        return $this->eventCategories;
+    }
+
+    public function addEventCategory(EventCategory $eventCategory): self
+    {
+        if (!$this->eventCategories->contains($eventCategory)) {
+            $this->eventCategories->add($eventCategory);
+            $eventCategory->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventCategory(EventCategory $eventCategory): self
+    {
+        if ($this->eventCategories->removeElement($eventCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($eventCategory->getLang() === $this) {
+                $eventCategory->setLang(null);
             }
         }
 

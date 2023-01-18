@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Exception\ApiException;
 use App\Entity\Event\EventCategory;
 use App\Form\Admin\Event\EventCategoryType;
 use App\Form\Admin\Filters\FilterEventCategoryType;
@@ -107,19 +108,37 @@ class EventCategoryController extends CrudController
         ]);
 
         $objectId = $object->getId();
+        $allTranslatedElements = $this->ecm->getTranslatedCategories($object);
 
         $deleteEvents = $request->get('deleteEvents');
-        if ($deleteEvents) {
-            $this->ecm->deleteEventsFromCategory($object);
-        } else {
-            $this->ecm->attachEventsToRootCategory($object);
+        foreach($allTranslatedElements as $element) {
+            if ($deleteEvents) {
+                $this->ecm->deleteEventsFromCategory($element);
+            } else {
+                $this->ecm->attachEventsToRootCategory($element);
+            }
+
+            $this->em->remove($element);
         }
 
-        $this->em->remove($object);
         $this->em->flush();
 
         $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Rest\Get('/event-categories/{categoryId}/translated/{languageId}', requirements: ['categoryId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['tf_admin'])]
+    public function getTranslated(Request $request, int $categoryId, int $languageId): View
+    {
+        $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($categoryId);
+        if (null === $object) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+        }
+
+        $result = $this->ecm->translateCategory($object, $languageId);
+
+        return $this->view($result, Response::HTTP_OK);
     }
 }

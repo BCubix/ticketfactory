@@ -9,7 +9,9 @@ import { Component } from '@/AdminService/Component';
 
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesList = null }) => {
+export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesList = null, translateInitialValues = null }) => {
+    const initValues = translateInitialValues || initialValues;
+
     const categorySchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la categorie.'),
         parent: Yup.string().when('mustHaveParent', (mustHaveParent) => {
@@ -26,11 +28,13 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
     return (
         <Formik
             initialValues={{
-                name: initialValues?.name || '',
-                active: initialValues?.active || false,
-                parent: initialValues?.parent?.id || '',
-                mustHaveParent: !initialValues || Boolean(initialValues?.parent),
-                slug: initialValues?.slug || '',
+                name: initValues?.name || '',
+                active: initValues?.active || false,
+                parent: initValues?.parent?.id || '',
+                mustHaveParent: !initValues || Boolean(initValues?.parent),
+                slug: initValues?.slug || '',
+                lang: initValues?.lang?.id || '',
+                languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
             }}
             validationSchema={categorySchema}

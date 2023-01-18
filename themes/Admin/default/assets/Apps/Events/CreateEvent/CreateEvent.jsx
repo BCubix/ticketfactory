@@ -32,6 +32,10 @@ export const CreateEvent = () => {
             dispatch(getCategoriesAction());
         }
 
+        if (!languageId && !languagesData?.languages) {
+            return;
+        }
+
         apiMiddleware(dispatch, async () => {
             const defaultLanguageId = languageId || languagesData?.languages?.find((el) => el.isDefault)?.id;
 
@@ -53,7 +57,7 @@ export const CreateEvent = () => {
                 setInitialValues(event.event);
             });
         });
-    }, []);
+    }, [languagesData?.languages]);
 
     useEffect(() => {
         if (categoriesData?.error || roomsData?.error || seasonsData?.error || tagsData?.error) {

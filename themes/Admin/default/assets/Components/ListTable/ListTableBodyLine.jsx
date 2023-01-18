@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TableCell, TableRow } from '@mui/material';
+import { emphasize, TableCell, TableRow } from '@mui/material';
 import { ListTableCellButtons } from './ListTableCellButtons';
 import { RenderCellFunction } from './RenderCellFunction';
 
@@ -20,6 +20,7 @@ export const ListTableBodyLine = ({
     handleClick,
     expendElementTranslation,
     setExpendElementTranslation,
+    isTranslated = false,
 }) => {
     return (
         <>
@@ -30,7 +31,7 @@ export const ListTableBodyLine = ({
                         onClick(item?.id);
                     }
                 }}
-                sx={{ cursor: onClick && 'pointer' }}
+                sx={{ cursor: onClick && 'pointer', backgroundColor: isTranslated && '#E1E1E1' }}
             >
                 {table.map((tableItem, ind) => (
                     <TableCell component="th" scope="row" key={ind}>
@@ -75,6 +76,7 @@ export const ListTableBodyLine = ({
                         handleClick={handleClick}
                         expendElementTranslation={expendElementTranslation}
                         setExpendElementTranslation={setExpendElementTranslation}
+                        isTranslated
                     />
                 ))}
         </>

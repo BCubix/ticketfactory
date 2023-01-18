@@ -6,6 +6,7 @@ use App\Entity\Event\EventCategory;
 use App\Event\Admin\HookEvent;
 use App\Exception\ApiException;
 
+
 use Symfony\Component\HttpFoundation\Response;
 
 class EventCategoryHook

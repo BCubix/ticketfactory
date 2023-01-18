@@ -103,7 +103,7 @@ class Tag extends Datable
         return $this->languageGroup;
     }
 
-    public function setLanguageGroup(Uuid $languageGroup): self
+    public function setLanguageGroup(?Uuid $languageGroup): self
     {
         $this->languageGroup = $languageGroup;
 

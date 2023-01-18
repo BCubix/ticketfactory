@@ -63,11 +63,11 @@ import { HooksList } from '@Apps/Hooks/HooksList/HooksList';
 import { CreateImageFormat } from '@Apps/ImageFormat/CreateImageFormat/CreateImageFormat';
 import { EditImageFormat } from '@Apps/ImageFormat/EditImageFormat/EditImageFormat';
 import { ImageFormatForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatForm';
-import { ImageFormatGenerateForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatGenerateForm";
-import { ImageFormatParametersForm } from "@Apps/ImageFormat/ImageFormatForm/ImageFormatParametersForm";
+import { ImageFormatGenerateForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatGenerateForm';
+import { ImageFormatParametersForm } from '@Apps/ImageFormat/ImageFormatForm/ImageFormatParametersForm';
 import { ImageFormatsFilters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
-import { ImageFormatGenerate } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatGenerate";
-import { ImageFormatParameters } from "@Apps/ImageFormat/ImageFormatsList/ImageFormatParameters";
+import { ImageFormatGenerate } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatGenerate';
+import { ImageFormatParameters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatParameters';
 import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { Login } from '@Apps/Login/Login';
 import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
@@ -188,6 +188,7 @@ import { Layout } from '@Components/Layout/Layout';
 import { ListTable } from '@Components/ListTable/ListTable';
 import { MenuTitle } from '@Components/SideMenu/sc.SideMenu';
 import { SideMenu } from '@Components/SideMenu/SideMenu';
+import { CmtDisplayFlag } from '@Components/CmtDisplayFlag/CmtDisplayFlag';
 import { checkComponent, checkString } from '@Services/utils/check';
 import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
@@ -402,6 +403,7 @@ const ComponentObj = {
     CmtSearchFilters: CmtSearchFilters,
     CmtSimpleSelectFilters: CmtSimpleSelectFilters,
     ClearBooleanButton: ClearBooleanButton,
+    CmtDisplayFlag: CmtDisplayFlag,
 
     CmtActiveField: CmtActiveField,
     ActiveFieldBlock: ActiveFieldBlock,

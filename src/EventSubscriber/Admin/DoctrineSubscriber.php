@@ -3,6 +3,7 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\JsonDoctrineSerializable;
+use App\Manager\LanguageManager;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
@@ -12,10 +13,12 @@ use Doctrine\ORM\Events;
 class DoctrineSubscriber implements EventSubscriber
 {
     private $em;
+    private $lm;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, LanguageManager $lm)
     {
         $this->em = $em;
+        $this->lm = $lm;
     }
 
     public function getSubscribedEvents()
@@ -35,6 +38,8 @@ class DoctrineSubscriber implements EventSubscriber
         if ($entity instanceof (JsonDoctrineSerializable::class)) {
             $entity->jsonSerialize();
         }
+
+        $this->lm->setTranslationsProperties($entity);
     }
 
     public function preUpdate($args): void
@@ -43,6 +48,8 @@ class DoctrineSubscriber implements EventSubscriber
         if ($entity instanceof (JsonDoctrineSerializable::class)) {
             $entity->jsonSerialize();
         }
+
+        $this->lm->setTranslationsProperties($entity);
     }
 
     public function postLoad($args): void

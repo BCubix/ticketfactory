@@ -11,7 +11,7 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors }) => {
+export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
     const [generateDate, setGenerateDate] = useState(null);
 
@@ -19,7 +19,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
         let block = values.eventDateBlocks;
 
         if (!block || block.length === 0) {
-            block = { name: 'Dates', eventDates: [] };
+            block = { name: 'Dates', eventDates: [], lang: initialValues?.lang?.id || '' };
         } else {
             block = block[0];
             block.name = 'Dates';
@@ -58,7 +58,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                                             handleDeleteMultiple();
                                         }
                                     } else {
-                                        push({ name: '', eventDates: [] });
+                                        push({ name: '', eventDates: [], lang: initialValues?.lang?.id || '' });
                                         setFieldValue('multipleDateBlock', true);
                                     }
                                 }}
@@ -73,7 +73,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                                     color="primary"
                                     variant="contained"
                                     onClick={() => {
-                                        push({ name: '', eventDates: [] });
+                                        push({ name: '', eventDates: [], lang: initialValues?.lang?.id || '' });
                                     }}
                                     sx={{ ml: 2 }}
                                 >

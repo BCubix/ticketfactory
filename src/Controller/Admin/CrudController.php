@@ -87,8 +87,6 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->lm->setTranslationsProperties($object);
-
         $this->hs->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
@@ -167,6 +165,7 @@ abstract class CrudController extends AdminController
 
         $nObject = CloneObject::cloneObject($object);
 
+        $this->lm->duplicateElement($nObject);
         $this->em->persist($nObject);
         $this->em->flush();
 
@@ -187,6 +186,7 @@ abstract class CrudController extends AdminController
             'state'  => 'delete'
         ]);
 
+        $this->lm->deleteTranslation($object, $this->entityClass);
         $objectId = $object->getId();
 
         $this->em->remove($object);
@@ -211,6 +211,6 @@ abstract class CrudController extends AdminController
 
         $result = $this->lm->translateElement($object, $languageId);
 
-        return $this->view($object, Response::HTTP_OK);
+        return $this->view($result, Response::HTTP_OK);
     }
 }

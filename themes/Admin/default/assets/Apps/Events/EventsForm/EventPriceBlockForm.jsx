@@ -10,22 +10,14 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsPriceBlockForm = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    handleBlur,
-    handleChange,
-    touched,
-    errors,
-}) => {
+export const EventsPriceBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
 
     const handleDeleteMultiple = () => {
         let block = values.eventPriceBlocks;
 
         if (!block || block.length === 0) {
-            block = { name: 'Tarifs', eventPrices: [] };
+            block = { name: 'Tarifs', eventPrices: [], lang: initialValues?.lang?.id || '' };
         } else {
             block = block[0];
             block.name = 'Tarifs';
@@ -36,12 +28,7 @@ export const EventsPriceBlockForm = ({
     };
 
     const getBlockError = (index) => {
-        const err = getNestedFormikError(
-            touched?.eventPriceBlocks,
-            errors?.eventPriceBlocks,
-            index,
-            'eventPrices'
-        );
+        const err = getNestedFormikError(touched?.eventPriceBlocks, errors?.eventPriceBlocks, index, 'eventPrices');
 
         if (typeof err === 'string') {
             return err;
@@ -68,15 +55,13 @@ export const EventsPriceBlockForm = ({
                                             handleDeleteMultiple();
                                         }
                                     } else {
-                                        push({ name: '', eventPrices: [] });
+                                        push({ name: '', eventPrices: [], lang: initialValues?.lang?.id || '' });
                                         setFieldValue('multiplePriceBlock', true);
                                     }
                                 }}
                             >
                                 <WorkspacesIcon sx={{ marginRight: 1 }} />
-                                {values?.multiplePriceBlock
-                                    ? 'Ne plus utiliser les groupes'
-                                    : 'Utiliser les groupes'}
+                                {values?.multiplePriceBlock ? 'Ne plus utiliser les groupes' : 'Utiliser les groupes'}
                             </Component.ActionButton>
 
                             {values?.multiplePriceBlock && (
@@ -85,7 +70,7 @@ export const EventsPriceBlockForm = ({
                                     color="primary"
                                     variant="contained"
                                     onClick={() => {
-                                        push({ name: '', eventPrices: [] });
+                                        push({ name: '', eventPrices: [], lang: initialValues?.lang?.id || '' });
                                     }}
                                     sx={{ ml: 2 }}
                                 >
@@ -95,11 +80,7 @@ export const EventsPriceBlockForm = ({
                             )}
                         </Box>
                         {values?.eventPriceBlocks?.map((item, index) => (
-                            <Component.CmtFormBlock
-                                title={values?.multiplePriceBlock ? '' : item?.name}
-                                marginBlock={7}
-                                key={index}
-                            >
+                            <Component.CmtFormBlock title={values?.multiplePriceBlock ? '' : item?.name} marginBlock={7} key={index}>
                                 {values?.multiplePriceBlock && (
                                     <Box mb={4}>
                                         <Component.CmtTextField
@@ -109,12 +90,7 @@ export const EventsPriceBlockForm = ({
                                             required
                                             label="Nom"
                                             name={`eventPriceBlocks.${index}.name`}
-                                            error={getNestedFormikError(
-                                                touched?.eventPriceBlocks,
-                                                errors?.eventPriceBlocks,
-                                                index,
-                                                'name'
-                                            )}
+                                            error={getNestedFormikError(touched?.eventPriceBlocks, errors?.eventPriceBlocks, index, 'name')}
                                         />
                                     </Box>
                                 )}
@@ -122,22 +98,15 @@ export const EventsPriceBlockForm = ({
                                     values={values}
                                     setFieldValue={setFieldValue}
                                     setFieldTouched={setFieldTouched}
-                                    touched={
-                                        touched?.eventPriceBlocks && touched.eventPriceBlocks[index]
-                                    }
-                                    errors={
-                                        errors?.eventPriceBlocks && errors.eventPriceBlocks[index]
-                                    }
+                                    touched={touched?.eventPriceBlocks && touched.eventPriceBlocks[index]}
+                                    errors={errors?.eventPriceBlocks && errors.eventPriceBlocks[index]}
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     blockIndex={index}
                                 />
 
                                 {getBlockError(index) && (
-                                    <FormHelperText
-                                        error
-                                        id={`eventPriceBlocks-${index}-helper-text`}
-                                    >
+                                    <FormHelperText error id={`eventPriceBlocks-${index}-helper-text`}>
                                         {getBlockError(index)}
                                     </FormHelperText>
                                 )}
@@ -166,12 +135,8 @@ export const EventsPriceBlockForm = ({
                 }}
             >
                 <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Êtes-vous sûr de ne plus vouloir utiliser les groupes ?
-                    </Typography>
-                    <Typography component="p">
-                        Attention, seul le premier groupe ne sera pas supprimé.
-                    </Typography>
+                    <Typography component="p">Êtes-vous sûr de ne plus vouloir utiliser les groupes ?</Typography>
+                    <Typography component="p">Attention, seul le premier groupe ne sera pas supprimé.</Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>

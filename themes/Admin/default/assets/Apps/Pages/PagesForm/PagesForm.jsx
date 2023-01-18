@@ -40,7 +40,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                             l: column?.l || 12,
                             xl: column?.xl || 12,
                         })),
-                        lang: pageBlock?.lang?.id || '',
+                        lang: pageBlock?.lang?.id || initValues?.lang?.id || '',
                         languageGroup: pageBlock?.languageGroup || '',
                     })) || [],
                 slug: initValues?.slug || '',

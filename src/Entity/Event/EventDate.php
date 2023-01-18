@@ -2,11 +2,13 @@
 
 namespace App\Entity\Event;
 
+use App\Entity\Language\Language;
 use App\Repository\EventDateRepository;
 use App\Validation\Constraint\EventDateConstraint;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[EventDateConstraint]
@@ -30,6 +32,11 @@ class EventDate
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
 
     #[Assert\GreaterThan(value: "1970-01-01", message: 'Vous devez renseigner une date valide.')]
     #[Assert\NotBlank(message: 'La date doit être renseignée.')]
@@ -59,10 +66,28 @@ class EventDate
     #[ORM\JoinColumn(nullable: false)]
     private $eventDateBlock;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'eventDates')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
     }
 
     public function getEventDate(): ?\DateTimeInterface
@@ -127,5 +152,17 @@ class EventDate
 
     public function getStateKeys() {
         return array_keys(self::STATES);
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
     }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControlLabel, Switch } from '@mui/material';
+import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';

@@ -39,6 +39,10 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
 export const ParentCategoryPartForm = ({ values, categoriesList, setFieldValue, touched, errors }) => {
     const theme = useTheme();
 
+    if (!categoriesList) {
+        return <></>;
+    }
+
     return (
         <>
             <Typography variant="body1" sx={{ fontWeight: 500, mt: 2, color: theme.palette.labelColor }}>

@@ -16,7 +16,7 @@ class CloneObject
         "Doctrine\ORM\Mapping\ManyToMany" => "ManyToMany",
     ];
 
-    private static function getVariableType($reflectionProperty)
+    public static function getVariableType($reflectionProperty)
     {
         $attributes = $reflectionProperty->getAttributes();
 
@@ -52,7 +52,7 @@ class CloneObject
             $value = $reflectionProperty->getValue($newObject);
             $type = self::getVariableType($reflectionProperty);
 
-            if ($name === "id" || $name === "slug") {
+            if ($name === "id") {
                 $reflectionProperty->setValue($newObject, null);
             } else if ($type === "OneToMany") {
                 $reflectionProperty->setValue($newObject, new ArrayCollection());

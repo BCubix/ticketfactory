@@ -14,7 +14,7 @@ import { getNestedFormikError } from '../../../services/utils/getNestedFormikErr
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { useDispatch } from 'react-redux';
 
-const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
+const DisplayAddPageBlockModal = ({ push, isOpen, close, initValue }) => {
     const dispatch = useDispatch();
 
     const [newBlockMode, setNewBlockMode] = useState('create');
@@ -45,6 +45,8 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
             name: name,
             saveAsModel: saveAsModel,
             columns: columns,
+            lang: initValue?.lang?.id || '',
+            languageGroup: '',
         });
         resetChoice();
         close();
@@ -57,7 +59,7 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close }) => {
             return;
         }
 
-        push({ name: pageBlock.name, saveAsModel: false, columns: [...pageBlock.columns] });
+        push({ name: pageBlock.name, saveAsModel: false, columns: [...pageBlock.columns], lang: pageBlock.lang?.id || '', languageGroup: pageBlock?.languageGroup || '' });
         resetChoice();
         close();
     };

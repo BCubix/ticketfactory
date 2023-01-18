@@ -1,10 +1,17 @@
 import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
+import { copyData } from '@Services/utils/copyData';
 
 const categoriesApi = {
-    getCategories: async () => {
+    getCategories: async (filters) => {
         try {
-            const result = await axios.get('/event-categories');
+            let params = {};
+
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            const result = await axios.get('/event-categories', { params: params });
 
             return { result: true, categories: result.data };
         } catch (error) {
@@ -30,6 +37,8 @@ const categoriesApi = {
             formData.append('name', data.name);
             formData.append('parent', data.parent);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             const result = await axios.post('/event-categories', formData);
 
@@ -47,6 +56,8 @@ const categoriesApi = {
             formData.append('name', data.name);
             formData.append('parent', data.parent);
             formData.append('slug', changeSlug(data.slug));
+            formData.append('lang', data.lang);
+            formData.append('languageGroup', data.languageGroup);
 
             const result = await axios.post(`/event-categories/${id}`, formData);
 
@@ -71,6 +82,17 @@ const categoriesApi = {
             await axios.post(`/event-categories/${id}/duplicate`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getTranslated: async (id, languageId) => {
+        try {
+            const result = await axios.get(`/event-categories/${id}/translated/${languageId}`);
+            const data = copyData(result?.data);
+
+            return { result: true, category: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

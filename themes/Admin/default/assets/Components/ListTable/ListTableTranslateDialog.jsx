@@ -57,6 +57,7 @@ export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, lang
                             }
                         }}
                         id="validateDialog"
+                        disabled={!Boolean(translateLanguage)}
                     >
                         Suivant
                     </Button>

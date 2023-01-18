@@ -13,7 +13,7 @@ class RoomRepository extends CrudRepository
     ];
 
     protected const JOINS = [
-        ['leftJoin', 'o.lang', 'el']
+        ['innerJoin', 'o.lang', 'el']
     ];
 
     protected const IS_TRANSLATABLE = true;

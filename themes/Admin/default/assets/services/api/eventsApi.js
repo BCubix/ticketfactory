@@ -118,16 +118,20 @@ const eventsApi = {
             formData.append('season', data.season);
             formData.append('mainCategory', data.mainCategory);
             formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
+            formData.append('lang', data.lang || '');
+            formData.append('languageGroup', data.languageGroup || '');
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
+                formData.append(`eventDateBlocks[${index}][lang]`, dateBlock.lang || '');
+                formData.append(`eventDateBlocks[${index}][languageGroup]`, dateBlock.languageGroup || '');
 
                 dateBlock?.eventDates?.forEach((date, ind) => {
                     formData.append(`eventDateBlocks[${index}][eventDates][${ind}][eventDate]`, moment(date.eventDate).format('YYYY-MM-DD HH:mm'));
                     formData.append(`eventDateBlocks[${index}][eventDates][${ind}][annotation]`, date.annotation);
                     formData.append(`eventDateBlocks[${index}][eventDates][${ind}][state]`, date.state);
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][lang]`, date.lang || '');
+                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][languageGroup]`, date.languageGroup || '');
 
                     if (date.reportDate) {
                         formData.append(`eventDateBlocks[${index}][eventDates][${ind}][reportDate]`, moment(date.reportDate).format('YYYY-MM-DD HH:mm'));
@@ -137,11 +141,15 @@ const eventsApi = {
 
             data?.eventPriceBlocks?.forEach((priceBlock, index) => {
                 formData.append(`eventPriceBlocks[${index}][name]`, priceBlock.name);
+                formData.append(`eventPriceBlocks[${index}][lang]`, priceBlock.lang || '');
+                formData.append(`eventPriceBlocks[${index}][languageGroup]`, priceBlock.languageGroup || '');
 
                 priceBlock?.eventPrices.forEach((price, ind) => {
                     formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][name]`, price.name);
                     formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`, price.annotation);
                     formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][price]`, price.price);
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][lang]`, price.lang || '');
+                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][languageGroup]`, price.languageGroup || '');
                 });
             });
 
