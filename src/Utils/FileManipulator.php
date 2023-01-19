@@ -53,9 +53,13 @@ class FileManipulator
      * @return int
      * @throws ApiException
      */
-    public function getPosition(string $needle): int
+    public function getPosition(string $needle, bool $firstOccurrence = true): int
     {
-        $position = strpos($this->content, $needle);
+        if ($firstOccurrence) {
+            $position = strpos($this->content, $needle);
+        } else {
+            $position = strrpos($this->content, $needle);
+        }
         if (false === $position) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
                 "'$needle' n'a pas été trouvé dans le fichier $this->filePath.");

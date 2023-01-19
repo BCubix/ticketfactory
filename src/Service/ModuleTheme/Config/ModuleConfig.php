@@ -174,7 +174,9 @@ class ModuleConfig
         if (!static::TRAITS)
             return;
 
-        $space = PHP_EOL . "    ";
+        $space = "    ";
+        $newLineSpace = PHP_EOL . $space;
+        $constructorTemplate = 'public function __construct()' . $newLineSpace . '{';
         $mainTemplate = '/*** > Trait ***/';
         $beginTemplate = "/*** > Module: " . static::NAME . " ***/";
         $endTemplate = "/*** < Module: " . static::NAME . " ***/";
@@ -187,31 +189,80 @@ class ModuleConfig
             $content = $file->getContent();
 
             if (!$remove) {
-                // Find the main template
                 $pos = $file->getPosition($mainTemplate) + strlen($mainTemplate);
-                $str = substr($content, 0, $pos);
+                $str = $this->getSubContent($content, 0, $pos);
 
                 // Add template and traits of module
-                $str .= $space . $beginTemplate;
-                foreach ($traitsClass as $traitClass) {
-                    $str .= $space . "use \\" . $traitClass . ';';
+                $str .= $newLineSpace . $beginTemplate;
+                $str .= $this->addTraitsUse($traitsClass);
+                $str .= $newLineSpace . $endTemplate;
+
+                if (str_contains($content, $constructorTemplate)) {
+                    $oldPos = $pos;
+                    $pos = $file->getPosition($constructorTemplate) + strlen($constructorTemplate);
+                    $str .= $this->getSubContent($content, $oldPos, $pos);
+
+                    // Add template and constructor body of module
+                    $str .= $newLineSpace . $space . $beginTemplate;
+                    $str .= $this->addTraitsConstructorBody($traitsClass, $constructorTemplate);
+                    $str .= $newLineSpace . $space . $endTemplate;
                 }
-                $str .= $space . $endTemplate;
 
-                // Add the rest of content
-                $str .= substr($content, $pos);
+                $str .= $this->getSubContent($content, $pos);
             } else {
-                // Find the beginning template of module
                 $pos = $file->getPosition($beginTemplate);
-                $str = substr($content, 0, $pos);
+                $str = $this->getSubContent($content, 0, $pos);
 
-                // Ignore traits of the module in file and restart at the end of template
-                $pos = $file->getPosition($endTemplate) + strlen($endTemplate) + strlen($space);
-                $str .= substr($content, $pos);
+                // Ignore traits of module
+                $endPos = $file->getPosition($endTemplate) + strlen($endTemplate) + strlen($newLineSpace);
+
+                $secondPos = $file->getPosition($beginTemplate, false);
+                if ($secondPos !== $pos) {
+                    $str .= $this->getSubContent($content, $endPos, $secondPos);
+
+                    // Ignore constructor body of module
+                    $endPos = $file->getPosition($endTemplate, false) + strlen($endTemplate)
+                            + strlen($newLineSpace) + strlen($space);
+                }
+
+                $str .= $this->getSubContent($content, $endPos);
             }
 
             $file->setContent($str);
         }
+    }
+
+    private function getSubContent($content, $begin, $to = null) {
+        return substr($content, $begin, null === $to ? $to : $to - $begin);
+    }
+
+    private function addTraitsUse(array $traitsClass): string
+    {
+        $str = '';
+        foreach ($traitsClass as $traitClass) {
+            $str .= PHP_EOL . "    " . "use \\" . $traitClass . ';';
+        }
+        return $str;
+    }
+
+    private function addTraitsConstructorBody(array $traitsClass, string $constructorTemplate): string
+    {
+        $str = '';
+        foreach ($traitsClass as $traitClass) {
+            $filename = (new \ReflectionClass($traitClass))->getFileName();
+            $content  = (new FileManipulator($filename))->getContent();
+
+            if (str_contains($content, $constructorTemplate)) {
+                $pattern = '/public function __construct\(\)' . PHP_EOL . "    " . '{' . '(?<constructorBody>[^}]+)' . PHP_EOL . "    ". '/';
+                $err = preg_match($pattern, $content, $matches);
+                if ($err === 0 || $err === FALSE) {
+                    continue;
+                }
+
+                $str .= $matches['constructorBody'];
+            }
+        }
+        return $str;
     }
 
     /**
