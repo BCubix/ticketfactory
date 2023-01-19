@@ -63,7 +63,7 @@ class AppFixtures extends Fixture
                 "id"   => "Ballets",
                 "name" => "Ballets"
             ]
-    ]);
+        ]);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Types par défaut");
         $parameter->setBreakpointsValue("xs-12 md-6");
@@ -205,6 +205,6 @@ class AppFixtures extends Fixture
 
         $om->flush();
 
-        $this->tm->active('default', true);
+        $this->tm->active('default', false, true);
     }
 }

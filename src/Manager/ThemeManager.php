@@ -220,12 +220,13 @@ class ThemeManager extends ModuleThemeManager
      * Active theme installed     : apply config and clear.
      *
      * @param string $themeName
+     * @param bool   $transaction
      * @param bool   $firstTheme
      *
      * @return Theme
      * @throws \Exception
      */
-    public function active(string $themeName, bool $firstTheme = false): Theme
+    public function active(string $themeName, bool $transaction = false, bool $firstTheme = false): Theme
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
@@ -236,7 +237,7 @@ class ThemeManager extends ModuleThemeManager
 
             $this->em->persist($theme);
             $this->em->flush();
-            if ($this->em->getConnection()->isTransactionActive()) {
+            if ($transaction) {
                 $this->em->getConnection()->commit();
             }
         }
@@ -246,7 +247,7 @@ class ThemeManager extends ModuleThemeManager
             if ($themeName === $mainThemeName) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
             } else {
-                $this->disableMainTheme();
+                $this->disableMainTheme($transaction);
             }
         }
 
@@ -254,28 +255,32 @@ class ThemeManager extends ModuleThemeManager
         $globalSettings = $config['global_settings'];
 
         $modules = $globalSettings['modules'];
-        $this->applyModulesConfig($modules['to_disable'], false, Module::ACTION_DISABLE);
-        $this->applyModulesConfig($modules['to_enable'], true, Module::ACTION_INSTALL);
+        $this->applyModulesConfig($modules['to_disable'], false, Module::ACTION_DISABLE, $transaction);
+        $this->applyModulesConfig($modules['to_enable'], true, Module::ACTION_INSTALL, $transaction);
 
         $imagesTypes = $globalSettings['images_types'];
-        $this->applyImagesTypesConfig($imagesTypes, true);
+        $this->applyImagesTypesConfig($imagesTypes, true, $transaction);
 
         $hooks = $globalSettings['hooks']['modules_to_hook'];
         $this->applyHooksConfig($hooks, true);
 
         $this->pm->set('main_theme', $themeName);
         $this->em->flush();
-        if ($this->em->getConnection()->isTransactionActive()) {
+        if ($transaction) {
             $this->em->getConnection()->commit();
         }
 
-        $this->entry($mainThemeName, true);
+        if (!$firstTheme) {
+            $this->entry($mainThemeName, true);
+        }
         $this->entry($themeName, false);
         try {
             $this->clear();
         } catch (\Exception $e) {
-            $this->entry($themeName, true);
-            $this->entry($mainThemeName, false);
+            //$this->entry($themeName, true);
+            /*if (!$firstTheme) {
+                $this->entry($mainThemeName, false);
+            }*/
             throw $e;
         }
 
@@ -286,11 +291,12 @@ class ThemeManager extends ModuleThemeManager
      * Delete theme in database and in project.
      *
      * @param string $themeName
+     * @param bool   $transaction
      *
      * @return void
      * @throws \Exception
      */
-    public function delete(string $themeName): void
+    public function delete(string $themeName, bool $transaction = false): void
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
@@ -304,7 +310,7 @@ class ThemeManager extends ModuleThemeManager
 
         $this->em->remove($theme);
         $this->em->flush();
-        if ($this->em->getConnection()->isTransactionActive()) {
+        if ($transaction) {
             $this->em->getConnection()->commit();
         }
 
@@ -314,10 +320,12 @@ class ThemeManager extends ModuleThemeManager
     /**
      * Disable main theme.
      *
+     * @param bool $transaction
+     *
      * @return void
      * @throws \Exception
      */
-    private function disableMainTheme(): void
+    private function disableMainTheme(bool $transaction): void
     {
         $mainThemeName = $this->pm->get('main_theme');
 
@@ -331,11 +339,11 @@ class ThemeManager extends ModuleThemeManager
 
         // Disable active module
         $toDisable = $globalSettings['modules']['to_enable'];
-        $this->applyModulesConfig($toDisable, false, Module::ACTION_DISABLE);
+        $this->applyModulesConfig($toDisable, false, Module::ACTION_DISABLE, $transaction);
 
         // Disable imageFormat of theme
         $imagesTypes = $globalSettings['images_types'];
-        $this->applyImagesTypesConfig($imagesTypes, false);
+        $this->applyImagesTypesConfig($imagesTypes, false, $transaction);
 
         // Disable module register to hook
         $hooks = $globalSettings['hooks']['modules_to_hook'];
@@ -348,14 +356,15 @@ class ThemeManager extends ModuleThemeManager
      * @param array $modulesName
      * @param bool  $activeCondition
      * @param int   $action
+     * @param bool  $transaction
      *
      * @return void
      * @throws \Exception
      */
-    private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action): void
+    private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action, bool $transaction): void
     {
         foreach ($modulesName as $moduleName) {
-            $this->mm->active($moduleName, $action, $activeCondition);
+            $this->mm->active($moduleName, $action, $activeCondition, $transaction);
         }
     }
 
@@ -365,11 +374,12 @@ class ThemeManager extends ModuleThemeManager
      *
      * @param array $imagesTypes
      * @param bool  $active
+     * @param bool  $transaction
      *
      * @return void
      * @throws \Exception
      */
-    private function applyImagesTypesConfig(array $imagesTypes, bool $active): void
+    private function applyImagesTypesConfig(array $imagesTypes, bool $active, bool $transaction): void
     {
         foreach ($imagesTypes as $name => $format) {
             $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneByNameForAdmin($name);
@@ -392,7 +402,7 @@ class ThemeManager extends ModuleThemeManager
 
             $this->em->persist($imageFormat);
             $this->em->flush();
-            if ($this->em->getConnection()->isTransactionActive()) {
+            if ($transaction) {
                 $this->em->getConnection()->commit();
             }
         }
