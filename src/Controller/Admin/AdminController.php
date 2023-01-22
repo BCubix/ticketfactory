@@ -26,7 +26,7 @@ abstract class AdminController extends AbstractFOSRestController
         FormErrorsCollector $fec,
         Logger $log,
         HookService $hs,
-        LanguageManager $lm,
+        LanguageManager $lm
     ) {
         $this->em = $em;
         $this->se = $se;
