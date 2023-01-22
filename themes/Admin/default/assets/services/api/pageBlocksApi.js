@@ -2,7 +2,7 @@ import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
+import { sortTranslatedObject } from '@Services/utils/translationUtils';
 
 var controller = null;
 

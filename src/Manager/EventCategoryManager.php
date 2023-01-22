@@ -5,11 +5,21 @@ namespace App\Manager;
 use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
 use App\Utils\CloneObject;
+use App\Manager\LanguageManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 
 class EventCategoryManager extends AbstractManager
 {
+    private $lm;
+
+    public function __construct(EntityManagerInterface $em, LanguageManager $lm)
+    {
+        parent::__construct($em);
+
+        $this->lm = $lm;
+    }
+
     public function deleteEventsFromCategory(EventCategory $mainCategory): void
     {
         $rootCategory = $this->em->getRepository(EventCategory::class)->findRootCategory();
@@ -39,7 +49,7 @@ class EventCategoryManager extends AbstractManager
         }
     }
 
-    public function translateCategory($object, $languageId)
+    public function translateCategory(EventCategory $object, int $languageId)
     {
         $newObject = CloneObject::cloneObject($object);
         $parent = $object->getParent();
@@ -67,10 +77,26 @@ class EventCategoryManager extends AbstractManager
         return $newObject;
     }
 
-    public function getTranslatedCategories($object)
+    public function getTranslatedCategories(EventCategory $object): EventCategory
     {
         $results = $this->em->getRepository(EventCategory::class)->findAllByLanguageGroupForAdmin($object->getLanguageGroup()->toBinary());
 
         return $results;
+    }
+
+    public function getTranslatedChildren(EventCategory $object, array $filters): EventCategory
+    {
+        $children = $object->getChildren();
+
+        if (isset($filters['lang']) || count($children) === 0) {
+            return $object;
+        }
+
+        /* $children = $this->lm->getAllTranslations($children, EventCategory::class, $filters);
+        if (null !== $children) {
+            $object->setChildren($children);
+        } */
+
+        return $object;
     }
 }

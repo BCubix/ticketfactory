@@ -6,11 +6,11 @@ import { Box } from '@mui/system';
 
 import { Constant } from '@/AdminService/Constant';
 
-export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, languageList, onTranslate }) => {
+export const CmtTranslateDialog = ({ item, isOpen, onClose, languageList, onTranslate }) => {
     const [translateLanguage, setTranslateLanguage] = useState('');
 
     return (
-        <Dialog open={Boolean(translateItem)} onClose={() => setTranslateItem(null)} maxWidth="sm" fullWidth>
+        <Dialog open={isOpen} onClose={() => onClose(null)} maxWidth="sm" fullWidth>
             <DialogTitle sx={{ fontSize: 20 }}>Traduction</DialogTitle>
             <DialogContent dividers>
                 <FormControl fullWidth sx={{ marginTop: 3 }}>
@@ -41,7 +41,7 @@ export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, lang
                     <Button
                         color="error"
                         onClick={() => {
-                            setTranslateItem(null);
+                            onClose(null);
                         }}
                         id="cancelDialog"
                     >
@@ -51,7 +51,7 @@ export const ListTableTranslateDialog = ({ translateItem, setTranslateItem, lang
                         color="primary"
                         onClick={() => {
                             if (translateLanguage !== '') {
-                                onTranslate(translateItem?.id, translateLanguage);
+                                onTranslate(item?.id, translateLanguage);
                             } else {
                                 NotificationManager.error('Veuillez renseigner la langue.', 'Erreur', Constant.REDIRECTION_TIME);
                             }

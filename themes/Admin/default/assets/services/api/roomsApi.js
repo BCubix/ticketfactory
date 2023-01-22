@@ -4,7 +4,7 @@ import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
+import { sortTranslatedObject } from '@Services/utils/translationUtils';
 
 var controller = null;
 
@@ -18,6 +18,7 @@ const FILTERS_SORT_TAB = [
     { name: 'name', sortName: 'filters[name]' },
     { name: 'page', sortName: 'filters[page]' },
     { name: 'limit', sortName: 'filters[limit]' },
+    { name: 'lang', sortName: 'filters[lang]' },
     {
         name: 'sort',
         transformFilter: (params, sort) => {

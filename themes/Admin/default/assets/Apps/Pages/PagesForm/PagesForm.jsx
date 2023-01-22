@@ -97,6 +97,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                             setFieldTouched={setFieldTouched}
                             handleChange={handleChange}
                             handleBlur={handleBlur}
+                            initValues={initValues}
                         />
 
                         {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}

@@ -185,7 +185,11 @@ import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { LightEditor } from '@Components/Editors/LightEditor/LightEditor';
 import { LightEditorFormControl } from '@Components/Editors/LightEditor/sc.LightEditorFormControl';
 import { Layout } from '@Components/Layout/Layout';
+import { CmtTranslateDialog } from '@Components/CmtTranslateDialog/CmtTranslateDialog';
 import { ListTable } from '@Components/ListTable/ListTable';
+import { ListTableHead } from '@Components/ListTable/ListTableHead';
+import { ListTableContextualMenu } from '@Components/ListTable/ListTableContextualMenu';
+import { ListTableBodyLine } from '@Components/ListTable/ListTableBodyLine';
 import { MenuTitle } from '@Components/SideMenu/sc.SideMenu';
 import { SideMenu } from '@Components/SideMenu/SideMenu';
 import { CmtDisplayFlag } from '@Components/CmtDisplayFlag/CmtDisplayFlag';
@@ -424,11 +428,15 @@ const ComponentObj = {
     CmtTextField: CmtTextField,
     CmtSlugInput: CmtSlugInput,
     CmtTimePicker: CmtTimePicker,
+    CmtTranslateDialog: CmtTranslateDialog,
     DeleteDialog: DeleteDialog,
     LightEditor: LightEditor,
     LightEditorFormControl: LightEditorFormControl,
     Layout: Layout,
     ListTable: ListTable,
+    ListTableHead: ListTableHead,
+    ListTableContextualMenu: ListTableContextualMenu,
+    ListTableBodyLine: ListTableBodyLine,
     MenuTitle: MenuTitle,
     SideMenu: SideMenu,
 };

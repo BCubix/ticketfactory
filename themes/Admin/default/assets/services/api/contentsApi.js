@@ -4,7 +4,7 @@ import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
-import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
+import { sortTranslatedObject } from '@Services/utils/translationUtils';
 
 var controller = null;
 

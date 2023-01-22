@@ -3,12 +3,11 @@ import { useSelector } from 'react-redux';
 
 import { Table, TableBody, TableContainer } from '@mui/material';
 
+import { getAvailableLanguages } from '@Services/utils/translationUtils';
+
 import { languagesSelector } from '@Redux/languages/languagesSlice';
 
-import { ListTableHead } from './ListTableHead';
-import { ListTableContextualMenu } from './ListTableContextualMenu';
-import { ListTableBodyLine } from './ListTableBodyLine';
-import { ListTableTranslateDialog } from './ListTableTranslateDialog';
+import { Component } from '@/AdminService/Component';
 
 /**
  *
@@ -68,16 +67,7 @@ export const ListTable = ({
     const languageList = useMemo(() => {
         const list = translateItem || selectedMenuItem;
 
-        if (!list || !list?.lang) {
-            return [];
-        }
-
-        let listId = [];
-        listId.push(list?.lang?.id);
-
-        list?.translatedElements?.forEach((el) => listId.push(el.lang.id));
-
-        return languagesData?.languages?.filter((el) => !listId.includes(el.id));
+        return getAvailableLanguages(list, languagesData);
     }, [translateItem, selectedMenuItem, languagesData?.languages]);
 
     const defaultLanguage = useMemo(() => {
@@ -95,7 +85,7 @@ export const ListTable = ({
     return (
         <TableContainer>
             <Table sx={{ minWidth: 650, marginTop: 5, transition: '.3s' }}>
-                <ListTableHead
+                <Component.ListTableHead
                     table={table}
                     filters={filters}
                     changeFilters={changeFilters}
@@ -103,7 +93,7 @@ export const ListTable = ({
                 />
                 <TableBody>
                     {list?.map((item, index) => (
-                        <ListTableBodyLine
+                        <Component.ListTableBodyLine
                             item={item}
                             key={index}
                             table={table}
@@ -123,7 +113,7 @@ export const ListTable = ({
                         />
                     ))}
 
-                    <ListTableContextualMenu
+                    <Component.ListTableContextualMenu
                         contextualMenu={contextualMenu}
                         anchorEl={anchorEl}
                         setAnchorEl={setAnchorEl}
@@ -138,7 +128,13 @@ export const ListTable = ({
                         onPreview={onPreview}
                     />
 
-                    <ListTableTranslateDialog translateItem={translateItem} setTranslateItem={setTranslateItem} languageList={languageList} onTranslate={onTranslate} />
+                    <Component.CmtTranslateDialog
+                        item={translateItem}
+                        isOpen={Boolean(translateItem)}
+                        onClose={() => setTranslateItem(null)}
+                        languageList={languageList}
+                        onTranslate={onTranslate}
+                    />
                 </TableBody>
             </Table>
         </TableContainer>

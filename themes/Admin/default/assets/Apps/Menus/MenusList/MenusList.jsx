@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 
@@ -10,13 +11,20 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getMenusAction, menusSelector } from '@Redux/menus/menusSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { languagesSelector } from '@Redux/languages/languagesSlice';
+
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getAvailableLanguages } from '@Services/utils/translationUtils';
 
 export const MenusList = () => {
     const { loading, menus, error } = useSelector(menusSelector);
+    const languagesData = useSelector(languagesSelector);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [initialValues, setInitialValues] = useState(null);
+    const [translationInitialValues, setTranslationInitialValues] = useState(null);
+    const [translateDialog, setTranslateDialog] = useState(false);
 
     useEffect(() => {
         if (!loading && !menus && !error) {
@@ -25,59 +33,104 @@ export const MenusList = () => {
     }, []);
 
     useEffect(() => {
-        if (!menus || initialValues) {
+        if (!menus) {
             return;
         }
 
         if (menus.length === 0) {
             setInitialValues({});
+            setTranslationInitialValues({});
+            return;
+        }
+
+        if (initialValues) {
+            const element = menus?.find((el) => el.id === initialValues?.id);
+            if (element?.id === translationInitialValues?.id) {
+                setTranslationInitialValues(element);
+            } else {
+                setTranslationInitialValues(element?.translatedElements?.find((el) => el.id === translationInitialValues?.id) || element);
+            }
+
+            if (element) {
+                setInitialValues(element);
+            }
 
             return;
         }
 
         setInitialValues(menus.at(-1));
+        setTranslationInitialValues(menus.at(-1));
     }, [menus]);
 
     const updateMenu = async (values) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.menusApi.updateMenu(translationInitialValues.id, values);
+            if (result.result) {
+                NotificationManager.success('Le menu a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(getMenusAction());
+            }
+        });
+    };
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+    const handleDelete = () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.menusApi.deleteMenu(translationInitialValues.id);
+            if (result.result) {
+                NotificationManager.success('Le menu a bien été supprimé.', 'Succès', Constant.REDIRECTION_TIME);
 
+                if (initialValues?.id === translationInitialValues?.id) {
+                    setInitialValues(null);
+                }
+                setTranslationInitialValues(null);
+                setDeleteDialog(false);
+
+                dispatch(getMenusAction());
+            }
+        });
+    };
+
+    const deserializeChildrenData = (children) => {
+        let childrenList = [];
+
+        if (!children) {
+            return [];
+        }
+
+        children?.forEach((el) => {
+            let newElement = { ...el, lang: el?.lang?.id || '' };
+
+            if (el?.children?.length > 0) {
+                newElement.children = deserializeChildrenData(el.children);
+            }
+
+            childrenList.push(newElement);
+        });
+
+        return childrenList;
+    };
+
+    const languageList = useMemo(() => {
+        if (initialValues?.id !== translationInitialValues?.id) {
+            return [];
+        }
+
+        return getAvailableLanguages(initialValues, languagesData);
+    }, [initialValues, languagesData?.languages]);
+
+    const changeFormikInitialValues = (setFieldValue, values) => {
+        if (!values) {
             return;
         }
 
-        const result = await Api.menusApi.updateMenu(initialValues.id, values);
-
-        if (result.result) {
-            NotificationManager.success('Le menu a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
-
-            dispatch(getMenusAction());
-        }
+        setFieldValue('name', values.name);
+        setFieldValue('type', values.type);
+        setFieldValue('value', values.value);
+        setFieldValue('lang', values.lang?.id);
+        setFieldValue('languageGroup', values.languageGroup);
+        setFieldValue('children', deserializeChildrenData(values.children));
     };
 
-    const handleDelete = async () => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.menusApi.deleteMenu(initialValues.id);
-
-        if (result.result) {
-            NotificationManager.success('Le menu a bien été supprimé.', 'Succès', Constant.REDIRECTION_TIME);
-
-            setInitialValues(null);
-            setDeleteDialog(false);
-
-            dispatch(getMenusAction());
-        }
-    };
-
-    if (!menus || !initialValues) {
+    if (!menus || !initialValues || !translationInitialValues) {
         return <></>;
     }
 
@@ -85,11 +138,13 @@ export const MenusList = () => {
         <>
             <Formik
                 initialValues={{
-                    name: initialValues?.name || '',
-                    type: initialValues?.menuType || null,
-                    value: initialValues?.value || null,
-                    children: initialValues?.children ? [...initialValues?.children] : [],
-                    maxLevel: initialValues?.maxLevel || 3,
+                    name: translationInitialValues?.name || '',
+                    type: translationInitialValues?.menuType || null,
+                    value: translationInitialValues?.value || null,
+                    children: translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : [],
+                    maxLevel: translationInitialValues?.maxLevel || 3,
+                    lang: translationInitialValues?.lang?.id || '',
+                    languageGroup: translationInitialValues?.languageGroup || '',
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                     updateMenu(values);
@@ -102,25 +157,31 @@ export const MenusList = () => {
                         <Component.MenuHeaderLine
                             selectedMenu={initialValues}
                             list={menus}
+                            translationSelectedMenu={translationInitialValues}
                             handleChange={(val) => {
                                 setInitialValues(val);
-
-                                setFieldValue('name', val.name);
-                                setFieldValue('type', val.type);
-                                setFieldValue('value', val.value);
-                                setFieldValue('children', val.children);
+                                setTranslationInitialValues(val);
+                                changeFormikInitialValues(setFieldValue, val);
+                            }}
+                            changeLanguage={(val) => {
+                                setTranslationInitialValues(val);
+                                changeFormikInitialValues(setFieldValue, val);
                             }}
                         />
-
                         {Object.keys(initialValues).length > 0 && (
                             <Grid container spacing={5} sx={{ marginTop: 5 }}>
                                 <Grid item xs={12} md={6} lg={3}>
                                     <Component.AddMenuElement
+                                        language={translationInitialValues?.lang}
                                         addElementToMenu={(newElements) => {
                                             let menu = [...values.children];
 
                                             newElements.forEach((el) => {
-                                                menu.push(el);
+                                                if (!el?.lang) {
+                                                    menu.push({ ...el, lang: values?.lang });
+                                                } else {
+                                                    menu.push(el);
+                                                }
                                             });
 
                                             setFieldValue('children', menu);
@@ -135,6 +196,8 @@ export const MenusList = () => {
                                         handleBlur={handleBlur}
                                         touched={touched}
                                         errors={errors}
+                                        languageList={languageList}
+                                        openTranslateDialog={() => setTranslateDialog(true)}
                                     />
 
                                     <Box className="flex row-between">
@@ -164,6 +227,14 @@ export const MenusList = () => {
                                 <Typography component="p">Cette action est irréversible.</Typography>
                             </Box>
                         </Component.DeleteDialog>
+
+                        <Component.CmtTranslateDialog
+                            item={initialValues}
+                            isOpen={translateDialog}
+                            onClose={() => setTranslateDialog(false)}
+                            languageList={languageList}
+                            onTranslate={(id, languageId) => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)}
+                        />
                     </Component.CmtPageWrapper>
                 )}
             </Formik>

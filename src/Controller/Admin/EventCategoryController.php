@@ -54,6 +54,8 @@ class EventCategoryController extends CrudController
         $filters = empty($filters) ? [] : $filters;
         $mainCategory = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters, $categoryId);
 
+        $mainCategory = $this->ecm->getTranslatedChildren($mainCategory, $filters);
+
         // Hacks to delete parents and children which are not needed
         // For the moment, JMS Serializer lazy loads all categories and there is no efficient way to avoid that
         if (null != $categoryId) {

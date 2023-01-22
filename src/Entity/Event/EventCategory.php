@@ -201,6 +201,13 @@ class EventCategory extends Datable
         return $this;
     }
 
+    public function setChildren(array $children): self
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
     public function resetChildren(): self
     {
         $this->children = new ArrayCollection();

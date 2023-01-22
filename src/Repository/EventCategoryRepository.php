@@ -88,4 +88,24 @@ class EventCategoryRepository extends NestedTreeRepository
             ->getResult()
         ;
     }
+
+    public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = [])
+    {
+        $results = $this
+            ->createQueryBuilder('o')
+            ->addSelect('el')
+            ->leftJoin('o.lang', 'el')
+        ;
+
+        return $results
+            ->andWhere('o.languageGroup IN (:languageGroupList)')
+            ->setParameter('languageGroupList', $languageGroupList)
+            ->addOrderBy('o.id', 'ASC')
+            ->addOrderBy('o.languageGroup', "ASC")
+            ->addOrderBy('el.isDefault', 'DESC')
+            ->addOrderBy('el.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

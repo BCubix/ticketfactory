@@ -4,7 +4,7 @@ import { changeSlug } from '@Services/utils/changeSlug';
 
 import { Constant } from '@/AdminService/Constant';
 import { copyData } from '@Services/utils/copyData';
-import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
+import { sortTranslatedObject } from '@Services/utils/translationUtils';
 
 var controller = null;
 
@@ -18,6 +18,7 @@ const FILTERS_SORT_TAB = [
     { name: 'title', sortName: 'filters[title]' },
     { name: 'page', sortName: 'filters[page]' },
     { name: 'limit', sortName: 'filters[limit]' },
+    { name: 'lang', sortName: 'filters[lang]' },
     {
         name: 'sort',
         transformFilter: (params, sort) => {

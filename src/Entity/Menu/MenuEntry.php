@@ -7,6 +7,7 @@ use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
+use App\Entity\Language\Language;
 use App\Entity\Page\Page;
 use App\Repository\MenuEntryRepository;
 
@@ -15,6 +16,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Gedmo\Tree(type: 'nested')]
@@ -49,6 +51,11 @@ class MenuEntry
     #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
 
     #[Assert\Choice(callback: 'getTypesKeys', message: 'Vous devez choisir un type valide.')]
     #[Assert\NotBlank(message: 'Le type de l\'élément doit être renseigné.')]
@@ -88,6 +95,12 @@ class MenuEntry
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(inversedBy: 'menuEntries')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private $children;
@@ -112,6 +125,18 @@ class MenuEntry
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
 
         return $this;
     }
@@ -157,6 +182,18 @@ class MenuEntry
         return $this;
     }
 
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, self>
      */
@@ -183,6 +220,13 @@ class MenuEntry
                 $child->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function resetChildren(): self
+    {
+        $this->children = new ArrayCollection();
 
         return $this;
     }

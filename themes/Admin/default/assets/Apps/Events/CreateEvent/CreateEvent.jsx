@@ -7,7 +7,6 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
 import { languagesSelector } from '@Redux/languages/languagesSlice';
 
@@ -16,8 +15,8 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 export const CreateEvent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const categoriesData = useSelector(categoriesSelector);
     const languagesData = useSelector(languagesSelector);
+    const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
@@ -28,10 +27,6 @@ export const CreateEvent = () => {
     const languageId = queryParameters.get('languageId');
 
     useEffect(() => {
-        if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
-            dispatch(getCategoriesAction());
-        }
-
         if (!languageId && !languagesData?.languages) {
             return;
         }
@@ -42,6 +37,7 @@ export const CreateEvent = () => {
             Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
+            Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
 
             if (!eventId || !languageId) {
                 return;

@@ -8,7 +8,6 @@ use App\Exception\ApiException;
 use App\Manager\LanguageManager;
 use App\Manager\EventCategoryManager;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,7 +35,7 @@ class LanguageHook
         $this->em->persist($newCategory);
 
         /**
-         * Ajouter un nouveau menu 
+         * Ajouter un nouveau menu ??? 
          */
 
          $this->em->flush();

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -12,47 +12,64 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getMenusAction } from '@Redux/menus/menusSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateMenu = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [initialValues, setInitialValues] = useState(null);
 
-    const createMenu = async (values) => {
-        const check = await Api.authApi.checkIsAuth();
+    const [queryParameters] = useSearchParams();
+    const menuId = queryParameters.get('menuId');
+    const languageId = queryParameters.get('languageId');
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+    const createMenu = (values) => {
+        return apiMiddleware(dispatch, async () => {
+            const result = await Api.menusApi.createMenu(values);
+            if (result.result) {
+                NotificationManager.success('Le menu a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(getMenusAction());
+                navigate(Constant.MENUS_BASE_PATH);
+            }
+        });
+    };
 
+    useEffect(() => {
+        if (!menuId || !languageId) {
             return;
         }
 
-        const result = await Api.menusApi.createMenu(values);
+        apiMiddleware(dispatch, async () => {
+            let menu = await Api.menusApi.getTranslated(menuId, languageId);
+            if (!menu?.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.MENUS_BASE_PATH);
+                return;
+            }
 
-        if (result.result) {
-            NotificationManager.success('Le menu a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
-
-            dispatch(getMenusAction());
-
-            navigate(Constant.MENUS_BASE_PATH);
-        }
-    };
+            setInitialValues(menu.menu);
+        });
+    }, []);
 
     const menusSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du menu.'),
     });
 
+    if (menuId && !initialValues) {
+        return <></>;
+    }
+
     return (
         <Formik
-            initialValues={{ name: '' }}
+            initialValues={{ name: initialValues?.name || '', lang: languageId || '', languageGroup: initialValues?.languageGroup || '' }}
             validationSchema={menusSchema}
-            onSubmit={(values, { setSubmitting }) => {
-                createMenu(values);
+            onSubmit={async (values, { setSubmitting }) => {
+                await createMenu(values);
 
                 setSubmitting(false);
             }}
         >
-            {({ values, errors, touched, handleChange, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title="Création d'un menu">
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField

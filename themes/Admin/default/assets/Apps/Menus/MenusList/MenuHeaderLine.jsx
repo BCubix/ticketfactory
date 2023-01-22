@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import ReactCountryFlag from 'react-country-flag';
 
-import {
-    Button,
-    Card,
-    CardContent,
-    FormControl,
-    Link,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
+import { CardContent, FormControl, Link, MenuItem, Select, Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+
+import { getLanguagesFromTranslatedElement } from '@Services/utils/translationUtils';
 
 const SelectMenu = ({ selectedMenu, list, handleChange }) => {
-    const [value, setValue] = useState(selectedMenu?.id);
-
     return (
         <>
             <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
@@ -25,9 +17,9 @@ const SelectMenu = ({ selectedMenu, list, handleChange }) => {
                     size="small"
                     id={`select-menus`}
                     variant="standard"
-                    value={value}
+                    value={selectedMenu?.id || ''}
                     onChange={(e) => {
-                        setValue(e.target.value);
+                        handleChange(e.target.value ? list.find((el) => el.id === e.target.value) : null);
                     }}
                     sx={{ marginLeft: 3, marginRight: 1, minWidth: 200 }}
                 >
@@ -38,31 +30,28 @@ const SelectMenu = ({ selectedMenu, list, handleChange }) => {
                     ))}
                 </Select>
             </FormControl>
-
-            <Button
-                variant="outlined"
-                sx={{ paddingBlock: '6px', marginRight: 2 }}
-                onClick={() => handleChange(list.find((el) => el.id === value))}
-            >
-                Sélectionner
-            </Button>
         </>
     );
 };
 
-export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
+export const MenuHeaderLine = ({ selectedMenu, list, handleChange, changeLanguage, translationSelectedMenu }) => {
+    const [selectedLanguage, setSelectedLanguage] = useState(translationSelectedMenu?.lang);
+
+    const selectedMenuLanguages = useMemo(() => {
+        return getLanguagesFromTranslatedElement(selectedMenu);
+    }, [selectedMenu]);
+
+    useEffect(() => {
+        setSelectedLanguage(translationSelectedMenu?.lang);
+    }, [translationSelectedMenu]);
+
     return (
         <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
             <CardContent>
                 <Typography component="span" variant="body1" display={'flex'} alignItems={'center'}>
                     {list?.length > 1 ? (
                         <>
-                            Sélectionnez le menu à modifier :{' '}
-                            <SelectMenu
-                                selectedMenu={selectedMenu}
-                                list={list}
-                                handleChange={handleChange}
-                            />
+                            Sélectionnez le menu à modifier : <SelectMenu selectedMenu={selectedMenu} list={list} handleChange={handleChange} />
                             ou
                         </>
                     ) : (
@@ -72,6 +61,40 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
                         {list.length === 0 ? 'C' : 'c'}réez un nouveau menu.
                     </Link>
                     N’oubliez pas d’enregistrer vos modifications !
+                    {selectedMenuLanguages?.length > 1 && (
+                        <FormControl sx={{ m: 1, minWidth: 100, marginLeft: 'auto' }} size="small">
+                            <Select
+                                labelId={`select-menus-language-label`}
+                                size="small"
+                                id={`select-menus-language`}
+                                variant="standard"
+                                value={selectedLanguage?.id || ''}
+                                onChange={(e) => {
+                                    if (e.target.value === translationSelectedMenu?.lang?.id) {
+                                        return;
+                                    }
+
+                                    let newElement = null;
+
+                                    if (selectedMenu?.lang?.id === e.target.value) {
+                                        newElement = selectedMenu;
+                                    } else {
+                                        newElement = selectedMenu?.translatedElements?.find((el) => el.lang?.id === e.target.value);
+                                    }
+
+                                    changeLanguage(newElement || null);
+                                    setSelectedLanguage(selectedMenuLanguages?.find((el) => el.id === e.target.value));
+                                }}
+                                sx={{ marginLeft: 3, marginRight: 1, minWidth: 200 }}
+                            >
+                                {selectedMenuLanguages?.map((item, index) => (
+                                    <MenuItem key={index} value={item.id}>
+                                        <ReactCountryFlag countryCode={item?.isoCode} style={{ fontSize: '1.5rem', marginRight: '5px' }} /> {item.name} ({item.isoCode})
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                 </Typography>
             </CardContent>
         </Component.CmtCard>

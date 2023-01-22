@@ -4,7 +4,7 @@ import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-import { sortTranslatedObject } from '@Services/utils/sortTranslatedObject';
+import { sortTranslatedObject } from '@Services/utils/translationUtils';
 
 var controller = null;
 
@@ -17,6 +17,7 @@ const FILTERS_SORT_TAB = [
     },
     { name: 'name', sortName: 'filters[name]' },
     { name: 'page', sortName: 'filters[page]' },
+    { name: 'lang', sortName: 'filters[lang]' },
     { name: 'limit', sortName: 'filters[limit]' },
     {
         name: 'sort',
@@ -135,7 +136,7 @@ const tagsApi = {
     getTranslated: async (id, languageId) => {
         try {
             const result = await axios.get(`/tags/${id}/translated/${languageId}`);
-            const data = copyData(result?.data);
+            let data = copyData(result?.data);
 
             return { result: true, tag: data };
         } catch (error) {

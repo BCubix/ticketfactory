@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { getEventsAction } from '@Redux/events/eventsSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -17,25 +16,15 @@ export const EditEvent = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [event, setEvent] = useState(null);
-    const categoriesData = useSelector(categoriesSelector);
+    const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
 
     useEffect(() => {
-        if (!categoriesData.loading && !categoriesData.categories && !categoriesData.error) {
-            dispatch(getCategoriesAction());
-        }
-
-        apiMiddleware(dispatch, async () => {});
-    }, []);
-
-    useEffect(() => {
         if (categoriesData?.error || roomsData?.error || seasonsData?.error || tagsData?.error) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
             navigate(Constant.EVENTS_BASE_PATH);
-
             return;
         }
     }, [categoriesData, roomsData, seasonsData, tagsData]);
@@ -55,6 +44,7 @@ export const EditEvent = () => {
             Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
+            Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
         });
     };
 

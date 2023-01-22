@@ -14,7 +14,7 @@ import { getNestedFormikError } from '../../../services/utils/getNestedFormikErr
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 import { useDispatch } from 'react-redux';
 
-const DisplayAddPageBlockModal = ({ push, isOpen, close, initValue }) => {
+const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
     const dispatch = useDispatch();
 
     const [newBlockMode, setNewBlockMode] = useState('create');
@@ -45,7 +45,7 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValue }) => {
             name: name,
             saveAsModel: saveAsModel,
             columns: columns,
-            lang: initValue?.lang?.id || '',
+            lang: initValues?.lang?.id || '',
             languageGroup: '',
         });
         resetChoice();
@@ -114,7 +114,7 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValue }) => {
     );
 };
 
-export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFieldTouched, handleChange, handleBlur }) => {
+export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFieldTouched, handleChange, handleBlur, initValues }) => {
     const [displayAddModal, setDisplayAddModal] = useState(false);
     const [view, setView] = useState('xl');
 
@@ -215,7 +215,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                             <AddIcon /> Ajouter un bloc
                         </Component.AddBlockButton>
                     </Component.CmtEndPositionWrapper>
-                    <DisplayAddPageBlockModal push={push} isOpen={displayAddModal} close={() => setDisplayAddModal(false)} />
+                    <DisplayAddPageBlockModal push={push} isOpen={displayAddModal} close={() => setDisplayAddModal(false)} initValues={initValues} />
                 </Box>
             )}
         </FieldArray>

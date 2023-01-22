@@ -94,7 +94,6 @@ abstract class CrudRepository extends AbstractRepository
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, $filters)
     {
-        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
         $results = $this->createQueryBuilder('o')->addSelect('el');
 
         foreach (static::JOINS as $joinArray) {

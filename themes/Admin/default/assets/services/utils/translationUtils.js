@@ -17,3 +17,26 @@ export const sortTranslatedObject = (list) => {
 
     return newList;
 };
+
+export const getAvailableLanguages = (list, languagesData) => {
+    if (!list || !list?.lang) {
+        return [];
+    }
+
+    let listId = [];
+    listId.push(list?.lang?.id);
+
+    list?.translatedElements?.forEach((el) => listId.push(el.lang.id));
+
+    return languagesData?.languages?.filter((el) => !listId.includes(el.id));
+};
+
+export const getLanguagesFromTranslatedElement = (element) => {
+    const list = [element.lang];
+
+    element?.translatedElements?.forEach((el) => {
+        list.push(el.lang);
+    });
+
+    return list;
+};

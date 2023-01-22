@@ -9,7 +9,7 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const MENU_TYPE = 'category';
 const MENU_TYPE_LABEL = 'Catégories';
@@ -42,32 +42,25 @@ const DisplayCategories = ({ category, selectedAdd, setSelectedAdd }) => {
     );
 };
 
-export const MenuEntryModule = ({ addElementToMenu }) => {
+export const MenuEntryModule = ({ addElementToMenu, language }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
 
     const getList = async () => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.categoriesApi.getCategories({ lang: language?.id });
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.categoriesApi.getCategories();
-
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.categories);
+            setList(result.categories);
+        });
     };
 
     useEffect(() => {
         getList();
-    }, []);
+    }, [language]);
 
     return (
         <Accordion>

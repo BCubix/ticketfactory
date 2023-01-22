@@ -14,6 +14,7 @@ use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\SeatingPlan;
 use App\Entity\Event\Tag;
+use App\Entity\Menu\MenuEntry;
 use App\Entity\Page\Page;
 use App\Entity\Page\PageBlock;
 use App\Repository\LanguageRepository;
@@ -91,6 +92,9 @@ class Language extends Datable
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventCategory::class, orphanRemoval: true)]
     private Collection $eventCategories;
 
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: MenuEntry::class, orphanRemoval: true)]
+    private Collection $menuEntries;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -106,6 +110,7 @@ class Language extends Datable
         $this->eventPriceBlocks = new ArrayCollection();
         $this->eventPrices = new ArrayCollection();
         $this->seatingPlans = new ArrayCollection();
+        $this->menuEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -533,6 +538,36 @@ class Language extends Datable
             // set the owning side to null (unless already changed)
             if ($eventCategory->getLang() === $this) {
                 $eventCategory->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuEntry>
+     */
+    public function getMenuEntries(): Collection
+    {
+        return $this->menuEntries;
+    }
+
+    public function addMenuEntry(MenuEntry $menuEntry): self
+    {
+        if (!$this->menuEntries->contains($menuEntry)) {
+            $this->menuEntries->add($menuEntry);
+            $menuEntry->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuEntry(MenuEntry $menuEntry): self
+    {
+        if ($this->menuEntries->removeElement($menuEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($menuEntry->getLang() === $this) {
+                $menuEntry->setLang(null);
             }
         }
 

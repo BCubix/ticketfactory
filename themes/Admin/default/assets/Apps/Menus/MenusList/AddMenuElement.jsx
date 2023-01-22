@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import getMenuEntryModules from "@Apps/Menus/MenusList/getMenuEntryModules";
+import getMenuEntryModules from '@Apps/Menus/MenusList/getMenuEntryModules';
 
-export const AddMenuElement = ({ addElementToMenu }) => {
+export const AddMenuElement = ({ addElementToMenu, language }) => {
     const menuEntryModule = useMemo(() => {
         const menuEntries = getMenuEntryModules();
         let modules = [];
 
         Object.entries(menuEntries).map(([name, value]) => {
             const Component = (value && value?.MenuEntryModule) || null;
-
             if (!Component) {
                 throw `Le module ${name} n'existe pas ou est corrompu`;
             }
@@ -29,7 +28,7 @@ export const AddMenuElement = ({ addElementToMenu }) => {
 
             <Box marginTop={4}>
                 {menuEntryModule.map((Item, index) => (
-                    <Item key={index} addElementToMenu={addElementToMenu} />
+                    <Item key={index} addElementToMenu={addElementToMenu} language={language} />
                 ))}
             </Box>
         </>

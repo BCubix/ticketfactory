@@ -9,37 +9,29 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const MENU_TYPE = 'event';
 const MENU_TYPE_LABEL = 'Evènements';
 
-export const MenuEntryModule = ({ addElementToMenu }) => {
+export const MenuEntryModule = ({ addElementToMenu, language }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
 
     const getList = async () => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.eventsApi.getEvents();
-
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.events);
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.eventsApi.getEvents({ lang: language?.id });
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
+            setList(result.events);
+        });
     };
 
     useEffect(() => {
         getList();
-    }, []);
+    }, [language]);
 
     return (
         <Accordion>
