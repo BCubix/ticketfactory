@@ -140,10 +140,10 @@ export const SecondCardDashboard = ({ data }) => {
                                     }}
                                 >
                                     <Box>
-                                        <Component.GraphTabTitle variant="h5">
+                                        <Component.GraphTabTitle variant="h6">
                                             {val.label}
                                         </Component.GraphTabTitle>
-                                        <Typography variant="body1" fontSize={10} fontWeight={600}>
+                                        <Typography variant="body1" fontSize={10} fontWeight={500}>
                                             {val.amount} {val.unit}
                                         </Typography>
                                     </Box>

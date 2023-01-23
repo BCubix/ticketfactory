@@ -7,9 +7,9 @@ import { useTheme } from '@emotion/react';
 import { CardContent, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
 

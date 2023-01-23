@@ -7,7 +7,7 @@ import {
     ListItem,
     ListItemButton,
     ListItemIcon,
-    ListItemText
+    ListItemText,
 } from '@mui/material';
 import { Box } from '@mui/system';
 
@@ -27,27 +27,41 @@ export const SideMenu = () => {
 
                 '& .MuiDrawer-paper': {
                     width: drawerWidth,
-                    paddingTop: 16,
+                    backgroundColor: (theme) => theme.palette.cardBackground,
+                    borderRight: '2px solid #FFC828',
+                    paddingTop: 18,
                 },
             }}
             variant="permanent"
         >
             {Menu.map((menu, index) => (
                 <Box key={index}>
-                    <Component.MenuTitle component="h1" variant="h6">
+                    <Component.MenuTitle component="h1" sx={{ paddingLeft: 3 }}>
                         {menu.title}
                     </Component.MenuTitle>
                     <List>
                         {menu?.menu?.map((item, ind) => (
-                            <ListItem disablePadding key={ind}>
-                                <ListItemButton component={Link} to={item.link || Constant.HOME_PATH}>
-                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItem disablePadding key={ind} sx={{ paddingLeft: 3 }}>
+                                <ListItemButton
+                                    component={Link}
+                                    to={item.link || Constant.HOME_PATH}
+                                >
+                                    <ListItemIcon
+                                        sx={{
+                                            paddingLeft: 3,
+                                            color: (theme) => theme.palette.picto.pictoColor,
+                                        }}
+                                    >
+                                        {item.icon}
+                                    </ListItemIcon>
                                     <ListItemText primary={item.name} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
-                    {index < Menu.length - 1 && <Divider />}
+                    {index < Menu.length - 1 && (
+                        <Divider sx={{ backgroundColor: '#FFC828', height: '2px' }} />
+                    )}
                 </Box>
             ))}
         </Drawer>

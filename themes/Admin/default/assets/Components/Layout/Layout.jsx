@@ -30,22 +30,31 @@ export const Layout = ({ children }) => {
 
     return (
         <Box>
-            <AppBar position="fixed" sx={{ width: `100%`, zIndex: 1201 }}>
-                <Toolbar>
-                    <Button component={Link} to={Constant.HOME_PATH} variant="text" sx={{ color: '#FFFFFF' }}>
-                        <Typography variant="h2" component="div">
-                            Ticket Factory
-                        </Typography>
-                    </Button>
-
+            <AppBar
+                position="fixed"
+                sx={{
+                    zIndex: 1201,
+                    height: '70px',
+                    left: '0px',
+                    right: '0px',
+                    width: 'unset',
+                    backgroundColor: (theme) => theme.palette.fourth.main,
+                    boxShadow: '0',
+                    borderBottom: (theme) => `2px solid ${theme.palette.secondary.main}`,
+                }}
+            >
+                <Toolbar sx={{ height: '100%' }}>
+                    <Box component={Link} to={Constant.HOME_PATH} sx={{ height: '100%', paddingTop: 2, paddingBottom: 2, paddingLeft: 2 }}>
+                        <Box component="img" src={Constant.LOGOS_FILE_PATH + '/TicketFactoryJauneLogotypeHori.svg'} height="100%" />
+                    </Box>
                     {user && (
-                        <ProfileButton size="small" sx={{ marginLeft: 'auto' }} component={Link} to={`${Constant.PROFILE_BASE_PATH}${Constant.EDIT_PATH}`}>
+                        <ProfileButton size="small" sx={{ marginLeft: 'auto' }} component={Link} to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}>
                             <PersonIcon />
                         </ProfileButton>
                     )}
 
                     <Button onClick={handleLogout}>
-                        <LogoutIcon sx={{ color: '#FFFFFF' }} />
+                        <LogoutIcon sx={{ color: (theme) => theme.palette.secondary.main }} />
                     </Button>
                 </Toolbar>
             </AppBar>
