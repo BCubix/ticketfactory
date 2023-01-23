@@ -99,6 +99,8 @@ const roomsApi = {
 
             data.seatingPlans.forEach((plan, index) => {
                 formData.append(`seatingPlans[${index}][name]`, plan.name);
+                formData.append(`seatingPlans[${index}][lang]`, plan.lang || '');
+                formData.append(`seatingPlans[${index}][languageGroup]`, plan.languageGroup || '');
             });
 
             const result = await axios.post('/rooms', formData);
