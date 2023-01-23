@@ -18,6 +18,17 @@ export const sortTranslatedObject = (list) => {
     return newList;
 };
 
+export const sortTranslatedCategory = (category) => {
+    let children = category?.children;
+
+    if (!children || children.length === 0) {
+        return category;
+    }
+
+    category.children = sortTranslatedObject(children);
+    return category;
+};
+
 export const getAvailableLanguages = (list, languagesData) => {
     if (!list || !list?.lang) {
         return [];

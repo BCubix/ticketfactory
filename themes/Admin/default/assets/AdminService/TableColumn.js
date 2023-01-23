@@ -10,7 +10,8 @@ const TableColumnObj = {
     CategoriesList: [
         { name: 'id', label: 'ID', width: '10%' },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-        { name: 'name', label: 'Nom de la catégorie', width: '70%' },
+        { name: 'name', label: 'Nom de la catégorie', width: '50%' },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     ContactRequestsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },

@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class MenuEntryManager extends AbstractManager
 {
-    public function translateMenuEntry($object, $languageId)
+    public function translateMenuEntry(MenuEntry $object, int $languageId): ?MenuEntry
     {
         $newObject = CloneObject::cloneObject($object);
 

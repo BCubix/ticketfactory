@@ -7,6 +7,7 @@ use App\Entity\Language\Language;
 use App\Utils\CloneObject;
 use App\Manager\LanguageManager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EventCategoryManager extends AbstractManager
@@ -77,8 +78,12 @@ class EventCategoryManager extends AbstractManager
         return $newObject;
     }
 
-    public function getTranslatedCategories(EventCategory $object): EventCategory
+    public function getTranslatedCategories(EventCategory $object): array
     {
+        if (!$object->getLang()->isIsDefault()) {
+            return [$object];
+        }
+
         $results = $this->em->getRepository(EventCategory::class)->findAllByLanguageGroupForAdmin($object->getLanguageGroup()->toBinary());
 
         return $results;
@@ -92,10 +97,10 @@ class EventCategoryManager extends AbstractManager
             return $object;
         }
 
-        /* $children = $this->lm->getAllTranslations($children, EventCategory::class, $filters);
+        $children = $this->lm->getAllTranslations($children->toArray(), EventCategory::class, $filters);
         if (null !== $children) {
-            $object->setChildren($children);
-        } */
+            $object->setChildren(new ArrayCollection($children));
+        }
 
         return $object;
     }

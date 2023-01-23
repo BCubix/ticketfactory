@@ -59,19 +59,18 @@ export const CreateContent = () => {
     }, []);
 
     useEffect(() => {
-        if (!contentTypes) {
+        if (!contentTypes || (contentId && !initialValues)) {
             return;
         }
 
         const urlId = initialValues?.contentType?.id || parseInt(urlParams.get('contentType'));
-
-        if (!urlId) {
+        if (!initialValues && !urlId) {
             NotificationManager.error("Le type de contenu n'a pas été renseigné", 'Erreur', Constant.REDIRECTION_TIME);
             navigate(Constant.CONTENT_BASE_PATH);
+            return;
         }
 
         const contentType = contentTypes?.find((el) => el.id === urlId);
-
         if (!contentType) {
             NotificationManager.error('Le type de contenu renseigné ne correspond à aucun type connu.', 'Erreur', Constant.REDIRECTION_TIME);
             navigate(Constant.CONTENT_BASE_PATH);

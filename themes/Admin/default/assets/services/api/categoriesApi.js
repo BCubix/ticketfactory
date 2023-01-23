@@ -1,6 +1,7 @@
 import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
+import { sortTranslatedCategory } from '../utils/translationUtils';
 
 const categoriesApi = {
     getCategories: async (filters) => {
@@ -13,7 +14,9 @@ const categoriesApi = {
 
             const result = await axios.get('/event-categories', { params: params });
 
-            return { result: true, categories: result.data };
+            let data = sortTranslatedCategory(result.data);
+
+            return { result: true, categories: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

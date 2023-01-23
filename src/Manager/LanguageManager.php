@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LanguageManager extends AbstractManager
 {
-    public function setTranslationsProperties($entity): void
+    public function setTranslationsProperties(Object $entity): void
     {
         if (property_exists($entity, "languageGroup") && null === $entity->getLanguageGroup()) {
             $uuid = Uuid::v1();
@@ -24,7 +24,7 @@ class LanguageManager extends AbstractManager
         }
     }
 
-    public function duplicateElement($entity): void
+    public function duplicateElement(Object $entity): void
     {
         if (property_exists($entity, "languageGroup") && null !== $entity->getLanguageGroup()) {
             $uuid = Uuid::v1();
@@ -32,7 +32,7 @@ class LanguageManager extends AbstractManager
         }
     }
 
-    public function deleteTranslation($entity, $entityClass): void
+    public function deleteTranslation(Object $entity, string $entityClass): void
     {
         if (!property_exists($entity, "languageGroup") || !property_exists($entity, "lang") || !$entity->getLang()->isIsDefault()) {
             return;
@@ -46,7 +46,7 @@ class LanguageManager extends AbstractManager
         }
     }
 
-    public function getAllTranslations($objects, $entityClass, $filters)
+    public function getAllTranslations(array $objects, string $entityClass, array $filters): array
     {
         if (isset($objects['results'])) {
             $list = $objects['results'];
@@ -93,7 +93,7 @@ class LanguageManager extends AbstractManager
         return $objects;
     }
 
-    public function translateElement($object, $languageId)
+    public function translateElement(Object $object, int $languageId): ?Object
     {
         $language = $this->em->getRepository(Language::class)->findOneForAdmin($languageId);
         if (null === $language) {
@@ -112,7 +112,8 @@ class LanguageManager extends AbstractManager
         return $object;
     }
 
-    public function translateSubElements($object, $language) {
+    public function translateSubElements(Object $object, Language $language): ?Object
+    {
         $languageId = $language->getId();
         $newObject = CloneObject::cloneObject($object);
         $reflect = new \ReflectionClass($newObject);
@@ -161,7 +162,7 @@ class LanguageManager extends AbstractManager
         return $newObject;
     }
 
-    public function getTranslatedSubElement($object, $languageId)
+    public function getTranslatedSubElement(Object $object, int $languageId): ?Object
     {
         if (null === $object) {
             return null;
@@ -183,7 +184,7 @@ class LanguageManager extends AbstractManager
         return $result;
     }
 
-    public function createTranslateSubElement($object, $language)
+    public function createTranslateSubElement(Object $object, Language $language): ?Object
     {
         $newObject = CloneObject::cloneObject($object);
         $reflect = new \ReflectionClass($object);
