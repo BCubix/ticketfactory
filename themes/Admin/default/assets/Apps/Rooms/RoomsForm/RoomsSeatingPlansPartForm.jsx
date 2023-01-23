@@ -7,17 +7,14 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
-export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange, handleBlur }) => {
+export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange, handleBlur, initialValues }) => {
     return (
         <Component.CmtFormBlock title="Plans">
             <FieldArray name="seatingPlans">
                 {({ remove, push }) => (
                     <Box sx={{ padding: 2 }}>
                         {values.seatingPlans?.map((item, index) => (
-                            <Card
-                                sx={{ marginBlock: 7, position: 'relative', overflow: 'visible' }}
-                                key={index}
-                            >
+                            <Card sx={{ marginBlock: 7, position: 'relative', overflow: 'visible' }} key={index}>
                                 <CardContent sx={{ display: 'flex' }}>
                                     <Component.CmtTextField
                                         value={item.name}
@@ -26,12 +23,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                         label="Nom"
                                         name={`seatingPlans.${index}.name`}
                                         id={`seatingPlans-${index}-name`}
-                                        error={
-                                            touched.seatingPlans &&
-                                            touched.seatingPlans[index]?.name &&
-                                            errors.seatingPlans &&
-                                            errors.seatingPlans[index]?.name
-                                        }
+                                        error={touched.seatingPlans && touched.seatingPlans[index]?.name && errors.seatingPlans && errors.seatingPlans[index]?.name}
                                         sx={{ marginInline: 1 }}
                                         required
                                     />
@@ -52,7 +44,7 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 color="primary"
                                 variant="outlined"
                                 onClick={() => {
-                                    push({ name: '' });
+                                    push({ name: '', lang: initialValues?.lang?.id || '', languageGroup: '' });
                                 }}
                                 id="addSeatingPlan"
                             >

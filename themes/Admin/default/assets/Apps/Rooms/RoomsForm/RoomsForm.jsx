@@ -28,7 +28,7 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
                 active: initValues?.active || false,
                 seatsNb: initValues?.seatsNb || '',
                 area: initValues?.area || '',
-                seatingPlans: initValues?.seatingPlans || [],
+                seatingPlans: initValues?.seatingPlans?.map((el) => ({ ...el, lang: el.lang?.id || '' })) || [],
                 slug: initValues?.slug || '',
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
@@ -52,7 +52,14 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
                         editMode={Boolean(initialValues)}
                     />
 
-                    <Component.RoomsSeatingPlanPartForm values={values} errors={errors} touched={touched} handleChange={handleChange} handleBlur={handleBlur} />
+                    <Component.RoomsSeatingPlanPartForm
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        initialValues={initValues}
+                    />
 
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Salle active ?" />
