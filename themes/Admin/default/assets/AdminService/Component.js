@@ -190,7 +190,7 @@ import { ListTable } from '@Components/ListTable/ListTable';
 import { ListTableHead } from '@Components/ListTable/ListTableHead';
 import { ListTableContextualMenu } from '@Components/ListTable/ListTableContextualMenu';
 import { ListTableBodyLine } from '@Components/ListTable/ListTableBodyLine';
-import { MenuTitle } from '@Components/SideMenu/sc.SideMenu';
+import { MenuItemButton, MenuTitle } from '@Components/SideMenu/sc.SideMenu';
 import { SideMenu } from '@Components/SideMenu/SideMenu';
 import { CmtDisplayFlag } from '@Components/CmtDisplayFlag/CmtDisplayFlag';
 import { checkComponent, checkString } from '@Services/utils/check';
@@ -438,6 +438,7 @@ const ComponentObj = {
     ListTableContextualMenu: ListTableContextualMenu,
     ListTableBodyLine: ListTableBodyLine,
     MenuTitle: MenuTitle,
+    MenuItemButton: MenuItemButton,
     SideMenu: SideMenu,
 };
 
