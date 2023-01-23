@@ -64,8 +64,9 @@ class ThemeController extends AdminController
     public function active(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
+        $this->em->getConnection()->setAutoCommit(false);
         try {
-            $theme = $this->tm->active($themeName);
+            $theme = $this->tm->active($themeName, true);
         } catch (\Exception $e) {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();
@@ -81,8 +82,9 @@ class ThemeController extends AdminController
     public function delete(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
+        $this->em->getConnection()->setAutoCommit(false);
         try {
-            $this->tm->delete($themeName);
+            $this->tm->delete($themeName, true);
         } catch (\Exception $e) {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();

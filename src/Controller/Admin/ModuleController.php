@@ -71,8 +71,10 @@ class ModuleController extends AdminController
         $actionStr = $request->get('action');
         $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
 
+        $this->em->getConnection()->beginTransaction();
+        $this->em->getConnection()->setAutoCommit(false);
         try {
-            $module = $this->mm->active($moduleName, $action, $action === Module::ACTION_INSTALL);
+            $module = $this->mm->active($moduleName, $action, $action === Module::ACTION_INSTALL, true);
         } catch (\Exception $e) {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();

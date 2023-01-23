@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Event\EventCategory;
+use App\Entity\Language\Language;
 use App\Entity\Parameter\Parameter;
 use App\Entity\User\User;
 use App\Manager\ThemeManager;
@@ -24,10 +25,19 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $om): void
     {
+        // Language
+        $language = new Language();
+        $language->setActive(true);
+        $language->setName('France');
+        $language->setIsoCode('FR');
+        $language->setIsDefault(true);
+        $om->persist($language);
+
         // Root Category
         $eventCategory = new EventCategory();
         $eventCategory->setActive(true);
         $eventCategory->setName('Accueil');
+        $eventCategory->setLang($language);
         $om->persist($eventCategory);
 
         // Parameters
@@ -53,7 +63,7 @@ class AppFixtures extends Fixture
                 "id"   => "Ballets",
                 "name" => "Ballets"
             ]
-    ]);
+        ]);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName("Types par défaut");
         $parameter->setBreakpointsValue("xs-12 md-6");
@@ -195,6 +205,6 @@ class AppFixtures extends Fixture
 
         $om->flush();
 
-        $this->tm->active('default', true);
+        $this->tm->active('default', false, true);
     }
 }

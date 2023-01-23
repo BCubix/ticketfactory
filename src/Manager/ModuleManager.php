@@ -185,7 +185,7 @@ class ModuleManager extends ModuleThemeManager
      * @return Module|null
      * @throws \Exception
      */
-    public function active(string $moduleName, int $action, bool $active): Module|null
+    public function active(string $moduleName, int $action, bool $active, bool $transaction = false): Module|null
     {
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
 
@@ -194,7 +194,7 @@ class ModuleManager extends ModuleThemeManager
             if (null !== $module) {
                 $this->em->remove($module);
                 $this->em->flush();
-                if ($this->em->getConnection()->isTransactionActive()) {
+                if ($transaction) {
                     $this->em->getConnection()->commit();
                 }
             }
@@ -226,7 +226,7 @@ class ModuleManager extends ModuleThemeManager
 
                 $this->em->remove($module);
                 $this->em->flush();
-                if ($this->em->getConnection()->isTransactionActive()) {
+                if ($transaction) {
                     $this->em->getConnection()->commit();
                 }
 
@@ -237,7 +237,7 @@ class ModuleManager extends ModuleThemeManager
 
                 $this->em->persist($module);
                 $this->em->flush();
-                if ($this->em->getConnection()->isTransactionActive()) {
+                if ($transaction) {
                     $this->em->getConnection()->commit();
                 }
 
