@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[EventDateConstraint]
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: EventDateRepository::class)]
 class EventDate
 {

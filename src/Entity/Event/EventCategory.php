@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[Gedmo\Tree(type: 'nested')]
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: EventCategoryRepository::class)]
 class EventCategory extends Datable
 {

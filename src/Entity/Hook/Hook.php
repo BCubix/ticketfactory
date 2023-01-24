@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: HookRepository::class)]
 class Hook
 {

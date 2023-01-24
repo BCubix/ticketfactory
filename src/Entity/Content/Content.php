@@ -13,6 +13,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
 class Content extends Datable implements JsonDoctrineSerializable
 {

@@ -3,6 +3,8 @@
 namespace App\Entity\Event;
 
 use App\Entity\Language\Language;
+use App\Repository\EventDateBlockRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +13,8 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity(repositoryClass: EventDateBlockRepository::class)]
 class EventDateBlock
 {
     /*** > Trait ***/

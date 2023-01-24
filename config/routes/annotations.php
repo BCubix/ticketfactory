@@ -26,7 +26,7 @@ return function (RoutingConfigurator $routes) {
         if (is_dir($controllersPath)) {
             $routes
                 ->import($controllersPath, 'annotation')
-                ->prefix('/admin/api')
+                ->prefix('/admin')
             ;
         }
 

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: VersionnedEntityRepository::class)]
 class VersionnedEntity
 {
