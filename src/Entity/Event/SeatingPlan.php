@@ -31,6 +31,8 @@ class SeatingPlan
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
@@ -38,6 +40,8 @@ class SeatingPlan
     #[ORM\JoinColumn(nullable: false)]
     private $room;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
     #[ORM\ManyToOne(inversedBy: 'seatingPlans')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;

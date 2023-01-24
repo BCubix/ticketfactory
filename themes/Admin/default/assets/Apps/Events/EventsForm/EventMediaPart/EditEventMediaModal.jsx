@@ -52,7 +52,7 @@ export const EditEventMediaModal = ({
                                 <Component.CmtTextField
                                     value={values.eventMedias?.at(selectedMediaIndex)?.position}
                                     onChange={handleChange}
-                                    name={`medias.${selectedMediaIndex}.position`}
+                                    name={`eventMedias.${selectedMediaIndex}.position`}
                                     error={errors.eventMedias?.at(selectedMediaIndex)?.position}
                                     label={'Position'}
                                     type="number"
