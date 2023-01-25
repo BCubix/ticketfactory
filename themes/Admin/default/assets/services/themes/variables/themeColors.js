@@ -12,17 +12,16 @@ export const themeColors = {
 
     primary: {
         main: '#2E71B3',
-        dark: '#2E71B3',
-        light: '#2E71B3',
-        contrastText: '#fff',
-        publicMain: '#F9F1E4',
+        dark: '#225486',
+        light: '#EBF1FF',
+        contrastText: '#FFFFFF',
         family: defaultFamily,
     },
 
     secondary: {
-        main: '#2E71B3',
-        dark: '#16458F',
-        light: '#1D5ABB',
+        main: '#FFC828',
+        dark: '#225486',
+        light: '#FFF3E5',
         contrastText: '#FFFFFF',
     },
 
@@ -75,3 +74,23 @@ export const themeColors = {
     header: headerTheme,
     sidebar: sidebarTheme,
 };
+
+/* primary: {
+    main: '#2E71B3',
+    dark: '#2E71B3',
+    light: '#2E71B3',
+    contrastText: '#fff',
+    publicMain: '#F9F1E4',
+    family: defaultFamily,
+},
+
+secondary: {
+    main: '#2E71B3',
+    dark: '#16458F',
+    light: '#1D5ABB',
+    contrastText: '#FFFFFF',
+},
+
+tertiary: {
+    main: '#FFC828',
+}, */

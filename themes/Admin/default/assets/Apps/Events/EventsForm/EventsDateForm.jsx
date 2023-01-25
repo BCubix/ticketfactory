@@ -7,34 +7,12 @@ import { useTheme } from '@emotion/react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import {
-    Card,
-    CardContent,
-    FormControl,
-    Grid,
-    InputLabel,
-    ListItemText,
-    Box,
-    MenuItem,
-    Select,
-    FormHelperText,
-    Typography,
-} from '@mui/material';
+import { Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsDateForm = ({
-    values,
-    setFieldValue,
-    setFieldTouched,
-    handleChange,
-    handleBlur,
-    touched,
-    errors,
-    blockIndex,
-    setGenerateDate,
-}) => {
+export const EventsDateForm = ({ values, setFieldValue, setFieldTouched, handleChange, handleBlur, touched, errors, blockIndex, setGenerateDate }) => {
     const theme = useTheme();
 
     const STATES = [
@@ -65,17 +43,7 @@ export const EventsDateForm = ({
         }
 
         return (
-            <Box
-                height={30}
-                width={30}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                backgroundColor={day.color}
-                borderRadius="50%"
-                marginRight={3}
-                flexShrink={0}
-            >
+            <Box height={30} width={30} display="flex" alignItems="center" justifyContent="center" backgroundColor={day.color} borderRadius="50%" marginRight={3} flexShrink={0}>
                 <Typography component="span" color="white" variant="h4">
                     {day.label}
                 </Typography>
@@ -103,18 +71,13 @@ export const EventsDateForm = ({
                                                     id={`eventDateBlocks-${blockIndex}-eventDates-${index}-eventDate`}
                                                     required
                                                     setValue={(value) => {
-                                                        setFieldValue(
-                                                            `eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`,
-                                                            moment(value).format('YYYY-MM-DD HH:mm')
-                                                        );
+                                                        setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`, moment(value).format('YYYY-MM-DD HH:mm'));
                                                     }}
                                                     onTouched={setFieldTouched}
                                                     name={`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`}
                                                     error={getNestedFormikError(
-                                                        touched?.eventDateBlocks?.at(blockIndex)
-                                                            ?.eventDates,
-                                                        errors?.eventDateBlocks?.at(blockIndex)
-                                                            ?.eventDates,
+                                                        touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
+                                                        errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
                                                         index,
                                                         'eventDate'
                                                     )}
@@ -136,19 +99,14 @@ export const EventsDateForm = ({
                                                     fullWidth
                                                     error={Boolean(
                                                         getNestedFormikError(
-                                                            touched?.eventDateBlocks?.at(blockIndex)
-                                                                ?.eventDates,
-                                                            errors?.eventDateBlocks?.at(blockIndex)
-                                                                ?.eventDates,
+                                                            touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
+                                                            errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
                                                             index,
                                                             'state'
                                                         )
                                                     )}
                                                 >
-                                                    <InputLabel
-                                                        id={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`}
-                                                        size="small"
-                                                    >
+                                                    <InputLabel id={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`} size="small">
                                                         Status
                                                     </InputLabel>
                                                     <Select
@@ -161,27 +119,13 @@ export const EventsDateForm = ({
                                                         variant="standard"
                                                         label="Status"
                                                         onChange={(e) => {
-                                                            setFieldValue(
-                                                                `eventDateBlocks.${blockIndex}.eventDates.${index}.state`,
-                                                                e.target.value
-                                                            );
+                                                            setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.state`, e.target.value);
                                                         }}
                                                     >
                                                         {STATES?.map((item, index) => (
-                                                            <MenuItem
-                                                                value={item.value}
-                                                                key={index}
-                                                                id={`eventDateStateValue-${item.value}`}
-                                                            >
+                                                            <MenuItem value={item.value} key={index} id={`eventDateStateValue-${item.value}`}>
                                                                 <ListItemText>
-                                                                    <Box
-                                                                        display={'inline'}
-                                                                        borderRadius={4}
-                                                                        px={2}
-                                                                        py={1}
-                                                                        mx={1}
-                                                                        backgroundColor={item.color}
-                                                                    >
+                                                                    <Box display={'inline'} borderRadius={4} px={2} py={1} mx={1} backgroundColor={item.color}>
                                                                         {item.label}
                                                                     </Box>
                                                                 </ListItemText>
@@ -189,24 +133,15 @@ export const EventsDateForm = ({
                                                         ))}
                                                     </Select>
                                                     {getNestedFormikError(
-                                                        touched?.eventDateBlocks?.at(blockIndex)
-                                                            ?.eventDates,
-                                                        errors?.eventDateBlocks?.at(blockIndex)
-                                                            ?.eventDates,
+                                                        touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
+                                                        errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
                                                         index,
                                                         'state'
                                                     ) && (
-                                                        <FormHelperText
-                                                            error
-                                                            id={`eventDateBlocks-${blockIndex}-eventDates-${index}-state-helper-text`}
-                                                        >
+                                                        <FormHelperText error id={`eventDateBlocks-${blockIndex}-eventDates-${index}-state-helper-text`}>
                                                             {getNestedFormikError(
-                                                                touched?.eventDateBlocks?.at(
-                                                                    blockIndex
-                                                                )?.eventDates,
-                                                                errors?.eventDateBlocks?.at(
-                                                                    blockIndex
-                                                                )?.eventDates,
+                                                                touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
+                                                                errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
                                                                 index,
                                                                 'state'
                                                             )}
@@ -222,20 +157,13 @@ export const EventsDateForm = ({
                                                         value={item.reportDate}
                                                         disablePast
                                                         setValue={(value) => {
-                                                            setFieldValue(
-                                                                `eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`,
-                                                                moment(value).format(
-                                                                    'YYYY-MM-DD HH:mm'
-                                                                )
-                                                            );
+                                                            setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`, moment(value).format('YYYY-MM-DD HH:mm'));
                                                         }}
                                                         onTouched={setFieldTouched}
                                                         name={`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`}
                                                         error={getNestedFormikError(
-                                                            touched?.eventDateBlocks?.at(blockIndex)
-                                                                ?.eventDates,
-                                                            errors?.eventDateBlocks?.at(blockIndex)
-                                                                ?.eventDates,
+                                                            touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
+                                                            errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
                                                             index,
                                                             'reportDate'
                                                         )}

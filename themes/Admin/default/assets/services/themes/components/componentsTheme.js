@@ -1,5 +1,6 @@
 import { alpha } from '@mui/system';
-import { defaultFamily, themeBreakpoints, titleDefaultFamily } from '../variables/themeVariables';
+import { themeColors } from '../variables/themeColors';
+import { defaultFamily, titleDefaultFamily } from '../variables/themeVariables';
 
 export const typographyTheme = {
     fontFamily: defaultFamily,
@@ -10,6 +11,7 @@ export const typographyTheme = {
         fontWeight: 400,
         color: '#37373C',
         margin: '0 0 .5rem',
+        fontFamily: titleDefaultFamily,
     },
     h2: {
         fontSize: '1.4rem',
@@ -17,6 +19,7 @@ export const typographyTheme = {
         fontWeight: 400,
         color: '#37373C',
         margin: '0 0 .5rem',
+        fontFamily: titleDefaultFamily,
     },
     h3: {
         fontSize: '1.25rem',
@@ -30,7 +33,7 @@ export const typographyTheme = {
         lineHeight: 1.2,
         fontWeight: 400,
         color: '#37373C',
-        margin: '0 0 .5rem',
+        margin: '0',
     },
     h5: {
         fontSize: '1rem',
@@ -71,14 +74,6 @@ export const componentsTheme = {
         styleOverrides: {
             root: {
                 minHeight: 'auto',
-            },
-        },
-    },
-    MuiCard: {
-        styleOverrides: {
-            root: {
-                borderRadius: 12,
-                boxShadow: `0 0.5rem 1.25rem ${alpha('#7352C7', 0.175)}`,
             },
         },
     },

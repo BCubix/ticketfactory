@@ -155,7 +155,7 @@ import {
     DeleteFabButton,
     EditFabButton,
 } from '@Components/CmtButton/sc.Buttons';
-import { CmtCard } from '@Components/CmtCard/sc.CmtCard';
+import { CmtCard, CmtCardHeader } from '@Components/CmtCard/sc.CmtCard';
 import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
 import { CmtDateTimePicker } from '@Components/CmtDateTimePicker/CmtDateTimePicker';
 import { CmtDisplayMediaType } from '@Components/CmtDisplayMediaType/CmtDisplayMediaType';
@@ -396,6 +396,7 @@ const ComponentObj = {
     AddBlockButton: AddBlockButton,
     AddBlockFabButton: AddBlockFabButton,
     CmtCard: CmtCard,
+    CmtCardHeader: CmtCardHeader,
     CmtDatePicker: CmtDatePicker,
     CmtDateTimePicker: CmtDateTimePicker,
     CmtDisplayMediaType: CmtDisplayMediaType,

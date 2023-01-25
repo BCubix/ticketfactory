@@ -15,8 +15,8 @@ export const MenuItemButton = styled(ListItemButton)`
     padding: 0;
     border-radius: 0 24px 24px 0;
     margin: 0;
-    color: ${(props) => (props.isActive ? props.theme.palette.nav.action.active : props.theme.palette.nav.mainColor)};
-    background-color: ${(props) => props.isActive && alpha(props.theme.palette.nav.background.active, 0.15)};
+    color: ${(props) => (props.isActive ? props.theme.palette.primary.main : props.theme.palette.nav.mainColor)};
+    background-color: ${(props) => props.isActive && props.theme.palette.primary.light};
 
     &::before {
         left: 0;
@@ -26,12 +26,12 @@ export const MenuItemButton = styled(ListItemButton)`
         display: inline-block;
         width: 4px;
         height: 100%;
-        background-color: ${(props) => (props.isActive ? props.theme.palette.nav.tick.active : 'transparent')};
+        background-color: ${(props) => (props.isActive ? props.theme.palette.primary.main : 'transparent')};
     }
 
     &:hover {
-        color: ${(props) => props.theme.palette.nav.action.hover};
-        background-color: ${(props) => props.theme.palette.nav.background.hover};
+        color: ${(props) => props.theme.palette.primary.main};
+        background-color: ${(props) => props.theme.palette.primary.light};
 
         &::before {
             left: 0;
@@ -41,7 +41,7 @@ export const MenuItemButton = styled(ListItemButton)`
             display: 'inline-block';
             width: '4px';
             height: '100%';
-            background-color: ${(props) => props.theme.palette.nav.tick.hover};
+            background-color: ${(props) => props.theme.palette.primary.main};
         }
     }
 `;
