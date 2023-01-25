@@ -13,6 +13,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PageBlockRepository::class)]
 class PageBlock extends Datable implements JsonDoctrineSerializable
 {

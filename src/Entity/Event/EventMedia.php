@@ -3,11 +3,13 @@
 namespace App\Entity\Event;
 
 use App\Entity\Media\Media;
-use App\Repository\Event\EventMediaRepository;
+use App\Repository\EventMediaRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: EventMediaRepository::class)]
 class EventMedia
 {

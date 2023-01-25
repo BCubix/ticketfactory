@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[Assert\UniqueEntity(fields: 'email', message: 'Un utilisateur existe déjà avec cette adresse.')]
 #[JMS\ExclusionPolicy('all')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User extends Datable implements UserInterface, PasswordAuthenticatedUserInterface
 {

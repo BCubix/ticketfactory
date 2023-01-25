@@ -3,13 +3,16 @@
 namespace App\Entity\Event;
 
 use App\Entity\Language\Language;
+use App\Repository\EventPriceRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity(repositoryClass: EventPriceRepository::class)]
 class EventPrice
 {
     /*** > Trait ***/
