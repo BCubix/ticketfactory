@@ -54,7 +54,7 @@ export const Layout = ({ children }) => {
                     transition: (theme) => theme.transitions.create(['width']),
                 }}
             >
-                <Toolbar sx={{ height: '100%', px: { lg: 6, xs: 4 }, backgroundColor: (theme) => theme.palette.primary.light, boxShadow: '5px 0 10px rgba(0, 0, 0, 0.085)' }}>
+                <Toolbar sx={{ height: '100%', px: { lg: 6, xs: 4 }, backgroundColor: (theme) => theme.palette.secondary.light, boxShadow: '5px 0 10px rgba(0, 0, 0, 0.085)' }}>
                     <Box
                         sx={{
                             display: 'flex',
@@ -123,7 +123,6 @@ export const Layout = ({ children }) => {
                         flexDirection: 'column',
                         pb: 4,
                         pt: (theme) => `${theme.layout.header.height}px`,
-                        px: { lg: 6, xs: 4 },
                         backgroundColor: (theme) => theme.palette.main.backgroundColor,
                     }}
                 >

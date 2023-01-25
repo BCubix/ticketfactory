@@ -9,15 +9,15 @@ export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null, 
     return (
         <Box mx={1} py={2}>
             <Box display="flex" alignItems="center" justifyContent="center" className="fullHeight">
-                <Chip
-                    variant={null !== value ? 'default' : 'outlined'}
+                <Component.FilterChip
+                    variant={'outlined'}
                     icon={icon}
                     size="medium"
                     id={id ? id + 'Chip' : null}
                     label={label}
                     onClick={(e) => setAnchorEl(e.currentTarget)}
                     onDelete={null !== value ? () => setValue(null) : null}
-                    sx={{ backgroundColor: '#FFFFFF' }}
+                    isActive={value || value === false}
                 />
             </Box>
 

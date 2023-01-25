@@ -44,17 +44,20 @@ export const ContactRequestsList = () => {
         <>
             <Component.CmtPageWrapper title="Demandes de contact">
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des demandes de contact{' '}
+                                    {contactRequests && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contactRequests.length} sur ${total})`}
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH)}>
+                                    Nouveau
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des demandes de contact{' '}
-                                {contactRequests && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contactRequests.length} sur ${total})`}
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH)}>
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.ContactRequestsFilters filters={filters} changeFilters={(values) => dispatch(changeContactRequestsFilters(values))} />
                         <Component.ListTable
                             filters={filters}

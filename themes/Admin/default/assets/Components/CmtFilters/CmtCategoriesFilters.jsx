@@ -87,8 +87,8 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
     return (
         <Box mx={1} py={2}>
             <Box display="flex" alignItems="center" justifyContent="center" className="fullHeight">
-                <Chip
-                    variant={value ? 'default' : 'outlined'}
+                <Component.FilterChip
+                    variant={'outlined'}
                     icon={icon}
                     size="medium"
                     label={label}
@@ -98,7 +98,7 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
                         setAnchorEl(e.currentTarget);
                     }}
                     onDelete={value ? () => setValue('') : null}
-                    sx={{ backgroundColor: '#FFFFFF' }}
+                    isActive={value || value === false}
                 />
             </Box>
 

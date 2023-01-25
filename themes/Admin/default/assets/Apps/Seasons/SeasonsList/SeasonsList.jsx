@@ -49,16 +49,20 @@ export const SeasonsList = () => {
         <>
             <Component.CmtPageWrapper title={'Saisons'}>
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des saisons{' '}
+                                    {seasons && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + seasons.length} sur ${total})`}
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH)}>
+                                    Nouveau
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des saisons {seasons && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + seasons.length} sur ${total})`}
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH)}>
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.SeasonsFilters filters={filters} changeFilters={(values) => dispatch(changeSeasonsFilters(values))} />
 
                         <Component.ListTable

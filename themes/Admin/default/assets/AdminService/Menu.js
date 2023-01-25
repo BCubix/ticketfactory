@@ -31,7 +31,7 @@ const MenuObj = [
                 link: Constant.EVENTS_BASE_PATH,
                 icon: <ConfirmationNumberIcon />,
             },
-            { name: 'Catégories', link: Constant.CATEGORIES_BASE_PATH, icon: <CategoryIcon /> },
+            { name: 'Catégories', link: Constant.CATEGORIES_BASE_PATH, relatedLinks: [Constant.TAGS_BASE_PATH], icon: <CategoryIcon /> },
             { name: 'Salles', link: Constant.ROOMS_BASE_PATH, icon: <BusinessIcon /> },
             { name: 'Saisons', link: Constant.SEASONS_BASE_PATH, icon: <CalendarMonthIcon /> },
         ],
@@ -40,7 +40,7 @@ const MenuObj = [
         title: 'PERSONNALISATION',
         menu: [
             { name: 'Menus', link: Constant.MENUS_BASE_PATH, icon: <MenuIcon /> },
-            { name: 'Pages', link: Constant.PAGES_BASE_PATH, icon: <DescriptionIcon /> },
+            { name: 'Pages', link: Constant.PAGES_BASE_PATH, relatedLinks: [Constant.PAGE_BLOCKS_BASE_PATH], icon: <DescriptionIcon /> },
             {
                 name: 'Redirections',
                 link: Constant.REDIRECTIONS_BASE_PATH,
@@ -52,6 +52,7 @@ const MenuObj = [
             {
                 name: 'Bibliothèque médias',
                 link: Constant.MEDIAS_BASE_PATH,
+                relatedLinks: [Constant.IMAGE_FORMATS_BASE_PATH],
                 icon: <PermMediaIcon />,
             },
             { name: 'Contenus', link: Constant.CONTENT_BASE_PATH, icon: <SourceIcon /> },

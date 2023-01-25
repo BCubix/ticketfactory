@@ -165,7 +165,7 @@ import { CmtCategoriesFilters } from '@Components/CmtFilters/CmtCategoriesFilter
 import { CmtMultipleSelectFilters } from '@Components/CmtFilters/CmtMultipleSelectFilters';
 import { CmtSearchFilters } from '@Components/CmtFilters/CmtSearchFilters';
 import { CmtSimpleSelectFilters } from '@Components/CmtFilters/CmtSimpleSelectFilter';
-import { ClearBooleanButton } from '@Components/CmtFilters/sc.Filters';
+import { ClearBooleanButton, FilterChip } from '@Components/CmtFilters/sc.Filters';
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
 import { CmtHistoryDate } from '@Components/CmtHistoryDate/CmtHistoryDate';
 import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
@@ -408,6 +408,7 @@ const ComponentObj = {
     CmtSearchFilters: CmtSearchFilters,
     CmtSimpleSelectFilters: CmtSimpleSelectFilters,
     ClearBooleanButton: ClearBooleanButton,
+    FilterChip: FilterChip,
     CmtDisplayFlag: CmtDisplayFlag,
 
     CmtActiveField: CmtActiveField,

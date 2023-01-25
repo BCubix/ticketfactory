@@ -44,17 +44,20 @@ export const RedirectionsList = () => {
         <>
             <Component.CmtPageWrapper title="Redirections">
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des redirections{' '}
+                                    {redirections && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + redirections.length} sur ${total})`}
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH)}>
+                                    Nouveau
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des redirections{' '}
-                                {redirections && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + redirections.length} sur ${total})`}
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH)}>
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.RedirectionsFilters filters={filters} changeFilters={(values) => dispatch(changeRedirectionsFilters(values))} />
 
                         <Component.ListTable

@@ -90,16 +90,19 @@ export const ThemesList = () => {
         <>
             <Component.CmtPageWrapper title={'Themes'}>
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des thèmes
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                    Upload
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des thèmes
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
-                                Upload
-                            </Component.CreateButton>
-                        </Box>
-
                         <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
                             {themes.map((theme, index) => (
                                 <Component.CmtCard sx={{ width: 300, marginInline: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }} key={index}>

@@ -39,8 +39,8 @@ export const CmtSimpleSelectFilters = ({ list, value, setValue, title, label, ic
     return (
         <Box mx={1} py={2}>
             <Box display="flex" alignItems="center" justifyContent="center" className="fullHeight">
-                <Chip
-                    variant={value ? 'default' : 'outlined'}
+                <Component.FilterChip
+                    variant={'outlined'}
                     icon={icon}
                     size="medium"
                     id={id ? id + 'Chip' : null}
@@ -51,6 +51,7 @@ export const CmtSimpleSelectFilters = ({ list, value, setValue, title, label, ic
                     }}
                     onDelete={value ? () => setValue('') : null}
                     sx={{ backgroundColor: '#FFFFFF' }}
+                    isActive={value || value === false}
                 />
             </Box>
 

@@ -36,16 +36,19 @@ export const TagsList = () => {
         <>
             <Component.CmtPageWrapper title="Tags">
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des tags {tags && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + tags.length} sur ${total})`}
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH)}>
+                                    Nouveau
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des tags {tags && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + tags.length} sur ${total})`}
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH)}>
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.TagsFilters filters={filters} changeFilters={(values) => dispatch(changeTagsFilters(values))} />
 
                         <Component.ListTable

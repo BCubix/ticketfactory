@@ -1,5 +1,4 @@
 import { alpha } from '@mui/system';
-import { themeColors } from '../variables/themeColors';
 import { defaultFamily, titleDefaultFamily } from '../variables/themeVariables';
 
 export const typographyTheme = {

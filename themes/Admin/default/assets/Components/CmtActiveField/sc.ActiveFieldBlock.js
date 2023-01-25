@@ -10,6 +10,7 @@ export const ActiveFieldBlock = styled(Box)`
     padding-inline: 10px;
     border: ${(props) => `1px solid ${props.theme.palette.primary.main}`};
     border-radius: 3px;
+    background-color: ${(props) => props.theme.palette.secondary.light};
 `;
 
 export const SwitchActiveLabel = styled(Typography)`

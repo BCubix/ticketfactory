@@ -50,16 +50,19 @@ export const MediasList = () => {
     return (
         <Component.CmtPageWrapper title="Médias">
             <Component.CmtCard sx={{ height: '100%', mt: 5 }}>
+                <Component.CmtCardHeader
+                    title={
+                        <Box display="flex" justifyContent={'space-between'} alignItems="center">
+                            <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                Liste des médias {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
+                            </Typography>
+                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createMediaButton">
+                                Nouveau
+                            </Component.CreateButton>
+                        </Box>
+                    }
+                />
                 <CardContent sx={{ height: '100%' }}>
-                    <Box display="flex" justifyContent={'space-between'}>
-                        <Typography component="h2" variant="h5">
-                            Liste des médias {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
-                        </Typography>
-                        <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createMediaButton">
-                            Nouveau
-                        </Component.CreateButton>
-                    </Box>
-
                     <Component.MediasFilters filters={filters} changeFilters={(values) => dispatch(changeMediasFilters(values))} />
 
                     <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>

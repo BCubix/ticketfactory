@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, matchPath, useLocation } from 'react-router-dom';
 import { Drawer, Link, List, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
@@ -8,7 +8,21 @@ import { Component } from '@/AdminService/Component';
 import { Menu } from '@/AdminService/Menu';
 
 export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
-    const location = useLocation();
+    const { pathname } = useLocation();
+
+    const checkPath = (path, relatedLinks) => {
+        let p = pathname?.split('/')?.at(2);
+
+        if (p === path.split('/')?.at(2)) {
+            return true;
+        }
+
+        if (!relatedLinks) {
+            return false;
+        }
+
+        return relatedLinks?.some((el) => el.split('/')?.at(2) === p);
+    };
 
     return (
         <Drawer
@@ -41,7 +55,7 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
                                 </Typography>
                             </Component.MenuTitle>
                             {menu?.menu?.map((item, ind) => (
-                                <Component.MenuItemButton component="li" key={ind} isActive={location.pathname === item.link}>
+                                <Component.MenuItemButton component="li" key={ind} isActive={checkPath(item.link, item?.relatedLinks)}>
                                     <Link
                                         underline={'none'}
                                         component={RouterLink}

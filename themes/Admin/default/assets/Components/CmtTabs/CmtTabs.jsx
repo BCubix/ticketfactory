@@ -19,7 +19,7 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
 
     return (
         <Box sx={containerStyle}>
-            <Box sx={{ borderBottom: 1, borderColor: '#E8E8E8' }}>
+            <Box sx={{ borderBottom: 1, borderBottom: 'none', backgroundColor: (theme) => theme.palette.secondary.light }}>
                 <Tabs
                     value={value}
                     onChange={(_, newValue) => {

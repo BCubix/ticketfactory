@@ -66,17 +66,20 @@ export const ContentsList = () => {
         <>
             <Component.CmtPageWrapper title="Contenus">
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des contenus{' '}
+                                    {contents && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contents.length} sur ${total})`}
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createContentButton">
+                                    Nouveau
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des contenus{' '}
-                                {contents && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contents.length} sur ${total})`}
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createContentButton">
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.ContentsFilters filters={filters} changeFilters={(values) => dispatch(changeContentsFilters(values))} list={contentTypes} />
 
                         <Component.ListTable

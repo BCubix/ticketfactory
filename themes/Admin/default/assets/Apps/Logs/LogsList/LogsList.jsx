@@ -112,13 +112,16 @@ export const LogsList = () => {
     return (
         <Component.CmtPageWrapper title={'Logs'}>
             <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                <Component.CmtCardHeader
+                    title={
+                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                Liste des logs
+                            </Typography>
+                        </Box>
+                    }
+                />
                 <CardContent>
-                    <Box display="flex" justifyContent="space-between">
-                        <Typography component="h2" variant="h5">
-                            Liste des logs
-                        </Typography>
-                    </Box>
-
                     <Component.ListTable table={TABLE_COLUMN} list={logs} />
                 </CardContent>
             </Component.CmtCard>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Fab } from '@mui/material';
+import { Chip, Fab } from '@mui/material';
 
 export const ClearBooleanButton = styled(Fab)`
     background-color: #ffffff;
@@ -14,7 +14,14 @@ export const ClearBooleanButton = styled(Fab)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.delete.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+    }
+`;
+
+export const FilterChip = styled(Chip)`
+    background-color: ${(props) => (props.isActive ? props.theme.palette.secondary.light : '#FFFFFF')};
+
+    &:hover {
+        background-color: ${(props) => (props.isActive ? props.theme.palette.secondary.light : '#E3E3E3')} !important;
     }
 `;

@@ -60,16 +60,19 @@ export const RoomsList = () => {
         <>
             <Component.CmtPageWrapper title="Salles">
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des salles {rooms && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + rooms.length} sur ${total})`}
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH)}>
+                                    Nouveau
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des salles {rooms && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + rooms.length} sur ${total})`}
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH)}>
-                                Nouveau
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.RoomsFilters filters={filters} changeFilters={(values) => dispatch(changeRoomsFilters(values))} />
 
                         <Component.ListTable

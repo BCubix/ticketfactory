@@ -123,16 +123,19 @@ export const ModulesList = () => {
         <>
             <Component.CmtPageWrapper title={'Modules'}>
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    Liste des modules
+                                </Typography>
+                                <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                    Upload
+                                </Component.CreateButton>
+                            </Box>
+                        }
+                    />
                     <CardContent>
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5">
-                                Liste des modules
-                            </Typography>
-                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
-                                Upload
-                            </Component.CreateButton>
-                        </Box>
-
                         <Component.ListTable
                             table={TableColumn.ModulesList}
                             list={modules}

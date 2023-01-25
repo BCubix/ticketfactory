@@ -8,15 +8,16 @@ export const CmtSearchFilters = ({ value, setValue, title, label, icon = null, i
     return (
         <Box mx={1} py={2}>
             <Box display="flex" alignItems="center" justifyContent="center" className="fullHeight">
-                <Chip
-                    variant={value ? 'default' : 'outlined'}
+                <Component.FilterChip
+                    variant={'outlined'}
                     icon={icon}
                     size="medium"
                     label={label}
                     id={id ? id + 'Chip' : null}
                     onClick={(e) => setAnchorEl(e.currentTarget)}
                     onDelete={value ? () => setValue('') : null}
-                    sx={{ backgroundColor: '#FFFFFF' }}
+                    sx={{ backgroundColor: !value && '#FFFFFF' }}
+                    isActive={value || value === false}
                 />
             </Box>
 
