@@ -12,6 +12,8 @@ const ConstantObj = {
     ICONS_FILE_PATH: '/images/icons',
     LOGOS_FILE_PATH: '/images/logos',
 
+    DEFAULT_LOGOS_FILE: '/TicketFactoryJauneLogotypeHori.svg',
+
     REDIRECTION_TIME: 5000,
 
     HOME_PATH: '/admin',

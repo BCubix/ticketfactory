@@ -52,7 +52,7 @@ export const MediasList = () => {
             <Component.CmtCard sx={{ height: '100%', mt: 5 }}>
                 <CardContent sx={{ height: '100%' }}>
                     <Box display="flex" justifyContent={'space-between'}>
-                        <Typography component="h2" variant="h5" fontSize={20}>
+                        <Typography component="h2" variant="h5">
                             Liste des médias {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
                         </Typography>
                         <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createMediaButton">

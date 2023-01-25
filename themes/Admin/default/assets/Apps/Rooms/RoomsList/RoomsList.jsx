@@ -62,7 +62,7 @@ export const RoomsList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des salles {rooms && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + rooms.length} sur ${total})`}
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => navigate(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH)}>

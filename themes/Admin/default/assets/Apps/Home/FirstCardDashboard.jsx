@@ -7,14 +7,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import {
-    CardContent,
-    CardHeader,
-    List,
-    ListItemAvatar,
-    ListItemButton,
-    ListItemText,
-} from '@mui/material';
+import { CardContent, CardHeader, List, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -52,15 +45,7 @@ export const FirstCardDashboard = ({ data }) => {
 
     return (
         <Component.CmtCard sx={{ position: 'relative' }} overflow="hidden">
-            <CardHeader
-                title="Informations générales"
-                titleTypographyProps={{
-                    fontWeight: 600,
-                    fontSize: 16,
-                    color: '#FFFFFF',
-                }}
-                sx={{ borderBottom: 1, borderBottomColor: 'divider', backgroundColor: colorProps }}
-            />
+            <CardHeader title="Informations générales" />
             <CardContent sx={{ position: 'relative', p: 0 }}>
                 <List disablePadding>
                     {list.map(({ icon, title, info }, index) => (

@@ -12,7 +12,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const SecondCardDashboard = ({ data }) => {
     const theme = useTheme();
@@ -27,25 +27,15 @@ export const SecondCardDashboard = ({ data }) => {
     const [tab, setTab] = useState(data.graph?.tab);
 
     async function getGraph(tab, beginDate, endDate) {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.dashboardApi.getGraph(tab, beginDate, endDate);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                return;
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-            return;
-        }
-
-        const result = await Api.dashboardApi.getGraph(tab, beginDate, endDate);
-
-        if (!result.result) {
-            NotificationManager.error(
-                "Une erreur s'est produite",
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
-            return;
-        }
-
-        setGraph(result.dashboard?.graph);
+            setGraph(result.dashboard?.graph);
+        });
     }
 
     useEffect(() => {
@@ -56,17 +46,8 @@ export const SecondCardDashboard = ({ data }) => {
 
     return (
         <>
-            <Component.CmtCard sx={{ marginBottom: 4 }} overflow="hidden">
-                <Box sx={{ width: '100%', backgroundColor: colorProps }}>
-                    <CardHeader
-                        title="Période sélectionnée"
-                        titleTypographyProps={{
-                            fontWeight: 600,
-                            fontSize: 16,
-                            color: '#FFFFFF',
-                        }}
-                    />
-                </Box>
+            <Component.CmtCard sx={{ marginBottom: 4 }}>
+                <CardHeader title="Période sélectionnée" />
 
                 <CardContent>
                     <Grid container spacing={4}>
@@ -98,29 +79,13 @@ export const SecondCardDashboard = ({ data }) => {
                 </CardContent>
             </Component.CmtCard>
 
-            <Component.CmtCard overflow="hidden">
-                <Box sx={{ width: '100%', backgroundColor: colorProps }}>
-                    <CardHeader
-                        title="Statistiques"
-                        titleTypographyProps={{
-                            fontWeight: 600,
-                            fontSize: 16,
-                            color: '#FFFFFF',
-                        }}
-                    />
-                </Box>
+            <Component.CmtCard>
+                <CardHeader title="Statistiques" />
 
                 <Grid container spacing={0} sx={{ backgroundColor: '#F7F7F7', paddingTop: -15 }}>
                     {Object.entries(data.numbers).map(([tabName, val], index) => {
                         return (
-                            <Grid
-                                key={index}
-                                item
-                                xs={4}
-                                sm={3}
-                                md={2}
-                                sx={{ display: 'flex', justifyContent: 'center' }}
-                            >
+                            <Grid key={index} item xs={4} sm={3} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Button
                                     variant="text"
                                     onClick={() => setTab(tabName)}
@@ -129,20 +94,12 @@ export const SecondCardDashboard = ({ data }) => {
                                     sx={{
                                         borderBottomRightRadius: tab === tabName && 0,
                                         borderBottomLeftRadius: tab === tabName && 0,
-                                        borderBottom: (theme) =>
-                                            tab === tabName
-                                                ? `1px solid ${theme.palette.primary.main}`
-                                                : 'none',
-                                        color: (theme) =>
-                                            tab === tabName
-                                                ? theme.palette.primary.main
-                                                : colorProps,
+                                        borderBottom: (theme) => (tab === tabName ? `1px solid ${theme.palette.primary.main}` : 'none'),
+                                        color: (theme) => (tab === tabName ? theme.palette.primary.main : colorProps),
                                     }}
                                 >
                                     <Box>
-                                        <Component.GraphTabTitle variant="h6">
-                                            {val.label}
-                                        </Component.GraphTabTitle>
+                                        <Component.GraphTabTitle variant="h6">{val.label}</Component.GraphTabTitle>
                                         <Typography variant="body1" fontSize={10} fontWeight={500}>
                                             {val.amount} {val.unit}
                                         </Typography>

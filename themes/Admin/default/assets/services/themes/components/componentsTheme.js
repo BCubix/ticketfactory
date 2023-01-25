@@ -1,6 +1,169 @@
+import { alpha } from '@mui/system';
 import { defaultFamily, themeBreakpoints, titleDefaultFamily } from '../variables/themeVariables';
 
+export const typographyTheme = {
+    fontFamily: defaultFamily,
+    fontSize: 14,
+    h1: {
+        fontSize: '1.5rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        color: '#37373C',
+        margin: '0 0 .5rem',
+    },
+    h2: {
+        fontSize: '1.4rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        color: '#37373C',
+        margin: '0 0 .5rem',
+    },
+    h3: {
+        fontSize: '1.25rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        color: '#37373C',
+        margin: '0 0 .5rem',
+    },
+    h4: {
+        fontSize: '1.1rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        color: '#37373C',
+        margin: '0 0 .5rem',
+    },
+    h5: {
+        fontSize: '1rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        color: '#37373C',
+        margin: '0 0 .5rem',
+    },
+    h6: {
+        fontSize: '.875rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        color: '#37373C',
+        margin: '0 0 .5rem',
+    },
+    body1: {
+        fontSize: '.875rem',
+    },
+    body2: {
+        fontSize: 14,
+        fontWeight: 400,
+        letterSpacing: 0.25,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    },
+};
+
 export const componentsTheme = {
+    MuiTableCell: {
+        styleOverrides: {
+            root: {
+                borderColor: alpha('#000', 0.1),
+            },
+        },
+    },
+    MuiMenuItem: {
+        styleOverrides: {
+            root: {
+                minHeight: 'auto',
+            },
+        },
+    },
+    MuiCard: {
+        styleOverrides: {
+            root: {
+                borderRadius: 12,
+                boxShadow: `0 0.5rem 1.25rem ${alpha('#7352C7', 0.175)}`,
+            },
+        },
+    },
+    MuiCardContent: {
+        styleOverrides: {
+            root: {
+                padding: 24,
+            },
+        },
+    },
+    MuiCardHeader: {
+        styleOverrides: {
+            root: {
+                padding: '18px 24px',
+            },
+            title: {
+                fontSize: '1.1rem',
+                marginBottom: 0,
+            },
+            subheader: {
+                margin: '4px 0 0',
+            },
+            action: {
+                margin: 0,
+            },
+        },
+    },
+    MuiCardActions: {
+        styleOverrides: {
+            root: {
+                padding: '8px 24px',
+            },
+        },
+    },
+    MuiChip: {
+        styleOverrides: {
+            sizeSmall: {
+                height: 22,
+                fontSize: 12,
+            },
+        },
+    },
+    MuiButton: {
+        styleOverrides: {
+            root: {
+                fontWeight: 400,
+                letterSpacing: 1,
+            },
+            sizeSmall: {
+                fontSize: '12px',
+            },
+        },
+    },
+    MuiPopover: {
+        styleOverrides: {
+            paper: {
+                borderRadius: 8,
+            },
+        },
+    },
+    MuiDialogTitle: {
+        styleOverrides: {
+            root: {
+                fontSize: 18,
+            },
+        },
+    },
+    MuiDialogActions: {
+        styleOverrides: {
+            root: {
+                padding: '16px 24px',
+            },
+        },
+    },
+    MuiAvatarGroup: {
+        styleOverrides: {
+            avatar: {
+                backgroundColor: '#757575',
+                fontSize: 16,
+            },
+        },
+    },
+};
+
+/* export const componentsTheme = {
     MuiTypography: {
         styleOverrides: {
             h1: {
@@ -76,3 +239,4 @@ export const componentsTheme = {
         },
     },
 };
+ */

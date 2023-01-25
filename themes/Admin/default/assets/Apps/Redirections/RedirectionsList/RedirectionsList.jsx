@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Box, CardContent, Typography } from '@mui/material';
 import { redirectionsSelector } from '@Redux/redirections/redirectionsSlice';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
 import { changeRedirectionsFilters, getRedirectionsAction } from '@Redux/redirections/redirectionsSlice';
@@ -46,25 +46,16 @@ export const RedirectionsList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des redirections{' '}
-                                {redirections &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + redirections.length
-                                    } sur ${total})`}
+                                {redirections && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + redirections.length} sur ${total})`}
                             </Typography>
-                            <Component.CreateButton
-                                variant="contained"
-                                onClick={() => navigate(Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH)}
-                            >
+                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH)}>
                                 Nouveau
                             </Component.CreateButton>
                         </Box>
 
-                        <Component.RedirectionsFilters
-                            filters={filters}
-                            changeFilters={(values) => dispatch(changeRedirectionsFilters(values))}
-                        />
+                        <Component.RedirectionsFilters filters={filters} changeFilters={(values) => dispatch(changeRedirectionsFilters(values))} />
 
                         <Component.ListTable
                             table={TableColumn.RedirectionsList}
@@ -74,37 +65,25 @@ export const RedirectionsList = () => {
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
-                            changeFilters={(newFilters) =>
-                                dispatch(changeRedirectionsFilters(newFilters))
-                            }
+                            changeFilters={(newFilters) => dispatch(changeRedirectionsFilters(newFilters))}
                         />
 
                         <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changeRedirectionsFilters({ ...filters }, newValue))
-                            }
+                            setPage={(newValue) => dispatch(changeRedirectionsFilters({ ...filters }, newValue))}
                             setLimit={(newValue) => {
-                                dispatch(
-                                    changeRedirectionsFilters({ ...filters, limit: newValue })
-                                );
+                                dispatch(changeRedirectionsFilters({ ...filters, limit: newValue }));
                             }}
                             length={redirections?.length}
                         />
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
-            >
+            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette redirection ?
-                    </Typography>
+                    <Typography component="p">Êtes-vous sûr de vouloir supprimer cette redirection ?</Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>

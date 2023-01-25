@@ -45,12 +45,12 @@ export const App = () => {
 
     return (
         <ThemeProvider theme={createTheme(defaultTheme)}>
-            <Component.CmtLayoutProvider>
+            <Component.AppProvider>
                 <BrowserRouter>
                     <Component.Routing />
                     <NotificationContainer />
                 </BrowserRouter>
-            </Component.CmtLayoutProvider>
+            </Component.AppProvider>
         </ThemeProvider>
     );
 };

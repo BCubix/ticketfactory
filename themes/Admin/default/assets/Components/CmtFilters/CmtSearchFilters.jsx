@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Chip, Typography } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const CmtSearchFilters = ({ value, setValue, title, label, icon = null, id }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -16,6 +16,7 @@ export const CmtSearchFilters = ({ value, setValue, title, label, icon = null, i
                     id={id ? id + 'Chip' : null}
                     onClick={(e) => setAnchorEl(e.currentTarget)}
                     onDelete={value ? () => setValue('') : null}
+                    sx={{ backgroundColor: '#FFFFFF' }}
                 />
             </Box>
 
@@ -25,12 +26,7 @@ export const CmtSearchFilters = ({ value, setValue, title, label, icon = null, i
                         {title}
                     </Typography>
 
-                    <Component.CmtTextField
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        id={id ? id + 'Search' : null}
-                        label={label}
-                    />
+                    <Component.CmtTextField value={value} onChange={(e) => setValue(e.target.value)} id={id ? id + 'Search' : null} label={label} />
                 </Box>
             </Component.CmtPopover>
         </Box>

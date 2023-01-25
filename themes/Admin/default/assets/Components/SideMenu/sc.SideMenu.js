@@ -1,4 +1,4 @@
-import { ListItemButton, ListSubheader, Typography } from '@mui/material';
+import { ListItemButton, ListSubheader } from '@mui/material';
 import { alpha, styled } from '@mui/system';
 
 export const MenuTitle = styled(ListSubheader)`
@@ -8,6 +8,7 @@ export const MenuTitle = styled(ListSubheader)`
     text-transform: uppercase;
     bgcolor: transparent;
     padding: 30px 30px 15px;
+    color: ${(props) => props.theme.palette.sidebar.menuTitleText};
 `;
 
 export const MenuItemButton = styled(ListItemButton)`

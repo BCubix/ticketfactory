@@ -168,7 +168,6 @@ import { CmtSimpleSelectFilters } from '@Components/CmtFilters/CmtSimpleSelectFi
 import { ClearBooleanButton } from '@Components/CmtFilters/sc.Filters';
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
 import { CmtHistoryDate } from '@Components/CmtHistoryDate/CmtHistoryDate';
-import { CmtLayoutProvider } from '@Components/CmtLayoutProvider/CmtLayoutProvider';
 import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
 import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { TitleTypography } from '@Components/CmtPage/CmtPageTitle/sc.TitleTypography';
@@ -201,6 +200,7 @@ import { LanguagesList } from '@Apps/Languages/LanguagesList/LanguagesList';
 import { CreateLanguage } from '@Apps/Languages/CreateLanguage/CreateLanguage';
 import { EditLanguage } from '@Apps/Languages/EditLanguage/EditLanguage';
 import { LanguagesForm } from '@Apps/Languages/LanguagesForm/LanguagesForm';
+import { AppProvider } from '@/Config/AppProvider';
 
 const ComponentObj = {
     App: App,
@@ -414,7 +414,7 @@ const ComponentObj = {
     SwitchActiveLabel: SwitchActiveLabel,
     SwitchTextLabel: SwitchTextLabel,
     CmtFormBlock: CmtFormBlock,
-    CmtLayoutProvider: CmtLayoutProvider,
+    AppProvider: AppProvider,
     CmtHistoryDate: CmtHistoryDate,
     CmtMediaElement: CmtMediaElement,
     CmtPageTitle: CmtPageTitle,

@@ -1,34 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { NotificationManager } from "react-notifications";
+import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 import { Box } from '@mui/system';
 import {
     Button,
     CardContent,
     CircularProgress,
-    Dialog, DialogActions,
+    Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
     FormControl,
     FormControlLabel,
     Radio,
     RadioGroup,
-    Typography
+    Typography,
 } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
 import { getModulesAction, modulesSelector } from '@Redux/modules/modulesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
 
-const ACTION_DISABLE = "Désactiver";
-const ACTION_UNINSTALL = "Désinstaller";
-const ACTION_UNINSTALL_DELETE = "Désinstaller & Supprimer";
+const ACTION_DISABLE = 'Désactiver';
+const ACTION_UNINSTALL = 'Désinstaller';
+const ACTION_UNINSTALL_DELETE = 'Désinstaller & Supprimer';
 
 export const ModulesList = () => {
     const { loading, modules, error } = useSelector(modulesSelector);
@@ -51,7 +52,7 @@ export const ModulesList = () => {
         dispatch(getModulesAction());
         NotificationManager.success('Votre module a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
         setTimeout(() => window.location.reload(), 1000);
-    }
+    };
 
     const handleActive = async (name) => {
         const check = await Api.authApi.checkIsAuth();
@@ -76,7 +77,7 @@ export const ModulesList = () => {
         NotificationManager.success('Le module a bien été activé.', 'Succès', Constant.REDIRECTION_TIME);
         dispatch(getModulesAction());
         setTimeout(() => window.location.reload(), 1000);
-    }
+    };
 
     const handleDisable = async (name, action) => {
         const check = await Api.authApi.checkIsAuth();
@@ -96,10 +97,7 @@ export const ModulesList = () => {
             setLoadingDialog(`Désinstallation et suppression du module : ${name}`);
         }
 
-        const result = await Api.modulesApi.disableModule(
-            name,
-            action === ACTION_DISABLE ? 0 : action === ACTION_UNINSTALL ? 1 : 2
-        );
+        const result = await Api.modulesApi.disableModule(name, action === ACTION_DISABLE ? 0 : action === ACTION_UNINSTALL ? 1 : 2);
 
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -112,14 +110,16 @@ export const ModulesList = () => {
 
         const message = result.module
             ? 'Le module a bien été désactivé.'
-            : action === ACTION_UNINSTALL ? 'Le module a bien été désinstallé.' : 'Le module a bien été désinstallé et supprimer.';
+            : action === ACTION_UNINSTALL
+            ? 'Le module a bien été désinstallé.'
+            : 'Le module a bien été désinstallé et supprimer.';
 
         NotificationManager.success(message, 'Succès', Constant.REDIRECTION_TIME);
 
         setActionDelete(ACTION_DISABLE);
         dispatch(getModulesAction());
         setTimeout(() => window.location.reload(), 1000);
-    }
+    };
 
     return (
         <>
@@ -127,7 +127,7 @@ export const ModulesList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des modules
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
@@ -145,21 +145,14 @@ export const ModulesList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
-            <Dialog
-                fullWidth
-                maxWidth="md"
-                open={createDialog}
-                onClose={() => setCreateDialog(false)}
-            >
+            <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
                     <Component.UploadModule
                         handleSubmit={handleSubmit}
                         handleAdded={() => {
                             setCreateDialog(false);
-                            setLoadingDialog(
-                                "Vérification et installation du fichier zip...\n" +
-                                "Activation et installation du module...");
+                            setLoadingDialog('Vérification et installation du fichier zip...\n' + 'Activation et installation du module...');
                         }}
                         handleFail={(error) => {
                             setLoadingDialog(null);
@@ -169,57 +162,32 @@ export const ModulesList = () => {
                     />
                 </DialogContent>
             </Dialog>
-            <Dialog
-                open={!!deleteDialog}
-                onClose={() => setDeleteDialog(null)}
-            >
-                <DialogTitle sx={{ fontSize: 20 }}>
-                    Désactivation, désinstallation et/ou suppression
-                </DialogTitle>
+            <Dialog open={!!deleteDialog} onClose={() => setDeleteDialog(null)}>
+                <DialogTitle sx={{ fontSize: 20 }}>Désactivation, désinstallation et/ou suppression</DialogTitle>
                 <DialogContent dividers>
                     <Box textAlign="left">
                         <FormControl>
-                            <RadioGroup
-                                name="Action"
-                                value={actionDelete}
-                                onChange={(event) => setActionDelete(event.target.value)}
-                            >
-                                <FormControlLabel
-                                    value={ACTION_DISABLE}
-                                    control={<Radio />}
-                                    label={ACTION_DISABLE}
-                                />
+                            <RadioGroup name="Action" value={actionDelete} onChange={(event) => setActionDelete(event.target.value)}>
+                                <FormControlLabel value={ACTION_DISABLE} control={<Radio />} label={ACTION_DISABLE} />
                                 <Typography variant="h5">
-                                    {
-                                        "Désactivation des fonctionnalités apportées par le module." + " " +
-                                        "Le paramétrage et les données saisies sont conservées pour une réactivation ultérieure."
-                                    }
+                                    {'Désactivation des fonctionnalités apportées par le module.' +
+                                        ' ' +
+                                        'Le paramétrage et les données saisies sont conservées pour une réactivation ultérieure.'}
                                 </Typography>
-                                <FormControlLabel
-                                    value={ACTION_UNINSTALL}
-                                    control={<Radio />}
-                                    label={ACTION_UNINSTALL}
-                                />
+                                <FormControlLabel value={ACTION_UNINSTALL} control={<Radio />} label={ACTION_UNINSTALL} />
                                 <Typography variant="h5">
-                                    {
-                                        "Désactivation du module et suppression de son paramétrage ainsi que des données saisies." + " " +
-                                        "Le module reste présent sur le serveur et pourra être réinstallé ultérieurement, mais il devra être configuré à nouveau."
-                                    }
+                                    {'Désactivation du module et suppression de son paramétrage ainsi que des données saisies.' +
+                                        ' ' +
+                                        'Le module reste présent sur le serveur et pourra être réinstallé ultérieurement, mais il devra être configuré à nouveau.'}
                                 </Typography>
-                                <FormControlLabel
-                                    value={ACTION_UNINSTALL_DELETE}
-                                    control={<Radio />}
-                                    label={ACTION_UNINSTALL_DELETE}
-                                />
+                                <FormControlLabel value={ACTION_UNINSTALL_DELETE} control={<Radio />} label={ACTION_UNINSTALL_DELETE} />
                                 <Typography variant="h5">
-                                    {
-                                        "Désinstallation du module et suppression de son dossier du serveur." + " " +
-                                        "Pour utiliser le module ultérieurement, vous devrez le télécharger, l'installer et le configurer à nouveau."
-                                    }
+                                    {'Désinstallation du module et suppression de son dossier du serveur.' +
+                                        ' ' +
+                                        "Pour utiliser le module ultérieurement, vous devrez le télécharger, l'installer et le configurer à nouveau."}
                                 </Typography>
                             </RadioGroup>
                         </FormControl>
-
                     </Box>
                 </DialogContent>
 
@@ -229,27 +197,19 @@ export const ModulesList = () => {
                             Annuler
                         </Button>
                         <Button color="error" onClick={() => handleDisable(deleteDialog, actionDelete)}>
-                            { actionDelete }
+                            {actionDelete}
                         </Button>
                     </Box>
                 </DialogActions>
             </Dialog>
-            <Component.DeleteDialog
-                open={!!removeDialog}
-                onCancel={() => setRemoveDialog(null)}
-                onDelete={() => handleDisable(removeDialog, ACTION_UNINSTALL_DELETE)}
-            >
+            <Component.DeleteDialog open={!!removeDialog} onCancel={() => setRemoveDialog(null)} onDelete={() => handleDisable(removeDialog, ACTION_UNINSTALL_DELETE)}>
                 <Box textAlign="center" py={3}>
                     <Typography>Êtes-vous sûr de vouloir supprimer ce module ?</Typography>
 
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
-            <Dialog
-                fullWidth
-                open={loadingDialog !== null}
-                sx={{ display: 'flex', justifyContent: 'center' }}
-            >
+            <Dialog fullWidth open={loadingDialog !== null} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DialogTitle sx={{ fontSize: 17 }}>{loadingDialog}</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -259,4 +219,4 @@ export const ModulesList = () => {
             </Dialog>
         </>
     );
-}
+};

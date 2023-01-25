@@ -56,7 +56,7 @@ export const PagesList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des pages {pages && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + pages.length} sur ${total})`}
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => navigate(Constant.PAGES_BASE_PATH + Constant.CREATE_PATH)}>

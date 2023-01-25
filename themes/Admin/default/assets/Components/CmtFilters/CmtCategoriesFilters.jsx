@@ -46,22 +46,12 @@ const displayCategoriesOptions = (list, values, setValue, id) => {
                 </Box>
             }
         >
-            {Array.isArray(list?.children) &&
-                list?.children?.map((item) => displayCategoriesOptions(item, values, setValue, id))}
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setValue, id))}
         </TreeItem>
     );
 };
 
-export const CmtCategoriesFilters = ({
-    list,
-    value,
-    setValue,
-    title,
-    label,
-    icon,
-    getList,
-    id,
-}) => {
+export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon, getList, id }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const parsedValue = value ? value?.split(',') : [];
@@ -108,6 +98,7 @@ export const CmtCategoriesFilters = ({
                         setAnchorEl(e.currentTarget);
                     }}
                     onDelete={value ? () => setValue('') : null}
+                    sx={{ backgroundColor: '#FFFFFF' }}
                 />
             </Box>
 

@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { NotificationManager } from "react-notifications";
+import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Box } from '@mui/system';
-import {
-    CardActions,
-    CardContent,
-    CardMedia,
-    CircularProgress,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Typography
-} from '@mui/material';
+import { CardActions, CardContent, CardMedia, CircularProgress, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { getThemesAction, themesSelector } from '@Redux/themes/themesSlice';
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const ThemesList = () => {
     const { loading, themes, error } = useSelector(themesSelector);
@@ -55,7 +46,7 @@ export const ThemesList = () => {
         dispatch(getThemesAction());
         NotificationManager.success('Votre thème a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
         setTimeout(() => window.location.reload(), 1000);
-    }
+    };
 
     const handleSelect = async (name) => {
         apiMiddleware(dispatch, async () => {
@@ -73,7 +64,7 @@ export const ThemesList = () => {
             NotificationManager.success('Le thème choisi est devenue le thème principal.', 'Succès', Constant.REDIRECTION_TIME);
             setTimeout(() => window.location.reload(), 1000);
         });
-    }
+    };
 
     const handleDelete = async (name) => {
         apiMiddleware(dispatch, async () => {
@@ -89,7 +80,7 @@ export const ThemesList = () => {
             setLoadingDialog(null);
             dispatch(getThemesAction());
         });
-    }
+    };
 
     if (!themes) {
         return <></>;
@@ -101,7 +92,7 @@ export const ThemesList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des thèmes
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
@@ -112,13 +103,7 @@ export const ThemesList = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
                             {themes.map((theme, index) => (
                                 <Component.CmtCard sx={{ width: 300, marginInline: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }} key={index}>
-                                    <CardMedia
-                                        component='img'
-                                        alt='preview'
-                                        height={250}
-                                        image={theme.previewUrl}
-                                        sx={{ objectFit: 'cover', objectPosition: 'top' }}
-                                    />
+                                    <CardMedia component="img" alt="preview" height={250} image={theme.previewUrl} sx={{ objectFit: 'cover', objectPosition: 'top' }} />
                                     <CardContent>
                                         <Typography variant="h5" fontSize={15} align={'center'}>
                                             {theme.name}
@@ -127,7 +112,7 @@ export const ThemesList = () => {
                                             {`Par ${theme.author.name} (${theme.version})`}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ display: 'flex', justifyContent: 'center'}}>
+                                    <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
                                         {theme.name !== themeName && (
                                             <>
                                                 <Component.ActionFabButton
@@ -148,10 +133,10 @@ export const ThemesList = () => {
                                                     size="small"
                                                     aria-label="Supprimer"
                                                     onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setDeleteDialog(theme.name);
-                                                }}
-                                                    >
+                                                        e.stopPropagation();
+                                                        setDeleteDialog(theme.name);
+                                                    }}
+                                                >
                                                     <DeleteIcon />
                                                 </Component.DeleteFabButton>
                                             </>
@@ -163,21 +148,14 @@ export const ThemesList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
-            <Dialog
-                fullWidth
-                maxWidth="md"
-                open={createDialog}
-                onClose={() => setCreateDialog(false)}
-            >
+            <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
                     <Component.UploadTheme
                         handleSubmit={handleSubmit}
                         handleAdded={() => {
                             setCreateDialog(false);
-                            setLoadingDialog(
-                                "Vérification et installation du fichier zip...\n" +
-                                "Activation et installation du thème...");
+                            setLoadingDialog('Vérification et installation du fichier zip...\n' + 'Activation et installation du thème...');
                         }}
                         handleFail={(error) => {
                             setLoadingDialog(null);
@@ -186,22 +164,14 @@ export const ThemesList = () => {
                     />
                 </DialogContent>
             </Dialog>
-            <Component.DeleteDialog
-                open={!!deleteDialog}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
-            >
+            <Component.DeleteDialog open={!!deleteDialog} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
                     <Typography>Êtes-vous sûr de vouloir supprimer ce thème ?</Typography>
 
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
-            <Dialog
-                fullWidth
-                open={loadingDialog !== null}
-                sx={{ display: 'flex', justifyContent: 'center' }}
-            >
+            <Dialog fullWidth open={loadingDialog !== null} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DialogTitle sx={{ fontSize: 20 }}>{loadingDialog}</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -211,4 +181,4 @@ export const ThemesList = () => {
             </Dialog>
         </>
     );
-}
+};

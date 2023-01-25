@@ -4,21 +4,16 @@ import { useNavigate } from 'react-router-dom';
 
 import { Box, CardContent, Typography } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { TableColumn } from "@/AdminService/TableColumn";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { TableColumn } from '@/AdminService/TableColumn';
 
-import {
-    changeContactRequestsFilters,
-    contactRequestsSelector,
-    getContactRequestsAction
-} from '@Redux/contactRequests/contactRequestsSlice';
+import { changeContactRequestsFilters, contactRequestsSelector, getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const ContactRequestsList = () => {
-    const { loading, contactRequests, filters, total, error } =
-        useSelector(contactRequestsSelector);
+    const { loading, contactRequests, filters, total, error } = useSelector(contactRequestsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -51,34 +46,21 @@ export const ContactRequestsList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des demandes de contact{' '}
-                                {contactRequests &&
-                                    `(${(filters.page - 1) * filters.limit + 1} - ${
-                                        (filters.page - 1) * filters.limit + contactRequests.length
-                                    } sur ${total})`}
+                                {contactRequests && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contactRequests.length} sur ${total})`}
                             </Typography>
-                            <Component.CreateButton
-                                variant="contained"
-                                onClick={() => navigate(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH)}
-                            >
+                            <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH)}>
                                 Nouveau
                             </Component.CreateButton>
                         </Box>
 
-                        <Component.ContactRequestsFilters
-                            filters={filters}
-                            changeFilters={(values) =>
-                                dispatch(changeContactRequestsFilters(values))
-                            }
-                        />
+                        <Component.ContactRequestsFilters filters={filters} changeFilters={(values) => dispatch(changeContactRequestsFilters(values))} />
                         <Component.ListTable
                             filters={filters}
                             table={TableColumn.ContactRequestsList}
                             list={contactRequests}
-                            changeFilters={(newFilters) =>
-                                dispatch(changeContactRequestsFilters(newFilters))
-                            }
+                            changeFilters={(newFilters) => dispatch(changeContactRequestsFilters(newFilters))}
                             onEdit={(id) => {
                                 navigate(`${Constant.CONTACT_REQUEST_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
@@ -89,28 +71,18 @@ export const ContactRequestsList = () => {
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
-                            setPage={(newValue) =>
-                                dispatch(changeContactRequestsFilters({ ...filters }, newValue))
-                            }
+                            setPage={(newValue) => dispatch(changeContactRequestsFilters({ ...filters }, newValue))}
                             setLimit={(newValue) => {
-                                dispatch(
-                                    changeContactRequestsFilters({ ...filters, limit: newValue })
-                                );
+                                dispatch(changeContactRequestsFilters({ ...filters, limit: newValue }));
                             }}
                             length={contactRequests?.length}
                         />
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => setDeleteDialog(null)}
-                onDelete={() => handleDelete(deleteDialog)}
-            >
+            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Êtes-vous sûr de vouloir supprimer cette demande de contact ?
-                    </Typography>
+                    <Typography component="p">Êtes-vous sûr de vouloir supprimer cette demande de contact ?</Typography>
 
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>

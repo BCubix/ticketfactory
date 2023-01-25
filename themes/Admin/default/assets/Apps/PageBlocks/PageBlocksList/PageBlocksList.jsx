@@ -52,7 +52,7 @@ export const PageBlocksList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des blocs{' '}
                                 {pageBlocks && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + pageBlocks.length} sur ${total})`}
                             </Typography>

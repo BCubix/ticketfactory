@@ -1,30 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-    Box,
-    Chip,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Box, Chip, CircularProgress, FormControl, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-export const CmtSimpleSelectFilters = ({
-    list,
-    value,
-    setValue,
-    title,
-    label,
-    icon,
-    parameters,
-    getList,
-    id,
-}) => {
+export const CmtSimpleSelectFilters = ({ list, value, setValue, title, label, icon, parameters, getList, id }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const [displayList, setDisplayList] = useState(null);
@@ -70,6 +50,7 @@ export const CmtSimpleSelectFilters = ({
                         setAnchorEl(e.currentTarget);
                     }}
                     onDelete={value ? () => setValue('') : null}
+                    sx={{ backgroundColor: '#FFFFFF' }}
                 />
             </Box>
 
@@ -109,11 +90,7 @@ export const CmtSimpleSelectFilters = ({
                                 </Box>
                             )}
                             {displayList?.map((item, index) => (
-                                <MenuItem
-                                    id={id ? id + 'Value-' + item[parameters.nameValue] : null}
-                                    key={index}
-                                    value={item[parameters.nameValue]}
-                                >
+                                <MenuItem id={id ? id + 'Value-' + item[parameters.nameValue] : null} key={index} value={item[parameters.nameValue]}>
                                     <ListItemText primary={item[parameters?.nameLabel]} />
                                 </MenuItem>
                             ))}

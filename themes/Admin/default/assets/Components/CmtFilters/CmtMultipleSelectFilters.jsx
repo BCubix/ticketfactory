@@ -1,31 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-    Box,
-    Checkbox,
-    Chip,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    ListItemText,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Box, Checkbox, Chip, CircularProgress, FormControl, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-export const CmtMultipleSelectFilters = ({
-    list,
-    value,
-    setValue,
-    title,
-    label,
-    icon,
-    parameters,
-    getList,
-    id,
-}) => {
+export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, icon, parameters, getList, id }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const [parsedValue, setParsedValue] = useState([]);
@@ -45,9 +24,7 @@ export const CmtMultipleSelectFilters = ({
         value?.split(',')?.forEach((el) => {
             const searchEl = parseInt(el) || el;
 
-            const findList = displayList?.find(
-                (it) => it[parameters?.nameValue || 'id'] === searchEl
-            );
+            const findList = displayList?.find((it) => it[parameters?.nameValue || 'id'] === searchEl);
 
             if (findList) {
                 val.push(findList);
@@ -104,6 +81,7 @@ export const CmtMultipleSelectFilters = ({
                         setAnchorEl(e.currentTarget);
                     }}
                     onDelete={value ? () => setValue('') : null}
+                    sx={{ backgroundColor: '#FFFFFF' }}
                 />
             </Box>
 
@@ -124,11 +102,7 @@ export const CmtMultipleSelectFilters = ({
                             id={id ? id + 'Select' : null}
                             value={parsedValue}
                             onChange={(e) => {
-                                setValue(
-                                    e.target.value
-                                        .map((elem) => elem[parameters?.nameValue])
-                                        .join(',')
-                                );
+                                setValue(e.target.value.map((elem) => elem[parameters?.nameValue]).join(','));
                             }}
                             renderValue={() => {
                                 return displayValue;
@@ -151,18 +125,8 @@ export const CmtMultipleSelectFilters = ({
                                 </Box>
                             )}
                             {displayList?.map((item, index) => (
-                                <MenuItem
-                                    key={index}
-                                    id={id ? id + 'Value-' + item[parameters.nameValue] : null}
-                                    value={item}
-                                >
-                                    <Checkbox
-                                        checked={
-                                            parsedValue
-                                                ?.map((elem) => elem[parameters.nameValue])
-                                                .indexOf(item[parameters.nameValue]) > -1
-                                        }
-                                    />
+                                <MenuItem key={index} id={id ? id + 'Value-' + item[parameters.nameValue] : null} value={item}>
+                                    <Checkbox checked={parsedValue?.map((elem) => elem[parameters.nameValue]).indexOf(item[parameters.nameValue]) > -1} />
                                     <ListItemText primary={item[parameters?.nameLabel]} />
                                 </MenuItem>
                             ))}

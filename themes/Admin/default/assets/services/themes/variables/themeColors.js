@@ -1,3 +1,6 @@
+import { headerTheme } from './headerTheme';
+import { mainPartTheme } from './mainPartTheme';
+import { sidebarTheme } from './sidebarTheme';
 import { defaultFamily } from './themeVariables';
 
 export const themeColors = {
@@ -66,5 +69,9 @@ export const themeColors = {
         pictoColor: '#2E71B3',
     },
 
-    cardBackground: '#EBF1FF',
+    cardBackground: '#FFFFFF',
+
+    main: mainPartTheme,
+    header: headerTheme,
+    sidebar: sidebarTheme,
 };

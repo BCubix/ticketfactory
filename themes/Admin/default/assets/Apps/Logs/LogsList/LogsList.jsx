@@ -97,10 +97,7 @@ export const LogsList = () => {
         const result = await Api.logsApi.getLogs();
 
         if (!result.result) {
-            NotificationManager.error(
-                'Une erreur est survenue, vous pouvez tenter de rafraichir la page.',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenue, vous pouvez tenter de rafraichir la page.', Constant.REDIRECTION_TIME);
 
             return;
         }
@@ -117,7 +114,7 @@ export const LogsList = () => {
             <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                 <CardContent>
                     <Box display="flex" justifyContent="space-between">
-                        <Typography component="h2" variant="h5" fontSize={20}>
+                        <Typography component="h2" variant="h5">
                             Liste des logs
                         </Typography>
                     </Box>

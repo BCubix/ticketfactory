@@ -17,6 +17,7 @@ export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null, 
                     label={label}
                     onClick={(e) => setAnchorEl(e.currentTarget)}
                     onDelete={null !== value ? () => setValue(null) : null}
+                    sx={{ backgroundColor: '#FFFFFF' }}
                 />
             </Box>
 
@@ -47,19 +48,9 @@ export const CmtBooleanFilters = ({ value, setValue, title, label, icon = null, 
                         }}
                         label={label}
                     >
-                        <FormControlLabel
-                            value={false}
-                            id={id ? id + 'Value-False' : null}
-                            control={<Radio />}
-                            label={'Non'}
-                        />
+                        <FormControlLabel value={false} id={id ? id + 'Value-False' : null} control={<Radio />} label={'Non'} />
 
-                        <FormControlLabel
-                            value={true}
-                            id={id ? id + 'Value-True' : null}
-                            control={<Radio />}
-                            label={'Oui'}
-                        />
+                        <FormControlLabel value={true} id={id ? id + 'Value-True' : null} control={<Radio />} label={'Oui'} />
                     </RadioGroup>
                 </Box>
             </Component.CmtPopover>

@@ -127,7 +127,7 @@ export const CategoriesList = () => {
                 <Component.CmtCard sx={{ width: '100%', mt: 2 }}>
                     <CardContent>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography component="h2" variant="h5" fontSize={20}>
+                            <Typography component="h2" variant="h5">
                                 Liste des catégories
                             </Typography>
                             <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CATEGORIES_BASE_PATH + Constant.CREATE_PATH)}>
