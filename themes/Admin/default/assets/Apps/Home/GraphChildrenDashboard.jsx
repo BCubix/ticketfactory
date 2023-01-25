@@ -1,8 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis } from 'recharts';
+import { useTheme } from '@emotion/react';
 
 export const GraphChildrenDashboard = ({ values }) => {
+    const theme = useTheme();
+
     return (
         <ResponsiveContainer height={120}>
             <AreaChart
@@ -11,14 +14,14 @@ export const GraphChildrenDashboard = ({ values }) => {
             >
                 <defs>
                     <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="1%" stopColor="#EAE7FF" />
+                        <stop offset="1%" stopColor={theme.palette.primary.light} />
                         <stop offset="99%" stopColor="#ffffff" />
                     </linearGradient>
                 </defs>
 
                 <CartesianGrid strokeDasharray="6 1 2" horizontal={false} strokeOpacity={0.7} />
                 <XAxis dataKey="key" hide />
-                <Area type="monotone" dataKey={'value'} stackId="2" strokeWidth={2} fillOpacity={0.7} stroke={'#51459E'} fill="url(#colorUv)" />
+                <Area type="monotone" dataKey={'value'} stackId="2" strokeWidth={2} fillOpacity={0.7} stroke={theme.palette.primary.main} fill="url(#colorUv)" />
             </AreaChart>
         </ResponsiveContainer>
     );

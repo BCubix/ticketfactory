@@ -13,7 +13,7 @@ import { Component } from '@/AdminService/Component';
 
 export const FirstCardDashboard = ({ data }) => {
     const theme = useTheme();
-    const colorProps = theme.palette.secondary.main;
+    const colorProps = theme.palette.primary.main;
 
     const list = [
         {
@@ -45,7 +45,7 @@ export const FirstCardDashboard = ({ data }) => {
 
     return (
         <Component.CmtCard sx={{ position: 'relative' }} overflow="hidden">
-            <CardHeader title="Informations générales" />
+            <Component.CmtCardHeader title="Informations générales" />
             <CardContent sx={{ position: 'relative', p: 0 }}>
                 <List disablePadding>
                     {list.map(({ icon, title, info }, index) => (

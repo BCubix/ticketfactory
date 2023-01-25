@@ -10,7 +10,6 @@ export const typographyTheme = {
         lineHeight: 1.2,
         fontWeight: 400,
         color: '#37373C',
-        margin: '0 0 .5rem',
         fontFamily: titleDefaultFamily,
     },
     h2: {
@@ -26,28 +25,24 @@ export const typographyTheme = {
         lineHeight: 1.2,
         fontWeight: 400,
         color: '#37373C',
-        margin: '0 0 .5rem',
     },
     h4: {
         fontSize: '1.1rem',
         lineHeight: 1.2,
         fontWeight: 400,
         color: '#37373C',
-        margin: '0',
     },
     h5: {
         fontSize: '1rem',
         lineHeight: 1.2,
         fontWeight: 400,
         color: '#37373C',
-        margin: '0 0 .5rem',
     },
     h6: {
         fontSize: '.875rem',
         lineHeight: 1.2,
         fontWeight: 400,
         color: '#37373C',
-        margin: '0 0 .5rem',
     },
     body1: {
         fontSize: '.875rem',

@@ -16,7 +16,7 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const SecondCardDashboard = ({ data }) => {
     const theme = useTheme();
-    const colorProps = theme.palette.secondary.main;
+    const colorProps = theme.palette.primary.main;
 
     const dispatch = useDispatch();
 
@@ -47,7 +47,7 @@ export const SecondCardDashboard = ({ data }) => {
     return (
         <>
             <Component.CmtCard sx={{ marginBottom: 4 }}>
-                <CardHeader title="Période sélectionnée" />
+                <Component.CmtCardHeader title="Période sélectionnée" />
 
                 <CardContent>
                     <Grid container spacing={4}>
@@ -80,7 +80,7 @@ export const SecondCardDashboard = ({ data }) => {
             </Component.CmtCard>
 
             <Component.CmtCard>
-                <CardHeader title="Statistiques" />
+                <Component.CmtCardHeader title="Statistiques" />
 
                 <Grid container spacing={0} sx={{ backgroundColor: '#F7F7F7', paddingTop: -15 }}>
                     {Object.entries(data.numbers).map(([tabName, val], index) => {

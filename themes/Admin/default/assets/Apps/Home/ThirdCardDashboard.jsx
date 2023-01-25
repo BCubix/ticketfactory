@@ -43,7 +43,7 @@ export const ThirdCardDashboard = ({ data }) => {
     return (
         <>
             <Component.CmtCard>
-                <CardHeader title="Informations générales" />
+                <Component.CmtCardHeader title="Informations générales" />
                 <CardContent sx={{ position: 'relative', p: 0 }}>
                     <List disablePadding>
                         {data.news?.map(({ title, date, desc, url }, index) => (
@@ -80,7 +80,7 @@ export const ThirdCardDashboard = ({ data }) => {
             </Component.CmtCard>
 
             <Component.CmtCard sx={{ marginTop: 4 }}>
-                <CardHeader title="Notes" />
+                <Component.CmtCardHeader title="Notes" />
                 {data.notes && (
                     <Box sx={{ padding: 2 }}>
                         {editNote ? (

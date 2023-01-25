@@ -17,6 +17,7 @@ export const MenuItemButton = styled(ListItemButton)`
     margin: 0;
     color: ${(props) => (props.isActive ? props.theme.palette.primary.main : props.theme.palette.nav.mainColor)};
     background-color: ${(props) => props.isActive && props.theme.palette.primary.light};
+    transition: 0.3s;
 
     &::before {
         left: 0;
