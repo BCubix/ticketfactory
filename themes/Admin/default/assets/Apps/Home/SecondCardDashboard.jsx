@@ -94,8 +94,8 @@ export const SecondCardDashboard = ({ data }) => {
                                     sx={{
                                         borderBottomRightRadius: tab === tabName && 0,
                                         borderBottomLeftRadius: tab === tabName && 0,
-                                        borderBottom: (theme) => (tab === tabName ? `1px solid ${theme.palette.primary.main}` : 'none'),
-                                        color: (theme) => (tab === tabName ? theme.palette.primary.main : colorProps),
+                                        borderBottom: (theme) => (tab === tabName ? `1px solid ${theme.palette.tertiary.main}` : 'none'),
+                                        color: (theme) => (tab === tabName ? theme.palette.tertiary.main : colorProps),
                                     }}
                                 >
                                     <Box>

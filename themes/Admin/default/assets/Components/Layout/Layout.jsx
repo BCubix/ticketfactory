@@ -64,15 +64,15 @@ export const Layout = ({ children }) => {
                             height: theme.layout.header.height,
                         }}
                     >
-                        <Box component={RouterLink} to={Constant.HOME_PATH} height="100%">
-                            <Box component="img" src={Constant.LOGOS_FILE_PATH + Constant.DEFAULT_LOGOS_FILE} height="100%" />
+                        <Box component={RouterLink} to={Constant.HOME_PATH} height="100%" maxWidth={150}>
+                            <Box component="img" src={Constant.LOGOS_FILE_PATH + Constant.DEFAULT_LOGOS_FILE} height="100%" width="100%" />
                         </Box>
                         <IconButton
                             edge="start"
                             color="primary"
                             aria-label="open drawer"
                             sx={{
-                                ml: 10,
+                                ml: 8,
                                 mr: 3,
                             }}
                             onClick={() => {

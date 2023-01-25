@@ -26,7 +26,8 @@ export const themeColors = {
     },
 
     tertiary: {
-        main: '#FFC828',
+        main: '#F71047',
+        light: '#E3E3E3',
     },
 
     fourth: {
