@@ -78,7 +78,7 @@ const modulesApi = {
     uploadModule: async (data) => {
         try {
             let formData = new FormData();
-            formData.append('active', data.active);
+            formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
 
             const result = await axios.post('/modules', formData);

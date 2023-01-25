@@ -104,7 +104,7 @@ const contentsApi = {
         try {
             let formData = new FormData();
 
-            formData.append('active', data.active);
+            formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang);

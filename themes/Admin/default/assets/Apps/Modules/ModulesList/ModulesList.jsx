@@ -75,7 +75,6 @@ export const ModulesList = () => {
         setLoadingDialog(null);
 
         NotificationManager.success('Le module a bien été activé.', 'Succès', Constant.REDIRECTION_TIME);
-        dispatch(getModulesAction());
         setTimeout(() => window.location.reload(), 1000);
     };
 
@@ -117,7 +116,6 @@ export const ModulesList = () => {
         NotificationManager.success(message, 'Succès', Constant.REDIRECTION_TIME);
 
         setActionDelete(ACTION_DISABLE);
-        dispatch(getModulesAction());
         setTimeout(() => window.location.reload(), 1000);
     };
 
@@ -193,10 +191,10 @@ export const ModulesList = () => {
 
                 <DialogActions>
                     <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                        <Button color="primary" onClick={() => setDeleteDialog(null)}>
+                        <Button color="error" onClick={() => setDeleteDialog(null)}>
                             Annuler
                         </Button>
-                        <Button color="error" onClick={() => handleDisable(deleteDialog, actionDelete)}>
+                        <Button color="primary" onClick={() => handleDisable(deleteDialog, actionDelete)}>
                             {actionDelete}
                         </Button>
                     </Box>
