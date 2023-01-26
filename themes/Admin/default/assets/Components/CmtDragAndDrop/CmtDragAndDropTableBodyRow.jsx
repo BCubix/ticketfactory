@@ -4,9 +4,18 @@ import DragHandleIcon from "@mui/icons-material/DragHandle";
 import { TableCell, TableRow } from "@mui/material";
 import { Box } from "@mui/system";
 
-export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, tableRowProps, children }) => {
+export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, setExpendElementTranslation, tableRowProps, children }) => {
     if (!onDragEnd) {
         return <TableRow {...tableRowProps}>{children}</TableRow>;
+    }
+
+    if (onDragEnd === true) {
+        return (
+            <TableRow {...tableRowProps}>
+                <TableCell sx={{ width: '1%' }} />
+                {children}
+            </TableRow>
+        );
     }
 
     return (
@@ -22,7 +31,12 @@ export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, tableRowProps, ch
                     {...tableRowProps}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    isDragging={snapshot.isDragging}
+                    isDragging={(() => {
+                        if (snapshot.isDragging) {
+                            setExpendElementTranslation(null);
+                        }
+                        return snapshot.isDragging;
+                    })()}
                 >
                     <TableCell sx={{ width: '1%' }}>
                         <Box

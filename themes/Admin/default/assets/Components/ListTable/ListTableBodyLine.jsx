@@ -31,6 +31,7 @@ export const ListTableBodyLine = ({
             <Component.CmtDragAndDropTableBodyRow
                 onDragEnd={onDragEnd}
                 index={index}
+                setExpendElementTranslation={setExpendElementTranslation}
                 tableRowProps={{
                     id: `tableElement-${item.id}`,
                     onClick: () => {
@@ -79,7 +80,7 @@ export const ListTableBodyLine = ({
                         onSelect={onSelect}
                         onActive={onActive}
                         onDisable={onDisable}
-                        onDragEnd={onDragEnd}
+                        onDragEnd={true}
                         disableDeleteFunction={disableDeleteFunction}
                         contextualMenu={contextualMenu}
                         themeId={themeId}
