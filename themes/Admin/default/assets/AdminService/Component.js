@@ -90,6 +90,7 @@ import { MoveElementButton } from '@Apps/Menus/MenusList/MenuStructure/sc.MoveEl
 import { AddMenuElement } from '@Apps/Menus/MenusList/AddMenuElement';
 import { MenuHeaderLine } from '@Apps/Menus/MenusList/MenuHeaderLine';
 import { MenusList } from '@Apps/Menus/MenusList/MenusList';
+import { ModulesMenu } from "@Apps/Modules/ModulesMenu/ModulesMenu";
 import { UploadModule } from '@Apps/Modules/UploadModule/UploadModule';
 import { ModulesFilters } from '@Apps/Modules/ModulesList/ModulesFilters/ModulesFilters';
 import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
@@ -325,6 +326,7 @@ const ComponentObj = {
     UploadModule: UploadModule,
     ModulesFilters: ModulesFilters,
     ModulesList: ModulesList,
+    ModulesMenu: ModulesMenu,
 
     CreatePage: CreatePage,
     EditPage: EditPage,

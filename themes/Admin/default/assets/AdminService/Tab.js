@@ -1,5 +1,5 @@
-import { checkFunction, checkString } from '@Services/utils/check';
 import React from 'react';
+import { checkFunction, checkString } from '@Services/utils/check';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
@@ -21,6 +21,10 @@ const TabObj = {
     PagesTabList: () => [
         { label: 'Pages', component: <Component.PagesList />, path: Constant.PAGES_BASE_PATH },
         { label: 'Blocs', component: <Component.PageBlocksList />, path: Constant.PAGE_BLOCKS_BASE_PATH },
+    ],
+    ModulesTabList: () => [
+        { label: 'Modules', component: <Component.ModulesList />, path: Constant.MODULES_BASE_PATH },
+        { label: 'Hooks', component: <Component.HooksList />, path: Constant.HOOKS_BASE_PATH },
     ],
     EventsFormTabList: (values, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue, roomsList, seasonsList, categoriesList, tagsList, initialValues) => [
         {

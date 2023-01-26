@@ -21,8 +21,8 @@ const AuthenticatedRouteObj = [
     () => ({ path: `${Constant.CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditCategory }),
 
     () => ({ path: Constant.TAGS_BASE_PATH, component: Component.CategoriesMenu, tabValue: 1 }),
-    () => ({ path: Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateTag, tabValue: 1 }),
-    () => ({ path: `${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditTag, tabValue: 1 }),
+    () => ({ path: Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateTag }),
+    () => ({ path: `${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditTag }),
 
     () => ({ path: Constant.ROOMS_BASE_PATH, component: Component.RoomsList }),
     () => ({ path: Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateRoom }),
@@ -90,11 +90,11 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.LANGUAGES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateLanguage }),
     () => ({ path: `${Constant.LANGUAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditLanguage }),
 
-    () => ({ path: Constant.MODULES_BASE_PATH, component: Component.ModulesList }),
-
     () => ({ path: Constant.THEMES_BASE_PATH, component: Component.ThemesList }),
 
-    () => ({ path: Constant.HOOKS_BASE_PATH, component: Component.HooksList }),
+    () => ({ path: Constant.MODULES_BASE_PATH, component: Component.ModulesMenu, tabValue: 0 }),
+
+    () => ({ path: Constant.HOOKS_BASE_PATH, component: Component.ModulesMenu, tabValue: 1 }),
     () => ({ path: Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateHook }),
 ];
 
