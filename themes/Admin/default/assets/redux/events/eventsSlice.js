@@ -58,7 +58,7 @@ export function getEventsAction(filters) {
             dispatch(getEvents());
 
             apiMiddleware(dispatch, async () => {
-                const state = filters || getState().contents?.filters;
+                const state = filters || getState().events?.filters;
 
                 const events = await Api.eventsApi.getEvents(state);
 
