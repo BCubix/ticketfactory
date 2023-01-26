@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
 
-export const ListTableHead = ({ table, filters, changeFilters, displayAction }) => {
+export const ListTableHead = ({ table, filters, changeFilters, displayAction, onDragEnd }) => {
     const field = filters?.sort ? filters?.sort?.split(' ')[0] : '';
     const order = filters?.sort ? filters?.sort?.split(' ')[1] : '';
 
@@ -24,6 +24,7 @@ export const ListTableHead = ({ table, filters, changeFilters, displayAction }) 
     return (
         <TableHead>
             <TableRow>
+                {onDragEnd && (<TableCell sx={{ width: '1%' }}></TableCell>)}
                 {table.map((element, index) => (
                     <TableCell key={index} sx={{ width: element.width || 'auto' }}>
                         {element.sortable ? (

@@ -4,8 +4,11 @@ import { emphasize, TableCell, TableRow } from '@mui/material';
 import { ListTableCellButtons } from './ListTableCellButtons';
 import { RenderCellFunction } from './RenderCellFunction';
 
+import { Component } from "@/AdminService/Component";
+
 export const ListTableBodyLine = ({
     item,
+    index,
     onClick,
     table,
     onDelete,
@@ -14,6 +17,7 @@ export const ListTableBodyLine = ({
     onSelect,
     onActive,
     onDisable,
+    onDragEnd,
     disableDeleteFunction,
     contextualMenu,
     themeId,
@@ -24,14 +28,18 @@ export const ListTableBodyLine = ({
 }) => {
     return (
         <>
-            <TableRow
-                id={`tableElement-${item.id}`}
-                onClick={() => {
-                    if (onClick) {
-                        onClick(item?.id);
-                    }
+            <Component.CmtDragAndDropTableBodyRow
+                onDragEnd={onDragEnd}
+                index={index}
+                tableRowProps={{
+                    id: `tableElement-${item.id}`,
+                    onClick: () => {
+                        if (onClick) {
+                            onClick(item?.id);
+                        }
+                    },
+                    sx: { cursor: onClick && 'pointer', backgroundColor: isTranslated && '#E1E1E1' }
                 }}
-                sx={{ cursor: onClick && 'pointer', backgroundColor: isTranslated && '#E1E1E1' }}
             >
                 {table.map((tableItem, ind) => (
                     <TableCell component="th" scope="row" key={ind}>
@@ -54,7 +62,7 @@ export const ListTableBodyLine = ({
                     expendElementTranslation={expendElementTranslation}
                     setExpendElementTranslation={setExpendElementTranslation}
                 />
-            </TableRow>
+            </Component.CmtDragAndDropTableBodyRow>
 
             {item?.translatedElements?.length > 0 &&
                 expendElementTranslation?.id === item?.id &&
@@ -62,6 +70,7 @@ export const ListTableBodyLine = ({
                     <ListTableBodyLine
                         item={it}
                         key={ind}
+                        index={index}
                         table={table}
                         onClick={onClick}
                         onDelete={onDelete}
@@ -70,6 +79,7 @@ export const ListTableBodyLine = ({
                         onSelect={onSelect}
                         onActive={onActive}
                         onDisable={onDisable}
+                        onDragEnd={onDragEnd}
                         disableDeleteFunction={disableDeleteFunction}
                         contextualMenu={contextualMenu}
                         themeId={themeId}

@@ -159,6 +159,9 @@ import { CmtCard, CmtCardHeader } from '@Components/CmtCard/sc.CmtCard';
 import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
 import { CmtDateTimePicker } from '@Components/CmtDateTimePicker/CmtDateTimePicker';
 import { CmtDisplayMediaType } from '@Components/CmtDisplayMediaType/CmtDisplayMediaType';
+import { CmtDragAndDropTableBody } from "@Components/CmtDragAndDrop/CmtDragAndDropTableBody";
+import { CmtDragAndDropTableBodyRow } from "@Components/CmtDragAndDrop/CmtDragAndDropTableBodyRow";
+import { CmtEditorField } from "@Components/CmtEditorField/CmtEditorField";
 import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
 import { CmtBooleanFilters } from '@Components/CmtFilters/CmtBooleanFilters';
 import { CmtCategoriesFilters } from '@Components/CmtFilters/CmtCategoriesFilters';
@@ -400,6 +403,9 @@ const ComponentObj = {
     CmtDatePicker: CmtDatePicker,
     CmtDateTimePicker: CmtDateTimePicker,
     CmtDisplayMediaType: CmtDisplayMediaType,
+    CmtDragAndDropTableBody: CmtDragAndDropTableBody,
+    CmtDragAndDropTableBodyRow: CmtDragAndDropTableBodyRow,
+    CmtEditorField: CmtEditorField,
     CmtEndPositionWrapper: CmtEndPositionWrapper,
 
     CmtBooleanFilters: CmtBooleanFilters,
