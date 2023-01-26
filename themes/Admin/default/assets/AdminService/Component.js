@@ -171,6 +171,10 @@ import { CmtSimpleSelectFilters } from '@Components/CmtFilters/CmtSimpleSelectFi
 import { ClearBooleanButton, FilterChip } from '@Components/CmtFilters/sc.Filters';
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
 import { CmtHistoryDate } from '@Components/CmtHistoryDate/CmtHistoryDate';
+import { CmtImageCard } from "@Components/CmtImageField/CmtImageCard";
+import { CmtImageField } from "@Components/CmtImageField/CmtImageField";
+import { CmtMediaModal } from "@Components/CmtImageField/CmtMediaModal";
+import { CmtMediaModalInfos } from "@Components/CmtImageField/CmtMediaModalInfos";
 import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
 import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { TitleTypography } from '@Components/CmtPage/CmtPageTitle/sc.TitleTypography';
@@ -424,6 +428,12 @@ const ComponentObj = {
     CmtFormBlock: CmtFormBlock,
     AppProvider: AppProvider,
     CmtHistoryDate: CmtHistoryDate,
+
+    CmtImageCard: CmtImageCard,
+    CmtImageField: CmtImageField,
+    CmtMediaModal: CmtMediaModal,
+    CmtMediaModalInfos: CmtMediaModalInfos,
+
     CmtMediaElement: CmtMediaElement,
     CmtPageTitle: CmtPageTitle,
     TitleTypography: TitleTypography,
