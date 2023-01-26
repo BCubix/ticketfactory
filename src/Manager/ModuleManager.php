@@ -187,7 +187,7 @@ class ModuleManager extends ModuleThemeManager
      * @return Module|null
      * @throws \Exception
      */
-    public function active(string $moduleName, int $action, bool $active, bool $transaction = false): Module|null
+    public function active(string $moduleName, int $action, bool $active, bool $transaction = false, bool $install = true): Module|null
     {
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
 
@@ -203,7 +203,7 @@ class ModuleManager extends ModuleThemeManager
             return null;
         }
 
-        $install = null === $module && $action === Module::ACTION_INSTALL;
+        $install = $install && null === $module && $action === Module::ACTION_INSTALL;
         if (null === $module) {
             switch ($action) {
                 case Module::ACTION_UNINSTALL_DELETE:

@@ -99,8 +99,8 @@ class ThemeManager extends ModuleThemeManager
     {
         $tree = parent::install($objectName);
 
-        if (isset($tree[$objectName]['config']['modules'])) {
-            foreach ($tree[$objectName]['config']['modules'] as $moduleName => $value) {
+        if (isset($tree[$objectName]['config']['modulesToDeploy'])) {
+            foreach ($tree[$objectName]['config']['modulesToDeploy'] as $moduleName => $value) {
                 $originDir = $this->dir . '/' . $objectName . '/config/modulesToDeploy/' . $moduleName;
                 $targetDir = $this->pg->getModulesDir() . '/' . $moduleName;
 
@@ -277,10 +277,10 @@ class ThemeManager extends ModuleThemeManager
         try {
             $this->clear();
         } catch (\Exception $e) {
-            //$this->entry($themeName, true);
-            /*if (!$firstTheme) {
+            $this->entry($themeName, true);
+            if (!$firstTheme) {
                 $this->entry($mainThemeName, false);
-            }*/
+            }
             throw $e;
         }
 
@@ -364,7 +364,7 @@ class ThemeManager extends ModuleThemeManager
     private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action, bool $transaction): void
     {
         foreach ($modulesName as $moduleName) {
-            $this->mm->active($moduleName, $action, $activeCondition, $transaction);
+            $this->mm->active($moduleName, $action, $activeCondition, $transaction, false);
         }
     }
 
