@@ -72,11 +72,11 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                     lang: el?.lang?.id || '',
                     eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
                 })) || [{ name: 'Tarifs', eventPrices: [], lang: initValues?.lang?.id || '' }],
-                eventCategories: initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [],
+                eventCategories: initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList.id],
                 room: initValues?.room?.id || '',
                 season: initValues?.season?.id || '',
                 tags: initValues?.tags ? initValues?.tags?.map((el) => el.id) : [],
-                mainCategory: initValues?.mainCategory?.id || '',
+                mainCategory: initValues?.mainCategory?.id || categoriesList.id,
                 multiplePriceBlock: initValues?.eventPriceBlocks?.length > 1 || false,
                 multipleDateBlock: initValues?.eventDateBlocks?.length > 1 || false,
                 eventMedias:

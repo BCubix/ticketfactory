@@ -76,7 +76,7 @@ export const EventParentCategoryPartForm = ({
         <>
             <Box display="flex" justifyContent={'space-between'}>
                 <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
-                    Catégorie parente
+                    Catégories
                 </Typography>
                 <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
                     Catégorie principale
@@ -85,7 +85,7 @@ export const EventParentCategoryPartForm = ({
             <TreeView
                 size="small"
                 id="categoriesParent"
-                label="Catégorie parent"
+                label="Catégories"
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpanded={[categoriesList.id?.toString()]}
                 defaultExpandIcon={<ChevronRightIcon />}
