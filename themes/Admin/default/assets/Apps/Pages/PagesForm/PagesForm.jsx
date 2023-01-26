@@ -3,14 +3,14 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Box } from '@mui/system';
-import { Button, FormHelperText } from '@mui/material';
+import { Button, FormHelperText, Grid } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { useNavigate } from 'react-router-dom';
 import { Constant } from '@/AdminService/Constant';
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
+export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList }) => {
     const initValues = translateInitialValues || initialValues;
     const navigate = useNavigate();
 
@@ -28,6 +28,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
             initialValues={{
                 active: initValues?.active || false,
                 title: initValues?.title || '',
+                parent: initValues?.parent?.id || '',
                 pageBlocks:
                     initValues?.pageBlocks?.map((pageBlock) => ({
                         name: pageBlock.name,
@@ -72,20 +73,36 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                     }
                 >
                     <Component.CmtFormBlock title="Informations générales">
-                        <Component.CmtTextField
-                            value={values.title}
-                            onChange={(e) => {
-                                setFieldValue('title', e.target.value);
-                                if (!values.editSlug && !initialValues) {
-                                    setFieldValue('slug', changeSlug(e.target.value));
-                                }
-                            }}
-                            onBlur={handleBlur}
-                            label="Titre de la page"
-                            name="title"
-                            error={touched.title && errors.title}
-                        />
-                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
+                        <Grid container spacing={4}>
+                            <Grid item xs={12} sm={8}>
+                                <Component.CmtTextField
+                                    value={values.title}
+                                    onChange={(e) => {
+                                        setFieldValue('title', e.target.value);
+                                        if (!values.editSlug && !initialValues) {
+                                            setFieldValue('slug', changeSlug(e.target.value));
+                                        }
+                                    }}
+                                    onBlur={handleBlur}
+                                    label="Titre de la page"
+                                    name="title"
+                                    error={touched.title && errors.title}
+                                />
+                                <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Component.CmtSelectField
+                                    label="Page parente"
+                                    name={`parent`}
+                                    value={values.parent}
+                                    list={pagesList}
+                                    getValue={(item) => item.id}
+                                    getName={(item) => item.title}
+                                    setFieldValue={setFieldValue}
+                                    errors={touched.parent && errors.parent}
+                                />
+                            </Grid>
+                        </Grid>
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Blocs">

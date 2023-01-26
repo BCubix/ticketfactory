@@ -62,6 +62,22 @@ const pagesApi = {
         }
     },
 
+    getAllPages: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            const result = await axios.get('/pages', { params: params });
+
+            return { result: true, pages: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     getOnePage: async (id) => {
         try {
             const result = await axios.get(`/pages/${id}`);
@@ -78,6 +94,7 @@ const pagesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
+            formData.append('parent', data.parent);
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang);
             formData.append('languageGroup', data.languageGroup);
@@ -112,6 +129,7 @@ const pagesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('title', data.title);
+            formData.append('parent', data.parent);
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang);
             formData.append('languageGroup', data.languageGroup);

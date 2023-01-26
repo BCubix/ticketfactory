@@ -14,12 +14,24 @@ export const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [initialValues, setInitialValues] = useState(null);
+    const [pagesList, setPagesList] = useState(null);
 
     const [queryParameters] = useSearchParams();
     const pageId = queryParameters.get('pageId');
     const languageId = queryParameters.get('languageId');
 
     useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const pages = await Api.pagesApi.getAllPages();
+            if (pages?.error) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            setPagesList(pages.pages);
+        });
+
         apiMiddleware(dispatch, async () => {
             if (!pageId || !languageId) {
                 return;
@@ -47,9 +59,9 @@ export const CreatePage = () => {
         });
     }
 
-    if (pageId && !initialValues) {
+    if (!pagesList || (pageId && !initialValues)) {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} />;
+    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} pagesList={pagesList}/>;
 };
