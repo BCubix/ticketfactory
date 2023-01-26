@@ -184,6 +184,7 @@ import { PageWrapper } from '@Components/CmtPage/CmtPageWrapper/sc.PageWrapper';
 import { CmtPagination } from '@Components/CmtPagination/CmtPagination';
 import { CmtPopover } from '@Components/CmtPopover/CmtPopover';
 import { CmtRemoveButton } from '@Components/CmtRemoveButton/CmtRemoveButton';
+import { CmtSelectField } from "@Components/CmtSelectField/CmtSelectField";
 import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
 import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
 import { CmtSlugInput } from '@Components/CmtSlugInput/CmtSlugInput';
@@ -444,6 +445,7 @@ const ComponentObj = {
     CmtPagination: CmtPagination,
     CmtPopover: CmtPopover,
     CmtRemoveButton: CmtRemoveButton,
+    CmtSelectField: CmtSelectField,
     CmtTabs: CmtTabs,
     CmtTextField: CmtTextField,
     CmtSlugInput: CmtSlugInput,
