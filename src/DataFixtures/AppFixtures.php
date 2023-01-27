@@ -16,12 +16,10 @@ use Doctrine\Persistence\ObjectManager;
 class AppFixtures extends Fixture
 {
     private $um;
-    private $tm;
 
-    public function __construct(UserManager $um, ThemeManager $tm)
+    public function __construct(UserManager $um)
     {
         $this->um = $um;
-        $this->tm = $tm;
     }
 
     public function load(ObjectManager $om): void
@@ -193,7 +191,7 @@ class AppFixtures extends Fixture
         $parameter->setName("Thème principal");
         $parameter->setType("string");
         $parameter->setParamKey("main_theme");
-        $parameter->setParamValue("default");
+        $parameter->setParamValue(null);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
         $parameter->setBlockName(null);
@@ -211,7 +209,5 @@ class AppFixtures extends Fixture
         $this->um->upgradePassword($user);
 
         $om->flush();
-
-        $this->tm->active('default', false, true);
     }
 }

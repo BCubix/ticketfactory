@@ -221,12 +221,11 @@ class ThemeManager extends ModuleThemeManager
      *
      * @param string $themeName
      * @param bool   $transaction
-     * @param bool   $firstTheme
      *
      * @return Theme
      * @throws \Exception
      */
-    public function active(string $themeName, bool $transaction = false, bool $firstTheme = false): Theme
+    public function active(string $themeName, bool $transaction = false): Theme
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
@@ -243,6 +242,8 @@ class ThemeManager extends ModuleThemeManager
         }
 
         $mainThemeName = $this->pm->get('main_theme');
+        $firstTheme = $mainThemeName === null;
+
         if (!$firstTheme) {
             if ($themeName === $mainThemeName) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
