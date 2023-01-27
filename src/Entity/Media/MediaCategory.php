@@ -76,7 +76,7 @@ class MediaCategory extends Datable
     #[ORM\OneToMany(mappedBy: 'mainCategory', targetEntity: Media::class)]
     private $mainMedias;
 
-    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'mediaCategories')]
+    #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'mediaCategories')]
     private $medias;
 
     #[JMS\Expose()]
@@ -240,6 +240,7 @@ class MediaCategory extends Datable
     {
         if (!$this->medias->contains($media)) {
             $this->medias->add($media);
+            $media->addMediaCategory($this);
         }
 
         return $this;
@@ -247,7 +248,9 @@ class MediaCategory extends Datable
 
     public function removeMedia(Media $media): self
     {
-        $this->medias->removeElement($media);
+        if ($this->medias->removeElement($media)) {
+            $media->removeMediaCategory($this);
+        }
 
         return $this;
     }

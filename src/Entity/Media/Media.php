@@ -77,7 +77,7 @@ class Media extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['tf_admin'])]
-    #[ORM\ManyToMany(targetEntity: MediaCategory::class, mappedBy: 'medias')]
+    #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
     private $mediaCategories;
 
     public function __construct()
@@ -242,7 +242,6 @@ class Media extends Datable
     {
         if (!$this->mediaCategories->contains($mediaCategory)) {
             $this->mediaCategories->add($mediaCategory);
-            $mediaCategory->addMedia($this);
         }
 
         return $this;
@@ -250,9 +249,7 @@ class Media extends Datable
 
     public function removeMediaCategory(MediaCategory $mediaCategory): self
     {
-        if ($this->mediaCategories->removeElement($mediaCategory)) {
-            $mediaCategory->removeMedia($this);
-        }
+        $this->mediaCategories->removeElement($mediaCategory);
 
         return $this;
     }
