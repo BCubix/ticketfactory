@@ -47,22 +47,6 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 id="titleFilter"
             />
 
-            <Component.CmtMultipleSelectFilters
-                value={filters.documentType}
-                setValue={(newValue) => {
-                    changeFilters({ ...filters, documentType: newValue });
-                }}
-                title="Chercher par type"
-                label="Type"
-                icon={<CategoryIcon />}
-                parameters={{
-                    nameValue: 'value',
-                    nameLabel: 'label',
-                }}
-                list={LIST_TYPE}
-                id="mediaDocumentTypeFilter"
-            />
-
             <Component.MediasSorters
                 value={filters.sort}
                 setValue={(newValue) => {

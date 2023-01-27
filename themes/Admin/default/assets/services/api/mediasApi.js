@@ -12,7 +12,6 @@ const FILTERS_SORT_TAB = [
         },
     },
     { name: 'title', sortName: 'filters[title]' },
-    { name: 'type', sortName: 'filters[type]' },
     { name: 'page', sortName: 'filters[page]' },
     { name: 'limit', sortName: 'filters[limit]' },
     {

@@ -12,7 +12,6 @@ class MediaRepository extends CrudRepository
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['title', 'o.title', 'search'],
-        ['documentType', 'o.documentType', 'in']
     ];
 
     protected const SORTS = [
