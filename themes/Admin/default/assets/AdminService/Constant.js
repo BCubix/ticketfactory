@@ -30,6 +30,7 @@ const ConstantObj = {
     LOGS_BASE_PATH: '/admin/logs',
     TAGS_BASE_PATH: '/admin/tags',
     MEDIAS_BASE_PATH: '/admin/medias',
+    MEDIA_CATEGORIES_BASE_PATH: '/admin/categories-de-media',
     IMAGE_FORMATS_BASE_PATH: '/admin/image-formats',
     CONTENT_TYPES_BASE_PATH: '/admin/types-de-contenus',
     CONTENT_BASE_PATH: '/admin/contenus',

@@ -12,6 +12,7 @@ const TabObj = {
     ],
     MediasTabList: () => [
         { label: 'Médias', component: <Component.MediasList />, path: Constant.MEDIAS_BASE_PATH },
+        { label: 'Catégories de média', component: <Component.MediaCategoriesList />, path: Constant.MEDIA_CATEGORIES_BASE_PATH },
         {
             label: "Formats d'images",
             component: <Component.ImageFormatsList />,

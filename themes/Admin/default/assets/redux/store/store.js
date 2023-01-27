@@ -22,6 +22,7 @@ import themesReducer from '@Redux/themes/themesSlice';
 import hooksReducer from '@Redux/hooks/hooksSlice';
 import pageBlocksReducer from '@Redux/pageBlocks/pageBlocksSlice';
 import languagesReducer from '@Redux/languages/languagesSlice';
+import mediaCategoriesReducer from '@Redux/mediaCategories/mediaCategoriesSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -46,6 +47,7 @@ const reducer = {
     hooks: hooksReducer,
     pageBlocks: pageBlocksReducer,
     languages: languagesReducer,
+    mediaCategories: mediaCategoriesReducer,
 };
 
 const store = configureStore({

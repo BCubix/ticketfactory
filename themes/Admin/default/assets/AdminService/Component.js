@@ -71,6 +71,11 @@ import { ImageFormatParameters } from '@Apps/ImageFormat/ImageFormatsList/ImageF
 import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { Login } from '@Apps/Login/Login';
 import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
+import { CreateMediaCategory } from "@Apps/MediaCategories/CreateMediaCategory/CreateMediaCategory";
+import { EditMediaCategory } from "@Apps/MediaCategories/EditMediaCategory/EditMediaCategory";
+import { MediaCategoriesForm } from "@Apps/MediaCategories/MediaCategoriesForm/MediaCategoriesForm";
+import { ParentMediaCategoryPartForm } from "@Apps/MediaCategories/MediaCategoriesForm/ParentMediaCategoryPartForm";
+import { MediaCategoriesList } from "@Apps/MediaCategories/MediaCategoriesList/MediaCategoriesList";
 import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
 import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
 import { EditMedia } from '@Apps/Medias/EditMedia/EditMedia';
@@ -301,6 +306,12 @@ const ComponentObj = {
     LogUserName: LogUserName,
     LogTags: LogTags,
     LogsList: LogsList,
+
+    CreateMediaCategory: CreateMediaCategory,
+    EditMediaCategory: EditMediaCategory,
+    MediaCategoriesForm: MediaCategoriesForm,
+    ParentMediaCategoryPartForm: ParentMediaCategoryPartForm,
+    MediaCategoriesList: MediaCategoriesList,
 
     DropzoneWrapper: DropzoneWrapper,
     CreateMedia: CreateMedia,

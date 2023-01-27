@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
+use App\Entity\Media\MediaCategory;
 use App\Entity\Parameter\Parameter;
 use App\Entity\User\User;
 use App\Manager\ThemeManager;
@@ -39,6 +40,12 @@ class AppFixtures extends Fixture
         $eventCategory->setName('Accueil');
         $eventCategory->setLang($language);
         $om->persist($eventCategory);
+
+        $mediaCategory = new MediaCategory();
+        $mediaCategory->setActive(true);
+        $mediaCategory->setName('Médias');
+        $mediaCategory->setLang($language);
+        $om->persist($mediaCategory);
 
         // Parameters
         $parameter = new Parameter();

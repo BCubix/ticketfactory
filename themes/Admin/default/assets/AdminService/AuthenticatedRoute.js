@@ -36,7 +36,12 @@ const AuthenticatedRouteObj = [
 
     () => ({ path: Constant.MEDIAS_BASE_PATH, component: Component.MediasMenu, tabValue: 0 }),
 
-    () => ({ path: Constant.IMAGE_FORMATS_BASE_PATH, component: Component.MediasMenu, tabValue: 1 }),
+    () => ({ path: Constant.MEDIA_CATEGORIES_BASE_PATH, component: Component.MediasMenu, tabValue: 1 }),
+    () => ({ path: `${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id`, component: Component.MediasMenu, tabValue: 1 }),
+    () => ({ path: Constant.MEDIA_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateMediaCategory }),
+    () => ({ path: `${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditMediaCategory }),
+
+    () => ({ path: Constant.IMAGE_FORMATS_BASE_PATH, component: Component.MediasMenu, tabValue: 2 }),
     () => ({ path: Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateImageFormat }),
     () => ({
         path: `${Constant.IMAGE_FORMATS_BASE_PATH}/:id${Constant.EDIT_PATH}`,

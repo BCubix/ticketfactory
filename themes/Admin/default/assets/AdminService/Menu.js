@@ -45,7 +45,7 @@ const MenuObj = [
             {
                 name: 'Bibliothèque médias',
                 link: Constant.MEDIAS_BASE_PATH,
-                relatedLinks: [Constant.IMAGE_FORMATS_BASE_PATH],
+                relatedLinks: [Constant.MEDIA_CATEGORIES_BASE_PATH, Constant.IMAGE_FORMATS_BASE_PATH],
                 icon: <PermMediaIcon />,
             },
             {
