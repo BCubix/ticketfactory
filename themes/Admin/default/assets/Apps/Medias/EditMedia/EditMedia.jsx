@@ -64,7 +64,9 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
         }
 
         getMedia();
+    }, [id]);
 
+    useEffect(() => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.mediaCategoriesApi.getAllMediaCategories();
             if (!result.result) {
@@ -74,7 +76,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
 
             setMediaCategoriesList(result.mediaCategories);
         });
-    }, [id]);
+    }, []);
 
     if (!media || !mediaCategoriesList) {
         return <></>;

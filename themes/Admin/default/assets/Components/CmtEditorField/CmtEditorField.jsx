@@ -2,7 +2,7 @@ import React from "react";
 import { FormHelperText, InputLabel } from "@mui/material";
 import { Component } from "@/AdminService/Component";
 
-export const CmtEditorField = ({ label, required = false, name, id = name?.replaceAll('.', '-'), value, setFieldValue, setFieldTouched, touched, errors }) => {
+export const CmtEditorField = ({ label, required = false, name, id = name?.replaceAll('.', '-'), value, setFieldValue, setFieldTouched, errors }) => {
     return (
         <>
             <InputLabel id={`${id}-label`} required={required} sx={{ fontSize: '12px' }}>
@@ -17,7 +17,7 @@ export const CmtEditorField = ({ label, required = false, name, id = name?.repla
                         setFieldValue(name, val);
                     }}
                 />
-                {touched && errors && (
+                {errors && (
                     <FormHelperText error id={`${id}-helper-text`}>
                         {errors}
                     </FormHelperText>

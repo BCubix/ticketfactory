@@ -59,74 +59,42 @@ export const EventMainPartForm = ({
                     </Grid>
 
                     <Grid item xs={12}>
-                        <InputLabel id="description" required>
-                            Description
-                        </InputLabel>
-                        <Component.LightEditorFormControl id={`descriptionControl`}>
-                            <Component.LightEditor
-                                labelId="description"
-                                value={values.description}
-                                onBlur={() => setFieldTouched('description', true, false)}
-                                onChange={(val) => {
-                                    setFieldValue('description', val);
-                                }}
-                            />
-                            {touched.description && errors.description && (
-                                <FormHelperText error id="description-helper-text">
-                                    {errors.description}
-                                </FormHelperText>
-                            )}
-                        </Component.LightEditorFormControl>
+                        <Component.CmtEditorField
+                            label="Description"
+                            required
+                            id={`description`}
+                            name={`description`}
+                            value={values.description}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            errors={touched.description && errors.description}
+                        />
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="eventRoomLabel" size="small">
-                                Salle
-                            </InputLabel>
-                            <Select
-                                labelId="eventRoomLabel"
-                                size="small"
-                                variant="standard"
-                                id="room"
-                                value={values.room}
-                                label="Salle"
-                                onChange={(e) => {
-                                    setFieldValue('room', e.target.value);
-                                }}
-                            >
-                                {roomsList.map((item, index) => (
-                                    <MenuItem value={item.id} key={index} id={`roomValue-${item.id}`}>
-                                        <ListItemText>{item.name}</ListItemText>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Component.CmtSelectField
+                            label="Salle"
+                            name={`room`}
+                            value={values.room}
+                            list={roomsList}
+                            getValue={(item) => item.id}
+                            getName={(item) => item.name}
+                            setFieldValue={setFieldValue}
+                            errors={touched.room && errors.room}
+                        />
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="eventRoomLabel" size="small">
-                                Saison
-                            </InputLabel>
-                            <Select
-                                labelId="eventSeasonLabel"
-                                size="small"
-                                id="season"
-                                variant="standard"
-                                value={values.season}
-                                label="Saison"
-                                onChange={(e) => {
-                                    setFieldValue('season', e.target.value);
-                                }}
-                            >
-                                {seasonsList.map((item, index) => (
-                                    <MenuItem value={item.id} key={index} id={`seasonValue-${item.id}`}>
-                                        <ListItemText>{item.name}</ListItemText>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Component.CmtSelectField
+                            label="Saison"
+                            name={`season`}
+                            value={values.season}
+                            list={seasonsList}
+                            getValue={(item) => item.id}
+                            getName={(item) => item.name}
+                            setFieldValue={setFieldValue}
+                            errors={touched.season && errors.season}
+                        />
                     </Grid>
                 </Grid>
             </Component.CmtFormBlock>
@@ -138,43 +106,17 @@ export const EventMainPartForm = ({
                     </Grid>
 
                     <Grid item xs={12} md={6}>
-                        <FormControl fullWidth sx={{ marginTop: 3 }}>
-                            <InputLabel id="eventCategoriesLabel" size="small">
-                                Tags
-                            </InputLabel>
-                            <Select
-                                labelId="eventTagsLabel"
-                                id="eventTags"
-                                variant="standard"
-                                value={values.tags}
-                                size="small"
-                                label="Tags"
-                                onChange={(e) => {
-                                    setFieldValue('tags', e.target.value);
-                                }}
-                                multiple
-                                renderValue={(selected) => {
-                                    let renderName = [];
-
-                                    selected.forEach((elem) => {
-                                        const name = tagsList.find((el) => el.id === elem).name;
-
-                                        if (name) {
-                                            renderName.push(name);
-                                        }
-                                    });
-
-                                    return renderName.join(', ');
-                                }}
-                            >
-                                {tagsList?.map((item, index) => (
-                                    <MenuItem value={item.id} key={index} id={`eventTagsValue-${item.id}`}>
-                                        <Checkbox checked={values.tags.indexOf(item.id) > -1} />
-                                        <ListItemText>{item.name}</ListItemText>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Component.CmtSelectField
+                            label="Tags"
+                            multiple
+                            name={`tags`}
+                            value={values.tags}
+                            list={tagsList}
+                            getValue={(item) => item.id}
+                            getName={(item) => item.name}
+                            setFieldValue={setFieldValue}
+                            errors={touched.tags && errors.tags}
+                        />
                     </Grid>
                 </Grid>
             </Component.CmtFormBlock>

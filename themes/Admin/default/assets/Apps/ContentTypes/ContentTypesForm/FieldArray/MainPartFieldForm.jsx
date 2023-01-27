@@ -85,6 +85,7 @@ export const MainPartFieldForm = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 label="Titre du champ"
+                required
                 name={`${prefixName}fields.${index}.title`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'title')}
             />
@@ -94,12 +95,13 @@ export const MainPartFieldForm = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 label="Nom du type de champ"
+                required
                 name={`${prefixName}fields.${index}.name`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'name')}
             />
 
             <FormControl fullWidth sx={{ marginTop: 3 }}>
-                <InputLabel id={`${prefixId}fields-${index}-typeLabel`} size="small">
+                <InputLabel id={`${prefixId}fields-${index}-typeLabel`} size="small" className="required-input">
                     Type de champs
                 </InputLabel>
                 <Select

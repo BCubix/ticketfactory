@@ -85,6 +85,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                     }}
                                     onBlur={handleBlur}
                                     label="Titre de la page"
+                                    required
                                     name="title"
                                     error={touched.title && errors.title}
                                 />
