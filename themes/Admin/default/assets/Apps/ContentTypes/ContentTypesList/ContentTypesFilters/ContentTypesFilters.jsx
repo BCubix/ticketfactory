@@ -10,8 +10,8 @@ export const ContentTypesFilters = ({ filters, changeFilters, list }) => {
             <Component.CmtBooleanFilters
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
-                title="Chercher par status de gestion"
-                label="Gérée ?"
+                title="Chercher par status"
+                label="Actif ?"
                 icon={<CheckIcon />}
                 id="activeFilter"
             />

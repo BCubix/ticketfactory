@@ -37,7 +37,7 @@ class AppFixtures extends Fixture
         // Root Category
         $eventCategory = new EventCategory();
         $eventCategory->setActive(true);
-        $eventCategory->setName('Accueil');
+        $eventCategory->setName('Catégories');
         $eventCategory->setLang($language);
         $om->persist($eventCategory);
 

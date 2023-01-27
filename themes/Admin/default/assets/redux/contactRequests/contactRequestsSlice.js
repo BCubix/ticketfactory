@@ -9,7 +9,7 @@ const initialState = {
     contactRequests: null,
     total: null,
     filters: {
-        active: getBooleanFromString(sessionStorage.getItem('contactRequestActiveFilter')),
+        active: getBooleanFromString(sessionStorage.getItem('contactRequestsActiveFilter')),
         firstName: sessionStorage.getItem('contactRequestsFirstNameFilter') || '',
         lastName: sessionStorage.getItem('contactRequestsLastNameFilter') || '',
         email: sessionStorage.getItem('contactRequestsEmailFilter') || '',

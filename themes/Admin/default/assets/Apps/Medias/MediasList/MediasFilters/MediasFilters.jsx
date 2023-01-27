@@ -33,7 +33,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status"
-                label="Activé ?"
+                label="Actif ?"
                 icon={<CheckIcon />}
                 id="activeFilter"
             />
