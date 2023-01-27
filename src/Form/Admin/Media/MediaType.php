@@ -3,11 +3,12 @@
 namespace App\Form\Admin\Media;
 
 use App\Entity\Media\Media;
+use App\Entity\Media\MediaCategory;
+use App\Repository\MediaCategoryRepository;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +23,28 @@ class MediaType extends AbstractType
             ->add('description',          TextType::class,            [])
             ->add('legend',               TextType::class,            [])
             ->add('title',                TextType::class,            [])
-            ->add('slug',                 TextType::class,            [])
+            ->add('mainCategory',         EntityType::class,          [
+                'class'         => MediaCategory::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (MediaCategoryRepository $mcr) {
+                    return $mcr
+                        ->createQueryBuilder('mc')
+                        ->orderBy('mc.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('mediaCategories',      EntityType::class,          [
+                'class'         => MediaCategory::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function (MediaCategoryRepository $mcr) {
+                    return $mcr
+                        ->createQueryBuilder('mc')
+                        ->orderBy('mc.name', 'ASC')
+                    ;
+                }
+            ])
         ;
     }
 

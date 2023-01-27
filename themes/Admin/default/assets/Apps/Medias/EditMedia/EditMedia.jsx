@@ -1,3 +1,4 @@
+import { apiMiddleware } from "@Services/utils/apiMiddleware";
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
@@ -18,51 +19,35 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     const [media, setMedia] = useState(null);
     const [editImage, setEditImage] = useState(false);
     const [mediaType, setMediaType] = useState(null);
+    const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
 
     const getMedia = async () => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediasApi.getOneMedia(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                onCancel();
+                return;
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.mediasApi.getOneMedia(id);
-
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-            onCancel();
-
-            return;
-        }
-
-        setMedia(result.media);
-        setMediaType(getMediaType(result?.media?.documentType));
+            setMedia(result.media);
+            setMediaType(getMediaType(result?.media?.documentType));
+        });
     };
 
     const handleSubmit = async (values) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediasApi.editMedia(id, values);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                return;
+            }
 
-            return;
-        }
-
-        const result = await Api.mediasApi.editMedia(id, values);
-
-        if (!result.result) {
-            return;
-        }
-
-        NotificationManager.success('Votre fichier a bien été modifié', 'Succès', Constant.REDIRECTION_TIME);
-
-        editSuccess();
-        dispatch(getMediasAction());
-
-        return;
+            NotificationManager.success('Votre fichier a bien été modifié', 'Succès', Constant.REDIRECTION_TIME);
+            editSuccess();
+            dispatch(getMediasAction());
+        });
     };
 
     const handleEditImageSuccess = () => {
@@ -79,9 +64,19 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
         }
 
         getMedia();
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.getAllMediaCategories();
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                onCancel();
+            }
+
+            setMediaCategoriesList(result.mediaCategories);
+        });
     }, [id]);
 
-    if (!media) {
+    if (!media || !mediaCategoriesList) {
         return <></>;
     }
 
@@ -130,6 +125,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                             handleSubmit={handleSubmit}
                             deleteElement={() => deleteElement(id)}
                             mediaType={mediaType}
+                            mediaCategoriesList={mediaCategoriesList}
                         />
                     </Grid>
                 </>

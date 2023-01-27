@@ -7,7 +7,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement }) => {
+export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement, mediaCategoriesList }) => {
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du fichier'),
     });
@@ -20,6 +20,8 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                 legend: media?.legend || '',
                 description: media?.description || '',
                 active: media?.active || false,
+                mainCategory: media?.mainCategory?.id || '',
+                mediaCategories: media?.mediaCategories ? media?.mediaCategories?.map((el) => el.id) : [],
             }}
             validationSchema={mediaSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -49,6 +51,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                         name="title"
                         error={touched.title && errors.title}
                         sx={{ mt: 10 }}
+                        required
                     />
 
                     <Component.CmtTextField
@@ -74,6 +77,9 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement })
                         error={touched.description && errors.description}
                         sx={{ mt: 10 }}
                     />
+
+                    <Component.MediaParentCategoryPartForm sx={{ mt: 10 }} values={values} mediaCategoriesList={mediaCategoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
+
                     <Box display={'flex'} justifyContent="flex-end" sx={{ pb: 3, pt: 5 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />
                     </Box>

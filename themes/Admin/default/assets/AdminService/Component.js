@@ -81,6 +81,7 @@ import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
 import { EditMedia } from '@Apps/Medias/EditMedia/EditMedia';
 import { MediaDataForm } from '@Apps/Medias/MediasForm/MediaDataForm';
 import { MediaImageForm } from '@Apps/Medias/MediasForm/MediaImageForm';
+import { MediaParentCategoryPartForm } from "@Apps/Medias/MediasForm/MediaParentCategoryPartForm";
 import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
 import { MediasSorters } from '@Apps/Medias/MediasList/MediasFilters/MediasSorters';
 import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
@@ -317,6 +318,7 @@ const ComponentObj = {
     EditMedia: EditMedia,
     MediaDataForm: MediaDataForm,
     MediaImageForm: MediaImageForm,
+    MediaParentCategoryPartForm: MediaParentCategoryPartForm,
     MediasFilters: MediasFilters,
     MediasSorters: MediasSorters,
     RotatingIcons: RotatingIcons,

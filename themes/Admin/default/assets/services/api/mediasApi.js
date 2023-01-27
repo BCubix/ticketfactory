@@ -129,6 +129,10 @@ const mediasApi = {
             formData.append('legend', data?.legend);
             formData.append('description', data?.description);
             formData.append('active', data.active ? 1 : 0);
+            formData.append('mainCategory', data.mainCategory);
+            data?.mediaCategories?.forEach((category, index) => {
+                formData.append(`mediaCategories[${index}]`, category);
+            });
 
             const result = await axios.post(`/medias/${id}`, formData);
 
