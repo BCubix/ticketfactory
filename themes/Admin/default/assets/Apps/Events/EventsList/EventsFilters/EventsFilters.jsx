@@ -1,8 +1,11 @@
 import React from 'react';
 
+import BusinessIcon from "@mui/icons-material/Business";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CategoryIcon from '@mui/icons-material/Category';
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import TagIcon from '@mui/icons-material/Tag';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
 import { Api } from "@/AdminService/Api";
@@ -56,7 +59,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 title="Chercher par nom"
                 label="Nom"
                 id="nameFilter"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
             />
 
             <Component.CmtCategoriesFilters
@@ -79,7 +82,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 title="Chercher par salle"
                 label="Salles"
                 id="roomFilter"
-                icon={<CategoryIcon />}
+                icon={<BusinessIcon />}
                 parameters={{
                     nameValue: 'id',
                     nameLabel: 'name',
@@ -94,7 +97,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 }}
                 title="Chercher par saison"
                 label="Saisons"
-                icon={<CategoryIcon />}
+                icon={<CalendarMonthIcon />}
                 id="seasonFilter"
                 parameters={{
                     nameValue: 'id',
@@ -110,7 +113,7 @@ export const EventsFilters = ({ filters, changeFilters, categoriesList }) => {
                 }}
                 title="Chercher par tags"
                 label="Tags"
-                icon={<CategoryIcon />}
+                icon={<TagIcon />}
                 id="tagFilter"
                 parameters={{
                     nameValue: 'id',

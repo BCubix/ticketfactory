@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TitleIcon from '@mui/icons-material/Title';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -13,7 +13,7 @@ export const PageBlocksFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, title: newValue })}
                 title="Chercher par nom"
                 label="Nom"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
                 id="titleFilter"
             />
         </Box>

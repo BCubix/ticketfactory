@@ -2,7 +2,7 @@ import React from 'react';
 
 import CategoryIcon from '@mui/icons-material/Category';
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -41,7 +41,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, redirectFrom: newValue })}
                 title="Chercher par source de la redirection"
                 label="Redirigé depuis"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
                 id="redirectFromFilter"
             />
 
@@ -50,7 +50,7 @@ export const RedirectionsFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, redirectTo: newValue })}
                 title="Chercher par destination de la redirection"
                 label="Redirigé vers"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
                 id="redirectToFilter"
             />
         </Box>

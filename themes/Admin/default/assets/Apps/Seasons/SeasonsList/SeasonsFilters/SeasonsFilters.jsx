@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box } from '@mui/system';
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 
 import { Component } from "@/AdminService/Component";
 
@@ -23,7 +23,7 @@ export const SeasonsFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, name: newValue })}
                 title="Chercher par nom"
                 label="Nom"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
                 id="nameFilter"
             />
         </Box>

@@ -1,8 +1,7 @@
 import React from 'react';
 
-import CategoryIcon from '@mui/icons-material/Category';
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
 import { Component } from "@/AdminService/Component";
@@ -43,7 +42,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, title: newValue })}
                 title="Chercher par titre"
                 label="Titre"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
                 id="titleFilter"
             />
 

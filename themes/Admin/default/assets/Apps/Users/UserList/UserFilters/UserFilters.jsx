@@ -1,7 +1,9 @@
 import React from 'react';
 
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import EmailIcon from "@mui/icons-material/Email";
+import PersonIcon from "@mui/icons-material/Person";
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -19,20 +21,11 @@ export const UserFilters = ({ filters, changeFilters }) => {
             />
 
             <Component.CmtSearchFilters
-                value={filters.email}
-                setValue={(newValue) => changeFilters({ ...filters, email: newValue })}
-                title="Chercher par email"
-                label="Email"
-                icon={<TitleIcon />}
-                id="emailFilter"
-            />
-
-            <Component.CmtSearchFilters
                 value={filters.firstName}
                 setValue={(newValue) => changeFilters({ ...filters, firstName: newValue })}
                 title="Chercher par prénom"
                 label="Prénom"
-                icon={<TitleIcon />}
+                icon={<PersonIcon />}
                 id="firstNameFilter"
             />
 
@@ -41,8 +34,17 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, lastName: newValue })}
                 title="Chercher par nom"
                 label="Nom"
-                icon={<TitleIcon />}
+                icon={<PersonIcon />}
                 id="lastNameFilter"
+            />
+
+            <Component.CmtSearchFilters
+                value={filters.email}
+                setValue={(newValue) => changeFilters({ ...filters, email: newValue })}
+                title="Chercher par email"
+                label="Email"
+                icon={<EmailIcon />}
+                id="emailFilter"
             />
 
             <Component.CmtSearchFilters
@@ -50,7 +52,7 @@ export const UserFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, role: newValue })}
                 title="Chercher par role"
                 label="Role"
-                icon={<TitleIcon />}
+                icon={<AssignmentIndIcon />}
                 id="roleFilter"
             />
         </Box>
