@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
 import { Component } from "@/AdminService/Component";
@@ -13,7 +13,7 @@ export const PagesFilters = ({ filters, changeFilters }) => {
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status"
-                label="Activé ?"
+                label="Actif ?"
                 icon={<CheckIcon />}
                 id="activeFilter"
             />
@@ -21,9 +21,9 @@ export const PagesFilters = ({ filters, changeFilters }) => {
             <Component.CmtSearchFilters
                 value={filters.title}
                 setValue={(newValue) => changeFilters({ ...filters, title: newValue })}
-                title="Chercher par nom"
-                label="Nom"
-                icon={<TitleIcon />}
+                title="Chercher par titre"
+                label="Titre"
+                icon={<TextFieldsIcon />}
                 id="titleFilter"
             />
         </Box>

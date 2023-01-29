@@ -10,7 +10,7 @@ const TableColumnObj = {
     CategoriesList: [
         { name: 'id', label: 'ID', width: '10%' },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-        { name: 'name', label: 'Nom de la catégorie', width: '50%' },
+        { name: 'name', label: 'Nom', width: '50%' },
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     ContactRequestsList: [
@@ -32,7 +32,7 @@ const TableColumnObj = {
     ContentTypesList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom de la catégorie', width: '70%', sortable: true },
+        { name: 'name', label: 'Nom', width: '70%', sortable: true },
     ],
     EventsList: [
         { name: 'id', label: 'ID', width: '5%', sortable: true },
@@ -102,15 +102,15 @@ const TableColumnObj = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     SeasonsList: [
-        { name: 'id', label: 'ID', width: '20%', sortable: true },
-        { name: 'active', label: 'Activé ?', type: 'bool', width: '20%', sortable: true },
-        { name: 'name', label: 'Nom de la catégorie', width: '30%', sortable: true },
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '50%', sortable: true },
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     TagsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom de la catégorie', width: '50%', sortable: true },
+        { name: 'name', label: 'Nom', width: '50%', sortable: true },
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     UserList: [

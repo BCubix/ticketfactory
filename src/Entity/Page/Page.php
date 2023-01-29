@@ -2,6 +2,7 @@
 
 namespace App\Entity\Page;
 
+use App\Entity\Content\ContentType;
 use App\Entity\Datable;
 use App\Entity\Language\Language;
 use App\Repository\PageRepository;
@@ -63,10 +64,23 @@ class Page extends Datable
     #[JMS\Groups(['tf_admin'])]
     public $frontUrl;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'pages')]
+    private $parent;
+
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true)]
+    private $pages;
+
+    #[ORM\OneToMany(mappedBy: 'pageParent', targetEntity: ContentType::class, orphanRemoval: true)]
+    private $contentTypes;
+
 
     public function __construct()
     {
         $this->pageBlocks = new ArrayCollection();
+        $this->pages = new ArrayCollection();
+        $this->contentTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,6 +158,78 @@ class Page extends Datable
     public function setLang(?Language $lang): self
     {
         $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getPages(): Collection
+    {
+        return $this->pages;
+    }
+
+    public function addPage(self $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages->add($page);
+            $page->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePage(self $page): self
+    {
+        if ($this->pages->removeElement($page)) {
+            // set the owning side to null (unless already changed)
+            if ($page->getParent() === $this) {
+                $page->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContentType>
+     */
+    public function getContentTypes(): Collection
+    {
+        return $this->contentTypes;
+    }
+
+    public function addContentType(ContentType $contentType): self
+    {
+        if (!$this->contentTypes->contains($contentType)) {
+            $this->contentTypes->add($contentType);
+            $contentType->setPageParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContentType(ContentType $contentType): self
+    {
+        if ($this->contentTypes->removeElement($contentType)) {
+            // set the owning side to null (unless already changed)
+            if ($contentType->getPageParent() === $this) {
+                $contentType->setPageParent(null);
+            }
+        }
 
         return $this;
     }

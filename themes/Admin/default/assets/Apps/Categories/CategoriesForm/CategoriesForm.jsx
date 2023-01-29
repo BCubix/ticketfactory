@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -46,25 +46,30 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
             {({ values, errors, touched, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
                     <Component.CmtFormBlock title="Informations générales">
-                        <Component.CmtTextField
-                            value={values.name}
-                            onChange={(e) => {
-                                setFieldValue('name', e.target.value);
-                                if (!values.editSlug && !initialValues) {
-                                    setFieldValue('slug', changeSlug(e.target.value));
-                                }
-                            }}
-                            onBlur={handleBlur}
-                            label="Nom"
-                            name="name"
-                            error={touched.name && errors.name}
-                            required
-                        />
-                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
-
-                        {values?.mustHaveParent && (
-                            <Component.ParentCategoryPartForm values={values} categoriesList={categoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
-                        )}
+                        <Grid container spacing={4}>
+                            <Grid item xs={12}>
+                                <Component.CmtTextField
+                                    value={values.name}
+                                    onChange={(e) => {
+                                        setFieldValue('name', e.target.value);
+                                        if (!values.editSlug && !initialValues) {
+                                            setFieldValue('slug', changeSlug(e.target.value));
+                                        }
+                                    }}
+                                    onBlur={handleBlur}
+                                    label="Nom"
+                                    name="name"
+                                    error={touched.name && errors.name}
+                                    required
+                                />
+                                <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
+                            </Grid>
+                            {values?.mustHaveParent && (
+                                <Grid item xs={12}>
+                                    <Component.ParentCategoryPartForm values={values} categoriesList={categoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
+                                </Grid>
+                            )}
+                        </Grid>
                     </Component.CmtFormBlock>
 
                     <Box display="flex" justifyContent={'flex-end'} alignItems="center" sx={{ pt: 3, pb: 2 }}>

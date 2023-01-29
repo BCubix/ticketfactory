@@ -4,6 +4,7 @@ namespace App\Entity\Content;
 
 use App\Entity\Datable;
 use App\Entity\JsonDoctrineSerializable;
+use App\Entity\Page\Page;
 use App\Repository\ContentTypeRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,6 +43,12 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: Content::class)]
     private $contents;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contentTypes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $pageParent;
 
 
     public function __construct()
@@ -132,5 +139,17 @@ class ContentType extends Datable implements JsonDoctrineSerializable
         $data->fields = $fields;
 
         return $data;
+    }
+
+    public function getPageParent(): ?Page
+    {
+        return $this->pageParent;
+    }
+
+    public function setPageParent(?Page $pageParent): self
+    {
+        $this->pageParent = $pageParent;
+
+        return $this;
     }
 }

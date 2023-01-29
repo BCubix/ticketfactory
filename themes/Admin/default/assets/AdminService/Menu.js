@@ -1,7 +1,5 @@
 import React from 'react';
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import TocIcon from '@mui/icons-material/Toc';
 import BusinessIcon from '@mui/icons-material/Business';
 import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -41,32 +39,31 @@ const MenuObj = [
         menu: [
             { name: 'Menus', link: Constant.MENUS_BASE_PATH, icon: <MenuIcon /> },
             { name: 'Pages', link: Constant.PAGES_BASE_PATH, relatedLinks: [Constant.PAGE_BLOCKS_BASE_PATH], icon: <DescriptionIcon /> },
+            { name: 'Contenus', link: Constant.CONTENT_BASE_PATH, icon: <SourceIcon /> },
+            {
+                name: 'Bibliothèque médias',
+                link: Constant.MEDIAS_BASE_PATH,
+                relatedLinks: [Constant.MEDIA_CATEGORIES_BASE_PATH, Constant.IMAGE_FORMATS_BASE_PATH],
+                icon: <PermMediaIcon />,
+            },
             {
                 name: 'Redirections',
                 link: Constant.REDIRECTIONS_BASE_PATH,
                 icon: <CallMissedOutgoingIcon />,
             },
             { name: 'Thèmes', link: Constant.THEMES_BASE_PATH, icon: <TvIcon /> },
-            { name: 'Modules', link: Constant.MODULES_BASE_PATH, icon: <ViewModuleIcon /> },
-            { name: 'Hooks', link: Constant.HOOKS_BASE_PATH, icon: <ViewModuleIcon /> },
-            {
-                name: 'Bibliothèque médias',
-                link: Constant.MEDIAS_BASE_PATH,
-                relatedLinks: [Constant.IMAGE_FORMATS_BASE_PATH],
-                icon: <PermMediaIcon />,
-            },
-            { name: 'Contenus', link: Constant.CONTENT_BASE_PATH, icon: <SourceIcon /> },
-            {
-                name: 'Types de contenus',
-                link: Constant.CONTENT_TYPES_BASE_PATH,
-                icon: <WidgetsIcon />,
-            },
+            { name: 'Modules', link: Constant.MODULES_BASE_PATH, relatedLinks: [Constant.HOOKS_BASE_PATH], icon: <ViewModuleIcon /> },
         ],
     }),
     () => ({
         title: 'ADMINISTRATION',
         menu: [
             { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon /> },
+            {
+                name: 'Types de contenus',
+                link: Constant.CONTENT_TYPES_BASE_PATH,
+                icon: <WidgetsIcon />,
+            },
             { name: 'Contacts', link: Constant.CONTACT_REQUEST_BASE_PATH, icon: <EmailIcon /> },
             { name: 'Utilisateurs', link: Constant.USER_BASE_PATH, icon: <PersonIcon /> },
             { name: 'Logs', link: Constant.LOGS_BASE_PATH, icon: <HistoryIcon /> },

@@ -11,7 +11,6 @@ const initialState = {
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('mediasActiveFilter')),
         title: sessionStorage.getItem('mediasTitleFilter') || '',
-        documentType: sessionStorage.getItem('mediasDocumentTypeFilter') || '',
         sort: sessionStorage.getItem('mediasSort') || 'id ASC',
         page: 1,
         limit: 20,
@@ -76,7 +75,6 @@ export function changeMediasFilters(filters, page = 1) {
     return async (dispatch) => {
         sessionStorage.setItem('mediasActiveFilter', filters?.active);
         sessionStorage.setItem('mediasTitleFilter', filters?.title);
-        sessionStorage.setItem('mediasDocumentTypeFilter', filters?.documentType);
         sessionStorage.setItem('mediasSort', filters?.sort);
 
         filters.page = page;

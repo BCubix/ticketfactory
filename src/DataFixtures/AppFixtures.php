@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
+use App\Entity\Media\MediaCategory;
 use App\Entity\Parameter\Parameter;
 use App\Entity\User\User;
 use App\Manager\ThemeManager;
@@ -15,12 +16,10 @@ use Doctrine\Persistence\ObjectManager;
 class AppFixtures extends Fixture
 {
     private $um;
-    private $tm;
 
-    public function __construct(UserManager $um, ThemeManager $tm)
+    public function __construct(UserManager $um)
     {
         $this->um = $um;
-        $this->tm = $tm;
     }
 
     public function load(ObjectManager $om): void
@@ -36,9 +35,15 @@ class AppFixtures extends Fixture
         // Root Category
         $eventCategory = new EventCategory();
         $eventCategory->setActive(true);
-        $eventCategory->setName('Accueil');
+        $eventCategory->setName('Catégories');
         $eventCategory->setLang($language);
         $om->persist($eventCategory);
+
+        $mediaCategory = new MediaCategory();
+        $mediaCategory->setActive(true);
+        $mediaCategory->setName('Médias');
+        $mediaCategory->setLang($language);
+        $om->persist($mediaCategory);
 
         // Parameters
         $parameter = new Parameter();
@@ -186,7 +191,7 @@ class AppFixtures extends Fixture
         $parameter->setName("Thème principal");
         $parameter->setType("string");
         $parameter->setParamKey("main_theme");
-        $parameter->setParamValue("default");
+        $parameter->setParamValue(null);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
         $parameter->setBlockName(null);
@@ -204,7 +209,5 @@ class AppFixtures extends Fixture
         $this->um->upgradePassword($user);
 
         $om->flush();
-
-        $this->tm->active('default', false, true);
     }
 }

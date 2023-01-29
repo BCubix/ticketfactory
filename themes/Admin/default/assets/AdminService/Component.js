@@ -72,11 +72,17 @@ import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormat
 import { Login } from '@Apps/Login/Login';
 import { LoginBackgroundWrapper, LoginComponentWrapper, LoginPageWrapper } from '@Apps/Login/sc.Login';
 import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
+import { CreateMediaCategory } from "@Apps/MediaCategories/CreateMediaCategory/CreateMediaCategory";
+import { EditMediaCategory } from "@Apps/MediaCategories/EditMediaCategory/EditMediaCategory";
+import { MediaCategoriesForm } from "@Apps/MediaCategories/MediaCategoriesForm/MediaCategoriesForm";
+import { ParentMediaCategoryPartForm } from "@Apps/MediaCategories/MediaCategoriesForm/ParentMediaCategoryPartForm";
+import { MediaCategoriesList } from "@Apps/MediaCategories/MediaCategoriesList/MediaCategoriesList";
 import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
 import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
 import { EditMedia } from '@Apps/Medias/EditMedia/EditMedia';
 import { MediaDataForm } from '@Apps/Medias/MediasForm/MediaDataForm';
 import { MediaImageForm } from '@Apps/Medias/MediasForm/MediaImageForm';
+import { MediaParentCategoryPartForm } from "@Apps/Medias/MediasForm/MediaParentCategoryPartForm";
 import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
 import { MediasSorters } from '@Apps/Medias/MediasList/MediasFilters/MediasSorters';
 import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
@@ -91,8 +97,8 @@ import { MoveElementButton } from '@Apps/Menus/MenusList/MenuStructure/sc.MoveEl
 import { AddMenuElement } from '@Apps/Menus/MenusList/AddMenuElement';
 import { MenuHeaderLine } from '@Apps/Menus/MenusList/MenuHeaderLine';
 import { MenusList } from '@Apps/Menus/MenusList/MenusList';
+import { ModulesMenu } from "@Apps/Modules/ModulesMenu/ModulesMenu";
 import { UploadModule } from '@Apps/Modules/UploadModule/UploadModule';
-import { ModulesFilters } from '@Apps/Modules/ModulesList/ModulesFilters/ModulesFilters';
 import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
 import { CreatePage } from '@Apps/Pages/CreatePage/CreatePage';
 import { EditPage } from '@Apps/Pages/EditPage/EditPage';
@@ -160,6 +166,9 @@ import { CmtCard, CmtCardHeader } from '@Components/CmtCard/sc.CmtCard';
 import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
 import { CmtDateTimePicker } from '@Components/CmtDateTimePicker/CmtDateTimePicker';
 import { CmtDisplayMediaType } from '@Components/CmtDisplayMediaType/CmtDisplayMediaType';
+import { CmtDragAndDropTableBody } from "@Components/CmtDragAndDrop/CmtDragAndDropTableBody";
+import { CmtDragAndDropTableBodyRow } from "@Components/CmtDragAndDrop/CmtDragAndDropTableBodyRow";
+import { CmtEditorField } from "@Components/CmtEditorField/CmtEditorField";
 import { CmtEndPositionWrapper } from '@Components/CmtEndButtonWrapper/sc.CmtEndPositionWrapper';
 import { CmtBooleanFilters } from '@Components/CmtFilters/CmtBooleanFilters';
 import { CmtCategoriesFilters } from '@Components/CmtFilters/CmtCategoriesFilters';
@@ -169,6 +178,10 @@ import { CmtSimpleSelectFilters } from '@Components/CmtFilters/CmtSimpleSelectFi
 import { ClearBooleanButton, FilterChip } from '@Components/CmtFilters/sc.Filters';
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
 import { CmtHistoryDate } from '@Components/CmtHistoryDate/CmtHistoryDate';
+import { CmtImageCard } from "@Components/CmtImageField/CmtImageCard";
+import { CmtImageField } from "@Components/CmtImageField/CmtImageField";
+import { CmtMediaModal } from "@Components/CmtImageField/CmtMediaModal";
+import { CmtMediaModalInfos } from "@Components/CmtImageField/CmtMediaModalInfos";
 import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
 import { CmtPageTitle } from '@Components/CmtPage/CmtPageTitle/CmtPageTitle';
 import { TitleTypography } from '@Components/CmtPage/CmtPageTitle/sc.TitleTypography';
@@ -177,6 +190,7 @@ import { PageWrapper } from '@Components/CmtPage/CmtPageWrapper/sc.PageWrapper';
 import { CmtPagination } from '@Components/CmtPagination/CmtPagination';
 import { CmtPopover } from '@Components/CmtPopover/CmtPopover';
 import { CmtRemoveButton } from '@Components/CmtRemoveButton/CmtRemoveButton';
+import { CmtSelectField } from "@Components/CmtSelectField/CmtSelectField";
 import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
 import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
 import { CmtSlugInput } from '@Components/CmtSlugInput/CmtSlugInput';
@@ -294,11 +308,18 @@ const ComponentObj = {
     LogTags: LogTags,
     LogsList: LogsList,
 
+    CreateMediaCategory: CreateMediaCategory,
+    EditMediaCategory: EditMediaCategory,
+    MediaCategoriesForm: MediaCategoriesForm,
+    ParentMediaCategoryPartForm: ParentMediaCategoryPartForm,
+    MediaCategoriesList: MediaCategoriesList,
+
     DropzoneWrapper: DropzoneWrapper,
     CreateMedia: CreateMedia,
     EditMedia: EditMedia,
     MediaDataForm: MediaDataForm,
     MediaImageForm: MediaImageForm,
+    MediaParentCategoryPartForm: MediaParentCategoryPartForm,
     MediasFilters: MediasFilters,
     MediasSorters: MediasSorters,
     RotatingIcons: RotatingIcons,
@@ -317,8 +338,8 @@ const ComponentObj = {
     MenusList: MenusList,
 
     UploadModule: UploadModule,
-    ModulesFilters: ModulesFilters,
     ModulesList: ModulesList,
+    ModulesMenu: ModulesMenu,
 
     CreatePage: CreatePage,
     EditPage: EditPage,
@@ -401,6 +422,9 @@ const ComponentObj = {
     CmtDatePicker: CmtDatePicker,
     CmtDateTimePicker: CmtDateTimePicker,
     CmtDisplayMediaType: CmtDisplayMediaType,
+    CmtDragAndDropTableBody: CmtDragAndDropTableBody,
+    CmtDragAndDropTableBodyRow: CmtDragAndDropTableBodyRow,
+    CmtEditorField: CmtEditorField,
     CmtEndPositionWrapper: CmtEndPositionWrapper,
 
     CmtBooleanFilters: CmtBooleanFilters,
@@ -419,6 +443,12 @@ const ComponentObj = {
     CmtFormBlock: CmtFormBlock,
     AppProvider: AppProvider,
     CmtHistoryDate: CmtHistoryDate,
+
+    CmtImageCard: CmtImageCard,
+    CmtImageField: CmtImageField,
+    CmtMediaModal: CmtMediaModal,
+    CmtMediaModalInfos: CmtMediaModalInfos,
+
     CmtMediaElement: CmtMediaElement,
     CmtPageTitle: CmtPageTitle,
     TitleTypography: TitleTypography,
@@ -430,6 +460,7 @@ const ComponentObj = {
     CmtPagination: CmtPagination,
     CmtPopover: CmtPopover,
     CmtRemoveButton: CmtRemoveButton,
+    CmtSelectField: CmtSelectField,
     CmtTabs: CmtTabs,
     CmtTextField: CmtTextField,
     CmtSlugInput: CmtSlugInput,

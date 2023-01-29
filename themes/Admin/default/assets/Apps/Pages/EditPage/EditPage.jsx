@@ -16,12 +16,24 @@ export const EditPage = () => {
     const { id } = useParams();
 
     const [page, setPage] = useState(null);
+    const [pagesList, setPagesList] = useState(null);
 
     useEffect(() => {
         if (!id) {
             navigate(Constant.PAGES_BASE_PATH);
             return;
         }
+
+        apiMiddleware(dispatch, async () => {
+            const pages = await Api.pagesApi.getAllPages();
+            if (pages?.error) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            setPagesList(pages.pages);
+        });
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.pagesApi.getOnePage(id);
@@ -46,9 +58,9 @@ export const EditPage = () => {
         });
     }
 
-    if (!page) {
+    if (!page || !pagesList) {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} />;
+    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} pagesList={pagesList}/>;
 };

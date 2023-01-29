@@ -1,8 +1,7 @@
 import React from 'react';
 
-import CategoryIcon from '@mui/icons-material/Category';
 import CheckIcon from '@mui/icons-material/Check';
-import TitleIcon from '@mui/icons-material/Title';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
 import { Component } from "@/AdminService/Component";
@@ -33,7 +32,7 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 value={filters.active}
                 setValue={(newValue) => changeFilters({ ...filters, active: newValue })}
                 title="Chercher par status"
-                label="Activé ?"
+                label="Actif ?"
                 icon={<CheckIcon />}
                 id="activeFilter"
             />
@@ -43,24 +42,8 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 setValue={(newValue) => changeFilters({ ...filters, title: newValue })}
                 title="Chercher par titre"
                 label="Titre"
-                icon={<TitleIcon />}
+                icon={<TextFieldsIcon />}
                 id="titleFilter"
-            />
-
-            <Component.CmtMultipleSelectFilters
-                value={filters.documentType}
-                setValue={(newValue) => {
-                    changeFilters({ ...filters, documentType: newValue });
-                }}
-                title="Chercher par type"
-                label="Type"
-                icon={<CategoryIcon />}
-                parameters={{
-                    nameValue: 'value',
-                    nameLabel: 'label',
-                }}
-                list={LIST_TYPE}
-                id="mediaDocumentTypeFilter"
             />
 
             <Component.MediasSorters

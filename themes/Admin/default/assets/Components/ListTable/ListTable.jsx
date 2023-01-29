@@ -46,6 +46,7 @@ export const ListTable = ({
     changeFilters = null,
     contextualMenu = false,
     disableDeleteFunction = null,
+    onDragEnd = null
 }) => {
     const languagesData = useSelector(languagesSelector);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -90,11 +91,16 @@ export const ListTable = ({
                     filters={filters}
                     changeFilters={changeFilters}
                     displayAction={Boolean(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null))}
+                    onDragEnd={onDragEnd}
                 />
-                <TableBody>
+                <Component.CmtDragAndDropTableBody
+                    droppableId={'drag'}
+                    onDragEnd={onDragEnd}
+                >
                     {list?.map((item, index) => (
                         <Component.ListTableBodyLine
                             item={item}
+                            index={index}
                             key={index}
                             table={table}
                             onClick={onClick}
@@ -104,6 +110,7 @@ export const ListTable = ({
                             onSelect={onSelect}
                             onActive={onActive}
                             onDisable={onDisable}
+                            onDragEnd={onDragEnd}
                             disableDeleteFunction={disableDeleteFunction}
                             contextualMenu={contextualMenu}
                             themeId={themeId}
@@ -135,7 +142,7 @@ export const ListTable = ({
                         languageList={languageList}
                         onTranslate={onTranslate}
                     />
-                </TableBody>
+                </Component.CmtDragAndDropTableBody>
             </Table>
         </TableContainer>
     );

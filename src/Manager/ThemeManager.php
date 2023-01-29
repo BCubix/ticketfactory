@@ -99,8 +99,8 @@ class ThemeManager extends ModuleThemeManager
     {
         $tree = parent::install($objectName);
 
-        if (isset($tree[$objectName]['config']['modules'])) {
-            foreach ($tree[$objectName]['config']['modules'] as $moduleName => $value) {
+        if (isset($tree[$objectName]['config']['modulesToDeploy'])) {
+            foreach ($tree[$objectName]['config']['modulesToDeploy'] as $moduleName => $value) {
                 $originDir = $this->dir . '/' . $objectName . '/config/modulesToDeploy/' . $moduleName;
                 $targetDir = $this->pg->getModulesDir() . '/' . $moduleName;
 
@@ -221,12 +221,11 @@ class ThemeManager extends ModuleThemeManager
      *
      * @param string $themeName
      * @param bool   $transaction
-     * @param bool   $firstTheme
      *
      * @return Theme
      * @throws \Exception
      */
-    public function active(string $themeName, bool $transaction = false, bool $firstTheme = false): Theme
+    public function active(string $themeName, bool $transaction = false): Theme
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
@@ -243,6 +242,8 @@ class ThemeManager extends ModuleThemeManager
         }
 
         $mainThemeName = $this->pm->get('main_theme');
+        $firstTheme = $mainThemeName === null;
+
         if (!$firstTheme) {
             if ($themeName === $mainThemeName) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
@@ -277,10 +278,10 @@ class ThemeManager extends ModuleThemeManager
         try {
             $this->clear();
         } catch (\Exception $e) {
-            //$this->entry($themeName, true);
-            /*if (!$firstTheme) {
+            $this->entry($themeName, true);
+            if (!$firstTheme) {
                 $this->entry($mainThemeName, false);
-            }*/
+            }
             throw $e;
         }
 
@@ -364,7 +365,7 @@ class ThemeManager extends ModuleThemeManager
     private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action, bool $transaction): void
     {
         foreach ($modulesName as $moduleName) {
-            $this->mm->active($moduleName, $action, $activeCondition, $transaction);
+            $this->mm->active($moduleName, $action, $activeCondition, $transaction, false);
         }
     }
 

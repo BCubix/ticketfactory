@@ -6,6 +6,7 @@ use App\Entity\Module\Module;
 use App\Exception\ApiException;
 use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Config\ModuleConfig;
+use App\Utils\Exec;
 use App\Utils\GetClass;
 use App\Utils\PathGetter;
 
@@ -181,11 +182,12 @@ class ModuleManager extends ModuleThemeManager
      * @param string $moduleName
      * @param int $action
      * @param bool $active
+     * @param bool $transaction
      *
      * @return Module|null
      * @throws \Exception
      */
-    public function active(string $moduleName, int $action, bool $active, bool $transaction = false): Module|null
+    public function active(string $moduleName, int $action, bool $active, bool $transaction = false, bool $install = true): Module|null
     {
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
 
@@ -201,6 +203,7 @@ class ModuleManager extends ModuleThemeManager
             return null;
         }
 
+        $install = $install && null === $module && $action === Module::ACTION_INSTALL;
         if (null === $module) {
             switch ($action) {
                 case Module::ACTION_UNINSTALL_DELETE:
@@ -244,6 +247,9 @@ class ModuleManager extends ModuleThemeManager
                 // Important: Call config after install module
                 $this->callConfig($moduleName, self::ACTIONS[$action]);
                 $this->clear();
+                if ($install) {
+                    Exec::exec('yarn run encore production');
+                }
             }
         }
 

@@ -54,7 +54,7 @@ export function getSeasonsAction(filters) {
             dispatch(getSeasons());
 
             apiMiddleware(dispatch, async () => {
-                const state = filters || getState().rooms?.filters;
+                const state = filters || getState().seasons?.filters;
 
                 const seasons = await Api.seasonsApi.getSeasons(state);
                 if (!seasons.result) {

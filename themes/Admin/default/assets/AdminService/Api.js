@@ -9,6 +9,7 @@ import eventsApi from '@Services/api/eventsApi';
 import imageFormatsApi from '@Services/api/imageFormatsApi';
 import logsApi from '@Services/api/logsApi';
 import languagesApi from '@Services/api/languagesApi';
+import mediaCategoriesApi from "@Services/api/mediaCategoriesApi";
 import mediasApi from '@Services/api/mediasApi';
 import menusApi from '@Services/api/menusApi';
 import modulesApi from '@Services/api/modulesApi';
@@ -38,6 +39,7 @@ const ApiObj = {
     imageFormatsApi: imageFormatsApi,
     logsApi: logsApi,
     languagesApi: languagesApi,
+    mediaCategoriesApi: mediaCategoriesApi,
     mediasApi: mediasApi,
     menusApi: menusApi,
     modulesApi: modulesApi,

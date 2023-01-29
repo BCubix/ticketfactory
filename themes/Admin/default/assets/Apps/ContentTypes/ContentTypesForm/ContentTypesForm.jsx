@@ -2,20 +2,21 @@ import React, { useMemo } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormHelperText } from '@mui/material';
+import { Button, FormHelperText, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
 import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
 
-export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
+export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }) => {
     const getContentTypesModules = useMemo(() => {
         return ContentTypesModules();
     }, []);
 
     const contentTypeSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom du type de contenus.'),
+        pageParent: Yup.string().required('Veuillez renseigner la page parente.'),
         fields: Yup.array()
             .of(
                 Yup.object().shape({
@@ -48,6 +49,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
                 name: initialValues?.name || '',
                 active: initialValues?.active || false,
                 fields: initialValues?.fields || [],
+                pageParent: initialValues?.pageParent?.id || '',
             }}
             validationSchema={contentTypeSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -58,14 +60,32 @@ export const ContentTypesForm = ({ initialValues = null, submitForm }) => {
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un type de contenus`}>
                     <Component.CmtFormBlock title="Informations générales">
-                        <Component.CmtTextField
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            label="Nom du type de contenus"
-                            name="name"
-                            error={touched.name && errors.name}
-                        />
+                        <Grid container spacing={4}>
+                            <Grid item xs={12} sm={8}>
+                                <Component.CmtTextField
+                                    value={values.name}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Nom du type de contenus"
+                                    required
+                                    name="name"
+                                    error={touched.name && errors.name}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Component.CmtSelectField
+                                    label="Page parente"
+                                    required
+                                    name={`pageParent`}
+                                    value={values.pageParent}
+                                    list={pagesList}
+                                    getValue={(item) => item.id}
+                                    getName={(item) => item.title}
+                                    setFieldValue={setFieldValue}
+                                    errors={touched.pageParent && errors.pageParent}
+                                />
+                            </Grid>
+                        </Grid>
                     </Component.CmtFormBlock>
 
                     <Component.CmtFormBlock title="Champs">

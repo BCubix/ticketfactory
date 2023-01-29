@@ -70,9 +70,20 @@ class Media extends Datable
     #[ORM\OneToMany(mappedBy: 'media', targetEntity: EventMedia::class, orphanRemoval: true)]
     private Collection $eventMedias;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToOne(targetEntity: MediaCategory::class, inversedBy: 'mainMedias')]
+    private $mainCategory;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
+    private $mediaCategories;
+
     public function __construct()
     {
         $this->eventMedias = new ArrayCollection();
+        $this->mediaCategories = new ArrayCollection();
     }
 
 
@@ -203,6 +214,42 @@ class Media extends Datable
                 $eventMedia->setMedia(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMainCategory(): ?MediaCategory
+    {
+        return $this->mainCategory;
+    }
+
+    public function setMainCategory(?MediaCategory $mainCategory): self
+    {
+        $this->mainCategory = $mainCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MediaCategory>
+     */
+    public function getMediaCategories(): Collection
+    {
+        return $this->mediaCategories;
+    }
+
+    public function addMediaCategory(MediaCategory $mediaCategory): self
+    {
+        if (!$this->mediaCategories->contains($mediaCategory)) {
+            $this->mediaCategories->add($mediaCategory);
+        }
+
+        return $this;
+    }
+
+    public function removeMediaCategory(MediaCategory $mediaCategory): self
+    {
+        $this->mediaCategories->removeElement($mediaCategory);
 
         return $this;
     }

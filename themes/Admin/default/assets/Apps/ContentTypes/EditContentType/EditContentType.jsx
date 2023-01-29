@@ -8,34 +8,26 @@ import { Component } from "@/AdminService/Component";
 import { Constant } from "@/AdminService/Constant";
 
 import { getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from "@Services/utils/apiMiddleware";
 
 export const EditContentType = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
     const [contentType, setContentType] = useState(null);
+    const [pagesList, setPagesList] = useState(null);
 
     const getContentType = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.contentTypesApi.getOneContentType(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CONTENT_TYPES_BASE_PATH);
+                return;
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.contentTypesApi.getOneContentType(id);
-
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-            navigate(Constant.CONTENT_TYPES_BASE_PATH);
-
-            return;
-        }
-
-        setContentType(result.contentType);
+            setContentType(result.contentType);
+        });
     };
 
     useEffect(() => {
@@ -47,33 +39,40 @@ export const EditContentType = () => {
         getContentType(id);
     }, [id]);
 
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const pages = await Api.pagesApi.getAllPages();
+            if (pages?.error) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CONTENT_TYPES_BASE_PATH);
+                return;
+            }
+
+            setPagesList(pages.pages);
+        });
+    }, []);
+
     const handleSubmit = async (values) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.contentTypesApi.editContentType(id, values);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.contentTypesApi.editContentType(id, values);
-
-        if (result.result) {
-            NotificationManager.success(
-                'Le type de contenus a bien été modifié.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
-
-            dispatch(getContentTypesAction());
-
-            navigate(Constant.CONTENT_TYPES_BASE_PATH);
-        }
+            if (result.result) {
+                NotificationManager.success(
+                    'Le type de contenus a bien été modifié.',
+                    'Succès',
+                    Constant.REDIRECTION_TIME
+                );
+                dispatch(getContentTypesAction());
+                navigate(Constant.CONTENT_TYPES_BASE_PATH);
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            }
+        });
     };
 
-    if (!contentType) {
+    if (!contentType || !pagesList) {
         return <></>;
     }
 
-    return <Component.ContentTypesForm submitForm={handleSubmit} initialValues={contentType} />;
+    return <Component.ContentTypesForm submitForm={handleSubmit} initialValues={contentType} pagesList={pagesList} />;
 };

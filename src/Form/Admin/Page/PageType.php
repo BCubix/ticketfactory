@@ -6,6 +6,7 @@ use App\Entity\Page\Page;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
+use App\Repository\PageRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -22,6 +23,17 @@ class PageType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('title',                TextType::class,            [])
+            ->add('parent',               EntityType::class,          [
+                'class'         => Page::class,
+                'choice_label'  => 'title',
+                'multiple'      => false,
+                'query_builder' => function (PageRepository $pr) {
+                    return $pr
+                        ->createQueryBuilder('p')
+                        ->orderBy('p.title', 'ASC')
+                    ;
+                }
+            ])
             ->add('slug',                 TextType::class,            [])
             ->add('pageBlocks',           CollectionType::class,      [
                 'entry_type'   => PageBlockType::class,

@@ -57,7 +57,7 @@ export function getUsersAction(filters) {
             dispatch(getUsers());
 
             apiMiddleware(dispatch, async () => {
-                const state = filters || getState().pages?.filters;
+                const state = filters || getState().users?.filters;
 
                 const users = await Api.usersApi.getUsers(state);
                 if (!users.result) {

@@ -1,11 +1,8 @@
 import React from 'react';
-
-import { useTheme } from '@emotion/react';
-
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TreeItem, TreeView } from '@mui/lab';
-import { Radio, Typography } from '@mui/material';
+import { InputLabel, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 const displayCategoriesOptions = (list, values, setFieldValue) => {
@@ -23,6 +20,9 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                         checked={values?.parent === list.id}
                         onClick={(e) => {
                             e.stopPropagation();
+                            if (values?.id === list.id) {
+                                return;
+                            }
                             setFieldValue('parent', values?.parent === list.id ? '' : list.id);
                         }}
                         id={`parentCategoryValue-${list.id}`}
@@ -37,20 +37,15 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
 };
 
 export const ParentCategoryPartForm = ({ values, categoriesList, setFieldValue, touched, errors }) => {
-    const theme = useTheme();
-
     if (!categoriesList) {
         return <></>;
     }
 
     return (
         <>
-            <Typography variant="body1" sx={{ fontWeight: 500, mt: 2, color: theme.palette.labelColor }}>
-                Catégorie parente{' '}
-                <Typography component="span" className="MuiFormLabel-asterisk">
-                    *
-                </Typography>
-            </Typography>
+            <InputLabel id={`categoriesParent-label`} required sx={{ fontSize: '12px' }}>
+                Catégorie parente
+            </InputLabel>
             <TreeView
                 size="small"
                 id="categoriesParent"

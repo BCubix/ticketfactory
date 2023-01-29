@@ -14,6 +14,7 @@ use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\SeatingPlan;
 use App\Entity\Event\Tag;
+use App\Entity\Media\MediaCategory;
 use App\Entity\Menu\MenuEntry;
 use App\Entity\Page\Page;
 use App\Entity\Page\PageBlock;
@@ -96,6 +97,9 @@ class Language extends Datable
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: MenuEntry::class, orphanRemoval: true)]
     private Collection $menuEntries;
 
+    #[ORM\OneToMany(mappedBy: 'lang', targetEntity: MediaCategory::class, orphanRemoval: true)]
+    private Collection $mediaCategories;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -112,6 +116,7 @@ class Language extends Datable
         $this->eventPrices = new ArrayCollection();
         $this->seatingPlans = new ArrayCollection();
         $this->menuEntries = new ArrayCollection();
+        $this->mediaCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -569,6 +574,36 @@ class Language extends Datable
             // set the owning side to null (unless already changed)
             if ($menuEntry->getLang() === $this) {
                 $menuEntry->setLang(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MediaCategory>
+     */
+    public function getMediaCategories(): Collection
+    {
+        return $this->mediaCategories;
+    }
+
+    public function addMediaCategory(MediaCategory $mediaCategory): self
+    {
+        if (!$this->mediaCategories->contains($mediaCategory)) {
+            $this->mediaCategories->add($mediaCategory);
+            $mediaCategory->setLang($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMediaCategory(MediaCategory $mediaCategory): self
+    {
+        if ($this->mediaCategories->removeElement($mediaCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($mediaCategory->getLang() === $this) {
+                $mediaCategory->setLang(null);
             }
         }
 
