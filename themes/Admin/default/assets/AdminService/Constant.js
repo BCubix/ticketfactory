@@ -9,10 +9,13 @@ const ConstantObj = {
     PARAMETERS_UPLOAD_URL: '/admin/api/_uploader/parameter/upload',
     MODULE_UPLOAD_URL: '/admin/api/_uploader/module/upload',
     THEME_UPLOAD_URL: '/admin/api/_uploader/theme/upload',
+    IMAGES_FILE_PATH: '/images',
     ICONS_FILE_PATH: '/images/icons',
     LOGOS_FILE_PATH: '/images/logos',
 
     DEFAULT_LOGOS_FILE: '/TicketFactoryRougeHori.svg',
+    LOGIN_LOGOS_FILE: '/TicketFactoryJauneLogotypeHori.svg',
+    LOGIN_BACKGROUND_FILE: '/loginBackground.jpg',
 
     REDIRECTION_TIME: 5000,
 

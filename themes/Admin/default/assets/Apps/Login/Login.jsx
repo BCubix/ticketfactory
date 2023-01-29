@@ -4,22 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {
-    Avatar,
-    Box,
-    Button,
-    Checkbox,
-    FormControlLabel,
-    Grid,
-    Link,
-    Paper,
-    Typography,
-} from '@mui/material';
-import { Container } from '@mui/system';
+import { Avatar, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { loginAction, profileSelector } from '@Redux/profile/profileSlice';
 
@@ -35,19 +23,25 @@ export const Login = () => {
     }, [connected]);
 
     const loginSchema = Yup.object().shape({
-        username: Yup.string()
-            .required('Veuillez renseigner une adresse email.')
-            .email('Adresse email invalide.'),
+        username: Yup.string().required('Veuillez renseigner une adresse email.').email('Adresse email invalide.'),
         password: Yup.string().required('Veuillez renseigner votre mot de passe.'),
     });
 
     return (
-        <Container
-            component="main"
-            maxWidth="xs"
-            sx={{ height: '100%', display: 'flex', alignItems: 'center' }}
-        >
-            <Paper elevation={2} sx={{ borderRadius: 4 }}>
+        <Component.LoginPageWrapper component="main">
+            <Box
+                sx={{
+                    zIndex: 100,
+                    display: { xs: 'none', md: 'block' },
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: { md: '32vh', lg: '35vh' },
+                    height: 5,
+                    backgroundColor: (theme) => theme.palette.secondary.main,
+                }}
+            />
+            <Component.LoginComponentWrapper>
                 <Formik
                     initialValues={{ username: '', password: '' }}
                     validationSchema={loginSchema}
@@ -56,31 +50,26 @@ export const Login = () => {
                         setSubmitting(false);
                     }}
                 >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                    }) => (
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
                         <Box
                             sx={{
-                                margin: 5,
-                                display: 'flex',
-                                flexDirection: 'column',
+                                width: '100%',
+                                marginInline: { xs: 'auto', sm: 0 },
                             }}
                             component="form"
                             onSubmit={handleSubmit}
                         >
-                            <Avatar sx={{ m: 1, mb: 3, bgcolor: 'secondary.main' }}>
-                                <LockOutlinedIcon />
-                            </Avatar>
-                            <Typography component="h1" variant="h5" sx={{ fontWeight: 600 }}>
-                                Connexion
-                            </Typography>
-                            <Box sx={{ mt: 1 }}>
+                            <Box sx={{ height: '20vh', width: '100%' }}>
+                                <Box component="img" src={Constant.LOGOS_FILE_PATH + Constant.LOGIN_LOGOS_FILE} width="100%" maxWidth={150} />
+                                <Typography
+                                    component="h1"
+                                    variant="h1"
+                                    sx={{ textTransform: 'uppercase', fontSize: 45, fontWeight: 800, marginTop: { xs: 5, md: 20 }, letterSpacing: '-0.025em' }}
+                                >
+                                    Connexion
+                                </Typography>
+                            </Box>
+                            <Box sx={{ mt: { xs: 5, md: 25 } }} fullWidth>
                                 <Component.CmtTextField
                                     margin="normal"
                                     value={values.username}
@@ -110,41 +99,53 @@ export const Login = () => {
                                     error={touched.password && Boolean(errors.password)}
                                     helperText={touched.password && errors.password}
                                 />
-                                <Grid container>
-                                    <Grid item xs>
-                                        <FormControlLabel
-                                            control={<Checkbox value="remember" color="primary" />}
-                                            label="Remember me"
-                                        />
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs
+                                <Box sx={{ marginTop: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <Link
+                                        href={Constant.FORGOT_PASSWORD_PATH}
+                                        variant="body2"
                                         sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'flex-end',
+                                            color: (theme) => theme.palette.tertiary.main,
+                                            textDecoration: 'none',
+                                            '&:hover': {
+                                                color: (theme) => theme.palette.tertiary.main,
+                                            },
                                         }}
                                     >
-                                        <Link href={Constant.FORGOT_PASSWORD_PATH} variant="body2">
-                                            Mot de passe oublié
-                                        </Link>
-                                    </Grid>
-                                </Grid>
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2, borderRadius: 5 }}
-                                    disabled={isSubmitting}
-                                >
-                                    Se connecter
-                                </Button>
+                                        Mot de passe oublié
+                                    </Link>
+                                    <Button type="submit" variant="contained" disabled={isSubmitting}>
+                                        Se connecter
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
                     )}
                 </Formik>
-            </Paper>
-        </Container>
+            </Component.LoginComponentWrapper>
+            <Component.LoginBackgroundWrapper backgroundUrl={Constant.IMAGES_FILE_PATH + Constant.LOGIN_BACKGROUND_FILE}>
+                <Box sx={{ zIndex: 20, height: '20vh', width: '100%', display: 'flex', alignItems: 'flex-end' }}>
+                    <Typography
+                        component="h2"
+                        variant="h1"
+                        sx={{ color: '#FFFFFF', textTransform: 'uppercase', fontSize: 45, fontWeight: 800, marginTop: { xs: 5, md: 20 }, letterSpacing: '-0.025em' }}
+                    >
+                        Bienvenue
+                    </Typography>
+                </Box>
+
+                <Box sx={{ zIndex: 20, mt: { md: 25 }, color: '#FFFFFF', maxWidth: { md: '30vw', lg: '20vw' } }}>
+                    <Typography variant="h1" sx={{ color: '#FFFFFF', textTransform: 'uppercase', fontSize: 25, fontWeight: 500, marginTop: { xs: 5, md: 20 } }}>
+                        Titre
+                    </Typography>
+
+                    <Typography sx={{ marginTop: 3, fontSize: 18 }}>
+                        <Typography sx={{ fontWeight: 600, fontSize: 18 }} component="b">
+                            Lorem ipsum{' '}
+                        </Typography>
+                        dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                    </Typography>
+                </Box>
+            </Component.LoginBackgroundWrapper>
+        </Component.LoginPageWrapper>
     );
 };

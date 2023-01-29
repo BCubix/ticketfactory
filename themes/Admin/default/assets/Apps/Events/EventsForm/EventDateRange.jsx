@@ -1,11 +1,9 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, FormControl, FormHelperText, MenuItem, Select, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import moment from 'moment';
 import * as Yup from 'yup';
-
-import { Button, Dialog, DialogActions, DialogContent, FormControl, FormHelperText, MenuItem, Select, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-
+import { Formik } from 'formik';
 import { Component } from '@/AdminService/Component';
 
 const DAY_LIST = [
@@ -24,11 +22,11 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
         let endDate = moment(values.endDate);
         let generatedList = [];
 
-        while (values.day !== beginDate.format('dddd')) {
-            beginDate.add(1, 'day');
-        }
-
         while (beginDate.isSameOrBefore(endDate, 'day')) {
+            while (values.days.indexOf(beginDate.format('dddd')) === -1) {
+                beginDate.add(1, 'day');
+            }
+
             generatedList.push({
                 eventDate: beginDate.format('YYYY-MM-DD HH:mm'),
                 annotation: '',
@@ -36,7 +34,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                 reportDate: '',
             });
 
-            beginDate.add(7, 'day');
+            beginDate.add(1, 'day');
         }
 
         submitDateRange(generatedList);
@@ -44,7 +42,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
     };
 
     const generateSchema = Yup.object().shape({
-        day: Yup.string().required('Veuillez renseigner le jour de récurrence.'),
+        days: Yup.array().min(1, 'Veuillez renseigner au moins un jour.'),
         beginDate: Yup.date()
             .required('Veuillez renseigner la date de début.')
             .test('isValid', 'Date invalide', (val) => val && moment(val).isValid()),
@@ -59,7 +57,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
         <Dialog maxWidth="sm" fullWidth open={Boolean(open !== null)} onClose={() => setOpen(null)}>
             <Formik
                 initialValues={{
-                    day: 'Monday',
+                    days: [],
                     beginDate: moment().format('YYYY-MM-DD'),
                     endDate: '',
                     hour: moment().format('HH:mm'),
@@ -83,22 +81,25 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
 
                                 <FormControl sx={{ maxWidth: 100 }} fullWidth>
                                     <Select
-                                        labelId={'day-choice-label'}
+                                        labelId={'days-choice-label'}
                                         variant={'standard'}
                                         size="small"
-                                        value={values.day}
-                                        onChange={(e) => setFieldValue('day', e.target.value)}
+                                        value={values.days}
+                                        onChange={(e) => setFieldValue('days', e.target.value)}
                                         onBlur={handleBlur}
-                                        name="day"
+                                        name="days"
                                         required
+                                        multiple
+                                        renderValue={() => values.days.join(', ')}
                                     >
                                         {DAY_LIST.map((item, dayIndex) => (
                                             <MenuItem key={dayIndex} value={item.value}>
+                                                <Checkbox checked={values.days?.indexOf(item.value) > -1} />
                                                 {item.label}
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    <FormHelperText error>{touched.day && errors.day}</FormHelperText>
+                                    <FormHelperText error>{touched.days && errors.days}</FormHelperText>
                                 </FormControl>
 
                                 <Typography marginInline={5}> entre le </Typography>
@@ -113,7 +114,6 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                                     name="beginDate"
                                     onTouched={setFieldTouched}
                                     required
-                                    disablePast
                                     inputSize="small"
                                     error={touched.beginDate && errors.beginDate}
                                 />
@@ -130,7 +130,6 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                                     onTouched={setFieldTouched}
                                     name="endDate"
                                     required
-                                    disablePast
                                     inputSize="small"
                                     error={touched.endDate && errors.endDate}
                                 />

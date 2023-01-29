@@ -70,6 +70,7 @@ import { ImageFormatGenerate } from '@Apps/ImageFormat/ImageFormatsList/ImageFor
 import { ImageFormatParameters } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatParameters';
 import { ImageFormatsList } from '@Apps/ImageFormat/ImageFormatsList/ImageFormatsList';
 import { Login } from '@Apps/Login/Login';
+import { LoginBackgroundWrapper, LoginComponentWrapper, LoginPageWrapper } from '@Apps/Login/sc.Login';
 import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
 import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
 import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
@@ -423,6 +424,9 @@ const ComponentObj = {
     TitleTypography: TitleTypography,
     CmtPageWrapper: CmtPageWrapper,
     PageWrapper: PageWrapper,
+    LoginPageWrapper: LoginPageWrapper,
+    LoginComponentWrapper: LoginComponentWrapper,
+    LoginBackgroundWrapper: LoginBackgroundWrapper,
     CmtPagination: CmtPagination,
     CmtPopover: CmtPopover,
     CmtRemoveButton: CmtRemoveButton,
