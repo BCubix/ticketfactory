@@ -140,9 +140,22 @@ export const Login = () => {
                         <Typography sx={{ fontWeight: 600, fontSize: 18 }} component="b">
                             Ticket Factory{' '}
                         </Typography>
-                        est l'outil de création de sites web n°1 pour l'événementiel et la culture. Personnalisez votre site comme vous le souhaitez grâce aux thèmes disponibles
-                        pour votre domaine d'activité et communiquez avec le reste de votre écosystème digital grâce aux nombreux modules de la market place (liaisons billetterie,
-                        CRM, outils tiers)...{' '}
+                        est l'outil de
+                        <Typography sx={{ fontWeight: 600, fontSize: 18 }} component="b">
+                            {' '}
+                            création de sites web{' '}
+                        </Typography>
+                        n°1 pour l'événementiel et la culture. Personnalisez votre site comme vous le souhaitez grâce aux
+                        <Typography sx={{ fontWeight: 600, fontSize: 18 }} component="b">
+                            {' '}
+                            thèmes{' '}
+                        </Typography>
+                        disponibles pour votre domaine d'activité et communiquez avec le reste de votre écosystème digital grâce aux nombreux
+                        <Typography sx={{ fontWeight: 600, fontSize: 18 }} component="b">
+                            {' '}
+                            modules{' '}
+                        </Typography>
+                        de la market place (liaisons billetterie, CRM, outils tiers)...{' '}
                     </Typography>
 
                     <Stack direction="row" spacing={10} sx={{ mt: 20 }}>
