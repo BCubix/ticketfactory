@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Avatar, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { loginAction, profileSelector } from '@Redux/profile/profileSlice';
+import { Stack } from '@mui/system';
 
 export const Login = () => {
     const dispatch = useDispatch();
@@ -29,19 +30,7 @@ export const Login = () => {
 
     return (
         <Component.LoginPageWrapper component="main">
-            <Box
-                sx={{
-                    zIndex: 100,
-                    display: { xs: 'none', md: 'block' },
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: { md: '32vh', lg: '35vh' },
-                    height: 5,
-                    backgroundColor: (theme) => theme.palette.secondary.main,
-                }}
-            />
-            <Component.LoginComponentWrapper>
+            <Component.LoginComponentWrapper className="backgroundDot_vertical">
                 <Formik
                     initialValues={{ username: '', password: '' }}
                     validationSchema={loginSchema}
@@ -59,12 +48,18 @@ export const Login = () => {
                             component="form"
                             onSubmit={handleSubmit}
                         >
-                            <Box sx={{ height: '20vh', width: '100%' }}>
-                                <Box component="img" src={Constant.LOGOS_FILE_PATH + Constant.LOGIN_LOGOS_FILE} width="100%" maxWidth={150} />
+                            <Box sx={{ height: { xs: '15vh', md: '20vh', lg: '25vh' }, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                                <Box component="img" src={Constant.LOGOS_FILE_PATH + Constant.DEFAULT_LOGOS_FILE} width="100%" maxWidth={300} />
                                 <Typography
                                     component="h1"
                                     variant="h1"
-                                    sx={{ textTransform: 'uppercase', fontSize: 45, fontWeight: 800, marginTop: { xs: 5, md: 20 }, letterSpacing: '-0.025em' }}
+                                    sx={{
+                                        textTransform: 'uppercase',
+                                        fontSize: { xs: 25, md: 35, lg: 45 },
+                                        fontWeight: 800,
+                                        marginTop: { xs: 5, md: 20 },
+                                        letterSpacing: '-0.025em',
+                                    }}
                                 >
                                     Connexion
                                 </Typography>
@@ -99,7 +94,7 @@ export const Login = () => {
                                     error={touched.password && Boolean(errors.password)}
                                     helperText={touched.password && errors.password}
                                 />
-                                <Box sx={{ marginTop: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <Box sx={{ marginTop: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Link
                                         href={Constant.FORGOT_PASSWORD_PATH}
                                         variant="body2"
@@ -123,29 +118,60 @@ export const Login = () => {
                 </Formik>
             </Component.LoginComponentWrapper>
             <Component.LoginBackgroundWrapper backgroundUrl={Constant.IMAGES_FILE_PATH + Constant.LOGIN_BACKGROUND_FILE}>
-                <Box sx={{ zIndex: 20, height: '20vh', width: '100%', display: 'flex', alignItems: 'flex-end' }}>
+                <Box sx={{ zIndex: 20, height: { xs: '15vh', md: '20vh', lg: '25vh' }, width: '100%', display: 'flex', alignItems: 'flex-end' }}>
                     <Typography
                         component="h2"
                         variant="h1"
-                        sx={{ color: '#FFFFFF', textTransform: 'uppercase', fontSize: 45, fontWeight: 800, marginTop: { xs: 5, md: 20 }, letterSpacing: '-0.025em' }}
+                        sx={{
+                            color: '#FFFFFF',
+                            textTransform: 'uppercase',
+                            fontSize: { md: 35, lg: 45 },
+                            fontWeight: 800,
+                            marginTop: { xs: 5, md: 20 },
+                            letterSpacing: '-0.025em',
+                        }}
                     >
-                        Bienvenue
+                        Bienvenue sur Ticket Factory
                     </Typography>
                 </Box>
 
-                <Box sx={{ zIndex: 20, mt: { md: 25 }, color: '#FFFFFF', maxWidth: { md: '30vw', lg: '20vw' } }}>
-                    <Typography variant="h1" sx={{ color: '#FFFFFF', textTransform: 'uppercase', fontSize: 25, fontWeight: 500, marginTop: { xs: 5, md: 20 } }}>
-                        Titre
-                    </Typography>
-
+                <Box sx={{ zIndex: 20, mt: { md: 25 }, color: '#FFFFFF', maxWidth: { md: '30vw', lg: '40vw' } }}>
                     <Typography sx={{ marginTop: 3, fontSize: 18 }}>
                         <Typography sx={{ fontWeight: 600, fontSize: 18 }} component="b">
-                            Lorem ipsum{' '}
+                            Ticket Factory{' '}
                         </Typography>
-                        dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                        est l'outil de création de sites web n°1 pour l'événementiel et la culture. Personnalisez votre site comme vous le souhaitez grâce aux thèmes disponibles
+                        pour votre domaine d'activité et communiquez avec le reste de votre écosystème digital grâce aux nombreux modules de la market place (liaisons billetterie,
+                        CRM, outils tiers)...{' '}
                     </Typography>
+
+                    <Stack direction="row" spacing={10} sx={{ mt: 20 }}>
+                        <LoginModulePresentation alt="Module 1">M1</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 2">M2</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 3">M3</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 4">M4</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 5">M5</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 6">M6</LoginModulePresentation>
+                    </Stack>
+
+                    <Stack direction="row" spacing={10} sx={{ mt: 6 }}>
+                        <LoginModulePresentation alt="Module 1">M1</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 2">M2</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 3">M3</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 4">M4</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 5">M5</LoginModulePresentation>
+                        <LoginModulePresentation alt="Module 6">M6</LoginModulePresentation>
+                    </Stack>
                 </Box>
             </Component.LoginBackgroundWrapper>
         </Component.LoginPageWrapper>
+    );
+};
+
+const LoginModulePresentation = ({ alt, children }) => {
+    return (
+        <Avatar alt={alt} sx={{ width: 64, height: 64 }}>
+            {children}
+        </Avatar>
     );
 };

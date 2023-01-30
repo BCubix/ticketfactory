@@ -1,0 +1,16 @@
+.backgroundDot {
+    &_vertical {
+        position: relative;
+
+        &::after {
+            content: '';
+            z-index: 200;
+            position: absolute;
+            right: -10px;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            background: url("../images/dot.png") repeat-y;
+        }
+    }
+}

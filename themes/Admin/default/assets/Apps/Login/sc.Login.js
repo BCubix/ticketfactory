@@ -47,7 +47,6 @@ export const LoginComponentWrapper = styled(Paper)`
         padding: 28px;
         border-radius: 0;
         box-shadow: none;
-        border-right: ${(props) => `10px dashed ${props.theme.palette.secondary.main}`};
     }
 
     ${(props) => props.theme.breakpoints.up('lg')} {
@@ -64,7 +63,8 @@ export const LoginBackgroundWrapper = styled(Box)`
     ${(props) => props.theme.breakpoints.up('md')} {
         display: flex;
         flex-direction: column;
-        padding: 64px;
+        padding-block: 28px;
+        padding-inline: 64px;
         background: ${(props) => `center / cover no-repeat url('${props.backgroundUrl}')`};
 
         &::before {
@@ -74,12 +74,12 @@ export const LoginBackgroundWrapper = styled(Box)`
             bottom: 0;
             right: 0;
             left: 0px;
-            border-left: ${(props) => `10px dashed ${props.theme.palette.secondary.main}`};
             background-color: ${(props) => alpha(props.theme.palette.primary.main, 0.4)};
         }
     }
 
     ${(props) => props.theme.breakpoints.up('lg')} {
+        padding-block: 64px;
         padding-inline: 112px;
     }
 `;

@@ -41,8 +41,6 @@ export const ParentMediaCategoryPartForm = ({ values, mediaCategoriesList, setFi
         return <></>;
     }
 
-    console.log(values, mediaCategoriesList);
-
     return (
         <>
             <InputLabel id={`mediaCategoriesParent-label`} required sx={{ fontSize: '12px' }}>
