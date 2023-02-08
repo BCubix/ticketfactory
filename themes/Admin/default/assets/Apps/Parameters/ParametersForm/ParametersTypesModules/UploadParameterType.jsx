@@ -4,11 +4,9 @@ import { useDispatch } from 'react-redux';
 import { Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 
-import {
-    intitializeParamsDropzone
-} from "@Apps/Parameters/ParametersForm/ParametersTypesModules/utils/initParamsDropzone";
+import { intitializeParamsDropzone } from '@Apps/Parameters/ParametersForm/ParametersTypesModules/utils/initParamsDropzone';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
 
@@ -18,25 +16,11 @@ const getType = () => {
     return TYPE;
 };
 
-const getComponent = ({
-    paramName,
-    paramKey,
-    paramValue,
-    paramBreakpoints,
-    setFieldValue,
-    indexTab,
-    indexBlock,
-    indexParam,
-    validations,
-    id,
-}) => {
+const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFieldValue, indexTab, indexBlock, indexParam, validations, id }) => {
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
-        setFieldValue(
-            `tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`,
-            e.filename
-        );
+        setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.filename);
     };
 
     useEffect(() => {
@@ -54,34 +38,30 @@ const getComponent = ({
     }, []);
 
     return (
-        <Grid item {...paramBreakpoints} display="flex" alignItems="center">
-            {paramValue && (
+        <Grid item {...paramBreakpoints} display="flex" flexDirection="column" justifyContent="center">
+            <Typography variant="body2">{paramName}</Typography>
+            <Box display={'flex'} alignItems="center" sx={{ paddingTop: 2, height: 100 }}>
+                {paramValue && <Box component="img" src={`${Constant.PARAMETER_FILE_BASE_URL}/${paramValue}`} height={100} marginRight={4} />}
                 <Box
-                    component="img"
-                    src={`${Constant.PARAMETER_FILE_BASE_URL}/${paramValue}`}
-                    height={100}
-                    marginRight={4}
-                />
-            )}
-            <Box
-                id={`js-dropzone-${paramName}`}
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    mt: 1,
-                    mb: 3,
-                    padding: 8,
-                    minHeight: 100,
-                    borderRadius: 1,
-                    border: '2px dashed #BBB',
-                    cursor: 'pointer',
-                    width: '100%',
-                }}
-            >
-                <Typography component="span" className="js-dropzone-label dropzone-element_label">
-                    Veuillez déposer un fichier ou cliquer sur la zone
-                </Typography>
+                    id={`js-dropzone-${paramName}`}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        mt: 2,
+                        mb: 3,
+                        padding: 8,
+                        minHeight: 100,
+                        borderRadius: 1,
+                        border: '2px dashed #BBB',
+                        cursor: 'pointer',
+                        width: '100%',
+                    }}
+                >
+                    <Typography component="span" className="js-dropzone-label dropzone-element_label">
+                        Veuillez déposer un fichier ou cliquer sur la zone
+                    </Typography>
+                </Box>
             </Box>
         </Grid>
     );

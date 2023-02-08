@@ -21,6 +21,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Event extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Spectacle\SpectacleTrait;
+    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -117,6 +120,13 @@ class Event extends Datable
 
     public function __construct()
     {
+        /*** > Module: ModuleTCE ***/
+        $this->spectacleBlogs = new ArrayCollection();
+        $this->spectaclePresses = new ArrayCollection();
+        $this->spectacleFroms = new ArrayCollection();
+        $this->spectacleTos = new ArrayCollection();
+        $this->spectacleTags = new ArrayCollection();
+        /*** < Module: ModuleTCE ***/
         $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();

@@ -16,6 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EventPrice
 {
     /*** > Trait ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Spectacle\SpectaclePriceTrait;
+    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]

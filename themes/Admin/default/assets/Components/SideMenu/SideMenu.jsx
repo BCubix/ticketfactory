@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink, matchPath, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { Drawer, Link, List, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 

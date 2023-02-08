@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Season extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Season\SeasonTrait;
+    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -70,6 +73,8 @@ class Season extends Datable
 
     public function __construct()
     {
+        /*** > Module: ModuleTCE ***/
+        /*** < Module: ModuleTCE ***/
         $this->events = new ArrayCollection();
     }
 

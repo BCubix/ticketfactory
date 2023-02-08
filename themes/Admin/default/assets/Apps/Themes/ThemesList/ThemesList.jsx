@@ -105,7 +105,11 @@ export const ThemesList = () => {
                     <CardContent>
                         <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
                             {themes.map((theme, index) => (
-                                <Component.CmtCard sx={{ width: 300, marginInline: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }} key={index}>
+                                <Component.CmtCard
+                                    sx={{ width: 300, marginInline: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }}
+                                    overflow="hidden"
+                                    key={index}
+                                >
                                     <CardMedia component="img" alt="preview" height={250} image={theme.previewUrl} sx={{ objectFit: 'cover', objectPosition: 'top' }} />
                                     <CardContent>
                                         <Typography variant="h5" fontSize={15} align={'center'}>

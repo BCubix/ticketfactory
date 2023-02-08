@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import getMenuEntryModules from '@Apps/Menus/MenusList/getMenuEntryModules';
+import { NoClickableMenuEntry } from './NoClickableMenuEntry';
 
 export const AddMenuElement = ({ addElementToMenu, language }) => {
     const menuEntryModule = useMemo(() => {
@@ -27,6 +28,7 @@ export const AddMenuElement = ({ addElementToMenu, language }) => {
             </Typography>
 
             <Box marginTop={4}>
+                <NoClickableMenuEntry addElementToMenu={addElementToMenu} />
                 {menuEntryModule.map((Item, index) => (
                     <Item key={index} addElementToMenu={addElementToMenu} language={language} />
                 ))}

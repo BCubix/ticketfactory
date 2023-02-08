@@ -61,6 +61,20 @@ class ThemeManager extends ModuleThemeManager
         return $themesInDisk;
     }
 
+    public function getIsServerSide()
+    {
+        $themeName = $this->pm->get('main_theme');
+        $configuration = $this->getConfiguration($themeName);
+
+        if (array_key_exists("server_side_rendering", $configuration)) {
+            $serverSideRendering = $configuration['server_side_rendering'] == true ? true : false;
+        } else {
+            $serverSideRendering = false;
+        }
+
+        return $serverSideRendering;
+    }
+
     public function getConfiguration(string $objectName): array
     {
         $config = Yaml::parseFile($this->dir . '/' . $objectName . '/config/config.yaml');
@@ -173,6 +187,16 @@ class ThemeManager extends ModuleThemeManager
     public function getWebsiteTemplatesPath(): string
     {
         return "Website/" . $this->pm->get('main_theme') . "/templates/";
+    }
+
+    /**
+     * Get website server path.
+     *
+     * @return string
+     */
+    public function getWebsiteServerPath(): string
+    {
+        return $this->pg->GetThemesDir() . "/" . $this->pm->get('main_theme') . "/assets/server/";
     }
 
     /**
