@@ -9,7 +9,7 @@ import { Component } from '@/AdminService/Component';
 
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const MediaCategoriesForm = ({ handleSubmit, initialValues = null, mediaCategoriesList = null, translateInitialValues = null }) => {
+export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValues = null, mediaCategoriesList = null, translateInitialValues = null }) => {
     const initValues = translateInitialValues || initialValues;
 
     const mediaCategorySchema = Yup.object().shape({
@@ -31,7 +31,7 @@ export const MediaCategoriesForm = ({ handleSubmit, initialValues = null, mediaC
                 id: initValues?.id || undefined,
                 name: initValues?.name || '',
                 active: initValues?.active || false,
-                parent: initValues?.parent?.id || '',
+                parent: initValues?.parent?.id || parentId || '',
                 mustHaveParent: !initValues || Boolean(initValues?.parent),
                 slug: initValues?.slug || '',
                 lang: initValues?.lang?.id || '',
@@ -68,7 +68,13 @@ export const MediaCategoriesForm = ({ handleSubmit, initialValues = null, mediaC
 
                             {values?.mustHaveParent && (
                                 <Grid item xs={12}>
-                                    <Component.ParentMediaCategoryPartForm values={values} mediaCategoriesList={mediaCategoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
+                                    <Component.ParentMediaCategoryPartForm
+                                        values={values}
+                                        mediaCategoriesList={mediaCategoriesList}
+                                        setFieldValue={setFieldValue}
+                                        touched={touched}
+                                        errors={errors}
+                                    />
                                 </Grid>
                             )}
                         </Grid>

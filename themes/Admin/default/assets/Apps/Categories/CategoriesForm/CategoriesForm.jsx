@@ -9,7 +9,7 @@ import { Component } from '@/AdminService/Component';
 
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesList = null, translateInitialValues = null }) => {
+export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = null, categoriesList = null, translateInitialValues = null }) => {
     const initValues = translateInitialValues || initialValues;
 
     const categorySchema = Yup.object().shape({
@@ -30,7 +30,7 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
             initialValues={{
                 name: initValues?.name || '',
                 active: initValues?.active || false,
-                parent: initValues?.parent?.id || '',
+                parent: initValues?.parent?.id || parentId || '',
                 mustHaveParent: !initValues || Boolean(initValues?.parent),
                 slug: initValues?.slug || '',
                 lang: initValues?.lang?.id || '',
@@ -66,7 +66,13 @@ export const CategoriesForm = ({ handleSubmit, initialValues = null, categoriesL
                             </Grid>
                             {values?.mustHaveParent && (
                                 <Grid item xs={12}>
-                                    <Component.ParentCategoryPartForm values={values} categoriesList={categoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
+                                    <Component.ParentCategoryPartForm
+                                        values={values}
+                                        categoriesList={categoriesList}
+                                        setFieldValue={setFieldValue}
+                                        touched={touched}
+                                        errors={errors}
+                                    />
                                 </Grid>
                             )}
                         </Grid>

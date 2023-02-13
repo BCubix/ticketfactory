@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import ReactCountryFlag from 'react-country-flag';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { CardContent, FormControl, Link, MenuItem, Select, Typography } from '@mui/material';
 
@@ -57,7 +58,7 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange, changeLanguag
                     ) : (
                         list?.length > 0 && <>Modifiez votre menu ci-dessous, ou</>
                     )}
-                    <Link sx={{ marginInline: 2 }} href={`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}`}>
+                    <Link sx={{ marginInline: 2 }} component={RouterLink} to={`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}`}>
                         {list.length === 0 ? 'C' : 'c'}réez un nouveau menu.
                     </Link>
                     N’oubliez pas d’enregistrer vos modifications !

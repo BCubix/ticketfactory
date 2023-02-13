@@ -4,6 +4,7 @@ const MEDIA_TYPE = [
     { name: 'image/jpeg', type: 'image' },
     { name: 'image/webp', type: 'image' },
     { name: 'image/gif', type: 'image' },
+    { name: 'image/svg+xml', type: 'image' },
     { name: 'audio/midi', type: 'audio' },
     { name: 'audio/mpeg', type: 'audio' },
     { name: 'audio/webm', type: 'audio' },

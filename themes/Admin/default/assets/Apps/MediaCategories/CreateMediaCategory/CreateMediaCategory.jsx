@@ -19,6 +19,7 @@ export const CreateMediaCategory = () => {
     const [queryParameters] = useSearchParams();
     const mediaCategoryId = queryParameters.get('mediaCategoryId');
     const languageId = queryParameters.get('languageId');
+    const parentId = queryParameters.get('parentId');
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
@@ -66,5 +67,12 @@ export const CreateMediaCategory = () => {
         return <></>;
     }
 
-    return <Component.MediaCategoriesForm handleSubmit={handleSubmit} mediaCategoriesList={mediaCategoriesData?.mediaCategories} translateInitialValues={initialValues} />;
+    return (
+        <Component.MediaCategoriesForm
+            handleSubmit={handleSubmit}
+            mediaCategoriesList={mediaCategoriesData?.mediaCategories}
+            translateInitialValues={initialValues}
+            parentId={parseInt(parentId) || null}
+        />
+    );
 };

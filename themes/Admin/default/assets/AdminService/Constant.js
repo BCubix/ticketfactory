@@ -54,7 +54,7 @@ const ConstantObj = {
 
     MEDIA_FILE_PATH: '/uploads/media',
 
-    IMAGE_FILE_SUPPORTED: 'image/jpeg, image/png, image/gif, image/webp',
+    IMAGE_FILE_SUPPORTED: 'image/jpeg, image/png, image/gif, image/webp, image/svg+xml, image/vnd.microsoft.icon',
     AUDIO_FILE_SUPPORTED: 'audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav',
     VIDEO_FILE_SUPPORTED: 'video/mp4, video/webm, video/ogg, video/mpeg',
     WORD_FILE_SUPPORTED: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -17,14 +17,12 @@ export const EditCategory = () => {
     const [category, setCategory] = useState(null);
     const [categoriesData, setCategoriesData] = useState(null);
 
-    useEffect(() => {}, [categoriesData]);
-
     const getCategory = async (id) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.categoriesApi.getOneCategory(id);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.CATEGORIES_BASE_PATH);
+                navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
                 return;
             }
 
@@ -33,7 +31,7 @@ export const EditCategory = () => {
             Api.categoriesApi.getCategories({ lang: result?.category?.lang?.id }).then((categoriesList) => {
                 if (!categoriesList.result) {
                     NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                    navigate(Constant.CATEGORIES_BASE_PATH);
+                    navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
                     return;
                 }
 
@@ -44,7 +42,7 @@ export const EditCategory = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(Constant.CATEGORIES_BASE_PATH);
+            navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
             return;
         }
 
@@ -57,7 +55,7 @@ export const EditCategory = () => {
             if (result.result) {
                 NotificationManager.success('La catégorie a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getCategoriesAction());
-                navigate(Constant.CATEGORIES_BASE_PATH);
+                navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
             }
         });
     };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const NAME = 'groupFields';
 const LABEL = 'Groupes de champs';
@@ -8,18 +8,7 @@ const LABEL = 'Groupes de champs';
 const TYPE = 'groupFields';
 const TYPE_GROUP_NAME = 'Groupes';
 
-const ComplementInformation = ({
-    values,
-    index,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-    setFieldTouched,
-    prefixName,
-    errors,
-    touched,
-    contentTypesModules,
-}) => {
+const ComplementInformation = ({ values, index, handleChange, handleBlur, setFieldValue, setFieldTouched, prefixName, errors, touched, contentTypesModules }) => {
     return (
         <>
             <Component.ContentTypeFieldArrayForm
@@ -46,10 +35,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.required)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.required`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
                             }}
                         />
                     }
@@ -64,10 +50,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.disabled)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.disabled`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
                             }}
                         />
                     }
@@ -86,6 +69,7 @@ const getTabList = () => [{ label: 'Options', component: (props) => <Options {..
 const setInitialValues = (prefixName, setFieldValue) => {
     setFieldValue(`${prefixName}.options`, getInitialValues().options);
     setFieldValue(`${prefixName}.validations`, getInitialValues().validations);
+    setFieldValue(`${prefixName}.parameters`, getInitialValues().parameters);
 };
 
 const getInitialValues = () => ({

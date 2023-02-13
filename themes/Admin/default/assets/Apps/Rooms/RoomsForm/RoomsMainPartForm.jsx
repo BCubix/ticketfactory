@@ -36,20 +36,11 @@ export const RoomsMainPartForm = ({ values, errors, touched, setFieldValue, hand
                         label="Nombre de places"
                         name="seatsNb"
                         error={touched.seatsNb && errors.seatsNb}
-                        required
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={4}>
-                    <Component.CmtTextField
-                        value={values.area}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label="Superficie"
-                        name="area"
-                        error={touched.area && errors.area}
-                        required
-                    />
+                    <Component.CmtTextField value={values.area} onChange={handleChange} onBlur={handleBlur} label="Superficie" name="area" error={touched.area && errors.area} />
                 </Grid>
             </Grid>
         </Component.CmtFormBlock>

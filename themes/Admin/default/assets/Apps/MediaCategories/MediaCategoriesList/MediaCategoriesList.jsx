@@ -64,10 +64,12 @@ export const MediaCategoriesList = () => {
             pathArray.push({
                 label: mediaCategoryCopy.name,
                 path: `${Constant.MEDIA_CATEGORIES_BASE_PATH}/${mediaCategoryCopy.id}`,
+                id: mediaCategoryCopy.id,
             });
 
             mediaCategoryCopy = mediaCategoryCopy.parent ? { ...mediaCategoryCopy.parent } : null;
         }
+
         setPath(pathArray.reverse());
     }, [mediaCategory]);
 
@@ -114,7 +116,10 @@ export const MediaCategoriesList = () => {
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     Liste des catégories de média
                                 </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.MEDIA_CATEGORIES_BASE_PATH + Constant.CREATE_PATH)}>
+                                <Component.CreateButton
+                                    variant="contained"
+                                    onClick={() => navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}${path ? `?parentId=${path.at(-1)?.id}` : ''}`)}
+                                >
                                     Nouveau
                                 </Component.CreateButton>
                             </Box>
@@ -136,7 +141,11 @@ export const MediaCategoriesList = () => {
                                 handleDuplicate(id);
                             }}
                             onTranslate={(id, languageId) => {
-                                navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?mediaCategoryId=${id}&languageId=${languageId}`);
+                                navigate(
+                                    `${Constant.MEDIA_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?mediaCategoryId=${id}&languageId=${languageId}${
+                                        path ? `&parentId=${path.at(-1)?.id}` : ''
+                                    }`
+                                );
                             }}
                         />
                     </CardContent>

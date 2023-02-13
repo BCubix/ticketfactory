@@ -28,25 +28,16 @@ export const CategoriesList = () => {
     const [path, setPath] = useState(null);
 
     const getCategory = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.categoriesApi.getOneCategory(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CATEGORIES_BASE_PATH);
+                return;
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.categoriesApi.getOneCategory(id);
-
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-            navigate(Constant.CATEGORIES_BASE_PATH);
-
-            return;
-        }
-
-        setCategory(result.category);
+            setCategory(result.category);
+        });
     };
 
     useEffect(() => {
@@ -74,6 +65,7 @@ export const CategoriesList = () => {
             pathArray.push({
                 label: categoryCopy.name,
                 path: `${Constant.CATEGORIES_BASE_PATH}/${categoryCopy.id}`,
+                id: categoryCopy.id,
             });
 
             categoryCopy = categoryCopy.parent ? { ...categoryCopy.parent } : null;
@@ -131,7 +123,10 @@ export const CategoriesList = () => {
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     Liste des catégories
                                 </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CATEGORIES_BASE_PATH + Constant.CREATE_PATH)}>
+                                <Component.CreateButton
+                                    variant="contained"
+                                    onClick={() => navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}${path ? `?parentId=${path.at(-1)?.id}` : ''}`)}
+                                >
                                     Nouveau
                                 </Component.CreateButton>
                             </Box>
@@ -153,7 +148,9 @@ export const CategoriesList = () => {
                                 handleDuplicate(id);
                             }}
                             onTranslate={(id, languageId) => {
-                                navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}`);
+                                navigate(
+                                    `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}${path ? `?parentId=${path.at(-1)?.id}` : ''}`
+                                );
                             }}
                         />
                     </CardContent>

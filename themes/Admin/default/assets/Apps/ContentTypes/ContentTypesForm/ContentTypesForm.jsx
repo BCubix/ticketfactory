@@ -8,6 +8,7 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
 import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
+import { Constant } from '@/AdminService/Constant';
 
 export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }) => {
     const getContentTypesModules = useMemo(() => {
@@ -23,20 +24,18 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                     title: Yup.string().required('Veuillez renseigner le titre de votre champ.'),
                     name: Yup.string().required('Veuillez renseigner le nom de votre champ.'),
                     type: Yup.string().required('Veuillez renseigner le type de votre champ.'),
-                    parameters: Yup.array().of(
-                        Yup.object().when('type', (type) => {
-                            if (!type) {
-                                return;
-                            }
+                    parameters: Yup.object().when('type', (type) => {
+                        if (!type) {
+                            return;
+                        }
 
-                            const moduleName = String(type).charAt(0).toUpperCase() + type?.slice(1) + CONTENT_TYPE_MODULES_EXTENSION;
-                            if (getContentTypesModules[moduleName]?.getValidation) {
-                                return Yup.object().shape({
-                                    ...getContentTypesModules[moduleName].getValidation(),
-                                });
-                            }
-                        })
-                    ),
+                        const moduleName = String(type).charAt(0).toUpperCase() + type?.slice(1) + Constant.CONTENT_TYPE_MODULES_EXTENSION;
+                        if (getContentTypesModules[moduleName]?.getValidation) {
+                            return Yup.object().shape({
+                                ...getContentTypesModules[moduleName].getValidation(),
+                            });
+                        }
+                    }),
                 })
             )
             .required('Veuillez renseigner un champ')

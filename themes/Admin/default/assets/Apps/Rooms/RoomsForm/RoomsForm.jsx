@@ -12,8 +12,6 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
 
     const roomsSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la salle.').max(250, 'Le nom renseigné est trop long.'),
-        seatsNb: Yup.number().required('Veuillez renseigner le nombre de place.').min(1, 'Veuillez renseigner un nombre valide.'),
-        area: Yup.number().required('Veuillez renseigner la superficie.').min(1, 'Veuillez renseigner un nombre valide.'),
         seatingPlans: Yup.array().of(
             Yup.object().shape({
                 name: Yup.string().required('Veuillez renseigner le nom du plan'),

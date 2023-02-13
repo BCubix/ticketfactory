@@ -1,9 +1,12 @@
-import React from 'react';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { TreeItem, TreeView } from '@mui/lab';
+import React, { useMemo } from 'react';
+
 import { InputLabel, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { TreeItem, TreeView } from '@mui/lab';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
 const displayMediaCategoriesOptions = (list, values, setFieldValue) => {
     if (!list || list?.length === 0) {
@@ -41,6 +44,10 @@ export const ParentMediaCategoryPartForm = ({ values, mediaCategoriesList, setFi
         return <></>;
     }
 
+    const defaultExpend = useMemo(() => {
+        return getDefaultParentPath(mediaCategoriesList, values.parent);
+    }, []);
+
     return (
         <>
             <InputLabel id={`mediaCategoriesParent-label`} required sx={{ fontSize: '12px' }}>
@@ -52,7 +59,7 @@ export const ParentMediaCategoryPartForm = ({ values, mediaCategoriesList, setFi
                 value={values.parent}
                 label="Catégorie parent"
                 defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpanded={[mediaCategoriesList.id?.toString()]}
+                defaultExpanded={[mediaCategoriesList?.id?.toString(), ...defaultExpend]}
                 defaultExpandIcon={<ChevronRightIcon />}
                 sx={{ flexGrow: 1, overflowY: 'auto' }}
                 selected={values?.parent?.toString()}

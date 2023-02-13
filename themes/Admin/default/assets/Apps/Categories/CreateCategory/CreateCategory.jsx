@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { categoriesSelector, getCategoriesAction } from '@Redux/categories/categoriesSlice';
+import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
@@ -20,13 +20,14 @@ export const CreateCategory = () => {
     const [queryParameters] = useSearchParams();
     const categoryId = queryParameters.get('categoryId');
     const languageId = queryParameters.get('languageId');
+    const parentId = queryParameters.get('parentId');
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
             Api.categoriesApi.getCategories({ lang: languageId }).then((categoriesList) => {
                 if (!categoriesList.result) {
                     NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                    navigate(Constant.CATEGORIES_BASE_PATH);
+                    navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
                     return;
                 }
 
@@ -40,7 +41,7 @@ export const CreateCategory = () => {
             Api.categoriesApi.getTranslated(categoryId, languageId).then((category) => {
                 if (!category?.result) {
                     NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                    navigate(Constant.CATEGORIES_BASE_PATH);
+                    navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
                     return;
                 }
 
@@ -63,7 +64,7 @@ export const CreateCategory = () => {
         if (result.result) {
             NotificationManager.success('La catégorie a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
             dispatch(getCategoriesAction());
-            navigate(Constant.CATEGORIES_BASE_PATH);
+            navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
         }
     };
 
@@ -71,5 +72,12 @@ export const CreateCategory = () => {
         return <></>;
     }
 
-    return <Component.CategoriesForm handleSubmit={handleSubmit} categoriesList={categoriesData?.categories} translateInitialValues={initialValues} />;
+    return (
+        <Component.CategoriesForm
+            handleSubmit={handleSubmit}
+            categoriesList={categoriesData?.categories}
+            translateInitialValues={initialValues}
+            parentId={parseInt(parentId) || null}
+        />
+    );
 };
