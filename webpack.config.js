@@ -1,5 +1,6 @@
 var Encore = require('@symfony/webpack-encore');
 const path = require('path');
+const fs = require('fs');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -62,19 +63,33 @@ Encore
     .configureBabel(() => {}, {
         useBuiltIns: 'usage',
         corejs: 3,
-    });
+    })
 
-/* .configureDefinePlugin((options) => {
-        const env = dotenv.config();
-
+    .configureDefinePlugin((options) => {
+        const env = dotenv.config().parsed;
         if (env.error) {
             throw env.error;
         }
-
-        options['process'] = {
-            env: {},
-        };
-        options['process.env'].BEST_API_KEY = JSON.stringify(env.parsed.BEST_API_KEY || '');
-    }); */
+        options['process'] = {};
+        options['process.env'] = {};
+        // Get the root path.
+        const currentPath = path.join(__dirname);
+        // Create fallback path.
+        const basePath = currentPath + '/.env';
+        // Add the correct environment in path.
+        const envPath = currentPath + '/.env.local';
+        // Check if the specified environment file exists.
+        const finalPath = fs.existsSync(envPath) ? envPath : basePath;
+        // Set the path parameter in the dotenv config.
+        const fileEnv = dotenv.config({ path: finalPath }).parsed;
+        // Finally add env vars.
+        for (const property in fileEnv) {
+            // Filter env vars by prefix to avoid passing sensitive symfony variables to front,
+            // assuming  related vars are prefixed with REACT_APP_.
+            if (property.substr(0, 10) === 'REACT_APP_') {
+                options['process.env'][property] = JSON.stringify(fileEnv[property]);
+            }
+        }
+    });
 
 module.exports = Encore.getWebpackConfig();

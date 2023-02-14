@@ -1,10 +1,10 @@
 import { checkString } from '../services/utils/check';
 
 const ConstantObj = {
-    API_URL: 'http://localhost:8000/admin',
-    FRONT_URL: 'http://localhost:8000',
-    MEDIA_FILE_BASE_URL: 'http://localhost:8000',
-    PARAMETER_FILE_BASE_URL: 'http://localhost:8000/uploads/parameter',
+    API_URL: process.env.REACT_APP_API_URL,
+    FRONT_URL: process.env.REACT_APP_FRONT_URL,
+    MEDIA_FILE_BASE_URL: process.env.REACT_APP_MEDIA_FILE_BASE_URL,
+    PARAMETER_FILE_BASE_URL: process.env.REACT_APP_PARAMETER_FILE_BASE_URL,
     MEDIA_UPLOAD_URL: '/admin/api/_uploader/media/upload',
     PARAMETERS_UPLOAD_URL: '/admin/api/_uploader/parameter/upload',
     MODULE_UPLOAD_URL: '/admin/api/_uploader/module/upload',
