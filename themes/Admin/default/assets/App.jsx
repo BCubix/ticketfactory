@@ -29,8 +29,6 @@ export const App = () => {
         }
     }, []);
 
-    console.log(process.env.REACT_APP_FRONT_URL);
-
     useEffect(() => {
         if (!connected) {
             return;
