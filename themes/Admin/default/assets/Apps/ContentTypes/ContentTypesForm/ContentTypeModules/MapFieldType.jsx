@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const NAME = 'map';
 const LABEL = 'Carte';
@@ -43,10 +43,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.required)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.required`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
                             }}
                         />
                     }
@@ -61,10 +58,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.disabled)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.disabled`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
                             }}
                         />
                     }
@@ -76,7 +70,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
     );
 };
 
-const getSelectEntry = () => ({ name: NAME, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
+const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
 const getTabList = () => [{ label: 'Options', component: (props) => <Options {...props} /> }];
 
@@ -93,6 +87,7 @@ const getInitialValues = () => ({
 });
 
 export default {
+    TYPE,
     Options,
     ComplementInformation,
     getSelectEntry,

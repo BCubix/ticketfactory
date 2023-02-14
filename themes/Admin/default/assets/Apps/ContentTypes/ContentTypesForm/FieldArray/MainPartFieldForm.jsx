@@ -20,27 +20,12 @@ export const MainPartFieldForm = ({
     prefixId = prefixName.replaceAll('.', '-'),
     contentTypesModules,
 }) => {
-    const moduleName =
-        String(values.type).charAt(0).toUpperCase() +
-        values.type?.slice(1) +
-        Constant.CONTENT_TYPE_MODULES_EXTENSION;
-
     const handleChangeFieldType = (value) => {
-        const modName =
-            String(value).charAt(0).toUpperCase() +
-            value?.slice(1) +
-            Constant.CONTENT_TYPE_MODULES_EXTENSION;
-
-        contentTypesModules[modName]?.setInitialValues(
-            `${prefixName}fields.${index}`,
-            setFieldValue
-        );
+        contentTypesModules[value]?.setInitialValues(`${prefixName}fields.${index}`, setFieldValue);
     };
 
     const getSelectEntryList = useMemo(() => {
-        let moduleSelectList = Object.entries(contentTypesModules)?.map(([key, item]) =>
-            item?.getSelectEntry()
-        );
+        let moduleSelectList = Object.entries(contentTypesModules)?.map(([key, item]) => item?.getSelectEntry());
 
         let selectList = {};
 
@@ -76,7 +61,7 @@ export const MainPartFieldForm = ({
         return sList;
     }, []);
 
-    const ComplementInformation = contentTypesModules[moduleName]?.ComplementInformation || null;
+    const ComplementInformation = contentTypesModules[values.type]?.ComplementInformation || null;
 
     return (
         <>
@@ -118,11 +103,7 @@ export const MainPartFieldForm = ({
                 >
                     {getSelectEntryList?.map((typeList, typeIndex) =>
                         typeList?.name ? (
-                            <MenuItem
-                                key={typeIndex}
-                                value={typeList?.name}
-                                id={`${prefixId}fields-${index}-typeValue-${typeIndex}`}
-                            >
+                            <MenuItem key={typeIndex} value={typeList?.name} id={`${prefixId}fields-${index}-typeValue-${typeIndex}`}>
                                 {typeList?.label}
                             </MenuItem>
                         ) : (

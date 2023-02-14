@@ -56,7 +56,7 @@ export const ContentTypeFieldArrayForm = ({ values, errors, touched, handleChang
                                 color="primary"
                                 onClick={() => {
                                     const type = 'text';
-                                    const initialValues = contentTypesModules['TextFieldType'].getInitialValues();
+                                    const initialValues = contentTypesModules[type].getInitialValues();
 
                                     push({
                                         title: '',

@@ -1,11 +1,11 @@
 import React from 'react';
-import { FormControlLabel, Switch } from '@mui/material';
+import { FormControlLabel, FormHelperText, Switch } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
 const NAME = 'groupFields';
 const LABEL = 'Groupes de champs';
 
-const TYPE = 'groupFields';
+const TYPE = 'group';
 const TYPE_GROUP_NAME = 'Groupes';
 
 const ComplementInformation = ({ values, index, handleChange, handleBlur, setFieldValue, setFieldTouched, prefixName, errors, touched, contentTypesModules }) => {
@@ -22,6 +22,9 @@ const ComplementInformation = ({ values, index, handleChange, handleBlur, setFie
                 prefixName={`${prefixName}fields.${index}.parameters.`}
                 contentTypesModules={contentTypesModules}
             />
+            {errors[`${prefixName}fields.${index}`] && typeof errors[`${prefixName}fields.${index}`] === 'string' && (
+                <FormHelperText error>{errors[`${prefixName}fields.${index}`]}</FormHelperText>
+            )}
         </>
     );
 };
@@ -62,7 +65,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
     );
 };
 
-const getSelectEntry = () => ({ name: NAME, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
+const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
 const getTabList = () => [{ label: 'Options', component: (props) => <Options {...props} /> }];
 
@@ -79,6 +82,7 @@ const getInitialValues = () => ({
 });
 
 export default {
+    TYPE,
     Options,
     ComplementInformation,
     getSelectEntry,

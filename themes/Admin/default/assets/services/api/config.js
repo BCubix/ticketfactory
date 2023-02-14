@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 import { logoutAction } from '@Redux/profile/profileSlice';
 
@@ -22,20 +22,12 @@ api.interceptors.response.use(
         const status = error?.response?.status;
 
         if (api_count === 3) {
-            NotificationManager.error(
-                'Une erreur est survenu, essayez de rafraichir la page.',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenu, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             api_count = 0;
         }
 
         if (status >= 500) {
-            NotificationManager.error(
-                'Une erreur est survenu, essayez de rafraichir la page.',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenu, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
         }
 
         if (status === 401 && error?.config?.url !== '/token/refresh') {
@@ -67,7 +59,9 @@ axiosRetry(api, {
             return false;
         }
 
-        if (error?.response?.status === 500) {
+        const status = error?.response?.status;
+        const statusList = [400, 500];
+        if (statusList?.includes(status)) {
             return false;
         }
 

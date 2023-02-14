@@ -6,24 +6,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FormControlLabel, FormHelperText, Grid, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 const NAME = 'choiceList';
 const LABEL = 'Liste de choix multiples';
 
-const TYPE = 'choiceList';
+const TYPE = 'list';
 const TYPE_GROUP_NAME = 'Choix';
 
-const ComplementInformation = ({
-    values,
-    index,
-    setFieldValue,
-    handleBlur,
-    prefixName,
-    errors,
-    touched,
-}) => {
+const ComplementInformation = ({ values, index, setFieldValue, handleBlur, prefixName, errors, touched }) => {
     const [list, setList] = useState([]);
 
     useEffect(() => {
@@ -50,9 +42,7 @@ const ComplementInformation = ({
         newList[choiceIndex] = { label, value };
         setList(newList);
 
-        let choices = newList
-            .map((el) => `${el.value}${el.label ? ` : ${el.label}` : ''}`)
-            .join('\n');
+        let choices = newList.map((el) => `${el.value}${el.label ? ` : ${el.label}` : ''}`).join('\n');
 
         setFieldValue(`${prefixName}fields.${index}.parameters.choices`, choices);
     };
@@ -67,15 +57,10 @@ const ComplementInformation = ({
 
     const handleDeleteChoice = (deleteIndex) => {
         let newList = [...list];
-
         newList.splice(deleteIndex, 1);
-
         setList(newList);
 
-        let choices = newList
-            .map((el) => `${el.value}${el.label ? ` : ${el.label}` : ''}`)
-            .join('\n');
-
+        let choices = newList.map((el) => `${el.value}${el.label ? ` : ${el.label}` : ''}`).join('\n');
         setFieldValue(`${prefixName}fields.${index}.parameters.choices`, choices);
     };
 
@@ -87,15 +72,7 @@ const ComplementInformation = ({
             <Box marginTop={8} marginLeft={4} marginBottom={4}>
                 <Grid container spacing={12}>
                     {list.map((item, ind) => (
-                        <Grid
-                            item
-                            container
-                            spacing={4}
-                            xs={12}
-                            sm={6}
-                            key={ind}
-                            position="relative"
-                        >
+                        <Grid item container spacing={4} xs={12} sm={6} key={ind} position="relative">
                             <Component.CmtCard sx={{ width: '100%', position: 'relative', padding: 2 }}>
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} sm={6}>
@@ -130,10 +107,7 @@ const ComplementInformation = ({
                                         />
                                     </Grid>
                                 </Grid>
-                                <Component.DeleteBlockFabButton
-                                    size={'small'}
-                                    onClick={() => handleDeleteChoice(ind)}
-                                >
+                                <Component.DeleteBlockFabButton size={'small'} onClick={() => handleDeleteChoice(ind)}>
                                     <CloseIcon />
                                 </Component.DeleteBlockFabButton>
                             </Component.CmtCard>
@@ -142,19 +116,9 @@ const ComplementInformation = ({
                 </Grid>
             </Box>
 
-            <FormHelperText error>
-                {
-                    getNestedFormikError(touched?.fields, errors?.fields, index, 'parameters')
-                        ?.choices
-                }
-            </FormHelperText>
+            <FormHelperText error>{getNestedFormikError(touched?.fields, errors?.fields, index, 'parameters')?.choices}</FormHelperText>
             <Box className="flex row-end">
-                <Component.AddBlockFabButton
-                    size="small"
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleAddChoice}
-                >
+                <Component.AddBlockFabButton size="small" variant="outlined" color="primary" onClick={handleAddChoice}>
                     <AddIcon />
                 </Component.AddBlockFabButton>
             </Box>
@@ -171,10 +135,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.required)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.required`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
                             }}
                         />
                     }
@@ -189,10 +150,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.disabled)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.disabled`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
                             }}
                         />
                     }
@@ -207,10 +165,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.multiple)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.multiple`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.multiple`, e.target.checked);
                             }}
                         />
                     }
@@ -222,7 +177,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
     );
 };
 
-const getSelectEntry = () => ({ name: NAME, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
+const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
 const getTabList = () => [{ label: 'Options', component: (props) => <Options {...props} /> }];
 
@@ -243,6 +198,7 @@ const getValidation = () => {
 };
 
 export default {
+    TYPE,
     Options,
     ComplementInformation,
     getSelectEntry,

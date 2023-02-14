@@ -8,7 +8,6 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
 import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
-import { Constant } from '@/AdminService/Constant';
 
 export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }) => {
     const getContentTypesModules = useMemo(() => {
@@ -26,15 +25,16 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                     type: Yup.string().required('Veuillez renseigner le type de votre champ.'),
                     parameters: Yup.object().when('type', (type) => {
                         if (!type) {
-                            return;
+                            return Yup.object().nullable();
                         }
 
-                        const moduleName = String(type).charAt(0).toUpperCase() + type?.slice(1) + Constant.CONTENT_TYPE_MODULES_EXTENSION;
-                        if (getContentTypesModules[moduleName]?.getValidation) {
+                        if (getContentTypesModules[type]?.getValidation) {
                             return Yup.object().shape({
-                                ...getContentTypesModules[moduleName].getValidation(),
+                                ...getContentTypesModules[type].getValidation(),
                             });
                         }
+
+                        return Yup.object().nullable();
                     }),
                 })
             )

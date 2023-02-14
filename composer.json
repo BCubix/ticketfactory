@@ -25,6 +25,7 @@
         "symfony/form": "^6.0",
         "symfony/framework-bundle": "*",
         "symfony/mailer": "5.4.*",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/runtime": "*",
         "symfony/security-bundle": "^5.4",

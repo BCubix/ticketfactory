@@ -1,26 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
 
-export const FieldArrayElem = ({
-    values,
-    index,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-    setFieldTouched,
-    prefixName,
-    contentTypesModules,
-}) => {
+export const FieldArrayElem = ({ values, index, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched, prefixName, contentTypesModules }) => {
     const [tabList, setTabList] = useState([]);
 
     useEffect(() => {
-        const moduleName = String(values.type).charAt(0).toUpperCase() + values.type?.slice(1);
-
-        const list =
-            contentTypesModules[`${moduleName}${Constant.CONTENT_TYPE_MODULES_EXTENSION}`]?.getTabList();
+        const list = contentTypesModules[values.type]?.getTabList();
 
         setTabList(list);
     }, [values.type]);

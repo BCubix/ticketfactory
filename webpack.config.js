@@ -1,5 +1,8 @@
 var Encore = require('@symfony/webpack-encore');
 const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
@@ -60,5 +63,18 @@ Encore
         useBuiltIns: 'usage',
         corejs: 3,
     });
+
+/* .configureDefinePlugin((options) => {
+        const env = dotenv.config();
+
+        if (env.error) {
+            throw env.error;
+        }
+
+        options['process'] = {
+            env: {},
+        };
+        options['process.env'].BEST_API_KEY = JSON.stringify(env.parsed.BEST_API_KEY || '');
+    }); */
 
 module.exports = Encore.getWebpackConfig();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const NAME = 'password';
 const LABEL = 'Mot de passe';
@@ -17,10 +17,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.required)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.required`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
                             }}
                         />
                     }
@@ -35,10 +32,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.disabled)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.disabled`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
                             }}
                         />
                     }
@@ -50,15 +44,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
     );
 };
 
-const Validations = ({
-    values,
-    errors,
-    index,
-    handleChange,
-    handleBlur,
-    prefixName,
-    setFieldValue,
-}) => {
+const Validations = ({ values, errors, index, handleChange, handleBlur, prefixName, setFieldValue }) => {
     return (
         <>
             <Component.FieldFormControl fullWidth>
@@ -101,10 +87,7 @@ const Validations = ({
                         <Switch
                             checked={Boolean(values.validations.minChar)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.minChar`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.minChar`, e.target.checked);
                             }}
                         />
                     }
@@ -119,10 +102,7 @@ const Validations = ({
                         <Switch
                             checked={Boolean(values.validations.majChar)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.majChar`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.majChar`, e.target.checked);
                             }}
                         />
                     }
@@ -137,10 +117,7 @@ const Validations = ({
                         <Switch
                             checked={Boolean(values.validations.numberChar)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.numberChar`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.numberChar`, e.target.checked);
                             }}
                         />
                     }
@@ -152,7 +129,7 @@ const Validations = ({
     );
 };
 
-const getSelectEntry = () => ({ name: NAME, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
+const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
 const getTabList = () => [
     { label: 'Options', component: (props) => <Options {...props} /> },
@@ -170,6 +147,7 @@ const getInitialValues = () => ({
 });
 
 export default {
+    TYPE,
     Options,
     Validations,
     getSelectEntry,

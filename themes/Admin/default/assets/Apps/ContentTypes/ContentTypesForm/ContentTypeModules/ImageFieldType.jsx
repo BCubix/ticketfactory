@@ -3,8 +3,8 @@ import React, { useMemo } from 'react';
 import { FormControlLabel, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 const NAME = 'image';
 const LABEL = 'Image';
@@ -21,10 +21,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.required)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.required`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
                             }}
                         />
                     }
@@ -39,10 +36,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.disabled)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.disabled`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
                             }}
                         />
                     }
@@ -57,10 +51,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.multiple)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.multiple`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.multiple`, e.target.checked);
                             }}
                         />
                     }
@@ -72,15 +63,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
     );
 };
 
-const Validations = ({
-    values,
-    errors,
-    index,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-    prefixName,
-}) => {
+const Validations = ({ values, errors, index, handleChange, handleBlur, setFieldValue, prefixName }) => {
     const imageTypeList = useMemo(() => {
         const list = Constant.IMAGE_FILE_SUPPORTED.split(',');
 
@@ -199,10 +182,7 @@ const Validations = ({
                             value={values.validations.type}
                             multiple
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.type`,
-                                    e.target.value
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.type`, e.target.value);
                             }}
                             renderValue={(val) => {
                                 return val.map((item, index) => (
@@ -228,7 +208,7 @@ const Validations = ({
     );
 };
 
-const getSelectEntry = () => ({ name: NAME, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
+const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
 const getTabList = () => [
     { label: 'Options', component: (props) => <Options {...props} /> },
@@ -254,6 +234,7 @@ const getInitialValues = () => ({
 });
 
 export default {
+    TYPE,
     Options,
     Validations,
     getSelectEntry,

@@ -26,13 +26,22 @@ const FILTERS_SORT_TAB = [
     },
 ];
 
-const serializeOptionsValidations = (element, name, formData) => {
+const serializeOptionsValidations = (element, name, formData, isParameterObject = false) => {
     Object.entries(element).map(([key, value], index) => {
-        if (null !== value && typeof value === 'object') {
-            serializeOptionsValidations(value, `${name}[${key}][${index}]`, formData);
-        } else {
+        if (null !== value && Array.isArray(value)) {
             formData.append(`${name}[${index}][name]`, key);
-            formData.append(`${name}[${index}][value]`, value);
+            value.forEach((el, index) => {
+                serializeOptionsValidations(el, `${name}[${index}][value][${index}]`, formData, true);
+            });
+        } else if (null !== value && typeof value === 'object') {
+            serializeOptionsValidations(value, `${name}[${key}][${index}]`, formData, isParameterObject);
+        } else {
+            if (isParameterObject) {
+                formData.append(`${name}[${key}]`, value);
+            } else {
+                formData.append(`${name}[${index}][name]`, key);
+                formData.append(`${name}[${index}][value]`, value);
+            }
         }
     });
 };
@@ -40,7 +49,7 @@ const serializeOptionsValidations = (element, name, formData) => {
 const serializeData = (element, name, formData) => {
     Object.entries(element).map(([key, value]) => {
         if (null !== value && typeof value === 'object') {
-            if (key === 'options' || key === 'validations') {
+            if (key === 'options' || key === 'validations' || key === 'parameters') {
                 serializeOptionsValidations(value, `${name}[${key}]`, formData);
             } else {
                 serializeData(value, `${name}[${key}]`, formData);

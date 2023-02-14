@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { FormControlLabel, Switch } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const NAME = 'datetime';
 const LABEL = 'Date / Heure';
@@ -18,10 +18,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.required)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.required`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
                             }}
                         />
                     }
@@ -36,10 +33,7 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                         <Switch
                             checked={Boolean(values.options.disabled)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.options.disabled`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
                             }}
                         />
                     }
@@ -60,10 +54,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                         <Switch
                             checked={Boolean(values.validations.disablePast)}
                             onChange={(e) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.disablePast`,
-                                    e.target.checked
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.disablePast`, e.target.checked);
                             }}
                         />
                     }
@@ -79,10 +70,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             fullWidth
                             value={values.validations.minDate}
                             setValue={(newValue) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.minDate`,
-                                    moment(newValue).format('YYYY-MM-DD')
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.minDate`, moment(newValue).format('YYYY-MM-DD'));
                             }}
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.minDate`}
@@ -102,10 +90,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             fullWidth
                             value={values.validations.maxDate}
                             setValue={(newValue) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.maxDate`,
-                                    moment(newValue).format('YYYY-MM-DD')
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.maxDate`, moment(newValue).format('YYYY-MM-DD'));
                             }}
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.maxDate`}
@@ -125,10 +110,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             fullWidth
                             value={values.validations.minHour}
                             setValue={(newValue) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.minHour`,
-                                    moment(newValue).format('HH:mm')
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.minHour`, moment(newValue).format('HH:mm'));
                             }}
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.minHour`}
@@ -148,10 +130,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                             fullWidth
                             value={values.validations.maxHour}
                             setValue={(newValue) => {
-                                setFieldValue(
-                                    `${prefixName}fields.${index}.validations.maxHour`,
-                                    moment(newValue).format('HH:mm')
-                                );
+                                setFieldValue(`${prefixName}fields.${index}.validations.maxHour`, moment(newValue).format('HH:mm'));
                             }}
                             onTouched={setFieldTouched}
                             name={`${prefixName}fields.${index}.validations.maxHour`}
@@ -167,7 +146,7 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
     );
 };
 
-const getSelectEntry = () => ({ name: NAME, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
+const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
 const getTabList = () => [
     { label: 'Options', component: (props) => <Options {...props} /> },
@@ -185,6 +164,7 @@ const getInitialValues = () => ({
 });
 
 export default {
+    TYPE,
     Options,
     Validations,
     getSelectEntry,
