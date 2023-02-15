@@ -1,7 +1,9 @@
 import React from 'react';
 import * as Yup from 'yup';
 import { Typography } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
+
+const TYPE = 'email';
 
 const VALIDATION_LIST = [
     {
@@ -12,16 +14,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    handleChange,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, handleChange, handleBlur, name, errors, field, label, touched }) => {
     return (
         <>
             <Component.CmtTextField
@@ -56,9 +49,7 @@ const getValidation = (contentType) => {
     VALIDATION_LIST?.forEach((element) => {
         const elVal = valList.find((el) => el.name === element.name);
         if (elVal && element.test(elVal.value)) {
-            validation = validation[element.validationName](
-                ...element.params({ name: contentType.title, value: elVal.value })
-            );
+            validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
@@ -66,6 +57,7 @@ const getValidation = (contentType) => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_LIST,

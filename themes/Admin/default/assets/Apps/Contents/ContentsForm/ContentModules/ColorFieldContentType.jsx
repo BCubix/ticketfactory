@@ -3,6 +3,8 @@ import { CirclePicker } from 'react-color';
 import { InputLabel, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
+const TYPE = 'color';
+
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
     {
@@ -13,16 +15,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field, label, touched }) => {
     return (
         <Box sx={{ marginBlock: 3 }}>
             <InputLabel id={`${label}-label`}>{label}</InputLabel>
@@ -52,6 +45,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_LIST,

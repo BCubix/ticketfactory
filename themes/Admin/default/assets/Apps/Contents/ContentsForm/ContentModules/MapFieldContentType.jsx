@@ -9,19 +9,11 @@ import 'mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { Button, Grid, InputLabel, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
-const FormComponent = ({
-    values,
-    handleChange,
-    setFieldValue,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const TYPE = 'map';
+
+const FormComponent = ({ values, handleChange, setFieldValue, handleBlur, name, errors, field, label, touched }) => {
     const mapContainer = useRef(null);
     const map = useRef(null);
 
@@ -70,14 +62,7 @@ const FormComponent = ({
                         onChange={handleChange}
                         onBlur={handleBlur}
                         name={`${name}.zoom`}
-                        error={
-                            touched &&
-                            touched[field.name] &&
-                            touched[field.name].zoom &&
-                            errors &&
-                            errors[field.name] &&
-                            errors[field.name].zoom
-                        }
+                        error={touched && touched[field.name] && touched[field.name].zoom && errors && errors[field.name] && errors[field.name].zoom}
                         required={field?.options?.required}
                         disabled={field?.options?.disabled}
                         type="number"
@@ -92,14 +77,7 @@ const FormComponent = ({
                         onChange={handleChange}
                         onBlur={handleBlur}
                         name={`${name}.lng`}
-                        error={
-                            touched &&
-                            touched[field.name] &&
-                            touched[field.name].lng &&
-                            errors &&
-                            errors[field.name] &&
-                            errors[field.name].lng
-                        }
+                        error={touched && touched[field.name] && touched[field.name].lng && errors && errors[field.name] && errors[field.name].lng}
                         required={field?.options?.required}
                         disabled={field?.options?.disabled}
                         type="number"
@@ -114,14 +92,7 @@ const FormComponent = ({
                         onChange={handleChange}
                         onBlur={handleBlur}
                         name={`${name}.lat`}
-                        error={
-                            touched &&
-                            touched[field.name] &&
-                            touched[field.name].lat &&
-                            errors &&
-                            errors[field.name] &&
-                            errors[field.name].lat
-                        }
+                        error={touched && touched[field.name] && touched[field.name].lat && errors && errors[field.name] && errors[field.name].lat}
                         required={field?.options?.required}
                         disabled={field?.options?.disabled}
                         size="small"
@@ -129,16 +100,7 @@ const FormComponent = ({
                     />
                 </Grid>
 
-                <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={2}
-                    display="flex"
-                    alignItems={'flex-end'}
-                    paddingBottom={'10px'}
-                >
+                <Grid item xs={12} sm={6} md={4} lg={2} display="flex" alignItems={'flex-end'} paddingBottom={'10px'}>
                     <Button
                         variant="contained"
                         color="primary"
@@ -187,6 +149,7 @@ const getValidation = (contentType) => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     getValidation,

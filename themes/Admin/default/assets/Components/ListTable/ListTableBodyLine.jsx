@@ -4,7 +4,7 @@ import { emphasize, TableCell, TableRow } from '@mui/material';
 import { ListTableCellButtons } from './ListTableCellButtons';
 import { RenderCellFunction } from './RenderCellFunction';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const ListTableBodyLine = ({
     item,
@@ -39,7 +39,7 @@ export const ListTableBodyLine = ({
                             onClick(item?.id);
                         }
                     },
-                    sx: { cursor: onClick && 'pointer', backgroundColor: isTranslated && '#E1E1E1' }
+                    sx: { cursor: onClick && 'pointer', backgroundColor: isTranslated && '#E1E1E1' },
                 }}
             >
                 {table.map((tableItem, ind) => (
@@ -80,7 +80,7 @@ export const ListTableBodyLine = ({
                         onSelect={onSelect}
                         onActive={onActive}
                         onDisable={onDisable}
-                        onDragEnd={true}
+                        onDragEnd={onDragEnd}
                         disableDeleteFunction={disableDeleteFunction}
                         contextualMenu={contextualMenu}
                         themeId={themeId}

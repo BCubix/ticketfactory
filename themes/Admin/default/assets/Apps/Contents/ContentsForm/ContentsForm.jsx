@@ -80,9 +80,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         let fields = {};
 
         selectedContentType?.fields?.forEach((el) => {
-            const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
-
-            fields[el.name] = formModules[moduleName]?.getInitialValue(el) || '';
+            fields[el.name] = formModules[el.type]?.getInitialValue(el) || '';
         });
 
         setInitValue({

@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import { FormControlLabel, FormHelperText, InputLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
+const TYPE = 'radio';
+
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
     {
@@ -12,16 +14,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field, label, touched }) => {
     const getList = useMemo(() => {
         if (!field || !field?.parameters?.choices) {
             return;
@@ -63,16 +56,9 @@ const FormComponent = ({
                 }}
             >
                 {getList?.map((item, index) => (
-                    <FormControlLabel
-                        key={index}
-                        value={item.value}
-                        control={<Radio />}
-                        label={item.label}
-                    />
+                    <FormControlLabel key={index} value={item.value} control={<Radio />} label={item.label} />
                 ))}
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </RadioGroup>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
@@ -88,6 +74,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_TYPE,

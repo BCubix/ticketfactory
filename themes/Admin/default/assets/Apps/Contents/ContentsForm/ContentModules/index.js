@@ -4,7 +4,10 @@ export default function ContentModules() {
     const list = require.context('./', true, /\.jsx$/);
 
     list.keys().map((item) => {
-        components[item.replace('./', '').replace('.jsx', '')] = list(item).default;
+        const component = list(item).default;
+        const name = component.TYPE;
+
+        components[name] = component;
     });
 
     return components;

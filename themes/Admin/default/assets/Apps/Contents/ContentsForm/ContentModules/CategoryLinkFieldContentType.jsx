@@ -8,8 +8,10 @@ import { TreeItem, TreeView } from '@mui/lab';
 import { FormControl, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
+
+const TYPE = 'categoryLink';
 
 const VALIDATION_TYPE = 'array';
 const VALIDATION_LIST = [
@@ -43,10 +45,7 @@ const displayCategoriesOptions = (list, values, setFieldValue, name, field) => {
                 </Box>
             }
         >
-            {Array.isArray(list?.children) &&
-                list?.children?.map((item) =>
-                    displayCategoriesOptions(item, values, setFieldValue, name, field)
-                )}
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setFieldValue, name, field))}
         </TreeItem>
     );
 };
@@ -67,11 +66,7 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
         const result = await Api.categoriesApi.getCategories();
 
         if (!result?.result) {
-            NotificationManager.error(
-                'Une erreur est survenue, essayez de rafraichir la page.',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
         }
 
         setList(result.categories);
@@ -104,9 +99,7 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
                     {displayCategoriesOptions(list, values, setFieldValue, name, field)}
                 </TreeView>
 
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </FormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
@@ -122,6 +115,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_TYPE,

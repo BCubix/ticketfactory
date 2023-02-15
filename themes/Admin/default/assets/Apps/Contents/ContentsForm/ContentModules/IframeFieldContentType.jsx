@@ -1,7 +1,9 @@
 import React from 'react';
 import * as Yup from 'yup';
 import { Typography } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
+
+const TYPE = 'iframe';
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
@@ -13,16 +15,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    handleChange,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, handleChange, handleBlur, name, errors, field, label, touched }) => {
     return (
         <>
             <Component.CmtTextField
@@ -52,21 +45,14 @@ const getInitialValue = () => {
 const getValidation = (contentType) => {
     let validation = Yup[VALIDATION_TYPE]();
 
-    validation = validation['matches'](
-        ...[
-            /^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
-            'Url invalide',
-        ]
-    );
+    validation = validation['matches'](...[/^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, 'Url invalide']);
 
     const valList = [...contentType.validations, ...contentType.options];
 
     VALIDATION_LIST.forEach((element) => {
         const elVal = valList.find((el) => el.name === element.name);
         if (elVal && element.test(elVal.value)) {
-            validation = validation[element.validationName](
-                ...element.params({ name: contentType.title, value: elVal.value })
-            );
+            validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
@@ -74,6 +60,7 @@ const getValidation = (contentType) => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     getValidation,

@@ -1,6 +1,8 @@
 import React from 'react';
 import { InputLabel, Typography } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
+
+const TYPE = 'contentEditor';
 
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
@@ -12,16 +14,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldTouched,
-    setFieldValue,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldTouched, setFieldValue, name, errors, field, label, touched }) => {
     return (
         <>
             <InputLabel id={`${label}-label`}>{label}</InputLabel>
@@ -36,9 +29,7 @@ const FormComponent = ({
                     required={field?.options?.required}
                     disabled={field?.options?.disabled}
                 />
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </Component.LightEditorFormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
@@ -54,6 +45,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_LIST,

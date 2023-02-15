@@ -1,28 +1,7 @@
 import React from 'react';
-import { Constant } from "@/AdminService/Constant";
 
-export const DisplayContentField = ({
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-    setFieldTouched,
-    field,
-    contentModules,
-    prefixName,
-}) => {
-    const moduleName =
-        String(field.type).charAt(0).toUpperCase() +
-        field.type?.slice(1) +
-        Constant.CONTENT_MODULES_EXTENSION;
-
-    const FormComponent =
-        (contentModules &&
-            contentModules[moduleName] &&
-            contentModules[moduleName].FormComponent) ||
-        null;
+export const DisplayContentField = ({ values, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched, field, contentModules, prefixName }) => {
+    const FormComponent = (contentModules && contentModules[field.type] && contentModules[field.type].FormComponent) || null;
 
     if (!FormComponent) {
         return <>Ce composant n'existe pas</>;

@@ -4,10 +4,12 @@ import { useDispatch } from 'react-redux';
 
 import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
+
+const TYPE = 'eventLink';
 
 const VALIDATION_TYPE = 'array';
 const VALIDATION_LIST = [
@@ -19,16 +21,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    handleBlur,
-    setFieldValue,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field, label, touched }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
@@ -44,11 +37,7 @@ const FormComponent = ({
         const result = await Api.eventsApi.getEvents();
 
         if (!result?.result) {
-            NotificationManager.error(
-                'Une erreur est survenue, essayez de rafraichir la page.',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
         }
 
         setList(result.events);
@@ -83,9 +72,7 @@ const FormComponent = ({
                         </MenuItem>
                     ))}
                 </Select>
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </FormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
@@ -101,6 +88,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_TYPE,

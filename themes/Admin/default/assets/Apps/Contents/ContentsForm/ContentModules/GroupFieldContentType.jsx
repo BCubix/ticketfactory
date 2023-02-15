@@ -2,39 +2,31 @@ import React from 'react';
 import * as Yup from 'yup';
 import { Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import ContentModules from "@Apps/Contents/ContentsForm/ContentModules/index";
+import ContentModules from '@Apps/Contents/ContentsForm/ContentModules/index';
 
-const FormComponent = ({
-    values,
-    handleChange,
-    handleBlur,
-    setFieldTouched,
-    setFieldValue,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-    contentModules,
-}) => {
+const TYPE = 'group';
+
+const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules }) => {
     return (
         <>
             <Component.CmtFormBlock title={label}>
-                <Component.DisplayContentForm
-                    values={values[field.name]}
-                    errors={(errors && errors[field.name]?.parameters) || {}}
-                    touched={(touched && touched[field.name]?.parameters) || {}}
-                    handleBlur={handleBlur}
-                    handleChange={handleChange}
-                    setFieldTouched={setFieldTouched}
-                    setFieldValue={setFieldValue}
-                    contentType={field?.parameters}
-                    contentModules={contentModules}
-                    prefixName={`${name}.`}
-                />
+                {values && (
+                    <Component.DisplayContentForm
+                        values={values[field.name]}
+                        errors={(errors && errors[field.name]?.parameters) || {}}
+                        touched={(touched && touched[field.name]?.parameters) || {}}
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        setFieldTouched={setFieldTouched}
+                        setFieldValue={setFieldValue}
+                        contentType={field?.parameters}
+                        contentModules={contentModules}
+                        prefixName={`${name}.`}
+                    />
+                )}
 
                 {field.helper && (
                     <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
@@ -52,8 +44,7 @@ const getInitialValue = (field) => {
     let fields = {};
 
     field?.parameters?.fields?.forEach((el) => {
-        const moduleName =
-            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
+        const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
 
         fields[el.name] = contentModules[moduleName]?.getInitialValue(el) || '';
     });
@@ -73,9 +64,7 @@ const getSubValidation = (contentType, contentModule) => {
     contentModule?.VALIDATION_LIST?.forEach((element) => {
         const elVal = valList.find((el) => el.name === element.name);
         if (elVal && element.test(elVal.value)) {
-            validation = validation[element.validationName](
-                ...element.params({ name: contentType.title, value: elVal.value })
-            );
+            validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
@@ -87,18 +76,16 @@ const getValidation = (contentType) => {
     const contentModules = ContentModules();
 
     contentType?.parameters?.fields?.forEach((el) => {
-        const moduleName =
-            String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
+        const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
 
-        validation[el.name] = contentModules[moduleName]?.getValidation
-            ? contentModules[moduleName].getValidation(el)
-            : getSubValidation(el, contentModules[moduleName]);
+        validation[el.name] = contentModules[moduleName]?.getValidation ? contentModules[moduleName].getValidation(el) : getSubValidation(el, contentModules[moduleName]);
     });
 
     return Yup.array().of(Yup.object().shape({ ...validation }));
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     getValidation,

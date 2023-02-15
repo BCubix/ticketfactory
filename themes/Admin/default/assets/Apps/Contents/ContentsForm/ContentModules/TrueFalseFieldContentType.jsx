@@ -2,16 +2,9 @@ import React from 'react';
 import { FormControl, FormControlLabel, FormHelperText, Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const TYPE = 'trueFalse';
+
+const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field, label, touched }) => {
     return (
         <Box sx={{ marginBlock: 3 }}>
             <FormControl fullWidth>
@@ -33,9 +26,7 @@ const FormComponent = ({
                         marginBlock: 0,
                     }}
                 />
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </FormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
@@ -51,6 +42,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
 };

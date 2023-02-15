@@ -6,6 +6,8 @@ import { Box, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
+const TYPE = 'date';
+
 const VALIDATION_TYPE = 'date';
 const VALIDATION_LIST = [
     {
@@ -105,6 +107,7 @@ const getValidation = (contentType) => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_LIST,

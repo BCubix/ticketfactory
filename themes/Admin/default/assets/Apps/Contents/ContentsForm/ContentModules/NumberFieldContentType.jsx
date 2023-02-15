@@ -1,6 +1,8 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
+
+const TYPE = 'number';
 
 const VALIDATION_TYPE = 'number';
 const VALIDATION_LIST = [
@@ -15,33 +17,18 @@ const VALIDATION_LIST = [
         name: 'min',
         validationName: 'min',
         test: (value) => Boolean(value),
-        params: ({ name, value }) => [
-            value,
-            `Le champ ${name} doit être supérieur ou égal à ${value}`,
-        ],
+        params: ({ name, value }) => [value, `Le champ ${name} doit être supérieur ou égal à ${value}`],
     },
 
     {
         name: 'max',
         validationName: 'max',
         test: (value) => Boolean(value),
-        params: ({ name, value }) => [
-            value,
-            `Le champ ${name} doit être inférieur ou égal à ${value}`,
-        ],
+        params: ({ name, value }) => [value, `Le champ ${name} doit être inférieur ou égal à ${value}`],
     },
 ];
 
-const FormComponent = ({
-    values,
-    handleChange,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, handleChange, handleBlur, name, errors, field, label, touched }) => {
     return (
         <>
             <Component.CmtTextField
@@ -69,6 +56,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_TYPE,

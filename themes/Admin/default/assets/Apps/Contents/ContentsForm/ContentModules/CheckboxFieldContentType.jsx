@@ -2,6 +2,8 @@ import React from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
+const TYPE = 'checkbox';
+
 const VALIDATION_TYPE = 'bool';
 const VALIDATION_LIST = [
     {
@@ -12,16 +14,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
+const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field, label, touched }) => {
     return (
         <Box sx={{ marginBlock: 3 }}>
             <FormControl fullWidth>
@@ -43,9 +36,7 @@ const FormComponent = ({
                         marginBlock: 0,
                     }}
                 />
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </FormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 0 }}>
@@ -61,6 +52,7 @@ const getInitialValue = () => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_LIST,

@@ -26,7 +26,9 @@ const categoriesApi = {
         try {
             const result = await axios.get(`/event-categories/${id}`);
 
-            return { result: true, category: result.data };
+            let data = sortTranslatedCategory(result.data);
+
+            return { result: true, category: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

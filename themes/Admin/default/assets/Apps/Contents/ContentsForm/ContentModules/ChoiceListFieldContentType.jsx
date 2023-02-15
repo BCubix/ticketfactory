@@ -1,13 +1,8 @@
 import React, { useMemo } from 'react';
-import {
-    FormControl,
-    FormHelperText,
-    InputLabel,
-    MenuItem,
-    Select,
-    Typography,
-} from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+
+const TYPE = 'list';
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
@@ -19,21 +14,8 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({
-    values,
-    setFieldValue,
-    handleBlur,
-    name,
-    errors,
-    field,
-    label,
-    touched,
-}) => {
-    let val = field?.options?.multiple
-        ? Array.isArray(values[field.name])
-            ? values[field.name]
-            : []
-        : values[field.name];
+const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field, label, touched }) => {
+    let val = field?.options?.multiple ? (Array.isArray(values[field.name]) ? values[field.name] : []) : values[field.name];
 
     const getList = useMemo(() => {
         if (!field || !field?.parameters?.choices) {
@@ -78,9 +60,7 @@ const FormComponent = ({
                         </MenuItem>
                     ))}
                 </Select>
-                {touched && touched[field.name] && errors && errors[field.name] && (
-                    <FormHelperText error>{errors[field.name]}</FormHelperText>
-                )}
+                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
             </FormControl>
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
@@ -96,6 +76,7 @@ const getInitialValue = (field) => {
 };
 
 export default {
+    TYPE,
     FormComponent,
     getInitialValue,
     VALIDATION_LIST,
