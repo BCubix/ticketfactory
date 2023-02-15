@@ -3,6 +3,7 @@
 namespace App\Form\Admin\Content\Types;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldRadioType extends ContentTypeFieldAbstractType
@@ -26,6 +27,8 @@ class ContentTypeFieldRadioType extends ContentTypeFieldAbstractType
     }
 
     public static function getParameters() {
-        return ['choices' => 'string'];
+        return [
+            'choices' => ['class' => TextType::class]
+        ];
     }
 }

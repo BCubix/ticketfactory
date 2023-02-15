@@ -24,6 +24,11 @@ class ContentTypeFieldDateType extends ContentTypeFieldAbstractType
     }
 
     public static function getValidations() {
-        return ['lessThan', 'lessThanOrEqual', 'greaterThan', 'greaterThanOrEqual'];
+        return [
+            'lessThan' => ['class' => DateType::class],
+            'lessThanOrEqual' => ['class' => DateType::class],
+            'greaterThan' => ['class' => DateType::class],
+            'greaterThanOrEqual' => ['class' => DateType::class]
+        ];
     }
 }

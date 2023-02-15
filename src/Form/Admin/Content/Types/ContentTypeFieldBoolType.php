@@ -17,11 +17,18 @@ class ContentTypeFieldBoolType extends ContentTypeFieldAbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'false_values' => ['0']
+            'false_values' => ['0', null, false]
         ]);
     }
 
     public static function getValidations() {
-        return ['isTrue'];
+        return [
+            'isTrue' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', null, false]
+                ]
+            ]
+        ];
     }
 }

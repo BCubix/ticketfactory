@@ -107,7 +107,7 @@ class ContentTypeManager extends AbstractManager
         $parameters = [];
         foreach ($contentTypeField->getParameters() as $parameter) {
             // We only pass parameters that are defined
-            if (!in_array($parameter->getName(), $expectedParameters)) {
+            if (!array_key_exists($parameter->getName(), $expectedParameters)) {
                 continue;
             }
 

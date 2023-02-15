@@ -20,8 +20,4 @@ class ContentTypeFieldUrlType extends ContentTypeFieldAbstractType
             'default_protocol' => 'https'
         ]);
     }
-
-    public static function getValidations() {
-        return ['url'];
-    }
 }

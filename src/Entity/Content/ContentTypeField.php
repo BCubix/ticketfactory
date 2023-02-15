@@ -130,57 +130,82 @@ class ContentTypeField implements JsonDoctrineSerializable
 
     public function jsonSerialize(): mixed
     {
-        $options = [];
-        foreach ($this->options as $option) {
-            $options[] = $option->jsonSerialize();
-        }
-
-        $validations = [];
-        foreach ($this->validations as $validation) {
-            $validations[] = $validation->jsonSerialize();
-        }
-
-        $parameters = [];
-        foreach ($this->parameters as $parameter) {
-            $parameters[] = $parameter->jsonSerialize();
-        }
-
         return [
             'title'       => $this->title,
             'name'        => $this->name,
             'helper'      => $this->helper,
             'type'        => $this->type,
-            'options'     => $options,
-            'validations' => $validations,
-            'parameters'  => $parameters,
+            'options'     => $this->jsonNodeSerialize($this->options),
+            'validations' => $this->jsonNodeSerialize($this->validations),
+            'parameters'  => $this->jsonNodeSerialize($this->parameters)
         ];
     }
 
     public static function jsonDeserialize($data): self
     {
-        $object = new self();
-        $object->title  = $data['title'];
-        $object->name   = $data['name'];
-        $object->helper = $data['helper'];
-        $object->type   = $data['type'];
-
-        $object->options = [];
-        foreach ($data['options'] as $option) {
-            $object->options[] = ContentTypeOption::jsonDeserialize($option);
-        }
-
-        $object->validations = [];
-        foreach ($data['validations'] as $validation) {
-            $object->validations[] = ContentTypeValidation::jsonDeserialize($validation);
-        }
-
-        if (array_key_exists("parameters", $data)) {
-            $object->parameters = [];
-            foreach ($data['parameters'] as $parameter) {
-                $object->parameters[] = ContentTypeParameter::jsonDeserialize($parameter);
-            }
-        }
+        $object              = new self();
+        $object->title       = $data['title'];
+        $object->name        = $data['name'];
+        $object->helper      = $data['helper'];
+        $object->type        = $data['type'];
+        $object->options     = self::jsonNodeDeserialize($data['options']);
+        $object->validations = self::jsonNodeDeserialize($data['validations']);
+        $object->parameters  = self::jsonNodeDeserialize($data['parameters']);
 
         return $object;
+    }
+
+    private function jsonNodeSerialize($data): mixed
+    {
+        switch (gettype($data)) {
+            case "array":
+                $arr = [];
+                foreach ($data as $key => $value) {
+                    $arr[$key] = $this->jsonNodeSerialize($value);
+                }
+                return $arr;
+
+            case "object":
+                return [
+                    'type' => 'object',
+                    'typeName' => get_class($data),
+                    'data' => $data->jsonSerialize()
+                ];
+
+            default:
+                return [
+                    'type' => 'type',
+                    'typeName' => gettype($data),
+                    'data' => $data
+                ];
+        }
+    }
+
+    private static function jsonNodeDeserialize($data): mixed
+    {
+        // Every field is encoded as an array containing its type and its value
+        if (!is_array($data)) {
+            throw new \Exception('Serialization error.');
+        }
+
+        // Array
+        if (!isset($data['type']) || !isset($data['typeName'])) {
+            $arr = [];
+            foreach ($data as $key => $value) {
+                $arr[$key] = self::jsonNodeDeserialize($value);
+            }
+            return $arr;
+        }
+
+        // Object
+        if ($data['type'] =='object') {
+            $className = $data['typeName'];
+            return $className::jsonDeserialize($data['data']);
+        }
+
+        // Primitive
+        if ($data['type'] =='type') {
+            return $data['data'];
+        }
     }
 }

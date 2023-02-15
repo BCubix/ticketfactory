@@ -2,7 +2,9 @@
 
 namespace App\Form\Admin\Content\Types;
 
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldTextareaType extends ContentTypeFieldAbstractType
@@ -15,6 +17,10 @@ class ContentTypeFieldTextareaType extends ContentTypeFieldAbstractType
     }
 
     public static function getValidations() {
-        return ['minLength', 'maxLength', 'regex'];
+        return [
+            'minLength' => ['class' => IntegerType::class],
+            'maxLength' => ['class' => IntegerType::class],
+            'regex' => ['class' => TextType::class]
+        ];
     }
 }

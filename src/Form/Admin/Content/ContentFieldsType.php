@@ -32,9 +32,7 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
 
     public function onPreSetData(FormEvent $event): void
     {
-        $object = $event->getData();
         $form = $event->getForm();
-
         $contentType = $form->getConfig()->getOptions()['content_type'];
 
         foreach ($contentType->getFields() as $field) {

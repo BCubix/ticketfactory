@@ -26,34 +26,10 @@ const FILTERS_SORT_TAB = [
     },
 ];
 
-const serializeOptionsValidations = (element, name, formData, isParameterObject = false) => {
-    Object.entries(element).map(([key, value], index) => {
-        if (null !== value && Array.isArray(value)) {
-            formData.append(`${name}[${index}][name]`, key);
-            value.forEach((el, index) => {
-                serializeOptionsValidations(el, `${name}[${index}][value][${index}]`, formData, true);
-            });
-        } else if (null !== value && typeof value === 'object') {
-            serializeOptionsValidations(value, `${name}[${key}][${index}]`, formData, isParameterObject);
-        } else {
-            if (isParameterObject) {
-                formData.append(`${name}[${key}]`, value);
-            } else {
-                formData.append(`${name}[${index}][name]`, key);
-                formData.append(`${name}[${index}][value]`, value);
-            }
-        }
-    });
-};
-
 const serializeData = (element, name, formData) => {
     Object.entries(element).map(([key, value]) => {
         if (null !== value && typeof value === 'object') {
-            if (key === 'options' || key === 'validations' || key === 'parameters') {
-                serializeOptionsValidations(value, `${name}[${key}]`, formData);
-            } else {
-                serializeData(value, `${name}[${key}]`, formData);
-            }
+            serializeData(value, `${name}[${key}]`, formData);
         } else if (null !== value && Array.isArray(value)) {
             value.forEach((el, index) => {
                 serializeData(el, `${name}[${key}][${index}]`, formData);
@@ -62,30 +38,6 @@ const serializeData = (element, name, formData) => {
             formData.append(`${name}[${key}]`, value);
         }
     });
-};
-
-const deserializeData = (data) => {
-    const newData = copyData(data);
-
-    newData?.fields?.forEach((field, fieldIndex) => {
-        newData.fields[fieldIndex].options = field?.options?.reduce(
-            (previousValue, currentValue) => ({
-                ...previousValue,
-                [currentValue.name]: currentValue.value,
-            }),
-            {}
-        );
-
-        newData.fields[fieldIndex].validations = field?.validations?.reduce(
-            (previousValue, currentValue) => ({
-                ...previousValue,
-                [currentValue.name]: currentValue.value,
-            }),
-            {}
-        );
-    });
-
-    return newData;
 };
 
 const contentTypesApi = {
@@ -134,8 +86,8 @@ const contentTypesApi = {
         try {
             const result = await axios.get(`content-types/${id}`);
 
-            const data = deserializeData(result.data);
-            return { result: true, contentType: data };
+            const newData = copyData(result.data);
+            return { result: true, contentType: newData };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

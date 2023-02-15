@@ -13,8 +13,4 @@ class ContentTypeFieldEmailType extends ContentTypeFieldAbstractType
     {
         return EmailType::class;
     }
-
-    public static function getValidations() {
-        return ['email'];
-    }
 }

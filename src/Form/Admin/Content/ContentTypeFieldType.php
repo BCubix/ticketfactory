@@ -31,20 +31,9 @@ class ContentTypeFieldType extends AbstractType
             ->add('type',                 ChoiceType::class,          [
                 'choices' => array_flip($this->ctm->getFieldsSelect())
             ])
-            ->add('options',              CollectionType::class,      [
-                'entry_type'   => ContentTypeOptionType::class,
-                'allow_add'    => true,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'by_reference' => false
-            ])
-            ->add('validations',          CollectionType::class,      [
-                'entry_type'   => ContentTypeValidationType::class,
-                'allow_add'    => true,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'by_reference' => false
-            ])
+            ->add('options',              ContentTypeOptionsType::class,     [])
+            ->add('validations',          ContentTypeValidationsType::class, [])
+            ->add('parameters',           ContentTypeParametersType::class,  [])
         ;
     }
 

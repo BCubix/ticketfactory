@@ -13,8 +13,4 @@ class ContentTypeFieldPasswordType extends ContentTypeFieldAbstractType
     {
         return PasswordType::class;
     }
-
-    public static function getValidations() {
-        return ['password'];
-    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Form\Admin\Content\Types;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -19,26 +21,30 @@ class ContentTypeFieldNumberType extends ContentTypeFieldAbstractType
 
     public static function getOptions() {
         return [
-            'attr'      => [
-                'type'  => 'array',
-                'label' => 'Attributs HTML'
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', false]
+                ]
             ],
-            'disabled'  => [
-                'type'  => 'boolean',
-                'label' => 'Champ désactivé'
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', false]
+                ]
             ],
-            'required'  => [
-                'type'  => 'boolean',
-                'label' => 'Champ requis'
-            ],
-            'scale'     => [
-                'type'  => 'integer',
-                'label' => 'Nombre de chiffres après la virgule'
+            'scale' => [
+                'class' => IntegerType::class
             ]
         ];
     }
 
     public static function getValidations() {
-        return ['lessThan', 'lessThanOrEqual', 'greaterThan', 'greaterThanOrEqual'];
+        return [
+            'lessThan' => ['class' => NumberType::class],
+            'lessThanOrEqual' => ['class' => NumberType::class],
+            'greaterThan' => ['class' => NumberType::class],
+            'greaterThanOrEqual' => ['class' => NumberType::class]
+        ];
     }
 }

@@ -3,26 +3,29 @@
 namespace App\Form\Admin\Content\Types;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 abstract class ContentTypeFieldAbstractType extends AbstractType
 {
     public static function getOptions() {
         return [
-            'attr'      => [
-                'type'  => 'array',
-                'label' => 'Attributs HTML'
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', null, false]
+                ]
             ],
-            'disabled'  => [
-                'type'  => 'boolean',
-                'label' => 'Champ désactivé'
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', null, false]
+                ]
             ],
-            'required'  => [
-                'type'  => 'boolean',
-                'label' => 'Champ requis'
-            ],
-            'trim'      => [
-                'type'  => 'boolean',
-                'label' => 'Epurer les espaces'
+            'trim' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', null, false]
+                ]
             ]
         ];
     }
