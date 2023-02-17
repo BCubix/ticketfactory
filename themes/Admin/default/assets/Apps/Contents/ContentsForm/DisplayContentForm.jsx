@@ -1,19 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/system';
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
-export const DisplayContentForm = ({
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-    setFieldTouched,
-    contentType,
-    contentModules,
-    prefixName = '',
-}) => {
+export const DisplayContentForm = ({ values, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched, contentType, contentModules, prefixName = '' }) => {
     if (!contentType) {
         return <></>;
     }

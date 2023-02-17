@@ -18,7 +18,7 @@ export const ClearBooleanButton = styled(Fab)`
     }
 `;
 
-export const FilterChip = styled(Chip)`
+export const FilterChip = styled(Chip, { shouldForwardProp: (prop) => prop !== 'isActive' })`
     background-color: ${(props) => (props.isActive ? props.theme.palette.secondary.light : '#FFFFFF')};
 
     &:hover {

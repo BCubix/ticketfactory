@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { ListItemButton, ListSubheader } from '@mui/material';
-import { alpha, styled } from '@mui/system';
 
 export const MenuTitle = styled(ListSubheader)`
     font-size: 80%;
@@ -11,7 +11,7 @@ export const MenuTitle = styled(ListSubheader)`
     color: ${(props) => props.theme.palette.sidebar.menuTitleText};
 `;
 
-export const MenuItemButton = styled(ListItemButton)`
+export const MenuItemButton = styled(ListItemButton, { shouldForwardProp: (prop) => prop !== 'isActive' })`
     padding: 0;
     border-radius: 0 24px 24px 0;
     margin: 0;

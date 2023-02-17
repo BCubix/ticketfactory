@@ -44,12 +44,10 @@ const getInitialValue = (field) => {
     let fields = {};
 
     field?.parameters?.fields?.forEach((el) => {
-        const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
-
-        fields[el.name] = contentModules[moduleName]?.getInitialValue(el) || '';
+        fields[el.name] = contentModules[el.type]?.getInitialValue(el) || '';
     });
 
-    return { fields: fields };
+    return { ...fields };
 };
 
 const getSubValidation = (contentType, contentModule) => {

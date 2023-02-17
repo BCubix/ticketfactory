@@ -41,7 +41,6 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
-            console.log(result);
             setList(result.medias);
         });
     };

@@ -127,10 +127,9 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                         />
                         <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                     </Component.CmtFormBlock>
-
                     <Component.CmtFormBlock title="Formulaire">
                         <Component.DisplayContentForm
-                            values={values}
+                            values={values.fields}
                             errors={errors}
                             touched={touched}
                             handleBlur={handleBlur}
@@ -139,6 +138,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                             setFieldValue={setFieldValue}
                             contentType={selectedContentType}
                             contentModules={getContentModules}
+                            prefixName="fields."
                         />
                     </Component.CmtFormBlock>
 

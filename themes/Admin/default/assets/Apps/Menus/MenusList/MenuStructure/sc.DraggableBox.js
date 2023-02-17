@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/system';
 
-export const DraggableBox = styled(Box)`
+export const DraggableBox = styled(Box, { shouldForwardProp: (prop) => prop !== 'isDragging' })`
     ${(props) =>
         props.isDragging &&
         `

@@ -9,10 +9,10 @@ export const DisplayContentField = ({ values, errors, touched, handleChange, han
 
     return (
         <FormComponent
-            values={values?.fields}
+            values={values}
             handleChange={handleChange}
             handleBlur={handleBlur}
-            name={`${prefixName}fields.${field.name}`}
+            name={`${prefixName}${field.name}`}
             errors={errors.fields}
             touched={touched.fields}
             setFieldValue={setFieldValue}
