@@ -32,7 +32,7 @@ class ContentTypeFieldCheckboxType extends ContentTypeFieldAbstractType
             'isTrue' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', null, false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ]
         ];

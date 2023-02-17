@@ -17,7 +17,7 @@ class ContentTypeFieldBoolType extends ContentTypeFieldAbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'false_values' => ['0', null, false]
+            'false_values' => ['0', 'null', 'false']
         ]);
     }
 
@@ -26,7 +26,7 @@ class ContentTypeFieldBoolType extends ContentTypeFieldAbstractType
             'isTrue' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', null, false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ]
         ];

@@ -12,19 +12,19 @@ abstract class ContentTypeFieldAbstractType extends AbstractType
             'disabled' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', null, false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ],
             'required' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', null, false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ],
             'trim' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', null, false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ]
         ];

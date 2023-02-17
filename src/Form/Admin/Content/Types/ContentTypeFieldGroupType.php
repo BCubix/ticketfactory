@@ -17,6 +17,10 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
         return ContentFieldsType::class;
     }
 
+    public static function getOptions() {
+        return [];
+    }
+
     public static function getParameters() {
         return [
             'fields' => [

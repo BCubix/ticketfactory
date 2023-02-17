@@ -24,13 +24,13 @@ class ContentTypeFieldNumberType extends ContentTypeFieldAbstractType
             'disabled' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ],
             'required' => [
                 'class' => CheckboxType::class,
                 'options' => [
-                    'false_values' => ['0', false]
+                    'false_values' => ['0', 'null', 'false']
                 ]
             ],
             'scale' => [

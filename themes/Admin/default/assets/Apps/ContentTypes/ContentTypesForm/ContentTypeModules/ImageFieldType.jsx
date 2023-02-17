@@ -148,7 +148,7 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, setField
                             type="number"
                         />
                     }
-                    label={'Longueur minimum'}
+                    label={'Hauteur minimum'}
                     labelPlacement="start"
                 />
             </Component.FieldFormControl>
@@ -164,7 +164,7 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, setField
                             type="number"
                         />
                     }
-                    label={'Longueur maximum'}
+                    label={'Hauteur maximum'}
                     labelPlacement="start"
                 />
             </Component.FieldFormControl>

@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin\Content\Types;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,7 +13,7 @@ class ContentTypeFieldDateTimeType extends ContentTypeFieldAbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'format'         => 'yyyy-MM-dd HH:mm',
+            'format' => 'yyyy-MM-dd HH:mm',
             'html5' => false,
             'widget' => 'single_text'
         ]);
@@ -23,12 +24,44 @@ class ContentTypeFieldDateTimeType extends ContentTypeFieldAbstractType
         return DateTimeType::class;
     }
 
+    public static function getOptions() {
+        return [
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ],
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ]
+        ];
+    }
+
     public static function getValidations() {
         return [
-            'lessThan' => ['class' => DateTimeType::class],
-            'lessThanOrEqual' => ['class' => DateTimeType::class],
-            'greaterThan' => ['class' => DateTimeType::class],
-            'greaterThanOrEqual' => ['class' => DateTimeType::class]
+            'disablePast' => [
+                'class' => CheckboxType::class
+            ],
+            'minDate' => [
+                'class' => DateTimeType::class,
+                'options' => [
+                    'format' => 'yyyy-MM-dd HH:mm',
+                    'html5' => false,
+                    'widget' => 'single_text'
+                ]
+            ],
+            'maxDate' => [
+                'class' => DateTimeType::class,
+                'options' => [
+                    'format' => 'yyyy-MM-dd HH:mm',
+                    'html5' => false,
+                    'widget' => 'single_text'
+                ]
+            ]
         ];
     }
 }

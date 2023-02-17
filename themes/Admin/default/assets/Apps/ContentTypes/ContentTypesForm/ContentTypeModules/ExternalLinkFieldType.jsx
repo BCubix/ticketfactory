@@ -40,6 +40,21 @@ const Options = ({ values, index, setFieldValue, prefixName }) => {
                     labelPlacement="start"
                 />
             </Component.FieldFormControl>
+
+            <Component.FieldFormControl fullWidth>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={Boolean(values.options.trim)}
+                            onChange={(e) => {
+                                setFieldValue(`${prefixName}fields.${index}.options.trim`, e.target.checked);
+                            }}
+                        />
+                    }
+                    label={'Gérer les espaces inutiles'}
+                    labelPlacement="start"
+                />
+            </Component.FieldFormControl>
         </>
     );
 };
@@ -54,7 +69,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 };
 
 const getInitialValues = () => ({
-    options: { required: false, disabled: false },
+    options: { required: false, disabled: false, trim: false },
     validations: {},
 });
 

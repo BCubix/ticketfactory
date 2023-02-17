@@ -157,6 +157,10 @@ class ContentTypeField implements JsonDoctrineSerializable
 
     private function jsonNodeSerialize($data): mixed
     {
+        if ($this->getName() == 'titre-1') {
+            dd($data);
+        }
+
         switch (gettype($data)) {
             case "array":
                 $arr = [];

@@ -35,7 +35,7 @@ export const FieldArrayElem = ({ values, index, errors, touched, handleChange, h
         <Component.CmtTabs
             list={[
                 {
-                    label: 'Informations générale',
+                    label: 'Informations générales',
                     component: (
                         <Component.MainPartFieldForm
                             values={values}

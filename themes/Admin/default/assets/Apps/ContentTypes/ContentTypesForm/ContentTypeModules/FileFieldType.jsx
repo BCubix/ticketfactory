@@ -158,15 +158,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 
 const getInitialValues = () => ({
     options: { required: false, disabled: false, multiple: false },
-    validations: {
-        minSize: '',
-        maxSize: '',
-        minLength: '',
-        maxLength: '',
-        minHeight: '',
-        maxHeight: '',
-        type: [],
-    },
+    validations: { minSize: '', maxSize: '', type: [] }
 });
 
 export default {

@@ -159,7 +159,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 };
 
 const getInitialValues = () => ({
-    options: { required: false, disabled: false, scale: '' },
+    options: { required: false, disabled: false },
     validations: { disablePast: false, minDate: '', maxDate: '', minHour: '', maxHour: '' },
 });
 

@@ -29,45 +29,9 @@ const ComplementInformation = ({ values, index, handleChange, handleBlur, setFie
     );
 };
 
-const Options = ({ values, index, setFieldValue, prefixName }) => {
-    return (
-        <>
-            <Component.FieldFormControl fullWidth>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={Boolean(values.options.required)}
-                            onChange={(e) => {
-                                setFieldValue(`${prefixName}fields.${index}.options.required`, e.target.checked);
-                            }}
-                        />
-                    }
-                    label={'Requis'}
-                    labelPlacement="start"
-                />
-            </Component.FieldFormControl>
-
-            <Component.FieldFormControl fullWidth>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={Boolean(values.options.disabled)}
-                            onChange={(e) => {
-                                setFieldValue(`${prefixName}fields.${index}.options.disabled`, e.target.checked);
-                            }}
-                        />
-                    }
-                    label={'Désactivé'}
-                    labelPlacement="start"
-                />
-            </Component.FieldFormControl>
-        </>
-    );
-};
-
 const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
-const getTabList = () => [{ label: 'Options', component: (props) => <Options {...props} /> }];
+const getTabList = () => [];
 
 const setInitialValues = (prefixName, setFieldValue) => {
     setFieldValue(`${prefixName}.options`, getInitialValues().options);
@@ -76,14 +40,13 @@ const setInitialValues = (prefixName, setFieldValue) => {
 };
 
 const getInitialValues = () => ({
-    options: { required: false, disabled: false },
+    options: {},
     validations: {},
     parameters: { fields: [] },
 });
 
 export default {
     TYPE,
-    Options,
     ComplementInformation,
     getSelectEntry,
     getTabList,

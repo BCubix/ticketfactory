@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldUrlType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'url';
+    public const FIELD_NAME = 'externalLink';
 
     public function getParent(): string
     {
