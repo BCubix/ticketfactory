@@ -179,10 +179,10 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, setField
                             variant="standard"
                             id="imageType"
                             fullWidth
-                            value={values.validations.type}
+                            value={values.validations.type ? values.validations.type?.split(', ') : []}
                             multiple
                             onChange={(e) => {
-                                setFieldValue(`${prefixName}fields.${index}.validations.type`, e.target.value);
+                                setFieldValue(`${prefixName}fields.${index}.validations.type`, e.target.value.join(', '));
                             }}
                             renderValue={(val) => {
                                 return val.map((item, index) => (
@@ -229,7 +229,7 @@ const getInitialValues = () => ({
         maxLength: '',
         minHeight: '',
         maxHeight: '',
-        type: [],
+        type: '',
     },
 });
 
