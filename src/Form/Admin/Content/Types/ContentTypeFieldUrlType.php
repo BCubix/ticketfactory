@@ -11,7 +11,7 @@ class ContentTypeFieldUrlType extends ContentTypeFieldAbstractType
 
     public function getParent(): string
     {
-        return TextType::class;
+        return UrlType::class;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

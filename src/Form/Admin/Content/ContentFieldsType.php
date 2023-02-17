@@ -27,21 +27,23 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
             [$this, 'onPreSetData']
         );
 
-        $builder->setDataMapper($this);
+        //$builder->setDataMapper($this);
     }
 
     public function onPreSetData(FormEvent $event): void
     {
         $form = $event->getForm();
-        $contentType = $form->getConfig()->getOptions()['content_type'];
+        $contentTypes = $form->getConfig()->getOptions()['contentTypes'];
 
-        foreach ($contentType->getFields() as $field) {
-            $options = $this->ctm->getOptionsFromField($field);
-            $options = array_replace(['property_path' => '[' . $field->getName() . ']'], $options);
+        foreach ($contentTypes as $contentType) {
+            $options = [];
+            if (isset($contentType['children'])) {
+                $options['contentTypes'] = $contentType['children'];
+            }
 
             $form->add(
-                $field->getName(),
-                $this->ctm->getContentTypeFieldFromType($field->getType()),
+                $contentType['name'],
+                $this->ctm->getContentTypeFieldFromType($contentType['type']),
                 $options
             );
         }
@@ -82,9 +84,8 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null
+            'data_class' => null,
+            'contentTypes'   => []
         ]);
-
-        $resolver->setRequired('content_type');
     }
 }

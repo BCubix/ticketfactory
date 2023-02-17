@@ -50,8 +50,8 @@ abstract class CrudController extends AdminController
     {
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
+        
         $objects = $this->em->getRepository($this->entityClass)->findAllForAdmin($filters);
-
         $objects = $this->lm->getAllTranslations($objects, $this->entityClass, $filters);
 
         return $this->view($objects, Response::HTTP_OK);
