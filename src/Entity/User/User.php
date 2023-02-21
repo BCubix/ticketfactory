@@ -27,7 +27,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     ];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -37,26 +37,26 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one'])]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le prénom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_user_all', 'a_user_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstName;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_user_all', 'a_user_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastName;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_user_all', 'a_user_one'])]
     #[ORM\Column(type: 'json')]
     private $roles = [];
 

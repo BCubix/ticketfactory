@@ -17,7 +17,7 @@ class DashboardController extends AdminController
     #[Rest\QueryParam(name:'tab', default:null)]
     #[Rest\QueryParam(name:'beginDate', default:null)]
     #[Rest\QueryParam(name:'endDate', default:null)]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all'])]
     public function index(Request $request, ParamFetcher $paramFetcher): View
     {
         $tab = $paramFetcher->get('tab');

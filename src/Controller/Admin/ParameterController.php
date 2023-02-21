@@ -24,21 +24,21 @@ class ParameterController extends AdminController
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
 
     #[Rest\Get('/parametres')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_parameter_all'])]
     public function getAll(Request $request, ParameterManager $pm): View
     {
         return $this->view($pm->getAll(), Response::HTTP_OK);
     }
 
     #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function getValue(Request $request, string $parameterKey, ParameterManager $pm): View
     {
         return $this->view($pm->get($parameterKey), Response::HTTP_OK);
     }
 
     #[Rest\Post('/parametres')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function edit(Request $request, ParameterManager $pm): View
     {
         $parameters = $request->request->all();

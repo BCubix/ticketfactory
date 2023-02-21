@@ -17,14 +17,14 @@ class Theme
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_theme_all', 'a_theme_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
     private $id;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_theme_all', 'a_theme_one'])]
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 

@@ -24,7 +24,7 @@ class EventCategory extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -33,18 +33,18 @@ class EventCategory extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de la catégorie doit être inférieure à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de la catégorie doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
@@ -67,19 +67,19 @@ class EventCategory extends Datable
 
     #[Gedmo\TreeParent]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $parent;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     #[ORM\ManyToOne(inversedBy: 'eventCategories')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private $children;
@@ -91,7 +91,7 @@ class EventCategory extends Datable
     private $events;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     public $frontUrl;
 
 
@@ -201,7 +201,7 @@ class EventCategory extends Datable
 
         return $this;
     }
-    
+
     public function setChildren(ArrayCollection $children): self
     {
         $this->children = $children;

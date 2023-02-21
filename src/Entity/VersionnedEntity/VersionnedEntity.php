@@ -17,29 +17,29 @@ class VersionnedEntity
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_version_all', 'a_version_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_version_all', 'a_version_one'])]
     #[ORM\Column(length: 255)]
     private ?string $entityKeyword = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_version_all', 'a_version_one'])]
     #[ORM\Column]
     private ?int $entityId = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_version_all', 'a_version_one'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $revisionDate = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_version_all', 'a_version_one'])]
     #[ORM\Column]
     private array $fields = [];
 

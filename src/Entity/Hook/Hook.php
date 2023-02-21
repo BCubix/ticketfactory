@@ -18,24 +18,24 @@ class Hook
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
     private $id;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one'])]
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one'])]
     #[ORM\ManyToOne(inversedBy: 'hooks', targetEntity: Module::class)]
     private $module;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one'])]
     #[ORM\Column(type: Types::INTEGER)]
     private $position;
 

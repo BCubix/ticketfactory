@@ -15,7 +15,7 @@ class LogController extends AdminController
 {
     #[Rest\Get('/logs')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_log_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, Logger $logger): View
     {
         $filters = $paramFetcher->get('filters');

@@ -5,33 +5,34 @@ namespace App\Entity\Page;
 use App\Entity\JsonDoctrineSerializable;
 use JMS\Serializer\Annotation as JMS;
 
+#[JMS\ExclusionPolicy('all')]
 class PageColumn implements JsonDoctrineSerializable
 {
     /*** > Trait ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?string $content = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?int $xs = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?int $s = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?int $m = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?int $l = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?int $xl = null;
 
 

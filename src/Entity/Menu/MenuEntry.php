@@ -40,7 +40,7 @@ class MenuEntry
     ];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -49,24 +49,24 @@ class MenuEntry
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'élément doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'élément doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\Choice(callback: 'getTypesKeys', message: 'Vous devez choisir un type valide.')]
     #[Assert\NotBlank(message: 'Le type de l\'élément doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $menuType = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $value = null;
 
@@ -89,19 +89,19 @@ class MenuEntry
 
     #[Gedmo\TreeParent]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private $parent;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\ManyToOne(inversedBy: 'menuEntries')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private $children;

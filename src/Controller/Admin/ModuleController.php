@@ -41,7 +41,7 @@ class ModuleController extends AdminController
 
     #[Rest\Get('/modules')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_module_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         $filters = $paramFetcher->get('filters');
@@ -53,7 +53,7 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Get('/modules/{moduleId}', requirements: ['moduleId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_module_one'])]
     public function getOne(Request $request, int $moduleId): View
     {
         $module = $this->em->getRepository(Module::class)->findOneForAdmin($moduleId);
@@ -65,7 +65,7 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Post('/modules/{moduleName}/active', requirements: ['moduleName' => '.+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_module_one'])]
     public function active(Request $request, string $moduleName): View
     {
         $actionStr = $request->get('action');

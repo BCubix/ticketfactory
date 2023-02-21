@@ -21,49 +21,49 @@ class Media extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_all', 'a_media_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $alt = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_one'])]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_one'])]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $legend = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $title = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $documentFileName = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_all', 'a_media_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $documentType = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $documentSize = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one', 'a_media_all', 'a_media_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $documentUrl = null;
 
@@ -71,14 +71,15 @@ class Media extends Datable
     private Collection $eventMedias;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_media_one'])]
     #[ORM\ManyToOne(targetEntity: MediaCategory::class, inversedBy: 'mainMedias')]
     private $mainCategory;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_media_one'])]
     #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
     private $mediaCategories;
+
 
     public function __construct()
     {

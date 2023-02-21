@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthenticationController extends AdminController
 {
     #[Rest\Post('/forgot-password')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function forgotPassword(Request $request, Mailer $mailer): View
     {
         $data = $this->se->deserialize($request->getContent(), 'array', 'json');
@@ -43,10 +43,8 @@ class AuthenticationController extends AdminController
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * @Rest\Post("/reset-password")
-     * @Rest\View(serializerGroups={"impuls_security"})
-     */
+    #[Rest\Post('/reset-password')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function resetPassword(Request $request, UserManager $um): View
     {
         $data = $this->se->deserialize($request->getContent(), 'array', 'json');

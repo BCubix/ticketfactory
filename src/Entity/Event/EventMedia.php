@@ -17,19 +17,19 @@ class EventMedia
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column]
     private ?bool $mainImg = null;
-    
+
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column]
     private ?int $position = null;
 
@@ -38,7 +38,7 @@ class EventMedia
     private ?Event $event = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\ManyToOne(inversedBy: 'eventMedias')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Media $media = null;

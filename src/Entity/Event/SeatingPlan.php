@@ -19,7 +19,7 @@ class SeatingPlan
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -28,12 +28,12 @@ class SeatingPlan
     #[Assert\Length(max: 250, maxMessage: 'Le nom du plan doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du plan doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
@@ -42,7 +42,7 @@ class SeatingPlan
     private $room;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_one'])]
     #[ORM\ManyToOne(inversedBy: 'seatingPlans')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;

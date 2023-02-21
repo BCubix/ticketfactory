@@ -23,7 +23,7 @@ class Room extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_room_all', 'a_room_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -32,36 +32,36 @@ class Room extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de la salle doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de la salle doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_room_all', 'a_room_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_all', 'a_room_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\PositiveOrZero(message: 'Le nombre de sièges de la salle doit être un nombre supérieur ou égal à 0.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_all', 'a_room_one'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $seatsNb;
 
     #[Assert\PositiveOrZero(message: 'La surface de la salle doit être un nombre supérieur ou égal à 0.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_all', 'a_room_one'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $area;
 
     #[Assert\Valid]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_one'])]
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: SeatingPlan::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $seatingPlans;
 
@@ -69,13 +69,13 @@ class Room extends Datable
     private $events;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_all', 'a_room_one'])]
     #[ORM\ManyToOne(inversedBy: 'rooms')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_room_all', 'a_room_one'])]
     public $frontUrl;
 
     public function __construct()

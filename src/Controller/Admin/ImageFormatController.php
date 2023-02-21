@@ -22,42 +22,42 @@ class ImageFormatController extends CrudController
 
     #[Rest\Get('/image-formats')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_image_format_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/image-formats/{formatId}', requirements: ['formatId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function getOne(Request $request, int $formatId): View
     {
         return parent::getOne($request, $formatId);
     }
 
     #[Rest\Post('/image-formats')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/image-formats/{formatId}', requirements: ['formatId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function edit(Request $request, int $formatId): View
     {
         return parent::edit($request, $formatId);
     }
 
     #[Rest\Delete('/image-formats/{formatId}', requirements: ['formatId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function delete(Request $request, int $formatId): View
     {
         return parent::delete($request, $formatId);
     }
 
     #[Rest\Post('/image-formats/generate/{formatId}', requirements: ['formatId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
     {
         if (null === $formatId) {

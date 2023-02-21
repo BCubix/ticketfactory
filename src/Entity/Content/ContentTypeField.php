@@ -7,6 +7,7 @@ use App\Entity\JsonDoctrineSerializable;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[JMS\ExclusionPolicy('all')]
 class ContentTypeField implements JsonDoctrineSerializable
 {
     /*** > Trait ***/
@@ -15,33 +16,33 @@ class ContentTypeField implements JsonDoctrineSerializable
     #[Assert\Length(max: 250, maxMessage: 'Le titre du champ doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre du champ doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?string $title = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom du champ doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du champ doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?string $helper = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?string $type = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?array $options = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?array $validations = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     private ?array $parameters = [];
 
     public function getTitle(): ?string

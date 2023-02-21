@@ -24,7 +24,7 @@ class Page extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -33,39 +33,39 @@ class Page extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le titre de la page doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre de la page doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
     #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\Valid]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one'])]
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $pageBlocks;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\ManyToOne(inversedBy: 'pages')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     public $frontUrl;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'pages')]
     private $parent;
 

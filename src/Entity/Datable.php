@@ -14,17 +14,17 @@ class Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_all'])]
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_all'])]
     #[ORM\Column(type: 'datetime_immutable')]
     private $updatedAt;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_all'])]
     #[ORM\Column(type: 'boolean')]
     private $active = false;
 

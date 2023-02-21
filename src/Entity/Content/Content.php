@@ -13,6 +13,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[JMS\ExclusionPolicy('all')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
 class Content extends Datable implements JsonDoctrineSerializable
@@ -21,7 +22,7 @@ class Content extends Datable implements JsonDoctrineSerializable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,40 +31,40 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[Assert\Length(max: 250, maxMessage: 'Le titre du contenu doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre du contenu doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
     #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one'])]
     #[ORM\Column]
     private array $fields = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     #[ORM\ManyToOne(targetEntity: ContentType::class, inversedBy: 'contents')]
     #[ORM\JoinColumn(nullable: false)]
     private $contentType;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     #[ORM\ManyToOne(inversedBy: 'contents')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     public $frontUrl;
 
 

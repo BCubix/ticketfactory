@@ -27,21 +27,21 @@ class ContentController extends CrudController
 
     #[Rest\Get('/contents')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/contents/{contentId}', requirements: ['contentId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function getOne(Request $request, int $contentId): View
     {
         return parent::getOne($request, $contentId);
     }
 
     #[Rest\Post('/contents/{contentTypeId}/create', requirements: ['contentTypeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function addContent(Request $request, ContentTypeManager $ctm): View
     {
         $contentTypeId = $request->get('contentTypeId');
@@ -87,7 +87,7 @@ class ContentController extends CrudController
     }
 
     #[Rest\Post('/contents/{contentId}/edit', requirements: ['contentId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function edit(Request $request, int $contentId): View
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($contentId);
@@ -127,14 +127,14 @@ class ContentController extends CrudController
     }
 
     #[Rest\Delete('/contents/{contentId}', requirements: ['contentId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function delete(Request $request, int $contentId): View
     {
         return parent::delete($request, $contentId);
     }
 
     #[Rest\Get('/contents/{contentId}/translated/{languageId}', requirements: ['contentId' => '\d+', 'languageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function getTranslated(Request $request, int $contentId, int $languageId): View
     {
         return parent::getTranslated($request, $contentId, $languageId);

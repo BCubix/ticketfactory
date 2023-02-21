@@ -21,7 +21,7 @@ class EventPriceBlock
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -30,19 +30,19 @@ class EventPriceBlock
     #[Assert\Length(max: 250, maxMessage: 'Le nom du bloc doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du bloc doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'eventPriceBlock', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventPrices;
 
@@ -51,7 +51,7 @@ class EventPriceBlock
     private $event;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\ManyToOne(inversedBy: 'eventPriceBlocks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;

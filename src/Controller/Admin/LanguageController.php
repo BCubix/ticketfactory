@@ -21,35 +21,35 @@ class LanguageController extends CrudController
 
     #[Rest\Get('/languages')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_language_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/languages/{languageId}', requirements: ['languageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function getOne(Request $request, int $languageId): View
     {
         return parent::getOne($request, $languageId);
     }
 
     #[Rest\Post('/languages')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/languages/{languageId}', requirements: ['languageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function edit(Request $request, int $languageId): View
     {
         return parent::edit($request, $languageId);
     }
 
     #[Rest\Delete('/languages/{languageId}', requirements: ['languageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function delete(Request $request, int $languageId): View
     {
         return parent::delete($request, $languageId);

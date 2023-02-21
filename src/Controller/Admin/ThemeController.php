@@ -39,7 +39,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Get('/themes')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_theme_all'])]
     public function getAll(Request $request): View
     {
         $themes = $this->tm->getAll();
@@ -48,7 +48,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Get('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
     public function getOne(Request $request, int $themeId): View
     {
         $theme = $this->em->getRepository(Theme::class)->findOneForAdmin($themeId);
@@ -60,7 +60,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Post('/themes/{themeName}/active', requirements: ['themeName' => '.+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
     public function active(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
@@ -78,7 +78,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Delete('/themes/{themeName}', requirements: ['themeName' => '.+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
     public function delete(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();

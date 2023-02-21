@@ -24,7 +24,7 @@ class Event extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -33,85 +33,85 @@ class Event extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\NotBlank(message: 'Le chapô doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $chapo = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDateBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventDateBlocks;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de tarifs.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventPriceBlocks;
 
     #[Assert\NotNull(message: 'La catégorie principale de l\'événement doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventMedia::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $eventMedias;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne(targetEntity: EventCategory::class, inversedBy: 'mainEvents')]
     private $mainCategory;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\ManyToMany(targetEntity: EventCategory::class, inversedBy: 'events')]
     private $eventCategories;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'events')]
     private $room;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne(targetEntity: Season::class, inversedBy: 'events')]
     private $season;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events')]
     private $tags;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
 
@@ -310,7 +310,7 @@ class Event extends Datable
         return $this;
     }
 
-    
+
     public function getLang(): ?Language
     {
         return $this->lang;

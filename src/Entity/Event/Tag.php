@@ -23,7 +23,7 @@ class Tag extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -32,36 +32,34 @@ class Tag extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom du tag doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du tag doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_tag_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_tag_all', 'a_tag_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_tag_one'])]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_tag_all', 'a_tag_one'])]
     #[ORM\ManyToOne(inversedBy: 'tags')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'tags')]
     private $events;
-
-
 
 
     public function __construct()

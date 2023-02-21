@@ -18,7 +18,7 @@ class ContactRequest extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -27,14 +27,14 @@ class ContactRequest extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le prénom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $firstName = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $lastName = null;
 
@@ -42,27 +42,27 @@ class ContactRequest extends Datable
     #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $email = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le téléphone doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le téléphone doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $phone = null;
 
     #[Assert\Length(max: 1000, maxMessage: 'L\'objet doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'L\'objet doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $subject = null;
 
     #[Assert\NotBlank(message: 'Le message doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'text')]
     private ?string $message = null;
 

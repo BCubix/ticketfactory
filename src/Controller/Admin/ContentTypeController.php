@@ -21,35 +21,35 @@ class ContentTypeController extends CrudController
 
     #[Rest\Get('/content-types')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_type_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/content-types/{contentTypeId}', requirements: ['contentTypeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_type_one'])]
     public function getOne(Request $request, int $contentTypeId): View
     {
         return parent::getOne($request, $contentTypeId);
     }
 
     #[Rest\Post('/content-types')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_type_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/content-types/{contentTypeId}', requirements: ['contentTypeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_type_one'])]
     public function edit(Request $request, int $contentTypeId): View
     {
         return parent::edit($request, $contentTypeId);
     }
 
     #[Rest\Delete('/content-types/{contentTypeId}', requirements: ['contentTypeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_content_type_one'])]
     public function delete(Request $request, int $contentTypeId): View
     {
         return parent::delete($request, $contentTypeId);

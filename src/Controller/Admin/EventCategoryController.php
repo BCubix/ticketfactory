@@ -47,7 +47,7 @@ class EventCategoryController extends CrudController
 
     #[Rest\Get('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, int $categoryId = null): View
     {
         $filters = $paramFetcher->get('filters');
@@ -75,28 +75,28 @@ class EventCategoryController extends CrudController
     }
 
     #[Rest\Post('/event-categories')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
     public function edit(Request $request, int $categoryId): View
     {
         return parent::edit($request, $categoryId);
     }
 
     #[Rest\Post('/event-categories/{categoryId}/duplicate', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
     public function duplicate(Request $request, int $categoryId): View
     {
         return parent::duplicate($request, $categoryId);
     }
 
     #[Rest\Delete('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
     public function delete(Request $request, int $categoryId): View
     {
         $object = $this->em->getRepository($this->entityClass)->findAllForAdmin(['page' => 0], $categoryId);
@@ -131,7 +131,7 @@ class EventCategoryController extends CrudController
     }
 
     #[Rest\Get('/event-categories/{categoryId}/translated/{languageId}', requirements: ['categoryId' => '\d+', 'languageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
     public function getTranslated(Request $request, int $categoryId, int $languageId): View
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($categoryId);

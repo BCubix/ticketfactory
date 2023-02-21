@@ -16,54 +16,54 @@ class Parameter
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $type;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $paramKey;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $paramValue;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'json', nullable: true)]
     private $availableValue = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'json', nullable: true)]
     private $validations = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $tabName;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $blockName;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $breakpointsValue;
 
