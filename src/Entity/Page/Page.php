@@ -21,9 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Page extends Datable
 {
     /*** > Trait ***/
-    /*** > Module: ModuleTCE ***/
-    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Page\PageTrait;
-    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -81,8 +78,6 @@ class Page extends Datable
 
     public function __construct()
     {
-        /*** > Module: ModuleTCE ***/
-        /*** < Module: ModuleTCE ***/
         $this->pageBlocks = new ArrayCollection();
         $this->pages = new ArrayCollection();
         $this->contentTypes = new ArrayCollection();

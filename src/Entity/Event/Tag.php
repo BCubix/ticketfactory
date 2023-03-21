@@ -20,9 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Tag extends Datable
 {
     /*** > Trait ***/
-    /*** > Module: ModuleTCE ***/
-    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Spectacle\TagTrait;
-    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -69,9 +66,6 @@ class Tag extends Datable
 
     public function __construct()
     {
-        /*** > Module: ModuleTCE ***/
-        $this->spectacles = new ArrayCollection();
-        /*** < Module: ModuleTCE ***/
         $this->events = new ArrayCollection();
     }
 

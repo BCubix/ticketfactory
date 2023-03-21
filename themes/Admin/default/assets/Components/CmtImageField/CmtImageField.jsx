@@ -1,21 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { NotificationManager } from "react-notifications";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch } from 'react-redux';
 
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { Box, FormHelperText, FormLabel } from "@mui/material";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { Box, FormHelperText, FormLabel } from '@mui/material';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
-import { getMediaType } from "@Services/utils/getMediaType";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getMediaType } from '@Services/utils/getMediaType';
+
+const filterInit = {
+    title: '',
+    active: null,
+    sort: 'id DESC',
+    page: 1,
+    limit: 20,
+};
 
 export const CmtImageField = ({ label, required = false, name, id = name?.replaceAll('.', '-'), image, setFieldValue, touched, errors, width = null, height = null }) => {
     const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
+
     const [imagesList, setImagesList] = useState(null);
+    const [imageMediasTotal, setImageMediasTotal] = useState(null);
+    const [imageMediaFilters, setImageMediaFilters] = useState(filterInit);
 
     useEffect(() => {
         getImages();
@@ -23,13 +34,13 @@ export const CmtImageField = ({ label, required = false, name, id = name?.replac
 
     const getImages = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getAllMedias();
+            const result = await Api.mediasApi.getMediasList({ ...imageMediaFilters, type: ['Image'] });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+                return;
             }
-
-            const images = result?.medias?.filter((el) => getMediaType(el.documentType) === 'image') || [];
-            setImagesList(images);
+            setImagesList(result?.medias);
+            setImageMediasTotal(result.total);
         });
     };
 
@@ -61,6 +72,9 @@ export const CmtImageField = ({ label, required = false, name, id = name?.replac
                 setFieldValue={setFieldValue}
                 name={name}
                 onAddNewMedia={getImages}
+                mediaFilters={imageMediaFilters}
+                setMediaFilters={setImageMediaFilters}
+                total={imageMediasTotal}
             />
         </>
     );

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Box, Checkbox, Chip, CircularProgress, FormControl, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Checkbox, CircularProgress, FormControl, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { useSelector } from 'react-redux';
+import { languagesSelector } from '@Redux/languages/languagesSlice';
 
 export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, icon, parameters, getList, id }) => {
     const dispatch = useDispatch();
@@ -11,6 +13,7 @@ export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, 
     const [displayValue, setDisplayValue] = useState('');
     const [displayList, setDisplayList] = useState(null);
     const [loading, setLoading] = useState(false);
+    const languagesData = useSelector(languagesSelector);
 
     useEffect(() => {
         let val = [];
@@ -25,7 +28,6 @@ export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, 
             const searchEl = parseInt(el) || el;
 
             const findList = displayList?.find((it) => it[parameters?.nameValue || 'id'] === searchEl);
-
             if (findList) {
                 val.push(findList);
             }
@@ -56,8 +58,13 @@ export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, 
 
         setLoading(true);
 
+        if (!languagesData?.languages) {
+            return;
+        }
+
         apiMiddleware(dispatch, async () => {
-            const result = await getList();
+            const defaultLanguage = languagesData.languages.find((el) => el.isDefault);
+            const result = await getList(defaultLanguage?.id);
 
             if (result) {
                 setDisplayList(result);

@@ -7,16 +7,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    IconButton,
-    Typography,
-} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const DisplayMenuElement = ({
     element,
@@ -32,6 +25,9 @@ export const DisplayMenuElement = ({
     maxLevel,
     isDragging = false,
     level = 1,
+    menuEntryModule,
+    language,
+    errors,
 }) => {
     const displayMove = index > 0 || index < list?.length - 1 || isSubMenu;
 
@@ -83,6 +79,8 @@ export const DisplayMenuElement = ({
         setFieldValue(name, newList);
     };
 
+    const EditValueComponent = menuEntryModule[element.menuType]?.MenuEntryModule || null;
+
     return (
         <Box sx={{ marginTop: 3 }}>
             <Accordion sx={{ maxWidth: 400 }}>
@@ -91,43 +89,34 @@ export const DisplayMenuElement = ({
                 </AccordionSummary>
 
                 <AccordionDetails>
-                    <Component.CmtTextField
-                        value={element.name}
-                        name={`${name}.${index}.name`}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label={'Titre de la navigation'}
-                    />
+                    <Component.CmtTextField value={element.name} name={`${name}.${index}.name`} onChange={handleChange} onBlur={handleBlur} label={'Titre de la navigation'} />
+                    {EditValueComponent && (
+                        <EditValueComponent
+                            setValue={(newValue) => setFieldValue(`${name}.${index}.value`, newValue)}
+                            element={element}
+                            errors={errors}
+                            language={language}
+                            editMode
+                        />
+                    )}
 
                     <Box display="flex">
                         {displayMove && (
                             <Box component="span">
                                 {index < list.length - 1 && (
-                                    <Component.MoveElementButton
-                                        onClick={() => handleMoveMenuElement(1)}
-                                        size="small"
-                                        title="Descendre d'un cran"
-                                    >
+                                    <Component.MoveElementButton onClick={() => handleMoveMenuElement(1)} size="small" title="Descendre d'un cran">
                                         <ArrowDownwardIcon fontSize="inherit" />
                                     </Component.MoveElementButton>
                                 )}
 
                                 {index > 0 && (
                                     <>
-                                        <Component.MoveElementButton
-                                            onClick={() => handleMoveMenuElement(-1)}
-                                            size="small"
-                                            title="Monter d'un cran"
-                                        >
+                                        <Component.MoveElementButton onClick={() => handleMoveMenuElement(-1)} size="small" title="Monter d'un cran">
                                             <ArrowUpwardIcon fontSize="inherit" />
                                         </Component.MoveElementButton>
 
                                         {level < maxLevel && (
-                                            <Component.MoveElementButton
-                                                onClick={() => handleMoveIntoSubMenuElement()}
-                                                size="small"
-                                                title={`Sous ${list[index - 1].name}`}
-                                            >
+                                            <Component.MoveElementButton onClick={() => handleMoveIntoSubMenuElement()} size="small" title={`Sous ${list[index - 1].name}`}>
                                                 <SubdirectoryArrowRightIcon fontSize="inherit" />
                                             </Component.MoveElementButton>
                                         )}
@@ -135,35 +124,21 @@ export const DisplayMenuElement = ({
                                 )}
 
                                 {isSubMenu && (
-                                    <Component.MoveElementButton
-                                        onClick={() => handleMoveOutSubMenuElement(index)}
-                                        size="small"
-                                        title={`Sortir de ${parent.name}`}
-                                    >
+                                    <Component.MoveElementButton onClick={() => handleMoveOutSubMenuElement(index)} size="small" title={`Sortir de ${parent.name}`}>
                                         <SubdirectoryArrowLeftIcon fontSize="inherit" />
                                     </Component.MoveElementButton>
                                 )}
                             </Box>
                         )}
 
-                        <IconButton
-                            aria-label="delete"
-                            color="error"
-                            size="small"
-                            sx={{ marginLeft: 'auto' }}
-                            onClick={() => handleDeleteElement()}
-                        >
+                        <IconButton aria-label="delete" color="error" size="small" sx={{ marginLeft: 'auto' }} onClick={() => handleDeleteElement()}>
                             <DeleteIcon fontSize="inherit" />
                         </IconButton>
                     </Box>
                 </AccordionDetails>
             </Accordion>
 
-            <Droppable
-                droppableId={`${name}.${index}.children`}
-                className={'droppableZone'}
-                type={`menus`}
-            >
+            <Droppable droppableId={`${name}.${index}.children`} className={'droppableZone'} type={`menus`}>
                 {(provided, snapshot) => (
                     <Component.DroppableBox
                         id={`${name}-${index}-children`}
@@ -180,12 +155,7 @@ export const DisplayMenuElement = ({
                         {element?.children?.length > 0 &&
                             level < maxLevel &&
                             element?.children?.map((item, ind) => (
-                                <Draggable
-                                    key={`${name}.${index}.children.${ind}`}
-                                    draggableId={`${name}.${index}.children.${ind}`}
-                                    index={index}
-                                    item={item}
-                                >
+                                <Draggable key={`${name}.${index}.children.${ind}`} draggableId={`${name}.${index}.children.${ind}`} index={index} item={item}>
                                     {(provided2, snapshot2) => (
                                         <Component.RenderElement provided={provided2} snapshot={snapshot2}>
                                             <Component.DisplayMenuElement
@@ -203,6 +173,9 @@ export const DisplayMenuElement = ({
                                                 maxLevel={maxLevel}
                                                 level={level + 1}
                                                 isDragging={snapshot2.isDragging}
+                                                menuEntryModule={menuEntryModule}
+                                                language={language}
+                                                errors={errors?.at(children)}
                                             />
                                         </Component.RenderElement>
                                     )}
@@ -218,12 +191,7 @@ export const DisplayMenuElement = ({
 
 export const RenderElement = ({ children, provided, snapshot }) => {
     const child = (
-        <Component.DraggableBox
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            ref={provided.innerRef}
-            isDragging={snapshot.isDragging}
-        >
+        <Component.DraggableBox {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} isDragging={snapshot.isDragging}>
             {children}
         </Component.DraggableBox>
     );

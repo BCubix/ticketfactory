@@ -39,6 +39,10 @@ button:focus {
     color: #b71c1c;
 }
 
+table {
+    table-layout: fixed;
+}
+
 .numberTypeField-noArrow {
     & input::-webkit-outer-spin-button,
     & input::-webkit-inner-spin-button {
@@ -47,5 +51,19 @@ button:focus {
 
     & input[type='number'] {
         mozappearance: 'textfield';
+    }
+}
+
+.tox-statusbar__branding {
+    display: none;
+}
+
+.tox-promotion {
+    display: none;
+}
+
+.Mui-Select-FormControl {
+    &:focus-within + label {
+        transform: translate(0px, 0px) scale(0.75)
     }
 }

@@ -8,15 +8,19 @@ import { Box } from '@mui/system';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { useSelector } from 'react-redux';
+import { menusListDataSelector, setMenusListData } from '@Redux/menus/menusListDataSlice';
 
 const MENU_TYPE = 'tag';
 const MENU_TYPE_LABEL = 'Tags';
 
-export const MenuEntryModule = ({ addElementToMenu, language }) => {
+export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue, element, errors }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
+    const { menusListData } = useSelector(menusListDataSelector);
 
     const getList = async () => {
         apiMiddleware(dispatch, async () => {
@@ -26,12 +30,53 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
             }
 
             setList(result.tags);
+            dispatch(setMenusListData({ tags: result.tags }));
         });
     };
 
     useEffect(() => {
+        if (list) {
+            return;
+        }
+
+        if (menusListData?.tags && !list) {
+            setList(menusListData.tags);
+        }
+
+        if (editMode) {
+            return;
+        }
+
         getList();
     }, [language]);
+
+    useEffect(() => {
+        if (list) {
+            return;
+        }
+
+        if (menusListData?.tags && !list) {
+            setList(menusListData.tags);
+        }
+    }, [menusListData?.tags]);
+
+    if (editMode) {
+        return list ? (
+            <Component.CmtSelect
+                label="Tag"
+                required
+                name={`tag`}
+                value={parseInt(element.value)}
+                list={list || []}
+                getValue={(item) => item.id}
+                getName={(item) => `${item.title}`}
+                setFieldValue={(_, newValue) => setValue(newValue)}
+                errors={errors?.value}
+            />
+        ) : (
+            <></>
+        );
+    }
 
     return (
         <Accordion>
@@ -96,4 +141,5 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
 
 export default {
     MenuEntryModule,
+    MENU_TYPE,
 };

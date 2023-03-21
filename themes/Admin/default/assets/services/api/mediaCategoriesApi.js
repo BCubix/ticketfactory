@@ -56,6 +56,7 @@ const mediaCategoriesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('shortDescription', data.shortDescription || '');
             formData.append('parent', data.parent);
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang);
@@ -75,6 +76,7 @@ const mediaCategoriesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('shortDescription', data.shortDescription || '');
             formData.append('parent', data.parent);
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang);

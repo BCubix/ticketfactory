@@ -1,8 +1,8 @@
 import React from 'react';
-import { Draggable } from "react-beautiful-dnd";
-import DragHandleIcon from "@mui/icons-material/DragHandle";
-import { TableCell, TableRow } from "@mui/material";
-import { Box } from "@mui/system";
+import { Draggable } from 'react-beautiful-dnd';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { TableCell, TableRow } from '@mui/material';
+import { Box } from '@mui/system';
 
 export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, setExpendElementTranslation, tableRowProps, children }) => {
     if (!onDragEnd) {
@@ -19,13 +19,7 @@ export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, setExpendElementT
     }
 
     return (
-        <Draggable
-            key={index}
-            draggableId={index.toString()}
-            index={index}
-            isCombineEnabled
-            ignoreContainerClipping
-        >
+        <Draggable key={index} draggableId={index.toString()} index={index} isCombineEnabled ignoreContainerClipping>
             {(provided, snapshot) => (
                 <TableRow
                     {...tableRowProps}

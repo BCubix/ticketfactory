@@ -66,6 +66,7 @@ const pagesApi = {
         try {
             let params = { 'filters[page]': 0 };
 
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
             if (filters?.lang) {
                 params['filters[lang]'] = filters?.lang;
             }

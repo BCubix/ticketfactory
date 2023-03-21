@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
 export const CmtSearchFilters = ({ value, setValue, title, label, icon = null, id }) => {

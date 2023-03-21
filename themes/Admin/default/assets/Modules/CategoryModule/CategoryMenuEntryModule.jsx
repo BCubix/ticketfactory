@@ -2,50 +2,79 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { useSelector } from 'react-redux';
+import { menusListDataSelector, setMenusListData } from '@Redux/menus/menusListDataSlice';
+import { TreeItem, TreeView } from '@mui/lab';
 
 const MENU_TYPE = 'category';
 const MENU_TYPE_LABEL = 'Catégories';
 
-const DisplayCategories = ({ category, selectedAdd, setSelectedAdd }) => {
+const displayCategories = (list, selectedAdd, setSelectedAdd, editMode, setValue, value) => {
+    if (!list || list?.length === 0) {
+        return <></>;
+    }
+
+    const handleCheckCategory = (id) => {
+        let categories = [...selectedAdd];
+        const check = categories?.includes(id);
+
+        if (check) {
+            categories = categories?.filter((el) => el !== id);
+            setSelectedAdd(categories);
+        } else {
+            categories.push(id);
+
+            setSelectedAdd(categories);
+        }
+    };
+
     return (
-        <>
-            <Box
-                onClick={() => {
-                    let newValue = [...selectedAdd];
-
-                    if (newValue?.some((el) => el.id === category.id)) {
-                        newValue = newValue.filter((el) => el.id !== category.id);
-                    } else {
-                        newValue.push({ id: category.id, name: category.name });
-                    }
-
-                    setSelectedAdd([...newValue]);
-                }}
-            >
-                <Typography component="span" id={`categoriesMenuEntryValue-${category?.id}`}>
-                    <Checkbox checked={selectedAdd?.some((el) => el.id === category.id)} />
-                    {category?.name}
-                </Typography>
-            </Box>
-
-            {Array.isArray(category?.children) &&
-                category?.children?.map((item, index) => <DisplayCategories key={index} category={item} selectedAdd={selectedAdd} setSelectedAdd={setSelectedAdd} />)}
-        </>
+        <TreeItem
+            key={list.id}
+            nodeId={list?.id?.toString()}
+            label={
+                <Box display="flex" alignItems={'center'}>
+                    {editMode ? (
+                        <Radio
+                            checked={value?.toString() === list.id?.toString()}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setValue(list.id);
+                            }}
+                        />
+                    ) : (
+                        <Checkbox
+                            checked={selectedAdd.includes(list.id)}
+                            id={`eventCategoriesValue-${list.id}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleCheckCategory(list.id);
+                            }}
+                        />
+                    )}
+                    {list?.name}
+                </Box>
+            }
+        >
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategories(item, selectedAdd, setSelectedAdd, editMode, setValue, value))}
+        </TreeItem>
     );
 };
 
-export const MenuEntryModule = ({ addElementToMenu, language }) => {
+export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue, element }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
+    const { menusListData } = useSelector(menusListDataSelector);
 
     const getList = async () => {
         apiMiddleware(dispatch, async () => {
@@ -55,12 +84,51 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
             }
 
             setList(result.categories);
+            dispatch(setMenusListData({ categories: result.categories }));
         });
     };
 
     useEffect(() => {
+        if (list) {
+            return;
+        }
+
+        if (menusListData?.categories && !list) {
+            setList(menusListData.categories);
+            return;
+        }
+
+        if (editMode) {
+            return;
+        }
+
         getList();
     }, [language]);
+
+    useEffect(() => {
+        if (menusListData?.categories && !list) {
+            setList(menusListData.categories);
+        }
+    }, [menusListData?.categories]);
+
+    if (editMode) {
+        return (
+            <Box sx={{ marginTop: 3 }}>
+                {list && (
+                    <TreeView
+                        size="small"
+                        id="categories"
+                        defaultCollapseIcon={<ExpandMoreIcon />}
+                        defaultExpanded={[list?.id?.toString()]}
+                        defaultExpandIcon={<ChevronRightIcon />}
+                        sx={{ flexGrow: 1, overflowY: 'auto' }}
+                    >
+                        {displayCategories(list, selectedAdd, setSelectedAdd, editMode, setValue, element?.value || '')}
+                    </TreeView>
+                )}
+            </Box>
+        );
+    }
 
     return (
         <Accordion>
@@ -68,7 +136,18 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
                 <Typography>Catégories</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <DisplayCategories category={list} selectedAdd={selectedAdd} setSelectedAdd={setSelectedAdd} />
+                {list && (
+                    <TreeView
+                        size="small"
+                        id="categories"
+                        defaultCollapseIcon={<ExpandMoreIcon />}
+                        defaultExpanded={[list?.id?.toString()]}
+                        defaultExpandIcon={<ChevronRightIcon />}
+                        sx={{ flexGrow: 1, overflowY: 'auto' }}
+                    >
+                        {displayCategories(list, selectedAdd, setSelectedAdd, editMode, setValue, element?.value || '')}
+                    </TreeView>
+                )}
 
                 <Box display="flex" justifyContent={'flex-end'}>
                     <Button
@@ -101,4 +180,5 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
 
 export default {
     MenuEntryModule,
+    MENU_TYPE,
 };

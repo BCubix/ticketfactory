@@ -86,8 +86,9 @@ const contentTypesApi = {
         try {
             const result = await axios.get(`content-types/${id}`);
 
-            const newData = copyData(result.data);
-            return { result: true, contentType: newData };
+            const data = copyData(result.data);
+
+            return { result: true, contentType: data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

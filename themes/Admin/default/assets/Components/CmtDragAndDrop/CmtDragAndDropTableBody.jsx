@@ -1,6 +1,6 @@
-import React from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { TableBody } from "@mui/material";
+import React from 'react';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { TableBody } from '@mui/material';
 
 export const CmtDragAndDropTableBody = ({ droppableId, onDragEnd, children }) => {
     if (!onDragEnd) {
@@ -9,17 +9,9 @@ export const CmtDragAndDropTableBody = ({ droppableId, onDragEnd, children }) =>
 
     return (
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-            <Droppable
-                droppableId={droppableId}
-                isCombineEnabled
-                ignoreContainerClipping
-            >
+            <Droppable droppableId={droppableId} isCombineEnabled ignoreContainerClipping>
                 {(provided, snapshot) => (
-                    <TableBody
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        isDraggingOver={snapshot.isDraggingOver}
-                    >
+                    <TableBody {...provided.droppableProps} ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver}>
                         {children}
                         {provided.placeholder}
                     </TableBody>

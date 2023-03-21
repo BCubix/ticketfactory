@@ -22,7 +22,7 @@ export const CreatePage = () => {
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
-            const pages = await Api.pagesApi.getAllPages();
+            const pages = await Api.pagesApi.getAllPages({ sort: 'title ASC' });
             if (pages?.error) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.PAGES_BASE_PATH);
@@ -63,5 +63,5 @@ export const CreatePage = () => {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} pagesList={pagesList}/>;
+    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} pagesList={pagesList} />;
 };

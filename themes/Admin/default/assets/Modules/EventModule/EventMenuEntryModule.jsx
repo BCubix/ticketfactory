@@ -8,16 +8,20 @@ import { Box } from '@mui/system';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { Component } from '@/AdminService/Component';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { useSelector } from 'react-redux';
+import { menusListDataSelector, setMenusListData } from '@Redux/menus/menusListDataSlice';
 
 const MENU_TYPE = 'event';
 const MENU_TYPE_LABEL = 'Evènements';
 
-export const MenuEntryModule = ({ addElementToMenu, language }) => {
+export const MenuEntryModule = ({ addElementToMenu, language, element, errors, editMode, setValue }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
+    const { menusListData } = useSelector(menusListDataSelector);
 
     const getList = async () => {
         apiMiddleware(dispatch, async () => {
@@ -26,12 +30,50 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
             setList(result.events);
+            dispatch(setMenusListData({ events: result.events }));
         });
     };
 
     useEffect(() => {
+        if (list) {
+            return;
+        }
+
+        if (menusListData?.events && !list) {
+            setList(menusListData.events);
+            return;
+        }
+
+        if (editMode) {
+            return;
+        }
+
         getList();
     }, [language]);
+
+    useEffect(() => {
+        if (menusListData?.events && !list) {
+            setList(menusListData.events);
+        }
+    }, [menusListData?.events]);
+
+    if (editMode) {
+        return list ? (
+            <Component.CmtSelect
+                label="Evènement"
+                required
+                name={`event`}
+                value={parseInt(element.value)}
+                list={list}
+                getValue={(item) => item.id}
+                getName={(item) => `${item.shortTitle}`}
+                setFieldValue={(_, newValue) => setValue(newValue)}
+                errors={errors?.value}
+            />
+        ) : (
+            <></>
+        );
+    }
 
     return (
         <Accordion>
@@ -96,4 +138,5 @@ export const MenuEntryModule = ({ addElementToMenu, language }) => {
 
 export default {
     MenuEntryModule,
+    MENU_TYPE,
 };

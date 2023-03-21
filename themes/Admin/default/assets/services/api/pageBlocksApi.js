@@ -82,6 +82,7 @@ const pageBlocksApi = {
             formData.append('name', data?.name);
             formData.append('saveAsModel', 1);
             formData.append('lang', data.lang);
+            formData.append('blockType', data?.blockType || 0);
             formData.append('languageGroup', data.languageGroup);
 
             data.columns.forEach((column, index) => {
@@ -108,6 +109,7 @@ const pageBlocksApi = {
             formData.append('name', data?.name);
             formData.append('saveAsModel', 1);
             formData.append('lang', data.lang);
+            formData.append('blockType', data?.blockType || 0);
             formData.append('languageGroup', data.languageGroup);
 
             data.columns.forEach((column, index) => {

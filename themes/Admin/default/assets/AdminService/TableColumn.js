@@ -13,6 +13,13 @@ const TableColumnObj = {
         { name: 'name', label: 'Nom', width: '50%' },
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
+    MediaCategoriesList: [
+        { name: 'id', label: 'ID', width: '10%' },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
+        { name: 'name', label: 'Nom', width: '25%' },
+        { name: 'shortDescription', label: 'Description courte', width: '25%' },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+    ],
     ContactRequestsList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Gérée ?', type: 'bool', width: '10%', sortable: true },

@@ -1,7 +1,7 @@
 export const getDefaultParentPath = (list, parentId) => {
     let path = [];
 
-    if (list?.id === parentId) {
+    if (list.id === parentId) {
         return [parentId.toString()];
     } else if (list?.children?.length === 0) {
         return [];
@@ -15,7 +15,7 @@ export const getDefaultParentPath = (list, parentId) => {
     }
 
     if (path.length > 0) {
-        return [list?.id?.toString(), ...path];
+        return [list.id.toString(), ...path];
     }
 
     return [];

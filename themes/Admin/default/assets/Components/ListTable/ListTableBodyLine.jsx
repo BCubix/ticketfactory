@@ -43,7 +43,7 @@ export const ListTableBodyLine = ({
                 }}
             >
                 {table.map((tableItem, ind) => (
-                    <TableCell component="th" scope="row" key={ind}>
+                    <TableCell component="td" scope="row" key={ind}>
                         <RenderCellFunction item={item} tableItem={tableItem} />
                     </TableCell>
                 ))}

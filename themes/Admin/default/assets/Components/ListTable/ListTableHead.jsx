@@ -24,7 +24,7 @@ export const ListTableHead = ({ table, filters, changeFilters, displayAction, on
     return (
         <TableHead>
             <TableRow>
-                {onDragEnd && (<TableCell sx={{ width: '1%' }}></TableCell>)}
+                {onDragEnd && <TableCell sx={{ width: '1%' }}></TableCell>}
                 {table.map((element, index) => (
                     <TableCell key={index} sx={{ width: element.width || 'auto' }}>
                         {element.sortable ? (
@@ -36,7 +36,7 @@ export const ListTableHead = ({ table, filters, changeFilters, displayAction, on
                         )}
                     </TableCell>
                 ))}
-                {displayAction && <TableCell>Actions</TableCell>}
+                {displayAction && <TableCell sx={{ width: '15%' }}>Actions</TableCell>}
             </TableRow>
         </TableHead>
     );

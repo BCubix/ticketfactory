@@ -9,6 +9,7 @@ export const CmtMediaElement = styled(Card)`
     display: flex;
     justify-content: center;
     cursor: pointer;
+    position: relative;
 
     & > img {
         object-fit: cover;

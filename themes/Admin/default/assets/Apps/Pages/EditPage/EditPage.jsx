@@ -9,23 +9,21 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getPagesAction } from '@Redux/pages/pagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { useSelector } from 'react-redux';
+import { languagesSelector } from '@Redux/languages/languagesSlice';
 
 export const EditPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const languagesData = useSelector(languagesSelector);
     const { id } = useParams();
 
     const [page, setPage] = useState(null);
     const [pagesList, setPagesList] = useState(null);
 
-    useEffect(() => {
-        if (!id) {
-            navigate(Constant.PAGES_BASE_PATH);
-            return;
-        }
-
+    const getPageList = (langId) => {
         apiMiddleware(dispatch, async () => {
-            const pages = await Api.pagesApi.getAllPages();
+            const pages = await Api.pagesApi.getAllPages({ sort: 'title ASC', lang: langId });
             if (pages?.error) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.PAGES_BASE_PATH);
@@ -34,6 +32,13 @@ export const EditPage = () => {
 
             setPagesList(pages.pages);
         });
+    };
+
+    useEffect(() => {
+        if (!id) {
+            navigate(Constant.PAGES_BASE_PATH);
+            return;
+        }
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.pagesApi.getOnePage(id);
@@ -44,6 +49,7 @@ export const EditPage = () => {
             }
 
             setPage(result.page);
+            getPageList(result.page?.lang?.id);
         });
     }, [id]);
 
@@ -62,5 +68,5 @@ export const EditPage = () => {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} pagesList={pagesList}/>;
+    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} pagesList={pagesList} />;
 };

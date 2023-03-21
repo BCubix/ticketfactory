@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
 import { formatMenusData } from '@Services/utils/formatMenusData';
+import getMenuEntryModules from '../getMenuEntryModules';
 
-export const MenuStructure = ({ values, setFieldValue, handleChange, handleBlur, touched, errors, languageList, openTranslateDialog }) => {
+export const MenuStructure = ({ values, setFieldValue, handleChange, handleBlur, touched, errors, languageList, openTranslateDialog, language }) => {
+    const menuEntryModule = useMemo(() => {
+        const modules = getMenuEntryModules();
+        return modules;
+    }, []);
+
     const removeMenuElement = (menus, path) => {
         if (path.length === 0) {
             return menus;
@@ -105,6 +111,9 @@ export const MenuStructure = ({ values, setFieldValue, handleChange, handleBlur,
                                                         setFieldValue={setFieldValue}
                                                         isDragging={snapshot2.isDragging}
                                                         maxLevel={values.maxLevel}
+                                                        menuEntryModule={menuEntryModule}
+                                                        language={language}
+                                                        errors={errors?.children?.at(index) || null}
                                                     />
                                                 </Component.RenderElement>
                                             )}

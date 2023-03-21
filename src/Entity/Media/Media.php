@@ -18,12 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Media extends Datable
 {
     /*** > Trait ***/
-    /*** > Module: SliderElement ***/
-    use \TicketFactory\Module\SliderElement\Entity\Traits\Media\MediaTrait;
-    /*** < Module: SliderElement ***/
-    /*** > Module: ModuleTCE ***/
-    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Media\MediaTrait;
-    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -88,16 +82,6 @@ class Media extends Datable
 
     public function __construct()
     {
-        /*** > Module: SliderElement ***/
-        $this->sliderElements = new ArrayCollection();
-        /*** < Module: SliderElement ***/
-        /*** > Module: ModuleTCE ***/
-        $this->spectacleBlogs = new ArrayCollection();
-        $this->seasonsLogo = new ArrayCollection();
-        $this->seasonsHeader = new ArrayCollection();
-        $this->seatingPlans = new ArrayCollection();
-        $this->pageBlocks = new ArrayCollection();
-        /*** < Module: ModuleTCE ***/
         $this->eventMedias = new ArrayCollection();
         $this->mediaCategories = new ArrayCollection();
     }

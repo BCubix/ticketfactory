@@ -18,9 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Content extends Datable implements JsonDoctrineSerializable
 {
     /*** > Trait ***/
-    /*** > Module: ModuleTCE ***/
-    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Content\ContentTrait;
-    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]

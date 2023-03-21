@@ -56,7 +56,6 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                     sx={{ minHeight: 150, marginTop: 4, display: 'flex', overflowX: 'hidden' }}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    isDragging={snapshot.isDragging}
                 >
                     {isNewLine && <AddContentBox index={index - 1} values={values} setFieldValue={setFieldValue} baseName={baseName} />}
                     <Component.CmtCard sx={{ border: '1px solid #C4C4C4', overflowX: 'hidden', width: '100%', minWidth: 0 }}>
@@ -219,7 +218,7 @@ export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouc
                 <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
                     <Droppable direction="horizontal" droppableId="columns" type="columns" isCombineEnabled ignoreContainerClipping>
                         {(provided, snapshot) => (
-                            <Grid container {...provided.droppableProps} ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver} sx={{ minWidth: 1300, paddingLeft: 2 }}>
+                            <Grid container {...provided.droppableProps} ref={provided.innerRef} sx={{ paddingLeft: 2 }}>
                                 {values?.columns?.map((column, index) => (
                                     <PageBlockColumnElem
                                         media={media}

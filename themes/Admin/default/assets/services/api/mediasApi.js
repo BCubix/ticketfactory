@@ -23,6 +23,14 @@ const FILTERS_SORT_TAB = [
             params['filters[sortOrder]'] = splitSort[1];
         },
     },
+    {
+        name: 'type',
+        transformFilter: (params, sort) => {
+            sort?.forEach((el, index) => {
+                params[`filters[type][${index}]`] = el;
+            });
+        },
+    },
 ];
 
 const mediasApi = {
@@ -51,6 +59,22 @@ const mediasApi = {
                 return { result: true, medias: [], total: 0 };
             }
 
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getMediasList: async (filters) => {
+        try {
+            let params = {};
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            const result = await axios.get('/medias', {
+                params: params,
+            });
+
+            return { result: true, medias: result.data?.results, total: result?.data?.total };
+        } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
@@ -128,7 +152,7 @@ const mediasApi = {
             formData.append('legend', data?.legend);
             formData.append('description', data?.description);
             formData.append('active', data.active ? 1 : 0);
-            formData.append('mainCategory', data.mainCategory);
+            formData.append('mainCategory', data.mainCategory || '');
             data?.mediaCategories?.forEach((category, index) => {
                 formData.append(`mediaCategories[${index}]`, category);
             });

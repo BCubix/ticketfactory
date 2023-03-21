@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { TableCell } from '@mui/material';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -28,7 +27,7 @@ export const ListTableCellButtons = ({
 }) => {
     if (onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null)) {
         return (
-            <TableCell component="th" scope="row">
+            <TableCell component="td" scope="row">
                 {onActive !== null && onDisable !== null && (
                     <Component.ActionFabButton
                         sx={{ marginInline: 1 }}

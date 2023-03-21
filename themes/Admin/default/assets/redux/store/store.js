@@ -14,6 +14,7 @@ import contentsReducer from '@Redux/contents/contentsSlice';
 import contactRequestsReducer from '@Redux/contactRequests/contactRequestsSlice';
 import redirectionsReducer from '@Redux/redirections/redirectionsSlice';
 import menusReducer from '@Redux/menus/menusSlice';
+import menusListDataReducer from '@Redux/menus/menusListDataSlice';
 import dashboardReducer from '@Redux/dashboard/dashboardSlice';
 import pagesReducer from '@Redux/pages/pagesSlice';
 import parametersReducer from '@Redux/parameters/parametersSlice';
@@ -39,6 +40,7 @@ const reducer = {
     contactRequests: contactRequestsReducer,
     redirections: redirectionsReducer,
     menus: menusReducer,
+    menusListData: menusListDataReducer,
     dashboard: dashboardReducer,
     pages: pagesReducer,
     parameters: parametersReducer,

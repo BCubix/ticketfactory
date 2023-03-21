@@ -37,7 +37,7 @@ export const RenderCellFunction = ({ item, tableItem }) => {
     }
 
     return (
-        <Typography component="p" variant="body1">
+        <Typography component="p" variant="body2">
             {objectResolver(tableItem.name, item)}
         </Typography>
     );

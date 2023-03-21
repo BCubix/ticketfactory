@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Api } from "@/AdminService/Api";
+import { Api } from '@/AdminService/Api';
 import { loginFailure } from '@Redux/profile/profileSlice';
 
 const initialState = {
