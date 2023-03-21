@@ -21,6 +21,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EventCategory extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Spectacle\SpectacleCategoryTrait;
+    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -97,6 +100,8 @@ class EventCategory extends Datable
 
     public function __construct()
     {
+        /*** > Module: ModuleTCE ***/
+        /*** < Module: ModuleTCE ***/
         $this->children   = new ArrayCollection();
         $this->mainEvents = new ArrayCollection();
         $this->events     = new ArrayCollection();

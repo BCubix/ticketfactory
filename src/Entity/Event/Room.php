@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Room extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Spectacle\RoomTrait;
+    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -80,6 +83,8 @@ class Room extends Datable
 
     public function __construct()
     {
+        /*** > Module: ModuleTCE ***/
+        /*** < Module: ModuleTCE ***/
         $this->seatingPlans = new ArrayCollection();
         $this->events = new ArrayCollection();
     }

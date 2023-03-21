@@ -17,6 +17,7 @@ Encore
     .setPublicPath('/build')
     .enableReactPreset()
     .enableSassLoader()
+
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
     /*
@@ -28,7 +29,8 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
-    .addEntry('app', './themes/Admin/default/assets/index.js')
+    .addEntry('app', './themes/Website/default/assets/index.js')
+    .addEntry('admin', './themes/Admin/default/assets/index.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -44,6 +46,12 @@ Encore
         '@Redux': path.resolve(__dirname, 'themes/Admin/default/assets/redux'),
         '@Services': path.resolve(__dirname, 'themes/Admin/default/assets/services'),
         '@Style': path.resolve(__dirname, 'themes/Admin/default/assets/Style'),
+
+        '@Website': path.resolve(__dirname, 'themes/Website/default/assets'),
+        '@WApps': path.resolve(__dirname, 'themes/Website/default/assets/Apps'),
+        '@WComponents': path.resolve(__dirname, 'themes/Website/default/assets/Components'),
+        '@WServices': path.resolve(__dirname, 'themes/Website/default/assets/services'),
+        '@WStyle': path.resolve(__dirname, 'themes/Website/default/assets/Style'),
     })
 
     /*

@@ -26,6 +26,15 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    limenius_react.react_renderer:
+        class: App\Utils\CustomPhpExecJsReactRenderer
+        arguments:
+            - '%kernel.project_dir%/public' # here you set the base path
+            - '%limenius_react.fail_loud%'
+            - '@limenius_react.context_provider'
+            - '@logger'
+        calls:
+            - [setPackage, ['@assets.packages', 'build/app.js']]
 
     # Event Subscribers / Event Listeners
     App\EventSubscriber\Admin\ApiExceptionSubscriber:

@@ -31,6 +31,15 @@ use JMS\Serializer\Annotation as JMS;
 class Language extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: SliderElement ***/
+    use \TicketFactory\Module\SliderElement\Entity\Traits\Language\LanguageTrait;
+    /*** < Module: SliderElement ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Language\LanguageTrait;
+    /*** < Module: ModuleTCE ***/
+    /*** > Module: FlashInfo ***/
+    use \TicketFactory\Module\FlashInfo\Entity\Language\Override\LanguageTrait;
+    /*** < Module: FlashInfo ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
@@ -102,6 +111,16 @@ class Language extends Datable
 
     public function __construct()
     {
+        /*** > Module: SliderElement ***/
+        $this->sliderElements = new ArrayCollection();
+        /*** < Module: SliderElement ***/
+        /*** > Module: ModuleTCE ***/
+        $this->spectacleBlogs = new ArrayCollection();
+        $this->spectaclePresses = new ArrayCollection();
+        /*** < Module: ModuleTCE ***/
+        /*** > Module: FlashInfo ***/
+        $this->flashInfos = new ArrayCollection();
+        /*** < Module: FlashInfo ***/
         $this->events = new ArrayCollection();
         $this->eventCategories = new ArrayCollection();
         $this->tags = new ArrayCollection();

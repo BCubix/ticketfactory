@@ -49,6 +49,7 @@ class ThemeConfig implements ConfigurationInterface
                         ->thenInvalid('required version in float (example: 1.0.0.0)')
                     ->end()
                 ->end()
+                ->scalarNode('server_side_rendering')->defaultValue(false)->end()
             ->end()
         ;
     }

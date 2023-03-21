@@ -14,6 +14,9 @@ use JMS\Serializer\Annotation as JMS;
 class EventMedia
 {
     /*** > Trait ***/
+    /*** > Module: ModuleTCE ***/
+    use \TicketFactory\Module\ModuleTCE\Entity\Traits\Spectacle\SpectacleMediaTrait;
+    /*** < Module: ModuleTCE ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]

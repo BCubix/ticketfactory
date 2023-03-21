@@ -6,7 +6,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Button, IconButton, Toolbar } from '@mui/material';
+import { AppBar, IconButton, Toolbar } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
