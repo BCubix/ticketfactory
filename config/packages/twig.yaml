@@ -1,5 +1,7 @@
 twig:
     default_path: '%kernel.project_dir%/themes/'
+    paths:
+        '%kernel.project_dir%/modules': 'modules'
 
 when@test:
     twig:

@@ -5,7 +5,7 @@ import { Component } from '@/AdminService/Component';
 const NAME = 'pageLink';
 const LABEL = 'Lien vers une page';
 
-const TYPE = 'pageLink';
+const TYPE = 'page';
 const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {

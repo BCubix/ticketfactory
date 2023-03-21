@@ -69,7 +69,6 @@ export const MediaCategoriesList = () => {
 
             mediaCategoryCopy = mediaCategoryCopy.parent ? { ...mediaCategoryCopy.parent } : null;
         }
-
         setPath(pathArray.reverse());
     }, [mediaCategory]);
 
@@ -128,7 +127,7 @@ export const MediaCategoriesList = () => {
                     <CardContent>
                         <Component.ListTable
                             contextualMenu
-                            table={TableColumn.CategoriesList}
+                            table={TableColumn.MediaCategoriesList}
                             list={mediaCategory?.children}
                             onEdit={(id) => {
                                 navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);

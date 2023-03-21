@@ -6,6 +6,7 @@ import { Button, FormHelperText, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
 
@@ -55,6 +56,8 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                 await submitForm(values);
                 setSubmitting(false);
             }}
+            validateOnChange={false}
+            validateOnBlur
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un type de contenus`}>
@@ -86,7 +89,6 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>
-
                     <Component.CmtFormBlock title="Champs">
                         <Component.ContentTypeFieldArrayForm
                             contentTypesModules={getContentTypesModules}
@@ -105,7 +107,6 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                             </FormHelperText>
                         )}
                     </Component.CmtFormBlock>
-
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Type de contenu actif ?" />
 

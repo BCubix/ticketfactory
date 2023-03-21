@@ -71,7 +71,10 @@ export const EventsDateForm = ({ values, setFieldValue, setFieldTouched, handleC
                                                     id={`eventDateBlocks-${blockIndex}-eventDates-${index}-eventDate`}
                                                     required
                                                     setValue={(value) => {
-                                                        setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`, moment(value).format('YYYY-MM-DD HH:mm'));
+                                                        setFieldValue(
+                                                            `eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`,
+                                                            value ? moment(value).format('YYYY-MM-DD HH:mm') : ''
+                                                        );
                                                     }}
                                                     onTouched={setFieldTouched}
                                                     name={`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`}
@@ -157,7 +160,10 @@ export const EventsDateForm = ({ values, setFieldValue, setFieldTouched, handleC
                                                         value={item.reportDate}
                                                         disablePast
                                                         setValue={(value) => {
-                                                            setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`, moment(value).format('YYYY-MM-DD HH:mm'));
+                                                            setFieldValue(
+                                                                `eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`,
+                                                                value ? moment(value).format('YYYY-MM-DD HH:mm') : ''
+                                                            );
                                                         }}
                                                         onTouched={setFieldTouched}
                                                         name={`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`}

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -16,12 +16,13 @@ export const CreateContent = () => {
     const navigate = useNavigate();
     const { loading, contentTypes, error } = useSelector(contentTypesSelector);
     const [selectedContentType, setSelectedContentType] = useState(null);
+    const { search } = useLocation();
     const [initialValues, setInitialValues] = useState(null);
+    const urlParams = useMemo(() => new URLSearchParams(search), [search]);
 
     const [queryParameters] = useSearchParams();
     const contentId = queryParameters.get('contentId');
     const languageId = queryParameters.get('languageId');
-    const contentTypeId = queryParameters.get('contentType');
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
@@ -62,20 +63,21 @@ export const CreateContent = () => {
             return;
         }
 
-        const urlId = initialValues?.contentType?.id || parseInt(contentTypeId);
+        const urlId = initialValues?.contentType?.id || parseInt(urlParams.get('contentType'));
         if (!initialValues && !urlId) {
             NotificationManager.error("Le type de contenu n'a pas été renseigné", 'Erreur', Constant.REDIRECTION_TIME);
             navigate(Constant.CONTENT_BASE_PATH);
             return;
         }
 
-        const contentType = contentTypes?.find((el) => el.id === urlId);
-        if (!contentType) {
-            NotificationManager.error('Le type de contenu renseigné ne correspond à aucun type connu.', 'Erreur', Constant.REDIRECTION_TIME);
-            navigate(Constant.CONTENT_BASE_PATH);
-        }
-
-        setSelectedContentType(contentType);
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.contentTypesApi.getOneContentType(urlId);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite.", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CONTENT_BASE_PATH);
+            }
+            setSelectedContentType(result.contentType);
+        });
     }, [contentTypes, initialValues]);
 
     if (!contentTypes || !selectedContentType || (contentId && !initialValues)) {

@@ -7,21 +7,13 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const DisplayMediaAddInformations = ({
-    onClose,
-    selectedMedia,
-    values,
-    setFieldValue,
-    name,
-}) => {
+export const DisplayMediaAddInformations = ({ onClose, selectedMedia, values, setFieldValue, name }) => {
     const isSelected = values.eventMedias?.map((el) => el.id).includes(selectedMedia?.id);
 
     if (!selectedMedia) {
         return (
             <Box mt={4} display="flex" justifyContent="center">
-                <Typography variant="body1">
-                    Selectionnez un élément pour afficher ses détails
-                </Typography>
+                <Typography variant="body1">Selectionnez un élément pour afficher ses détails</Typography>
             </Box>
         );
     }
@@ -106,42 +98,44 @@ export const DisplayMediaInformations = ({ selectedMedia }) => {
                 </Typography>
             </Box>
 
-            <Box>
-                <Typography component="span" variant="body2">
-                    Titre :
-                </Typography>
-                <Typography component="span" variant="body1" sx={{ marginLeft: 3 }}>
-                    {selectedMedia?.title}
-                </Typography>
-            </Box>
-
-            <Box my={10} display="flex" justifyContent={'center'}>
-                <Box maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center">
-                    <Component.CmtDisplayMediaType
-                        media={selectedMedia}
-                        maxWidth={'100%'}
-                        maxHeight={'300px'}
-                    />
-                </Box>
-            </Box>
-
-            {selectedMedia?.description && (
+            <Box sx={{ marginTop: 3 }}>
                 <Box>
-                    <Typography variant="body2">Description :</Typography>
-                    <Typography variant="body1" sx={{ marginLeft: 3 }}>
-                        {selectedMedia?.description}
+                    <Typography component="span" variant="body2">
+                        Titre :
+                    </Typography>
+                    <Typography component="span" variant="body1" sx={{ marginLeft: 3 }}>
+                        {selectedMedia?.title}
                     </Typography>
                 </Box>
-            )}
 
-            {selectedMedia?.legend && (
-                <Box>
-                    <Typography variant="body2">Légende :</Typography>
-                    <Typography variant="body1" sx={{ marginLeft: 3 }}>
-                        {selectedMedia?.legend}
-                    </Typography>
+                {selectedMedia?.description && (
+                    <Box>
+                        <Typography component="span" variant="body2">
+                            Description :
+                        </Typography>
+                        <Typography component="span" variant="body1" sx={{ marginLeft: 3 }}>
+                            {selectedMedia?.description}
+                        </Typography>
+                    </Box>
+                )}
+
+                {selectedMedia?.legend && (
+                    <Box>
+                        <Typography component="span" variant="body2">
+                            Légende :
+                        </Typography>
+                        <Typography component="span" variant="body1" sx={{ marginLeft: 3 }}>
+                            {selectedMedia?.legend}
+                        </Typography>
+                    </Box>
+                )}
+            </Box>
+
+            <Box display="flex" justifyContent={'center'}>
+                <Box my={10} maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center" position={'relative'}>
+                    <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
                 </Box>
-            )}
+            </Box>
         </Box>
     );
 };

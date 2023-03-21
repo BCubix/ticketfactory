@@ -6,17 +6,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const DisplayEventMediaElement = ({
-    title,
-    openAddModal,
-    mediaType,
-    mediaList,
-    openEditModal,
-    values,
-    name,
-    setFieldValue,
-    id,
-}) => {
+export const DisplayEventMediaElement = ({ title, openAddModal, mediaType, mediaList, openEditModal, values, name, setFieldValue, id }) => {
     return (
         <Component.CmtFormBlock title={title}>
             <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
@@ -35,15 +25,11 @@ export const DisplayEventMediaElement = ({
                             onClick={() => {
                                 openEditModal({
                                     item,
-                                    index,
+                                    index: mediaList.findIndex((el) => el.media?.id === item?.id),
                                 });
                             }}
                         >
-                            <Component.CmtDisplayMediaType
-                                media={item}
-                                width={'100%'}
-                                height={'auto'}
-                            />
+                            <Component.CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
                             {mediaType === 'Image' && (
                                 <Radio
                                     checked={values.eventMedias.at(valueIndex)?.mainImg}

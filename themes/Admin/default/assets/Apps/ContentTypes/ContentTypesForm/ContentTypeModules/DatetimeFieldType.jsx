@@ -102,46 +102,6 @@ const Validations = ({ values, errors, index, setFieldTouched, setFieldValue, pr
                     labelPlacement="start"
                 />
             </Component.FieldFormControl>
-
-            <Component.FieldFormControl fullWidth>
-                <FormControlLabel
-                    control={
-                        <Component.CmtTimePicker
-                            fullWidth
-                            value={values.validations.minHour}
-                            setValue={(newValue) => {
-                                setFieldValue(`${prefixName}fields.${index}.validations.minHour`, moment(newValue).format('HH:mm'));
-                            }}
-                            onTouched={setFieldTouched}
-                            name={`${prefixName}fields.${index}.validations.minHour`}
-                            error={errors?.validations?.minHour}
-                            inputSize="small"
-                        />
-                    }
-                    label={'Heure minimum'}
-                    labelPlacement="start"
-                />
-            </Component.FieldFormControl>
-
-            <Component.FieldFormControl fullWidth>
-                <FormControlLabel
-                    control={
-                        <Component.CmtTimePicker
-                            fullWidth
-                            value={values.validations.maxHour}
-                            setValue={(newValue) => {
-                                setFieldValue(`${prefixName}fields.${index}.validations.maxHour`, moment(newValue).format('HH:mm'));
-                            }}
-                            onTouched={setFieldTouched}
-                            name={`${prefixName}fields.${index}.validations.maxHour`}
-                            error={errors?.validations?.maxHour}
-                            inputSize="small"
-                        />
-                    }
-                    label={'Heure maximum'}
-                    labelPlacement="start"
-                />
-            </Component.FieldFormControl>
         </>
     );
 };
@@ -160,7 +120,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 
 const getInitialValues = () => ({
     options: { required: false, disabled: false },
-    validations: { disablePast: false, minDate: '', maxDate: '', minHour: '', maxHour: '' },
+    validations: { disablePast: false, minDate: '', maxDate: '' },
 });
 
 export default {

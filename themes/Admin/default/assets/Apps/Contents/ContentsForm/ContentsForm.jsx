@@ -25,10 +25,10 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
         let validation = Yup[contentModule?.VALIDATION_TYPE]();
 
-        const valList = [...contentType.validations, ...contentType.options];
+        const valList = { ...contentType.validations, ...contentType.options };
 
         contentModule?.VALIDATION_LIST?.forEach((element) => {
-            const elVal = valList.find((el) => el.name === element.name);
+            const elVal = valList[element.name];
             if (elVal && element.test(elVal.value)) {
                 validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
             }

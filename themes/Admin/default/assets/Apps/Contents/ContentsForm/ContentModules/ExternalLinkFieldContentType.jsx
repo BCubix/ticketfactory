@@ -47,10 +47,10 @@ const getValidation = (contentType) => {
 
     validation = validation['matches'](...[/^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, 'Url invalide']);
 
-    const valList = [...contentType.validations, ...contentType.options];
+    const valList = { ...contentType.validations, ...contentType.options };
 
     VALIDATION_LIST.forEach((element) => {
-        const elVal = valList.find((el) => el.name === element.name);
+        const elVal = valList[element.name];
         if (elVal && element.test(elVal.value)) {
             validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }

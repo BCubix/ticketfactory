@@ -51,6 +51,7 @@ const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field,
                         setFieldValue(name, e.target.value);
                     }}
                     onBlur={handleBlur}
+                    name={name}
                     label={label}
                     multiple={field?.options?.multiple}
                 >

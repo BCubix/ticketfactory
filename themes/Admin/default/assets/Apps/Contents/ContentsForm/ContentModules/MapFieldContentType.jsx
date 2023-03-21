@@ -134,9 +134,9 @@ const getValidation = (contentType) => {
     let validation = Yup.object();
     let val = {};
 
-    const valList = [...contentType.validations, ...contentType.options];
+    const valList = { ...contentType.validations, ...contentType.options };
 
-    const elVal = valList.find((el) => el.name === 'required');
+    const elVal = valList['required'];
     if (elVal && elVal.value) {
         val['zoom'] = Yup.string().required('Veuillez renseigner le zoom.');
         val['lng'] = Yup.string().required('Veuillez renseigner la longitude.');

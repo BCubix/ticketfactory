@@ -59,29 +59,29 @@ const getInitialValue = () => {
 const getValidation = (contentType) => {
     let validation = Yup[VALIDATION_TYPE]();
 
-    const valList = [...contentType.validations, ...contentType.options];
+    const valList = { ...contentType.validations, ...contentType.options };
 
     VALIDATION_LIST?.forEach((element) => {
-        const elVal = valList.find((el) => el.name === element.name);
+        const elVal = valList[element.name];
         if (elVal && element.test(elVal.value)) {
             validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
     });
 
     // We get minChar validation and check if defined, then add to validation the test to check if there is minChar
-    const minChar = valList.find((el) => el.name === 'minChar');
+    const minChar = valList['minChar'];
     if (minChar && minChar.value) {
         validation = validation.test('minChar', 'Le mot de passe doit contenir au moins un caractère minuscule.', (val) => val && /^(?=.*[a-z])/.test(val));
     }
 
     // We get majChar validation and check if defined, then add to validation the test to check if there is majChar
-    const majChar = valList.find((el) => el.name === 'majChar');
+    const majChar = valList['majChar'];
     if (majChar && majChar.value) {
         validation = validation.test('majChar', 'Le mot de passe doit contenir au moins un caractère majuscule.', (val) => val && /^(?=.*[A-Z])/.test(val));
     }
 
     // We get numberChar validation and check if defined, then add to validation the test to check if there is numberChar
-    const numberChar = valList.find((el) => el.name === 'numberChar');
+    const numberChar = valList['numberChar'];
     if (numberChar && numberChar.value) {
         validation = validation.test('numberChar', 'Le mot de passe doit contenir au moins un nombre', (val) => val && /^(?=.*\d)/.test(val));
     }

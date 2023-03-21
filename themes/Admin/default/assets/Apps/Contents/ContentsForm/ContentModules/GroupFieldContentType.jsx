@@ -52,15 +52,14 @@ const getInitialValue = (field) => {
 
 const getSubValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
-        return;
+        return {};
     }
 
     let validation = Yup[contentModule?.VALIDATION_TYPE]();
-
-    const valList = [...contentType.validations, ...contentType.options];
+    const valList = { ...contentType.validations, ...contentType.options };
 
     contentModule?.VALIDATION_LIST?.forEach((element) => {
-        const elVal = valList.find((el) => el.name === element.name);
+        const elVal = valList[element.name];
         if (elVal && element.test(elVal.value)) {
             validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
@@ -74,12 +73,12 @@ const getValidation = (contentType) => {
     const contentModules = ContentModules();
 
     contentType?.parameters?.fields?.forEach((el) => {
-        const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
-
-        validation[el.name] = contentModules[moduleName]?.getValidation ? contentModules[moduleName].getValidation(el) : getSubValidation(el, contentModules[moduleName]);
+        validation[el.name] = contentModules[el.type]?.getValidation ? contentModules[el.type].getValidation(el) : getSubValidation(el, contentModules[el.type]);
     });
 
-    return Yup.array().of(Yup.object().shape({ ...validation }));
+    return Yup.object()
+        .shape({ ...validation })
+        .nullable();
 };
 
 export default {

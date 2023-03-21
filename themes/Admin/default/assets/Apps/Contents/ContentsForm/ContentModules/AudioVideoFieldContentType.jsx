@@ -33,20 +33,59 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
     const [list, setList] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
+    const [createDialog, setCreateDialog] = useState(false);
+    const [mediasTotal, setMediasTotal] = useState(null);
+    const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+    const [mediaFilters, setMediaFilters] = useState({
+        title: '',
+        active: null,
+        iframe: null,
+        sort: 'id ASC',
+        page: 1,
+        limit: 20,
+        type: '',
+        category: '',
+    });
 
     const getMedias = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getAllMedias();
+            const result = await Api.mediasApi.getMediasList({ ...mediaFilters, type: ['Audio', 'Vidéo'] });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
             setList(result.medias);
+            setMediasTotal(result.total);
         });
     };
 
     useEffect(() => {
         getMedias();
+    }, [mediaFilters]);
+
+    useEffect(() => {
+        if (!values[field.name]) {
+            return;
+        }
+
+        if (field?.options?.multiple) {
+            let list = values[field.name]?.map((el) => el?.id || el);
+            setFieldValue(name, list);
+        } else {
+            setFieldValue(name, values[field.name]?.id || values[field.name]);
+        }
+    }, []);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.getAllMediaCategories();
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                onCancel();
+            }
+
+            setMediaCategoriesList(result.mediaCategories);
+        });
     }, []);
 
     return (
@@ -78,7 +117,13 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                 </DialogTitle>
                 <Box height="100%" width={'100%'} sx={{ padding: 0 }}>
                     <Grid container sx={{ height: '100%' }}>
-                        <Grid item xs={12} md={9}>
+                        <Grid item xs={12} md={9} sx={{ paddingInline: 5, paddingTop: 5 }}>
+                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                Créer un nouveau média
+                            </Component.CreateButton>
+
+                            <Component.MediasFilters filters={mediaFilters} changeFilters={(values) => setMediaFilters(values)} categoriesList={mediaCategoriesList} />
+
                             <Box display="flex" px={5} py={10} flexWrap="wrap">
                                 {list?.map((item, index) => (
                                     <Component.CmtMediaElement
@@ -93,6 +138,15 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                                     </Component.CmtMediaElement>
                                 ))}
                             </Box>
+
+                            <Component.CmtPagination
+                                page={mediaFilters.page}
+                                total={mediasTotal}
+                                limit={mediaFilters.limit}
+                                setPage={(newValue) => setMediaFilters({ ...mediaFilters, page: newValue })}
+                                setLimit={(newValue) => setMediaFilters({ ...mediaFilters, limit: newValue })}
+                                length={list?.length}
+                            />
                         </Grid>
                         <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%' }}>
                             <DisplayMediaInformation

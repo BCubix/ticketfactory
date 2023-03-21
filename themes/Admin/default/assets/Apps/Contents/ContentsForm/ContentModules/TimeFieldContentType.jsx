@@ -55,10 +55,10 @@ const getInitialValue = () => {
 const getValidation = (contentType) => {
     let validation = Yup.string();
 
-    const valList = [...contentType.validations, ...contentType.options];
+    const valList = { ...contentType.validations, ...contentType.options };
 
     VALIDATION_LIST?.forEach((element) => {
-        const elVal = valList.find((el) => el.name === element.name);
+        const elVal = valList[element.name];
         if (elVal && element.test(elVal.value)) {
             validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
@@ -68,7 +68,8 @@ const getValidation = (contentType) => {
     validation = validation.test('isValid', 'Date invalide', (val) => val && moment(val, 'HH:mm').isValid());
 
     // We get the minHour validation data and add a test to validation to check minimum Hour if minHour.value exist and is defined
-    const minHour = valList.find((el) => el.name === 'minHour');
+    const minHour = valList['minDate'];
+    valList['minHour'];
     if (minHour && minHour.value) {
         validation = validation.test('minHour', `L'heure doit être supérieur ou égal à ${moment(minHour.value, 'HH:mm').format('HH:mm')}`, (val) => {
             const valHour = moment(val, 'HH:mm').format('HH:mm');
@@ -78,7 +79,7 @@ const getValidation = (contentType) => {
     }
 
     // We get the maxHour validation data and add a test to validation to check maximum Hour if maxHour.value exist and is defined
-    const maxHour = valList.find((el) => el.name === 'maxHour');
+    const maxHour = valList['maxHour'];
     if (maxHour && maxHour.value) {
         validation = validation.test('maxHour', `L'heure doit être inférieur ou égal à ${moment(maxHour.value, 'HH:mm').format('HH:mm')}`, (val) => {
             const valHour = moment(val, 'HH:mm').format('HH:mm');

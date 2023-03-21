@@ -45,6 +45,14 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
         getLinks();
     }, []);
 
+    useEffect(() => {
+        if (!values[field.name]) {
+            return;
+        }
+
+        setFieldValue(name, values[field.name]?.id || values[field.name]);
+    }, []);
+
     return (
         <>
             <FormControl fullWidth>

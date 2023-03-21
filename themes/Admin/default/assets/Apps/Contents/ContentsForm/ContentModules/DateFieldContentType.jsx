@@ -56,10 +56,10 @@ const getInitialValue = () => {
 const getValidation = (contentType) => {
     let validation = Yup.date();
 
-    const valList = [...contentType.validations, ...contentType.options];
+    const valList = { ...contentType.validations, ...contentType.options };
 
     VALIDATION_LIST?.forEach((element) => {
-        const elVal = valList.find((el) => el.name === element.name);
+        const elVal = valList[element.name];
         if (elVal && element.test(elVal.value)) {
             validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
         }
@@ -68,8 +68,8 @@ const getValidation = (contentType) => {
     // Add test to validation to check if date is valid
     validation = validation.test('isValid', 'Date invalide', (val) => val && moment(val).isValid());
 
-    const minDate = valList.find((el) => el.name === 'minDate');
-    const disablePast = valList.find((el) => el.name === 'disablePast');
+    const minDate = valList['minDate'];
+    const disablePast = valList['disablePast'];
     let validMinDate = '';
     let validMinDateMessage = '';
 
@@ -94,7 +94,7 @@ const getValidation = (contentType) => {
     }
 
     // We get the maxDate validation data and add a test to validation to check maximum Date if maxDate.value exist and is defined
-    const maxDate = valList.find((el) => el.name === 'maxDate');
+    const maxDate = valList['maxDate'];
     if (maxDate && maxDate.value) {
         validation = validation.test(
             'maxDate',

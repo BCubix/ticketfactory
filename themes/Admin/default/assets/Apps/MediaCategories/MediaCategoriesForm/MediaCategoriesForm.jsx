@@ -30,6 +30,7 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
             initialValues={{
                 id: initValues?.id || undefined,
                 name: initValues?.name || '',
+                shortDescription: initValues?.shortDescription || '',
                 active: initValues?.active || false,
                 parent: initValues?.parent?.id || parentId || '',
                 mustHaveParent: !initValues || Boolean(initValues?.parent),
@@ -48,7 +49,7 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <Component.CmtTextField
                                     value={values.name}
                                     onChange={(e) => {
@@ -64,6 +65,19 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                                     required
                                 />
                                 <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
+                            </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtTextField
+                                    value={values.shortDescription}
+                                    onChange={(e) => {
+                                        setFieldValue('shortDescription', e.target.value);
+                                    }}
+                                    onBlur={handleBlur}
+                                    label="Description courte"
+                                    name="name"
+                                    error={touched.shortDescription && errors.shortDescription}
+                                />
                             </Grid>
 
                             {values?.mustHaveParent && (

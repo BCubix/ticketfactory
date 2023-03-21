@@ -130,114 +130,114 @@ export const MenusList = () => {
         setFieldValue('children', deserializeChildrenData(values.children));
     };
 
-    if (!menus || !initialValues || !translationInitialValues) {
+    if (!menus || !initialValues || !translationInitialValues || !languagesData.languages) {
         return <></>;
     }
 
     return (
-        <>
-            <Formik
-                initialValues={{
-                    name: translationInitialValues?.name || '',
-                    type: translationInitialValues?.menuType || null,
-                    value: translationInitialValues?.value || null,
-                    children: translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : [],
-                    maxLevel: translationInitialValues?.maxLevel || 3,
-                    lang: translationInitialValues?.lang?.id || '',
-                    languageGroup: translationInitialValues?.languageGroup || '',
-                }}
-                onSubmit={async (values, { setSubmitting }) => {
-                    updateMenu(values);
+        <Formik
+            initialValues={{
+                name: translationInitialValues?.name || '',
+                type: translationInitialValues?.menuType || null,
+                value: translationInitialValues?.value || null,
+                children: translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : [],
+                maxLevel: translationInitialValues?.maxLevel || 3,
+                lang: translationInitialValues?.lang?.id || '',
+                languageGroup: translationInitialValues?.languageGroup || '',
+            }}
+            onSubmit={async (values, { setSubmitting }) => {
+                updateMenu(values);
 
-                    setSubmitting(false);
-                }}
-            >
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
-                    <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
-                        <Component.MenuHeaderLine
-                            selectedMenu={initialValues}
-                            list={menus}
-                            translationSelectedMenu={translationInitialValues}
-                            handleChange={(val) => {
-                                setInitialValues(val);
-                                setTranslationInitialValues(val);
-                                changeFormikInitialValues(setFieldValue, val);
-                            }}
-                            changeLanguage={(val) => {
-                                setTranslationInitialValues(val);
-                                changeFormikInitialValues(setFieldValue, val);
-                            }}
-                        />
-                        {Object.keys(initialValues).length > 0 && (
-                            <Grid container spacing={5} sx={{ marginTop: 5 }}>
-                                <Grid item xs={12} md={6} lg={3}>
-                                    <Component.AddMenuElement
-                                        language={translationInitialValues?.lang}
-                                        addElementToMenu={(newElements) => {
-                                            let menu = [...values.children];
+                setSubmitting(false);
+            }}
+        >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+                <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
+                    <Component.MenuHeaderLine
+                        selectedMenu={initialValues}
+                        list={menus}
+                        translationSelectedMenu={translationInitialValues}
+                        handleChange={(val) => {
+                            setInitialValues(val);
+                            setTranslationInitialValues(val);
+                            changeFormikInitialValues(setFieldValue, val);
+                        }}
+                        changeLanguage={(val) => {
+                            setTranslationInitialValues(val);
+                            changeFormikInitialValues(setFieldValue, val);
+                        }}
+                    />
 
-                                            newElements.forEach((el) => {
-                                                if (!el?.lang) {
-                                                    menu.push({ ...el, lang: values?.lang });
-                                                } else {
-                                                    menu.push(el);
-                                                }
-                                            });
+                    {Object.keys(initialValues).length > 0 && (
+                        <Grid container spacing={5} sx={{ marginTop: 5 }}>
+                            <Grid item xs={12} md={6} lg={3}>
+                                <Component.AddMenuElement
+                                    language={translationInitialValues?.lang}
+                                    addElementToMenu={(newElements) => {
+                                        let menu = [...values.children];
 
-                                            setFieldValue('children', menu);
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={9}>
-                                    <Component.MenuStructure
-                                        values={values}
-                                        setFieldValue={setFieldValue}
-                                        handleChange={handleChange}
-                                        handleBlur={handleBlur}
-                                        touched={touched}
-                                        errors={errors}
-                                        languageList={languageList}
-                                        openTranslateDialog={() => setTranslateDialog(true)}
-                                    />
+                                        newElements.forEach((el) => {
+                                            if (!el?.lang) {
+                                                menu.push({ ...el, lang: values?.lang });
+                                            } else {
+                                                menu.push(el);
+                                            }
+                                        });
 
-                                    <Box className="flex row-between">
-                                        <Button
-                                            variant="outlined"
-                                            sx={{ mt: 3, mb: 2 }}
-                                            disabled={isSubmitting}
-                                            color="error"
-                                            onClick={() => setDeleteDialog(!deleteDialog)}
-                                            id="deleteMenuButton"
-                                        >
-                                            Supprimer
-                                        </Button>
-
-                                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
-                                            Modifier
-                                        </Button>
-                                    </Box>
-                                </Grid>
+                                        setFieldValue('children', menu);
+                                    }}
+                                />
                             </Grid>
-                        )}
+                            <Grid item xs={12} md={6} lg={9}>
+                                <Component.MenuStructure
+                                    values={values}
+                                    setFieldValue={setFieldValue}
+                                    handleChange={handleChange}
+                                    handleBlur={handleBlur}
+                                    touched={touched}
+                                    errors={errors}
+                                    languageList={languageList}
+                                    openTranslateDialog={() => setTranslateDialog(true)}
+                                    language={translationInitialValues?.lang}
+                                />
 
-                        <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                            <Box textAlign="center" py={3}>
-                                <Typography component="p">Êtes-vous sûr de vouloir supprimer ce menu ?</Typography>
+                                <Box className="flex row-between">
+                                    <Button
+                                        variant="outlined"
+                                        sx={{ mt: 3, mb: 2 }}
+                                        disabled={isSubmitting}
+                                        color="error"
+                                        onClick={() => setDeleteDialog(!deleteDialog)}
+                                        id="deleteMenuButton"
+                                    >
+                                        Supprimer
+                                    </Button>
 
-                                <Typography component="p">Cette action est irréversible.</Typography>
-                            </Box>
-                        </Component.DeleteDialog>
+                                    <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
+                                        Modifier
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    )}
 
-                        <Component.CmtTranslateDialog
-                            item={initialValues}
-                            isOpen={translateDialog}
-                            onClose={() => setTranslateDialog(false)}
-                            languageList={languageList}
-                            onTranslate={(id, languageId) => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)}
-                        />
-                    </Component.CmtPageWrapper>
-                )}
-            </Formik>
-        </>
+                    <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+                        <Box textAlign="center" py={3}>
+                            <Typography component="p">Êtes-vous sûr de vouloir supprimer ce menu ?</Typography>
+
+                            <Typography component="p">Cette action est irréversible.</Typography>
+                        </Box>
+                    </Component.DeleteDialog>
+
+                    <Component.CmtTranslateDialog
+                        item={initialValues}
+                        isOpen={translateDialog}
+                        onClose={() => setTranslateDialog(false)}
+                        languageList={languageList}
+                        onTranslate={(id, languageId) => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)}
+                    />
+                </Component.CmtPageWrapper>
+            )}
+        </Formik>
     );
 };

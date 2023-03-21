@@ -3,12 +3,12 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateContentType = () => {
     const dispatch = useDispatch();
@@ -20,17 +20,13 @@ export const CreateContentType = () => {
             const result = await Api.contentTypesApi.createContentType(values);
 
             if (result.result) {
-                NotificationManager.success(
-                    'Le type de contenu a bien été créé.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.success('Le type de contenu a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getContentTypesAction());
                 navigate(Constant.CONTENT_TYPES_BASE_PATH);
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
-        })
+        });
     };
 
     useEffect(() => {
@@ -50,5 +46,5 @@ export const CreateContentType = () => {
         return <></>;
     }
 
-    return <Component.ContentTypesForm submitForm={handleSubmit} pagesList={pagesList}/>;
+    return <Component.ContentTypesForm submitForm={handleSubmit} pagesList={pagesList} />;
 };

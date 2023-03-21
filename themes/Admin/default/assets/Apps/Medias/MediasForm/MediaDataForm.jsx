@@ -25,7 +25,7 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement, m
             }}
             validationSchema={mediaSchema}
             onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values);
+                handleSubmit({ ...media, ...values });
 
                 setSubmitting(false);
             }}
@@ -78,7 +78,14 @@ export const MediaDataForm = ({ media, mediaType, handleSubmit, deleteElement, m
                         sx={{ mt: 10 }}
                     />
 
-                    <Component.MediaParentCategoryPartForm sx={{ mt: 10 }} values={values} mediaCategoriesList={mediaCategoriesList} setFieldValue={setFieldValue} touched={touched} errors={errors} />
+                    <Component.MediaParentCategoryPartForm
+                        sx={{ mt: 10 }}
+                        values={values}
+                        mediaCategoriesList={mediaCategoriesList}
+                        setFieldValue={setFieldValue}
+                        touched={touched}
+                        errors={errors}
+                    />
 
                     <Box display={'flex'} justifyContent="flex-end" sx={{ pb: 3, pt: 5 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />

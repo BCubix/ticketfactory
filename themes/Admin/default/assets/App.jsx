@@ -43,6 +43,10 @@ export const App = () => {
         }
     }, [connected]);
 
+    if (null === connected || (connected && (!languagesData?.languages || !parametersData?.parameters))) {
+        return <></>;
+    }
+
     return (
         <ThemeProvider theme={createTheme(defaultTheme)}>
             <Component.AppProvider>

@@ -1,11 +1,9 @@
 import React, { useMemo } from 'react';
-
-import { InputLabel, Radio, Typography } from '@mui/material';
-import { TreeItem, TreeView } from '@mui/lab';
-import { Box } from '@mui/system';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import { TreeItem, TreeView } from '@mui/lab';
+import { InputLabel, Radio, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
 const displayCategoriesOptions = (list, values, setFieldValue) => {

@@ -76,6 +76,14 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
         getLinks();
     }, []);
 
+    useEffect(() => {
+        if (!values[field.name]) {
+            return;
+        }
+
+        setFieldValue(name, values[field.name]?.id || values[field.name]);
+    }, []);
+
     if (!list || list.length === 0) return <></>;
 
     return (

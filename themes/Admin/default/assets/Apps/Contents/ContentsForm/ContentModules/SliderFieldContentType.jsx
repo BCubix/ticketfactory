@@ -70,6 +70,15 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
         getMedias();
     }, []);
 
+    useEffect(() => {
+        if (!values[field.name]) {
+            return;
+        }
+
+        let list = values[field.name]?.map((el) => el?.id || el) || values[field.name];
+        setFieldValue(name, list);
+    }, []);
+
     return (
         <>
             <InputLabel id={`${label}-label`}>{label}</InputLabel>

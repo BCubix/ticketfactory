@@ -4,9 +4,10 @@ export default function getMenuEntryModules() {
     const list = require.context('@/Modules/', true, /\MenuEntryModule.jsx$/);
 
     list.keys().map((item) => {
-        const name = item.split('/').at(-1).replace('./', '').replace('.jsx', '');
+        const component = list(item).default;
+        const name = component.MENU_TYPE;
 
-        components[name] = list(item).default;
+        components[name] = component;
     });
 
     return components;

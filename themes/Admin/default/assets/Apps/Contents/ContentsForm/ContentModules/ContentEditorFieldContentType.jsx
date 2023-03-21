@@ -2,9 +2,9 @@ import React from 'react';
 import { InputLabel, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-const TYPE = 'contentEditor';
+const TYPE = 'wysiwyg';
 
-const VALIDATION_TYPE = 'date';
+const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
     {
         name: 'required',

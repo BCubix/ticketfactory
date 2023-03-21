@@ -56,6 +56,19 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
         getMedias();
     }, []);
 
+    useEffect(() => {
+        if (!values[field.name]) {
+            return;
+        }
+
+        if (field?.options?.multiple) {
+            let list = values[field.name]?.map((el) => el?.id || el);
+            setFieldValue(name, list);
+        } else {
+            setFieldValue(name, values[field.name]?.id || values[field.name]);
+        }
+    }, []);
+
     return (
         <>
             <InputLabel id={`${label}-label`}>{label}</InputLabel>

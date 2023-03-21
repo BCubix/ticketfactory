@@ -1,7 +1,7 @@
+import React from 'react';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { checkComponent, checkObject, checkString } from '@Services/utils/check';
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedRouteObj = [

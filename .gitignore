@@ -1,4 +1,5 @@
 .vscode
+.htpasswd
 
 ###> symfony/framework-bundle ###
 /.env.local

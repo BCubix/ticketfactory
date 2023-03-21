@@ -17,6 +17,9 @@ export const EditCategory = () => {
     const [category, setCategory] = useState(null);
     const [categoriesData, setCategoriesData] = useState(null);
 
+    const [queryParameters] = useSearchParams();
+    const parentId = queryParameters.get('parentId');
+
     const getCategory = async (id) => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.categoriesApi.getOneCategory(id);
