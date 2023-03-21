@@ -159,7 +159,7 @@ class FileUploader implements EventSubscriberInterface
         $folderDestination = $this->getFolderByElementId($media->getId());
         $documentFile->move($this->rootPath . self::MEDIA_FILE_PATH . $folderDestination);
 
-        $media->setDocumentUrl($basePath . $folderDestination . "/" . $media->getDocumentFileName());
+        $media->setDocumentUrl($basePath . $folderDestination . $media->getDocumentFileName());
 
         $this->em->persist($media);
         $this->em->flush();

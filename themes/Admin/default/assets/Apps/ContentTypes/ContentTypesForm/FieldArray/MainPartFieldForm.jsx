@@ -41,9 +41,7 @@ export const MainPartFieldForm = ({
 
         Object.entries(selectList).forEach(([key, value]) => {
             const sortValue = [...value];
-
             sortValue.sort((a, b) => a.label > b.label);
-
             sortList.push({ groupName: key, contentTypes: [...sortValue] });
         });
 

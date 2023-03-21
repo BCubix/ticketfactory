@@ -41,9 +41,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         let validation = {};
 
         contentType.fields?.forEach((el) => {
-            const moduleName = String(el.type).charAt(0).toUpperCase() + el.type?.slice(1) + Constant.CONTENT_MODULES_EXTENSION;
-
-            validation[el.name] = getContentModules[moduleName]?.getValidation ? getContentModules[moduleName].getValidation(el) : getValidation(el, getContentModules[moduleName]);
+            validation[el.name] = getContentModules[el.type]?.getValidation ? getContentModules[el.type].getValidation(el) : getValidation(el, getContentModules[el.type]);
         });
 
         return Yup.object().shape({ ...validation });

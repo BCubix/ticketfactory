@@ -1,9 +1,11 @@
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { checkComponent, checkObject, checkString } from '@Services/utils/check';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 const AuthenticatedRouteObj = [
-    () => ({ path: Constant.HOME_PATH, component: Component.Home, exact: true }),
+    () => ({ path: Constant.HOME_PATH, component: () => <Navigate to={Constant.EVENTS_BASE_PATH} />, exact: true }),
 
     () => ({ path: Constant.USER_BASE_PATH, component: Component.UserList }),
     () => ({ path: Constant.USER_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateUser }),

@@ -5,7 +5,7 @@ import { Component } from '@/AdminService/Component';
 const NAME = 'contentEditor';
 const LABEL = 'Editeur de contenus';
 
-const TYPE = 'contentEditor';
+const TYPE = 'wysiwyg';
 const TYPE_GROUP_NAME = 'Contenu';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {
@@ -101,10 +101,7 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, prefixNa
 
 const getSelectEntry = () => ({ name: TYPE, label: LABEL, type: TYPE, groupName: TYPE_GROUP_NAME });
 
-const getTabList = () => [
-    { label: 'Options', component: (props) => <Options {...props} /> },
-    { label: 'Validations', component: (props) => <Validations {...props} /> },
-];
+const getTabList = () => [{ label: 'Options', component: (props) => <Options {...props} /> }];
 
 const setInitialValues = (prefixName, setFieldValue) => {
     setFieldValue(`${prefixName}.options`, getInitialValues().options);
@@ -113,7 +110,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 
 const getInitialValues = () => ({
     options: { required: false, disabled: false, trim: false },
-    validations: { minLength: '', maxLength: '' },
+    validations: {},
 });
 
 export default {

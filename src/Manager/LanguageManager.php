@@ -162,7 +162,7 @@ class LanguageManager extends AbstractManager
         return $newObject;
     }
 
-    public function getTranslatedSubElement(Object $object, int $languageId): ?Object
+    public function getTranslatedSubElement(?Object $object, int $languageId): ?Object
     {
         if (null === $object) {
             return null;
