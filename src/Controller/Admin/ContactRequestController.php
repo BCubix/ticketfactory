@@ -21,35 +21,35 @@ class ContactRequestController extends CrudController
 
     #[Rest\Get('/contact-requests')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/contact-requests/{requestId}', requirements: ['requestId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function getOne(Request $request, int $requestId): View
     {
         return parent::getOne($request, $requestId);
     }
 
     #[Rest\Post('/contact-requests')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/contact-requests/{requestId}', requirements: ['requestId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function edit(Request $request, int $requestId): View
     {
         return parent::edit($request, $requestId);
     }
 
     #[Rest\Delete('/contact-requests/{requestId}', requirements: ['requestId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function delete(Request $request, int $requestId): View
     {
         return parent::delete($request, $requestId);
