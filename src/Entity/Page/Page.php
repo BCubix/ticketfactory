@@ -24,7 +24,7 @@ class Page extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -33,15 +33,20 @@ class Page extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le titre de la page doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre de la page doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[Gedmo\Slug(fields: ['title'], updatable: false)]
+    #[Gedmo\Slug(fields: ['title'], updatable: true)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[ORM\Column(length: 123, nullable: true)]
+    private ?string $keyword = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
@@ -108,6 +113,18 @@ class Page extends Datable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getKeyword(): ?string
+    {
+        return $this->keyword;
+    }
+
+    public function setKeyword(?string $keyword): self
+    {
+        $this->keyword = $keyword;
 
         return $this;
     }

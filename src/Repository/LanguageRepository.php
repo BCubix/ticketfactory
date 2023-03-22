@@ -13,7 +13,7 @@ class LanguageRepository extends CrudRepository
         parent::__construct($registry, Language::class);
     }
 
-    public function findDefaultLanguageForAdmin()
+    public function findDefaultForAdmin()
     {
         return $this->createQueryBuilder('l')
             ->where('l.isDefault = 1')

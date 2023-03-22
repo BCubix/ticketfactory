@@ -5,16 +5,21 @@ namespace App\Manager;
 use App\Entity\User\User;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class UserManager extends AbstractManager
 {
-    private $ph;
+    protected $ph;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $ph)
-    {
-        parent::__construct($em);
+    public function __construct(
+        ManagerFactory $mf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        UserPasswordHasherInterface $ph
+    ) {
+        parent::__construct($mf, $em, $rs);
 
         $this->ph = $ph;
     }

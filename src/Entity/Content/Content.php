@@ -3,7 +3,6 @@
 namespace App\Entity\Content;
 
 use App\Entity\Datable;
-use App\Entity\JsonDoctrineSerializable;
 use App\Entity\Language\Language;
 use App\Repository\ContentRepository;
 
@@ -16,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[JMS\ExclusionPolicy('all')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ContentRepository::class)]
-class Content extends Datable implements JsonDoctrineSerializable
+class Content extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
@@ -35,7 +34,7 @@ class Content extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[Gedmo\Slug(fields: ['title'], updatable: false)]
+    #[Gedmo\Slug(fields: ['title'], updatable: true)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_one'])]
     #[ORM\Column(length: 123, unique: true)]
@@ -131,17 +130,6 @@ class Content extends Datable implements JsonDoctrineSerializable
         $this->contentType = $contentType;
 
         return $this;
-    }
-
-    public function jsonSerialize(): mixed
-    {
-
-        return $this->fields;
-    }
-
-    public static function jsonDeserialize($data): self
-    {
-        return $data;
     }
 
     public function getLang(): ?Language

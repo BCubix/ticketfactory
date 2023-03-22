@@ -3,6 +3,7 @@
 namespace App\Form\Admin\Content\Types;
 
 use App\Entity\Content\Content;
+use App\Entity\Content\ContentTypeField;
 use App\Repository\ContentRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -30,5 +31,23 @@ class ContentTypeFieldContentType extends ContentTypeFieldAbstractType
                 ;
             }
         ]);
+    }
+
+    public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    {
+        if (empty($cf)) {
+            return null;
+        }
+
+        return $cf->getId();
+    }
+
+    public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    {
+        if (empty($cf)) {
+            return null;
+        }
+
+        return $this->em->getRepository(Content::class)->find($cf);
     }
 }

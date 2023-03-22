@@ -5,6 +5,7 @@ namespace App\Entity\Event;
 use App\Entity\Datable;
 use App\Entity\Language\Language;
 use App\Repository\EventRepository;
+use App\Service\Sorter\EventSorter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +25,7 @@ class Event extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -33,18 +34,18 @@ class Event extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: false)]
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
@@ -114,7 +115,6 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
-
     public function __construct()
     {
         /*** > Module: ModuleTCE ***/
@@ -127,7 +127,7 @@ class Event extends Datable
         $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
-        $this->eventMedias       = new ArrayCollection();
+        $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
     }
 
@@ -382,5 +382,55 @@ class Event extends Datable
         }
 
         return $this;
+    }
+
+    /**
+    * Renvoie la première date de représentation de l'événement
+    *
+    * @return EventDate
+    */
+    #[JMS\Expose()]
+    #[JMS\VirtualProperty()]
+    #[JMS\SerializedName("beginDate")]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    public function getBeginDate($objectString = EventSorter::STRING_DATE)
+    {
+        return EventSorter::getReferenceDate($this, EventSorter::FIRST_DATE, $objectString);
+    }
+
+    /**
+    * Renvoie la dernière date de représentation du spectacle
+    *
+    * @return Datetime
+    */
+    #[JMS\Expose()]
+    #[JMS\VirtualProperty()]
+    #[JMS\SerializedName("endDate")]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    public function getEndDate($objectString = EventSorter::STRING_DATE)
+    {
+        return EventSorter::getReferenceDate($this, EventSorter::LAST_DATE, $objectString);
+    }
+
+   /**
+    * Renvoie le media principal associé à l'évenement
+    *
+    * @return Media
+    */
+    public function getMainMedia()
+    {
+        foreach ($this->getEventMedias() as $eventMedia) {
+            if ($eventMedia->isMainImg()) {
+                return $eventMedia->getMedia();
+            }
+        }
+
+        foreach ($this->getEventMedias() as $eventMedia) {
+            if ($eventMedia->getRealType() == 'image') {
+                return $eventMedia->getMedia();
+            }
+        }
+
+        return null;
     }
 }

@@ -84,6 +84,13 @@ class ContentType extends AbstractType
                 $contentType['children'] = $this->getContentTypes($field->getParameters()['fields']);
             }
 
+            if (
+                count($field->getParameters()) > 0 &&
+                isset($field->getParameters()['choices'])
+            ) {
+                $contentType['choices'] = $field->getParameters()['choices'];
+            }
+
             $contentTypes[] = $contentType;
         }
 

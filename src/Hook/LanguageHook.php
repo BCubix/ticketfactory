@@ -3,7 +3,7 @@
 namespace App\Hook;
 
 use App\Entity\Event\EventCategory;
-use App\Event\Admin\HookEvent;
+use App\Event\HookEvent;
 use App\Exception\ApiException;
 use App\Manager\LanguageManager;
 use App\Manager\EventCategoryManager;
@@ -35,7 +35,7 @@ class LanguageHook
         $this->em->persist($newCategory);
 
         /**
-         * Ajouter un nouveau menu ??? 
+         * Ajouter un nouveau menu ???
          */
 
          $this->em->flush();

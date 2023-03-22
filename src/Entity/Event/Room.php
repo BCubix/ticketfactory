@@ -36,7 +36,7 @@ class Room extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: false)]
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_room_one'])]
     #[ORM\Column(length: 123, unique: true)]
@@ -61,7 +61,7 @@ class Room extends Datable
 
     #[Assert\Valid]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_room_one'])]
+    #[JMS\Groups(['a_room_all', 'a_room_one'])]
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: SeatingPlan::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $seatingPlans;
 

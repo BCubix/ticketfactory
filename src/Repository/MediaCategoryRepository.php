@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Language\Language;
+use App\Entity\Media\MediaCategory;
+
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class MediaCategoryRepository extends NestedTreeRepository
@@ -12,7 +14,7 @@ class MediaCategoryRepository extends NestedTreeRepository
         if (isset($filters['lang'])) {
             $langId = $filters['lang'];
         } else {
-            $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin()->getId();
+            $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin()->getId();
         }
 
         if (null == $categoryId) {
@@ -40,7 +42,7 @@ class MediaCategoryRepository extends NestedTreeRepository
 
     public function findRootCategory($languageId = null) {
         if (null === $languageId) {
-            $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin()->getId();
+            $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin()->getId();
         } else {
             $langId = $languageId;
         }

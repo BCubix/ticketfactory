@@ -8,6 +8,7 @@ use App\Exception\ApiException;
 use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,13 +18,18 @@ class ContentTypeManager extends AbstractManager
     private const TYPE_FILES_PATH = 'src/Form/Admin/Content/Types/*.php';
     private const NAMESPACE_PATH = '\App\Form\Admin\Content\Types\\';
 
-    private $ff;
-    private $pg;
-    private $types;
+    protected $ff;
+    protected $pg;
+    protected $types;
 
-    public function __construct(EntityManagerInterface $em, FormFactoryInterface $ff, PathGetter $pg)
-    {
-        parent::__construct($em);
+    public function __construct(
+        ManagerFactory $mf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        FormFactoryInterface $ff,
+        PathGetter $pg
+    ) {
+        parent::__construct($mf, $em, $rs);
 
         $this->ff = $ff;
         $this->pg = $pg;
@@ -56,6 +62,15 @@ class ContentTypeManager extends AbstractManager
             1500,
             "Le composant rattaché au type de contenu " . $contentType . " n'a pas été trouvé."
         );
+    }
+
+    public function getContentTypeInstanceFromType(string $contentType) {
+        $contentTypeField = $this->getContentTypeFieldFromType($contentType);
+
+        $form = $this->ff->create($contentTypeField);
+        $type = $form->getConfig()->getType()->getInnerType();
+        
+        return $type;
     }
 
     public function getOptionsFromField(ContentTypeField $contentTypeField) {
@@ -107,7 +122,7 @@ class ContentTypeManager extends AbstractManager
         $parameters = [];
         foreach ($contentTypeField->getParameters() as $parameter) {
             // We only pass parameters that are defined
-            if (!array_key_exists($parameter->getName(), $expectedParameters)) {
+            if (!in_array($parameter->getName(), $expectedParameters)) {
                 continue;
             }
 

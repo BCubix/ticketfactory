@@ -15,7 +15,24 @@ return function (RoutingConfigurator $routes) {
            ->controller(["gesdinet.jwtrefreshtoken", 'refresh'])
     ;
 
-    $websiteControllersPath = [];
+
+    if ($routes->env() == 'dev') {
+        $routes
+            ->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', 'xml')
+            ->prefix('/_wdt')
+        ;
+
+        $routes
+            ->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', 'xml')
+            ->prefix('/_profiler')
+        ;
+
+        $routes
+            ->import('@FrameworkBundle/Resources/config/routing/errors.xml', 'xml')
+            ->prefix('/_error')
+        ;
+    }
+
 
     // Core - Admin
     $routes
@@ -49,20 +66,6 @@ return function (RoutingConfigurator $routes) {
         if (is_dir($controllersPath)) {
             $routes->import($controllersPath, 'annotation');
         }
-    }
-
-    $routes
-        ->import('../../src/Controller/Admin', 'annotation')
-        ->prefix('/admin')
-    ;
-
-    $routes
-        ->import('.', 'uploader')
-        ->prefix('/admin/api')
-    ;
-
-    foreach ($websiteControllersPath as $controllersPath) {
-        $routes->import($controllersPath, 'annotation');
     }
 
     $routes->import('../../src/Controller/Website', 'annotation');

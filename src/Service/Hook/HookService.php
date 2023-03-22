@@ -3,24 +3,43 @@
 namespace App\Service\Hook;
 
 use App\Entity\Hook\Hook;
+use App\Entity\Language\Language;
 use App\Entity\Module\Module;
-use App\Event\Admin\HookEvent;
+use App\Event\HookEvent;
 use App\Exception\ApiException;
 use App\Service\ModuleTheme\Config\ModuleConfig;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class HookService
 {
-    private $ed;
-    private $em;
+    protected $ed;
+    protected $em;
+    protected $ts;
+    protected $rs;
 
-    public function __construct(EventDispatcherInterface $ed, EntityManagerInterface $em)
-    {
+    public function __construct(
+        EventDispatcherInterface $ed,
+        EntityManagerInterface $em,
+        Environment $ts,
+        RequestStack $rs
+    ) {
         $this->ed = $ed;
         $this->em = $em;
+        $this->ts = $ts;
+        $this->rs = $rs;
+    }
+
+    public function getTwig() {
+        return $this->ts;
+    }
+
+    public function getEm() {
+        return $this->em;
     }
 
     public static function normalize(string $methodName): string
@@ -96,10 +115,15 @@ class HookService
      *
      * @return void
      */
-    public function exec(string $hookName, array $hookArgs = []): void
+    public function exec(string $hookName, array $hookArgs = []): HookEvent
     {
+        $locale = $this->rs->getMainRequest()->getLocale();
+        $language = $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);
+
+        $hookArgs = array_merge(['languageId' => $language->getId()], $hookArgs);
         $event = new HookEvent($hookArgs);
-        $this->ed->dispatch($event, static::normalize($hookName));
+
+        return $this->ed->dispatch($event, static::normalize($hookName));
     }
 
     /**

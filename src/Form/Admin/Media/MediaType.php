@@ -4,6 +4,7 @@ namespace App\Form\Admin\Media;
 
 use App\Entity\Media\Media;
 use App\Entity\Media\MediaCategory;
+use App\Repository\MediaRepository;
 use App\Repository\MediaCategoryRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -23,6 +24,7 @@ class MediaType extends AbstractType
             ->add('description',          TextType::class,            [])
             ->add('legend',               TextType::class,            [])
             ->add('title',                TextType::class,            [])
+            ->add('subtitle',             TextType::class,            [])
             ->add('mainCategory',         EntityType::class,          [
                 'class'         => MediaCategory::class,
                 'choice_label'  => 'name',
@@ -42,6 +44,17 @@ class MediaType extends AbstractType
                     return $mcr
                         ->createQueryBuilder('mc')
                         ->orderBy('mc.name', 'ASC')
+                    ;
+                }
+            ])
+            ->add('thumbnail',             EntityType::class,          [
+                'class'         => Media::class,
+                'choice_label'  => 'media',
+                'multiple'      => false,
+                'query_builder' => function (MediaRepository $mr) {
+                    return $mr
+                        ->createQueryBuilder('m')
+                        ->orderBy('m.title', 'ASC')
                     ;
                 }
             ])

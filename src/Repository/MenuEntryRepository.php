@@ -15,7 +15,7 @@ class MenuEntryRepository extends NestedTreeRepository
         if (isset($filters['lang'])) {
             $langId = $filters['lang'];
         } else {
-            $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin()->getId();
+            $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin()->getId();
         }
 
         return $this
@@ -42,7 +42,7 @@ class MenuEntryRepository extends NestedTreeRepository
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = [])
     {
-        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
+        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin();
 
         $results = $this
             ->createQueryBuilder('o')

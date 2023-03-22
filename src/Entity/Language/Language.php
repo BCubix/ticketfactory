@@ -52,66 +52,56 @@ class Language extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]
+    #[ORM\Column(length: 255)]
+    private ?string $locale = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all'])]
     #[ORM\Column]
     private ?bool $isDefault = null;
 
-    #[JMS\Expose()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Event::class, orphanRemoval: true)]
     private Collection $events;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Tag::class, orphanRemoval: true)]
     private Collection $tags;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Room::class, orphanRemoval: true)]
     private Collection $rooms;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Season::class, orphanRemoval: true)]
     private Collection $seasons;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Page::class, orphanRemoval: true)]
     private Collection $pages;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: PageBlock::class, orphanRemoval: true)]
     private Collection $pageBlocks;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: Content::class, orphanRemoval: true)]
     private Collection $contents;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventDateBlock::class, orphanRemoval: true)]
     private Collection $eventDateBlocks;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventDate::class, orphanRemoval: true)]
     private Collection $eventDates;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventPriceBlock::class, orphanRemoval: true)]
     private Collection $eventPriceBlocks;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventPrice::class, orphanRemoval: true)]
     private Collection $eventPrices;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: SeatingPlan::class, orphanRemoval: true)]
     private Collection $seatingPlans;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: EventCategory::class, orphanRemoval: true)]
     private Collection $eventCategories;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: MenuEntry::class, orphanRemoval: true)]
     private Collection $menuEntries;
 
-    #[JMS\Exclude()]
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: MediaCategory::class, orphanRemoval: true)]
     private Collection $mediaCategories;
 
@@ -160,6 +150,18 @@ class Language extends Datable
     public function setIsoCode(string $isoCode): self
     {
         $this->isoCode = $isoCode;
+
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): self
+    {
+        $this->locale = $locale;
 
         return $this;
     }

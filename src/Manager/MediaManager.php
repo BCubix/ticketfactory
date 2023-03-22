@@ -4,18 +4,24 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
+use App\Utils\MimeTypeMapping;
 use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MediaManager extends AbstractManager
 {
-    private $pg;
+    protected $pg;
 
-    public function __construct(EntityManagerInterface $em, PathGetter $pg)
-    {
-        parent::__construct($em);
+    public function __construct(
+        ManagerFactory $mf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        PathGetter $pg
+    ) {
+        parent::__construct($mf, $em, $rs);
 
         $this->pg = $pg;
     }

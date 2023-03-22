@@ -7,15 +7,11 @@ use App\Entity\Media\ImageFormat;
 use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
-use App\Service\Hook\HookService;
 use App\Service\ModuleTheme\Config\ThemeConfig;
 use App\Utils\Exec;
 use App\Utils\FileManipulator;
 
-use App\Utils\PathGetter;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 
@@ -26,58 +22,9 @@ class ThemeManager extends ModuleThemeManager
     public const ZIP_CONFIG_FILE_NOT_FOUND = "Le dossier config ne contient pas le fichier de configuration.";
     public const ZIP_TEMPLATES_INDEX_NOT_FOUND = "Le dossier templates ne contient pas le fichier index.html.twig.";
 
-    private $pm;
-    private $mm;
-    private $ifm;
-    private $hs;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        PathGetter             $pg,
-        Filesystem             $fs,
-        ParameterManager       $pm,
-        ModuleManager          $mm,
-        ImageFormatManager     $ifm,
-        HookService            $hs
-    ) {
-        parent::__construct($em, $pg, $fs);
-
-        $this->dir = $this->pg->getThemesDir();
-
-        $this->pm  = $pm;
-        $this->mm  = $mm;
-        $this->ifm = $ifm;
-        $this->hs  = $hs;
-    }
-
-    public function getAll(array $filters = []): array
-    {
-        $themesInDisk = parent::getAll($filters);
-
-        for ($i = 0; $i < count($themesInDisk); ++$i) {
-            unset($themesInDisk[$i]['global_settings']);
-        }
-
-        return $themesInDisk;
-    }
-
-    public function getIsServerSide()
-    {
-        $themeName = $this->pm->get('main_theme');
-        $configuration = $this->getConfiguration($themeName);
-
-        if (array_key_exists("server_side_rendering", $configuration)) {
-            $serverSideRendering = $configuration['server_side_rendering'] == true ? true : false;
-        } else {
-            $serverSideRendering = false;
-        }
-
-        return $serverSideRendering;
-    }
-
     public function getConfiguration(string $objectName): array
     {
-        $config = Yaml::parseFile($this->dir . '/' . $objectName . '/config/config.yaml');
+        $config = Yaml::parseFile($this->getDir() . '/' . $objectName . '/config/config.yaml');
         if (!$config) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
                 "Le fichier de configuration du thème $objectName est vide.");
@@ -91,7 +38,7 @@ class ThemeManager extends ModuleThemeManager
 
     public function getImage(string $objectName): array
     {
-        $imagePathWithoutExt = $this->dir . "/$objectName/preview";
+        $imagePathWithoutExt = $this->getDir() . "/$objectName/preview";
         $imageUrlWithoutExt = "themes/$objectName/preview";
 
         $ext = null;
@@ -109,22 +56,9 @@ class ThemeManager extends ModuleThemeManager
         return ['previewUrl' => $ext];
     }
 
-    public function install(string $objectName): array
+    public function getDir(): string
     {
-        $tree = parent::install($objectName);
-
-        if (isset($tree[$objectName]['config']['modulesToDeploy'])) {
-            foreach ($tree[$objectName]['config']['modulesToDeploy'] as $moduleName => $value) {
-                $originDir = $this->dir . '/' . $objectName . '/config/modulesToDeploy/' . $moduleName;
-                $targetDir = $this->pg->getModulesDir() . '/' . $moduleName;
-
-                if (is_dir($originDir) && !is_dir($targetDir)) {
-                    $this->fs->mirror($originDir, $targetDir);
-                }
-            }
-        }
-
-        return $tree;
+        return $this->pg->getThemesDir();
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
@@ -162,6 +96,35 @@ class ThemeManager extends ModuleThemeManager
             static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
     }
 
+    public function getAll(array $filters = []): array
+    {
+        $themesInDisk = parent::getAll($filters);
+
+        for ($i = 0; $i < count($themesInDisk); ++$i) {
+            unset($themesInDisk[$i]['global_settings']);
+        }
+
+        return $themesInDisk;
+    }
+
+    public function install(string $objectName): array
+    {
+        $tree = parent::install($objectName);
+
+        if (isset($tree[$objectName]['config']['modulesToDeploy'])) {
+            foreach ($tree[$objectName]['config']['modulesToDeploy'] as $moduleName => $value) {
+                $originDir = $this->getDir() . '/' . $objectName . '/config/modulesToDeploy/' . $moduleName;
+                $targetDir = $this->pg->getModulesDir() . '/' . $moduleName;
+
+                if (is_dir($originDir) && !is_dir($targetDir)) {
+                    $this->fs->mirror($originDir, $targetDir);
+                }
+            }
+        }
+
+        return $tree;
+    }
+
     public function clear(): void
     {
         parent::clear();
@@ -176,7 +139,9 @@ class ThemeManager extends ModuleThemeManager
      */
     public function getAdminTemplatesPath(): string
     {
-        return "Admin/" . $this->pm->get('admin_theme') . "/templates/";
+        $themePath = $this->mf->get('parameter')->get('admin_theme');
+
+        return "Admin/" . $themePath . "/templates/";
     }
 
     /**
@@ -186,17 +151,9 @@ class ThemeManager extends ModuleThemeManager
      */
     public function getWebsiteTemplatesPath(): string
     {
-        return "Website/" . $this->pm->get('main_theme') . "/templates/";
-    }
+        $themePath = $this->mf->get('parameter')->get('main_theme');
 
-    /**
-     * Get website server path.
-     *
-     * @return string
-     */
-    public function getWebsiteServerPath(): string
-    {
-        return $this->pg->GetThemesDir() . "/" . $this->pm->get('main_theme') . "/assets/server/";
+        return "Website/" . $themePath . "/templates/";
     }
 
     /**
@@ -265,7 +222,7 @@ class ThemeManager extends ModuleThemeManager
             }
         }
 
-        $mainThemeName = $this->pm->get('main_theme');
+        $mainThemeName = $this->mf->get('parameter')->get('main_theme');
         $firstTheme = $mainThemeName === null;
 
         if (!$firstTheme) {
@@ -289,7 +246,7 @@ class ThemeManager extends ModuleThemeManager
         $hooks = $globalSettings['hooks']['modules_to_hook'];
         $this->applyHooksConfig($hooks, true);
 
-        $this->pm->set('main_theme', $themeName);
+        $this->mf->get('parameter')->set('main_theme', $themeName);
         $this->em->flush();
         if ($transaction) {
             $this->em->getConnection()->commit();
@@ -328,7 +285,7 @@ class ThemeManager extends ModuleThemeManager
             return;
         }
 
-        $mainThemeName = $this->pm->get('main_theme');
+        $mainThemeName = $this->mf->get('parameter')->get('main_theme');
         if ($themeName === $mainThemeName) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le thème $themeName ne doit pas correspondre au thème principal actuel...");
         }
@@ -352,7 +309,7 @@ class ThemeManager extends ModuleThemeManager
      */
     private function disableMainTheme(bool $transaction): void
     {
-        $mainThemeName = $this->pm->get('main_theme');
+        $mainThemeName = $this->mf->get('parameter')->get('main_theme');
 
         $mainTheme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($mainThemeName);
         if (null === $mainTheme) {
@@ -389,7 +346,7 @@ class ThemeManager extends ModuleThemeManager
     private function applyModulesConfig(array $modulesName, bool $activeCondition, int $action, bool $transaction): void
     {
         foreach ($modulesName as $moduleName) {
-            $this->mm->active($moduleName, $action, $activeCondition, $transaction, false);
+            $this->mf->get('module')->active($moduleName, $action, $activeCondition, $transaction, false);
         }
     }
 
@@ -433,7 +390,7 @@ class ThemeManager extends ModuleThemeManager
         }
 
         if ($active) {
-            $this->ifm->generateThumbnails();
+            $this->mf->get('imageFormat')->generateThumbnails();
         }
     }
 
@@ -462,7 +419,7 @@ class ThemeManager extends ModuleThemeManager
                     continue;
                 }
 
-                $moduleConfig = $this->mm->getModuleConfigInstance($moduleName);
+                $moduleConfig = $this->mf->get('module')->getModuleConfigInstance($moduleName);
                 $register
                     ? $this->hs->register($hookName, $moduleConfig, $position++)
                     : $this->hs->unregister($hookName, $moduleConfig);

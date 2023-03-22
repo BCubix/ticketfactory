@@ -37,13 +37,19 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
 
         foreach ($contentTypes as $contentType) {
             $options = [];
+            $component = $this->ctm->getContentTypeFieldFromType($contentType['type']);
+
             if (isset($contentType['children'])) {
                 $options['contentTypes'] = $contentType['children'];
             }
 
+            if (isset($contentType['choices'])) {
+                $options['choices'] = $component::getChoicesFromString($contentType['choices']);
+            }
+
             $form->add(
                 $contentType['name'],
-                $this->ctm->getContentTypeFieldFromType($contentType['type']),
+                $component,
                 $options
             );
         }

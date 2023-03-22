@@ -2,11 +2,15 @@
 
 namespace App\EventSubscriber\Admin;
 
+use App\Entity\Content\Content;
+use App\Entity\Page\PageBlock;
 use App\Entity\JsonDoctrineSerializable;
 use App\Manager\LanguageManager;
+use App\Service\Serializer\ContentSerializer;
+use App\Service\Serializer\PageBlockSerializer;
 
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 
@@ -14,11 +18,15 @@ class DoctrineSubscriber implements EventSubscriber
 {
     private $em;
     private $lm;
+    private $cs;
+    private $pbs;
 
-    public function __construct(EntityManagerInterface $em, LanguageManager $lm)
+    public function __construct(EntityManagerInterface $em, LanguageManager $lm, ContentSerializer $cs, PageBlockSerializer $pbs)
     {
         $this->em = $em;
         $this->lm = $lm;
+        $this->cs = $cs;
+        $this->pbs = $pbs;
     }
 
     public function getSubscribedEvents()
@@ -39,6 +47,14 @@ class DoctrineSubscriber implements EventSubscriber
             $entity->jsonSerialize();
         }
 
+        if (ClassUtils::getClass($entity) == Content::class) {
+            $this->cs->serializeContent($entity);
+        }
+
+        if (ClassUtils::getClass($entity) == PageBlock::class) {
+            $this->pbs->serializePageBlock($entity);
+        }
+
         $this->lm->setTranslationsProperties($entity);
     }
 
@@ -47,6 +63,14 @@ class DoctrineSubscriber implements EventSubscriber
         $entity = $args->getEntity();
         if ($entity instanceof (JsonDoctrineSerializable::class)) {
             $entity->jsonSerialize();
+        }
+
+        if (ClassUtils::getClass($entity) == Content::class) {
+            $this->cs->serializeContent($entity);
+        }
+
+        if (ClassUtils::getClass($entity) == PageBlock::class) {
+            $this->pbs->serializePageBlock($entity);
         }
 
         $this->lm->setTranslationsProperties($entity);
@@ -58,6 +82,14 @@ class DoctrineSubscriber implements EventSubscriber
         if ($entity instanceof (JsonDoctrineSerializable::class)) {
             $className = get_class($entity);
             $className::jsonDeserialize($entity);
+        }
+
+        if (ClassUtils::getClass($entity) == Content::class) {
+            $this->cs->deSerializeContent($entity);
+        }
+
+        if (ClassUtils::getClass($entity) == PageBlock::class) {
+            $this->pbs->deSerializePageBlock($entity);
         }
     }
 }

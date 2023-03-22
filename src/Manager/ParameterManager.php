@@ -7,15 +7,20 @@ use App\Exception\ApiException;
 use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 class ParameterManager extends AbstractManager
 {
-    private $pg;
+    protected $pg;
 
-    public function __construct(EntityManagerInterface $em, PathGetter $pg)
-    {
-        parent::__construct($em);
+    public function __construct(
+        ManagerFactory $mf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        PathGetter $pg
+    ) {
+        parent::__construct($mf, $em, $rs);
 
         $this->pg = $pg;
     }

@@ -3,7 +3,6 @@
 namespace App\Entity\Page;
 
 use App\Entity\Datable;
-use App\Entity\JsonDoctrineSerializable;
 use App\Entity\Language\Language;
 use App\Repository\PageBlockRepository;
 
@@ -15,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[JMS\ExclusionPolicy('all')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PageBlockRepository::class)]
-class PageBlock extends Datable implements JsonDoctrineSerializable
+class PageBlock extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
@@ -29,7 +28,7 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
 
     #[Assert\NotBlank(message: 'Le nom du bloc doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -128,30 +127,6 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
         $this->page = $page;
 
         return $this;
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        $columns = [];
-        foreach ($this->columns as $column) {
-            $columns[] = $column->jsonSerialize();
-        }
-
-        $this->columns = $columns;
-
-        return $this->columns;
-    }
-
-    public static function jsonDeserialize($data): self
-    {
-        $columns = [];
-        foreach ($data->columns as $column) {
-            $columns[] = PageColumn::jsonDeserialize($column);
-        }
-
-        $data->columns = $columns;
-
-        return $data;
     }
 
     public function getLang(): ?Language

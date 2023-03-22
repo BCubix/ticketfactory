@@ -12,15 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EventCategoryManager extends AbstractManager
 {
-    private $lm;
-
-    public function __construct(EntityManagerInterface $em, LanguageManager $lm)
-    {
-        parent::__construct($em);
-
-        $this->lm = $lm;
-    }
-
     public function deleteEventsFromCategory(EventCategory $mainCategory): void
     {
         $rootCategory = $this->em->getRepository(EventCategory::class)->findRootCategory();
@@ -97,11 +88,25 @@ class EventCategoryManager extends AbstractManager
             return $object;
         }
 
-        $children = $this->lm->getAllTranslations($children->toArray(), EventCategory::class, $filters);
+        $children = $this->mf->get('language')->getAllTranslations($children->toArray(), EventCategory::class, $filters);
         if (null !== $children) {
             $object->setChildren(new ArrayCollection($children));
         }
 
         return $object;
+    }
+
+    public function getTopCategories(): array
+    {
+        $languageId = $this->getLanguageId();
+
+        return $this->em->getRepository(EventCategory::class)->getTopCategoriesForWebsite($languageId);
+    }
+
+    public function getBySlug($slug): ?EventCategory
+    {
+        $languageId = $this->getLanguageId();
+        
+        return $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug);
     }
 }

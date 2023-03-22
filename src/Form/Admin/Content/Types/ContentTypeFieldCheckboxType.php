@@ -43,4 +43,23 @@ class ContentTypeFieldCheckboxType extends ContentTypeFieldAbstractType
             'choices' => ['class' => TextType::class]
         ];
     }
+
+    public static function getChoicesFromString(string $choices): array
+    {
+        $lineList = [];
+        $resultList = [];
+        
+        $choices = str_replace("\r", "", $choices);
+        $lineList = explode("\n", $choices);
+
+        foreach ($lineList as $line) {
+            $result = explode(" : ", $line);
+
+            if (count($result) == 2) {
+                $resultList[$result[1]] = $result[0];
+            }
+        }
+
+        return $resultList;
+    }
 }

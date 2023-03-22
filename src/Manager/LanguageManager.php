@@ -7,7 +7,6 @@ use App\Utils\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Uuid;
-use Doctrine\ORM\EntityManagerInterface;
 
 class LanguageManager extends AbstractManager
 {
@@ -19,7 +18,7 @@ class LanguageManager extends AbstractManager
         }
 
         if (property_exists($entity, "lang") && null === $entity->getLang()) {
-            $defaultLanguage = $this->em->getRepository(Language::class)->findDefaultLanguageForAdmin();
+            $defaultLanguage = $this->em->getRepository(Language::class)->findDefaultForAdmin();
             $entity->setLang($defaultLanguage);
         }
     }
@@ -133,7 +132,7 @@ class LanguageManager extends AbstractManager
                 $reflectionProperty->setValue($newObject, null);
             } else if ($type === 'OneToMany') {
                 $reflectionProperty->setValue($newObject, new ArrayCollection());
-                
+
                 $methodName = 'add' . ucfirst(substr($name, 0, -1));
                 if ($reflect->hasMethod($methodName)) {
                     foreach ($value as $subObj) {

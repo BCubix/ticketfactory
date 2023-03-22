@@ -37,11 +37,21 @@ class MediaCategory extends Datable
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_category_one'])]
+    #[JMS\Groups(['a_media_one', 'a_media_category_all', 'a_media_category_one'])]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $shortDescription = null;
+
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_article_one', 'a_media_one', 'a_media_category_all', 'a_media_category_one'])]
     #[ORM\Column(type: Types::STRING, length: 123, unique: true)]
     private $slug;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one', 'a_media_category_all', 'a_media_category_one'])]
+    #[ORM\Column]
+    private ?int $position = 0;
 
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: Types::INTEGER)]
@@ -118,6 +128,19 @@ class MediaCategory extends Datable
         return $this;
     }
 
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(?string $shortDescription): self
+    {
+        $this->shortDescription = $shortDescription;
+
+        return $this;
+    }
+
+
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -128,6 +151,33 @@ class MediaCategory extends Datable
         $this->slug = $slug;
 
         return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getLft(): ?int
+    {
+        return $this->lft;
+    }
+
+    public function getRgt(): ?int
+    {
+        return $this->rgt;
+    }
+
+    public function getLvl(): ?int
+    {
+        return $this->lvl;
     }
 
     public function getRoot(): ?self

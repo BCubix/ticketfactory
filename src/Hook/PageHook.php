@@ -2,7 +2,7 @@
 
 namespace App\Hook;
 
-use App\Event\Admin\HookEvent;
+use App\Event\HookEvent;
 use App\Manager\VersionnedEntityManager;
 
 class PageHook

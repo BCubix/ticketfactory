@@ -11,15 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class MediaCategoryManager extends AbstractManager
 {
-    private $lm;
-
-    public function __construct(EntityManagerInterface $em, LanguageManager $lm)
-    {
-        parent::__construct($em);
-
-        $this->lm = $lm;
-    }
-
     public function deleteMediasFromCategory(MediaCategory $mainCategory): void
     {
         $rootCategory = $this->em->getRepository(MediaCategory::class)->findRootCategory();
@@ -86,7 +77,7 @@ class MediaCategoryManager extends AbstractManager
         return $this->em->getRepository(MediaCategory::class)->findAllByLanguageGroupForAdmin($object->getLanguageGroup()->toBinary());
     }
 
-    public function getTranslatedChildren(MediaCategory $object, array $filters): MediaCategory
+    public function getTranslatedChildren(?MediaCategory $object, array $filters): ?MediaCategory
     {
         $children = $object->getChildren();
 
@@ -94,11 +85,40 @@ class MediaCategoryManager extends AbstractManager
             return $object;
         }
 
-        $children = $this->lm->getAllTranslations($children->toArray(), MediaCategory::class, $filters);
+        $children = $this->mf->get('language')->getAllTranslations($children->toArray(), MediaCategory::class, $filters);
         if (null !== $children) {
             $object->setChildren(new ArrayCollection($children));
         }
 
         return $object;
+    }
+
+    public function getHomeWebsiteCategory(): ?MediaCategory
+    {
+        $lvl = 1;
+        $repository = $this->em->getRepository(MediaCategory::class);
+
+        return $repository->findByLvlForWebsite($this->getDefaultLanguageId(), $lvl, 'home-du-site');
+    }
+
+    public function getMediasRootCategory($slug = null): array
+    {
+        $lvl = 1;
+        $repository = $this->em->getRepository(MediaCategory::class);
+        $rootCategory = $repository->findByLvlForWebsite($this->getDefaultLanguageId(), $lvl, $slug);
+
+        return $repository->findSubCategoriesForWebsite($this->getDefaultLanguageId(), $rootCategory, false);
+    }
+
+    public function getSubCategories(MediaCategory $rootCategory): array
+    {
+        $repository = $this->em->getRepository(MediaCategory::class);
+
+        return $repository->findSubCategoriesForWebsite($this->getLanguageId(), $rootCategory, true);
+    }
+
+    public function getCategoryBySlug(string $slug): ?MediaCategory
+    {
+        return $this->em->getRepository(MediaCategory::class)->findBySlugForWebsite($this->getLanguageId(), $slug);
     }
 }

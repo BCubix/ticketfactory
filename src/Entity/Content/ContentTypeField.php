@@ -158,10 +158,6 @@ class ContentTypeField implements JsonDoctrineSerializable
 
     private function jsonNodeSerialize($data): mixed
     {
-        if ($this->getName() == 'titre-1') {
-            dd($data);
-        }
-
         switch (gettype($data)) {
             case "array":
                 $arr = [];
@@ -205,7 +201,21 @@ class ContentTypeField implements JsonDoctrineSerializable
         // Object
         if ($data['type'] =='object') {
             $className = $data['typeName'];
-            return $className::jsonDeserialize($data['data']);
+
+            if (method_exists($className, 'jsonDeserialize')) {
+                return $className::jsonDeserialize($data['data']);
+            } else {
+                $reflection = new \ReflectionClass($className);
+                $obj = new $className();
+
+                foreach ($reflection->getProperties() as $property) {
+                    if (isset($data['data'][$property->getName()])) {
+                        $property->setValue($obj, $data['data'][$property->getName()]);
+                    }
+                }
+
+                return $obj;
+            }
         }
 
         // Primitive

@@ -16,7 +16,7 @@ abstract class CrudRepository extends AbstractRepository
 
     public function findAllForAdmin(array $filters): array
     {
-        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultLanguageForAdmin();
+        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin();
 
         list($limit, $page, $sortField, $sortOrder) = $this->getSortParameters($filters);
 

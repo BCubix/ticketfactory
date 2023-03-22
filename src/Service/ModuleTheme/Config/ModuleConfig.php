@@ -161,6 +161,21 @@ class ModuleConfig
     }
 
     /**
+     * Render twig file from module's templates folder
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function renderModule(string $path, array $parameters): string
+    {
+        $twig = $this->hs->getTwig();
+        $path = ('@modules/' . $this->name . '/templates/' . $path);
+
+        return $twig->render($path, $parameters);
+    }
+
+    /**
      * Inject or remove trait in entity.
      *
      * @param bool $remove

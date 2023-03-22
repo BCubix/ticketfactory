@@ -10,6 +10,7 @@ use App\Utils\PathGetter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -19,6 +20,7 @@ class RequestSubscriber implements EventSubscriberInterface
     private $em;
     private $mm;
     private $hs;
+    private $rs;
     private $container;
 
     public function __construct(
@@ -26,12 +28,14 @@ class RequestSubscriber implements EventSubscriberInterface
         EntityManagerInterface $em,
         ModuleManager          $mm,
         HookService            $hs,
+        RequestStack           $rs,
         ContainerInterface     $container
     ) {
         $this->pg = $pg;
         $this->em = $em;
         $this->mm = $mm;
         $this->hs = $hs;
+        $this->rs = $rs;
 
         $this->container = $container;
     }
@@ -45,6 +49,17 @@ class RequestSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event)
     {
+        if ($event->getRequest() != $this->rs->getMainRequest()) {
+            return;
+        }
+
+        /*$ip = $event->getRequest()->server->get('HTTP_X_REAL_IP');
+        $route = $event->getRequest()->attributes->get('_route');
+
+        if ((strpos($route, 'website') !== false) && (!in_array($ip, ['87.240.80.97', '82.65.219.167']))) {
+            throw new \Exception('Environnement en cours de construction.');
+        }*/
+
         // Register hook module
         $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
         foreach ($hooks as $hook) {

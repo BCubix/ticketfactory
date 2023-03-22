@@ -2,18 +2,17 @@
 
 namespace App\Entity\Page;
 
-use App\Entity\JsonDoctrineSerializable;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
-class PageColumn implements JsonDoctrineSerializable
+class PageColumn
 {
     /*** > Trait ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
-    private ?string $content = null;
+    private mixed $content = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
@@ -36,12 +35,12 @@ class PageColumn implements JsonDoctrineSerializable
     private ?int $xl = null;
 
 
-    public function getContent(): ?string
+    public function getContent(): mixed
     {
         return $this->content;
     }
 
-    public function setContent(?string $content): self
+    public function setContent(mixed $content): self
     {
         $this->content = $content;
 
@@ -106,30 +105,5 @@ class PageColumn implements JsonDoctrineSerializable
         $this->xl = $xl;
 
         return $this;
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'content' => $this->content,
-            'xs'      => $this->xs,
-            's'       => $this->s,
-            'm'       => $this->m,
-            'l'       => $this->l,
-            'xl'      => $this->xl
-        ];
-    }
-
-    public static function jsonDeserialize($data): self
-    {
-        $object          = new self();
-        $object->content = $data['content'];
-        $object->xs      = $data['xs'];
-        $object->s       = $data['s'];
-        $object->m       = $data['m'];
-        $object->l       = $data['l'];
-        $object->xl      = $data['xl'];
-
-        return $object;
     }
 }

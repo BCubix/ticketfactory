@@ -10,19 +10,24 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ImageFormatManager extends AbstractManager
 {
-    private $pm;
-    private $mm;
-    private $fs;
+    protected $pm;
+    protected $mm;
+    protected $fs;
 
-    public function __construct(EntityManagerInterface $em, ParameterManager $pm, MediaManager $mm, Filesystem $fs)
-    {
-        parent::__construct($em);
+    public function __construct(
+        ManagerFactory $mf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        Filesystem $fs
+    ) {
+        parent::__construct($mf, $em, $rs);
 
-        $this->pm = $pm;
-        $this->mm = $mm;
+        $this->pm = $this->mf->get('parameter');
+        $this->mm = $this->mf->get('media');
         $this->fs = $fs;
     }
 

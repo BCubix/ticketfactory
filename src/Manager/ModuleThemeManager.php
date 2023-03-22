@@ -4,26 +4,76 @@ namespace App\Manager;
 
 use App\Exception\ApiException;
 use App\Service\Exec\ExecService;
+use App\Service\Hook\HookService;
 use App\Utils\PathGetter;
 use App\Utils\Tree;
 use App\Utils\Zip;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class ModuleThemeManager extends AbstractManager
 {
-    protected $dir;
     protected $pg;
     protected $fs;
+    protected $hs;
 
-    public function __construct(EntityManagerInterface $em, PathGetter $pg, Filesystem $fs)
-    {
-        parent::__construct($em);
+    public function __construct(
+        ManagerFactory $mf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        PathGetter $pg,
+        Filesystem $fs,
+        HookService $hs
+    ) {
+        parent::__construct($mf, $em, $rs);
+
         $this->pg = $pg;
         $this->fs = $fs;
+        $this->hs = $hs;
     }
+
+    /**
+     * Return the information of object from the config.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public abstract function getConfiguration(string $objectName): array;
+
+    /**
+     * Get image and copy in public directory.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     */
+    public abstract function getImage(string $objectName): array;
+
+    /**
+     * Return the path to the main directory where modules / themes are stored.
+     *
+     * @param string $objectName
+     *
+     * @return array
+     */
+    public abstract function getDir(): string;
+
+    /**
+     * Verify node, so verify if the file or the directory corresponds to the architecture.
+     *
+     * @param int|string $nodeKey
+     * @param string|array $nodeValue
+     * @param string $rootName
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected abstract function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void;
 
     /**
      * Return list of objects with configuration info.
@@ -48,7 +98,7 @@ abstract class ModuleThemeManager extends AbstractManager
     {
         $result = [];
 
-        $paths = glob($this->dir . '/*', GLOB_ONLYDIR);
+        $paths = glob($this->getDir() . '/*', GLOB_ONLYDIR);
         foreach ($paths as $path) {
             $objectName = basename($path);
             // The next + is used to concat the two arrays
@@ -57,25 +107,6 @@ abstract class ModuleThemeManager extends AbstractManager
 
         return $result;
     }
-
-    /**
-     * Return the information of object from the config.
-     *
-     * @param string $objectName
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public abstract function getConfiguration(string $objectName): array;
-
-    /**
-     * Get image and copy in public directory.
-     *
-     * @param string $objectName
-     *
-     * @return array
-     */
-    public abstract function getImage(string $objectName): array;
 
     /**
      * Unzip the zip which contains a module or theme.
@@ -87,10 +118,10 @@ abstract class ModuleThemeManager extends AbstractManager
      */
     public function unzip(string $zipName): string
     {
-        $zipPath = $this->dir . '/' . $zipName;
+        $zipPath = $this->getDir() . '/' . $zipName;
 
         // Create tmp directory to unzip the zip
-        $tmpDirPath = $this->dir . '/tmp' . basename($zipName, '.zip');
+        $tmpDirPath = $this->getDir() . '/tmp' . basename($zipName, '.zip');
         $this->fs->mkdir($tmpDirPath);
         Zip::unzip($zipPath, $tmpDirPath, false);
 
@@ -123,11 +154,11 @@ abstract class ModuleThemeManager extends AbstractManager
         }
 
         // Finally unzip the real zip in dir
-        if (is_dir($this->dir . '/' . $name)) {
+        if (is_dir($this->getDir() . '/' . $name)) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le module/thème $name existe déjà.");
         }
 
-        Zip::unzip($zipPath, $this->dir);
+        Zip::unzip($zipPath, $this->getDir());
 
         try {
             $this->install($name);
@@ -162,7 +193,7 @@ abstract class ModuleThemeManager extends AbstractManager
      */
     public function check(string $objectName): array
     {
-        $path = $this->dir . '/' . $objectName;
+        $path = $this->getDir() . '/' . $objectName;
         if (!is_dir($path)) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $path n'existe pas.");
         }
@@ -199,18 +230,6 @@ abstract class ModuleThemeManager extends AbstractManager
     }
 
     /**
-     * Verify node, so verify if the file or the directory corresponds to the architecture.
-     *
-     * @param int|string $nodeKey
-     * @param string|array $nodeValue
-     * @param string $rootName
-     *
-     * @return void
-     * @throws \Exception
-     */
-    protected abstract function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void;
-
-    /**
      * Delete the directory of object (module or theme) and other files configurations.
      *
      * @param string $objectName
@@ -220,12 +239,12 @@ abstract class ModuleThemeManager extends AbstractManager
      */
     public function deleteInDisk(string $objectName): void
     {
-        $path = $this->dir . '/' . $objectName;
+        $path = $this->getDir() . '/' . $objectName;
         if (!is_dir($path)) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le dossier $path n'existe pas.");
         }
 
-        $this->fs->remove($this->dir . '/' . $objectName);
+        $this->fs->remove($this->getDir() . '/' . $objectName);
     }
 
     /**

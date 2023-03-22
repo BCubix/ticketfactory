@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
@@ -23,6 +24,7 @@ class PageBlockType extends AbstractType
         $builder
             ->add('name',                 TextType::class,            [])
             ->add('saveAsModel',          CheckboxType::class,        ['false_values' => ['0']])
+            ->add('blockType',            IntegerType::class,         [])
             ->add('columns',              CollectionType::class,      [
                 'entry_type'   => PageColumnType::class,
                 'allow_add'    => true,

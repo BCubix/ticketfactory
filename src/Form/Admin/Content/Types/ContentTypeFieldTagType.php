@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin\Content\Types;
 
+use App\Entity\Content\ContentTypeField;
 use App\Entity\Event\Tag;
 use App\Repository\TagRepository;
 
@@ -30,5 +31,23 @@ class ContentTypeFieldTagType extends ContentTypeFieldAbstractType
                 ;
             }
         ]);
+    }
+
+    public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    {
+        if (empty($cf)) {
+            return null;
+        }
+
+        return $cf->getId();
+    }
+
+    public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    {
+        if (empty($cf)) {
+            return null;
+        }
+
+        return $this->em->getRepository(Tag::class)->find($cf);
     }
 }

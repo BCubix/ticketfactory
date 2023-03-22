@@ -21,6 +21,7 @@ class MediaCategoryType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
+            ->add('shortDescription',     TextType::class,            [])
             ->add('slug',                 TextType::class,            [])
             ->add('parent',               EntityType::class,          [
                 'class'         => MediaCategory::class,

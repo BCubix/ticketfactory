@@ -21,7 +21,7 @@ class VersionnedEntityManager extends AbstractManager
         'page'    => Page::class
     ];
 
-    private $parsedObjects = [];
+    protected $parsedObjects = [];
 
     public function checkVersionnedEntity(Object $newEntity, Object $oldEntity): void
     {
@@ -203,7 +203,7 @@ class VersionnedEntityManager extends AbstractManager
                 $reflectionProperty->setValue($object, $fValues['after']);
                 continue;
             }
-            
+
             // Collection element
             $getMethod = 'get' . ucfirst(substr($fName, 0, -1)) . 's';
             foreach ($object->$getMethod() as &$childObject) {

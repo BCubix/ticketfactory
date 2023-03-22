@@ -64,6 +64,7 @@ class Kernel extends BaseKernel
             // Add module namespace in bundle list
             $bundleFileName = substr(basename($bundleFilePath), 0, -4);
             $moduleNamespace = 'TicketFactory\\Module\\' . $moduleName . '\\' . $bundleFileName;
+
             $bundles[$moduleNamespace] = ['all' => true];
         }
 

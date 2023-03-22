@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event\Event;
+use App\Service\Sorter\EventSorter;
 
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,7 +18,7 @@ class EventRepository extends CrudRepository
     ];
 
     protected const JOINS = [
-        ['leftJoin', 'o.mainCategory', 'ec'],
+        ['leftJoin', 'o.eventCategories', 'ec'],
         ['leftJoin', 'o.season', 'es'],
         ['leftJoin', 'o.room', 'er'],
         ['leftJoin', 'o.tags', 'et'],

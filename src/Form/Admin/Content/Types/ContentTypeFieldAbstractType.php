@@ -2,11 +2,19 @@
 
 namespace App\Form\Admin\Content\Types;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 abstract class ContentTypeFieldAbstractType extends AbstractType
 {
+    protected $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public static function getOptions() {
         return [
             'disabled' => [

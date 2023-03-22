@@ -8,15 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class HookManager extends AbstractManager
 {
-    private $mm;
-
-    public function __construct(EntityManagerInterface $em, ModuleManager $mm)
-    {
-        parent::__construct($em);
-
-        $this->mm = $mm;
-    }
-
     /**
      * Get all modules by hook sorted by position for each hook
      *
@@ -45,7 +36,7 @@ class HookManager extends AbstractManager
     {
         $result = [];
 
-        $modules = $this->mm->getAllInDisk();
+        $modules = $this->mf->get('module')->getAllInDisk();
         $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
 
         $hookName = null;

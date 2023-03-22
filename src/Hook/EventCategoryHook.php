@@ -3,7 +3,7 @@
 namespace App\Hook;
 
 use App\Entity\Event\EventCategory;
-use App\Event\Admin\HookEvent;
+use App\Event\HookEvent;
 use App\Exception\ApiException;
 
 

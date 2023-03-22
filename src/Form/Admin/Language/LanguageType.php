@@ -19,6 +19,7 @@ class LanguageType extends AbstractType
             ->add('isDefault',            CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
             ->add('isoCode',              TextType::class,            [])
+            ->add('locale',               TextType::class,            [])
         ;
     }
 
