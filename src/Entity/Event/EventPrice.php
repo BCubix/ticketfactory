@@ -19,7 +19,7 @@ class EventPrice
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -28,24 +28,24 @@ class EventPrice
     #[Assert\Length(max: 250, maxMessage: 'Le nom du tarif doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du tarif doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
 
     #[Assert\PositiveOrZero(message: 'Le tarif doit être un nombre supérieur ou égal à 0.')]
     #[Assert\NotBlank(message: 'Le tarif doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'float')]
     private $price;
 
@@ -54,7 +54,7 @@ class EventPrice
     private $eventPriceBlock;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\ManyToOne(inversedBy: 'eventPrices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;

@@ -38,7 +38,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Get('/hooks')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
     public function getAll(Request $request): View
     {
         $result = $this->hm->getAllModulesByHook();
@@ -46,7 +46,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Post('/hooks')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_hook_one'])]
     public function add(Request $request): View
     {
         $rq = $request->request->all();
@@ -75,7 +75,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Post('/hooks/{hookName}/disable', requirements: ['hookName' => '.+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_hook_one'])]
     public function disable(Request $request, string $hookName): View
     {
         $moduleName = $request->get('module-name');
@@ -96,7 +96,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Post('/hooks/{hookName}', requirements: ['hookName' => '.+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_hook_one'])]
     public function update(Request $request, string $hookName): View
     {
         $hooks = $this->em->getRepository(Hook::class)->findAllByNameForAdmin($hookName);

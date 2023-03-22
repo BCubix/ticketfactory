@@ -46,7 +46,7 @@ class MenuController extends CrudController
 
     #[Rest\Get('/menus')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_menu_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         $filters = $paramFetcher->get('filters');
@@ -63,35 +63,35 @@ class MenuController extends CrudController
     }
 
     #[Rest\Get('/menus/{menuId}', requirements: ['menuId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function getOne(Request $request, int $menuId): View
     {
         return parent::getOne($request, $menuId);
     }
 
     #[Rest\Post('/menus')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/menus/{menuId}', requirements: ['menuId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function edit(Request $request, int $menuId): View
     {
         return parent::edit($request, $menuId);
     }
 
     #[Rest\Delete('/menus/{menuId}', requirements: ['menuId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function delete(Request $request, int $menuId): View
     {
         return parent::delete($request, $menuId);
     }
 
     #[Rest\Get('/menus/{menusId}/translated/{languageId}', requirements: ['menusId' => '\d+', 'languageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function getTranslated(Request $request, int $menusId, int $languageId): View
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($menusId);

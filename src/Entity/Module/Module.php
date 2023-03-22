@@ -26,19 +26,17 @@ class Module extends Datable
     const ACTION_UNINSTALL_DELETE = 2;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one', 'a_module_all', 'a_module_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
     private $id;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one', 'a_module_all', 'a_module_one'])]
     #[ORM\Column(type: Types::STRING, length: 255)]
     private $name;
 
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Hook::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $hooks;
 

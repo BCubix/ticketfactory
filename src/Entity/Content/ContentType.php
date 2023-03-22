@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[JMS\ExclusionPolicy('all')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ContentTypeRepository::class)]
 class ContentType extends Datable implements JsonDoctrineSerializable
@@ -21,7 +22,7 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -30,22 +31,20 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[Assert\Length(max: 250, maxMessage: 'Le nom du type de contenu doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du type de contenu doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     #[ORM\Column(type: 'json')]
     private array $fields = [];
 
-    #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
     #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: Content::class)]
     private $contents;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_content_type_one'])]
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contentTypes')]
     #[ORM\JoinColumn(nullable: false)]
     private $pageParent;

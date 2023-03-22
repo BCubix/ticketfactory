@@ -21,35 +21,35 @@ class UserController extends CrudController
 
     #[Rest\Get('/users')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/users/{userId}', requirements: ['userId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function getOne(Request $request, int $userId): View
     {
         return parent::getOne($request, $userId);
     }
 
     #[Rest\Post('/users')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/users/{userId}', requirements: ['userId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function edit(Request $request, int $userId): View
     {
         return parent::edit($request, $userId);
     }
 
     #[Rest\Delete('/users/{userId}', requirements: ['userId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function delete(Request $request, int $userId): View
     {
         return parent::delete($request, $userId);

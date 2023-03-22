@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class VersionnedEntityController extends AdminController
 {
     #[Rest\Get('/api/versions/{entityKeyword}/{entityId}')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_version_all'])]
     public function getVersions(Request $request, VersionnedEntityManager $vem, string $entityKeyword, int $entityId): View
     {
         $className = $vem->getClass($entityKeyword);
@@ -27,7 +27,7 @@ class VersionnedEntityController extends AdminController
     }
 
     #[Rest\Post('/api/versions/{entityKeyword}/{versionId}')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_version_one'])]
     public function restoreVersion(Request $request, VersionnedEntityManager $vem, string $entityKeyword, int $versionId): View
     {
         $className = $vem->getClass($entityKeyword);

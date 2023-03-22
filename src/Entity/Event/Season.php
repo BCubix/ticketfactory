@@ -23,7 +23,7 @@ class Season extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_season_all', 'a_season_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -32,25 +32,25 @@ class Season extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de la saison doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de la saison doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_season_all', 'a_season_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_season_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_season_all', 'a_season_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\GreaterThan(value: "1970", message: 'Vous devez renseigner une année de saison valide.')]
     #[Assert\NotBlank(message: 'L\'année de début de saison doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_season_one'])]
     #[ORM\Column(type: 'integer')]
     private $beginYear;
 
@@ -58,13 +58,13 @@ class Season extends Datable
     private $events;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_season_all', 'a_season_one'])]
     #[ORM\ManyToOne(inversedBy: 'seasons')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_season_all', 'a_season_one'])]
     public $frontUrl;
 
 

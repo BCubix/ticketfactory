@@ -19,38 +19,40 @@ class Log extends Datable
     /*** > Trait ***/
     /*** < Trait ***/
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\Column(type: 'smallint')]
     private $severity;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $errorCode;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\Column(type: 'string', length: 511)]
     private $message;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\Column(type: 'string', length: 63, nullable: true)]
     private $objectName;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $objectId;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one'])]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 

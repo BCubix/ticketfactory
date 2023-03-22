@@ -19,7 +19,7 @@ class ImageFormat extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -28,32 +28,32 @@ class ImageFormat extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom du format doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du format doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_image_format_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
     #[Assert\PositiveOrZero(message: 'La hauteur de l\'image doit être un nombre supérieur ou égal à 0.')]
     #[Assert\NotBlank(message: 'La hauteur de l\'image doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\Column(type: 'integer')]
     private ?int $height = null;
 
     #[Assert\PositiveOrZero(message: 'La largeur de l\'image doit être un nombre supérieur ou égal à 0.')]
     #[Assert\NotBlank(message: 'La largeur de l\'image doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\Column(type: 'integer')]
     private ?int $width = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\Column(type: 'boolean')]
     private ?bool $themeUse = null;
 

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ProfileController extends AdminController
 {
     #[Rest\Get('/profile')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function getOne(Request $request): View
     {
         $user = $this->getUser();
@@ -23,7 +23,7 @@ class ProfileController extends AdminController
     }
 
     #[Rest\Post('/profile')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function edit(Request $request): View
     {
         $user = $this->getUser();

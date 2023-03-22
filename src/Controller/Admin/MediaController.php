@@ -21,7 +21,7 @@ class MediaController extends CrudController
 
     #[Rest\Get('/medias')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_media_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         $filters = $paramFetcher->get('filters');
@@ -36,28 +36,28 @@ class MediaController extends CrudController
     }
 
     #[Rest\Get('/medias/{mediaId}', requirements: ['mediaId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function getOne(Request $request, int $mediaId): View
     {
         return parent::getOne($request, $mediaId);
     }
 
     #[Rest\Post('/medias')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/medias/{mediaId}', requirements: ['mediaId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function edit(Request $request, int $mediaId): View
     {
         return parent::edit($request, $mediaId);
     }
 
     #[Rest\Delete('/medias/{mediaId}', requirements: ['mediaId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function delete(Request $request, int $mediaId): View
     {
         return parent::delete($request, $mediaId);

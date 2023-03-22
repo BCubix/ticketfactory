@@ -21,35 +21,35 @@ class RedirectionController extends CrudController
 
     #[Rest\Get('/redirections')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_redirection_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/redirections/{redirectionId}', requirements: ['redirectionId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_redirection_one'])]
     public function getOne(Request $request, int $redirectionId): View
     {
         return parent::getOne($request, $redirectionId);
     }
 
     #[Rest\Post('/redirections')]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_redirection_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/redirections/{redirectionId}', requirements: ['redirectionId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_redirection_one'])]
     public function edit(Request $request, int $redirectionId): View
     {
         return parent::edit($request, $redirectionId);
     }
 
     #[Rest\Delete('/redirections/{redirectionId}', requirements: ['redirectionId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['tf_admin'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_redirection_one'])]
     public function delete(Request $request, int $redirectionId): View
     {
         return parent::delete($request, $redirectionId);

@@ -21,7 +21,7 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -29,23 +29,23 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
 
     #[Assert\NotBlank(message: 'Le nom du bloc doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[Assert\NotNull(message: 'Cet élément doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     #[ORM\Column]
     private ?bool $saveAsModel = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     #[ORM\Column(type: 'json')]
     private array $columns = [];
 
@@ -53,7 +53,7 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
     private $page;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\ManyToOne(inversedBy: 'pageBlocks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
@@ -93,7 +93,7 @@ class PageBlock extends Datable implements JsonDoctrineSerializable
 
         return $this;
     }
-    
+
     public function isSaveAsModel(): ?bool
     {
         return $this->saveAsModel;
