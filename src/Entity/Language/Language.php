@@ -105,7 +105,6 @@ class Language extends Datable
     #[ORM\OneToMany(mappedBy: 'lang', targetEntity: MediaCategory::class, orphanRemoval: true)]
     private Collection $mediaCategories;
 
-
     public function __construct()
     {
         $this->events = new ArrayCollection();
