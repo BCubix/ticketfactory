@@ -9,6 +9,7 @@ class MimeTypeMapping
         "image/png"                                                                                   => 'Image',
         "image/gif"                                                                                   => 'Image',
         "image/webp"                                                                                  => 'Image',
+        "image/svg+xml"                                                                               => 'Image',
         "audio/midi"                                                                                  => 'Audio',
         "audio/mpeg"                                                                                  => 'Audio',
         "audio/webm"                                                                                  => 'Audio',

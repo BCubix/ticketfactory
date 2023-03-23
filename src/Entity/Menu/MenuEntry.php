@@ -28,7 +28,7 @@ class MenuEntry
     /*** > Trait ***/
     /*** < Trait ***/
 
-    const TYPES_MAPPING = [
+    public const TYPES_MAPPING = [
         'event'    => Event::class,
         'category' => EventCategory::class,
         'page'     => Page::class,
@@ -69,6 +69,11 @@ class MenuEntry
     #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $value = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['tf_admin'])]
+    #[ORM\Column(type: 'boolean')]
+    private $blank = false;
 
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: 'integer')]
@@ -162,6 +167,18 @@ class MenuEntry
     public function setValue(string $value): self
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function isBlank(): ?bool
+    {
+        return $this->blank;
+    }
+
+    public function setBlank(bool $blank): self
+    {
+        $this->blank = $blank;
 
         return $this;
     }

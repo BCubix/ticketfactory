@@ -39,7 +39,7 @@ class Event extends Datable
 
     #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
@@ -120,7 +120,7 @@ class Event extends Datable
         $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
-        $this->eventMedias       = new ArrayCollection();
+        $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
     }
 
