@@ -4,6 +4,7 @@ namespace App\Entity\Event;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
+use App\Entity\SEOAble\SEOAble;
 use App\Repository\EventCategoryRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,8 @@ class EventCategory extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
+
+    use SEOAble;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one'])]
@@ -285,5 +288,11 @@ class EventCategory extends Datable
         $this->events = new ArrayCollection();
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo() {
+        $this->completeFields($this->getTitle());
     }
 }

@@ -5,6 +5,7 @@ namespace App\Form\Admin\Content;
 use App\Entity\Content\Content;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
+use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,6 +37,9 @@ class ContentType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
+            ->add('seo',                  SEOAbleType::class,         [
+                'data_class' => Content::class,
+            ])
         ;
 
         $builder->addEventListener(

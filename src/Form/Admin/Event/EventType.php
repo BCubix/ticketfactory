@@ -2,6 +2,8 @@
 
 namespace App\Form\Admin\Event;
 
+use App\Form\Admin\SEOAble\SEOAbleType;
+
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
@@ -122,6 +124,9 @@ class EventType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
+            ->add('seo',                  SEOAbleType::class,         [
+                'data_class' => Event::class,
+            ])
         ;
     }
 

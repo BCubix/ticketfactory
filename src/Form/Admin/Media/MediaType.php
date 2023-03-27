@@ -6,9 +6,11 @@ use App\Entity\Media\Media;
 use App\Entity\Media\MediaCategory;
 use App\Repository\MediaRepository;
 use App\Repository\MediaCategoryRepository;
+use App\Utils\MimeTypeMapping;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,6 +59,11 @@ class MediaType extends AbstractType
                         ->orderBy('m.title', 'ASC')
                     ;
                 }
+            ])
+            ->add('iframe',                 CheckboxType::class,        ['false_values' => ['0']])
+            ->add('documentUrl',            TextType::class,            [])
+            ->add('documentType',           ChoiceType::class,          [
+                'choices'  => MimeTypeMapping::getAllMimes(),
             ])
         ;
     }

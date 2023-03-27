@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\SEOAble\SEOAble;
 use App\Entity\Language\Language;
 use App\Repository\TagRepository;
 
@@ -21,6 +22,8 @@ class Tag extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
+
+    use SEOAble;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
@@ -158,5 +161,11 @@ class Tag extends Datable
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo() {
+        $this->completeFields($this->getTitle());
     }
 }

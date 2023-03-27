@@ -6,6 +6,7 @@ use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
 use App\Repository\EventCategoryRepository;
 use App\Repository\LanguageRepository;
+use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -46,6 +47,9 @@ class EventCategoryType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
+            ->add('seo',                  SEOAbleType::class,         [
+                'data_class' => EventCategory::class,
+            ])
         ;
     }
 

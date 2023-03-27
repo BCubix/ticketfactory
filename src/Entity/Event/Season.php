@@ -4,6 +4,7 @@ namespace App\Entity\Event;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
+use App\Entity\SEOAble\SEOAble;
 use App\Repository\SeasonRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,6 +22,8 @@ class Season extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
+
+    use SEOAble;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one', 'a_season_all', 'a_season_one'])]
@@ -166,5 +169,11 @@ class Season extends Datable
         $this->lang = $lang;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo() {
+        $this->completeFields($this->getTitle());
     }
 }

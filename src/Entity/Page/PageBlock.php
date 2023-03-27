@@ -8,6 +8,7 @@ use App\Repository\PageBlockRepository;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,6 +43,11 @@ class PageBlock extends Datable
     #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     #[ORM\Column]
     private ?bool $saveAsModel = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[ORM\Column(type: Types::INTEGER)]
+    private $blockType;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
@@ -101,6 +107,18 @@ class PageBlock extends Datable
     public function setSaveAsModel(bool $saveAsModel): self
     {
         $this->saveAsModel = $saveAsModel;
+
+        return $this;
+    }
+
+    public function getBlockType(): ?int
+    {
+        return $this->blockType;
+    }
+
+    public function setBlockType(int $blockType): self
+    {
+        $this->blockType = $blockType;
 
         return $this;
     }

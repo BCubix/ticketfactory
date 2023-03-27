@@ -62,6 +62,11 @@ class Media extends Datable
     private ?string $subtitle = null;
 
     #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one', 'a_media_one', 'a_media_all'])]
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private $iframe = false;
+
+    #[JMS\Expose()]
     #[JMS\Groups(['a_media_one', 'a_article_one', 'a_event_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $documentFileName = null;
@@ -188,6 +193,17 @@ class Media extends Datable
         return $this;
     }
 
+    public function isIframe(): bool
+    {
+        return $this->iframe;
+    }
+
+    public function setIframe(?bool $iframe): self
+    {
+        $this->iframe = $iframe;
+
+        return $this;
+    }
 
     public function getDocumentFileName(): ?string
     {

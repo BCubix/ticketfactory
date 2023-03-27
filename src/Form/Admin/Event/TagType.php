@@ -5,6 +5,7 @@ namespace App\Form\Admin\Event;
 use App\Entity\Event\Tag;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
+use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -36,6 +37,9 @@ class TagType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
+            ->add('seo',                  SEOAbleType::class,         [
+                'data_class' => Tag::class,
+            ])
         ;
     }
 

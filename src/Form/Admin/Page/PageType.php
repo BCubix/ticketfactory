@@ -5,6 +5,7 @@ namespace App\Form\Admin\Page;
 use App\Entity\Page\Page;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
+use App\Form\Admin\SEOAble\SEOAbleType;
 
 use App\Repository\PageRepository;
 use Symfony\Component\Form\AbstractType;
@@ -23,6 +24,7 @@ class PageType extends AbstractType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('title',                TextType::class,            [])
+            ->add('subtitle',             TextareaType::class,        [])
             ->add('parent',               EntityType::class,          [
                 'class'         => Page::class,
                 'choice_label'  => 'title',
@@ -54,6 +56,9 @@ class PageType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
+            ->add('seo',                  SEOAbleType::class,         [
+                'data_class' => Page::class,
+            ])
         ;
     }
 
