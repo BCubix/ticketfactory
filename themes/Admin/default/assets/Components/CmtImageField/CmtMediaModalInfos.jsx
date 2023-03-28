@@ -18,24 +18,26 @@ export const CmtMediaModalInfos = ({ media, selectedMedia, onClose, setFieldValu
         <Box position="relative" px={10}>
             <Component.DisplayMediaInformations selectedMedia={selectedMedia} />
 
-            <Button
-                variant={isSelected ? 'outlined' : 'contained'}
-                color={isSelected ? 'error' : 'primary'}
-                id="add-remove-media"
-                onClick={() => {
-                    if (null !== onClick) {
-                        onClick(selectedMedia);
-                    } else {
-                        if (isSelected) {
-                            setFieldValue(name, null);
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                    variant={isSelected ? 'outlined' : 'contained'}
+                    color={isSelected ? 'error' : 'primary'}
+                    id="add-remove-media"
+                    onClick={() => {
+                        if (null !== onClick) {
+                            onClick(selectedMedia);
                         } else {
-                            setFieldValue(name, selectedMedia);
+                            if (isSelected) {
+                                setFieldValue(name, null);
+                            } else {
+                                setFieldValue(name, selectedMedia);
+                            }
                         }
-                    }
-                }}
-            >
-                {isSelected ? RemoveMediaLabel : AddMediaLabel} le fichier
-            </Button>
+                    }}
+                >
+                    {isSelected ? RemoveMediaLabel : AddMediaLabel} le fichier
+                </Button>
+            </Box>
         </Box>
     );
 };

@@ -84,10 +84,15 @@ export const CmtMediaModal = ({
                                     onClick={() => setSelectedMedia(item)}
                                     position="relative"
                                     sx={
-                                        (Array.isArray(media) ? media.includes(item.id) : media?.id === item.id)
+                                        item.id === selectedMedia?.id
                                             ? {
-                                                  outline: (theme) => `1px solid ${theme.palette.crud.create.textColor}`,
-                                                  outlineOffset: '-1px',
+                                                  outline: (theme) => `3px solid ${theme.palette.crud.action.textColor}`,
+                                                  outlineOffset: '-3px',
+                                              }
+                                            : (Array.isArray(media) ? media.includes(item.id) : media?.id === item.id)
+                                            ? {
+                                                  outline: (theme) => `3px solid ${theme.palette.crud.create.textColor}`,
+                                                  outlineOffset: '-3px',
                                               }
                                             : {}
                                     }

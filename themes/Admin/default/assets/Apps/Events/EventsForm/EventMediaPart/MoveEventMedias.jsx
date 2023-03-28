@@ -38,7 +38,7 @@ export const MoveEventMedias = ({ eventMedias, setFieldValue }) => {
                                                 key={index}
                                                 sx={{
                                                     position: 'relative',
-                                                    outline: (theme) => item.mainImg && `3px solid ${theme.palette.primary.main}`,
+                                                    outline: (theme) => item.mainImg && `3px solid ${theme.palette.crud.action.textColor}`,
                                                     outlineOffset: item.mainImg && '-3px',
                                                 }}
                                                 className="eventMediaElement"

@@ -17,7 +17,7 @@ export const DisplayEventMediaElement = ({ title, openAddModal, mediasList, medi
                             key={index}
                             sx={{
                                 position: 'relative',
-                                outline: (theme) => item.mainImg && `3px solid ${theme.palette.primary.main}`,
+                                outline: (theme) => item.mainImg && `3px solid ${theme.palette.crud.action.textColor}`,
                                 outlineOffset: item.mainImg && '-3px',
                             }}
                             onClick={() => {
@@ -35,6 +35,7 @@ export const DisplayEventMediaElement = ({ title, openAddModal, mediasList, medi
                                     checked={values.eventMedias.at(valueIndex)?.mainImg}
                                     className="showOnHover"
                                     sx={{ position: 'absolute', right: 2, top: 2 }}
+                                    title="Image principale"
                                     onClick={(e) => {
                                         e.stopPropagation();
 
