@@ -84,6 +84,7 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                         mainImg: el.mainImg,
                         position: el.position,
                         id: el.media?.id,
+                        media: el.media,
                     })) || [],
                 slug: initValues?.slug || '',
                 editSlug: false,

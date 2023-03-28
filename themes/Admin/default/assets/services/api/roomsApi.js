@@ -5,6 +5,7 @@ import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { getSeoFormData } from './seoApi';
 
 var controller = null;
 
@@ -29,6 +30,28 @@ const FILTERS_SORT_TAB = [
         },
     },
 ];
+
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('name', data.name);
+    formData.append('area', data.area);
+    formData.append('seatsNb', data.seatsNb);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    data.seatingPlans.forEach((plan, index) => {
+        formData.append(`seatingPlans[${index}][name]`, plan.name);
+        formData.append(`seatingPlans[${index}][lang]`, plan.lang || '');
+        formData.append(`seatingPlans[${index}][languageGroup]`, plan.languageGroup || '');
+    });
+
+    getSeoFormData(formData, data);
+
+    return formData;
+};
 
 const roomsApi = {
     getRooms: async (filters) => {
@@ -87,23 +110,7 @@ const roomsApi = {
 
     createRoom: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('area', data.area);
-            formData.append('seatsNb', data.seatsNb);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            data.seatingPlans.forEach((plan, index) => {
-                formData.append(`seatingPlans[${index}][name]`, plan.name);
-                formData.append(`seatingPlans[${index}][lang]`, plan.lang || '');
-                formData.append(`seatingPlans[${index}][languageGroup]`, plan.languageGroup || '');
-            });
-
-            const result = await axios.post('/rooms', formData);
+            const result = await axios.post('/rooms', getFormData(data));
 
             return { result: true, room: result.data };
         } catch (error) {
@@ -113,21 +120,7 @@ const roomsApi = {
 
     editRoom: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('area', data.area);
-            formData.append('seatsNb', data.seatsNb);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            data.seatingPlans.forEach((plan, index) => {
-                formData.append(`seatingPlans[${index}][name]`, plan.name);
-            });
-
-            const result = await axios.post(`/rooms/${id}`, formData);
+            const result = await axios.post(`/rooms/${id}`, getFormData(data));
 
             return { result: true, room: result.data };
         } catch (error) {

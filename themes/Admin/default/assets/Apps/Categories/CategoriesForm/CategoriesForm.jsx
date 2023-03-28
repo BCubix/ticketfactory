@@ -36,6 +36,15 @@ export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = 
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
+                seo: {
+                    metaTitle: initValues?.metaTitle || '',
+                    metaDescription: initValues?.metaDescription || '',
+                    socialImage: initValues?.socialImage || null,
+                    fbTitle: initValues?.fbTitle || '',
+                    fbDescription: initValues?.fbDescription || '',
+                    twTitle: initValues?.twTitle || '',
+                    twDescription: initValues?.twDescription || '',
+                },
             }}
             validationSchema={categorySchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -43,7 +52,7 @@ export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = 
                 setSubmitting(false);
             }}
         >
-            {({ values, errors, touched, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
@@ -77,6 +86,8 @@ export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = 
                             )}
                         </Grid>
                     </Component.CmtFormBlock>
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
 
                     <Box display="flex" justifyContent={'flex-end'} alignItems="center" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Catégorie active ?" />

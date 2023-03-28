@@ -26,6 +26,15 @@ export const TagsForm = ({ handleSubmit, initialValues = null, translateInitialV
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
+                seo: {
+                    metaTitle: initValues?.metaTitle || '',
+                    metaDescription: initValues?.metaDescription || '',
+                    socialImage: initValues?.socialImage || null,
+                    fbTitle: initValues?.fbTitle || '',
+                    fbDescription: initValues?.fbDescription || '',
+                    twTitle: initValues?.twTitle || '',
+                    twDescription: initValues?.twDescription || '',
+                },
             }}
             validationSchema={tagSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -33,7 +42,7 @@ export const TagsForm = ({ handleSubmit, initialValues = null, translateInitialV
                 setSubmitting(false);
             }}
         >
-            {({ values, errors, touched, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'un tag`} component="form" onSubmit={handleSubmit}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Component.CmtTextField
@@ -68,6 +77,9 @@ export const TagsForm = ({ handleSubmit, initialValues = null, translateInitialV
                             <FormHelperText error>{touched.description && errors.description}</FormHelperText>
                         </Component.LightEditorFormControl>
                     </Component.CmtFormBlock>
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
+
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Tag actif ?" />
 

@@ -228,6 +228,6 @@ class Room extends Datable
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function completeSeo() {
-        $this->completeFields($this->getTitle());
+        $this->completeFields($this->getName());
     }
 }

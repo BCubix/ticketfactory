@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select, Switch } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, ListItemText, ListSubheader, MenuItem, Select, Switch } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -40,56 +40,42 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={6} lg={4}>
-                                <FormControl fullWidth margin="normal">
-                                    <InputLabel id="redirectionType-label" size="small" required>
-                                        Type de redirection
-                                    </InputLabel>
-                                    <Select
-                                        labelId="redirectionType-label"
-                                        size="small"
-                                        id="redirectionType"
-                                        variant="standard"
-                                        value={values.redirectType}
-                                        label="Type de redirection"
-                                        onChange={(e) => {
-                                            setFieldValue('redirectType', e.target.value);
-                                        }}
-                                        onBlur={handleBlur}
-                                        name={'redirectType'}
-                                        error={touched.redirectType && Boolean(errors.redirectType)}
-                                        required
-                                    >
-                                        {Constant.REDIRECTION_TYPES.map((item, index) => (
-                                            <MenuItem value={item.value} key={index} id={`redirectionTypeValue-${item.value}`}>
-                                                <ListItemText>{item.label}</ListItemText>
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    <FormHelperText error>{touched.redirectType && errors.redirectType}</FormHelperText>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item xs={12} md={6} lg={4}>
-                                <Component.CmtTextField
-                                    value={values.redirectFrom}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    label="Url source"
-                                    name="redirectFrom"
-                                    error={touched.redirectFrom && errors.redirectFrom}
+                                <Component.CmtSelect
+                                    label="Type de redirection"
                                     required
+                                    id={`redirectType`}
+                                    name={`redirectType`}
+                                    value={values.redirectType}
+                                    list={Constant.REDIRECTION_TYPES}
+                                    getValue={(item) => item.value}
+                                    getName={(item) => item.label}
+                                    setFieldValue={setFieldValue}
+                                    touched={touched.redirectType}
+                                    errors={errors.redirectType}
                                 />
                             </Grid>
 
                             <Grid item xs={12} md={6} lg={4}>
                                 <Component.CmtTextField
+                                    label="Rediriger"
+                                    required
+                                    name="redirectFrom"
+                                    value={values.redirectFrom}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.redirectFrom && errors.redirectFrom}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} md={6} lg={4}>
+                                <Component.CmtTextField
+                                    label="Vers"
+                                    required
+                                    name="redirectTo"
                                     value={values.redirectTo}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    label="Url de destination"
-                                    name="redirectTo"
                                     error={touched.redirectTo && errors.redirectTo}
-                                    required
                                 />
                             </Grid>
                         </Grid>

@@ -28,6 +28,15 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null, translateIniti
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
+                seo: {
+                    metaTitle: initValues?.metaTitle || '',
+                    metaDescription: initValues?.metaDescription || '',
+                    socialImage: initValues?.socialImage || null,
+                    fbTitle: initValues?.fbTitle || '',
+                    fbDescription: initValues?.fbDescription || '',
+                    twTitle: initValues?.twTitle || '',
+                    twDescription: initValues?.twDescription || '',
+                },
             }}
             validationSchema={seasonsSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -70,6 +79,9 @@ export const SeasonsForm = ({ handleSubmit, initialValues = null, translateIniti
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
+
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Saison active ?" />
 

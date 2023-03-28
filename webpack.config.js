@@ -98,6 +98,14 @@ Encore
                 options['process.env'][property] = JSON.stringify(fileEnv[property]);
             }
         }
+    })
+    .copyFiles({
+        from: 'node_modules/tinymce/skins',
+        to: 'skins/[path][name].[ext]',
+    })
+    .copyFiles({
+        from: 'node_modules/tinymce/icons',
+        to: 'icons/[path][name].[ext]',
     });
 
 module.exports = Encore.getWebpackConfig();

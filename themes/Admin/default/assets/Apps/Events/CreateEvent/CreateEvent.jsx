@@ -20,6 +20,7 @@ export const CreateEvent = () => {
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
+    const [mediaCategoriesData, setMediaCategoriesData] = useState(null);
     const [initialValues, setInitialValues] = useState(null);
 
     const [queryParameters] = useSearchParams();
@@ -38,6 +39,7 @@ export const CreateEvent = () => {
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
+            Api.mediaCategoriesApi.getAllMediaCategories({ lang: defaultLanguageId }).then((results) => setMediaCategoriesData(results));
 
             if (!eventId || !languageId) {
                 return;

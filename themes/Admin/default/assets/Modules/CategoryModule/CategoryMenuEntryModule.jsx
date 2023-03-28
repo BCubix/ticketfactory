@@ -23,16 +23,15 @@ const displayCategories = (list, selectedAdd, setSelectedAdd, editMode, setValue
         return <></>;
     }
 
-    const handleCheckCategory = (id) => {
+    const handleCheckCategory = (category) => {
         let categories = [...selectedAdd];
-        const check = categories?.includes(id);
+        const check = categories?.some((el) => el.id === list.id);
 
         if (check) {
-            categories = categories?.filter((el) => el !== id);
+            categories = categories?.filter((el) => el !== category.id);
             setSelectedAdd(categories);
         } else {
-            categories.push(id);
-
+            categories.push({ id: category.id, name: category.name });
             setSelectedAdd(categories);
         }
     };
@@ -53,11 +52,11 @@ const displayCategories = (list, selectedAdd, setSelectedAdd, editMode, setValue
                         />
                     ) : (
                         <Checkbox
-                            checked={selectedAdd.includes(list.id)}
+                            checked={selectedAdd?.some((el) => el.id === list.id)}
                             id={`eventCategoriesValue-${list.id}`}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleCheckCategory(list.id);
+                                handleCheckCategory(list);
                             }}
                         />
                     )}
@@ -89,10 +88,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     };
 
     useEffect(() => {
-        if (list) {
-            return;
-        }
-
         if (menusListData?.categories && !list) {
             setList(menusListData.categories);
             return;

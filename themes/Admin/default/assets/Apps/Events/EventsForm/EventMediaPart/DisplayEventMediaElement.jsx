@@ -5,8 +5,17 @@ import { Radio } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
+import { getMediaType } from '@Services/utils/getMediaType';
 
-export const DisplayEventMediaElement = ({ title, openAddModal, mediaType, mediaList, openEditModal, values, name, setFieldValue, id }) => {
+export const DisplayEventMediaElement = ({ title, openAddModal, mediaType, openEditModal, values, name, setFieldValue, id }) => {
+    let mediaTypeList = ['audio', 'video', 'pdf'];
+
+    if (mediaType === 'Image') {
+        mediaTypeList = ['image'];
+    }
+
+    const list = values?.eventMedias?.filter((el) => mediaTypeList.includes(getMediaType(el.media.documentType))) || [];
+
     return (
         <Component.CmtFormBlock title={title}>
             <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
@@ -15,8 +24,8 @@ export const DisplayEventMediaElement = ({ title, openAddModal, mediaType, media
                         <AddCircleOutlineOutlinedIcon />
                     </Box>
                 </Component.CmtMediaElement>
-                {mediaList.map((item, index) => {
-                    const valueIndex = values.eventMedias?.findIndex((el) => el.id === item.id);
+                {list.map((item, index) => {
+                    const valueIndex = values.eventMedias?.findIndex((el) => el?.media?.id === item?.media?.id);
 
                     return (
                         <Component.CmtMediaElement
@@ -24,12 +33,12 @@ export const DisplayEventMediaElement = ({ title, openAddModal, mediaType, media
                             sx={{ position: 'relative' }}
                             onClick={() => {
                                 openEditModal({
-                                    item,
-                                    index: mediaList.findIndex((el) => el.media?.id === item?.id),
+                                    item: item?.media,
+                                    index: values?.eventMedias?.findIndex((el) => el?.media?.id === item?.media?.id),
                                 });
                             }}
                         >
-                            <Component.CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
+                            <Component.CmtDisplayMediaType media={item.media} width={'100%'} height={'auto'} />
                             {mediaType === 'Image' && (
                                 <Radio
                                     checked={values.eventMedias.at(valueIndex)?.mainImg}

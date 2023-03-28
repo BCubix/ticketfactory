@@ -2,6 +2,22 @@ import axios from '@Services/api/config';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '../utils/translationUtils';
+import { getSeoFormData } from './seoApi';
+
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('name', data.name);
+    formData.append('parent', data.parent);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    getSeoFormData(formData, data);
+
+    return formData;
+};
 
 const categoriesApi = {
     getCategories: async (filters) => {
@@ -36,16 +52,7 @@ const categoriesApi = {
 
     createCategory: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('parent', data.parent);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post('/event-categories', formData);
+            const result = await axios.post('/event-categories', getFormData(data));
 
             return { result: true, category: result.data };
         } catch (error) {
@@ -55,16 +62,7 @@ const categoriesApi = {
 
     editCategory: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('parent', data.parent);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post(`/event-categories/${id}`, formData);
+            const result = await axios.post(`/event-categories/${id}`, getFormData(data));
 
             return { result: true, category: result.data };
         } catch (error) {

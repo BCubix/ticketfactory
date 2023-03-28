@@ -3,28 +3,29 @@ import { NotificationManager } from 'react-notifications';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-
-import { Button, Grid, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from '@/AdminService/Component';
 import { getMediaType } from '@Services/utils/getMediaType';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Api } from '@/AdminService/Api';
 
-const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors, touched, setFieldTouched, handleBlur, mediaType, setEditImage }) => {
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Button, FormControl, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
+
+const IFRAME_TYPE = [
+    { label: 'Image', value: 'image/jpeg' },
+    { label: 'Audio', value: 'audio/mpeg' },
+    { label: 'video', value: 'video/mp4' },
+];
+
+const GeneralInformation = ({ values, handleChange, setFieldValue, errors, touched, setFieldTouched, handleBlur }) => {
     return (
         <Grid container spacing={4} sx={{ marginTop: 3 }}>
             <Grid item xs={12} sm={6} md={4} container spacing={4}>
                 <Grid item xs={12}>
                     <InputLabel sx={{ fontSize: 12 }}>Aperçu</InputLabel>
                     <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Component.CmtDisplayMediaType media={media} width={'auto'} height={'auto'} maxHeight="250px" maxWidth="100%" />
-                        {mediaType === 'image' && (
-                            <Button sx={{ mt: 5 }} variant={'contained'} color="primary" onClick={() => setEditImage(true)}>
-                                Modifier l'image
-                            </Button>
-                        )}
+                        <Component.CmtDisplayMediaType media={values} width={'auto'} height={'auto'} maxHeight="250px" maxWidth="100%" />
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
@@ -41,7 +42,7 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                 </Grid>
             </Grid>
             <Grid item xs={12} sm={6} md={8} container spacing={4}>
-                <Grid item xs={12}>
+                <Grid item xs={12} md={6}>
                     <Component.CmtTextField
                         value={values.title}
                         onChange={handleChange}
@@ -54,6 +55,41 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                     />
                 </Grid>
 
+                <Grid item xs={12} md={6}>
+                    <FormControl fullWidth error={touched.documentType && errors.documentType} size="small">
+                        <InputLabel id={`documentType-label`} size="small" required sx={{ marginLeft: -3 }}>
+                            Type de média
+                        </InputLabel>
+                        <Select
+                            labelId={`documentType-label`}
+                            id={`documentType`}
+                            size="small"
+                            value={values.documentType}
+                            onBlur={handleBlur}
+                            name={'documentType'}
+                            variant="standard"
+                            label="Status"
+                            onChange={(e) => {
+                                setFieldValue('alt', '');
+                                setFieldValue('documentType', e.target.value);
+                            }}
+                        >
+                            {IFRAME_TYPE?.map((item, index) => (
+                                <MenuItem value={item.value} key={index} id={`documentType-${index}`}>
+                                    <ListItemText>
+                                        <Box px={2} py={1} mx={1}>
+                                            {item.label}
+                                        </Box>
+                                    </ListItemText>
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText error id={'documentType-error'}>
+                            {touched.documentType && errors.documentType}
+                        </FormHelperText>
+                    </FormControl>
+                </Grid>
+
                 <Grid item xs={12}>
                     <Component.CmtTextField
                         value={values.subtitle}
@@ -63,6 +99,19 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                         name="subtitle"
                         error={touched.subtitle && errors.subtitle}
                         sx={{ mt: 5 }}
+                    />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Component.CmtTextField
+                        value={values.documentUrl}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label="Url youtube ou balise iframe"
+                        name="documentUrl"
+                        error={touched.documentUrl && errors.documentUrl}
+                        sx={{ mt: 3 }}
+                        required
                     />
                 </Grid>
 
@@ -131,8 +180,11 @@ const Categories = ({ values, setFieldValue, errors, touched, mediaCategoriesLis
     );
 };
 
-export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage }) => {
+export const IframeMediaForm = ({ handleSubmit, onCancel, id = null, deleteElement = null }) => {
     const dispatch = useDispatch();
+    const [media, setMedia] = useState(null);
+    const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+
     const [mediasList, setMediasList] = useState(null);
     const [mediasFilters, setMediasFilters] = useState({
         title: '',
@@ -156,38 +208,80 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
         });
     };
 
+    const getMedia = async () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediasApi.getOneMedia(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                onCancel();
+                return;
+            }
+
+            setMedia(result.media);
+        });
+    };
+
+    useEffect(() => {
+        setMedia(null);
+
+        if (!id) {
+            return;
+        }
+
+        getMedia();
+    }, [id]);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.getAllMediaCategories();
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                onCancel();
+            }
+
+            setMediaCategoriesList(result.mediaCategories);
+        });
+    }, []);
+
     useEffect(() => {
         getMediasList();
     }, [mediasFilters]);
 
     const mediaSchema = Yup.object().shape({
-        title: Yup.string().required('Veuillez renseigner le titre du fichier'),
+        title: Yup.string().required('Veuillez renseigner le titre du média'),
+        documentUrl: Yup.string().required("Veuillez renseigner l'url du média"),
+        documentType: Yup.string().required('Veuillez renseigner le type du média'),
     });
+
+    if ((!media && id) || !mediaCategoriesList) {
+        return <></>;
+    }
 
     return (
         <Formik
             initialValues={{
-                alt: media?.alt || '',
                 title: media?.title || '',
                 subtitle: media?.subtitle || '',
+                alt: media?.alt || '',
                 legend: media?.legend || '',
                 description: media?.description || '',
                 active: media?.active || false,
                 mainCategory: media?.mainCategory?.id || '',
-                documentType: media?.documentType || '',
                 mediaCategories: media?.mediaCategories ? media?.mediaCategories?.map((el) => el.id) : [],
+                documentUrl: media?.documentUrl || '',
+                documentType: media?.documentType || '',
                 thumbnail: media?.thumbnail || null,
                 realThumbnail: media?.realThumbnail || '',
+                iframe: true,
             }}
             validationSchema={mediaSchema}
             onSubmit={(values, { setSubmitting }) => {
-                handleSubmit({ ...media, ...values });
-
+                handleSubmit(values);
                 setSubmitting(false);
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
-                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5, width: '100%' }}>
+                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
                     <Component.CmtTabs
                         list={[
                             {
@@ -196,15 +290,12 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                                 component: (
                                     <GeneralInformation
                                         values={values}
-                                        media={media}
                                         handleChange={handleChange}
                                         setFieldValue={setFieldValue}
                                         errors={errors}
                                         touched={touched}
                                         setFieldTouched={setFieldTouched}
                                         handleBlur={handleBlur}
-                                        mediaType={mediaType}
-                                        setEditImage={setEditImage}
                                     />
                                 ),
                             },
@@ -221,19 +312,31 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                         ]}
                     />
 
-                    <Box display={'flex'} justifyContent="flex-end" sx={{ pb: 3, pt: 5 }}>
-                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />
-                    </Box>
+                    <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                            <Box display={'flex'} justifyContent="flex-end" sx={{ pb: 3, pt: 5 }}>
+                                <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />
+                            </Box>
+                        </Grid>
 
-                    <Box display="flex" justifyContent={'flex-end'} sx={{ mb: 5, mt: 2 }}>
-                        <Button id="deleteButton" color="error" onClick={deleteElement} sx={{ mt: 3, mb: 2, mr: 'auto' }}>
-                            Supprimer l'element
-                        </Button>
+                        <Grid item xs={12}>
+                            <Box display="flex" justifyContent={'flex-end'} sx={{ mb: 5, mt: 2 }}>
+                                {id ? (
+                                    <Button id="deleteButton" color="error" onClick={() => deleteElement(id)} sx={{ mt: 3, mb: 2, mr: 'auto' }}>
+                                        Supprimer l'element
+                                    </Button>
+                                ) : (
+                                    <Button id="cancelButton" color="error" onClick={onCancel} sx={{ mt: 3, mb: 2, mr: 'auto' }}>
+                                        Annuler
+                                    </Button>
+                                )}
 
-                        <Button id="submitForm" type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
-                            Modifier
-                        </Button>
-                    </Box>
+                                <Button id="submitForm" type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
+                                    Modifier
+                                </Button>
+                            </Box>
+                        </Grid>
+                    </Grid>
                 </Box>
             )}
         </Formik>

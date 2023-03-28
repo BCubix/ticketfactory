@@ -48,7 +48,7 @@ class Page extends Datable
 
     #[Gedmo\Slug(fields: ['title'], updatable: true)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one'])]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 

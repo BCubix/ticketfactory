@@ -7,63 +7,95 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { getMediaType } from '@Services/utils/getMediaType';
 
-export const EventMediaPartForm = ({ values, handleChange, errors, setFieldValue, name = 'eventMedias' }) => {
+const filterInit = {
+    title: '',
+    active: null,
+    iframe: null,
+    type: '',
+    category: '',
+    sort: 'id DESC',
+    page: 1,
+    limit: 20,
+};
+
+export const EventMediaPartForm = ({ values, handleChange, touched, errors, setFieldValue, name = 'eventMedias', mediaCategoriesList }) => {
     const dispatch = useDispatch();
     const [openAddModal, setOpenAddModal] = useState(null);
     const [editDialog, setEditDialog] = useState(null);
-    const [imageMedias, setImageMedias] = useState(null);
-    const [otherMedias, setOtherMedias] = useState(null);
 
-    const getMedias = async () => {
+    const [imageMedias, setImageMedias] = useState(null);
+    const [imageMediasTotal, setImageMediasTotal] = useState(null);
+    const [imageMediaFilters, setImageMediaFilters] = useState(filterInit);
+
+    const [otherMedias, setOtherMedias] = useState(null);
+    const [otherMediasTotal, setOtherMediasTotal] = useState(null);
+    const [otherMediaFilters, setOtherMediaFilters] = useState(filterInit);
+
+    const getImageMedias = () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getAllMedias();
+            const result = await Api.mediasApi.getMediasList({ ...imageMediaFilters, type: ['Image'] });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+                return;
             }
-
-            const images = result?.medias?.filter((el) => getMediaType(el.documentType) === 'image') || [];
-            setImageMedias(images);
-
-            const others = result?.medias?.filter((el) => getMediaType(el.documentType) !== 'image') || [];
-            setOtherMedias(others);
+            setImageMedias(result?.medias);
+            setImageMediasTotal(result.total);
         });
     };
 
-    const mediaList = useMemo(() => {
-        if (!openAddModal) {
-            return [];
-        }
-
-        if (openAddModal === 'Image') {
-            return imageMedias;
-        } else if (openAddModal === 'Other') {
-            return otherMedias;
-        }
-
-        return [];
-    }, [imageMedias, otherMedias, openAddModal]);
+    const getOtherMedias = () => {
+        apiMiddleware(dispatch, async () => {
+            Api.mediasApi.getMediasList({ ...otherMediaFilters, type: ['Audio', 'Vidéo', 'PDF'] }).then((result) => {
+                if (!result?.result) {
+                    NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+                    return;
+                }
+                setOtherMedias(result?.medias);
+                setOtherMediasTotal(result.total);
+            });
+        });
+    };
 
     useEffect(() => {
-        getMedias();
-    }, []);
+        getImageMedias();
+    }, [imageMediaFilters]);
 
-    const getResultList = (list) => {
-        const resultList = [];
+    useEffect(() => {
+        getOtherMedias();
+    }, [otherMediaFilters]);
 
-        if (!list) {
-            return [];
+    const changeImageInformations = (newValues) => {
+        if (!editDialog) {
+            return false;
         }
 
-        values?.eventMedias?.forEach((el) => {
-            const search = list.find((it) => it.id === el.id);
-            if (search) {
-                resultList.push(search);
-            }
-        });
+        return apiMiddleware(dispatch, async () => {
+            const newObject = { ...editDialog.item, ...newValues };
+            let result = null;
 
-        return resultList;
+            if (newObject.iframe) {
+                result = await Api.mediasApi.editIframeMedia(newObject?.id, newObject);
+            } else {
+                result = await Api.mediasApi.editMedia(newObject?.id, newObject);
+            }
+
+            if (!result?.result) {
+                return false;
+            }
+
+            setEditDialog({ index: editDialog.index, item: result.media });
+
+            getImageMedias();
+            getOtherMedias();
+
+            const fIndex = values?.eventMedias?.findIndex((el) => el.media.id === result.media.id);
+            if (fIndex > -1) {
+                setFieldValue(`eventMedias.${fIndex}.media`, { ...result.media });
+            }
+
+            return true;
+        });
     };
 
     return (
@@ -72,18 +104,18 @@ export const EventMediaPartForm = ({ values, handleChange, errors, setFieldValue
                 title="Photos"
                 openAddModal={setOpenAddModal}
                 mediaType="Image"
-                mediaList={getResultList(imageMedias)}
                 openEditModal={setEditDialog}
                 values={values}
                 name={name}
                 setFieldValue={setFieldValue}
                 id="imageMediasEvent"
+                error={touched.eventMedias && errors.eventMedias}
             />
+
             <Component.DisplayEventMediaElement
                 title="Autres contenus"
                 openAddModal={setOpenAddModal}
                 mediaType="Other"
-                mediaList={getResultList(otherMedias)}
                 openEditModal={setEditDialog}
                 values={values}
                 name={name}
@@ -91,14 +123,32 @@ export const EventMediaPartForm = ({ values, handleChange, errors, setFieldValue
                 id="othersMediasEvent"
             />
 
-            <Component.AddEventMediaModal
+            <Component.CmtMediaModal
+                title={`Ajouter des éléments média au spectacle`}
                 open={Boolean(openAddModal)}
-                closeModal={() => setOpenAddModal(null)}
-                mediaList={mediaList}
-                values={values}
-                name={name}
+                onClose={() => setOpenAddModal(null)}
+                mediasList={openAddModal === 'Image' ? imageMedias : otherMedias}
+                media={values.eventMedias}
                 setFieldValue={setFieldValue}
-                onAddNewMedia={getMedias}
+                name={name}
+                onAddNewMedia={openAddModal === 'Image' ? getImageMedias : getOtherMedias}
+                onClick={(selectedMedia) => {
+                    let newValue = values.eventMedias;
+
+                    if (newValue.map((el) => el.id).includes(selectedMedia?.id)) {
+                        newValue = newValue.filter((el) => el.id !== selectedMedia?.id);
+                    } else {
+                        newValue.push({ id: selectedMedia?.id, mainImg: false, mainImgCalendar: false, position: '', media: selectedMedia });
+                    }
+
+                    setFieldValue(name, newValue);
+                }}
+                AddMediaLabel="Ajouter"
+                RemoveMediaLabel="Retirer"
+                mediaFilters={openAddModal === 'Image' ? imageMediaFilters : otherMediaFilters}
+                setMediaFilters={openAddModal === 'Image' ? setImageMediaFilters : setOtherMediaFilters}
+                total={openAddModal === 'Image' ? imageMediasTotal : otherMediasTotal}
+                categoriesList={mediaCategoriesList}
             />
 
             <Component.EditEventMediaModal
@@ -111,6 +161,7 @@ export const EventMediaPartForm = ({ values, handleChange, errors, setFieldValue
                 errors={errors}
                 name={name}
                 setFieldValue={setFieldValue}
+                changeImageInformations={changeImageInformations}
             />
         </>
     );

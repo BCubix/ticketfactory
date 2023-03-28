@@ -9,34 +9,28 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { profileSelector } from '@Redux/profile/profileSlice';
 
 export const ForgotPassword = () => {
-    const { connected } = useSelector(profileSelector);
+    const { connected, modulesLoaded } = useSelector(profileSelector);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (connected) {
+        if (connected && modulesLoaded) {
             navigate(Constant.HOME_PATH);
         }
     }, [connected]);
 
     const forgotPasswordSchema = Yup.object().shape({
-        username: Yup.string()
-            .required('Veuillez renseigner une adresse email.')
-            .email('Adresse email invalide.'),
+        username: Yup.string().required('Veuillez renseigner une adresse email.').email('Adresse email invalide.'),
     });
 
     return (
-        <Container
-            component="main"
-            maxWidth="xs"
-            sx={{ height: '100%', display: 'flex', alignItems: 'center' }}
-        >
+        <Container component="main" maxWidth="xs" sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
             <Paper elevation={2} sx={{ borderRadius: 4 }}>
                 <Formik
                     initialValues={{ username: '' }}
@@ -44,33 +38,17 @@ export const ForgotPassword = () => {
                     onSubmit={async (values, { setSubmitting }) => {
                         const result = await Api.authApi.forgotPassword(values);
                         if (result.result) {
-                            NotificationManager.success(
-                                'Votre demande de changement de mot de passe a bien été prise en compte.',
-                                'Succès',
-                                Constant.REDIRECTION_TIME
-                            );
+                            NotificationManager.success('Votre demande de changement de mot de passe a bien été prise en compte.', 'Succès', Constant.REDIRECTION_TIME);
 
                             navigate(Constant.LOGIN_PATH);
                         } else {
-                            NotificationManager.error(
-                                "Une erreur s'est produite",
-                                'Erreur',
-                                Constant.REDIRECTION_TIME
-                            );
+                            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                         }
 
                         setSubmitting(false);
                     }}
                 >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                    }) => (
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
                         <Box
                             sx={{
                                 margin: 5,
@@ -101,13 +79,7 @@ export const ForgotPassword = () => {
                                     error={touched.username && Boolean(errors.username)}
                                     helperText={touched.username && errors.username}
                                 />
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2, borderRadius: 5 }}
-                                    disabled={isSubmitting}
-                                >
+                                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, borderRadius: 5 }} disabled={isSubmitting}>
                                     Envoyer
                                 </Button>
                             </Box>

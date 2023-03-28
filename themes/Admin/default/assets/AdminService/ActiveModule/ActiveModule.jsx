@@ -6,30 +6,38 @@ import { ActiveModuleContext } from '@/AdminService/ActiveModule/ActiveModuleCon
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { loginFailure, profileSelector, setModulesLoaded } from '@Redux/profile/profileSlice';
+import { useSelector } from 'react-redux';
 
 export const ActiveModule = () => {
     const dispatch = useDispatch();
-    const [modulesActive, setModulesActive] = useState(false);
+    const { connected, modulesLoaded } = useSelector(profileSelector);
+
+    const getActiveModules = async () => {
+        const check = await Api.authApi.checkIsAuth();
+        if (check.result) {
+            const result = await Api.modulesApi.getModulesActive();
+            if (result.result) {
+                ActiveModuleContext(result.modules);
+                dispatch(setModulesLoaded({ modulesLoaded: true }));
+            }
+        } else {
+            dispatch(loginFailure({ error: check.error }));
+            dispatch(setModulesLoaded({ modulesLoaded: false }));
+        }
+    };
 
     useEffect(() => {
-        (async () => {
-            const check = await Api.authApi.checkIsAuth();
+        if (modulesLoaded) {
+            return;
+        }
 
-            if (check.result) {
-                const result = await Api.modulesApi.getModulesActive();
-                if (result.result) {
-                    ActiveModuleContext(result.modules);
-                }
-            } else {
-                dispatch(loginFailure({ error: check.error }));
-            }
+        getActiveModules();
+    }, [connected]);
 
-            setModulesActive(true);
-        })();
-    }, []);
-
-    if (!modulesActive) return <></>;
+    if (null === modulesLoaded) {
+        return <></>;
+    }
 
     return <Component.App />;
 };

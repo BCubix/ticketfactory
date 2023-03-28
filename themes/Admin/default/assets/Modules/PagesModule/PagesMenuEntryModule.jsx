@@ -36,10 +36,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
     };
 
     useEffect(() => {
-        if (list) {
-            return;
-        }
-
         if (menusListData?.pages && !list) {
             setList(menusListData.pages);
             return;

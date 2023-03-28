@@ -54,7 +54,7 @@ export const LoginComponentWrapper = styled(Paper)`
     }
 `;
 
-export const LoginBackgroundWrapper = styled(Box)`
+export const LoginBackgroundWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== 'backgroundUrl' })`
     display: none;
     position: relative;
     height: 100%;

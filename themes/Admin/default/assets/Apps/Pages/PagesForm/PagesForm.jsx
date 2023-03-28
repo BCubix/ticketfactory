@@ -1,14 +1,20 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import { FieldArray, Formik } from 'formik';
 import * as Yup from 'yup';
+import moment from 'moment';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Box } from '@mui/system';
-import { Button, FormHelperText, Grid } from '@mui/material';
+import { Button, Card, CardContent, FormHelperText, Grid, InputLabel } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
-import { useNavigate } from 'react-router-dom';
 import { Constant } from '@/AdminService/Constant';
+
 import { changeSlug } from '@Services/utils/changeSlug';
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList }) => {
     const initValues = translateInitialValues || initialValues;
@@ -18,7 +24,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
         pageBlocks: Yup.array().of(
             Yup.object().shape({
-                name: Yup.string().required('Veuillez renseigner le nom du bloc.'),
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
             })
         ),
     });
@@ -29,9 +35,11 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                 active: initValues?.active || false,
                 title: initValues?.title || '',
                 parent: initValues?.parent?.id || '',
+                subtitle: initValues?.subtitle || '',
                 pageBlocks:
                     initValues?.pageBlocks?.map((pageBlock) => ({
                         name: pageBlock.name,
+                        blockType: pageBlock?.blockType || 0,
                         saveAsModel: false,
                         columns: pageBlock?.columns?.map((column) => ({
                             content: column?.content,
@@ -48,6 +56,15 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                 editSlug: false,
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
+                seo: {
+                    metaTitle: initValues?.metaTitle || '',
+                    metaDescription: initValues?.metaDescription || '',
+                    socialImage: initValues?.socialImage || null,
+                    fbTitle: initValues?.fbTitle || '',
+                    fbDescription: initValues?.fbDescription || '',
+                    twTitle: initValues?.twTitle || '',
+                    twDescription: initValues?.twDescription || '',
+                },
             }}
             validationSchema={pageSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -76,6 +93,9 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                         <Grid container spacing={4}>
                             <Grid item xs={12} sm={8}>
                                 <Component.CmtTextField
+                                    label="Titre"
+                                    required
+                                    name="title"
                                     value={values.title}
                                     onChange={(e) => {
                                         setFieldValue('title', e.target.value);
@@ -84,9 +104,6 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                         }
                                     }}
                                     onBlur={handleBlur}
-                                    label="Titre de la page"
-                                    required
-                                    name="title"
                                     error={touched.title && errors.title}
                                 />
                                 <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
@@ -96,11 +113,21 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                     label="Page parente"
                                     name={`parent`}
                                     value={values.parent}
-                                    list={pagesList}
+                                    list={pagesList?.filter((item) => item.id !== initValues?.id)}
                                     getValue={(item) => item.id}
                                     getName={(item) => item.title}
                                     setFieldValue={setFieldValue}
                                     errors={touched.parent && errors.parent}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Component.CmtEditorField
+                                    label="Introduction"
+                                    name={`subtitle`}
+                                    value={values.subtitle}
+                                    setFieldValue={setFieldValue}
+                                    setFieldTouched={setFieldTouched}
+                                    errors={touched.subtitle && errors.subtitle}
                                 />
                             </Grid>
                         </Grid>
@@ -120,6 +147,9 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
 
                         {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}
                     </Component.CmtFormBlock>
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
+
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Page active ?" />
 

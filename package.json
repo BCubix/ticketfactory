@@ -57,10 +57,11 @@
         "@mui/system": "^5.10.6",
         "@mui/x-date-pickers": "^5.0.2",
         "@reduxjs/toolkit": "^1.8.3",
+        "@tinymce/tinymce-react": "^4.3.0",
         "@toast-ui/react-image-editor": "^3.15.2",
         "axios-retry": "^3.3.1",
-        "dotenv": "^16.0.3",
         "babel-plugin-module-resolver": "^5.0.0",
+        "dotenv": "^16.0.3",
         "dropzone": "^6.0.0-beta.2",
         "formik": "^2.2.9",
         "ignore-styles": "^5.0.1",
@@ -68,6 +69,7 @@
         "mapbox-gl": "^2.10.0",
         "mapbox-gl-geocoder": "^2.0.1",
         "moment": "^2.29.4",
+        "raw-loader": "^4.0.2",
         "react-beautiful-dnd": "^13.1.1",
         "react-color": "^2.19.3",
         "react-country-flag": "^3.0.2",
@@ -80,6 +82,7 @@
         "react-slugify": "^3.0.0",
         "recharts": "^2.3.2",
         "redux": "^4.2.0",
+        "tinymce": "^6.4.0",
         "yup": "^0.32.11"
     }
 }

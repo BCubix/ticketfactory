@@ -4,6 +4,7 @@ import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { getSeoFormData } from './seoApi';
 
 var controller = null;
 
@@ -14,6 +15,7 @@ const FILTERS_SORT_TAB = [
             params['filters[active]'] = sort ? '1' : '0';
         },
     },
+    { name: 'beginYear', sortName: 'filters[beginYear]' },
     { name: 'name', sortName: 'filters[name]' },
     { name: 'page', sortName: 'filters[page]' },
     { name: 'lang', sortName: 'filters[lang]' },
@@ -28,6 +30,21 @@ const FILTERS_SORT_TAB = [
         },
     },
 ];
+
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('name', data.name);
+    formData.append('beginYear', data.beginYear);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    getSeoFormData(formData, data);
+
+    return formData;
+};
 
 const seasonsApi = {
     getSeasons: async (filters) => {
@@ -89,16 +106,7 @@ const seasonsApi = {
 
     createSeason: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('beginYear', data.beginYear);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post('/seasons', formData);
+            const result = await axios.post('/seasons', getFormData(data));
 
             return { result: true, season: result.data };
         } catch (error) {
@@ -108,16 +116,7 @@ const seasonsApi = {
 
     editSeason: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('beginYear', data.beginYear);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post(`/seasons/${id}`, formData);
+            const result = await axios.post(`/seasons/${id}`, getFormData(data));
 
             return { result: true, season: result.data };
         } catch (error) {

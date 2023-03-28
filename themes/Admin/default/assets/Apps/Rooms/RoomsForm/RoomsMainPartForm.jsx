@@ -12,6 +12,9 @@ export const RoomsMainPartForm = ({ values, errors, touched, setFieldValue, hand
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={4}>
                     <Component.CmtTextField
+                        label="Nom"
+                        required
+                        name="name"
                         value={values.name}
                         onChange={(e) => {
                             setFieldValue('name', e.target.value);
@@ -20,21 +23,19 @@ export const RoomsMainPartForm = ({ values, errors, touched, setFieldValue, hand
                             }
                         }}
                         onBlur={handleBlur}
-                        label="Nom"
-                        name="name"
                         error={touched.name && errors.name}
-                        required
                     />
                     <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={4}>
                     <Component.CmtTextField
+                        type="number"
+                        label="Nombre de places"
+                        name="seatsNb"
                         value={values.seatsNb}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        label="Nombre de places"
-                        name="seatsNb"
                         error={touched.seatsNb && errors.seatsNb}
                         required
                     />
@@ -42,11 +43,12 @@ export const RoomsMainPartForm = ({ values, errors, touched, setFieldValue, hand
 
                 <Grid item xs={12} sm={6} md={4}>
                     <Component.CmtTextField
+                        type="number"
+                        label="Superficie"
+                        name="area"
                         value={values.area}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        label="Superficie"
-                        name="area"
                         error={touched.area && errors.area}
                         required
                     />

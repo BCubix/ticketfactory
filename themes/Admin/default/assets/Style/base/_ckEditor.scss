@@ -1,12 +1,13 @@
-
-.pageBlockEditor {
-    & .ck-content {
-        border-left: 0 !important;
-        border-right: 0 !important;
-        border-bottom: 0 !important;
-    }
-    & .ck-toolbar {
-        border-left: 0 !important;
-        border-right: 0 !important;
+.ck-specialMenu-dropdown {
+    & .ck-list {
+        display: flex;
+        flex-direction: row;
+        & .ck-list__item {
+            min-width: 0;
+            width: 30px;
+            & .ck-button {
+                padding: 1px;
+            }
+        }
     }
 }

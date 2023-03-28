@@ -5,6 +5,7 @@ import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { getSeoFormData } from './seoApi';
 
 var controller = null;
 
@@ -29,6 +30,21 @@ const FILTERS_SORT_TAB = [
         },
     },
 ];
+
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    getSeoFormData(formData, data);
+
+    return formData;
+};
 
 const tagsApi = {
     getTags: async (filters) => {
@@ -87,16 +103,7 @@ const tagsApi = {
 
     createTag: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('description', data.description);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post('/tags', formData);
+            const result = await axios.post('/tags', getFormData(data));
 
             return { result: true, tag: result.data };
         } catch (error) {
@@ -106,16 +113,7 @@ const tagsApi = {
 
     editTag: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('description', data.description);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post(`/tags/${id}`, formData);
+            const result = await axios.post(`/tags/${id}`, getFormData(data));
 
             return { result: true, tag: result.data };
         } catch (error) {

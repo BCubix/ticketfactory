@@ -36,10 +36,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     };
 
     useEffect(() => {
-        if (list) {
-            return;
-        }
-
         if (menusListData?.seasons && !list) {
             setList(menusListData.seasons);
         }

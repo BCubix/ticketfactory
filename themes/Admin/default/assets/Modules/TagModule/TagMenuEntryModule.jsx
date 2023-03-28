@@ -35,10 +35,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     };
 
     useEffect(() => {
-        if (list) {
-            return;
-        }
-
         if (menusListData?.tags && !list) {
             setList(menusListData.tags);
         }
@@ -69,7 +65,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                 value={parseInt(element.value)}
                 list={list || []}
                 getValue={(item) => item.id}
-                getName={(item) => `${item.title}`}
+                getName={(item) => `${item.name}`}
                 setFieldValue={(_, newValue) => setValue(newValue)}
                 errors={errors?.value}
             />

@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { FieldArray } from 'formik';
-
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useDispatch } from 'react-redux';
 import { Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, FormControlLabel, Grid, InputLabel, Tab, Tabs, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Constant } from '@/AdminService/Constant';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
-import { GetPageBlockColumn } from '../../PageBlocks/CreatePageBlock/CreatePageBlockFormat';
-import { getNestedFormikError } from '../../../services/utils/getNestedFormikError';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
-import { useDispatch } from 'react-redux';
+
+import { GetPageBlockColumn } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
+
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+
+const CreateSlider = ({ name, setName }) => {
+    return (
+        <Box display="flex" flexDirection={'column'}>
+            <Component.CmtTextField value={name} onChange={(event) => setName(event.target.value)} label="Nom du bloc" />
+        </Box>
+    );
+};
 
 const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
     const dispatch = useDispatch();
@@ -45,6 +57,24 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
             name: name,
             saveAsModel: saveAsModel,
             columns: columns,
+            blockType: 0,
+            titleDisplayed: false,
+            lang: initValues?.lang?.id || '',
+            languageGroup: '',
+        });
+        resetChoice();
+        close();
+    };
+
+    const handleCreateSlider = () => {
+        const columns = [GetPageBlockColumn(12)];
+
+        push({
+            name: name,
+            saveAsModel: false,
+            columns: columns,
+            blockType: 1,
+            titleDisplayed: false,
             lang: initValues?.lang?.id || '',
             languageGroup: '',
         });
@@ -82,6 +112,7 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
             >
                 <Tab label="Créer un nouveau bloc" value="create" />
                 <Tab label="Importer un bloc existant" value="import" />
+                <Tab label="Créer un nouveau bloc (Slider)" value="slider" />
             </Tabs>
 
             <DialogContent sx={{ minHeight: 300 }}>
@@ -97,11 +128,12 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
                     />
                 )}
                 {newBlockMode === 'import' && <Component.ImportPageBlock pageBlocks={pageBlocks} selectedBlock={selectedBlock} setSelectedBlock={setSelectedBlock} />}
+                {newBlockMode === 'slider' && <CreateSlider name={name} setName={setName} />}
             </DialogContent>
 
             <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                {newBlockMode === 'create' ? (
-                    <Component.CreateButton id="createBlockSubmit" variant="contained" onClick={handleCreate}>
+                {newBlockMode === 'create' || newBlockMode === 'slider' ? (
+                    <Component.CreateButton id="createBlockSubmit" variant="contained" onClick={newBlockMode === 'create' ? handleCreate : handleCreateSlider}>
                         Créer
                     </Component.CreateButton>
                 ) : (
@@ -118,6 +150,16 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
     const [displayAddModal, setDisplayAddModal] = useState(false);
     const [view, setView] = useState('xl');
 
+    const handleMoveMenuElement = (index, move) => {
+        let newList = values.pageBlocks;
+        let elem = values.pageBlocks[index];
+
+        newList.splice(index, 1);
+        newList.splice(index + move, 0, elem);
+
+        setFieldValue('pageBlocks', newList);
+    };
+
     return (
         <FieldArray name="pageBlocks">
             {({ remove, push }) => (
@@ -127,8 +169,22 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                             <CardContent>
                                 <InputLabel>Bloc n°{index + 1}</InputLabel>
 
+                                <Box sx={{ position: 'absolute', right: 20, top: 20 }}>
+                                    {index < values.pageBlocks.length - 1 && (
+                                        <Component.MoveElementButton onClick={() => handleMoveMenuElement(index, 1)} title="Descendre d'un cran">
+                                            <ArrowDownwardIcon fontSize="inherit" />
+                                        </Component.MoveElementButton>
+                                    )}
+
+                                    {index > 0 && (
+                                        <Component.MoveElementButton onClick={() => handleMoveMenuElement(index, -1)} title="Monter d'un cran">
+                                            <ArrowUpwardIcon fontSize="inherit" />
+                                        </Component.MoveElementButton>
+                                    )}
+                                </Box>
+
                                 <Grid container spacing={4} sx={{ paddingLeft: 15 }}>
-                                    <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center' }}>
                                         <Component.CmtTextField
                                             value={pageBlock.name}
                                             onChange={handleChange}
@@ -140,55 +196,73 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                         />
                                     </Grid>
 
-                                    <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                        <FormControlLabel
-                                            size="small"
-                                            value={pageBlock.saveAsModel}
-                                            onChange={(e) => {
-                                                setFieldValue(`pageBlocks.${index}.saveAsModel`, e.target.checked);
-                                            }}
-                                            label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieure'}
-                                            labelPlacement="end"
-                                            control={<Checkbox checked={Boolean(pageBlock.saveAsModel)} />}
-                                        />
-                                    </Grid>
+                                    {pageBlock?.blockType === 0 && (
+                                        <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <FormControlLabel
+                                                size="small"
+                                                value={pageBlock.saveAsModel}
+                                                onChange={(e) => {
+                                                    setFieldValue(`pageBlocks.${index}.saveAsModel`, e.target.checked);
+                                                }}
+                                                label={'Enregistrer ce bloc comme modèle pour une utilisation ultérieure'}
+                                                labelPlacement="end"
+                                                control={<Checkbox checked={Boolean(pageBlock.saveAsModel)} />}
+                                            />
+                                        </Grid>
+                                    )}
                                 </Grid>
                                 <Box sx={{ paddingLeft: 5 }} minHeight={200}>
-                                    <ToggleButtonGroup
-                                        orientation="vertical"
-                                        value={view}
-                                        exclusive
-                                        onChange={(e, newValue) => setView(newValue)}
-                                        size="small"
-                                        sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
-                                    >
-                                        <ToggleButton value="xs" aria-label="XS">
-                                            XS
-                                        </ToggleButton>
+                                    {pageBlock?.blockType === 0 && (
+                                        <>
+                                            <ToggleButtonGroup
+                                                orientation="vertical"
+                                                value={view}
+                                                exclusive
+                                                onChange={(e, newValue) => setView(newValue)}
+                                                size="small"
+                                                sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
+                                            >
+                                                <ToggleButton value="xs" aria-label="XS">
+                                                    XS
+                                                </ToggleButton>
 
-                                        <ToggleButton value="s" aria-label="S">
-                                            S
-                                        </ToggleButton>
+                                                <ToggleButton value="s" aria-label="S">
+                                                    S
+                                                </ToggleButton>
 
-                                        <ToggleButton value="m" aria-label="M">
-                                            M
-                                        </ToggleButton>
+                                                <ToggleButton value="m" aria-label="M">
+                                                    M
+                                                </ToggleButton>
 
-                                        <ToggleButton value="l" aria-label="L">
-                                            L
-                                        </ToggleButton>
+                                                <ToggleButton value="l" aria-label="L">
+                                                    L
+                                                </ToggleButton>
 
-                                        <ToggleButton value="xl" aria-label="XL">
-                                            XL
-                                        </ToggleButton>
-                                    </ToggleButtonGroup>
-                                    <Component.PageBlockColumnPart
-                                        values={pageBlock}
-                                        media={view}
-                                        setFieldValue={setFieldValue}
-                                        setFieldTouched={setFieldTouched}
-                                        baseName={`pageBlocks.${index}.`}
-                                    />
+                                                <ToggleButton value="xl" aria-label="XL">
+                                                    XL
+                                                </ToggleButton>
+                                            </ToggleButtonGroup>
+
+                                            <Component.PageBlockColumnPart
+                                                values={pageBlock}
+                                                media={view}
+                                                setFieldValue={setFieldValue}
+                                                setFieldTouched={setFieldTouched}
+                                                baseName={`pageBlocks.${index}.`}
+                                            />
+                                        </>
+                                    )}
+
+                                    {pageBlock?.blockType === 1 && (
+                                        <Component.PagesBlocksSliderPart
+                                            values={pageBlock}
+                                            setFieldValue={setFieldValue}
+                                            setFieldTouched={setFieldTouched}
+                                            baseName={`pageBlocks.${index}.`}
+                                            errors={errors?.pageBlocks}
+                                            touched={touched?.pageBlocks?.at(index)}
+                                        />
+                                    )}
 
                                     <Component.DeleteBlockFabButton
                                         size="small"

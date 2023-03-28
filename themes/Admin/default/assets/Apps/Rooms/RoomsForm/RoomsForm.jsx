@@ -12,8 +12,6 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
 
     const roomsSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner le nom de la salle.').max(250, 'Le nom renseigné est trop long.'),
-        seatsNb: Yup.number().required('Veuillez renseigner le nombre de place.').min(1, 'Veuillez renseigner un nombre valide.'),
-        area: Yup.number().required('Veuillez renseigner la superficie.').min(1, 'Veuillez renseigner un nombre valide.'),
         seatingPlans: Yup.array().of(
             Yup.object().shape({
                 name: Yup.string().required('Veuillez renseigner le nom du plan'),
@@ -28,11 +26,24 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
                 active: initValues?.active || false,
                 seatsNb: initValues?.seatsNb || '',
                 area: initValues?.area || '',
-                seatingPlans: initValues?.seatingPlans?.map((el) => ({ ...el, lang: el.lang?.id || '' })) || [],
+                seatingPlans:
+                    initValues?.seatingPlans.map((el) => ({
+                        ...el,
+                        lang: el?.lang?.id || '',
+                    })) || [],
                 slug: initValues?.slug || '',
-                lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
+                lang: initValues?.lang?.id || '',
                 editSlug: false,
+                seo: {
+                    metaTitle: initValues?.metaTitle || '',
+                    metaDescription: initValues?.metaDescription || '',
+                    socialImage: initValues?.socialImage || null,
+                    fbTitle: initValues?.fbTitle || '',
+                    fbDescription: initValues?.fbDescription || '',
+                    twTitle: initValues?.twTitle || '',
+                    twDescription: initValues?.twDescription || '',
+                },
             }}
             validationSchema={roomsSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -58,8 +69,10 @@ export const RoomsForm = ({ handleSubmit, initialValues = null, translateInitial
                         touched={touched}
                         handleChange={handleChange}
                         handleBlur={handleBlur}
-                        initialValues={initValues}
+                        setFieldValue={setFieldValue}
                     />
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
 
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Salle active ?" />
