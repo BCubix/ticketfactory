@@ -7,8 +7,7 @@ export const CreateButton = styled(Button)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -18,8 +17,17 @@ export const ActionButton = styled(Button)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.action.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+    }
+`;
+
+export const DeleteButton = styled(Button)`
+    background-color: #ffffff;
+    color: ${(props) => props.theme.palette.crud.delete.textColor};
+
+    &:hover {
+        background-color: ${(props) => props.theme.palette.crud.delete.backgroundColor};
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -29,8 +37,7 @@ export const EditFabButton = styled(Fab)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.update.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -40,8 +47,7 @@ export const DeleteFabButton = styled(Fab)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.delete.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -61,8 +67,7 @@ export const DeleteBlockFabButton = styled(Fab)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.delete.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -72,8 +77,7 @@ export const ActionFabButton = styled(Fab)`
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.action.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -85,8 +89,7 @@ export const AddBlockButton = styled(Button)`
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
         border-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -98,7 +101,6 @@ export const AddBlockFabButton = styled(Fab)`
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
         border-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-            0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;

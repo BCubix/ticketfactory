@@ -362,6 +362,10 @@ class Media extends Datable
         return $this;
     }
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all'])]
+    #[JMS\SerializedName("realType")]
+    #[JMS\VirtualProperty()]
     public function getRealType(): string
     {
         $type = MimeTypeMapping::getTypeFromMime($this->getDocumentType());

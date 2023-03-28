@@ -37,6 +37,8 @@ import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart
 import { DisplayMediaAddInformations, DisplayMediaInformations } from '@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations';
 import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
 import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
+import { MoveEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/MoveEventMedias';
+import { DeleteEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/DeleteEventMedias';
 import { EventDateRange } from '@Apps/Events/EventsForm/EventDateRange';
 import { EventMainPartForm } from '@Apps/Events/EventsForm/EventMainPartForm';
 import { EventParentCategoryPartForm } from '@Apps/Events/EventsForm/EventParentCategoryPartForm';
@@ -161,6 +163,7 @@ import {
     AddBlockButton,
     AddBlockFabButton,
     CreateButton,
+    DeleteButton,
     DeleteBlockFabButton,
     DeleteFabButton,
     EditFabButton,
@@ -271,6 +274,8 @@ const ComponentObj = {
     DisplayMediaInformations: DisplayMediaInformations,
     EditEventMediaModal: EditEventMediaModal,
     EventMediaPartForm: EventMediaPartForm,
+    MoveEventMedias: MoveEventMedias,
+    DeleteEventMedias: DeleteEventMedias,
     EventDateRange: EventDateRange,
     EventMainPartForm: EventMainPartForm,
     EventParentCategoryPartForm: EventParentCategoryPartForm,
@@ -422,6 +427,7 @@ const ComponentObj = {
     ActionButton: ActionButton,
     EditFabButton: EditFabButton,
     DeleteFabButton: DeleteFabButton,
+    DeleteButton: DeleteButton,
     DeleteBlockFabButton: DeleteBlockFabButton,
     ActionFabButton: ActionFabButton,
     AddBlockButton: AddBlockButton,

@@ -7,7 +7,6 @@ import { Grid, IconButton } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
-import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';

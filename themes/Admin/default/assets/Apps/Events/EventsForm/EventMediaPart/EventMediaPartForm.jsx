@@ -2,11 +2,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
+import AddIcon from '@mui/icons-material/Add';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Box } from '@mui/system';
 
 const filterInit = {
     title: '',
@@ -19,51 +25,37 @@ const filterInit = {
     limit: 20,
 };
 
+const VIEW_MODE_LIST = {
+    DEFAULT: 'default',
+    MOVE: 'move',
+    DELETE: 'delete',
+};
+
 export const EventMediaPartForm = ({ values, handleChange, touched, errors, setFieldValue, name = 'eventMedias', mediaCategoriesList }) => {
     const dispatch = useDispatch();
-    const [openAddModal, setOpenAddModal] = useState(null);
+    const [viewMode, setViewMode] = useState(VIEW_MODE_LIST.DEFAULT);
+    const [openAddModal, setOpenAddModal] = useState(false);
     const [editDialog, setEditDialog] = useState(null);
 
-    const [imageMedias, setImageMedias] = useState(null);
-    const [imageMediasTotal, setImageMediasTotal] = useState(null);
-    const [imageMediaFilters, setImageMediaFilters] = useState(filterInit);
+    const [medias, setMedias] = useState(null);
+    const [mediasTotal, setMediasTotal] = useState(null);
+    const [mediasFilters, setMediasFilters] = useState(filterInit);
 
-    const [otherMedias, setOtherMedias] = useState(null);
-    const [otherMediasTotal, setOtherMediasTotal] = useState(null);
-    const [otherMediaFilters, setOtherMediaFilters] = useState(filterInit);
-
-    const getImageMedias = () => {
+    const getMedias = () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getMediasList({ ...imageMediaFilters, type: ['Image'] });
+            const result = await Api.mediasApi.getMediasList({ ...mediasFilters });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
                 return;
             }
-            setImageMedias(result?.medias);
-            setImageMediasTotal(result.total);
-        });
-    };
-
-    const getOtherMedias = () => {
-        apiMiddleware(dispatch, async () => {
-            Api.mediasApi.getMediasList({ ...otherMediaFilters, type: ['Audio', 'Vidéo', 'PDF'] }).then((result) => {
-                if (!result?.result) {
-                    NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-                    return;
-                }
-                setOtherMedias(result?.medias);
-                setOtherMediasTotal(result.total);
-            });
+            setMedias(result?.medias);
+            setMediasTotal(result.total);
         });
     };
 
     useEffect(() => {
-        getImageMedias();
-    }, [imageMediaFilters]);
-
-    useEffect(() => {
-        getOtherMedias();
-    }, [otherMediaFilters]);
+        getMedias();
+    }, [mediasFilters]);
 
     const changeImageInformations = (newValues) => {
         if (!editDialog) {
@@ -98,56 +90,118 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
         });
     };
 
+    const eventMedias = useMemo(() => {
+        const eventMediasList = [];
+
+        values?.eventMedias?.forEach((element) => {
+            const search = eventMediasList?.findIndex((el) => el.type === element?.media?.realType);
+            if (search > -1) {
+                eventMediasList[search].eventMedias?.push(element);
+            } else {
+                eventMediasList.push({ type: element?.media?.realType, eventMedias: [element] });
+            }
+        });
+
+        return eventMediasList;
+    });
+
     return (
         <>
-            <Component.DisplayEventMediaElement
-                title="Photos"
-                openAddModal={setOpenAddModal}
-                mediaType="Image"
-                openEditModal={setEditDialog}
-                values={values}
-                name={name}
-                setFieldValue={setFieldValue}
-                id="imageMediasEvent"
-                error={touched.eventMedias && errors.eventMedias}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center', my: 5 }}>
+                <Component.AddBlockButton
+                    sx={{ marginRight: 3 }}
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                    id="addMediaButton"
+                    onClick={() => {
+                        setOpenAddModal(true);
+                    }}
+                    disabled={viewMode !== VIEW_MODE_LIST.DEFAULT}
+                >
+                    <AddIcon /> Ajouter
+                </Component.AddBlockButton>
 
-            <Component.DisplayEventMediaElement
-                title="Autres contenus"
-                openAddModal={setOpenAddModal}
-                mediaType="Other"
-                openEditModal={setEditDialog}
-                values={values}
-                name={name}
-                setFieldValue={setFieldValue}
-                id="othersMediasEvent"
-            />
+                <Component.ActionButton
+                    sx={{ marginRight: 3, position: 'relative' }}
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                    id="moveMediaButton"
+                    onClick={() => {
+                        setViewMode(viewMode === VIEW_MODE_LIST.MOVE ? VIEW_MODE_LIST.DEFAULT : VIEW_MODE_LIST.MOVE);
+                    }}
+                    disabled={viewMode !== VIEW_MODE_LIST.DEFAULT && viewMode !== VIEW_MODE_LIST.MOVE}
+                >
+                    <OpenWithIcon /> Réorganiser
+                    {viewMode === VIEW_MODE_LIST.MOVE && (
+                        <CloseIcon color="error" sx={{ height: 20, width: 20, position: 'absolute', top: -10, right: -10, borderRadius: '50%', backgroundColor: '#FFFFFF' }} />
+                    )}
+                </Component.ActionButton>
+
+                <Component.DeleteButton
+                    sx={{ marginRight: 3, position: 'relative' }}
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    id="moveMediaButton"
+                    onClick={() => {
+                        setViewMode(viewMode === VIEW_MODE_LIST.DELETE ? VIEW_MODE_LIST.DEFAULT : VIEW_MODE_LIST.DELETE);
+                    }}
+                    disabled={viewMode !== VIEW_MODE_LIST.DEFAULT && viewMode !== VIEW_MODE_LIST.DELETE}
+                >
+                    <DeleteIcon /> Supprimer
+                    {viewMode === VIEW_MODE_LIST.DELETE && (
+                        <CloseIcon color="error" sx={{ height: 20, width: 20, position: 'absolute', top: -10, right: -10, borderRadius: '50%', backgroundColor: '#FFFFFF' }} />
+                    )}
+                </Component.DeleteButton>
+            </Box>
+
+            {viewMode === VIEW_MODE_LIST.DEFAULT &&
+                eventMedias.map((item, index) => (
+                    <Component.DisplayEventMediaElement
+                        key={index}
+                        title={item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+                        openAddModal={setOpenAddModal}
+                        mediaType={item.type}
+                        openEditModal={setEditDialog}
+                        values={values}
+                        mediasList={item?.eventMedias}
+                        name={name}
+                        setFieldValue={setFieldValue}
+                        id="eventMedias"
+                        error={touched.eventMedias && errors.eventMedias}
+                    />
+                ))}
+
+            {viewMode === VIEW_MODE_LIST.MOVE && <Component.MoveEventMedias eventMedias={values.eventMedias} setFieldValue={setFieldValue} />}
+            {viewMode === VIEW_MODE_LIST.DELETE && <Component.DeleteEventMedias eventMedias={values.eventMedias} setFieldValue={setFieldValue} />}
 
             <Component.CmtMediaModal
                 title={`Ajouter des éléments média au spectacle`}
-                open={Boolean(openAddModal)}
-                onClose={() => setOpenAddModal(null)}
-                mediasList={openAddModal === 'Image' ? imageMedias : otherMedias}
+                open={openAddModal}
+                onClose={() => setOpenAddModal(false)}
+                mediasList={medias}
                 media={values.eventMedias}
                 setFieldValue={setFieldValue}
                 name={name}
-                onAddNewMedia={openAddModal === 'Image' ? getImageMedias : getOtherMedias}
+                onAddNewMedia={getMedias}
                 onClick={(selectedMedia) => {
                     let newValue = values.eventMedias;
 
                     if (newValue.map((el) => el.id).includes(selectedMedia?.id)) {
                         newValue = newValue.filter((el) => el.id !== selectedMedia?.id);
                     } else {
-                        newValue.push({ id: selectedMedia?.id, mainImg: false, mainImgCalendar: false, position: '', media: selectedMedia });
+                        newValue.push({ id: selectedMedia?.id, mainImg: false, mainImgCalendar: false, position: newValue?.length + 1, media: selectedMedia });
                     }
 
                     setFieldValue(name, newValue);
                 }}
                 AddMediaLabel="Ajouter"
                 RemoveMediaLabel="Retirer"
-                mediaFilters={openAddModal === 'Image' ? imageMediaFilters : otherMediaFilters}
-                setMediaFilters={openAddModal === 'Image' ? setImageMediaFilters : setOtherMediaFilters}
-                total={openAddModal === 'Image' ? imageMediasTotal : otherMediasTotal}
+                mediaFilters={mediasFilters}
+                setMediaFilters={setMediasFilters}
+                total={mediasTotal}
                 categoriesList={mediaCategoriesList}
             />
 
