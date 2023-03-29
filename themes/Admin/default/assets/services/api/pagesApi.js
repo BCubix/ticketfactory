@@ -5,6 +5,7 @@ import { changeSlug } from '@Services/utils/changeSlug';
 import { Constant } from '@/AdminService/Constant';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { getSeoFormData } from './seoApi';
 
 var controller = null;
 
@@ -29,6 +30,39 @@ const FILTERS_SORT_TAB = [
         },
     },
 ];
+
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('title', data.title);
+    formData.append('parent', data.parent);
+    formData.append('subtitle', data.subtitle);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    data.pageBlocks.forEach((block, index) => {
+        formData.append(`pageBlocks[${index}][name]`, block.name);
+        formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
+        formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
+        formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
+        formData.append(`pageBlocks[${index}][blockType]`, block.blockType || 0);
+
+        block.columns.forEach((column, columnIndex) => {
+            formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, block?.blockType === 1 ? column?.content?.id || '' : column.content || '');
+            formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
+            formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
+            formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);
+            formData.append(`pageBlocks[${index}][columns][${columnIndex}][l]`, column.l);
+            formData.append(`pageBlocks[${index}][columns][${columnIndex}][xl]`, column.xl);
+        });
+    });
+
+    getSeoFormData(formData, data);
+
+    return formData;
+};
 
 const pagesApi = {
     getPages: async (filters) => {
@@ -91,32 +125,7 @@ const pagesApi = {
 
     createPage: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('title', data.title);
-            formData.append('parent', data.parent);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            data.pageBlocks.forEach((block, index) => {
-                formData.append(`pageBlocks[${index}][name]`, block.name);
-                formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
-                formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
-                formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
-
-                block.columns.forEach((column, columnIndex) => {
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content || '');
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][l]`, column.l);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][xl]`, column.xl);
-                });
-            });
-
-            const result = await axios.post('/pages', formData);
+            const result = await axios.post('/pages', getFormData(data));
 
             return { result: true, page: result.data };
         } catch (error) {
@@ -126,31 +135,7 @@ const pagesApi = {
 
     editPage: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('title', data.title);
-            formData.append('parent', data.parent);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            data.pageBlocks.forEach((block, index) => {
-                formData.append(`pageBlocks[${index}][name]`, block.name);
-                formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
-                formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
-                formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
-
-                block.columns.forEach((column, columnIndex) => {
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content || '');
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][l]`, column.l);
-                    formData.append(`pageBlocks[${index}][columns][${columnIndex}][xl]`, column.xl);
-                });
-            });
-            const result = await axios.post(`/pages/${id}`, formData);
+            const result = await axios.post(`/pages/${id}`, getFormData(data));
 
             return { result: true, page: result.data };
         } catch (error) {

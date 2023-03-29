@@ -1,9 +1,10 @@
-import { copyData } from "@Services/utils/copyData";
-import React from 'react';
+import { copyData } from '@Services/utils/copyData';
+import React, { useMemo } from 'react';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TreeView, TreeItem } from '@mui/lab';
 import { Typography, Radio, Checkbox, Box } from '@mui/material';
+import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
 const displayCategoriesOptions = (list, values, setFieldValue) => {
     if (!list || list?.length === 0) {
@@ -58,22 +59,23 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                 </Box>
             }
         >
-            {Array.isArray(list?.children) &&
-                list?.children?.map((item) =>
-                    displayCategoriesOptions(item, values, setFieldValue)
-                )}
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setFieldValue))}
         </TreeItem>
     );
 };
 
-export const MediaParentCategoryPartForm = ({
-    values,
-    mediaCategoriesList,
-    setFieldValue,
-    touched,
-    errors,
-    sx,
-}) => {
+export const MediaParentCategoryPartForm = ({ values, mediaCategoriesList, setFieldValue, touched, errors, sx }) => {
+    const defaultExpend = useMemo(() => {
+        let list = [];
+
+        values?.mediaCategories?.forEach((el) => {
+            list.push(...getDefaultParentPath(mediaCategoriesList, el));
+        });
+        list.push(...getDefaultParentPath(mediaCategoriesList, values?.mainCategory));
+
+        return list;
+    }, []);
+
     return (
         <>
             <Box display="flex" justifyContent={'space-between'} {...sx}>
@@ -89,7 +91,7 @@ export const MediaParentCategoryPartForm = ({
                 id="categoriesParent"
                 label="Catégories"
                 defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpanded={[mediaCategoriesList.id?.toString()]}
+                defaultExpanded={[mediaCategoriesList.id?.toString(), ...defaultExpend]}
                 defaultExpandIcon={<ChevronRightIcon />}
                 sx={{ flexGrow: 1, overflowY: 'auto' }}
             >

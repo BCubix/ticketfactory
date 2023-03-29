@@ -5,6 +5,7 @@ import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { getSeoFormData } from './seoApi';
 
 var controller = null;
 
@@ -36,6 +37,24 @@ const FILTERS_SORT_TAB = [
         },
     },
 ];
+
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('title', data.title);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    Object.entries(data.fields)?.map(([key, value]) => {
+        serializeData(value, `fields[${key}]`, formData);
+    });
+
+    getSeoFormData(formData, data);
+
+    return formData;
+};
 
 const serializeData = (element, name, formData) => {
     if (null !== element && typeof element !== 'object') {
@@ -102,19 +121,7 @@ const contentsApi = {
 
     createContent: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('title', data.title);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            Object.entries(data.fields)?.map(([key, value]) => {
-                serializeData(value, `fields[${key}]`, formData);
-            });
-
-            const result = await axios.post(`/contents/${data.contentType}/create`, formData);
+            const result = await axios.post(`/contents/${data.contentType}/create`, getFormData(data));
 
             return { result: true, content: result.data };
         } catch (error) {
@@ -124,19 +131,7 @@ const contentsApi = {
 
     editContent: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('title', data.title);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            Object.entries(data.fields)?.map(([key, value]) => {
-                serializeData(value, `fields[${key}]`, formData);
-            });
-
-            const result = await axios.post(`/contents/${id}/edit`, formData);
+            const result = await axios.post(`/contents/${id}/edit`, getFormData(data));
 
             return { result: true, content: result.data };
         } catch (error) {

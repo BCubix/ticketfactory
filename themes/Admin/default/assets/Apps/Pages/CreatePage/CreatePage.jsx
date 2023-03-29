@@ -8,11 +8,14 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getPagesAction } from '@Redux/pages/pagesSlice';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { useSelector } from 'react-redux';
+import { languagesSelector } from '@Redux/languages/languagesSlice';
 
 export const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const languagesData = useSelector(languagesSelector);
     const [initialValues, setInitialValues] = useState(null);
     const [pagesList, setPagesList] = useState(null);
 
@@ -20,9 +23,9 @@ export const CreatePage = () => {
     const pageId = queryParameters.get('pageId');
     const languageId = queryParameters.get('languageId');
 
-    useEffect(() => {
+    const getPageList = (langId) => {
         apiMiddleware(dispatch, async () => {
-            const pages = await Api.pagesApi.getAllPages({ sort: 'title ASC' });
+            const pages = await Api.pagesApi.getAllPages({ sort: 'title ASC', lang: langId });
             if (pages?.error) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.PAGES_BASE_PATH);
@@ -31,7 +34,18 @@ export const CreatePage = () => {
 
             setPagesList(pages.pages);
         });
+    };
 
+    useEffect(() => {
+        if ((!languageId && !languagesData?.languages) || pagesList) {
+            return;
+        }
+
+        const defaultLanguageId = languageId || languagesData?.languages?.find((el) => el.isDefault)?.id;
+        getPageList(defaultLanguageId);
+    }, [languagesData.languages]);
+
+    useEffect(() => {
         apiMiddleware(dispatch, async () => {
             if (!pageId || !languageId) {
                 return;

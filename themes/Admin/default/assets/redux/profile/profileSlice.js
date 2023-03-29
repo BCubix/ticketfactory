@@ -1,8 +1,8 @@
 import { NotificationManager } from 'react-notifications';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 import { resetCategories } from '@Redux/categories/categoriesSlice';
 import { resetEvents } from '@Redux/events/eventsSlice';
@@ -12,6 +12,7 @@ import { resetUsers } from '@Redux/users/usersSlice';
 
 const initialState = {
     connected: null,
+    modulesLoaded: null,
     loading: false,
     error: null,
     user: null,
@@ -45,6 +46,10 @@ const profileSlice = createSlice({
             state.error = null;
             state.user = null;
         },
+
+        setModulesLoaded: (state, action) => {
+            state.modulesLoaded = action.payload.modulesLoaded;
+        },
     },
 });
 
@@ -56,13 +61,7 @@ export function loginAction(data) {
             const response = await Api.authApi.login(data);
 
             if (!response.result) {
-                NotificationManager.error(
-                    response?.error?.code === 401
-                        ? 'Email ou mot de passe incorrect.'
-                        : 'Une erreur est survenue.',
-                    'Erreur',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.error(response?.error?.code === 401 ? 'Email ou mot de passe incorrect.' : 'Une erreur est survenue.', 'Erreur', Constant.REDIRECTION_TIME);
 
                 dispatch(loginFailure({ error: response.error }));
 
@@ -129,6 +128,6 @@ export function logoutAction() {
     };
 }
 
-export const { login, loginSuccess, loginFailure, logout } = profileSlice.actions;
+export const { login, loginSuccess, loginFailure, logout, setModulesLoaded } = profileSlice.actions;
 export const profileSelector = (state) => state.profile;
 export default profileSlice.reducer;

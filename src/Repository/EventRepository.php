@@ -12,9 +12,11 @@ class EventRepository extends CrudRepository
     protected const SELECTS = [
         'ec' => null,
         'es' => null,
-        'es' => null,
+        'er' => null,
         'et' => null,
-        'el' => null
+        'el' => null,
+        'ed' => null,
+        'edb' => null,
     ];
 
     protected const JOINS = [
@@ -22,7 +24,9 @@ class EventRepository extends CrudRepository
         ['leftJoin', 'o.season', 'es'],
         ['leftJoin', 'o.room', 'er'],
         ['leftJoin', 'o.tags', 'et'],
-        ['leftJoin', 'o.lang', 'el']
+        ['leftJoin', 'o.lang', 'el'],
+        ['leftJoin', 'o.eventDateBlocks', 'edb'],
+        ['leftJoin', 'edb.eventDates', 'ed'],
     ];
 
     protected const FILTERS = [

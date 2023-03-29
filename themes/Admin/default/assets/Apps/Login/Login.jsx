@@ -14,14 +14,14 @@ import { Stack } from '@mui/system';
 
 export const Login = () => {
     const dispatch = useDispatch();
-    const { connected } = useSelector(profileSelector);
+    const { connected, modulesLoaded } = useSelector(profileSelector);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (connected) {
+        if (connected && modulesLoaded) {
             navigate(Constant.HOME_PATH);
         }
-    }, [connected]);
+    }, [connected, modulesLoaded]);
 
     const loginSchema = Yup.object().shape({
         username: Yup.string().required('Veuillez renseigner une adresse email.').email('Adresse email invalide.'),
@@ -64,7 +64,7 @@ export const Login = () => {
                                     Connexion
                                 </Typography>
                             </Box>
-                            <Box sx={{ mt: { xs: 5, md: 25 } }} fullWidth>
+                            <Box sx={{ mt: { xs: 5, md: 25 }, width: '100%' }}>
                                 <Component.CmtTextField
                                     margin="normal"
                                     value={values.username}

@@ -43,15 +43,12 @@ export const RoomsSeatingPlanPartForm = ({ values, errors, touched, handleChange
                                 size="small"
                                 color="primary"
                                 variant="outlined"
+                                id="addSeatingPlanButton"
                                 onClick={() => {
                                     push({ name: '', lang: initialValues?.lang?.id || '', languageGroup: '' });
                                 }}
-                                id="addSeatingPlan"
                             >
-                                <AddIcon />
-                                <Typography mt={'2px'} component="p" variant="body1">
-                                    Ajouter
-                                </Typography>
+                                <AddIcon /> Ajouter
                             </Component.AddBlockButton>
                         </Box>
                     </Box>

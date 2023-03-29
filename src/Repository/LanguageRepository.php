@@ -21,4 +21,25 @@ class LanguageRepository extends CrudRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findDefaultForWebsite()
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.active = 1')
+            ->andWhere('l.isDefault = 1')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findByLocaleForWebsite($locale)
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.active = 1')
+            ->andWhere('l.locale = :locale')
+            ->setParameter('locale', $locale)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

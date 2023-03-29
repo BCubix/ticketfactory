@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TreeItem, TreeView } from '@mui/lab';
-import { FormControl, Radio, Typography } from '@mui/material';
+import { FormControl, FormHelperText, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
-const TYPE = 'categoryLink';
+const TYPE = 'category';
 
-const VALIDATION_TYPE = 'array';
+const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
     {
         name: 'required',
@@ -84,6 +85,14 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
         setFieldValue(name, values[field.name]?.id || values[field.name]);
     }, []);
 
+    const defaultExpend = useMemo(() => {
+        if (!list) {
+            return [];
+        }
+
+        return getDefaultParentPath(list, values[field.name]);
+    }, [list]);
+
     if (!list || list.length === 0) return <></>;
 
     return (
@@ -99,7 +108,7 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
                     value={values[field.name]}
                     label={label}
                     defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpanded={[list.id?.toString()]}
+                    defaultExpanded={[list.id?.toString(), ...defaultExpend]}
                     defaultExpandIcon={<ChevronRightIcon />}
                     sx={{ flexGrow: 1, overflowY: 'auto' }}
                     selected={values[field.name]?.toString()}

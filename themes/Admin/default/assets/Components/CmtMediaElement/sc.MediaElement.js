@@ -26,6 +26,43 @@ export const CmtMediaElement = styled(Card)`
         }
     }
 
+    &:hover {
+        &.eventMediaElement {
+            position: relative;
+
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.6);
+                z-index: 2;
+                transition: 0.3s;
+            }
+
+            .eventMediaType {
+                filter: blur(1px);
+            }
+
+            .showOnHover {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+    }
+
+    .eventMediaType {
+        transition: 0.3s;
+    }
+
+    .showOnHover {
+        transition: 0.3s;
+        opacity: 0;
+    }
+
     ${(props) => props.theme.breakpoints.up('sm')} {
         width: 25%;
         & > img {

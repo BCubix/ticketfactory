@@ -4,6 +4,7 @@ namespace App\Entity\Content;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
+use App\Entity\SEOAble\SEOAble;
 use App\Repository\ContentRepository;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,8 @@ class Content extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
+
+    use SEOAble;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -142,5 +145,11 @@ class Content extends Datable
         $this->lang = $lang;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo() {
+        $this->completeFields($this->getTitle());
     }
 }

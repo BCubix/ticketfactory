@@ -4,17 +4,17 @@ import CheckIcon from '@mui/icons-material/Check';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 const LIST_TYPE = [
-    { label: 'Image', value: 'image' },
-    { label: 'Audio', value: 'audio' },
-    { label: 'Vidéo', value: 'video' },
-    { label: 'Word', value: 'word' },
-    { label: 'Excel', value: 'excel' },
-    { label: 'Powerpoint', value: 'powerpoint' },
-    { label: 'Pdf', value: 'pdf' },
-    { label: 'Text', value: 'text' },
+    { label: 'Image', value: 'Image' },
+    { label: 'Audio', value: 'Audio' },
+    { label: 'Vidéo', value: 'Vidéo' },
+    { label: 'Word', value: 'Word' },
+    { label: 'Excel', value: 'Excel' },
+    { label: 'Powerpoint', value: 'Powerpoint' },
+    { label: 'Pdf', value: 'PDF' },
+    { label: 'Text', value: 'Text' },
 ];
 
 const SORT_LIST = [
@@ -25,7 +25,7 @@ const SORT_LIST = [
     { label: 'Poids', value: 'documentSize' },
 ];
 
-export const MediasFilters = ({ filters, changeFilters }) => {
+export const MediasFilters = ({ filters, changeFilters, categoriesList }) => {
     return (
         <Box p={3} flexGrow={1} display="flex" justifyContent="flex-start" flexWrap="wrap">
             <Component.CmtBooleanFilters
@@ -37,6 +37,15 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 id="activeFilter"
             />
 
+            <Component.CmtBooleanFilters
+                value={filters.iframe}
+                setValue={(newValue) => changeFilters({ ...filters, iframe: newValue })}
+                title="Chercher les iframes"
+                label="Iframes ?"
+                icon={<CheckIcon />}
+                id="iframeFilter"
+            />
+
             <Component.CmtSearchFilters
                 value={filters.title}
                 setValue={(newValue) => changeFilters({ ...filters, title: newValue })}
@@ -45,6 +54,32 @@ export const MediasFilters = ({ filters, changeFilters }) => {
                 icon={<TextFieldsIcon />}
                 id="titleFilter"
             />
+
+            <Component.CmtMultipleSelectFilters
+                list={LIST_TYPE}
+                value={filters.type}
+                setValue={(newValue) => changeFilters({ ...filters, type: newValue })}
+                title="Chercher par type"
+                label="Type"
+                icon={<TextFieldsIcon />}
+                id="typeFilter"
+                parameters={{
+                    nameValue: 'value',
+                    nameLabel: 'label',
+                }}
+            />
+
+            {categoriesList && (
+                <Component.CmtCategoriesFilters
+                    value={filters.category}
+                    list={categoriesList}
+                    setValue={(newValue) => changeFilters({ ...filters, category: newValue })}
+                    title="Chercher par catégorie"
+                    label="Catégories"
+                    icon={<TextFieldsIcon />}
+                    id="categoryFilter"
+                />
+            )}
 
             <Component.MediasSorters
                 value={filters.sort}

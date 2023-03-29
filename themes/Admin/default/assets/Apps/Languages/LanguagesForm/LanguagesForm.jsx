@@ -17,6 +17,7 @@ export const LanguagesForm = ({ handleSubmit, initialValues = null }) => {
             initialValues={{
                 name: initialValues?.name || '',
                 isoCode: initialValues?.isoCode || '',
+                locale: initialValues?.locale || '',
                 isDefault: initialValues?.isDefault || false,
                 active: initialValues?.active || false,
             }}
@@ -41,7 +42,7 @@ export const LanguagesForm = ({ handleSubmit, initialValues = null }) => {
                                     required
                                 />
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={3}>
                                 <Component.CmtTextField
                                     value={values.isoCode}
                                     onChange={handleChange}
@@ -49,6 +50,18 @@ export const LanguagesForm = ({ handleSubmit, initialValues = null }) => {
                                     label="Code ISO (FR, EN, ES, ...)"
                                     name="isoCode"
                                     error={touched.isoCode && errors.isoCode}
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} md={3}>
+                                <Component.CmtTextField
+                                    value={values.locale}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Locale"
+                                    name="locale"
+                                    error={touched.locale && errors.locale}
                                     required
                                 />
                             </Grid>

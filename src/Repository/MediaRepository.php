@@ -9,10 +9,21 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class MediaRepository extends CrudRepository
 {
+    protected const SELECTS = [
+        'ec' => null,
+    ];
+
+    protected const JOINS = [
+        ['leftJoin', 'o.mediaCategories', 'ec'],
+    ];
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
+        ['iframe', 'o.iframe', 'equals'],
+        ['category', 'ec.id', 'in'],
         ['title', 'o.title', 'search'],
-        ['type', 'o.documentType', 'in']
+        ['type', 'o.documentType', 'in'],
+        ['category', 'ec.id', 'in'],
     ];
 
     protected const SORTS = [

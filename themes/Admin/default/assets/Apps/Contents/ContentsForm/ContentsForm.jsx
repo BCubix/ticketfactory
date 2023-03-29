@@ -68,6 +68,15 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                 lang: initVal?.lang?.id || '',
                 languageGroup: initVal?.languageGroup || '',
                 editSlug: false,
+                seo: {
+                    metaTitle: initVal?.metaTitle || '',
+                    metaDescription: initVal?.metaDescription || '',
+                    socialImage: initVal?.socialImage || null,
+                    fbTitle: initVal?.fbTitle || '',
+                    fbDescription: initVal?.fbDescription || '',
+                    twTitle: initVal?.twTitle || '',
+                    twDescription: initVal?.twDescription || '',
+                },
             });
 
             return;
@@ -90,6 +99,15 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             lang: '',
             languageGroup: '',
             editSlug: false,
+            seo: {
+                metaTitle: '',
+                metaDescription: '',
+                socialImage: null,
+                fbTitle: '',
+                fbDescription: '',
+                twTitle: '',
+                twDescription: '',
+            },
         });
     }, []);
 
@@ -139,6 +157,8 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                             prefixName="fields."
                         />
                     </Component.CmtFormBlock>
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
 
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Contenu actif ?" />

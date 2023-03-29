@@ -1,15 +1,40 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-import { Typography } from '@mui/material';
+import { FormControl, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
 import { formatMenusData } from '@Services/utils/formatMenusData';
 import getMenuEntryModules from '../getMenuEntryModules';
+import ReactCountryFlag from 'react-country-flag';
+import { getLanguagesFromTranslatedElement } from '@Services/utils/translationUtils';
 
-export const MenuStructure = ({ values, setFieldValue, handleChange, handleBlur, touched, errors, languageList, openTranslateDialog, language }) => {
+export const MenuStructure = ({
+    values,
+    setFieldValue,
+    handleChange,
+    handleBlur,
+    touched,
+    errors,
+    languageList,
+    openTranslateDialog,
+    language,
+    translationSelectedMenu,
+    changeLanguage,
+    selectedMenu,
+}) => {
+    const [selectedLanguage, setSelectedLanguage] = useState(translationSelectedMenu?.lang);
+
+    const selectedMenuLanguages = useMemo(() => {
+        return getLanguagesFromTranslatedElement(selectedMenu);
+    }, [selectedMenu]);
+
+    useEffect(() => {
+        setSelectedLanguage(translationSelectedMenu?.lang);
+    }, [translationSelectedMenu]);
+
     const menuEntryModule = useMemo(() => {
         const modules = getMenuEntryModules();
         return modules;
@@ -68,6 +93,41 @@ export const MenuStructure = ({ values, setFieldValue, handleChange, handleBlur,
                 <Typography component="h2" variant="h4">
                     Structure du menu
                 </Typography>
+
+                {selectedMenuLanguages?.length > 1 && (
+                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                        <Select
+                            labelId={`select-menus-language-label`}
+                            size="small"
+                            id={`select-menus-language`}
+                            variant="standard"
+                            value={selectedLanguage?.id || ''}
+                            onChange={(e) => {
+                                if (e.target.value === translationSelectedMenu?.lang?.id) {
+                                    return;
+                                }
+
+                                let newElement = null;
+
+                                if (selectedMenu?.lang?.id === e.target.value) {
+                                    newElement = selectedMenu;
+                                } else {
+                                    newElement = selectedMenu?.translatedElements?.find((el) => el.lang?.id === e.target.value);
+                                }
+
+                                changeLanguage(newElement || null);
+                                setSelectedLanguage(selectedMenuLanguages?.find((el) => el.id === e.target.value));
+                            }}
+                            sx={{ marginLeft: 3, marginRight: 1, minWidth: 200 }}
+                        >
+                            {selectedMenuLanguages?.map((item, index) => (
+                                <MenuItem key={index} value={item.id}>
+                                    <ReactCountryFlag countryCode={item?.isoCode} style={{ fontSize: '1.5rem', marginRight: '5px' }} /> {item.name} ({item.isoCode})
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )}
 
                 {languageList?.length > 0 && (
                     <Component.ActionButton variant="contained" size="small" color="action" onClick={openTranslateDialog}>

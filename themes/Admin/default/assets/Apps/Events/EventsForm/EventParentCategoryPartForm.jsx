@@ -66,7 +66,14 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
 
 export const EventParentCategoryPartForm = ({ values, categoriesList, setFieldValue, touched, errors }) => {
     const defaultExpend = useMemo(() => {
-        return getDefaultParentPath(categoriesList, values?.mainCategory);
+        let list = [];
+
+        values?.eventCategories?.forEach((el) => {
+            list.push(...getDefaultParentPath(categoriesList, el));
+        });
+        list.push(...getDefaultParentPath(categoriesList, values?.mainCategory));
+
+        return list;
     }, []);
 
     return (

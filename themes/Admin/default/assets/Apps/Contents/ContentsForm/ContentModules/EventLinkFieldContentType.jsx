@@ -11,7 +11,7 @@ import { loginFailure } from '@Redux/profile/profileSlice';
 
 const TYPE = 'eventLink';
 
-const VALIDATION_TYPE = 'array';
+const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
     {
         name: 'required',

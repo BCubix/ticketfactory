@@ -4,11 +4,13 @@ namespace App\Entity\Page;
 
 use App\Entity\Content\ContentType;
 use App\Entity\Datable;
+use App\Entity\SEOAble\SEOAble;
 use App\Entity\Language\Language;
 use App\Repository\PageRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -22,6 +24,8 @@ class Page extends Datable
 {
     /*** > Trait ***/
     /*** < Trait ***/
+
+    use SEOAble;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one'])]
@@ -37,9 +41,14 @@ class Page extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[Gedmo\Slug(fields: ['title'], updatable: true)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private $subtitle;
+
+    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
@@ -101,6 +110,18 @@ class Page extends Datable
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSubtitle(): ?string
+    {
+        return $this->subtitle;
+    }
+
+    public function setSubtitle(?string $subtitle): self
+    {
+        $this->subtitle = $subtitle;
 
         return $this;
     }
@@ -249,5 +270,11 @@ class Page extends Datable
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo() {
+        $this->completeFields($this->getTitle());
     }
 }

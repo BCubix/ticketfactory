@@ -11,6 +11,12 @@ const FILTERS_SORT_TAB = [
             params['filters[active]'] = sort ? '1' : '0';
         },
     },
+    {
+        name: 'iframe',
+        transformFilter: (params, sort) => {
+            params['filters[iframe]'] = sort ? '1' : '0';
+        },
+    },
     { name: 'title', sortName: 'filters[title]' },
     { name: 'page', sortName: 'filters[page]' },
     { name: 'limit', sortName: 'filters[limit]' },
@@ -24,8 +30,20 @@ const FILTERS_SORT_TAB = [
         },
     },
     {
+        name: 'category',
+        transformFilter: (params, values) => {
+            values?.split(',').forEach((el, index) => {
+                params[`filters[category][${index}]`] = el;
+            });
+        },
+    },
+    {
         name: 'type',
         transformFilter: (params, sort) => {
+            if (typeof sort === 'string') {
+                sort = sort.split(',');
+            }
+
             sort?.forEach((el, index) => {
                 params[`filters[type][${index}]`] = el;
             });
@@ -132,10 +150,47 @@ const mediasApi = {
         }
     },
 
-    // @Todo: create Media particular function
-    createMedia: async (data) => {
+    createIframeMedia: async (data) => {
         try {
+            const formData = new FormData();
+
+            formData.append('title', data?.title);
+            formData.append('alt', data?.alt);
+            formData.append('legend', data?.legend);
+            formData.append('active', data.active ? 1 : 0);
+            formData.append('mainCategory', data.mainCategory || '');
+            formData.append('documentUrl', data.documentUrl || '');
+            formData.append('iframe', 1);
+            formData.append('documentType', data.documentType);
+            data?.mediaCategories?.forEach((category, index) => {
+                formData.append(`mediaCategories[${index}]`, category);
+            });
+
             const result = await axios.post('/medias', formData);
+
+            return { result: true, media: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    editIframeMedia: async (id, data) => {
+        try {
+            const formData = new FormData();
+
+            formData.append('title', data?.title);
+            formData.append('alt', data?.alt);
+            formData.append('legend', data?.legend);
+            formData.append('active', data.active ? 1 : 0);
+            formData.append('mainCategory', data.mainCategory || '');
+            formData.append('documentUrl', data.documentUrl || '');
+            formData.append('iframe', 1);
+            formData.append('documentType', data.documentType);
+            data?.mediaCategories?.forEach((category, index) => {
+                formData.append(`mediaCategories[${index}]`, category);
+            });
+
+            const result = await axios.post(`/medias/${id}`, formData);
 
             return { result: true, media: result.data };
         } catch (error) {
@@ -150,9 +205,11 @@ const mediasApi = {
             formData.append('title', data?.title);
             formData.append('alt', data?.alt);
             formData.append('legend', data?.legend);
-            formData.append('description', data?.description);
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
+            formData.append('documentUrl', data.documentUrl || '');
+            formData.append('iframe', 0);
+            formData.append('documentType', data.documentType || '');
             data?.mediaCategories?.forEach((category, index) => {
                 formData.append(`mediaCategories[${index}]`, category);
             });

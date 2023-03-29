@@ -11,14 +11,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 import { profileSelector } from '@Redux/profile/profileSlice';
 
 export const ChangePassword = () => {
-    const { connected } = useSelector(profileSelector);
+    const { connected, modulesLoaded } = useSelector(profileSelector);
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
@@ -26,19 +26,11 @@ export const ChangePassword = () => {
         const dateTime = localStorage.getItem('forgotPasswordDate');
 
         if (!dateTime) {
-            NotificationManager.error(
-                'Une erreur est survenu, Veuillez recommencer la procédure',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Une erreur est survenu, Veuillez recommencer la procédure', 'Erreur', Constant.REDIRECTION_TIME);
 
             navigate(Constant.FORGOT_PASSWORD_PATH);
         } else if (moment().subtract(15, 'minutes').isAfter(moment(dateTime, 'x'))) {
-            NotificationManager.error(
-                'Vous avez fait une demande il y a plus de 15 minutes, Veuillez recommencer la procédure',
-                'Erreur',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.error('Vous avez fait une demande il y a plus de 15 minutes, Veuillez recommencer la procédure', 'Erreur', Constant.REDIRECTION_TIME);
 
             navigate(Constant.FORGOT_PASSWORD_PATH);
         }
@@ -59,7 +51,7 @@ export const ChangePassword = () => {
     }, []);
 
     useEffect(() => {
-        if (connected) {
+        if ((connected, modulesLoaded)) {
             navigate(Constant.HOME_PATH);
         }
     }, [connected]);
@@ -72,18 +64,11 @@ export const ChangePassword = () => {
                 'Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spéciale.'
             )
             .required('Veuillez renseigner un mot de passe.'),
-        confirmPassword: Yup.string().oneOf(
-            [Yup.ref('password')],
-            'Le mot de passe ne correspond pas.'
-        ),
+        confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'Le mot de passe ne correspond pas.'),
     });
 
     return (
-        <Container
-            component="main"
-            maxWidth="xs"
-            sx={{ height: '100%', display: 'flex', alignItems: 'center' }}
-        >
+        <Container component="main" maxWidth="xs" sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
             <Paper elevation={2} sx={{ borderRadius: 4 }}>
                 <Formik
                     initialValues={{ password: '', confirmPassword: '' }}
@@ -95,33 +80,17 @@ export const ChangePassword = () => {
                             token: searchParams.get('token'),
                         });
                         if (result.result) {
-                            NotificationManager.success(
-                                'Votre demande de changement de mot de passe a bien été prise en compte',
-                                'Succès',
-                                Constant.REDIRECTION_TIME
-                            );
+                            NotificationManager.success('Votre demande de changement de mot de passe a bien été prise en compte', 'Succès', Constant.REDIRECTION_TIME);
 
                             navigate(Constant.LOGIN_PATH);
                         } else {
-                            NotificationManager.error(
-                                "Une erreur s'est produite",
-                                'Erreur',
-                                Constant.REDIRECTION_TIME
-                            );
+                            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                         }
 
                         setSubmitting(false);
                     }}
                 >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                    }) => (
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
                         <Box
                             sx={{
                                 margin: 5,
@@ -158,13 +127,7 @@ export const ChangePassword = () => {
                                     error={touched.confirmPassword && errors.confirmPassword}
                                     required
                                 />
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2, borderRadius: 5 }}
-                                    disabled={isSubmitting}
-                                >
+                                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, borderRadius: 5 }} disabled={isSubmitting}>
                                     Envoyer
                                 </Button>
                             </Box>

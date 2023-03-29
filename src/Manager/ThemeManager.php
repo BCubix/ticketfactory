@@ -10,10 +10,15 @@ use App\Exception\ApiException;
 use App\Service\Addon\ThemeConfig;
 use App\Service\Exec\ExecCommand;
 use App\Service\File\FileManipulator;
+use App\Service\File\PathGetter;
+use App\Service\Hook\HookService;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Yaml\Yaml;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ThemeManager extends ModuleThemeManager
 {
@@ -21,6 +26,32 @@ class ThemeManager extends ModuleThemeManager
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
     public const ZIP_CONFIG_FILE_NOT_FOUND = "Le dossier config ne contient pas le fichier de configuration.";
     public const ZIP_TEMPLATES_INDEX_NOT_FOUND = "Le dossier templates ne contient pas le fichier index.html.twig.";
+
+    protected $pm;
+    protected $mm;
+    protected $ifm;
+    protected $hs;
+
+    public function __construct(
+        ManagerFactory         $mf,
+        EntityManagerInterface $em,
+        RequestStack           $rs,
+        PathGetter             $pg,
+        Filesystem             $fs,
+        ParameterManager       $pm,
+        ModuleManager          $mm,
+        ImageFormatManager     $ifm,
+        HookService            $hs
+    ) {
+        parent::__construct($mf, $em, $rs, $pg, $fs, $hs);
+
+        $this->dir = $this->pg->getThemesDir();
+
+        $this->pm  = $pm;
+        $this->mm  = $mm;
+        $this->ifm = $ifm;
+        $this->hs  = $hs;
+    }
 
     public function getConfiguration(string $objectName): array
     {
@@ -59,6 +90,20 @@ class ThemeManager extends ModuleThemeManager
     public function getDir(): string
     {
         return $this->pg->getThemesDir();
+    }
+
+    public function getIsServerSide()
+    {
+        $themeName = $this->pm->get('main_theme');
+        $configuration = $this->getConfiguration($themeName);
+
+        if (array_key_exists("server_side_rendering", $configuration)) {
+            $serverSideRendering = $configuration['server_side_rendering'] == true ? true : false;
+        } else {
+            $serverSideRendering = false;
+        }
+
+        return $serverSideRendering;
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void

@@ -20,6 +20,7 @@ class SeasonRepository extends CrudRepository
 
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
+        ['beginYear', 'o.beginYear', 'equals'],
         ['name', 'o.name', 'search'],
         ['lang', 'el.id', 'in'],
         ['languageGroup', 'o.languageGroup', 'equals']

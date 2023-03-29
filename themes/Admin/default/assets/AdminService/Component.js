@@ -1,5 +1,6 @@
 import { App } from '@/App';
 import { Routing } from '@/Routing';
+import { SEOForm } from '@Apps/SEO/Form/SEOForm';
 import { CategoriesForm } from '@Apps/Categories/CategoriesForm/CategoriesForm';
 import { ParentCategoryPartForm } from '@Apps/Categories/CategoriesForm/ParentCategoryPartForm';
 import { CategoriesList } from '@Apps/Categories/CategoriesList/CategoriesList';
@@ -31,11 +32,12 @@ import { CreateContentType } from '@Apps/ContentTypes/CreateContentType/CreateCo
 import { EditContentType } from '@Apps/ContentTypes/EditContentType/EditContentType';
 import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
 import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
-import { AddEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/AddEventMediaModal';
 import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
-import { DisplayMediaAddInformations, DisplayMediaInformations } from '@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations';
+import { CmtMediaInfos, CmtDisplayMediaInfos, CmtDisplayMediaMeta } from '@Components/CmtMediaInfos/CmtMediaInfos';
 import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
 import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
+import { MoveEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/MoveEventMedias';
+import { DeleteEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/DeleteEventMedias';
 import { EventDateRange } from '@Apps/Events/EventsForm/EventDateRange';
 import { EventMainPartForm } from '@Apps/Events/EventsForm/EventMainPartForm';
 import { EventParentCategoryPartForm } from '@Apps/Events/EventsForm/EventParentCategoryPartForm';
@@ -81,6 +83,7 @@ import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
 import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
 import { EditMedia } from '@Apps/Medias/EditMedia/EditMedia';
 import { MediaDataForm } from '@Apps/Medias/MediasForm/MediaDataForm';
+import { IframeMediaForm } from '@Apps/Medias/MediasForm/IframeMediaForm';
 import { MediaImageForm } from '@Apps/Medias/MediasForm/MediaImageForm';
 import { MediaParentCategoryPartForm } from '@Apps/Medias/MediasForm/MediaParentCategoryPartForm';
 import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
@@ -105,6 +108,7 @@ import { EditPage } from '@Apps/Pages/EditPage/EditPage';
 import { PagesBlocksPart } from '@Apps/Pages/PagesForm/PagesBlocksPart';
 import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
+import { PagesBlocksSliderPart } from '@Apps/Pages/PagesForm/PagesBlocksSliderPart';
 import { PagesFilters } from '@Apps/Pages/PagesList/PagesFilters/PagesFilters';
 import { PagesList } from '@Apps/Pages/PagesList/PagesList';
 import { PagesMenu } from '@Apps/Pages/PagesMenu/PagesMenu';
@@ -158,12 +162,14 @@ import {
     AddBlockButton,
     AddBlockFabButton,
     CreateButton,
+    DeleteButton,
     DeleteBlockFabButton,
     DeleteFabButton,
     EditFabButton,
 } from '@Components/CmtButton/sc.Buttons';
 import { CmtCard, CmtCardHeader } from '@Components/CmtCard/sc.CmtCard';
 import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
+import { CmtSelect } from '@Components/CmtSelect/CmtSelect';
 import { CmtDateTimePicker } from '@Components/CmtDateTimePicker/CmtDateTimePicker';
 import { CmtDisplayMediaType } from '@Components/CmtDisplayMediaType/CmtDisplayMediaType';
 import { CmtDragAndDropTableBody } from '@Components/CmtDragAndDrop/CmtDragAndDropTableBody';
@@ -206,6 +212,7 @@ import { ListTableContextualMenu } from '@Components/ListTable/ListTableContextu
 import { ListTableBodyLine } from '@Components/ListTable/ListTableBodyLine';
 import { MenuItemButton, MenuTitle } from '@Components/SideMenu/sc.SideMenu';
 import { SideMenu } from '@Components/SideMenu/SideMenu';
+import { CmtImage } from '@Components/CmtImage/CmtImage';
 import { CmtDisplayFlag } from '@Components/CmtDisplayFlag/CmtDisplayFlag';
 import { checkComponent, checkString } from '@Services/utils/check';
 import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
@@ -220,6 +227,8 @@ import { AppProvider } from '@/Config/AppProvider';
 const ComponentObj = {
     App: App,
     Routing: Routing,
+
+    SEOForm: SEOForm,
 
     CategoriesForm: CategoriesForm,
     ParentCategoryPartForm: ParentCategoryPartForm,
@@ -258,12 +267,14 @@ const ComponentObj = {
 
     CreateEvent: CreateEvent,
     EditEvent: EditEvent,
-    AddEventMediaModal: AddEventMediaModal,
     DisplayEventMediaElement: DisplayEventMediaElement,
-    DisplayMediaAddInformations: DisplayMediaAddInformations,
-    DisplayMediaInformations: DisplayMediaInformations,
+    CmtMediaInfos: CmtMediaInfos,
+    CmtDisplayMediaInfos: CmtDisplayMediaInfos,
+    CmtDisplayMediaMeta: CmtDisplayMediaMeta,
     EditEventMediaModal: EditEventMediaModal,
     EventMediaPartForm: EventMediaPartForm,
+    MoveEventMedias: MoveEventMedias,
+    DeleteEventMedias: DeleteEventMedias,
     EventDateRange: EventDateRange,
     EventMainPartForm: EventMainPartForm,
     EventParentCategoryPartForm: EventParentCategoryPartForm,
@@ -318,6 +329,7 @@ const ComponentObj = {
     CreateMedia: CreateMedia,
     EditMedia: EditMedia,
     MediaDataForm: MediaDataForm,
+    IframeMediaForm: IframeMediaForm,
     MediaImageForm: MediaImageForm,
     MediaParentCategoryPartForm: MediaParentCategoryPartForm,
     MediasFilters: MediasFilters,
@@ -346,6 +358,7 @@ const ComponentObj = {
     PagesBlocksPart: PagesBlocksPart,
     ImportPageBlock: ImportPageBlock,
     PagesForm: PagesForm,
+    PagesBlocksSliderPart: PagesBlocksSliderPart,
     PagesFilters: PagesFilters,
     PagesList: PagesList,
     PagesMenu: PagesMenu,
@@ -413,6 +426,7 @@ const ComponentObj = {
     ActionButton: ActionButton,
     EditFabButton: EditFabButton,
     DeleteFabButton: DeleteFabButton,
+    DeleteButton: DeleteButton,
     DeleteBlockFabButton: DeleteBlockFabButton,
     ActionFabButton: ActionFabButton,
     AddBlockButton: AddBlockButton,
@@ -426,6 +440,7 @@ const ComponentObj = {
     CmtDragAndDropTableBodyRow: CmtDragAndDropTableBodyRow,
     CmtEditorField: CmtEditorField,
     CmtEndPositionWrapper: CmtEndPositionWrapper,
+    CmtSelect: CmtSelect,
 
     CmtBooleanFilters: CmtBooleanFilters,
     CmtCategoriesFilters: CmtCategoriesFilters,
@@ -446,6 +461,7 @@ const ComponentObj = {
 
     CmtImageCard: CmtImageCard,
     CmtImageField: CmtImageField,
+    CmtImage: CmtImage,
     CmtMediaModal: CmtMediaModal,
     CmtMediaModalInfos: CmtMediaModalInfos,
 

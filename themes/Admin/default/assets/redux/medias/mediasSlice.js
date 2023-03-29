@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Api } from "@/AdminService/Api";
+import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
@@ -10,6 +10,9 @@ const initialState = {
     total: null,
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('mediasActiveFilter')),
+        iframe: getBooleanFromString(sessionStorage.getItem('mediasIframeFilter')),
+        category: sessionStorage.getItem('mediasCategoryFilter') || '',
+        type: sessionStorage.getItem('mediasTypeFilter') || '',
         title: sessionStorage.getItem('mediasTitleFilter') || '',
         sort: sessionStorage.getItem('mediasSort') || 'id ASC',
         page: 1,
@@ -74,7 +77,10 @@ export function getMediasAction(filters) {
 export function changeMediasFilters(filters, page = 1) {
     return async (dispatch) => {
         sessionStorage.setItem('mediasActiveFilter', filters?.active);
+        sessionStorage.setItem('mediasIframeFilter', filters?.iframe);
         sessionStorage.setItem('mediasTitleFilter', filters?.title);
+        sessionStorage.setItem('mediasCategoryFilter', filters?.category);
+        sessionStorage.setItem('mediasTypeFilter', filters?.type);
         sessionStorage.setItem('mediasSort', filters?.sort);
 
         filters.page = page;
@@ -84,7 +90,6 @@ export function changeMediasFilters(filters, page = 1) {
     };
 }
 
-export const { getMedias, getMediasSuccess, getMediasFailure, resetMedias, updateMediasFilters } =
-    mediasSlice.actions;
+export const { getMedias, getMediasSuccess, getMediasFailure, resetMedias, updateMediasFilters } = mediasSlice.actions;
 export const mediasSelector = (state) => state.medias;
 export default mediasSlice.reducer;

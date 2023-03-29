@@ -29,16 +29,11 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
-            setList(result.events);
             dispatch(setMenusListData({ events: result.events }));
         });
     };
 
     useEffect(() => {
-        if (list) {
-            return;
-        }
-
         if (menusListData?.events && !list) {
             setList(menusListData.events);
             return;
@@ -52,9 +47,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
     }, [language]);
 
     useEffect(() => {
-        if (menusListData?.events && !list) {
-            setList(menusListData.events);
-        }
+        setList(menusListData.events);
     }, [menusListData?.events]);
 
     if (editMode) {
@@ -66,7 +59,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
                 value={parseInt(element.value)}
                 list={list}
                 getValue={(item) => item.id}
-                getName={(item) => `${item.shortTitle}`}
+                getName={(item) => `${item.name}`}
                 setFieldValue={(_, newValue) => setValue(newValue)}
                 errors={errors?.value}
             />

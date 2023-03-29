@@ -156,13 +156,8 @@ export const MenusList = () => {
                     <Component.MenuHeaderLine
                         selectedMenu={initialValues}
                         list={menus}
-                        translationSelectedMenu={translationInitialValues}
                         handleChange={(val) => {
                             setInitialValues(val);
-                            setTranslationInitialValues(val);
-                            changeFormikInitialValues(setFieldValue, val);
-                        }}
-                        changeLanguage={(val) => {
                             setTranslationInitialValues(val);
                             changeFormikInitialValues(setFieldValue, val);
                         }}
@@ -199,6 +194,12 @@ export const MenusList = () => {
                                     languageList={languageList}
                                     openTranslateDialog={() => setTranslateDialog(true)}
                                     language={translationInitialValues?.lang}
+                                    translationSelectedMenu={translationInitialValues}
+                                    changeLanguage={(val) => {
+                                        setTranslationInitialValues(val);
+                                        changeFormikInitialValues(setFieldValue, val);
+                                    }}
+                                    selectedMenu={initialValues}
                                 />
 
                                 <Box className="flex row-between">
