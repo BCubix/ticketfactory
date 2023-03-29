@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service\ModuleTheme\Config;
+namespace App\Service\Addon;
 
 use App\Exception\ApiException;
 use App\Service\Exec\ExecService;
+use App\Service\File\FileManipulator;
 use App\Service\Hook\HookService;
-use App\Utils\FileManipulator;
 
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;

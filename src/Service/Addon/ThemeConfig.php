@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\ModuleTheme\Config;
+namespace App\Service\Addon;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;

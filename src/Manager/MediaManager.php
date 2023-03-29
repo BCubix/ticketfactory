@@ -4,8 +4,8 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Utils\MimeTypeMapping;
-use App\Utils\PathGetter;
+use App\Service\File\PathGetter;
+use App\Service\File\MimeTypeMapping;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;

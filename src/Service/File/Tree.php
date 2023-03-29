@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Service\File;
 
 class Tree
 {

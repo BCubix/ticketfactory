@@ -7,7 +7,7 @@ use App\Entity\Language\Language;
 use App\Entity\Module\Module;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
-use App\Service\ModuleTheme\Config\ModuleConfig;
+use App\Service\Addon\ModuleConfig;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

@@ -5,7 +5,7 @@ namespace App\Entity\Event;
 use App\Entity\Datable;
 use App\Entity\Language\Language;
 use App\Repository\EventRepository;
-use App\Service\Sorter\EventSorter;
+use App\Service\Sort\EventSorter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

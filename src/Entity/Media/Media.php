@@ -5,7 +5,7 @@ namespace App\Entity\Media;
 use App\Entity\Datable;
 use App\Entity\Event\EventMedia;
 use App\Repository\MediaRepository;
-use App\Utils\MimeTypeMapping;
+use App\Service\File\MimeTypeMapping;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

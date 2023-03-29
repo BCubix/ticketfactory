@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Service\Object;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;

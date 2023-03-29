@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
-use App\Utils\PathGetter;
+use App\Service\File\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

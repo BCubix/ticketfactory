@@ -3,8 +3,8 @@
 namespace App\Validation\Validator;
 
 use App\Entity\Event\Media;
+use App\Service\File\MimeTypeMapping;
 use App\Validation\Constraint\MediaConstraint;
-use App\Utils\MimeTypeMapping;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraint;

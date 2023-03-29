@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Logger;
+namespace App\Service\Log;
 
 use App\Entity\Technical\Log;
 use App\Entity\User\User;

@@ -7,9 +7,9 @@ use App\Exception\ApiException;
 use App\Form\Admin\Content\ContentType;
 use App\Form\Admin\Filters\FilterContentType;
 use App\Manager\ContentTypeManager;
-use App\Service\Logger\Logger;
-use App\Utils\CloneObject;
-use App\Utils\FormErrorsCollector;
+use App\Service\Error\FormErrorsCollector;
+use App\Service\Log\Logger;
+use App\Service\Object\CloneObject;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;

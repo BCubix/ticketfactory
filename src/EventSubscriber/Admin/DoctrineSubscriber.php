@@ -6,8 +6,8 @@ use App\Entity\Content\Content;
 use App\Entity\Page\PageBlock;
 use App\Entity\JsonDoctrineSerializable;
 use App\Manager\LanguageManager;
-use App\Service\Serializer\ContentSerializer;
-use App\Service\Serializer\PageBlockSerializer;
+use App\Service\Serialization\ContentSerializer;
+use App\Service\Serialization\PageBlockSerializer;
 
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\EventSubscriber;

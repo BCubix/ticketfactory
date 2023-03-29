@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Sorter;
+namespace App\Service\Sort;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;

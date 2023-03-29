@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Utils;
+namespace App\Service\Exec;
 
 use App\Exception\ApiException;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class Exec
+class ExecCommand
 {
     /**
      * Exec command

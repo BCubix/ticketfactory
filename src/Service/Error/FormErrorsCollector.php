@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Service\Error;
 
 use Symfony\Component\Form\FormInterface;
 

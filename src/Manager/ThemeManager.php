@@ -7,9 +7,9 @@ use App\Entity\Media\ImageFormat;
 use App\Entity\Module\Module;
 use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
-use App\Service\ModuleTheme\Config\ThemeConfig;
-use App\Utils\Exec;
-use App\Utils\FileManipulator;
+use App\Service\Addon\ThemeConfig;
+use App\Service\Exec\ExecCommand;
+use App\Service\File\FileManipulator;
 
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,7 +129,7 @@ class ThemeManager extends ModuleThemeManager
     {
         parent::clear();
 
-        Exec::exec('yarn run encore production');
+        ExecCommand::exec('yarn run encore production');
     }
 
     /**

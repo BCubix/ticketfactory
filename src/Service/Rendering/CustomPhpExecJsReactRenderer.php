@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Service\Rendering;
 
 use Limenius\ReactRenderer\Renderer\PhpExecJsReactRenderer;
 use Symfony\Component\Asset\Packages;

@@ -7,6 +7,9 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class ManagerFactory implements ServiceSubscriberInterface
 {
+    protected const TYPE_FILES_PATH = '/*/*.php';
+    protected const NAMESPACE_PATH = '\App\Manager\\';
+
     protected $locator;
 
     public function __construct(ContainerInterface $locator)
@@ -31,6 +34,26 @@ class ManagerFactory implements ServiceSubscriberInterface
             'manager_user'             => UserManager::class,
             'manager_versionnedEntity' => VersionnedEntityManager::class
         ];
+    }
+
+    private function loadTypes() {
+        $types = [];
+        $files = glob($this->pg->getManagerDir() . self::TYPE_FILES_PATH);
+
+        foreach ($files as $file) {
+            dd($file);
+            $className = explode('/', $file);
+            $className = $className[count($className) - 1];
+
+            $className = explode('.', $className);
+            $className = $className[0];
+
+            $className = (self::NAMESPACE_PATH . $className);
+
+            $types[$typeName] = $className;
+        }
+
+        return $types;
     }
 
     public function get(string $keyword)

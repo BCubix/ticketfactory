@@ -5,7 +5,7 @@ namespace App\Manager;
 use App\Entity\Content\ContentType;
 use App\Entity\Content\ContentTypeField;
 use App\Exception\ApiException;
-use App\Utils\PathGetter;
+use App\Service\File\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

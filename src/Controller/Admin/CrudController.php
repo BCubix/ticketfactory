@@ -3,11 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Exception\ApiException;
-use App\Service\Hook\HookService;
-use App\Service\Logger\Logger;
-use App\Utils\CloneObject;
-use App\Utils\FormErrorsCollector;
 use App\Manager\LanguageManager;
+use App\Service\Error\FormErrorsCollector;
+use App\Service\Hook\HookService;
+use App\Service\Log\Logger;
+use App\Service\Object\CloneObject;
 
 
 use Doctrine\ORM\EntityManagerInterface;

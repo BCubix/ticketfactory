@@ -7,9 +7,9 @@ use App\Exception\ApiException;
 use App\Form\Admin\Media\MediaCategoryType;
 use App\Manager\LanguageManager;
 use App\Manager\MediaCategoryManager;
+use App\Service\Error\FormErrorsCollector;
 use App\Service\Hook\HookService;
-use App\Service\Logger\Logger;
-use App\Utils\FormErrorsCollector;
+use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;

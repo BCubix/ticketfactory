@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Serializer;
+namespace App\Service\Serialization;
 
 use App\Entity\Page\PageBlock;
 use App\Entity\Page\PageColumn;

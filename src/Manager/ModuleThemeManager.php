@@ -3,11 +3,11 @@
 namespace App\Manager;
 
 use App\Exception\ApiException;
+use App\Service\Archive\Zip;
 use App\Service\Exec\ExecService;
+use App\Service\File\Tree;
+use App\Service\File\PathGetter;
 use App\Service\Hook\HookService;
-use App\Utils\PathGetter;
-use App\Utils\Tree;
-use App\Utils\Zip;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;

@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Menu\MenuEntry;
 use App\Entity\Language\Language;
-use App\Utils\CloneObject;
+use App\Service\Object\CloneObject;
 
 use Doctrine\ORM\EntityManagerInterface;
 

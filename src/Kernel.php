@@ -3,8 +3,8 @@
 namespace App;
 
 use App\Service\Db\Db;
-use App\Utils\GetClass;
-use App\Utils\PathGetter;
+use App\Service\File\PathGetter;
+use App\Service\Object\GetClass;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;

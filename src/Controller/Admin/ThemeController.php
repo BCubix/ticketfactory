@@ -6,9 +6,9 @@ use App\Entity\Theme\Theme;
 use App\Exception\ApiException;
 use App\Manager\ThemeManager;
 use App\Manager\LanguageManager;
+use App\Service\Error\FormErrorsCollector;
 use App\Service\Hook\HookService;
-use App\Service\Logger\Logger;
-use App\Utils\FormErrorsCollector;
+use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
