@@ -155,10 +155,8 @@ const mediasApi = {
             const formData = new FormData();
 
             formData.append('title', data?.title);
-            formData.append('subtitle', data?.subtitle);
             formData.append('alt', data?.alt);
             formData.append('legend', data?.legend);
-            formData.append('description', data?.description);
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
@@ -166,12 +164,6 @@ const mediasApi = {
             formData.append('documentType', data.documentType);
             data?.mediaCategories?.forEach((category, index) => {
                 formData.append(`mediaCategories[${index}]`, category);
-            });
-            formData.append('thumbnail', data?.thumbnail?.id || '');
-            formData.append('beginDate', data?.beginDate || '');
-            formData.append('endDate', data?.endDate || '');
-            data?.mediaLinks?.forEach((link, index) => {
-                formData.append(`mediaLinks[${index}]`, link?.id);
             });
 
             const result = await axios.post('/medias', formData);
@@ -187,10 +179,8 @@ const mediasApi = {
             const formData = new FormData();
 
             formData.append('title', data?.title);
-            formData.append('subtitle', data?.subtitle);
             formData.append('alt', data?.alt);
             formData.append('legend', data?.legend);
-            formData.append('description', data?.description);
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
@@ -198,12 +188,6 @@ const mediasApi = {
             formData.append('documentType', data.documentType);
             data?.mediaCategories?.forEach((category, index) => {
                 formData.append(`mediaCategories[${index}]`, category);
-            });
-            formData.append('thumbnail', data?.thumbnail?.id || '');
-            formData.append('beginDate', data?.beginDate || '');
-            formData.append('endDate', data?.endDate || '');
-            data?.mediaLinks?.forEach((link, index) => {
-                formData.append(`mediaLinks[${index}]`, link?.id);
             });
 
             const result = await axios.post(`/medias/${id}`, formData);
@@ -219,16 +203,13 @@ const mediasApi = {
             const formData = new FormData();
 
             formData.append('title', data?.title);
-            formData.append('subtitle', data?.subtitle);
             formData.append('alt', data?.alt);
             formData.append('legend', data?.legend);
-            formData.append('description', data?.description);
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
             formData.append('iframe', 0);
             formData.append('documentType', data.documentType || '');
-            formData.append('thumbnail', data?.thumbnail?.id || '');
             data?.mediaCategories?.forEach((category, index) => {
                 formData.append(`mediaCategories[${index}]`, category);
             });

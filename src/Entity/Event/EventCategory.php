@@ -27,7 +27,7 @@ class EventCategory extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one'])]
+    #[JMS\Groups(['a_all', 'a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

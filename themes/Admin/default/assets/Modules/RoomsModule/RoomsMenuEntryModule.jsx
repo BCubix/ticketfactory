@@ -30,7 +30,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
-            setList(result.rooms);
             dispatch(setMenusListData({ rooms: result.rooms }));
         });
     };
@@ -38,6 +37,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     useEffect(() => {
         if (menusListData?.rooms && !list) {
             setList(menusListData.rooms);
+            return;
         }
 
         if (editMode) {
@@ -48,9 +48,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     }, [language]);
 
     useEffect(() => {
-        if (menusListData?.rooms && !list) {
-            setList(menusListData.rooms);
-        }
+        setList(menusListData.rooms);
     }, [menusListData?.rooms]);
 
     if (editMode) {

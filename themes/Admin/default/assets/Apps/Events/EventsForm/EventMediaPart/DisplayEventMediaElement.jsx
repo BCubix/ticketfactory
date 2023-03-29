@@ -5,7 +5,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const DisplayEventMediaElement = ({ title, openAddModal, mediasList, mediaType, openEditModal, values, name, setFieldValue, id }) => {
+export const DisplayEventMediaElement = ({ title, mediasList, mediaType, openEditModal, values, name, setFieldValue }) => {
     return (
         <Component.CmtFormBlock title={title}>
             <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>

@@ -29,7 +29,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
-            setList(result.events);
             dispatch(setMenusListData({ events: result.events }));
         });
     };
@@ -48,9 +47,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
     }, [language]);
 
     useEffect(() => {
-        if (menusListData?.events && !list) {
-            setList(menusListData.events);
-        }
+        setList(menusListData.events);
     }, [menusListData?.events]);
 
     if (editMode) {

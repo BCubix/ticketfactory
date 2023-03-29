@@ -29,7 +29,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
-            setList(result.tags);
             dispatch(setMenusListData({ tags: result.tags }));
         });
     };
@@ -37,6 +36,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     useEffect(() => {
         if (menusListData?.tags && !list) {
             setList(menusListData.tags);
+            return;
         }
 
         if (editMode) {
@@ -47,13 +47,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     }, [language]);
 
     useEffect(() => {
-        if (list) {
-            return;
-        }
-
-        if (menusListData?.tags && !list) {
-            setList(menusListData.tags);
-        }
+        setList(menusListData.tags);
     }, [menusListData?.tags]);
 
     if (editMode) {

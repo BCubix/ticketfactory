@@ -32,9 +32,8 @@ import { CreateContentType } from '@Apps/ContentTypes/CreateContentType/CreateCo
 import { EditContentType } from '@Apps/ContentTypes/EditContentType/EditContentType';
 import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
 import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
-import { AddEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/AddEventMediaModal';
 import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
-import { DisplayMediaAddInformations, DisplayMediaInformations } from '@Apps/Events/EventsForm/EventMediaPart/DisplayMediaInformations';
+import { CmtMediaInfos, CmtDisplayMediaInfos, CmtDisplayMediaMeta } from '@Components/CmtMediaInfos/CmtMediaInfos';
 import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
 import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
 import { MoveEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/MoveEventMedias';
@@ -268,10 +267,10 @@ const ComponentObj = {
 
     CreateEvent: CreateEvent,
     EditEvent: EditEvent,
-    AddEventMediaModal: AddEventMediaModal,
     DisplayEventMediaElement: DisplayEventMediaElement,
-    DisplayMediaAddInformations: DisplayMediaAddInformations,
-    DisplayMediaInformations: DisplayMediaInformations,
+    CmtMediaInfos: CmtMediaInfos,
+    CmtDisplayMediaInfos: CmtDisplayMediaInfos,
+    CmtDisplayMediaMeta: CmtDisplayMediaMeta,
     EditEventMediaModal: EditEventMediaModal,
     EventMediaPartForm: EventMediaPartForm,
     MoveEventMedias: MoveEventMedias,

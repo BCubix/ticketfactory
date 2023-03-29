@@ -13,11 +13,12 @@ export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, s
                 <DialogContent dividers>
                     <Grid container spacing={4} sx={{ mb: -4, minHeight: 300 }}>
                         <Grid item sx={{ mt: 4, mb: 4 }} xs={12} sm={6} md={7} display="flex" flexDirection={'column'} alignItems={'center'}>
-                            <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'50%'} maxHeight={200} sx={{ objectFit: 'contain' }} />
+                            <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'50%'} maxHeight={200} sx={{ objectFit: 'contain', marginBottom: 5 }} />
+                            <Component.CmtDisplayMediaMeta selectedMedia={selectedMedia} />
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
-                            <Component.DisplayMediaInformations selectedMedia={selectedMedia} />
+                            <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} />
 
                             <Box display="flex" my={5}>
                                 <Button

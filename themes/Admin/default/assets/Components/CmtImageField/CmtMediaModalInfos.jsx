@@ -3,7 +3,7 @@ import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
-export const CmtMediaModalInfos = ({ media, selectedMedia, onClose, setFieldValue, name, onClick, AddMediaLabel, RemoveMediaLabel }) => {
+export const CmtMediaModalInfos = ({ media, selectedMedia, setFieldValue, name, onClick, AddMediaLabel, RemoveMediaLabel }) => {
     const isSelected = Array.isArray(media) ? media?.includes(selectedMedia?.id) : media?.id === selectedMedia?.id;
 
     if (!selectedMedia) {
@@ -16,7 +16,7 @@ export const CmtMediaModalInfos = ({ media, selectedMedia, onClose, setFieldValu
 
     return (
         <Box position="relative" px={10}>
-            <Component.DisplayMediaInformations selectedMedia={selectedMedia} />
+            <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} displayImage displayMeta />
 
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button

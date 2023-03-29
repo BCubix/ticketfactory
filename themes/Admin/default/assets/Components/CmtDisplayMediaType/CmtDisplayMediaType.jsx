@@ -8,15 +8,7 @@ const MEDIA_TYPE = [
         type: 'image',
         component: ({ media, ...typeProps }) =>
             media.iframe ? (
-                <Box
-                    component="img"
-                    src={media?.realThumbnail || `${Constant.ICONS_FILE_PATH}/Fichiers Vidéos.png`}
-                    alt="Fichier Image"
-                    sx={{ padding: media?.realThumbnail ? 0 : 5 }}
-                    maxHeight="100%"
-                    maxWidth="100%"
-                    {...typeProps}
-                />
+                <Box component="img" src={media.documentUrl} alt="Fichier Image" sx={{ padding: 5 }} maxHeight="100%" maxWidth="100%" {...typeProps} />
             ) : (
                 <Box component="img" src={Constant.MEDIA_FILE_BASE_URL + media.documentUrl} alt={media.alt} {...typeProps} />
             ),
@@ -24,29 +16,13 @@ const MEDIA_TYPE = [
     {
         type: 'audio',
         component: ({ media, ...typeProps }) => (
-            <Box
-                component="img"
-                src={media?.realThumbnail || `${Constant.ICONS_FILE_PATH}/Fichiers Audio.png`}
-                alt="Fichier Audio"
-                sx={{ padding: media?.realThumbnail ? 0 : 5 }}
-                maxHeight="100%"
-                maxWidth="100%"
-                {...typeProps}
-            />
+            <Box component="img" src={`${Constant.ICONS_FILE_PATH}/Fichiers Audio.png`} alt="Fichier Audio" sx={{ padding: 5 }} maxHeight="100%" maxWidth="100%" {...typeProps} />
         ),
     },
     {
         type: 'video',
         component: ({ media, ...typeProps }) => (
-            <Box
-                component="img"
-                src={media?.realThumbnail || `${Constant.ICONS_FILE_PATH}/Fichiers Vidéos.png`}
-                alt="Fichier Vidéo"
-                sx={{ padding: media?.realThumbnail ? 0 : 5 }}
-                maxHeight="100%"
-                maxWidth="100%"
-                {...typeProps}
-            />
+            <Box component="img" src={`${Constant.ICONS_FILE_PATH}/Fichiers Vidéos.png`} alt="Fichier Vidéo" sx={{ padding: 5 }} maxHeight="100%" maxWidth="100%" {...typeProps} />
         ),
     },
     {
