@@ -91,7 +91,7 @@ class MediaCategory extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_media_category_all', 'a_media_category_one'])]
-    #[ORM\ManyToOne(targetEntity: Language::class, inversedBy: 'mediaCategories')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $lang;
 

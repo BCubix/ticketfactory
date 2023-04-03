@@ -7,7 +7,7 @@ use App\Entity\Language\Language;
 use App\Entity\Module\Module;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
-use App\Service\ModuleTheme\Config\ModuleConfig;
+use App\Service\Addon\ModuleConfig;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -17,6 +17,8 @@ use Twig\Environment;
 
 class HookService
 {
+    public const SERVICE_NAME = 'hook';
+
     protected $ed;
     protected $em;
     protected $ts;

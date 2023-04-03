@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VersionnedEntityManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'versionnedEntity';
+
     private const SUPPORTED_TYPES = [
         'content' => Content::class,
         'event'   => Event::class,

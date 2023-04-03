@@ -2,51 +2,93 @@
 
 namespace App\Controller\Website;
 
-use App\Manager\ThemeManager;
-use App\Service\Hook\HookService;
+use App\Manager\ManagerFactory;
+use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-
 use Spatie\Ssr\Renderer;
 use Spatie\Ssr\Engines\Node;
-
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class WebsiteController extends AbstractFOSRestController
 {
     protected $em;
-    protected $hs;
-    protected $tm;
+    protected $rs;
+    protected $mf;
+    protected $sf;
 
-    public function __construct(EntityManagerInterface $em, HookService $hs, ThemeManager $tm)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        ManagerFactory $mf,
+        ServiceFactory $sf
+    ) {
         $this->em = $em;
-        $this->hs = $hs;
-        $this->tm = $tm;
+        $this->rs = $rs;
+        $this->mf = $mf;
+        $this->sf = $sf;
     }
 
-    protected function websiteRender(string $twigFilename, Request $request): Response
+    protected function getRequest(): Request
     {
-        if ($this->tm->getIsServerSide()) {
-            $uri = $request->getPathInfo();
+        return $this->rs->getMainRequest();
+    }
 
-            $engine = new Node('node', $this->tm->getWebsiteServerPath());
-            $renderer = new Renderer($engine);
+    public function getDefaultLocale(): string
+    {
+        return $this->em->getRepository(Language::class)->findDefaultForWebsite()->getLocale();
+    }
 
-            $render = $renderer
-                ->enabled(true)
-                ->debug(true)
-                ->context('uri', $uri)
-                ->fallback('<div id="app"></div>')
-                ->entry($this->tm->getWebsiteServerPath() . "index.js")
-                ->render()
-            ;
+    public function getLocale(): string
+    {
+        return $this->getRequest()->getLocale();
+    }
 
-            return $this->render($this->tm->getWebsiteTemplatesPath() . $twigFilename, [ 'render' => $render, 'serverSideRendering' => true ]);
-        } else {
-            return $this->render($this->tm->getWebsiteTemplatesPath() . $twigFilename, [ 'serverSideRendering' => false ]);
+    public function getDefaultLanguageId(): int
+    {
+        return $this->em->getRepository(Language::class)->findDefaultForWebsite()->getId();
+    }
+
+    public function getLanguageId(): int
+    {
+        $locale = $this->getLocale();
+
+        $language = $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);
+        if (null !== $language) {
+            return $language->getId();
         }
+
+        return $this->getDefaultLanguageId();
+    }
+
+    protected function websiteRender(string $twigFilename, array $parameters = []): Response
+    {
+        $tm = $this->mf->get('theme');
+
+        if (!$tm->isSSRActive()) {
+            $parameters = array_merge($parameters, ['serverSideRendering' => false]);
+            return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
+        }
+
+        $uri = $this->rs->getMainRequest()->getPathInfo();
+        $serverPath = $this->mf->get('theme')->getWebsiteServerPath();
+
+        $engine = new Node('node', $serverPath);
+        $renderer = new Renderer($engine);
+
+        $render = $renderer
+            ->enabled(true)
+            ->debug(true)
+            ->context('uri', $uri)
+            ->fallback('<div id="app"></div>')
+            ->entry($serverPath . "index.js")
+            ->render()
+        ;
+
+        $parameters = array_merge($parameters, ['render' => $render, 'serverSideRendering' => true]);
+        return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
     }
 }

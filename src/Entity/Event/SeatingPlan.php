@@ -43,7 +43,7 @@ class SeatingPlan
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_room_one'])]
-    #[ORM\ManyToOne(inversedBy: 'seatingPlans')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

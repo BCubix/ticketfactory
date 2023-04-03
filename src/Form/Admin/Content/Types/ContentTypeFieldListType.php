@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldListType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'list';
+    public const SERVICE_NAME = 'list';
 
     public function getParent(): string
     {

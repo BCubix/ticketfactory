@@ -59,7 +59,7 @@ class PageBlock extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
-    #[ORM\ManyToOne(inversedBy: 'pageBlocks')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

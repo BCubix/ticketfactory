@@ -2,9 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Service\Error\FormErrorsCollector;
 use App\Service\Hook\HookService;
-use App\Service\Logger\Logger;
-use App\Utils\FormErrorsCollector;
+use App\Service\Log\Logger;
 use App\Manager\LanguageManager;
 
 use Doctrine\ORM\EntityManagerInterface;

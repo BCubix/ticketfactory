@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event\Event;
-use App\Service\Sorter\EventSorter;
+use App\Service\Sort\EventSorter;
 
 use Doctrine\Persistence\ManagerRegistry;
 

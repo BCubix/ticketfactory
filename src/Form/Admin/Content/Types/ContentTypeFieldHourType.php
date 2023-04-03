@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldHourType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'time';
+    public const SERVICE_NAME = 'time';
 
     public function configureOptions(OptionsResolver $resolver): void
     {

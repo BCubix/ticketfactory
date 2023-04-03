@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class ContentTypeFieldAudioVideoType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'audioVideo';
+    public const SERVICE_NAME = 'audioVideo';
 
     public function getParent(): string
     {

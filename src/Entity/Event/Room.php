@@ -73,7 +73,7 @@ class Room extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_room_all', 'a_room_one'])]
-    #[ORM\ManyToOne(inversedBy: 'rooms')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Utils\MimeTypeMapping;
 use App\Entity\Media\Media;
+use App\Service\File\MimeTypeMapping;
 
 use Doctrine\Persistence\ManagerRegistry;
 

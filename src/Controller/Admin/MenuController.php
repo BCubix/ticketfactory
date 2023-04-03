@@ -8,9 +8,9 @@ use App\Manager\MenuEntryManager;
 use App\Manager\LanguageManager;
 use App\Form\Admin\Menu\MenuEntryType;
 use App\Form\Admin\Filters\FilterMenuEntryType;
+use App\Service\Error\FormErrorsCollector;
 use App\Service\Hook\HookService;
-use App\Service\Logger\Logger;
-use App\Utils\FormErrorsCollector;
+use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;

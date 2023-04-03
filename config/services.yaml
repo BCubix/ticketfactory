@@ -26,18 +26,6 @@ services:
         resource: '../src/Hook'
         public: true
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    limenius_react.react_renderer:
-        class: App\Utils\CustomPhpExecJsReactRenderer
-        arguments:
-            - '%kernel.project_dir%/public' # here you set the base path
-            - '%limenius_react.fail_loud%'
-            - '@limenius_react.context_provider'
-            - '@logger'
-        calls:
-            - [setPackage, ['@assets.packages', 'build/app.js']]
-
     # Event Subscribers / Event Listeners
     App\EventSubscriber\Admin\ApiExceptionSubscriber:
         tags:
@@ -56,8 +44,19 @@ services:
     App\EventSubscriber\Admin\FrontUrlSubscriber:
         tags:
             - { name: jms_serializer.event_subscriber }
+    
+    # Server Side Rendering
+    limenius_react.react_renderer:
+        class: App\Service\Rendering\CustomPhpExecJsReactRenderer
+        arguments:
+            - '%kernel.project_dir%/public'
+            - '%limenius_react.fail_loud%'
+            - '@limenius_react.context_provider'
+            - '@logger'
+        calls:
+            - [setPackage, ['@assets.packages', 'build/app.js']]
 
     # Utils
-    App\Utils\PathGetter:
+    App\Service\File\PathGetter:
         arguments:
             $projectDir: '%kernel.project_dir%'

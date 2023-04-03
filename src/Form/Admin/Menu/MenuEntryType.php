@@ -22,6 +22,7 @@ class MenuEntryType extends AbstractType
     {
         $builder
             ->add('name',                 TextType::class,            [])
+            ->add('keyword',              TextType::class,            [])
             ->add('menuType',             TextType::class,            [])
             ->add('value',                TextType::class,            [])
             ->add('lang',                 EntityType::class,          [

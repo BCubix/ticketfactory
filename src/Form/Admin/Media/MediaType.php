@@ -6,7 +6,7 @@ use App\Entity\Media\Media;
 use App\Entity\Media\MediaCategory;
 use App\Repository\MediaRepository;
 use App\Repository\MediaCategoryRepository;
-use App\Utils\MimeTypeMapping;
+use App\Service\File\MimeTypeMapping;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

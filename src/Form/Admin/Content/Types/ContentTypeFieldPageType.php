@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldPageType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'page';
+    public const SERVICE_NAME = 'page';
 
     public function getParent(): string
     {

@@ -2,9 +2,10 @@
 
 namespace App\Manager;
 
+use App\Entity\Page\Page;
 use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
-use App\Utils\PathGetter;
+use App\Service\File\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -12,18 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ParameterManager extends AbstractManager
 {
-    protected $pg;
-
-    public function __construct(
-        ManagerFactory $mf,
-        EntityManagerInterface $em,
-        RequestStack $rs,
-        PathGetter $pg
-    ) {
-        parent::__construct($mf, $em, $rs);
-
-        $this->pg = $pg;
-    }
+    public const SERVICE_NAME = 'parameter';
 
     public function getAll()
     {
@@ -90,8 +80,10 @@ class ParameterManager extends AbstractManager
                 return boolval($value);
 
             case 'upload':
-                // @TODO : Dynamise the file path
-                return $this->pg->getPublicDir() . 'uploads/parameter/' . $value;
+                return ('/uploads/parameter/' . $value);
+            
+            case 'Page':
+                return $this->em->getRepository(Page::class)->findOneForAdmin($value);
 
             case 'string':
             default:

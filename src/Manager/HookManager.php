@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class HookManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'hook';
+
     /**
      * Get all modules by hook sorted by position for each hook
      *

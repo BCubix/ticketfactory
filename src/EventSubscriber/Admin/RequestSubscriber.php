@@ -4,8 +4,8 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Hook\Hook;
 use App\Manager\ModuleManager;
+use App\Service\File\PathGetter;
 use App\Service\Hook\HookService;
-use App\Utils\PathGetter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -52,13 +52,6 @@ class RequestSubscriber implements EventSubscriberInterface
         if ($event->getRequest() != $this->rs->getMainRequest()) {
             return;
         }
-
-        /*$ip = $event->getRequest()->server->get('HTTP_X_REAL_IP');
-        $route = $event->getRequest()->attributes->get('_route');
-
-        if ((strpos($route, 'website') !== false) && (!in_array($ip, ['87.240.80.97', '82.65.219.167']))) {
-            throw new \Exception('Environnement en cours de construction.');
-        }*/
 
         // Register hook module
         $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();

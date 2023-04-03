@@ -5,9 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\User\User;
 use App\Exception\ApiException;
 use App\Manager\UserManager;
-use App\Service\Mailer\Mailer;
-use App\Utils\FormErrorsCollector;
-use App\Utils\TokenGenerator;
+use App\Service\Error\FormErrorsCollector;
+use App\Service\Mail\Mailer;
+use App\Service\Security\TokenGenerator;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;

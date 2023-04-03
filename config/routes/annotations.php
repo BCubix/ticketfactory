@@ -1,7 +1,7 @@
 <?php
 
 use App\Service\Db\Db;
-use App\Utils\PathGetter;
+use App\Service\File\PathGetter;
 
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 

@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldIFrameType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'iframe';
+    public const SERVICE_NAME = 'iframe';
 
     public function getParent(): string
     {

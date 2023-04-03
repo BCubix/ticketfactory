@@ -3,13 +3,15 @@
 namespace App\Manager;
 
 use App\Entity\Language\Language;
-use App\Utils\CloneObject;
+use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Uuid;
 
 class LanguageManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'language';
+
     public function setTranslationsProperties(Object $entity): void
     {
         if (property_exists($entity, "languageGroup") && null === $entity->getLanguageGroup()) {
@@ -196,5 +198,10 @@ class LanguageManager extends AbstractManager
         $newObject->setLanguageGroup(null);
 
         return self::translateSubElements($newObject, $language);
+    }
+
+    public function getLanguageFromLocale(string $locale): ?Language
+    {
+        return $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);
     }
 }

@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldPasswordType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'password';
+    public const SERVICE_NAME = 'password';
 
     public function getParent(): string
     {

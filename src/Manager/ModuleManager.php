@@ -4,14 +4,16 @@ namespace App\Manager;
 
 use App\Entity\Module\Module;
 use App\Exception\ApiException;
-use App\Service\ModuleTheme\Config\ModuleConfig;
-use App\Utils\Exec;
-use App\Utils\GetClass;
+use App\Service\Addon\ModuleConfig;
+use App\Service\Exec\ExecCommand;
+use App\Service\Object\GetClass;
 
 use Symfony\Component\HttpFoundation\Response;
 
 class ModuleManager extends ModuleThemeManager
 {
+    public const SERVICE_NAME = 'module';
+
     private const ACTIONS = [
         Module::ACTION_INSTALL          => 'install',
         Module::ACTION_DISABLE          => 'disable',
@@ -238,7 +240,7 @@ class ModuleManager extends ModuleThemeManager
                 $this->callConfig($moduleName, self::ACTIONS[$action]);
                 $this->clear();
                 if ($install) {
-                    Exec::exec('yarn run encore production');
+                    ExecCommand::exec('yarn run encore production');
                 }
             }
         }

@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Media\Media;
 use App\Exception\ApiException;
 use App\Form\Admin\Media\MediaType;
-use App\Utils\MimeTypeMapping;
+use App\Service\File\MimeTypeMapping;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;

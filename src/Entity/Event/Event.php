@@ -6,7 +6,7 @@ use App\Entity\Datable;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\EventRepository;
-use App\Service\Sorter\EventSorter;
+use App\Service\Sort\EventSorter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -105,7 +105,7 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
-    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

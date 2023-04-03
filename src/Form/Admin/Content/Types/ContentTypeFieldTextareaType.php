@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldTextareaType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'textarea';
+    public const SERVICE_NAME = 'textarea';
 
     public function getParent(): string
     {

@@ -29,6 +29,9 @@ const languagesApi = {
             formData.append('name', data.name);
             formData.append('isoCode', data.isoCode);
             formData.append('locale', data.locale);
+            formData.append('datetimeFormat', data.datetimeFormat);
+            formData.append('dateFormat', data.dateFormat);
+            formData.append('timeFormat', data.timeFormat);
             formData.append('isDefault', data.isDefault ? 1 : 0);
 
             const result = await axios.post('/languages', formData);
@@ -47,6 +50,9 @@ const languagesApi = {
             formData.append('name', data.name);
             formData.append('isoCode', data.isoCode);
             formData.append('locale', data.locale);
+            formData.append('datetimeFormat', data.datetimeFormat);
+            formData.append('dateFormat', data.dateFormat);
+            formData.append('timeFormat', data.timeFormat);
             formData.append('isDefault', data.isDefault ? 1 : 0);
 
             const result = await axios.post(`/languages/${id}`, formData);

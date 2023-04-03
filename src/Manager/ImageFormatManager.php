@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
+use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -14,17 +15,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ImageFormatManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'imageFormat';
+
     protected $pm;
     protected $mm;
     protected $fs;
 
     public function __construct(
         ManagerFactory $mf,
+        ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
         Filesystem $fs
     ) {
-        parent::__construct($mf, $em, $rs);
+        parent::__construct($mf, $sf, $em, $rs);
 
         $this->pm = $this->mf->get('parameter');
         $this->mm = $this->mf->get('media');

@@ -4,13 +4,15 @@ namespace App\Manager;
 
 use App\Entity\Media\MediaCategory;
 use App\Entity\Language\Language;
-use App\Utils\CloneObject;
+use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MediaCategoryManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'mediaCategory';
+
     public function deleteMediasFromCategory(MediaCategory $mainCategory): void
     {
         $rootCategory = $this->em->getRepository(MediaCategory::class)->findRootCategory();
