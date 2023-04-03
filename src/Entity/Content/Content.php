@@ -61,7 +61,7 @@ class Content extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
-    #[ORM\ManyToOne(inversedBy: 'contents')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

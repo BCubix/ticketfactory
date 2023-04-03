@@ -4,6 +4,8 @@ namespace App\Service\File;
 
 class MimeTypeMapping
 {
+    public const SERVICE_NAME = 'mimeTypeMapping';
+
     private const MIMES = [
         "image/jpeg"                                                                                  => 'Image',
         "image/png"                                                                                   => 'Image',

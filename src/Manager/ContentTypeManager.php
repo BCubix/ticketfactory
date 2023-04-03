@@ -5,7 +5,7 @@ namespace App\Manager;
 use App\Entity\Content\ContentType;
 use App\Entity\Content\ContentTypeField;
 use App\Exception\ApiException;
-use App\Service\File\PathGetter;
+use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -15,24 +15,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ContentTypeManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'contentType';
     private const TYPE_FILES_PATH = 'src/Form/Admin/Content/Types/*.php';
     private const NAMESPACE_PATH = '\App\Form\Admin\Content\Types\\';
 
     protected $ff;
-    protected $pg;
     protected $types;
 
     public function __construct(
         ManagerFactory $mf,
+        ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
-        FormFactoryInterface $ff,
-        PathGetter $pg
+        FormFactoryInterface $ff
     ) {
-        parent::__construct($mf, $em, $rs);
+        parent::__construct($mf, $sf, $em, $rs);
 
         $this->ff = $ff;
-        $this->pg = $pg;
         $this->types = $this->loadTypes();
     }
 
@@ -134,7 +133,7 @@ class ContentTypeManager extends AbstractManager
 
     private function loadTypes() {
         $types = [];
-        $files = glob($this->pg->getProjectDir() . self::TYPE_FILES_PATH);
+        $files = glob($this->sf->get('pathGetter')->getProjectDir() . self::TYPE_FILES_PATH);
 
         foreach ($files as $file) {
             $className = explode('/', $file);
@@ -145,8 +144,8 @@ class ContentTypeManager extends AbstractManager
 
             $className = (self::NAMESPACE_PATH . $className);
 
-            if (defined( "$className::FIELD_NAME" )) {
-                $typeName = $className::FIELD_NAME;
+            if (defined("$className::SERVICE_NAME")) {
+                $typeName = $className::SERVICE_NAME;
                 $types[$typeName] = $className;
             }
         }

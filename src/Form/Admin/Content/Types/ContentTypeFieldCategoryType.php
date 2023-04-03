@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldCategoryType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'category';
+    public const SERVICE_NAME = 'category';
 
     public function getParent(): string
     {

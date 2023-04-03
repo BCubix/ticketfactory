@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldRadioType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'radio';
+    public const SERVICE_NAME = 'radio';
 
     public function getParent(): string
     {

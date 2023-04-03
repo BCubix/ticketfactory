@@ -7,7 +7,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class ManagerFactory implements ServiceSubscriberInterface
 {
-    protected const TYPE_FILES_PATH = '/*/*.php';
+    protected const TYPE_FILES_PATH = '/*.php';
     protected const NAMESPACE_PATH = '\App\Manager\\';
 
     protected $locator;
@@ -19,38 +19,36 @@ class ManagerFactory implements ServiceSubscriberInterface
 
     public static function getSubscribedServices(): array
     {
-        return [
-            'manager_contentType'      => ContentTypeManager::class,
-            'manager_eventCategory'    => EventCategoryManager::class,
-            'manager_hook'             => HookManager::class,
-            'manager_imageFormat'      => ImageFormatManager::class,
-            'manager_language'         => LanguageManager::class,
-            'manager_mediaCategory'    => MediaCategoryManager::class,
-            'manager_media'            => MediaManager::class,
-            'manager_menuEntry'        => MenuEntryManager::class,
-            'manager_module'           => ModuleManager::class,
-            'manager_parameter'        => ParameterManager::class,
-            'manager_theme'            => ThemeManager::class,
-            'manager_user'             => UserManager::class,
-            'manager_versionnedEntity' => VersionnedEntityManager::class
-        ];
-    }
-
-    private function loadTypes() {
         $types = [];
-        $files = glob($this->pg->getManagerDir() . self::TYPE_FILES_PATH);
 
+        $files = glob(__DIR__ . self::TYPE_FILES_PATH);
         foreach ($files as $file) {
-            dd($file);
-            $className = explode('/', $file);
-            $className = $className[count($className) - 1];
+            $namespace = ['App'];
+            $srcFound = false;
 
-            $className = explode('.', $className);
-            $className = $className[0];
+            $path = explode('/', $file);
+            foreach ($path as $pathElement) {
+                if ($srcFound) {
+                    $namespace[] = $pathElement;
+                }
+                
+                if ($pathElement == 'src') {
+                    $srcFound = true;
+                }
+            }
 
-            $className = (self::NAMESPACE_PATH . $className);
+            if (!$srcFound) {
+                throw new \Exception('Path must contain the "src" folder.');
+            }
 
-            $types[$typeName] = $className;
+            $namespace = implode('\\', $namespace);
+            $namespace = explode('.', $namespace);
+            $namespace = $namespace[0];
+
+            if (defined("$namespace::SERVICE_NAME")) {
+                $typeName = 'manager_' . $namespace::SERVICE_NAME;
+                $types[$typeName] = $namespace;
+            }
         }
 
         return $types;
@@ -60,7 +58,7 @@ class ManagerFactory implements ServiceSubscriberInterface
     {
         $keyword = 'manager_' . $keyword;
         if (!$this->locator->has($keyword)) {
-            throw new \Exception('This manager ' . $keyword . ' does not exist.');
+            throw new \Exception('The manager ' . $keyword . ' does not exist.');
         }
 
         return $this->locator->get($keyword);

@@ -7,6 +7,8 @@ use App\Entity\Event\EventDate;
 
 class EventSorter
 {
+    public const SERVICE_NAME = 'eventSorter';
+
     public const FIRST_DATE = 'first';
     public const LAST_DATE = 'last';
 

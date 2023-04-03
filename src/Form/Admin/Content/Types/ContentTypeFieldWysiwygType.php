@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldWysiwygType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'wysiwyg';
+    public const SERVICE_NAME = 'wysiwyg';
 
     public function getParent(): string
     {

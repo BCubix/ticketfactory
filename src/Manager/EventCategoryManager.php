@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EventCategoryManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'eventCategory';
+
     public function deleteEventsFromCategory(EventCategory $mainCategory): void
     {
         $rootCategory = $this->em->getRepository(EventCategory::class)->findRootCategory();

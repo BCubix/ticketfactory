@@ -62,7 +62,7 @@ class Season extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_season_all', 'a_season_one'])]
-    #[ORM\ManyToOne(inversedBy: 'seasons')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

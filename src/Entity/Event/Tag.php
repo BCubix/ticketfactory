@@ -57,7 +57,7 @@ class Tag extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_tag_all', 'a_tag_one'])]
-    #[ORM\ManyToOne(inversedBy: 'tags')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

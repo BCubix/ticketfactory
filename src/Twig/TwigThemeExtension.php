@@ -7,7 +7,7 @@ use App\Manager\ThemeManager;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class ThemeExtension extends AbstractExtension
+class TwigThemeExtension extends AbstractExtension
 {
     private $tm;
 

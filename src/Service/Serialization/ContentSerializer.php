@@ -8,6 +8,8 @@ use App\Manager\ContentTypeManager;
 
 class ContentSerializer
 {
+    public const SERVICE_NAME = 'contentSerializer';
+
     protected $ctm;
 
     public function __construct(ContentTypeManager $ctm)

@@ -4,6 +4,8 @@ namespace App\Service\File;
 
 class Tree
 {
+    public const SERVICE_NAME = 'tree';
+
     /**
      * Build a tree from path
      *

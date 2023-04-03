@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldTagType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'tag';
+    public const SERVICE_NAME = 'tag';
 
     public function getParent(): string
     {

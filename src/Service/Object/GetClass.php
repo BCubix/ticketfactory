@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GetClass
 {
+    public const SERVICE_NAME = 'getClass';
+
     /**
      * Return instance of class.
      *

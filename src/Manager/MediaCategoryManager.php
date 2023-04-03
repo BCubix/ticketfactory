@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class MediaCategoryManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'mediaCategory';
+
     public function deleteMediasFromCategory(MediaCategory $mainCategory): void
     {
         $rootCategory = $this->em->getRepository(MediaCategory::class)->findRootCategory();

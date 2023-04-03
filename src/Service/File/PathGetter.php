@@ -4,10 +4,12 @@ namespace App\Service\File;
 
 class PathGetter
 {
+    public const SERVICE_NAME = 'pathGetter';
+
     private const PROJECT_DIR = '/';
     private const PUBLIC_DIR  = 'public';
     private const MODULE_DIR  = 'modules';
-    private const THEME_DIR   = 'themes';
+    private const THEME_DIR   = 'themes/Website';
     private const MANAGER_DIR = 'src/Manager';
     private const SERVICE_DIR = 'src/Service';
     private const HOOK_DIR    = 'src/Hook';

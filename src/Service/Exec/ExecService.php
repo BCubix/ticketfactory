@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class ExecService
 {
+    public const SERVICE_NAME = 'execService';
+
     /**
      * Exec a command
      *

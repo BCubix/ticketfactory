@@ -20,6 +20,9 @@ class LanguageType extends AbstractType
             ->add('name',                 TextType::class,            [])
             ->add('isoCode',              TextType::class,            [])
             ->add('locale',               TextType::class,            [])
+            ->add('datetimeFormat',       TextType::class,            [])
+            ->add('dateFormat',           TextType::class,            [])
+            ->add('timeFormat',           TextType::class,            [])
         ;
     }
 

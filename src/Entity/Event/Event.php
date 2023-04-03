@@ -105,7 +105,7 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
-    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

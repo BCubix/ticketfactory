@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldMapType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'map';
+    public const SERVICE_NAME = 'map';
 
     public function getParent(): string
     {

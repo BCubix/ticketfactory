@@ -22,36 +22,12 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ThemeManager extends ModuleThemeManager
 {
+    public const SERVICE_NAME = 'theme';
+
     public const ZIP_FILES_OR_DIRS_NOT_CORRESPONDED = "Le zip contient des fichiers ou dossiers qui ne correspondent pas à l'architecture d'un thème";
     public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
     public const ZIP_CONFIG_FILE_NOT_FOUND = "Le dossier config ne contient pas le fichier de configuration.";
     public const ZIP_TEMPLATES_INDEX_NOT_FOUND = "Le dossier templates ne contient pas le fichier index.html.twig.";
-
-    protected $pm;
-    protected $mm;
-    protected $ifm;
-    protected $hs;
-
-    public function __construct(
-        ManagerFactory         $mf,
-        EntityManagerInterface $em,
-        RequestStack           $rs,
-        PathGetter             $pg,
-        Filesystem             $fs,
-        ParameterManager       $pm,
-        ModuleManager          $mm,
-        ImageFormatManager     $ifm,
-        HookService            $hs
-    ) {
-        parent::__construct($mf, $em, $rs, $pg, $fs, $hs);
-
-        $this->dir = $this->pg->getThemesDir();
-
-        $this->pm  = $pm;
-        $this->mm  = $mm;
-        $this->ifm = $ifm;
-        $this->hs  = $hs;
-    }
 
     public function getConfiguration(string $objectName): array
     {
@@ -80,7 +56,7 @@ class ThemeManager extends ModuleThemeManager
         }
 
         if (null !== $ext) {
-            $this->fs->copy("$imagePathWithoutExt.$ext", "{$this->pg->getProjectDir()}public/$imageUrlWithoutExt.$ext");
+            $this->fs->copy("$imagePathWithoutExt.$ext", "{$this->sf->get('pathGetter')->getProjectDir()}public/$imageUrlWithoutExt.$ext");
             $ext = "/$imageUrlWithoutExt.$ext";
         }
 
@@ -89,12 +65,12 @@ class ThemeManager extends ModuleThemeManager
 
     public function getDir(): string
     {
-        return $this->pg->getThemesDir();
+        return $this->sf->get('pathGetter')->getThemesDir();
     }
 
-    public function getIsServerSide()
+    public function isSSRActive()
     {
-        $themeName = $this->pm->get('main_theme');
+        $themeName = $this->mf->get('parameter')->get('main_theme');
         $configuration = $this->getConfiguration($themeName);
 
         if (array_key_exists("server_side_rendering", $configuration)) {
@@ -159,7 +135,7 @@ class ThemeManager extends ModuleThemeManager
         if (isset($tree[$objectName]['config']['modulesToDeploy'])) {
             foreach ($tree[$objectName]['config']['modulesToDeploy'] as $moduleName => $value) {
                 $originDir = $this->getDir() . '/' . $objectName . '/config/modulesToDeploy/' . $moduleName;
-                $targetDir = $this->pg->getModulesDir() . '/' . $moduleName;
+                $targetDir = $this->sf->get('pathGetter')->getModulesDir() . '/' . $moduleName;
 
                 if (is_dir($originDir) && !is_dir($targetDir)) {
                     $this->fs->mirror($originDir, $targetDir);
@@ -212,7 +188,7 @@ class ThemeManager extends ModuleThemeManager
      */
     public function entry(string $name, bool $remove): void
     {
-        $webpackFilePath = $this->pg->getProjectDir() . 'webpack.config.js';
+        $webpackFilePath = $this->sf->get('pathGetter')->getProjectDir() . 'webpack.config.js';
 
         $file = new FileManipulator($webpackFilePath);
         $content = $file->getContent();
@@ -466,8 +442,8 @@ class ThemeManager extends ModuleThemeManager
 
                 $moduleConfig = $this->mf->get('module')->getModuleConfigInstance($moduleName);
                 $register
-                    ? $this->hs->register($hookName, $moduleConfig, $position++)
-                    : $this->hs->unregister($hookName, $moduleConfig);
+                    ? $this->sf->get('hook')->register($hookName, $moduleConfig, $position++)
+                    : $this->sf->get('hook')->unregister($hookName, $moduleConfig);
             }
         }
     }

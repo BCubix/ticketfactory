@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldDateType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'date';
+    public const SERVICE_NAME = 'date';
 
     public function getParent(): string
     {

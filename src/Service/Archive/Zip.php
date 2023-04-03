@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Zip
 {
+    public const SERVICE_NAME = 'zip';
+
     public const ZIP_FAIL_OPEN           = "L'ouverture du zip a échoué.";
     public const ZIP_FAIL_EXTRACT        = "L'extraction du zip a échoué.";
     public const ZIP_EMPTY               = "Le zip est vide.";

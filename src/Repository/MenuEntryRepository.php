@@ -10,7 +10,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class MenuEntryRepository extends NestedTreeRepository
 {
-    public function findAllForAdmin(array $filters = [])
+    public function findAllForAdmin(array $filters = []): array
     {
         if (isset($filters['lang'])) {
             $langId = $filters['lang'];
@@ -30,7 +30,7 @@ class MenuEntryRepository extends NestedTreeRepository
         ;
     }
 
-    public function findOneForAdmin(int $id)
+    public function findOneForAdmin(int $id): ?MenuEntry
     {
         return $this->createQueryBuilder('o')
             ->where('o.id = :id')
@@ -40,7 +40,7 @@ class MenuEntryRepository extends NestedTreeRepository
         ;
     }
 
-    public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = [])
+    public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = []): array
     {
         $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin();
 
@@ -62,4 +62,49 @@ class MenuEntryRepository extends NestedTreeRepository
         ;
     }
 
+    public function findAllForWebsite(int $languageId): array
+    {
+        return $this
+            ->createQueryBuilder('me')
+            ->innerJoin('me.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->orderBy('me.root, me.lft', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    public function findByKeywordForWebsite(int $languageId, string $keyword): array
+    {
+        $root = $this
+            ->createQueryBuilder('mc')
+            ->innerJoin('mc.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('mc.keyword = :keyword')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('keyword', $keyword)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        if(null == $root) {
+            return [];
+        }
+
+        return $this
+            ->createQueryBuilder('mc')
+            ->innerJoin('mc.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('mc.root = :root')
+            ->andWhere('mc.lvl >= :lvl')
+            ->andWhere('mc.lft > :lft')
+            ->andWhere('mc.rgt < :rgt')
+            ->orderBy('mc.root, mc.position', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('root', $root->getRoot()->getId())
+            ->setParameter('lvl', ($root->getLvl() + 1))
+            ->setParameter('lft', $root->getLft())
+            ->setParameter('rgt', $root->getRgt())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

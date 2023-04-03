@@ -17,6 +17,8 @@ use Twig\Environment;
 
 class HookService
 {
+    public const SERVICE_NAME = 'hook';
+
     protected $ed;
     protected $em;
     protected $ts;

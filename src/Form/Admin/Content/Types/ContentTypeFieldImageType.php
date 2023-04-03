@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldImageType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'image';
+    public const SERVICE_NAME = 'image';
 
     public function getParent(): string
     {

@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldSliderType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'slider';
+    public const SERVICE_NAME = 'slider';
 
     protected $ctm;
 

@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'group';
+    public const SERVICE_NAME = 'group';
 
     protected $ctm;
 

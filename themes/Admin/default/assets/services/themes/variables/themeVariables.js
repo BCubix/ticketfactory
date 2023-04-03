@@ -1,9 +1,6 @@
 import { createBreakpoints } from '@mui/system';
 
-//export const defaultFamily = 'Kumbh Sans';
-//export const titleDefaultFamily = 'Anton';
-
-export const defaultFamily = 'Fredoka';
+export const defaultFamily = 'Rubik';
 export const titleDefaultFamily = 'Anton';
 
 export const themeBreakpointsVariables = {

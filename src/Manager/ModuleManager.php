@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ModuleManager extends ModuleThemeManager
 {
+    public const SERVICE_NAME = 'module';
+
     private const ACTIONS = [
         Module::ACTION_INSTALL          => 'install',
         Module::ACTION_DISABLE          => 'disable',

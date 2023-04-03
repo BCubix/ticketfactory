@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class PageBlockSerializer
 {
+    public const SERVICE_NAME = 'pageBlockSerializer';
+
     protected $em;
 
     public function __construct(EntityManagerInterface $em)

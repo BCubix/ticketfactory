@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExecCommand
 {
+    public const SERVICE_NAME = 'execCommand';
+
     /**
      * Exec command
      *

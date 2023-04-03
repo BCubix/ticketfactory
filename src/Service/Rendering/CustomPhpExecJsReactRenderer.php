@@ -2,11 +2,13 @@
 
 namespace App\Service\Rendering;
 
-use Limenius\ReactRenderer\Renderer\PhpExecJsReactRenderer;
+//use Limenius\ReactRenderer\Renderer\PhpExecJsReactRenderer;
 use Symfony\Component\Asset\Packages;
 
-class CustomPhpExecJsReactRenderer extends PhpExecJsReactRenderer
+class CustomPhpExecJsReactRenderer// extends PhpExecJsReactRenderer
 {
+    public const SERVICE_NAME = 'customPhpExecJsReactRenderer';
+
     /**
      * @param Packages $packages
      * @param string   $serverBundlePath

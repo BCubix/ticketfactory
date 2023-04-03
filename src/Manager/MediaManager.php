@@ -4,31 +4,16 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Service\File\PathGetter;
-use App\Service\File\MimeTypeMapping;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class MediaManager extends AbstractManager
 {
-    protected $pg;
-
-    public function __construct(
-        ManagerFactory $mf,
-        EntityManagerInterface $em,
-        RequestStack $rs,
-        PathGetter $pg
-    ) {
-        parent::__construct($mf, $em, $rs);
-
-        $this->pg = $pg;
-    }
+    public const SERVICE_NAME = 'media';
 
     public function getFilePathFromDocumentUrl(Media $media): string
     {
-        return $this->pg->getPublicDir() . $media->getDocumentUrl();
+        return $this->sf->get('pathGetter')->getPublicDir() . $media->getDocumentUrl();
     }
 
     public function getFilePathFromFormat(File $mediaFile, Imageformat $format): ?string

@@ -52,7 +52,7 @@ class EventPriceBlock
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\ManyToOne(inversedBy: 'eventPriceBlocks')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 

@@ -9,6 +9,8 @@ use Doctrine\ORM\PersistentCollection;
 
 class CloneObject
 {
+    public const SERVICE_NAME = 'cloneObject';
+
     protected const RELATIONS_TYPE_MAP = [
         "Doctrine\ORM\Mapping\OneToMany" => "OneToMany",
         "Doctrine\ORM\Mapping\ManyToOne" => "ManyToOne",

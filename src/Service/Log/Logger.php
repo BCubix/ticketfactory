@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\Security;
 
 class Logger
 {
+    public const SERVICE_NAME = 'logger';
+
     private $em;
     private $sc;
 

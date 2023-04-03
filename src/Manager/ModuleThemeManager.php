@@ -3,11 +3,10 @@
 namespace App\Manager;
 
 use App\Exception\ApiException;
+use App\Service\ServiceFactory;
 use App\Service\Archive\Zip;
 use App\Service\Exec\ExecService;
 use App\Service\File\Tree;
-use App\Service\File\PathGetter;
-use App\Service\Hook\HookService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -16,23 +15,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class ModuleThemeManager extends AbstractManager
 {
-    protected $pg;
     protected $fs;
-    protected $hs;
 
     public function __construct(
         ManagerFactory $mf,
+        ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
-        PathGetter $pg,
-        Filesystem $fs,
-        HookService $hs
+        Filesystem $fs
     ) {
-        parent::__construct($mf, $em, $rs);
+        parent::__construct($mf, $sf, $em, $rs);
 
-        $this->pg = $pg;
         $this->fs = $fs;
-        $this->hs = $hs;
     }
 
     /**

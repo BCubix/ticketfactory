@@ -8,6 +8,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class ThemeConfig implements ConfigurationInterface
 {
+    public const SERVICE_NAME = 'themeConfig';
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('theme');

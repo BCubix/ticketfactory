@@ -6,6 +6,8 @@ use Symfony\Component\Form\FormInterface;
 
 class FormErrorsCollector
 {
+    public const SERVICE_NAME = 'formErrors';
+
     public function getErrorsFromForm(FormInterface $form)
     {
         $errors = array();

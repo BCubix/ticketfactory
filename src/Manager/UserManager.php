@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\User\User;
+use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -11,15 +12,18 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class UserManager extends AbstractManager
 {
+    public const SERVICE_NAME = 'user';
+
     protected $ph;
 
     public function __construct(
         ManagerFactory $mf,
+        ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
         UserPasswordHasherInterface $ph
     ) {
-        parent::__construct($mf, $em, $rs);
+        parent::__construct($mf, $sf, $em, $rs);
 
         $this->ph = $ph;
     }

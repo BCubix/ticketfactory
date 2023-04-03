@@ -7,6 +7,8 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class Mailer
 {
+    public const SERVICE_NAME = 'mailer';
+
     private $mailer;
     private $sender;
 

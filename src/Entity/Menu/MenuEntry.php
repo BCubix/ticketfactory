@@ -55,6 +55,11 @@ class MenuEntry
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $keyword = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
@@ -101,7 +106,7 @@ class MenuEntry
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
-    #[ORM\ManyToOne(inversedBy: 'menuEntries')]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
@@ -131,6 +136,18 @@ class MenuEntry
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getKeyword(): ?string
+    {
+        return $this->keyword;
+    }
+
+    public function setKeyword(?string $keyword): self
+    {
+        $this->keyword = $keyword;
 
         return $this;
     }

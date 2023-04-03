@@ -18,6 +18,9 @@ export const LanguagesForm = ({ handleSubmit, initialValues = null }) => {
                 name: initialValues?.name || '',
                 isoCode: initialValues?.isoCode || '',
                 locale: initialValues?.locale || '',
+                datetimeFormat: initialValues?.datetimeFormat || '',
+                dateFormat: initialValues?.dateFormat || '',
+                timeFormat: initialValues?.timeFormat || '',
                 isDefault: initialValues?.isDefault || false,
                 active: initialValues?.active || false,
             }}
@@ -87,6 +90,46 @@ export const LanguagesForm = ({ handleSubmit, initialValues = null }) => {
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>
+
+                    <Component.CmtFormBlock title={'Format des dates'}>
+                        <Grid container spacing={4}>
+                            <Grid item xs={12} md={6} l={4}>
+                                <Component.CmtTextField
+                                    value={values.datetimeFormat}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Date & Heure"
+                                    name="datetimeFormat"
+                                    error={touched.datetimeFormat && errors.datetimeFormat}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={3} l={4}>
+                                <Component.CmtTextField
+                                    value={values.dateFormat}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Date"
+                                    name="dateFormat"
+                                    error={touched.dateFormat && errors.dateFormat}
+                                    required
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} md={3} l={4}>
+                                <Component.CmtTextField
+                                    value={values.timeFormat}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Heure"
+                                    name="timeFormat"
+                                    error={touched.timeFormat && errors.timeFormat}
+                                    required
+                                />
+                            </Grid>
+                        </Grid>
+                    </Component.CmtFormBlock>
+
                     <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Langue active ?" />
 

@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldCheckboxType extends ContentTypeFieldAbstractType
 {
-    public const FIELD_NAME = 'checkbox';
+    public const SERVICE_NAME = 'checkbox';
 
     public function getParent(): string
     {
