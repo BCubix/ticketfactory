@@ -33,7 +33,7 @@ import { EditContentType } from '@Apps/ContentTypes/EditContentType/EditContentT
 import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
 import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
 import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
-import { CmtMediaInfos, CmtDisplayMediaInfos, CmtDisplayMediaMeta } from '@Components/CmtMediaInfos/CmtMediaInfos';
+import { CmtDisplayMediaInfos, CmtDisplayMediaMeta } from '@Components/CmtMediaInfos/CmtMediaInfos';
 import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
 import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
 import { MoveEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/MoveEventMedias';
@@ -158,6 +158,7 @@ import { CmtBreadCrumb } from '@Components/CmtBreadCrumb/CmtBreadCrumb';
 import { StyledBreadCrumb } from '@Components/CmtBreadCrumb/sc.StyledBreadCrumb';
 import {
     ActionButton,
+    SpecialActionButton,
     ActionFabButton,
     AddBlockButton,
     AddBlockFabButton,
@@ -185,7 +186,6 @@ import { ClearBooleanButton, FilterChip } from '@Components/CmtFilters/sc.Filter
 import { CmtFormBlock } from '@Components/CmtFormBlock/CmtFormBlock';
 import { CmtHistoryDate } from '@Components/CmtHistoryDate/CmtHistoryDate';
 import { CmtImageCard } from '@Components/CmtImageField/CmtImageCard';
-import { CmtImageField } from '@Components/CmtImageField/CmtImageField';
 import { CmtMediaModal } from '@Components/CmtImageField/CmtMediaModal';
 import { CmtMediaModalInfos } from '@Components/CmtImageField/CmtMediaModalInfos';
 import { CmtMediaElement } from '@Components/CmtMediaElement/sc.MediaElement';
@@ -268,7 +268,6 @@ const ComponentObj = {
     CreateEvent: CreateEvent,
     EditEvent: EditEvent,
     DisplayEventMediaElement: DisplayEventMediaElement,
-    CmtMediaInfos: CmtMediaInfos,
     CmtDisplayMediaInfos: CmtDisplayMediaInfos,
     CmtDisplayMediaMeta: CmtDisplayMediaMeta,
     EditEventMediaModal: EditEventMediaModal,
@@ -424,6 +423,7 @@ const ComponentObj = {
     StyledBreadCrumb: StyledBreadCrumb,
     CreateButton: CreateButton,
     ActionButton: ActionButton,
+    SpecialActionButton: SpecialActionButton,
     EditFabButton: EditFabButton,
     DeleteFabButton: DeleteFabButton,
     DeleteButton: DeleteButton,
@@ -460,7 +460,6 @@ const ComponentObj = {
     CmtHistoryDate: CmtHistoryDate,
 
     CmtImageCard: CmtImageCard,
-    CmtImageField: CmtImageField,
     CmtImage: CmtImage,
     CmtMediaModal: CmtMediaModal,
     CmtMediaModalInfos: CmtMediaModalInfos,

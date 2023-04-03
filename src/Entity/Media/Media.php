@@ -57,7 +57,7 @@ class Media extends Datable
     private $iframe = false;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_one', 'a_article_one', 'a_event_one'])]
+    #[JMS\Groups(['a_media_all', 'a_media_one', 'a_article_one', 'a_event_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $documentFileName = null;
 

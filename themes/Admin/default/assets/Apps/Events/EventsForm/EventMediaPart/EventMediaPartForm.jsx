@@ -57,37 +57,22 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
         getMedias();
     }, [mediasFilters]);
 
-    const changeImageInformations = (newValues) => {
-        if (!editDialog) {
-            return false;
+    const updatedMedia = (newValues) => {
+        if (editDialog) {
+            setEditDialog({ ...editDialog, item: newValues });
         }
 
-        return apiMiddleware(dispatch, async () => {
-            const newObject = { ...editDialog.item, ...newValues };
-            let result = null;
+        const fIndex = values?.eventMedias?.findIndex((el) => el.media.id === newValues.id);
+        if (fIndex > -1) {
+            setFieldValue(`eventMedias.${fIndex}.media`, { ...newValues });
+        }
 
-            if (newObject.iframe) {
-                result = await Api.mediasApi.editIframeMedia(newObject?.id, newObject);
-            } else {
-                result = await Api.mediasApi.editMedia(newObject?.id, newObject);
-            }
-
-            if (!result?.result) {
-                return false;
-            }
-
-            setEditDialog({ index: editDialog.index, item: result.media });
-
-            getImageMedias();
-            getOtherMedias();
-
-            const fIndex = values?.eventMedias?.findIndex((el) => el.media.id === result.media.id);
-            if (fIndex > -1) {
-                setFieldValue(`eventMedias.${fIndex}.media`, { ...result.media });
-            }
-
-            return true;
-        });
+        const lIndex = medias?.findIndex((el) => el.id === newValues.id);
+        if (lIndex > -1) {
+            let newList = medias;
+            newList[lIndex] = newValues;
+            setMedias(newList);
+        }
     };
 
     const eventMedias = useMemo(() => {
@@ -203,6 +188,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                 setMediaFilters={setMediasFilters}
                 total={mediasTotal}
                 categoriesList={mediaCategoriesList}
+                updatedMedia={updatedMedia}
             />
 
             <Component.EditEventMediaModal
@@ -215,7 +201,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                 errors={errors}
                 name={name}
                 setFieldValue={setFieldValue}
-                changeImageInformations={changeImageInformations}
+                updatedMedia={updatedMedia}
             />
         </>
     );

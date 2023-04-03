@@ -27,6 +27,7 @@ export const CmtMediaModal = ({
     setMediaFilters,
     total,
     categoriesList,
+    updatedMedia = null,
 }) => {
     const [createDialog, setCreateDialog] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
@@ -114,7 +115,7 @@ export const CmtMediaModal = ({
                             length={mediasList?.length}
                         />
                     </Grid>
-                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%' }}>
+                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%', marginTop: 3 }}>
                         <Component.CmtMediaModalInfos
                             media={media}
                             selectedMedia={selectedMedia}
@@ -124,6 +125,15 @@ export const CmtMediaModal = ({
                             onClick={onClick}
                             AddMediaLabel={AddMediaLabel}
                             RemoveMediaLabel={RemoveMediaLabel}
+                            updatedMedia={(newMedia) => {
+                                if (selectedMedia?.id === newMedia?.id) {
+                                    setSelectedMedia(newMedia);
+                                }
+
+                                if (updatedMedia) {
+                                    updatedMedia(newMedia);
+                                }
+                            }}
                         />
                     </Grid>
                 </Grid>

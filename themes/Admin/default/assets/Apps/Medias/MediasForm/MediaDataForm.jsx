@@ -17,9 +17,9 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                     <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Component.CmtDisplayMediaType media={media} width={'auto'} height={'auto'} maxHeight="250px" maxWidth="100%" />
                         {mediaType === 'image' && (
-                            <Button sx={{ mt: 5 }} variant={'contained'} color="warning" onClick={() => setEditImage(true)}>
+                            <Component.SpecialActionButton variant="contained" sx={{ mt: 5 }} onClick={() => setEditImage(true)}>
                                 Modifier l'image
-                            </Button>
+                            </Component.SpecialActionButton>
                         )}
                     </Box>
                 </Grid>

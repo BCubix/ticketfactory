@@ -5,7 +5,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, setFieldValue, name }) => {
+export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, setFieldValue, name, updatedMedia }) => {
     return (
         <Dialog fullWidth maxWidth="lg" open={open} onClose={closeModal}>
             <DialogTitle sx={{ fontSize: 20 }}>Détails de l'élément média</DialogTitle>
@@ -18,7 +18,7 @@ export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, s
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
-                            <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} />
+                            <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} updatedMedia={updatedMedia} />
 
                             <Box display="flex" my={5}>
                                 <Button

@@ -90,6 +90,15 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                 editSlug: false,
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
+                seo: {
+                    metaTitle: initValues?.metaTitle || '',
+                    metaDescription: initValues?.metaDescription || '',
+                    socialImage: initValues?.socialImage || null,
+                    fbTitle: initValues?.fbTitle || '',
+                    fbDescription: initValues?.fbDescription || '',
+                    twTitle: initValues?.twTitle || '',
+                    twDescription: initValues?.twDescription || '',
+                },
             }}
             validationSchema={eventSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -117,6 +126,8 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                             initValues
                         )}
                     />
+
+                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
 
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Evènement actif ?" />

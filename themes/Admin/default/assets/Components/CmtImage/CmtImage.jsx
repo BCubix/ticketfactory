@@ -10,7 +10,6 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { getMediaType } from '@Services/utils/getMediaType';
 
 export const CmtImage = ({ label, required = false, id, name, image, setFieldValue, touched, errors, width = null, height = null }) => {
     const dispatch = useDispatch();
@@ -45,6 +44,17 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
         });
     };
 
+    const updatedMedia = (newValues) => {
+        setFieldValue(name, { ...newValues });
+
+        const lIndex = imagesList?.findIndex((el) => el.id === newValues.id);
+        if (lIndex > -1) {
+            let newList = imagesList;
+            newList[lIndex] = newValues;
+            setImagesList(newList);
+        }
+    };
+
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.mediaCategoriesApi.getAllMediaCategories();
@@ -76,7 +86,7 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
                 </FormHelperText>
             )}
             <Component.CmtMediaModal
-                title={`Selectionner l'image`}
+                title={`Selectionner l'image §§§`}
                 open={openModal}
                 onClose={() => setOpenModal(false)}
                 mediasList={imagesList}
@@ -88,6 +98,7 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
                 setMediaFilters={setMediaFilters}
                 total={imageMediasTotal}
                 categoriesList={mediaCategoriesList}
+                updatedMedia={updatedMedia}
             />
         </>
     );

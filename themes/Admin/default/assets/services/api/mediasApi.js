@@ -155,8 +155,8 @@ const mediasApi = {
             const formData = new FormData();
 
             formData.append('title', data?.title);
-            formData.append('alt', data?.alt);
-            formData.append('legend', data?.legend);
+            formData.append('alt', data?.alt || '');
+            formData.append('legend', data?.legend || '');
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
@@ -179,8 +179,8 @@ const mediasApi = {
             const formData = new FormData();
 
             formData.append('title', data?.title);
-            formData.append('alt', data?.alt);
-            formData.append('legend', data?.legend);
+            formData.append('alt', data?.alt || '');
+            formData.append('legend', data?.legend || '');
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
@@ -203,12 +203,12 @@ const mediasApi = {
             const formData = new FormData();
 
             formData.append('title', data?.title);
-            formData.append('alt', data?.alt);
-            formData.append('legend', data?.legend);
+            formData.append('alt', data?.alt || '');
+            formData.append('legend', data?.legend || '');
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
-            formData.append('iframe', 0);
+            formData.append('iframe', data.iframe ? 1 : 0);
             formData.append('documentType', data.documentType || '');
             data?.mediaCategories?.forEach((category, index) => {
                 formData.append(`mediaCategories[${index}]`, category);
