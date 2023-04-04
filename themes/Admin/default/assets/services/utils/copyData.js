@@ -9,7 +9,7 @@ export const copyData = (data) => {
                 arr.push(copyData(el));
             });
 
-            newData[key] = [...arr];
+            newData[key] = arr;
         } else if (null !== value && typeof value === 'object') {
             newData[key] = copyData(value);
         } else {

@@ -200,6 +200,7 @@ import { CmtSelectField } from '@Components/CmtSelectField/CmtSelectField';
 import { CmtTabs } from '@Components/CmtTabs/CmtTabs';
 import { CmtTextField } from '@Components/CmtTextField/CmtTextField';
 import { CmtSlugInput } from '@Components/CmtSlugInput/CmtSlugInput';
+import { CmtKeywordInput } from '@Components/CmtKeywordInput/CmtKeywordInput';
 import { CmtTimePicker } from '@Components/CmtTimePicker/CmtTimePicker';
 import { DeleteDialog } from '@Components/DeleteDialog/DeleteDialog';
 import { LightEditor } from '@Components/Editors/LightEditor/LightEditor';
@@ -479,6 +480,7 @@ const ComponentObj = {
     CmtTabs: CmtTabs,
     CmtTextField: CmtTextField,
     CmtSlugInput: CmtSlugInput,
+    CmtKeywordInput: CmtKeywordInput,
     CmtTimePicker: CmtTimePicker,
     CmtTranslateDialog: CmtTranslateDialog,
     DeleteDialog: DeleteDialog,

@@ -20,8 +20,11 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
             setFieldValue('mediaCategories', categories);
         } else {
             categories.push(id);
-
             setFieldValue('mediaCategories', categories);
+
+            if (!values.mainCategory) {
+                setFieldValue('mainCategory', id);
+            }
         }
     };
 

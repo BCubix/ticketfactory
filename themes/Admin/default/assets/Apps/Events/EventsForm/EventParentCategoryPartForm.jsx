@@ -20,8 +20,11 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
             setFieldValue('eventCategories', categories);
         } else {
             categories.push(id);
-
             setFieldValue('eventCategories', categories);
+
+            if (!values.mainCategory) {
+                setFieldValue('mainCategory', id);
+            }
         }
     };
 

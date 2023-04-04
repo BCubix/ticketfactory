@@ -23,6 +23,7 @@ class MediaCategoryType extends AbstractType
             ->add('name',                 TextType::class,            [])
             ->add('shortDescription',     TextType::class,            [])
             ->add('slug',                 TextType::class,            [])
+            ->add('keyword',              TextType::class,            [])
             ->add('parent',               EntityType::class,          [
                 'class'         => MediaCategory::class,
                 'choice_label'  => 'name',

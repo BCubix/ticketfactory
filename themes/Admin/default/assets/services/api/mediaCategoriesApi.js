@@ -3,6 +3,21 @@ import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '../utils/translationUtils';
 
+const getFormData = (data) => {
+    let formData = new FormData();
+
+    formData.append('active', data.active ? 1 : 0);
+    formData.append('name', data.name);
+    formData.append('shortDescription', data.shortDescription || '');
+    formData.append('parent', data.parent);
+    formData.append('slug', changeSlug(data.slug));
+    formData.append('keyword', changeSlug(data.keyword));
+    formData.append('lang', data.lang);
+    formData.append('languageGroup', data.languageGroup);
+
+    return formData;
+};
+
 const mediaCategoriesApi = {
     getMediaCategories: async (filters) => {
         try {
@@ -52,17 +67,7 @@ const mediaCategoriesApi = {
 
     createMediaCategory: async (data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('shortDescription', data.shortDescription || '');
-            formData.append('parent', data.parent);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post('/media-categories', formData);
+            const result = await axios.post('/media-categories', getFormData(data));
 
             return { result: true, mediaCategory: result.data };
         } catch (error) {
@@ -72,17 +77,7 @@ const mediaCategoriesApi = {
 
     editMediaCategory: async (id, data) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('shortDescription', data.shortDescription || '');
-            formData.append('parent', data.parent);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-
-            const result = await axios.post(`/media-categories/${id}`, formData);
+            const result = await axios.post(`/media-categories/${id}`, getFormData(data));
 
             return { result: true, mediaCategory: result.data };
         } catch (error) {
@@ -116,6 +111,16 @@ const mediaCategoriesApi = {
             const data = copyData(result?.data);
 
             return { result: true, mediaCategory: data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    orderCategories: async (id, srcPosition, destPosition) => {
+        try {
+            await axios.post(`/media-categories/${id}/order?src=${srcPosition}&dest=${destPosition}`);
+
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

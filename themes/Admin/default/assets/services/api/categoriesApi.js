@@ -11,6 +11,7 @@ const getFormData = (data) => {
     formData.append('name', data.name);
     formData.append('parent', data.parent);
     formData.append('slug', changeSlug(data.slug));
+    formData.append('keyword', changeSlug(data.keyword));
     formData.append('lang', data.lang);
     formData.append('languageGroup', data.languageGroup);
 
@@ -96,6 +97,16 @@ const categoriesApi = {
             const data = copyData(result?.data);
 
             return { result: true, category: data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    orderCategories: async (id, srcPosition, destPosition) => {
+        try {
+            await axios.post(`/event-categories/${id}/order?src=${srcPosition}&dest=${destPosition}`);
+
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

@@ -111,4 +111,47 @@ class EventCategoryManager extends AbstractManager
         
         return $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug);
     }
+
+    public function orderTranslatedElement(object $element, int $position)
+    {
+        $translatedObjects = $this->em->getRepository(EventCategory::class)->findAllTranslationsByElementForAdmin($element->getLanguageGroup()->toBinary());
+
+        if (null === $translatedObjects) {
+            return;
+        }
+
+        
+        foreach($translatedObjects as $object) {
+            $object->setPosition($position);
+            $this->em->persist($object);
+        }
+    }
+
+    public function orderCategoriesElementsList(array $list, int $srcPosition, int $destPosition)
+    {
+        if ($srcPosition > $destPosition) {
+            // Up position all element between dest include to src exclude
+            for ($i = $destPosition; $i < $srcPosition; ++$i) {
+                $list[$i - 1]->setPosition($i + 1);
+                $this->em->persist($list[$i - 1]);
+
+                $this->orderTranslatedElement($list[$i - 1], $i + 1);
+
+            }
+        } else {
+            // Down position of all element between src exclude to dest include
+            for ($i = $srcPosition + 1; $i < $destPosition + 1; ++$i) {
+                $list[$i - 1]->setPosition($i - 1);
+                $this->em->persist($list[$i - 1]);
+
+                $this->orderTranslatedElement($list[$i - 1], $i - 1);
+            }
+        }
+
+        // Update new position of the src element
+        $list[$srcPosition - 1]->setPosition($destPosition);
+        $this->em->persist($list[$srcPosition - 1]);
+
+        $this->orderTranslatedElement($list[$srcPosition - 1], $destPosition);
+    }
 }

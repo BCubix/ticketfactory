@@ -35,9 +35,11 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                 parent: initValues?.parent?.id || parentId || '',
                 mustHaveParent: !initValues || Boolean(initValues?.parent),
                 slug: initValues?.slug || '',
+                keyword: initValues?.keyword || '',
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
                 editSlug: false,
+                editKeyword: false,
             }}
             validationSchema={mediaCategorySchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -78,6 +80,10 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                                     name="name"
                                     error={touched.shortDescription && errors.shortDescription}
                                 />
+                            </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtKeywordInput values={values} setFieldValue={setFieldValue} name="keyword" />
                             </Grid>
 
                             {values?.mustHaveParent && (

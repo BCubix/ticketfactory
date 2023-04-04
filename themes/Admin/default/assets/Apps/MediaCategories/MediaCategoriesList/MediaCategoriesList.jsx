@@ -15,6 +15,7 @@ import { mediaCategoriesSelector } from '@Redux/mediaCategories/mediaCategoriesS
 import { getMediaCategoriesAction } from '@Redux/mediaCategories/mediaCategoriesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { copyData } from '@Services/utils/copyData';
 
 export const MediaCategoriesList = () => {
     const { loading, mediaCategories, error } = useSelector(mediaCategoriesSelector);
@@ -26,30 +27,30 @@ export const MediaCategoriesList = () => {
     const [mediaCategory, setMediaCategory] = useState(null);
     const [path, setPath] = useState(null);
 
-    const getMediaCategory = async (id) => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.mediaCategoriesApi.getOneMediaCategory(id);
-            if (!result.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
-                return;
-            }
-
-            setMediaCategory(result.mediaCategory);
-        });
-    };
-
-    useEffect(() => {
+    const getMediaCategory = async () => {
         if (!id && !loading && !mediaCategories && !error) {
             dispatch(getMediaCategoriesAction());
             return;
         } else if (id) {
-            getMediaCategory(id);
+            apiMiddleware(dispatch, async () => {
+                const result = await Api.mediaCategoriesApi.getOneMediaCategory(id);
+                if (!result.result) {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                    navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
+                    return;
+                }
+
+                setMediaCategory(result.mediaCategory);
+            });
         }
 
         if (!id && mediaCategories) {
             setMediaCategory(mediaCategories);
         }
+    };
+
+    useEffect(() => {
+        getMediaCategory();
     }, [id, loading, mediaCategories, error]);
 
     useEffect(() => {
@@ -90,6 +91,36 @@ export const MediaCategoriesList = () => {
             if (result?.result) {
                 NotificationManager.success('La catégorie de média a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getMediaCategoriesAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            }
+        });
+    };
+
+    const handleDragEnd = async (result) => {
+        if (!result.destination) {
+            return;
+        }
+
+        let indexSrc = result.source.index;
+        let indexDest = result.destination.index;
+
+        if (indexSrc === indexDest) {
+            return;
+        }
+
+        let svCategories = Object.values(copyData(mediaCategory?.children));
+
+        const removedElement = svCategories.splice(indexSrc, 1)[0];
+        svCategories.splice(indexDest, 0, removedElement);
+
+        setMediaCategory({ ...mediaCategory, children: svCategories });
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.orderCategories(removedElement.id, indexSrc, indexDest);
+            if (result?.result) {
+                NotificationManager.success('La catégorie a bien changé de position.', 'Succès', Constant.REDIRECTION_TIME);
+                getMediaCategory();
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
@@ -146,6 +177,7 @@ export const MediaCategoriesList = () => {
                                     }`
                                 );
                             }}
+                            onDragEnd={handleDragEnd}
                         />
                     </CardContent>
                 </Component.CmtCard>

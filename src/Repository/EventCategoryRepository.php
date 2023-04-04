@@ -106,4 +106,56 @@ class EventCategoryRepository extends NestedTreeRepository
             ->getResult()
         ;
     }
+
+    public function findAllByParentForAdmin(int $parendId): array
+    {
+        $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin()->getId();
+
+        return $this
+            ->createQueryBuilder('o')
+            ->addSelect('el')
+            ->leftJoin('o.lang', 'el')
+            ->leftJoin('o.parent', 'p')
+            ->andWhere("el.id = :languageId")
+            ->setParameter('languageId', $langId)
+            ->andWhere("p.id = :parentId")
+            ->setParameter('parentId', $parendId)
+            ->orderBy('o.position', "ASC")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findAllTranslationsByElementForAdmin(string $languageGroup): array
+    {
+        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin();
+
+        return $this->createQueryBuilder('o')
+            ->leftJoin('o.lang', 'l')
+            ->where('o.languageGroup = :languageGroup')
+            ->setParameter('languageGroup', $languageGroup)
+            ->andWhere("l.id != :defaultLanguageId")
+            ->setParameter("defaultLanguageId", $defaultLanguage->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findMaxPositionForAdmin(?int $parentId): array
+    {
+        $defaultLanguage = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin();
+
+        return $this->createQueryBuilder('o')
+            ->leftJoin("o.lang", "l")
+            ->leftJoin('o.parent', 'p')
+            ->where("l.id = :langId")
+            ->setParameter("langId", $defaultLanguage->getId())
+            ->andWhere('p.id = :parentId')
+            ->setParameter("parentId", $parentId)
+            ->setMaxResults(1)
+            ->orderBy('o.position', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

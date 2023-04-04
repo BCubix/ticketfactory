@@ -35,7 +35,9 @@ export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = 
                 slug: initValues?.slug || '',
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
+                keyword: initValues?.keyword || '',
                 editSlug: false,
+                editKeyword: false,
                 seo: {
                     metaTitle: initValues?.metaTitle || '',
                     metaDescription: initValues?.metaDescription || '',
@@ -56,7 +58,7 @@ export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = 
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <Component.CmtTextField
                                     value={values.name}
                                     onChange={(e) => {
@@ -73,6 +75,11 @@ export const CategoriesForm = ({ handleSubmit, parentId = null, initialValues = 
                                 />
                                 <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                             </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtKeywordInput values={values} setFieldValue={setFieldValue} name="keyword" />
+                            </Grid>
+
                             {values?.mustHaveParent && (
                                 <Grid item xs={12}>
                                     <Component.ParentCategoryPartForm

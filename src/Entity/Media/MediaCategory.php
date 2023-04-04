@@ -53,6 +53,11 @@ class MediaCategory extends Datable
     #[ORM\Column]
     private ?int $position = 0;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one', 'a_media_category_all', 'a_media_category_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $keyword = null;
+
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: Types::INTEGER)]
     private $lft;
@@ -161,6 +166,18 @@ class MediaCategory extends Datable
     public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getKeyword(): ?string
+    {
+        return $this->keyword;
+    }
+
+    public function setKeyword(?string $keyword): self
+    {
+        $this->keyword = $keyword;
 
         return $this;
     }

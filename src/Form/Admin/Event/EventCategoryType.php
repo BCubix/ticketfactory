@@ -24,6 +24,7 @@ class EventCategoryType extends AbstractType
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
             ->add('slug',                 TextType::class,            [])
+            ->add('keyword',              TextType::class,            [])
             ->add('parent',               EntityType::class,          [
                 'class'         => EventCategory::class,
                 'choice_label'  => 'name',

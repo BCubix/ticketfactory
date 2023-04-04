@@ -143,4 +143,29 @@ class EventCategoryController extends CrudController
 
         return $this->view($result, Response::HTTP_OK);
     }
+
+    #[Rest\Post('/event-categories/{categoryId}/order', requirements: ['categoryId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
+    public function order(Request $request, int $categoryId): View
+    {
+        $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($categoryId);
+        if (null === $object) {
+            throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
+        }
+
+        $srcPosition = $request->get('src') + 1;
+        $destPosition = $request->get('dest') + 1;
+        if (null === $destPosition) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "La requête n'a pas les informations requises.");
+        }
+
+        $categories = $this->em->getRepository($this->entityClass)->findAllByParentForAdmin($object->getParent()->getId());
+
+        // Order position in slider element s list
+        $this->ecm->orderCategoriesElementsList($categories, $srcPosition, $destPosition);
+
+        $this->em->flush();
+
+        return $this->view($object, Response::HTTP_OK);
+    }
 }

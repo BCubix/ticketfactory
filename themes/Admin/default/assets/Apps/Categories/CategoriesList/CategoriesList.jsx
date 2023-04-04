@@ -16,6 +16,7 @@ import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
 import { loginFailure } from '@Redux/profile/profileSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { copyData } from '@Services/utils/copyData';
 
 export const CategoriesList = () => {
     const { loading, categories, error } = useSelector(categoriesSelector);
@@ -27,30 +28,31 @@ export const CategoriesList = () => {
     const [category, setCategory] = useState(null);
     const [path, setPath] = useState(null);
 
-    const getCategory = async (id) => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.categoriesApi.getOneCategory(id);
-            if (!result.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.CATEGORIES_BASE_PATH);
-                return;
-            }
-
-            setCategory(result.category);
-        });
-    };
-
-    useEffect(() => {
+    const getCategory = async () => {
         if (!id && !loading && !categories && !error) {
             dispatch(getCategoriesAction());
             return;
         } else if (id) {
-            getCategory(id);
+            apiMiddleware(dispatch, async () => {
+                const result = await Api.categoriesApi.getOneCategory(id);
+                if (!result.result) {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                    navigate(Constant.CATEGORIES_BASE_PATH);
+                    return;
+                }
+
+                setCategory(result.category);
+            });
+            return;
         }
 
         if (!id && categories) {
             setCategory(categories);
         }
+    };
+
+    useEffect(() => {
+        getCategory();
     }, [id, loading, categories, error]);
 
     useEffect(() => {
@@ -96,8 +98,37 @@ export const CategoriesList = () => {
 
             if (result?.result) {
                 NotificationManager.success('La catégorie a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
-
                 dispatch(getCategoriesAction());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            }
+        });
+    };
+
+    const handleDragEnd = async (result) => {
+        if (!result.destination) {
+            return;
+        }
+
+        let indexSrc = result.source.index;
+        let indexDest = result.destination.index;
+
+        if (indexSrc === indexDest) {
+            return;
+        }
+
+        let svCategories = Object.values(copyData(category?.children));
+
+        const removedElement = svCategories.splice(indexSrc, 1)[0];
+        svCategories.splice(indexDest, 0, removedElement);
+
+        setCategory({ ...category, children: svCategories });
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.categoriesApi.orderCategories(removedElement.id, indexSrc, indexDest);
+            if (result?.result) {
+                NotificationManager.success('La catégorie a bien changé de position.', 'Succès', Constant.REDIRECTION_TIME);
+                getCategory();
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
@@ -152,6 +183,7 @@ export const CategoriesList = () => {
                                     `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}${path ? `?parentId=${path.at(-1)?.id}` : ''}`
                                 );
                             }}
+                            onDragEnd={handleDragEnd}
                         />
                     </CardContent>
                 </Component.CmtCard>

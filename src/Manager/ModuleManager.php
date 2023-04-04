@@ -53,7 +53,7 @@ class ModuleManager extends ModuleThemeManager
 
     public function getDir(): string
     {
-        return $this->pg->getModulesDir();
+        return $this->sf->get('pathGetter')->getModulesDir();
     }
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void

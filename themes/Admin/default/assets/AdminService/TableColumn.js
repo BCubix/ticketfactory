@@ -10,7 +10,7 @@ const TableColumnObj = {
     CategoriesList: [
         { name: 'id', label: 'ID', width: '10%' },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%' },
-        { name: 'name', label: 'Nom', width: '50%' },
+        { name: 'name', label: 'Nom', width: '45%' },
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     MediaCategoriesList: [

@@ -51,6 +51,16 @@ class EventCategory extends Datable
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
+    #[ORM\Column]
+    private ?int $position = 0;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $keyword = null;
+
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: 'integer')]
     private $lft;
@@ -142,6 +152,30 @@ class EventCategory extends Datable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getKeyword(): ?string
+    {
+        return $this->keyword;
+    }
+
+    public function setKeyword(?string $keyword): self
+    {
+        $this->keyword = $keyword;
 
         return $this;
     }
