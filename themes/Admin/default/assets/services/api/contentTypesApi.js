@@ -16,6 +16,12 @@ const FILTERS_SORT_TAB = [
     { name: 'page', sortName: 'filters[page]' },
     { name: 'limit', sortName: 'filters[limit]' },
     {
+        name: 'pageType',
+        transformFilter: (params, sort) => {
+            params['filters[pageType]'] = sort ? '1' : '0';
+        },
+    },
+    {
         name: 'sort',
         transformFilter: (params, sort) => {
             const splitSort = sort?.split(' ');
@@ -102,7 +108,7 @@ const contentTypesApi = {
             formData.append('name', data.name);
             formData.append('pageType', data.pageType ? 1 : 0);
             formData.append('maxObjectNb', data.maxObjectNb);
-            formData.append('pageParent', data.pageParent);
+            formData.append('pageParent', data.pageParent || '');
 
             data.fields?.forEach((el, index) => {
                 serializeData(el, `fields[${index}]`, formData);
@@ -124,7 +130,7 @@ const contentTypesApi = {
             formData.append('name', data.name);
             formData.append('pageType', data.pageType ? 1 : 0);
             formData.append('maxObjectNb', data.maxObjectNb);
-            formData.append('pageParent', data.pageParent);
+            formData.append('pageParent', data.pageParent || '');
 
             data.fields?.forEach((el, index) => {
                 serializeData(el, `fields[${index}]`, formData);

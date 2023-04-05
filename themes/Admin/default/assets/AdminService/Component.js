@@ -25,11 +25,16 @@ import { ContentTypeFieldArrayForm } from '@Apps/ContentTypes/ContentTypesForm/F
 import { FieldArrayElem } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/FieldArrayElem';
 import { MainPartFieldForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/MainPartFieldForm';
 import { ContentTypesForm } from '@Apps/ContentTypes/ContentTypesForm/ContentTypesForm';
+import { PageTypesForm } from '@Apps/ContentTypes/ContentTypesForm/PageTypesForm';
 import { FieldElemWrapper, FieldFormControl } from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
 import { ContentTypesFilters } from '@Apps/ContentTypes/ContentTypesList/ContentTypesFilters/ContentTypesFilters';
 import { ContentTypesList } from '@Apps/ContentTypes/ContentTypesList/ContentTypesList';
+import { PageTypesList } from '@Apps/ContentTypes/ContentTypesList/PageTypesList';
+import { ContentTypesMenu } from '@Apps/ContentTypes/ContentTypesMenu/ContentTypesMenu';
 import { CreateContentType } from '@Apps/ContentTypes/CreateContentType/CreateContentType';
+import { CreatePageType } from '@Apps/ContentTypes/CreateContentType/CreatePageType';
 import { EditContentType } from '@Apps/ContentTypes/EditContentType/EditContentType';
+import { EditPageType } from '@Apps/ContentTypes/EditContentType/EditPageType';
 import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
 import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
 import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
@@ -259,12 +264,17 @@ const ComponentObj = {
     FieldArrayElem: FieldArrayElem,
     MainPartFieldForm: MainPartFieldForm,
     ContentTypesForm: ContentTypesForm,
+    PageTypesForm: PageTypesForm,
     FieldElemWrapper: FieldElemWrapper,
     FieldFormControl: FieldFormControl,
     ContentTypesFilters: ContentTypesFilters,
     ContentTypesList: ContentTypesList,
+    PageTypesList: PageTypesList,
+    ContentTypesMenu: ContentTypesMenu,
     CreateContentType: CreateContentType,
     EditContentType: EditContentType,
+    CreatePageType: CreatePageType,
+    EditPageType: EditPageType,
 
     CreateEvent: CreateEvent,
     EditEvent: EditEvent,

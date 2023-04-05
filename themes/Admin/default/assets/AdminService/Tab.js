@@ -10,6 +10,10 @@ const TabObj = {
         { label: 'Catégories', component: <Component.CategoriesList />, path: Constant.CATEGORIES_BASE_PATH },
         { label: 'Tags', component: <Component.TagsList />, path: Constant.TAGS_BASE_PATH },
     ],
+    ContentTypesTabList: () => [
+        { label: 'Types de contenus', component: <Component.ContentTypesList />, path: Constant.CONTENT_TYPES_BASE_PATH },
+        { label: 'Types de pages', component: <Component.PageTypesList />, path: Constant.PAGE_TYPES_BASE_PATH },
+    ],
     MediasTabList: () => [
         { label: 'Médias', component: <Component.MediasList />, path: Constant.MEDIAS_BASE_PATH },
         { label: 'Catégories de média', component: <Component.MediaCategoriesList />, path: Constant.MEDIA_CATEGORIES_BASE_PATH },

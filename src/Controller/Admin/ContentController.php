@@ -139,4 +139,13 @@ class ContentController extends CrudController
     {
         return parent::getTranslated($request, $contentId, $languageId);
     }
+
+    #[Rest\Get('/contents/{contentTypeId}/availableContent', requirements: ['contentTypeId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all'])]
+    public function getAvailableContent(Request $request, int $contentTypeId): View
+    {
+        $count = $this->em->getRepository($this->entityClass)->findNumberOfContentForAdmin($contentTypeId);
+
+        return $this->view($count, Response::HTTP_OK);
+    }
 }

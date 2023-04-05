@@ -56,7 +56,7 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_type_one'])]
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'contentTypes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $pageParent;
 
 

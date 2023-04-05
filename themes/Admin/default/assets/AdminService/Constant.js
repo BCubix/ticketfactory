@@ -36,6 +36,7 @@ const ConstantObj = {
     MEDIA_CATEGORIES_BASE_PATH: '/admin/categories-de-media',
     IMAGE_FORMATS_BASE_PATH: '/admin/image-formats',
     CONTENT_TYPES_BASE_PATH: '/admin/types-de-contenus',
+    PAGE_TYPES_BASE_PATH: '/admin/types-de-pages',
     CONTENT_BASE_PATH: '/admin/contenus',
     CONTACT_REQUEST_BASE_PATH: '/admin/demandes-de-contact',
     REDIRECTIONS_BASE_PATH: '/admin/redirections',

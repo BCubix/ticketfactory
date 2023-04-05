@@ -37,4 +37,16 @@ class ContentRepository extends CrudRepository
     {
         parent::__construct($registry, Content::class);
     }
+
+    public function findNumberOfContentForAdmin(int $contentTypeId)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->leftJoin('c.contentType', 'ct')
+            ->where('ct.id = :id')
+            ->setParameter('id', $contentTypeId)
+            ->getQuery()
+            ->getScalar()
+        ;
+    }
 }

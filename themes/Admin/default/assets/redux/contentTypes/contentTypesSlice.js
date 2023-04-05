@@ -9,6 +9,7 @@ const initialState = {
     contentTypes: null,
     total: null,
     filters: {
+        pageType: false,
         active: getBooleanFromString(sessionStorage.getItem('contentTypesActiveFilter')),
         name: sessionStorage.getItem('contentTypesNameFilter') || '',
         sort: sessionStorage.getItem('contentTypesSort') || 'id ASC',
@@ -90,12 +91,6 @@ export function changeContentTypesFilters(filters, page = 1) {
     };
 }
 
-export const {
-    getContentTypes,
-    getContentTypesSuccess,
-    getContentTypesFailure,
-    resetContentTypes,
-    updateContentTypesFilters,
-} = contentTypesSlice.actions;
+export const { getContentTypes, getContentTypesSuccess, getContentTypesFailure, resetContentTypes, updateContentTypesFilters } = contentTypesSlice.actions;
 export const contentTypesSelector = (state) => state.contentTypes;
 export default contentTypesSlice.reducer;

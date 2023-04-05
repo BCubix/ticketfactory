@@ -50,11 +50,18 @@ const AuthenticatedRouteObj = [
         component: Component.EditImageFormat,
     }),
 
-    () => ({ path: Constant.CONTENT_TYPES_BASE_PATH, component: Component.ContentTypesList }),
+    () => ({ path: Constant.CONTENT_TYPES_BASE_PATH, component: Component.ContentTypesMenu, tabValue: 0 }),
     () => ({ path: Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateContentType }),
     () => ({
         path: `${Constant.CONTENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`,
         component: Component.EditContentType,
+    }),
+
+    () => ({ path: Constant.PAGE_TYPES_BASE_PATH, component: Component.ContentTypesMenu, tabValue: 1 }),
+    () => ({ path: Constant.PAGE_TYPES_BASE_PATH + Constant.CREATE_PATH, component: Component.CreatePageType }),
+    () => ({
+        path: `${Constant.PAGE_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`,
+        component: Component.EditPageType,
     }),
 
     () => ({ path: Constant.CONTENT_BASE_PATH, component: Component.ContentsList }),

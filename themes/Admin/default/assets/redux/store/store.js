@@ -10,6 +10,7 @@ import tagsReducer from '@Redux/tags/tagsSlice';
 import mediasReducer from '@Redux/medias/mediasSlice';
 import imageFormatsReducer from '@Redux/imageFormats/imageFormatSlice';
 import contentTypesReducer from '@Redux/contentTypes/contentTypesSlice';
+import pageTypesReducer from '@Redux/pageTypes/pageTypesSlice';
 import contentsReducer from '@Redux/contents/contentsSlice';
 import contactRequestsReducer from '@Redux/contactRequests/contactRequestsSlice';
 import redirectionsReducer from '@Redux/redirections/redirectionsSlice';
@@ -36,6 +37,7 @@ const reducer = {
     medias: mediasReducer,
     imageFormats: imageFormatsReducer,
     contentTypes: contentTypesReducer,
+    pageTypes: pageTypesReducer,
     contents: contentsReducer,
     contactRequests: contactRequestsReducer,
     redirections: redirectionsReducer,
