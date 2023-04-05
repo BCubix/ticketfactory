@@ -51,7 +51,7 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} md={8}>
                                 <Component.CmtTextField
                                     value={values.name}
                                     onChange={(e) => {
@@ -69,7 +69,11 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                                 <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
                             </Grid>
 
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} md={4}>
+                                <Component.CmtKeywordInput values={values} setFieldValue={setFieldValue} name="keyword" />
+                            </Grid>
+
+                            <Grid item xs={12}>
                                 <Component.CmtTextField
                                     value={values.shortDescription}
                                     onChange={(e) => {
@@ -80,10 +84,6 @@ export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValu
                                     name="name"
                                     error={touched.shortDescription && errors.shortDescription}
                                 />
-                            </Grid>
-
-                            <Grid item xs={12} sm={6}>
-                                <Component.CmtKeywordInput values={values} setFieldValue={setFieldValue} name="keyword" />
                             </Grid>
 
                             {values?.mustHaveParent && (

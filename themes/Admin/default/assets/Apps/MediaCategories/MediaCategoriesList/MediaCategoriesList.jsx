@@ -28,29 +28,31 @@ export const MediaCategoriesList = () => {
     const [path, setPath] = useState(null);
 
     const getMediaCategory = async () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.getOneMediaCategory(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
+                return;
+            }
+
+            setMediaCategory(result.mediaCategory);
+        });
+    };
+
+    useEffect(() => {
         if (!id && !loading && !mediaCategories && !error) {
             dispatch(getMediaCategoriesAction());
             return;
         } else if (id) {
-            apiMiddleware(dispatch, async () => {
-                const result = await Api.mediaCategoriesApi.getOneMediaCategory(id);
-                if (!result.result) {
-                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                    navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
-                    return;
-                }
-
-                setMediaCategory(result.mediaCategory);
-            });
+            getMediaCategory();
+            return;
         }
 
-        if (!id && mediaCategories) {
+        if (!id && mediaCategories && !loading && !error) {
+            console.log('h');
             setMediaCategory(mediaCategories);
         }
-    };
-
-    useEffect(() => {
-        getMediaCategory();
     }, [id, loading, mediaCategories, error]);
 
     useEffect(() => {
@@ -120,7 +122,11 @@ export const MediaCategoriesList = () => {
             const result = await Api.mediaCategoriesApi.orderCategories(removedElement.id, indexSrc, indexDest);
             if (result?.result) {
                 NotificationManager.success('La catégorie a bien changé de position.', 'Succès', Constant.REDIRECTION_TIME);
-                getMediaCategory();
+                if (!id) {
+                    dispatch(getMediaCategoriesAction());
+                } else {
+                    getMediaCategory();
+                }
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }

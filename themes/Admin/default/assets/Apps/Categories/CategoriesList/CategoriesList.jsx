@@ -29,30 +29,30 @@ export const CategoriesList = () => {
     const [path, setPath] = useState(null);
 
     const getCategory = async () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.categoriesApi.getOneCategory(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CATEGORIES_BASE_PATH);
+                return;
+            }
+
+            setCategory(result.category);
+        });
+    };
+
+    useEffect(() => {
         if (!id && !loading && !categories && !error) {
             dispatch(getCategoriesAction());
             return;
         } else if (id) {
-            apiMiddleware(dispatch, async () => {
-                const result = await Api.categoriesApi.getOneCategory(id);
-                if (!result.result) {
-                    NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                    navigate(Constant.CATEGORIES_BASE_PATH);
-                    return;
-                }
-
-                setCategory(result.category);
-            });
+            getCategory();
             return;
         }
 
-        if (!id && categories) {
+        if (!id && categories && !loading && !error) {
             setCategory(categories);
         }
-    };
-
-    useEffect(() => {
-        getCategory();
     }, [id, loading, categories, error]);
 
     useEffect(() => {
@@ -128,7 +128,11 @@ export const CategoriesList = () => {
             const result = await Api.categoriesApi.orderCategories(removedElement.id, indexSrc, indexDest);
             if (result?.result) {
                 NotificationManager.success('La catégorie a bien changé de position.', 'Succès', Constant.REDIRECTION_TIME);
-                getCategory();
+                if (!id) {
+                    dispatch(getCategoriesAction());
+                } else {
+                    getCategory();
+                }
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }

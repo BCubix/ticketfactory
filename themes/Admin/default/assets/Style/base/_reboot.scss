@@ -63,7 +63,7 @@ table {
 }
 
 .Mui-Select-FormControl {
-    &:focus-within + label {
-        transform: translate(0px, 0px) scale(0.75)
+    .MuiListItemText-root {
+        margin: 0;
     }
 }

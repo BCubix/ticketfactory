@@ -36,6 +36,16 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     private ?string $name = null;
 
     #[JMS\Expose()]
+    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
+    #[ORM\Column]
+    private ?bool $pageType = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
+    #[ORM\Column(nullable: true)]
+    private ?int $maxObjectNb = null;
+
+    #[JMS\Expose()]
     #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     #[ORM\Column(type: 'json')]
     private array $fields = [];
@@ -70,6 +80,30 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function isPageType(): ?bool
+    {
+        return $this->pageType;
+    }
+
+    public function setPageType(bool $pageType): self
+    {
+        $this->pageType = $pageType;
+
+        return $this;
+    }
+
+    public function getMaxObjectNb(): ?int
+    {
+        return $this->maxObjectNb;
+    }
+
+    public function setMaxObjectNb(?int $maxObjectNb): self
+    {
+        $this->maxObjectNb = $maxObjectNb;
 
         return $this;
     }

@@ -50,6 +50,8 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                 active: initialValues?.active || false,
                 fields: initialValues?.fields || [],
                 pageParent: initialValues?.pageParent?.id || '',
+                maxObjectNb: initialValues?.maxObjectNb || '',
+                pageType: initialValues?.pageType || false,
             }}
             validationSchema={contentTypeSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -63,7 +65,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un type de contenus`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12} sm={8}>
+                            <Grid item xs={12} sm={4}>
                                 <Component.CmtTextField
                                     value={values.name}
                                     onChange={handleChange}
@@ -85,6 +87,17 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                                     getName={(item) => item.title}
                                     setFieldValue={setFieldValue}
                                     errors={touched.pageParent && errors.pageParent}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Component.CmtTextField
+                                    value={values.maxObjectNb}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Nombre maximum d'objet"
+                                    name="maxObjectNb"
+                                    error={touched.maxObjectNb && errors.maxObjectNb}
+                                    type={'number'}
                                 />
                             </Grid>
                         </Grid>

@@ -7,9 +7,12 @@ import { changeSlug } from '@Services/utils/changeSlug';
 
 export const CmtKeywordInput = ({ values, setFieldValue, name }) => {
     return (
-        <Box sx={{ fontSize: 12, cursor: 'pointer', color: (theme) => theme.palette.info.main }} onClick={() => !values.editSlug && setFieldValue('editKeyword', true)}>
+        <Box
+            sx={{ marginTop: 4, fontSize: 12, cursor: 'pointer', color: (theme) => theme.palette.info.main }}
+            onClick={() => !values.editKeyword && setFieldValue('editKeyword', true)}
+        >
             {values.editKeyword && (
-                <Box sx={{ backgroundColor: (theme) => theme.palette.warning.light, p: 2, mb: 2, borderRadius: 2 }}>
+                <Box sx={{ cursor: 'default', backgroundColor: (theme) => theme.palette.warning.light, p: 2, mb: 2, borderRadius: 2 }}>
                     <Typography sx={{ color: (theme) => theme.palette.warning.main }}>
                         Ce champs est utilisé par le thème pour repérer cette catégorie. Modifier cette valeur risque de perturber l'affichage de votre site.
                     </Typography>
@@ -38,9 +41,11 @@ export const CmtKeywordInput = ({ values, setFieldValue, name }) => {
                     size="small"
                 />
             ) : (
-                <Typography component="span" sx={{ fontWeight: 'bold' }}>
-                    {values[name] || "Aucun mot clé n'a été renseigné"}
-                </Typography>
+                <Box sx={{ marginTop: 1, width: '100%', borderBottom: (theme) => `1px solid ${theme.palette.disabled.main}` }}>
+                    <Typography component="span" sx={{ color: (theme) => theme.palette.disabled.main, width: '100%' }}>
+                        {values[name] || "Aucun mot clé n'a été renseigné"}
+                    </Typography>
+                </Box>
             )}
         </Box>
     );

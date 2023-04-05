@@ -18,12 +18,15 @@ class MediaCategoryRepository extends NestedTreeRepository
         }
 
         if (null == $categoryId) {
-            return $this->findRootCategory($langId);
+            $categoryId = $this->findRootCategory($langId)->getId();
         }
 
         return $this
             ->createQueryBuilder('o')
+            ->addSelect('c')
+            ->leftJoin('o.children', 'c')
             ->where('o.id = :categoryId')
+            ->orderBy('c.position', 'ASC')
             ->setParameter('categoryId', $categoryId)
             ->getQuery()
             ->getOneOrNullResult()
@@ -90,16 +93,13 @@ class MediaCategoryRepository extends NestedTreeRepository
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = [])
     {
-        $results = $this
+        return $this
             ->createQueryBuilder('o')
             ->addSelect('el')
             ->leftJoin('o.lang', 'el')
-        ;
-
-        return $results
             ->andWhere('o.languageGroup IN (:languageGroupList)')
             ->setParameter('languageGroupList', $languageGroupList)
-            ->addOrderBy('o.id', 'ASC')
+            ->addOrderBy('o.position', 'ASC')
             ->addOrderBy('o.languageGroup', "ASC")
             ->addOrderBy('el.isDefault', 'DESC')
             ->addOrderBy('el.id', 'ASC')

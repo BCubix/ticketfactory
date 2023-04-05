@@ -100,6 +100,8 @@ const contentTypesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('pageType', data.pageType ? 1 : 0);
+            formData.append('maxObjectNb', data.maxObjectNb);
             formData.append('pageParent', data.pageParent);
 
             data.fields?.forEach((el, index) => {
@@ -120,6 +122,8 @@ const contentTypesApi = {
 
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
+            formData.append('pageType', data.pageType ? 1 : 0);
+            formData.append('maxObjectNb', data.maxObjectNb);
             formData.append('pageParent', data.pageParent);
 
             data.fields?.forEach((el, index) => {
