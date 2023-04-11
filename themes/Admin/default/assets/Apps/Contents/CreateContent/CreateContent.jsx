@@ -75,7 +75,20 @@ export const CreateContent = () => {
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite.", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.CONTENT_BASE_PATH);
+                return;
             }
+
+            let available = await Api.contentsApi.getAvailable(urlId);
+            if (!available?.result) {
+                NotificationManager.error("Une erreur s'est produite.", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CONTENT_BASE_PATH);
+                return;
+            } else if (result.contentType?.maxObjectNb && result.contentType?.maxObjectNb - available.number <= 0) {
+                NotificationManager.error('Vous ne pouvez plus créer de contenu avec ce type.', 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.CONTENT_BASE_PATH);
+                return;
+            }
+
             setSelectedContentType(result.contentType);
         });
     }, [contentTypes, initialValues]);

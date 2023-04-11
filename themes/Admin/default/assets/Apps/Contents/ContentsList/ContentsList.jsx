@@ -24,6 +24,13 @@ export const ContentsList = () => {
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [createDialog, setCreateDialog] = useState(false);
     const [formContentType, setFormContentType] = useState('');
+    const [availableCreateContent, setAvailableCreateContent] = useState({
+        loading: false,
+        loaded: false,
+        number: 0,
+        createdNumber: 0,
+        maxNumber: 0,
+    });
 
     useEffect(() => {
         if (!loading && !contents && !error) {
@@ -31,7 +38,7 @@ export const ContentsList = () => {
         }
 
         apiMiddleware(dispatch, async () => {
-            const result = await Api.contentTypesApi.getAllContentTypes();
+            const result = await Api.contentTypesApi.getAllContentTypes({ pageType: false });
             if (result?.result) {
                 setContentTypes(result?.contentTypes);
             }
@@ -59,6 +66,28 @@ export const ContentsList = () => {
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
+        });
+    };
+
+    const handleGetAvailable = async (id) => {
+        apiMiddleware(dispatch, async () => {
+            const type = contentTypes.find((el) => el.id === id);
+
+            const result = await Api.contentsApi.getAvailable(id);
+            if (!result?.result || !type) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                setAvailableCreateContent({ ...availableCreateContent, loaded: false, loading: false, number: 0, createdNumber: 0, maxNumber: 0 });
+                return;
+            }
+
+            setAvailableCreateContent({
+                ...availableCreateContent,
+                loading: false,
+                loaded: true,
+                number: type.maxObjectNb ? type.maxObjectNb - result.number : 1,
+                createdNumber: result.number,
+                maxNumber: type.maxObjectNb,
+            });
         });
     };
 
@@ -128,7 +157,9 @@ export const ContentsList = () => {
                             id={`selectContentType`}
                             value={formContentType}
                             onChange={(e) => {
+                                setAvailableCreateContent({ ...availableCreateContent, loading: true });
                                 setFormContentType(e.target.value);
+                                handleGetAvailable(e.target.value);
                             }}
                             label="Type de contenus"
                         >
@@ -139,6 +170,15 @@ export const ContentsList = () => {
                             ))}
                         </Select>
                     </FormControl>
+
+                    {!availableCreateContent.loading && availableCreateContent.loaded && availableCreateContent.number <= 0 && (
+                        <Box sx={{ mt: 3, width: '100%', borderRadius: 2, padding: 3, backgroundColor: (theme) => theme.palette.warning.light }}>
+                            <Typography sx={{ color: (theme) => theme.palette.warning.main }}>
+                                Attention, vous avez {availableCreateContent.createdNumber > availableCreateContent.maxObjectNb ? 'dépassé' : 'atteint'} le nombre de contenu que
+                                vous pouvez créer avec ce type de contenu. ({availableCreateContent.createdNumber} / {availableCreateContent.maxNumber})
+                            </Typography>
+                        </Box>
+                    )}
                 </DialogContent>
 
                 <DialogActions>
@@ -163,6 +203,7 @@ export const ContentsList = () => {
                                 }
                             }}
                             id="validateDialog"
+                            disabled={availableCreateContent.loading || availableCreateContent.number <= 0}
                         >
                             Suivant
                         </Button>

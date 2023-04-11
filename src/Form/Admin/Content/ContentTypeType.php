@@ -23,6 +23,7 @@ class ContentTypeType extends AbstractType
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('name',                 TextType::class,            [])
             ->add('pageType',             CheckboxType::class,        ['false_values' => ['0']])
+            ->add('displayBlocks',        CheckboxType::class,        ['false_values' => ['0']])
             ->add('maxObjectNb',          IntegerType::class,            [])
             ->add('pageParent',           EntityType::class,          [
                 'class'         => Page::class,

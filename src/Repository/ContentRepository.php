@@ -46,7 +46,20 @@ class ContentRepository extends CrudRepository
             ->where('ct.id = :id')
             ->setParameter('id', $contentTypeId)
             ->getQuery()
-            ->getScalar()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function findContentByPageIdForAdmin(int $pageId)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.page', 'p')
+            ->leftJoin('c.contentType', 'ct')
+            ->where('ct.pageType = 1')
+            ->andWhere('p.id = :pageId')
+            ->setParameter("pageId", $pageId)
+            ->getQuery()
+            ->getOneOrNullResult()
         ;
     }
 }

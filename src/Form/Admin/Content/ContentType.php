@@ -4,7 +4,9 @@ namespace App\Form\Admin\Content;
 
 use App\Entity\Content\Content;
 use App\Entity\Language\Language;
+use App\Entity\Page\Page;
 use App\Repository\LanguageRepository;
+use App\Repository\PageRepository;
 use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Component\Form\AbstractType;
@@ -39,6 +41,17 @@ class ContentType extends AbstractType
             ->add('languageGroup',        UuidType::class,            [])
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => Content::class,
+            ])
+            ->add('page',                 EntityType::class,          [
+                'class'         => Page::class,
+                'choice_label'  => 'title',
+                'multiple'      => false,
+                'query_builder' => function (PageRepository $pr) {
+                    return $pr
+                        ->createQueryBuilder('p')
+                        ->orderBy('p.title', 'ASC')
+                    ;
+                }
             ])
         ;
 

@@ -50,7 +50,6 @@ export const MediaCategoriesList = () => {
         }
 
         if (!id && mediaCategories && !loading && !error) {
-            console.log('h');
             setMediaCategory(mediaCategories);
         }
     }, [id, loading, mediaCategories, error]);

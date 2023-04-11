@@ -47,6 +47,10 @@ const getFormData = (data) => {
     formData.append('lang', data.lang);
     formData.append('languageGroup', data.languageGroup);
 
+    if (data.page) {
+        formData.append('page', data.page);
+    }
+
     Object.entries(data.fields)?.map(([key, value]) => {
         serializeData(value, `fields[${key}]`, formData);
     });
@@ -165,6 +169,26 @@ const contentsApi = {
             const data = copyData(result?.data);
 
             return { result: true, content: data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getAvailable: async (id) => {
+        try {
+            const result = await axios.get(`/contents/${id}/availableContent`);
+
+            return { result: true, number: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getContentByPageId: async (id) => {
+        try {
+            const result = await axios.get(`/contents/${id}/page`);
+
+            return { result: true, content: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

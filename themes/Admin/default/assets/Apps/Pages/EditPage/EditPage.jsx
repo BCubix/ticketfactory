@@ -9,13 +9,10 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getPagesAction } from '@Redux/pages/pagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { useSelector } from 'react-redux';
-import { languagesSelector } from '@Redux/languages/languagesSlice';
 
 export const EditPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const languagesData = useSelector(languagesSelector);
     const { id } = useParams();
 
     const [page, setPage] = useState(null);
@@ -48,18 +45,40 @@ export const EditPage = () => {
                 return;
             }
 
-            setPage(result.page);
+            const contentResult = await Api.contentsApi.getContentByPageId(result.page.id);
+
+            if (!contentResult.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            setPage({ ...result.page, contentId: contentResult?.content?.id, fields: contentResult?.content?.fields, contentType: contentResult?.content?.contentType });
             getPageList(result.page?.lang?.id);
         });
     }, [id]);
 
+    const handleUpdateContent = async (pageId, id, values) => {
+        values.page = pageId;
+
+        if (id) {
+            const result = await Api.contentsApi.editContent(id, values);
+            if (!result.result) {
+                return;
+            }
+        }
+
+        NotificationManager.success('La page a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
+        dispatch(getPagesAction());
+        navigate(Constant.PAGES_BASE_PATH);
+    };
+
     function handleSubmit(values) {
         apiMiddleware(dispatch, async () => {
             const result = await Api.pagesApi.editPage(id, values);
+
             if (result.result) {
-                NotificationManager.success('La page a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getPagesAction());
-                navigate(Constant.PAGES_BASE_PATH);
+                handleUpdateContent(id, page?.contentId, values);
             }
         });
     }
@@ -68,5 +87,5 @@ export const EditPage = () => {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} pagesList={pagesList} />;
+    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} contentType={page?.contentType} pagesList={pagesList} />;
 };

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormHelperText, Grid } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormHelperText, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -49,6 +49,7 @@ export const PageTypesForm = ({ initialValues = null, submitForm, pagesList }) =
                 fields: initialValues?.fields || [],
                 maxObjectNb: initialValues?.maxObjectNb || '',
                 pageType: initialValues?.pageType || true,
+                displayBlocks: initialValues?.displayBlocks || false,
             }}
             validationSchema={contentTypeSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -62,7 +63,7 @@ export const PageTypesForm = ({ initialValues = null, submitForm, pagesList }) =
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un type de page`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12} sm={8}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <Component.CmtTextField
                                     value={values.name}
                                     onChange={handleChange}
@@ -74,7 +75,7 @@ export const PageTypesForm = ({ initialValues = null, submitForm, pagesList }) =
                                 />
                             </Grid>
 
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <Component.CmtTextField
                                     value={values.maxObjectNb}
                                     onChange={handleChange}
@@ -83,6 +84,19 @@ export const PageTypesForm = ({ initialValues = null, submitForm, pagesList }) =
                                     name="maxObjectNb"
                                     error={touched.maxObjectNb && errors.maxObjectNb}
                                     type={'number'}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={4} sx={{ display: 'flex', alignItems: 'center' }}>
+                                <FormControlLabel
+                                    size="small"
+                                    value={values.displayBlocks}
+                                    onChange={(e) => {
+                                        setFieldValue(`displayBlocks`, e.target.checked);
+                                    }}
+                                    label={'Afficher les blocs classiques sur les pages'}
+                                    labelPlacement="end"
+                                    control={<Checkbox checked={Boolean(values.displayBlocks)} />}
                                 />
                             </Grid>
                         </Grid>
