@@ -58,4 +58,17 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
             ->getResult()
         ;
     }
+
+    public function getUserByTokenForWebsite($userEmail, $userPass): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :userEmail')
+            ->setParameter('userEmail', $userEmail)
+            ->andWhere('u.password LIKE :userPass')
+            ->setParameter('userPass', '%' . $userPass)
+            ->andWhere('u.active = 1')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

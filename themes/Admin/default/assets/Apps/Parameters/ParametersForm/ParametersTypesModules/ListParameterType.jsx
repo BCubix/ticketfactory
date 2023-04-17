@@ -17,6 +17,9 @@ const getComponent = ({
     indexTab,
     indexBlock,
     indexParam,
+    paramValueKey = 'id',
+    paramNameKey = 'name',
+    getName = null,
 }) => {
     return (
         <Grid item key={indexParam} {...paramBreakpoints}>
@@ -32,15 +35,12 @@ const getComponent = ({
                     label={paramName}
                     value={paramValue}
                     onChange={(e) => {
-                        setFieldValue(
-                            `tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`,
-                            e.target.value
-                        );
+                        setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.target.value);
                     }}
                 >
-                    {paramAvailableValue?.map(({ id, name }, index) => (
-                        <MenuItem value={id} key={index}>
-                            <ListItemText>{name}</ListItemText>
+                    {paramAvailableValue?.map((item, index) => (
+                        <MenuItem value={item[paramValueKey]} key={index}>
+                            <ListItemText>{getName ? getName(item) : item[paramNameKey]}</ListItemText>
                         </MenuItem>
                     ))}
                 </Select>

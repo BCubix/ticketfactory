@@ -16,6 +16,7 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryIcon from '@mui/icons-material/History';
+import LanguageIcon from '@mui/icons-material/Language';
 
 import { Constant } from '@/AdminService/Constant';
 import { checkArray, checkObject, checkPosition, checkString } from '@Services/utils/check';
@@ -59,6 +60,7 @@ const MenuObj = [
         title: 'ADMINISTRATION',
         menu: [
             { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon /> },
+            { name: 'Langues', link: Constant.LANGUAGES_BASE_PATH, icon: <LanguageIcon /> },
             {
                 name: 'Types de contenus',
                 link: Constant.CONTENT_TYPES_BASE_PATH,

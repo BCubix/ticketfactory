@@ -30,7 +30,7 @@ security:
             stateless: true
 
         admin:
-            pattern: ^/admin/api
+            pattern: ^/admin
             stateless: true
             entry_point: jwt
             json_login:

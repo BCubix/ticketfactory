@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, ListItemText, ListSubheader, MenuItem, Select, Switch } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
@@ -14,7 +14,7 @@ export const RedirectionsForm = ({ handleSubmit, initialValues = null }) => {
         redirectFrom: Yup.string()
             .required("Veuillez renseigner l'url à rediriger.")
             .max(1000, "l'url renseigné est trop longue.")
-            .matches(/^(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, 'Url invalide'),
+            .matches(/^(www.)?[-a-zA-Z0-9@:%._+/~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, 'Url invalide'),
         redirectTo: Yup.string()
             .required("Veuillez renseigner l'url de destination.")
             .max(1000, "l'url renseigné est trop longue.")

@@ -34,7 +34,7 @@ export const CmtSelectField = ({
                     renderValue: (selected) => {
                         let renderName = [];
 
-                        selected.forEach((elem) => {
+                        selected?.forEach((elem) => {
                             const name = getName(list.find((el) => el.id === elem));
                             if (name) {
                                 renderName.push(name);

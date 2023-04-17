@@ -27,6 +27,10 @@ class AppFixtures extends Fixture
         $language->setActive(true);
         $language->setName('France');
         $language->setIsoCode('FR');
+        $language->setLocale("fr");
+        $language->setDatetimeFormat("");
+        $language->setDateFormat("");
+        $language->setTimeFormat("");
         $language->setIsDefault(true);
         $om->persist($language);
 

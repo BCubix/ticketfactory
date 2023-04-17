@@ -127,8 +127,6 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                         )}
                     />
 
-                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
-
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
                         <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Evènement actif ?" />
 

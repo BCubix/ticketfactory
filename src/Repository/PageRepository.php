@@ -40,7 +40,6 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->where('p.active = 1')
             ->andWhere('p.id = :pageId')
             ->setParameter('languageId', $languageId)
             ->setParameter('pageId', $pageId)
