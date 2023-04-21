@@ -1,0 +1,21 @@
+[class^="icon-"], [class*=" icon-"] {
+    position: relative;
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    height: 100%;
+    width: 100%;
+    transition: $transition-base;
+}
+
+.icon-cart {
+    background-image: url('../../icons/cart.png');
+    max-height: rem(32);
+    top: rem(3);
+}
+
+.icon-user {
+    background-image: url('../../icons/user.png');
+    max-height: rem(40);
+}

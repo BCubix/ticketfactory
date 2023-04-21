@@ -1,0 +1,63 @@
+// Retina
+
+@mixin img-retina($file-1x, $file-2x, $width-1x, $height-1x) {
+  background-image: url("#{file-1x}");
+
+  @media
+  only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (     -o-min-device-pixel-ratio: 2/1),
+  only screen and (        min-device-pixel-ratio: 2),
+  only screen and (                min-resolution: 192dpi),
+  only screen and (                min-resolution: 2dppx) {
+    background-image: url("#{file-2x}");
+    background-size: $width-1x $height-1x;
+  }
+}
+
+// Text
+
+%text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+%sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+// List
+
+%list-reset {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
+
+// Placeholder
+
+@mixin placeholder {
+  $placeholders: ":-webkit-input" ":-moz" "-moz" "-ms-input";
+  @each $placeholder in $placeholders {
+    &:#{$placeholder}-placeholder {
+      @content;
+    }
+  }
+}
+
+// Functions
+
+@function rem($pxval) {
+  @return calc($pxval / 16) * 1rem;
+}
+
+@function em($pxval, $base: 16) {
+  @return calc($pxval / $base) * 1em;
+}

@@ -1,0 +1,47 @@
+{% if pagination.total > 0 %}
+{{ hook('paginationBegin') }}
+
+<ul class="pagination">
+    <li class="pagination__link prev {{ pagination.page > 1 ? '' : 'disabled'}}">
+        <a href="#" class="js-pagination" data-page="{{ pagination.page - 1 }}">
+            <span class="arrow"></span>
+        </a>
+    </li>
+
+    {% if (pagination.page - 2) > 1 %}
+    <li class="pagination__link">
+        <a href="#" class="js-pagination" data-page="{{ pagination.page - 2 }}">{{ pagination.page - 2 }}</a>
+    </li>
+    {% endif %}
+
+    {% if (pagination.page - 1) >= 1 %}
+    <li class="pagination__link">
+        <a href="#" class="js-pagination" data-page="{{ pagination.page - 1 }}">{{ pagination.page - 1 }}</a>
+    </li>
+    {% endif %}
+
+    <li class="pagination__link active">
+        <a href="#" class="js-pagination" data-page="{{ pagination.page }}">{{ pagination.page }}</a>
+    </li>
+
+    {% if (pagination.page + 1) <= pagination.maxPage %}
+    <li class="pagination__link">
+        <a href="#" class="js-pagination" data-page="{{ pagination.page + 1 }}">{{ pagination.page + 1 }}</a>
+    </li>
+    {% endif %}
+
+    {% if (pagination.page + 2) < pagination.maxPage %}
+    <li class="pagination__link">
+        <a href="#" class="js-pagination" data-page="{{ pagination.page + 2 }}">{{ pagination.page + 2 }}</a>
+    </li>
+    {% endif %}
+
+    <li class="pagination__link next {{ pagination.page < pagination.maxPage ? '' : 'disabled'}}">
+        <a href="#" class="js-pagination" data-page="{{ pagination.maxPage }}">
+            <span class="arrow"></span>
+        </a>
+    </li>
+</ul>
+
+{{ hook('paginationEnd') }}
+{% endif %}

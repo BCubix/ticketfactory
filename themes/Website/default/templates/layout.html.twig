@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="{{ locale() }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+
+        {% block meta %}
+        <title></title>
+        <meta name="description" content="" />
+
+        {{ hook('meta') }}
+        {% endblock meta %}
+
+        {% block socialTags %}
+        <meta name="twitter:card" content="">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:title" content="">
+        <meta name="twitter:description" content="">
+        <meta name="twitter:image" content="">
+
+        <meta property="og:title" content="">
+        <meta property="og:description" content="">
+        <meta property="og:type" content="">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="">
+        {% endblock socialTags %}
+
+        {% block favicon %}
+        <link rel="apple-touch-icon" sizes="180x180" href="">
+        <link rel="icon" type="image/png" sizes="32x32" href="">
+        <link rel="icon" type="image/png" sizes="16x16" href="">
+        <link rel="manifest" href="">
+        <link rel="mask-icon" href="" color="">
+        <meta name="msapplication-TileColor" content="">
+        <meta name="theme-color" content="{">
+        {% endblock favicon %}
+
+        {% block css %}
+        {{ encore_entry_link_tags('app') }}
+
+        {{ hook('css') }}
+        {% endblock css %}
+
+        {{ hook('homeHead') }}
+    </head>
+
+    <body>
+        {{ hook('bodyBegin') }}
+
+        <div class="wrapper">
+        {% block header %}
+        {% endblock header %}
+
+        {% block body %}
+        {% endblock body %}
+
+        {% block footer %}
+        {% endblock footer %}
+        </div>
+
+        {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+
+        {{ hook('js') }}
+        {% endblock %}
+
+        {{ hook('bodyEnd') }}
+    </body>
+</html>

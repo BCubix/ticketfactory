@@ -1,0 +1,44 @@
+.header {
+    height: rem(50);
+    position: relative;
+    z-index: 1000;
+  
+    @include media('>=md') {
+      height: rem(80);
+    }
+
+    &_container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: rem(10) rem(20);
+      background-color: $color1-light;
+
+      @include media('>=md') {
+        padding: rem(10) rem(100);
+      }
+    }
+  
+    &_logo {
+      position: relative;
+      transition: none;
+  
+      img {
+        height: rem(50);
+        display: block;
+  
+        @include media('>=md') {
+          height: rem(80);
+        }
+      }
+    }
+
+    &_menu {
+
+    }
+
+    &_icons {
+
+    }
+  }
+  

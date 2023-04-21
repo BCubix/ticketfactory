@@ -1,0 +1,12 @@
+{% extends websiteTemplates('layout.html.twig') %}
+
+{% block header %}
+{{ render(controller("App\\Controller\\Website\\DefaultController::generateHeader")) }}
+{% endblock header %}
+
+{% block body %}
+{% endblock body %}
+
+{% block footer %}
+{{ render(controller("App\\Controller\\Website\\DefaultController::generateFooter")) }}
+{% endblock footer %}

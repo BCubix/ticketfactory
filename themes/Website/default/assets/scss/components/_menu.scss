@@ -1,0 +1,80 @@
+.menu {
+    display: flex;
+    font-family: $font1;
+    font-size: rem(16);
+    font-weight: 500;
+    @extend %list-reset;
+    color: $black;
+
+    &_item {
+        position: relative;
+        margin: 0 rem(10);
+
+        a {
+            padding: rem(10) rem(20);
+            border-radius: rem(10);
+            transition: $transition-base;
+        }
+
+        &:hover {
+            a {
+                background-color: $color1-dark;
+                color: $white;
+            }
+
+            .menu_sub {
+                visibility: visible;
+            }
+        }
+    }
+
+    &_sub {
+        visibility: hidden;
+        position: absolute;
+        top: 200%;
+        left: 0;
+        @extend %list-reset;
+        padding: rem(10) 0;
+        border-radius: rem(10);
+        transition: $transition-base;
+        display: block;
+        width: 100%;
+        height: auto;
+        min-width: rem(300);
+        background-color: $color1-dark;
+        color: $white;
+        z-index: 35;
+
+        li {
+            position: relative;
+            margin: rem(10) 0;
+
+            a {
+                display: block;
+                padding: rem(10) rem(20);
+                border-radius: 0;
+                transition: $transition-base;
+                background-color: transparent;
+                color: $white;
+            }
+
+            &:hover a {
+                color: $color1-dark;
+                background-color: $color1-light;
+            }
+        }
+    }
+
+    &_icon {
+        display: inline-block;
+        width: rem(40);
+        height: rem(40);
+        margin-left: rem(20);
+        border-radius: rem(10);
+        transition: $transition-base;
+
+        &:hover {
+            background-color: $color1-dark;
+        }
+    }
+} 

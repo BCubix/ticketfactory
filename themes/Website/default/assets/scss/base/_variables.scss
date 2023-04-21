@@ -1,0 +1,160 @@
+// Colors
+$black:                     #000000;
+$white:                     #FFFFFF;
+$grey:                      #E3E3E3;
+
+$color1:                    #2E71B3;            // Blue
+$color1-dark:               #183C5F;
+$color1-light:              #EBF1FF;
+
+$color2:                    #FFC828;            // Yellow
+$color2-dark:               #E6B525;
+$color2-light:              #FFF3E5;
+
+$color3:                    #F71047;            // Red
+
+// Fonts
+
+@font-face {
+  font-family: 'Rubik';
+  src: url(../../fonts/Rubik-Light.eot);
+  src: url(../../fonts/Rubik-Light.eot?#iefix) format('embedded-opentype'),
+      url(../../fonts/Rubik-Light.otf) format('otf'),
+      url(../../fonts/Rubik-Light.ttf) format('truetype'),
+      url(../../fonts/Rubik-Light.svg#Rubik-Light) format('svg'),
+      url(../../fonts/Rubik-Light.woff) format('woff'),
+      url(../../fonts/Rubik-Light.woff2) format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url(../../fonts/Rubik-Regular.eot);
+  src: url(../../fonts/Rubik-Regular.eot?#iefix) format('embedded-opentype'),
+      url(../../fonts/Rubik-Regular.otf) format('otf'),
+      url(../../fonts/Rubik-Regular.ttf) format('truetype'),
+      url(../../fonts/Rubik-Regular.svg#Rubik-Regular) format('svg'),
+      url(../../fonts/Rubik-Regular.woff) format('woff'),
+      url(../../fonts/Rubik-Regular.woff2) format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url(../../fonts/Rubik-Italic.eot);
+  src: url(../../fonts/Rubik-Italic.eot?#iefix) format('embedded-opentype'),
+      url(../../fonts/Rubik-Italic.otf) format('otf'),
+      url(../../fonts/Rubik-Italic.ttf) format('truetype'),
+      url(../../fonts/Rubik-Italic.svg#Rubik-Italic) format('svg'),
+      url(../../fonts/Rubik-Italic.woff) format('woff'),
+      url(../../fonts/Rubik-Italic.woff2) format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url(../../fonts/Rubik-Medium.eot);
+  src: url(../../fonts/Rubik-Medium.eot?#iefix) format('embedded-opentype'),
+      url(../../fonts/Rubik-Medium.otf) format('otf'),
+      url(../../fonts/Rubik-Medium.ttf) format('truetype'),
+      url(../../fonts/Rubik-Medium.svg#Rubik-Medium) format('svg'),
+      url(../../fonts/Rubik-Medium.woff) format('woff'),
+      url(../../fonts/Rubik-Medium.woff2) format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url(../../fonts/Rubik-SemiBold.eot);
+    src: url(../../fonts/Rubik-SemiBold.eot?#iefix) format('embedded-opentype'),
+        url(../../fonts/Rubik-SemiBold.otf) format('otf'),
+        url(../../fonts/Rubik-SemiBold.ttf) format('truetype'),
+        url(../../fonts/Rubik-SemiBold.svg#Rubik-SemiBold) format('svg'),
+        url(../../fonts/Rubik-SemiBold.woff) format('woff'),
+        url(../../fonts/Rubik-SemiBold.woff2) format('woff2');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url(../../fonts/Rubik-Bold.eot);
+  src: url(../../fonts/Rubik-Bold.eot?#iefix) format('embedded-opentype'),
+      url(../../fonts/Rubik-Bold.otf) format('otf'),
+      url(../../fonts/Rubik-Bold.ttf) format('truetype'),
+      url(../../fonts/Rubik-Bold.svg#Rubik-Bold) format('svg'),
+      url(../../fonts/Rubik-Bold.woff) format('woff'),
+      url(../../fonts/Rubik-Bold.woff2) format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Anton';
+  src: url(../../fonts/Anton-Regular.eot);
+  src: url(../../fonts/Anton-Regular.eot?#iefix) format('embedded-opentype'),
+      url(../../fonts/Anton-Regular.otf) format('otf'),
+      url(../../fonts/Anton-Regular.ttf) format('truetype'),
+      url(../../fonts/Anton-Regular.svg#Anton-Regular) format('svg'),
+      url(../../fonts/Anton-Regular.woff) format('woff'),
+      url(../../fonts/Anton-Regular.woff2) format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+$font1:                    'Rubik', sans-serif;
+$font2:                    'Anton', sans-serif;
+
+// Body
+
+$body-bg:                   $white;
+$body-color:                $grey;
+
+// Base
+
+$font-size-base:            rem(16);
+$font-family-base:          $font1;
+$line-height-base:          normal;
+
+$spacer:                    rem(20);
+
+$transition-base:           all .3s ease;
+
+// Wrapper
+
+$wrapper-width-sm:          rem(728);
+$wrapper-width-md:          rem(864);
+$wrapper-width-lg:          rem(1120);
+$wrapper-width-xl:          rem(1178);
+
+// MQ
+
+$mq-xs:                     em(480);
+$mq-sm:                     em(768);
+$mq-md:                     em(1024);
+$mq-lg:                     em(1280);
+$mq-xl:                     em(1440);
+
+// Include-media
+
+$breakpoints: (
+  'xs': $mq-xs,
+  'sm': $mq-sm,
+  'md': $mq-md,
+  'lg': $mq-lg,
+  'xl': $mq-xl
+);
+
+// Flexbox grid
+
+$flexboxgrid-breakpoints:
+  sm $mq-sm $wrapper-width-sm,
+  md $mq-md $wrapper-width-md,
+  lg $mq-lg $wrapper-width-lg,
+  xl $mq-xl $wrapper-width-xl;
+
+$flexboxgrid-gutter-width: rem(40);

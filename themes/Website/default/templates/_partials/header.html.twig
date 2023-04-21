@@ -1,0 +1,51 @@
+<header class="header dots">
+    <div class="header_container">
+        <a class="header_logo" href="{{ keywordPath('home') }}" title="">
+            <img src="{{ parameter('website_logo') }}" alt="{{ parameter('website_name') }}">
+        </a>
+
+        <nav class="header_menu">
+            <ul class="menu">
+                {% for menu in menus.main.__children %}
+                <li class="menu_item">
+
+                    {% if menu.menuType == 'none' %}
+                    <span>{{ menu.name }}</span>
+                    {% else %}
+                    <a href="{{ menuPath(menu) }}" {% if menu.blank %}target="_blank"{% endif %}>
+                        {{ menu.name }}
+                    </a>
+                    {% endif %}
+
+                    {% if menu.__children | length > 0 %}
+                    <ul class="menu_sub">
+                        {% for subMenu in menu.__children %}
+                        <li>
+                            {% if subMenu.menuType == 'none' %}
+                            <span>{{ subMenu.name }}</span>
+                            {% else %}
+                            <a href="{{ menuPath(subMenu) }}" {% if subMenu.blank %}target="_blank"{% endif %}>
+                                {{ subMenu.name }}
+                            </a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <div class="header_icons">
+            <a href="#" class="menu_icon">
+                <span class="icon-user"></span>
+            </a>
+            
+            <a href="#" class="menu_icon">
+                <span class="icon-cart"></span>
+            </a>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,26 @@
+{% if breadcrumbs | length > 0 %}
+{{ hook('breadcrumbsBegin') }}
+
+<div>
+    <a href="{{ keywordPath('home') }}">Accueil</a>
+
+    {% for name, link in breadcrumbs %}
+        &gt;
+        {% if link is not empty %}
+            <a href="{{ link }}">
+        {% else %}
+            <strong>
+        {% endif %}
+
+        {{ name }}
+
+        {% if link is not empty %}
+            </a>
+        {% else %}
+            </strong>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{{ hook('breadcrumbsEnd') }}
+{% endif %}
