@@ -83,8 +83,8 @@ class EventManager extends AbstractManager
 
     public function getUrlSlugs(Event $event): array
     {
-        $eventFormat = $this->mf->get('parameter')->get('event_url_format');
-        $eventFormat = explode('/', $eventFormat);
+        $eventFormats = $this->mf->get('parameter')->get('event_url_format');
+        $eventFormats = explode('/', $eventFormats);
 
         $languageId = $this->getLanguageId();
         $url = [];

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Checkbox, FormControl, FormHelperText, Grid, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
+import { Grid } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -120,6 +120,8 @@ export const EventMainPartForm = ({
                     </Grid>
                 </Grid>
             </Component.CmtFormBlock>
+
+            <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
         </>
     );
 };

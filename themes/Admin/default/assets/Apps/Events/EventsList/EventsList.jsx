@@ -101,6 +101,12 @@ export const EventsList = () => {
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             changeFilters={(newFilters) => dispatch(changeEventsFilters(newFilters))}
+                            onPreview={(el) => {
+                                if (!el?.frontUrl) {
+                                    return;
+                                }
+                                window.open(el.frontUrl, '_blank').focus();
+                            }}
                         />
 
                         <Component.CmtPagination

@@ -1,43 +1,81 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FieldArray, Formik } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import moment from 'moment';
-
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Box } from '@mui/system';
-import { Button, Card, CardContent, FormHelperText, Grid, InputLabel } from '@mui/material';
+import { Button, FormHelperText, Grid } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { changeSlug } from '@Services/utils/changeSlug';
-import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
 
-export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList }) => {
-    const initValues = translateInitialValues || initialValues;
+export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null }) => {
+    const [initValue, setInitValue] = useState(null);
     const navigate = useNavigate();
 
-    const pageSchema = Yup.object().shape({
-        title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
-        pageBlocks: Yup.array().of(
-            Yup.object().shape({
-                name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
-            })
-        ),
-    });
+    const getContentModules = useMemo(() => {
+        return ContentModules();
+    }, []);
 
-    return (
-        <Formik
-            initialValues={{
-                active: initValues?.active || false,
-                title: initValues?.title || '',
-                parent: initValues?.parent?.id || '',
-                subtitle: initValues?.subtitle || '',
+    const getValidation = (contentType, contentModule) => {
+        if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
+            return;
+        }
+
+        let validation = Yup[contentModule?.VALIDATION_TYPE]();
+
+        const valList = { ...contentType.validations, ...contentType.options };
+
+        contentModule?.VALIDATION_LIST?.forEach((element) => {
+            const elVal = valList[element.name];
+            if (elVal && element.test(elVal.value)) {
+                validation = validation[element.validationName](...element.params({ name: contentType.title, value: elVal.value }));
+            }
+        });
+
+        return validation;
+    };
+
+    const getFieldsValidation = (contentType) => {
+        let validation = {};
+
+        if (!contentType) {
+            return Yup.object().nullable();
+        }
+
+        contentType.fields?.forEach((el) => {
+            validation[el.name] = getContentModules[el.type]?.getValidation ? getContentModules[el.type].getValidation(el) : getValidation(el, getContentModules[el.type]);
+        });
+
+        return Yup.object().shape({ ...validation });
+    };
+
+    let pageValidationSchema = useMemo(() => {
+        return Yup.object().shape({
+            title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
+            fields: getFieldsValidation(initialValues?.contentType || contentType),
+            pageBlocks: Yup.array().of(
+                Yup.object().shape({
+                    name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
+                })
+            ),
+        });
+    }, []);
+
+    useEffect(() => {
+        let initVal = translateInitialValues || initialValues;
+
+        if (initVal) {
+            setInitValue({
+                title: initVal?.title || '',
+                active: initVal?.active || false,
+                parent: initVal?.parent?.id || '',
+                subtitle: initVal?.subtitle || '',
                 pageBlocks:
-                    initValues?.pageBlocks?.map((pageBlock) => ({
+                    initVal?.pageBlocks?.map((pageBlock) => ({
                         name: pageBlock.name,
                         blockType: pageBlock?.blockType || 0,
                         saveAsModel: false,
@@ -49,24 +87,69 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                             l: column?.l || 12,
                             xl: column?.xl || 12,
                         })),
-                        lang: pageBlock?.lang?.id || initValues?.lang?.id || '',
+                        lang: pageBlock?.lang?.id || initVal?.lang?.id || '',
                         languageGroup: pageBlock?.languageGroup || '',
                     })) || [],
-                slug: initValues?.slug || '',
+                slug: initVal?.slug || '',
                 editSlug: false,
-                lang: initValues?.lang?.id || '',
-                languageGroup: initValues?.languageGroup || '',
+                lang: initVal?.lang?.id || '',
+                languageGroup: initVal?.languageGroup || '',
+                fields: { ...initVal?.fields },
+                contentType: initVal?.contentType?.id || contentType?.id,
                 seo: {
-                    metaTitle: initValues?.metaTitle || '',
-                    metaDescription: initValues?.metaDescription || '',
-                    socialImage: initValues?.socialImage || null,
-                    fbTitle: initValues?.fbTitle || '',
-                    fbDescription: initValues?.fbDescription || '',
-                    twTitle: initValues?.twTitle || '',
-                    twDescription: initValues?.twDescription || '',
+                    metaTitle: initVal?.metaTitle || '',
+                    metaDescription: initVal?.metaDescription || '',
+                    socialImage: initVal?.socialImage || null,
+                    fbTitle: initVal?.fbTitle || '',
+                    fbDescription: initVal?.fbDescription || '',
+                    twTitle: initVal?.twTitle || '',
+                    twDescription: initVal?.twDescription || '',
                 },
-            }}
-            validationSchema={pageSchema}
+            });
+
+            return;
+        }
+
+        const formModules = getContentModules;
+
+        let fields = {};
+
+        contentType?.fields?.forEach((el) => {
+            fields[el.name] = formModules[el.type]?.getInitialValue(el) || '';
+        });
+
+        setInitValue({
+            title: '',
+            active: false,
+            parent: '',
+            subtitle: '',
+            pageBlocks: [],
+            slug: '',
+            fields: fields,
+            contentType: contentType?.id,
+            lang: '',
+            languageGroup: '',
+            editSlug: false,
+            seo: {
+                metaTitle: '',
+                metaDescription: '',
+                socialImage: null,
+                fbTitle: '',
+                fbDescription: '',
+                twTitle: '',
+                twDescription: '',
+            },
+        });
+    }, []);
+
+    if (!initValue) {
+        return <></>;
+    }
+
+    return (
+        <Formik
+            initialValues={initValue}
+            validationSchema={pageValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
@@ -113,7 +196,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                     label="Page parente"
                                     name={`parent`}
                                     value={values.parent}
-                                    list={pagesList?.filter((item) => item.id !== initValues?.id)}
+                                    list={pagesList?.filter((item) => item.id !== initValue?.id)}
                                     getValue={(item) => item.id}
                                     getName={(item) => item.title}
                                     setFieldValue={setFieldValue}
@@ -133,20 +216,39 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                         </Grid>
                     </Component.CmtFormBlock>
 
-                    <Component.CmtFormBlock title="Blocs">
-                        <Component.PagesBlocksPart
-                            values={values}
-                            errors={errors}
-                            touched={touched}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            initValues={initValues}
-                        />
+                    {contentType && (
+                        <Component.CmtFormBlock title="Champs">
+                            <Component.DisplayContentForm
+                                values={values.fields}
+                                errors={errors}
+                                touched={touched}
+                                handleBlur={handleBlur}
+                                handleChange={handleChange}
+                                setFieldTouched={setFieldTouched}
+                                setFieldValue={setFieldValue}
+                                contentType={contentType}
+                                contentModules={getContentModules}
+                                prefixName="fields."
+                            />
+                        </Component.CmtFormBlock>
+                    )}
 
-                        {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}
-                    </Component.CmtFormBlock>
+                    {(!contentType || contentType?.displayBlocks) && (
+                        <Component.CmtFormBlock title="Blocs">
+                            <Component.PagesBlocksPart
+                                values={values}
+                                errors={errors}
+                                touched={touched}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                initValue={initValue}
+                            />
+
+                            {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}
+                        </Component.CmtFormBlock>
+                    )}
 
                     <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
 

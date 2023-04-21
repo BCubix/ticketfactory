@@ -76,9 +76,12 @@ const contentTypesApi = {
         }
     },
 
-    getAllContentTypes: async () => {
+    getAllContentTypes: async (filters) => {
         try {
-            let params = { 'filters[page]': 0 };
+            let params = {};
+
+            filters.page = 0;
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
 
             const result = await axios.get('/content-types', { params: params });
 
@@ -107,6 +110,7 @@ const contentTypesApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('pageType', data.pageType ? 1 : 0);
+            formData.append('displayBlocks', data.displayBlocks ? 1 : 0);
             formData.append('maxObjectNb', data.maxObjectNb);
             formData.append('pageParent', data.pageParent || '');
 
@@ -129,6 +133,7 @@ const contentTypesApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('name', data.name);
             formData.append('pageType', data.pageType ? 1 : 0);
+            formData.append('displayBlocks', data.displayBlocks ? 1 : 0);
             formData.append('maxObjectNb', data.maxObjectNb);
             formData.append('pageParent', data.pageParent || '');
 

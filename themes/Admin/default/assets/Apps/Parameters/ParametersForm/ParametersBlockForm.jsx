@@ -56,6 +56,7 @@ export const ParametersBlockForm = ({ indexTab, blocks, handleChange, handleBlur
                             indexParam={indexParam}
                             id={id}
                             validations={validations}
+                            handleChange={handleChange}
                         />
                     );
                 })}

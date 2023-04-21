@@ -2,6 +2,7 @@
 
 namespace App\Entity\Page;
 
+use App\Entity\Content\Content;
 use App\Entity\Content\ContentType;
 use App\Entity\Datable;
 use App\Entity\SEOAble\SEOAble;
@@ -89,12 +90,16 @@ class Page extends Datable
     #[ORM\OneToMany(mappedBy: 'pageParent', targetEntity: ContentType::class, orphanRemoval: true)]
     private $contentTypes;
 
+    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class)]
+    private Collection $contents;
+
 
     public function __construct()
     {
         $this->pageBlocks = new ArrayCollection();
         $this->pages = new ArrayCollection();
         $this->contentTypes = new ArrayCollection();
+        $this->contents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -276,5 +281,35 @@ class Page extends Datable
     #[ORM\PreUpdate]
     public function completeSeo() {
         $this->completeFields($this->getTitle());
+    }
+
+    /**
+     * @return Collection<int, Content>
+     */
+    public function getContents(): Collection
+    {
+        return $this->contents;
+    }
+
+    public function addContent(Content $content): self
+    {
+        if (!$this->contents->contains($content)) {
+            $this->contents->add($content);
+            $content->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContent(Content $content): self
+    {
+        if ($this->contents->removeElement($content)) {
+            // set the owning side to null (unless already changed)
+            if ($content->getPage() === $this) {
+                $content->setPage(null);
+            }
+        }
+
+        return $this;
     }
 }

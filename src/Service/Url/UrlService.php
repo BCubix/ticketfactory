@@ -81,7 +81,7 @@ class UrlService
 
     public function eventPath(Event $event, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
-        $slugs = $this->mf->get('event')->getUrlSlugs($event);
+        $slugs = $this->em->getUrlSlugs($event);
 
         $page = $this->prm->get('page_event');
         while ($page !== null) {

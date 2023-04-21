@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Menu, MenuItem } from '@mui/material';
 import { useTheme } from '@emotion/react';
@@ -7,6 +7,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TranslateIcon from '@mui/icons-material/Translate';
+import { Link as RouterLink } from 'react-router-dom';
 
 export const ListTableContextualMenu = ({
     contextualMenu,
@@ -80,16 +81,19 @@ export const ListTableContextualMenu = ({
             {onPreview && (
                 <MenuItem
                     id={`previewButton-${selectedMenuItem?.id}`}
-                    onClick={(e) => {
-                        e.stopPropagation();
-
-                        if (onPreview) {
-                            onPreview(selectedMenuItem.id);
-                            setSelectedMenuItem(null);
-                            setAnchorEl(null);
-                        }
+                    sx={{
+                        color: '#4A148C',
+                        '&:hover': {
+                            color: '#4A148C',
+                        },
                     }}
-                    sx={{ color: '#4A148C' }}
+                    onClick={(e) => {
+                        e.preventDefault();
+
+                        onPreview(selectedMenuItem);
+                        setSelectedMenuItem(null);
+                        setAnchorEl(null);
+                    }}
                 >
                     <VisibilityIcon sx={{ marginRight: 2 }} />
                     Prévisualiser

@@ -18,9 +18,11 @@ export const CreatePage = () => {
     const languagesData = useSelector(languagesSelector);
     const [initialValues, setInitialValues] = useState(null);
     const [pagesList, setPagesList] = useState(null);
+    const [selectedContentType, setSelectedContentType] = useState(null);
 
     const [queryParameters] = useSearchParams();
     const pageId = queryParameters.get('pageId');
+    const pageType = queryParameters.get('pageType');
     const languageId = queryParameters.get('languageId');
 
     const getPageList = (langId) => {
@@ -35,6 +37,40 @@ export const CreatePage = () => {
             setPagesList(pages.pages);
         });
     };
+
+    useEffect(() => {
+        if (!pageId && !pageType) {
+            NotificationManager.error("Le type de page n'a pas été renseigné", 'Erreur', Constant.REDIRECTION_TIME);
+            navigate(Constant.PAGES_BASE_PATH);
+            return;
+        }
+
+        if (!pageType || parseInt(pageType) === 0 || (pageId && !initialValues)) {
+            return;
+        }
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.contentTypesApi.getOneContentType(pageType);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite.", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            let available = await Api.contentsApi.getAvailable(pageType);
+            if (!available?.result) {
+                NotificationManager.error("Une erreur s'est produite.", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            } else if (result.contentType?.maxObjectNb && result.contentType?.maxObjectNb - available.number <= 0) {
+                NotificationManager.error('Vous ne pouvez plus créer de page avec ce type.', 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            setSelectedContentType(result.contentType);
+        });
+    }, [pageType, initialValues]);
 
     useEffect(() => {
         if ((!languageId && !languagesData?.languages) || pagesList) {
@@ -62,20 +98,33 @@ export const CreatePage = () => {
         });
     }, []);
 
+    const handleCreateContent = async (values, result) => {
+        values.page = result?.page?.id;
+
+        if (selectedContentType) {
+            const contentResult = await Api.contentsApi.createContent(values);
+            if (!contentResult.result) {
+                return;
+            }
+        }
+
+        NotificationManager.success('La page a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
+        dispatch(getPagesAction());
+        navigate(Constant.PAGES_BASE_PATH);
+    };
+
     function handleSubmit(values) {
         apiMiddleware(dispatch, async () => {
             const result = await Api.pagesApi.createPage(values);
             if (result.result) {
-                NotificationManager.success('La page a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getPagesAction());
-                navigate(Constant.PAGES_BASE_PATH);
+                handleCreateContent(values, result);
             }
         });
     }
 
-    if (!pagesList || (pageId && !initialValues)) {
+    if (!pagesList || (pageType && parseInt(pageType) !== 0 && !selectedContentType) || (pageId && !initialValues)) {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} pagesList={pagesList} />;
+    return <Component.PagesForm handleSubmit={handleSubmit} translateInitialValues={initialValues} pagesList={pagesList} contentType={selectedContentType} />;
 };

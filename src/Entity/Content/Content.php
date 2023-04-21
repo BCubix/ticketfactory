@@ -4,6 +4,7 @@ namespace App\Entity\Content;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
+use App\Entity\Page\Page;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\ContentRepository;
 
@@ -64,6 +65,11 @@ class Content extends Datable
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
+    #[ORM\ManyToOne(inversedBy: 'contents')]
+    private ?Page $page = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -151,5 +157,17 @@ class Content extends Datable
     #[ORM\PreUpdate]
     public function completeSeo() {
         $this->completeFields($this->getTitle());
+    }
+
+    public function getPage(): ?Page
+    {
+        return $this->page;
+    }
+
+    public function setPage(?Page $page): self
+    {
+        $this->page = $page;
+
+        return $this;
     }
 }
