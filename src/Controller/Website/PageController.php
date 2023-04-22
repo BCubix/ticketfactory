@@ -11,11 +11,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends WebsiteController
 {
-    #[Route('/{slugs}', name: 'tf_website_orchestrator', requirements: ['slugs' => '^(?!/en).*$'], priority: -100)]
-    public function index(Request $request, string $slugs)
+    public function index(string $slugs)
     {
-        $userAddress = $request->get('u');
-        $userPass = $request->get('t');
+        $userAddress = $this->getRequest()->get('u');
+        $userPass = $this->getRequest()->get('t');
         $user = null;
 
         if (null  !== $userAddress && null !== $userPass) {
@@ -51,7 +50,7 @@ class PageController extends WebsiteController
         }
 
         if (null === $page || (false === $page->isActive() && (null === $user || !in_array("ROLE_ADMIN", $user->getRoles())))) {
-            return $this->websiteRender('404/index.html.twig', []);
+            throw $this->createNotFoundException('This page does not exist.');
         }
 
         return $this->websiteRender('Page/index.html.twig', [ 'page' => $page]);

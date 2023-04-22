@@ -42,7 +42,7 @@ class ModuleManager extends ModuleThemeManager
             $imageUrlWithoutExt = "modules/$objectName/logo";
 
             $originFile = "$imagePathWithoutExt.$ext";
-            $targetFile = "{$this->pg->getProjectDir()}public/$imageUrlWithoutExt.$ext";
+            $targetFile = "{$this->sf->get('pathGetter')->getProjectDir()}public/$imageUrlWithoutExt.$ext";
             $this->fs->copy($originFile, $targetFile);
 
             $ext = "/$imageUrlWithoutExt.$ext";
@@ -74,7 +74,7 @@ class ModuleManager extends ModuleThemeManager
             return;
         }
 
-        if ($nodeKey === 'config') {
+        if (in_array($nodeKey, ['config', 'templates'])) {
             return;
         }
 
@@ -154,7 +154,7 @@ class ModuleManager extends ModuleThemeManager
 
         $originFile = $this->getDir() . "/$objectName/config/migrations/Version$objectName.php";
         if (is_file($originFile)) {
-            $targetFile = "{$this->pg->getProjectDir()}migrations/Version$objectName.php";
+            $targetFile = "{$this->sf->get('pathGetter')->getProjectDir()}migrations/Version$objectName.php";
             $this->fs->copy($originFile, $targetFile);
         }
 
@@ -165,7 +165,7 @@ class ModuleManager extends ModuleThemeManager
     {
         parent::deleteInDisk($objectName);
 
-        $this->fs->remove("{$this->pg->getProjectDir()}migrations/Version$objectName.php");
+        $this->fs->remove("{$this->sf->get('pathGetter')->getProjectDir()}migrations/Version$objectName.php");
     }
 
     /**
@@ -281,6 +281,6 @@ class ModuleManager extends ModuleThemeManager
     public function getModuleConfigInstance(string $name): ModuleConfig
     {
         return GetClass::getClass($this->getDir() . "/$name/{$name}Config.php",
-            $name . 'Config', [$this->getDir(), $this->hs]);
+            $name . 'Config', [$this->getDir(), $this->sf->get('hook')]);
     }
 }
