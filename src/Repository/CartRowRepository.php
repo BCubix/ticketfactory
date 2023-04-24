@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method CartRow[]    findAll()
  * @method CartRow[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CartRowRepository extends ServiceEntityRepository
+class CartRowRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -4,7 +4,6 @@ import moment from 'moment/moment';
 import { Grid, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
 

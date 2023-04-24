@@ -49,6 +49,10 @@ const ConstantObj = {
     MODULES_BASE_PATH: '/admin/modules',
     THEMES_BASE_PATH: '/admin/themes',
     HOOKS_BASE_PATH: '/admin/hooks',
+    CUSTOMERS_BASE_PATH: '/admin/clients',
+    ORDERS_BASE_PATH: '/admin/commandes',
+    CARTS_BASE_PATH: '/admin/paniers',
+    DISCOUNTS_BASE_PATH: '/admin/reductions',
 
     EDIT_PATH: '/modifier',
     CREATE_PATH: '/nouveau',

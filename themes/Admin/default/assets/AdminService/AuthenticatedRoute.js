@@ -110,6 +110,17 @@ const AuthenticatedRouteObj = [
 
     () => ({ path: Constant.HOOKS_BASE_PATH, component: Component.ModulesMenu, tabValue: 1 }),
     () => ({ path: Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateHook }),
+
+    () => ({ path: Constant.CUSTOMERS_BASE_PATH, component: Component.CustomersList }),
+    () => ({ path: Constant.CUSTOMERS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateCustomer }),
+    () => ({ path: `${Constant.CUSTOMERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditCustomer }),
+
+    () => ({ path: Constant.CARTS_BASE_PATH, component: Component.CartsList }),
+    () => ({ path: `${Constant.CARTS_BASE_PATH}/:id`, component: Component.CartsDetail }),
+
+    () => ({ path: Constant.DISCOUNTS_BASE_PATH, component: Component.DiscountsList }),
+    () => ({ path: Constant.DISCOUNTS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateDiscount }),
+    () => ({ path: `${Constant.DISCOUNTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditDiscount }),
 ];
 
 /**

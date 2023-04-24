@@ -1,0 +1,8 @@
+doctrine:
+    orm:
+        mappings:
+            Info:
+                is_bundle: true
+                dir: 'Entity'
+                prefix: 'TicketFactory\Module\Info\Entity'
+                alias: TicketFactory\Module\Info

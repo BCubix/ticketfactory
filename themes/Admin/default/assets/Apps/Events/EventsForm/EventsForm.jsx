@@ -111,7 +111,7 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}>
                     <Component.CmtTabs
                         containerStyle={{ mt: 3 }}
-                        list={Tab.EventsFormTabList(
+                        list={Tab.EventsFormTabList({
                             values,
                             handleChange,
                             handleBlur,
@@ -123,8 +123,9 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                             seasonsList,
                             categoriesList,
                             tagsList,
-                            initValues
-                        )}
+                            initialValues: initValues,
+                            editMode: Boolean(initialValues),
+                        })}
                     />
 
                     <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>

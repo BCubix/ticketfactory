@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { emphasize, TableCell, TableRow } from '@mui/material';
+import { TableCell } from '@mui/material';
 import { ListTableCellButtons } from './ListTableCellButtons';
 import { RenderCellFunction } from './RenderCellFunction';
 
@@ -18,6 +18,7 @@ export const ListTableBodyLine = ({
     onActive,
     onDisable,
     onDragEnd,
+    onPreview,
     disableDeleteFunction,
     contextualMenu,
     themeId,
@@ -55,6 +56,7 @@ export const ListTableBodyLine = ({
                     onRemove={onRemove}
                     onSelect={onSelect}
                     onActive={onActive}
+                    onPreview={onPreview}
                     onDisable={onDisable}
                     disableDeleteFunction={disableDeleteFunction}
                     contextualMenu={contextualMenu}
@@ -81,6 +83,7 @@ export const ListTableBodyLine = ({
                         onActive={onActive}
                         onDisable={onDisable}
                         onDragEnd={onDragEnd}
+                        onPreview={onPreview}
                         disableDeleteFunction={disableDeleteFunction}
                         contextualMenu={contextualMenu}
                         themeId={themeId}

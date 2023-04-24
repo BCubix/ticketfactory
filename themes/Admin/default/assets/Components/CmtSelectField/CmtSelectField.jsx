@@ -13,6 +13,7 @@ export const CmtSelectField = ({
     getName,
     setFieldValue,
     errors,
+    handleBlur = null,
     getMenuItem = null,
 }) => {
     return (
@@ -26,9 +27,11 @@ export const CmtSelectField = ({
                 variant="standard"
                 value={value}
                 label={label}
+                name={name}
                 onChange={(e) => {
                     setFieldValue(name, e.target.value);
                 }}
+                onBlur={handleBlur}
                 {...(multiple && {
                     multiple: true,
                     renderValue: (selected) => {

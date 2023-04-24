@@ -25,6 +25,9 @@ import hooksReducer from '@Redux/hooks/hooksSlice';
 import pageBlocksReducer from '@Redux/pageBlocks/pageBlocksSlice';
 import languagesReducer from '@Redux/languages/languagesSlice';
 import mediaCategoriesReducer from '@Redux/mediaCategories/mediaCategoriesSlice';
+import customersReducer from '@Redux/customers/customersSlice';
+import cartsReducer from '@Redux/carts/cartsSlice';
+import discountsReducer from '@Redux/discounts/discountsSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -52,6 +55,9 @@ const reducer = {
     pageBlocks: pageBlocksReducer,
     languages: languagesReducer,
     mediaCategories: mediaCategoriesReducer,
+    customers: customersReducer,
+    carts: cartsReducer,
+    discounts: discountsReducer,
 };
 
 const store = configureStore({

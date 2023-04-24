@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Ticket Factory{% endblock %}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            {% if serverSideRendering is defined and serverSideRendering == true %}
+                <div id="root" data-serverSide='true'>{{render | raw}}</div>
+            {% else %}
+                <div id="root" data-serverSide='false'></div>
+            {% endif %}
+        {% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </body>
+</html>

@@ -21,13 +21,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer extends Datable implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const CIVILITIES = ['M.', 'Mme.'];
+    public const CIVILITIES = [
+        'M.'   => 'Monsieur',
+        'Mme.' => 'Madame'
+    ];
 
     /*** > Trait ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,7 +40,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
@@ -46,19 +49,19 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
 
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstName = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
 
-    #[Assert\Choice(choices: self::CIVILITIES, message: 'Vous devez choisir une civilité valide.')]
+    #[Assert\Choice(callback: 'getCivilitiesKeys', message: 'Vous devez choisir une civilité valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
     #[ORM\Column(length: 3, nullable: true)]
     private ?string $civility = null;
 
@@ -262,5 +265,9 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
         }
 
         return $this;
+    }
+
+    public function getCivilitiesKeys() {
+        return array_keys(self::CIVILITIES);
     }
 }

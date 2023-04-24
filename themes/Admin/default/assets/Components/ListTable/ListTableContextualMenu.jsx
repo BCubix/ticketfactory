@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Menu, MenuItem } from '@mui/material';
 import { useTheme } from '@emotion/react';
@@ -7,7 +7,6 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TranslateIcon from '@mui/icons-material/Translate';
-import { Link as RouterLink } from 'react-router-dom';
 
 export const ListTableContextualMenu = ({
     contextualMenu,

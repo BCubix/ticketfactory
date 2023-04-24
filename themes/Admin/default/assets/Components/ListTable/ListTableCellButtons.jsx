@@ -3,6 +3,7 @@ import { TableCell } from '@mui/material';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,6 +19,7 @@ export const ListTableCellButtons = ({
     onSelect,
     onActive,
     onDisable,
+    onPreview,
     disableDeleteFunction,
     contextualMenu,
     themeId,
@@ -25,7 +27,7 @@ export const ListTableCellButtons = ({
     expendElementTranslation,
     setExpendElementTranslation,
 }) => {
-    if (onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null)) {
+    if (onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null) || onPreview !== null) {
         return (
             <TableCell component="td" scope="row">
                 {onActive !== null && onDisable !== null && (
@@ -87,10 +89,15 @@ export const ListTableCellButtons = ({
                     </Component.EditFabButton>
                 )}
 
+                {onPreview && !contextualMenu && (
+                    <Component.ActionFabButton sx={{ marginInline: 1 }} size="small" id={`previewButton-${item.id}`} aria-label="Preview" onClick={() => onPreview(item)}>
+                        <VisibilityIcon />
+                    </Component.ActionFabButton>
+                )}
+
                 {contextualMenu ? (
                     <Component.ActionFabButton
                         sx={{ marginInline: 1 }}
-                        color="error"
                         size="small"
                         id={`actionButton-${item.id}`}
                         aria-label="Menu contextuel"

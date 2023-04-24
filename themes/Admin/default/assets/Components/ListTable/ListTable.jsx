@@ -1,12 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-import { Table, TableBody, TableContainer } from '@mui/material';
+import { Table, TableContainer } from '@mui/material';
 
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
-
 import { languagesSelector } from '@Redux/languages/languagesSlice';
-
 import { Component } from '@/AdminService/Component';
 
 /**
@@ -46,7 +43,7 @@ export const ListTable = ({
     changeFilters = null,
     contextualMenu = false,
     disableDeleteFunction = null,
-    onDragEnd = null
+    onDragEnd = null,
 }) => {
     const languagesData = useSelector(languagesSelector);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -90,13 +87,12 @@ export const ListTable = ({
                     table={table}
                     filters={filters}
                     changeFilters={changeFilters}
-                    displayAction={Boolean(onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null))}
+                    displayAction={Boolean(
+                        onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null) || onPreview
+                    )}
                     onDragEnd={onDragEnd}
                 />
-                <Component.CmtDragAndDropTableBody
-                    droppableId={'drag'}
-                    onDragEnd={onDragEnd}
-                >
+                <Component.CmtDragAndDropTableBody droppableId={'drag'} onDragEnd={onDragEnd}>
                     {list?.map((item, index) => (
                         <Component.ListTableBodyLine
                             item={item}
@@ -110,6 +106,7 @@ export const ListTable = ({
                             onSelect={onSelect}
                             onActive={onActive}
                             onDisable={onDisable}
+                            onPreview={onPreview}
                             onDragEnd={onDragEnd}
                             disableDeleteFunction={disableDeleteFunction}
                             contextualMenu={contextualMenu}

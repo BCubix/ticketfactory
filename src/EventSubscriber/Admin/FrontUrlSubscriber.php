@@ -45,19 +45,20 @@ class FrontUrlSubscriber implements EventSubscriberInterface
 
     public function onPreSerialize(PreSerializeEvent $event): void
     {
-        $user = $this->security->getUser();
-
+        
         $object = $event->getObject();
         if (gettype($object) !== "object" || !get_class($object)) {
             return;
         }
-
+        
         $class = get_class($object);
         if (!array_key_exists($class, self::URL_TYPE_CLASS) || false === self::URL_TYPE_CLASS[$class]) {
             return;
         }
-
-        $frontUrl = $this->sf->get('urlService')->tfPath($object, ['u' => $user->getEmail(), 't' => substr($user->getPassword(), -8)], RouterInterface::ABSOLUTE_PATH);
+        
+        $user = $this->security->getUser();
+        $locale = $object->getLang()->getLocale();
+        $frontUrl = $this->sf->get('urlService')->tfPath($object, ['u' => $user->getEmail(), 't' => substr($user->getPassword(), -8), '_locale' => $locale], RouterInterface::ABSOLUTE_PATH);
 
         if (null === $frontUrl) {
             return;

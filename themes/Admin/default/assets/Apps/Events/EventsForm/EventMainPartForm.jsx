@@ -20,6 +20,7 @@ export const EventMainPartForm = ({
     tagsList,
     editMode,
 }) => {
+    console.log(editMode);
     return (
         <>
             <Component.CmtFormBlock title={'Informations générales'}>

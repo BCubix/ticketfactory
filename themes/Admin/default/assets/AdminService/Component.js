@@ -159,6 +159,21 @@ import { EditUserForm } from '@Apps/Users/UserForm/EditUserForm';
 import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
 import { UserFilters } from '@Apps/Users/UserList/UserFilters/UserFilters';
 import { UserList } from '@Apps/Users/UserList/UserList';
+import { CustomersFilters } from '@Apps/Customers/CustomersList/CustomersFilters/CustomersFilters';
+import { CustomersList } from '@Apps/Customers/CustomersList/CustomersList';
+import { CreateCustomer } from '@Apps/Customers/CreateCustomer/CreateCustomer';
+import { EditCustomer } from '@Apps/Customers/EditCustomer/EditCustomer';
+import { CustomersForm } from '@Apps/Customers/CustomersForm/CustomersForm';
+import { CartsList } from '@Apps/Carts/CartsList/CartsList';
+import { CartsFilters } from '@Apps/Carts/CartsList/CartsFilters/CartsFilters';
+import { CartsDetail } from '@Apps/Carts/CartsDetail/CartsDetail';
+import { CustomerCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CustomerCartPart';
+import { CartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartPart';
+import { DiscountsFilters } from '@Apps/Discounts/DiscountsList/DiscountsFilters/DiscountsFilters';
+import { DiscountsList } from '@Apps/Discounts/DiscountsList/DiscountsList';
+import { CreateDiscount } from '@Apps/Discounts/CreateDiscount/CreateDiscount';
+import { EditDiscount } from '@Apps/Discounts/EditDiscount/EditDiscount';
+import { DiscountsForm } from '@Apps/Discounts/DiscountsForm/DiscountsForm';
 import { CmtBreadCrumb } from '@Components/CmtBreadCrumb/CmtBreadCrumb';
 import { StyledBreadCrumb } from '@Components/CmtBreadCrumb/sc.StyledBreadCrumb';
 import {
@@ -429,6 +444,24 @@ const ComponentObj = {
     EditProfileForm: EditProfileForm,
     UserFilters: UserFilters,
     UserList: UserList,
+
+    CustomersList: CustomersList,
+    CustomersFilters: CustomersFilters,
+    CreateCustomer: CreateCustomer,
+    EditCustomer: EditCustomer,
+    CustomersForm: CustomersForm,
+
+    CartsList: CartsList,
+    CartsFilters: CartsFilters,
+    CartsDetail: CartsDetail,
+    CustomerCartPart: CustomerCartPart,
+    CartPart: CartPart,
+
+    DiscountsList: DiscountsList,
+    DiscountsFilters: DiscountsFilters,
+    CreateDiscount: CreateDiscount,
+    EditDiscount: EditDiscount,
+    DiscountsForm: DiscountsForm,
 
     CmtBreadCrumb: CmtBreadCrumb,
     StyledBreadCrumb: StyledBreadCrumb,

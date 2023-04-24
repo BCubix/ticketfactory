@@ -31,73 +31,26 @@ const TabObj = {
         { label: 'Modules', component: <Component.ModulesList />, path: Constant.MODULES_BASE_PATH },
         { label: 'Hooks', component: <Component.HooksList />, path: Constant.HOOKS_BASE_PATH },
     ],
-    EventsFormTabList: (values, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue, roomsList, seasonsList, categoriesList, tagsList, initialValues) => [
+    EventsFormTabList: (props) => [
         {
             label: 'Evènement',
             id: 'eventPartButton',
-            component: (
-                <Component.EventMainPartForm
-                    values={values}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    touched={touched}
-                    errors={errors}
-                    setFieldTouched={setFieldTouched}
-                    setFieldValue={setFieldValue}
-                    roomsList={roomsList}
-                    seasonsList={seasonsList}
-                    categoriesList={categoriesList}
-                    tagsList={tagsList}
-                    editMode={Boolean(initialValues)}
-                />
-            ),
+            component: <Component.EventMainPartForm {...props} />,
         },
         {
             label: 'Dates',
             id: 'datesPartButton',
-            component: (
-                <Component.EventsDateBlockForm
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                    touched={touched}
-                    errors={errors}
-                    handleBlur={handleBlur}
-                    handleChange={handleChange}
-                    initialValues={initialValues}
-                />
-            ),
+            component: <Component.EventsDateBlockForm {...props} />,
         },
         {
             label: 'Tarifs',
             id: 'pricesPartButton',
-            component: (
-                <Component.EventsPriceBlockForm
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                    touched={touched}
-                    errors={errors}
-                    handleBlur={handleBlur}
-                    handleChange={handleChange}
-                    initialValues={initialValues}
-                />
-            ),
+            component: <Component.EventsPriceBlockForm {...props} />,
         },
         {
             label: 'Médias',
             id: 'mediasPartButton',
-            component: (
-                <Component.EventMediaPartForm
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                    touched={touched}
-                    errors={errors}
-                    handleBlur={handleBlur}
-                    handleChange={handleChange}
-                />
-            ),
+            component: <Component.EventMediaPartForm {...props} />,
         },
     ],
 };

@@ -28,7 +28,7 @@ class EventDate
     ];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -42,24 +42,24 @@ class EventDate
     #[Assert\GreaterThan(value: "1970-01-01", message: 'Vous devez renseigner une date valide.')]
     #[Assert\NotBlank(message: 'La date doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one'])]
     #[ORM\Column(type: 'datetime')]
     private $eventDate;
 
     #[Assert\Choice(callback: 'getStateKeys', message: 'Vous devez renseigner un statut valide.')]
     #[Assert\NotBlank(message: 'Le statut doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one'])]
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     private $state;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one'])]
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $reportDate;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
 

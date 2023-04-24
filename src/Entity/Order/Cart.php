@@ -3,6 +3,7 @@
 namespace App\Entity\Order;
 
 use App\Entity\Customer\Customer;
+use App\Entity\Datable;
 use App\Repository\CartRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,7 +33,7 @@ class Cart extends Datable
     private ?Customer $customer = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartRow::class, orphanRemoval: true)]
     private Collection $cartRows;
     

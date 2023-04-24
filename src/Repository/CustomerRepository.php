@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Customer;
+use App\Entity\Customer\Customer;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;

@@ -1,8 +1,9 @@
 import React from 'react';
 import ExtensionIcon from '@mui/icons-material/Extension';
-import { Avatar } from '@mui/material';
+import { Avatar, Chip, Typography } from '@mui/material';
 import { checkArray, checkObject, checkString } from '@Services/utils/check';
 import { Component } from '@/AdminService/Component';
+import moment from 'moment/moment';
 
 const keys = ['name', 'label', 'width', 'type', 'sortable', 'renderFunction'];
 
@@ -127,6 +128,49 @@ const TableColumnObj = {
         { name: 'lastName', label: 'Nom', width: '15%', sortable: true },
         { name: 'email', label: 'Adresse Email', width: '20%', sortable: true },
         { name: 'roles', label: 'Rôle', width: '20%', sortable: true },
+    ],
+    CustomersList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'civility', label: 'Civilité', width: '10%', sortable: false },
+        { name: 'firstName', label: 'Prénom', width: '20%', sortable: true },
+        { name: 'lastName', label: 'Nom', width: '20%', sortable: true },
+        { name: 'email', label: 'Adresse Email', width: '20%', sortable: true },
+    ],
+    CartsList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        {
+            name: 'name',
+            label: 'Nom',
+            width: '30%',
+            renderFunction: (item) => (
+                <Typography>
+                    {item.customer?.civility} {item.customer?.firstName} {item.customer?.lastName}
+                </Typography>
+            ),
+        },
+        {
+            name: 'total',
+            label: 'Total',
+            width: '20%',
+            renderFunction: (item) => (
+                <Chip
+                    sx={{ backgroundColor: (theme) => theme.palette.success.light, color: (theme) => theme.palette.success.main }}
+                    label={`${item?.cartRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €`}
+                />
+            ),
+        },
+        {
+            name: 'createdAt',
+            label: 'Date',
+            width: '20%',
+            renderFunction: (item) => <Typography>{moment(item.createdAt).format('DD/MM/YYYY HH:mm')}</Typography>,
+        },
+    ],
+    DiscountsList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
     ],
     LanguagesList: [
         { name: 'id', label: 'ID', width: '10%' },

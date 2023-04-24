@@ -66,7 +66,7 @@ class CartRow
     private ?int $quantity = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
     #[ORM\Column]
     private ?float $total = null;
 

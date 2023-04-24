@@ -28,7 +28,7 @@ class Event extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -37,13 +37,13 @@ class Event extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[Gedmo\Slug(fields: ['name'], updatable: true)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_cart_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
@@ -54,7 +54,7 @@ class Event extends Datable
 
     #[Assert\NotBlank(message: 'Le chapô doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $chapo = null;
 

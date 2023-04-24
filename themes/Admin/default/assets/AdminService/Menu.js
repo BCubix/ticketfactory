@@ -17,6 +17,10 @@ import WidgetsIcon from '@mui/icons-material/Widgets';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryIcon from '@mui/icons-material/History';
 import LanguageIcon from '@mui/icons-material/Language';
+import PeopleIcon from '@mui/icons-material/People';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 import { Constant } from '@/AdminService/Constant';
 import { checkArray, checkObject, checkPosition, checkString } from '@Services/utils/check';
@@ -33,6 +37,15 @@ const MenuObj = [
             { name: 'Catégories', link: Constant.CATEGORIES_BASE_PATH, relatedLinks: [Constant.TAGS_BASE_PATH], icon: <CategoryIcon /> },
             { name: 'Salles', link: Constant.ROOMS_BASE_PATH, icon: <BusinessIcon /> },
             { name: 'Saisons', link: Constant.SEASONS_BASE_PATH, icon: <CalendarMonthIcon /> },
+        ],
+    }),
+    () => ({
+        title: 'VENDRE',
+        menu: [
+            { name: 'Clients', link: Constant.CUSTOMERS_BASE_PATH, icon: <PeopleIcon /> },
+            { name: 'Commandes', link: Constant.ORDERS_BASE_PATH, icon: <ShoppingCartIcon /> },
+            { name: 'Paniers', link: Constant.CARTS_BASE_PATH, icon: <ShoppingBasketIcon /> },
+            { name: 'Réductions', link: Constant.DISCOUNTS_BASE_PATH, icon: <MoneyOffIcon /> },
         ],
     }),
     () => ({
