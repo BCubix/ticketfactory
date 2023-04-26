@@ -10,24 +10,24 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeDiscountsFilters, getDiscountsAction, discountsSelector } from '@Redux/discounts/discountsSlice';
+import { changeVouchersFilters, getVouchersAction, vouchersSelector } from '@Redux/vouchers/vouchersSlice';
 
-export const DiscountsList = () => {
-    const { loading, discounts, filters, total, error } = useSelector(discountsSelector);
+export const VouchersList = () => {
+    const { loading, vouchers, filters, total, error } = useSelector(vouchersSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
 
     useEffect(() => {
-        if (!loading && !discounts && !error) {
-            dispatch(getDiscountsAction());
+        if (!loading && !vouchers && !error) {
+            dispatch(getVouchersAction());
         }
     }, []);
 
     const handleDelete = async (id) => {
-        await Api.discountsApi.deleteDiscount(id);
+        await Api.vouchersApi.deleteVoucher(id);
 
-        dispatch(getDiscountsAction());
+        dispatch(getVouchersAction());
 
         setDeleteDialog(null);
     };
@@ -41,37 +41,37 @@ export const DiscountsList = () => {
                             <Box display="flex" justifyContent="space-between" alignItems="center">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     Liste des réductions{' '}
-                                    {discounts && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + discounts.length} sur ${total})`}
+                                    {vouchers && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + vouchers.length} sur ${total})`}
                                 </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.DISCOUNTS_BASE_PATH + Constant.CREATE_PATH)}>
+                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH)}>
                                     Nouveau
                                 </Component.CreateButton>
                             </Box>
                         }
                     />
                     <CardContent>
-                        <Component.DiscountsFilters filters={filters} changeFilters={(values) => dispatch(changeDiscountsFilters(values))} />
+                        <Component.VouchersFilters filters={filters} changeFilters={(values) => dispatch(changeVouchersFilters(values))} />
 
                         <Component.ListTable
-                            table={TableColumn.DiscountsList}
-                            list={discounts}
+                            table={TableColumn.VouchersList}
+                            list={vouchers}
                             onEdit={(id) => {
-                                navigate(`${Constant.DISCOUNTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                                navigate(`${Constant.VOUCHERS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                             }}
                             onDelete={(id) => setDeleteDialog(id)}
                             filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeDiscountsFilters(newFilters))}
+                            changeFilters={(newFilters) => dispatch(changeVouchersFilters(newFilters))}
                         />
 
                         <Component.CmtPagination
                             page={filters.page}
                             total={total}
                             limit={filters.limit}
-                            setPage={(newValue) => dispatch(changeDiscountsFilters({ ...filters }, newValue))}
+                            setPage={(newValue) => dispatch(changeVouchersFilters({ ...filters }, newValue))}
                             setLimit={(newValue) => {
-                                dispatch(changeDiscountsFilters({ ...filters, limit: newValue }));
+                                dispatch(changeVouchersFilters({ ...filters, limit: newValue }));
                             }}
-                            length={discounts?.length}
+                            length={vouchers?.length}
                         />
                     </CardContent>
                 </Component.CmtCard>

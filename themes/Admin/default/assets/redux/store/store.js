@@ -27,7 +27,8 @@ import languagesReducer from '@Redux/languages/languagesSlice';
 import mediaCategoriesReducer from '@Redux/mediaCategories/mediaCategoriesSlice';
 import customersReducer from '@Redux/customers/customersSlice';
 import cartsReducer from '@Redux/carts/cartsSlice';
-import discountsReducer from '@Redux/discounts/discountsSlice';
+import vouchersReducer from '@Redux/vouchers/vouchersSlice';
+import ordersReducer from '@Redux/orders/ordersSlice';
 
 const reducer = {
     profile: profileReducer,
@@ -57,7 +58,8 @@ const reducer = {
     mediaCategories: mediaCategoriesReducer,
     customers: customersReducer,
     carts: cartsReducer,
-    discounts: discountsReducer,
+    vouchers: vouchersReducer,
+    orders: ordersReducer,
 };
 
 const store = configureStore({

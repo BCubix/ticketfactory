@@ -27,7 +27,8 @@ import usersApi from '@Services/api/usersApi';
 import hooksApi from '@Services/api/hooksApi';
 import customersApi from '@Services/api/customersApi';
 import cartsApi from '@Services/api/cartsApi';
-import discountsApi from '@Services/api/discountsApi';
+import vouchersApi from '@Services/api/vouchersApi';
+import ordersApi from '@Services/api/ordersApi';
 import { checkObject, checkString } from '@Services/utils/check';
 
 const ApiObj = {
@@ -60,7 +61,8 @@ const ApiObj = {
     hooksApi: hooksApi,
     customersApi: customersApi,
     cartsApi: cartsApi,
-    discountsApi: discountsApi,
+    vouchersApi: vouchersApi,
+    ordersApi: ordersApi,
 };
 
 /**

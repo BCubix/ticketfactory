@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const CartsFilters = ({ filters, changeFilters }) => {
+export const OrdersFilters = ({ filters }) => {
     return (
         <Box p={3} flexGrow={1} display="flex" justifyContent="flex-start" flexWrap="wrap">
             <Component.CmtBooleanFilters

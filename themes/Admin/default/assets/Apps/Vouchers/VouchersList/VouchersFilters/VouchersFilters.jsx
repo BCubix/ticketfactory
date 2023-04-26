@@ -5,7 +5,7 @@ import { Component } from '@/AdminService/Component';
 
 import CheckIcon from '@mui/icons-material/Check';
 
-export const DiscountsFilters = ({ filters, changeFilters }) => {
+export const VouchersFilters = ({ filters, changeFilters }) => {
     return (
         <Box p={3} flexGrow={1} display="flex" justifyContent="flex-start" flexWrap="wrap">
             <Component.CmtBooleanFilters

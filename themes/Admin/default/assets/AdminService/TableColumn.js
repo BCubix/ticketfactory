@@ -156,7 +156,7 @@ const TableColumnObj = {
             width: '20%',
             renderFunction: (item) => (
                 <Chip
-                    sx={{ backgroundColor: (theme) => theme.palette.success.light, color: (theme) => theme.palette.success.main }}
+                    sx={{ backgroundColor: '#FFFFFF', color: (theme) => theme.palette.success.main }}
                     label={`${item?.cartRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €`}
                 />
             ),
@@ -168,9 +168,65 @@ const TableColumnObj = {
             renderFunction: (item) => <Typography>{moment(item.createdAt).format('DD/MM/YYYY HH:mm')}</Typography>,
         },
     ],
-    DiscountsList: [
+    OrdersList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'reference', label: 'Référence', width: '15%', sortable: true },
+        {
+            name: 'name',
+            label: 'Client',
+            width: '30%',
+            renderFunction: (item) => (
+                <Typography>
+                    {item.customer?.civility} {item.customer?.firstName} {item.customer?.lastName}
+                </Typography>
+            ),
+        },
+        {
+            name: 'total',
+            label: 'Total',
+            width: '20%',
+            renderFunction: (item) => (
+                <Chip
+                    sx={{ backgroundColor: '#FFFFFF', color: (theme) => theme.palette.success.main }}
+                    label={`${item?.cart?.cartRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €`}
+                />
+            ),
+        },
+        {
+            name: 'status',
+            label: 'État',
+            width: '20%',
+            renderFunction: (item) => <Chip sx={{ backgroundColor: item.status.color }} label={item.status.name} />,
+        },
+    ],
+    VouchersList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '15%' },
+        { name: 'code', label: 'Code', width: '10%' },
+        {
+            name: 'discount',
+            label: 'Réduction',
+            width: '10%',
+            renderFunction: (item) => (
+                <Typography>
+                    {item?.discount} {item.unit}
+                </Typography>
+            ),
+        },
+        {
+            name: 'beginDate',
+            label: 'Date de début',
+            width: '15%',
+            renderFunction: (item) => <Typography>{item.beginDate ? moment(item.beginDate).format('DD/MM/YYYY') : '-'}</Typography>,
+        },
+        {
+            name: 'endDate',
+            label: 'Date de fin',
+            width: '15%',
+            renderFunction: (item) => <Typography>{item.endDate ? moment(item.endDate).format('DD/MM/YYYY') : '-'}</Typography>,
+        },
     ],
     LanguagesList: [
         { name: 'id', label: 'ID', width: '10%' },

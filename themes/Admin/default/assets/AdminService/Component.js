@@ -169,11 +169,18 @@ import { CartsFilters } from '@Apps/Carts/CartsList/CartsFilters/CartsFilters';
 import { CartsDetail } from '@Apps/Carts/CartsDetail/CartsDetail';
 import { CustomerCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CustomerCartPart';
 import { CartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartPart';
-import { DiscountsFilters } from '@Apps/Discounts/DiscountsList/DiscountsFilters/DiscountsFilters';
-import { DiscountsList } from '@Apps/Discounts/DiscountsList/DiscountsList';
-import { CreateDiscount } from '@Apps/Discounts/CreateDiscount/CreateDiscount';
-import { EditDiscount } from '@Apps/Discounts/EditDiscount/EditDiscount';
-import { DiscountsForm } from '@Apps/Discounts/DiscountsForm/DiscountsForm';
+import { OrderCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/OrderCartPart';
+import { VouchersList } from '@Apps/Vouchers/VouchersList/VouchersList';
+import { CreateVoucher } from '@Apps/Vouchers/CreateVoucher/CreateVoucher';
+import { EditVoucher } from '@Apps/Vouchers/EditVoucher/EditVoucher';
+import { VouchersForm } from '@Apps/Vouchers/VouchersForm/VouchersForm';
+import { VouchersFilters } from '@Apps/Vouchers/VouchersList/VouchersFilters/VouchersFilters';
+import { OrdersList } from '@Apps/Orders/OrdersList/OrdersList';
+import { OrdersFilters } from '@Apps/Orders/OrdersList/OrdersFilters/OrdersFIlters';
+import { OrdersDetail } from '@Apps/Orders/OrdersDetail/OrdersDetail';
+import { CartOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CartOrderPart';
+import { CustomerOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CustomerOrderPart';
+import { OrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/OrderPart';
 import { CmtBreadCrumb } from '@Components/CmtBreadCrumb/CmtBreadCrumb';
 import { StyledBreadCrumb } from '@Components/CmtBreadCrumb/sc.StyledBreadCrumb';
 import {
@@ -456,12 +463,20 @@ const ComponentObj = {
     CartsDetail: CartsDetail,
     CustomerCartPart: CustomerCartPart,
     CartPart: CartPart,
+    OrderCartPart: OrderCartPart,
 
-    DiscountsList: DiscountsList,
-    DiscountsFilters: DiscountsFilters,
-    CreateDiscount: CreateDiscount,
-    EditDiscount: EditDiscount,
-    DiscountsForm: DiscountsForm,
+    VouchersList: VouchersList,
+    VouchersFilters: VouchersFilters,
+    CreateVoucher: CreateVoucher,
+    EditVoucher: EditVoucher,
+    VouchersForm: VouchersForm,
+
+    OrdersList: OrdersList,
+    OrdersFilters: OrdersFilters,
+    OrdersDetail: OrdersDetail,
+    CartOrderPart: CartOrderPart,
+    CustomerOrderPart: CustomerOrderPart,
+    OrderPart: OrderPart,
 
     CmtBreadCrumb: CmtBreadCrumb,
     StyledBreadCrumb: StyledBreadCrumb,

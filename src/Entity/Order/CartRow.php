@@ -7,6 +7,8 @@ use App\Entity\Event\EventDate;
 use App\Entity\Event\EventPrice;
 use App\Entity\Event\SeatingPlan;
 use App\Repository\CartRowRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,6 +75,16 @@ class CartRow
     #[ORM\ManyToOne(inversedBy: 'cartRows')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'cartRows')]
+    private Collection $vouchers;
+
+    public function __construct()
+    {
+        $this->vouchers = new ArrayCollection();
+    }
     
 
     public function getId(): ?int
@@ -184,6 +196,33 @@ class CartRow
     public function setCart(?Cart $cart): self
     {
         $this->cart = $cart;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Voucher>
+     */
+    public function getVouchers(): Collection
+    {
+        return $this->vouchers;
+    }
+
+    public function addVoucher(Voucher $voucher): self
+    {
+        if (!$this->vouchers->contains($voucher)) {
+            $this->vouchers->add($voucher);
+            $voucher->addCartRow($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoucher(Voucher $voucher): self
+    {
+        if ($this->vouchers->removeElement($voucher)) {
+            $voucher->removeCartRow($this);
+        }
 
         return $this;
     }

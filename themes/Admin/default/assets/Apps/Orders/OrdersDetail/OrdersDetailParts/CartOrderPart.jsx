@@ -6,7 +6,7 @@ import { CardContent, Grid, Table, TableBody, TableCell, TableContainer, TableHe
 import { Box } from '@mui/system';
 import { Link } from 'react-router-dom';
 
-export const CartPart = ({ cart }) => {
+export const CartOrderPart = ({ cart }) => {
     return (
         <Grid item xs={12}>
             <Component.CmtCard sx={{ position: 'relative' }} overflow="hidden">
@@ -71,7 +71,7 @@ export const CartPart = ({ cart }) => {
                                     </TableCell>
                                 </TableRow>
 
-                                {cart?.vouchers.map((voucher, voucherIndex) => (
+                                {cart?.vouchers?.map((voucher, voucherIndex) => (
                                     <TableRow key={voucherIndex}>
                                         <TableCell component="td" scope="row" colSpan={6}>
                                             {voucher?.name}

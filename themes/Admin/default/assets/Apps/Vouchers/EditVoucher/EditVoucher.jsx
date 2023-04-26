@@ -6,51 +6,51 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { getDiscountsAction } from '@Redux/discounts/discountsSlice';
+import { getVouchersAction } from '@Redux/vouchers/vouchersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-export const EditDiscount = () => {
+export const EditVoucher = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [discount, setDiscount] = useState(null);
+    const [voucher, setVoucher] = useState(null);
 
-    const getDiscount = async (id) => {
+    const getVoucher = async (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.discountsApi.getOneDiscount(id);
+            const result = await Api.vouchersApi.getOneVoucher(id);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.DISCOUNTS_BASE_PATH);
+                navigate(Constant.VOUCHERS_BASE_PATH);
                 return;
             }
 
-            setDiscount(result.user);
+            setVoucher(result.voucher);
         });
     };
 
     useEffect(() => {
         if (!id) {
-            navigate(Constant.DISCOUNTS_BASE_PATH);
+            navigate(Constant.VOUCHERS_BASE_PATH);
             return;
         }
 
-        getDiscount(id);
+        getVoucher(id);
     }, [id]);
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.discountsApi.editDiscount(id, values);
+            const result = await Api.vouchersApi.editVoucher(id, values);
             if (result.result) {
                 NotificationManager.success('La réduction a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getDiscountsAction());
-                navigate(Constant.DISCOUNTS_BASE_PATH);
+                dispatch(getVouchersAction());
+                navigate(Constant.VOUCHERS_BASE_PATH);
             }
         });
     };
 
-    if (!discount) {
+    if (!voucher) {
         return <></>;
     }
 
-    return <Component.DiscountsForm handleSubmit={handleSubmit} initialValues={discount} />;
+    return <Component.VouchersForm handleSubmit={handleSubmit} initialValues={voucher} />;
 };

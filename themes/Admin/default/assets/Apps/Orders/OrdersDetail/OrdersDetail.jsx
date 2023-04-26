@@ -1,52 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { Grid } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 
-import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
+import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Grid } from '@mui/material';
 
-export const CartsDetail = () => {
+export const OrdersDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [cart, setCart] = useState(null);
+    const [order, setOrder] = useState(null);
 
-    const getCart = async (id) => {
+    const getOrder = async (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.cartsApi.getOneCart(id);
+            const result = await Api.ordersApi.getOneOrder(id);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.CARTS_BASE_PATH);
+                navigate(Constant.ORDERS_BASE_PATH);
                 return;
             }
 
-            setCart(result.cart);
+            setOrder(result.order);
         });
     };
 
     useEffect(() => {
         if (!id) {
-            navigate(Constant.CARTS_BASE_PATH);
+            navigate(Constant.ORDERS_BASE_PATH);
             return;
         }
 
-        getCart(id);
+        getOrder(id);
     }, [id]);
 
-    if (!cart) {
+    if (!order) {
         return <></>;
     }
 
     return (
         <Component.CmtPageWrapper title={'Afficher'}>
             <Grid container spacing={4}>
-                <Component.CustomerCartPart customer={cart?.customer} />
-                <Component.OrderCartPart order={cart?.order} />
-                <Component.CartPart cart={cart} />
+                <Component.CustomerOrderPart customer={order?.customer} />
+                <Component.OrderPart order={order} />
+                <Component.CartOrderPart cart={order?.cart} />
             </Grid>
         </Component.CmtPageWrapper>
     );

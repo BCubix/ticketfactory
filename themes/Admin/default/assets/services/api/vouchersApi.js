@@ -3,7 +3,7 @@ import { createFilterParams } from '@Services/utils/createFilterParams';
 
 import { Constant } from '@/AdminService/Constant';
 
-const DEFAULT_PATH = '/discounts';
+const DEFAULT_PATH = '/vouchers';
 
 var controller = null;
 
@@ -29,16 +29,19 @@ const FILTERS_SORT_TAB = [
 const getFormData = (data) => {
     let formData = new FormData();
 
+    formData.append('name', data.name);
     formData.append('code', data.code);
     formData.append('discount', data.discount);
     formData.append('unit', data.unit);
+    formData.append('beginDate', data.beginDate);
+    formData.append('endDate', data.endDate);
     formData.append('active', data.active ? 1 : 0);
 
     return formData;
 };
 
-const discountsApi = {
-    getDiscounts: async (filters) => {
+const vouchersApi = {
+    getVouchers: async (filters) => {
         try {
             let params = {};
 
@@ -57,17 +60,17 @@ const discountsApi = {
 
             controller = null;
 
-            return { result: true, discounts: result.data.results, total: result?.data?.total };
+            return { result: true, vouchers: result.data.results, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
-                return { result: true, discounts: [], total: 0 };
+                return { result: true, vouchers: [], total: 0 };
             }
 
             return { result: false, error: error?.response?.data };
         }
     },
 
-    getAllDiscounts: async (filters) => {
+    getAllVouchers: async (filters) => {
         try {
             let params = { 'filters[page]': 0 };
 
@@ -75,43 +78,43 @@ const discountsApi = {
 
             const result = await axios.get(DEFAULT_PATH, { params: params });
 
-            return { result: true, discounts: result.data?.results, total: result?.data?.total };
+            return { result: true, vouchers: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    getOneDiscount: async (id) => {
+    getOneVoucher: async (id) => {
         try {
             const result = await axios.get(`${DEFAULT_PATH}/${id}`);
 
-            return { result: true, discount: result.data };
+            return { result: true, voucher: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    createDiscount: async (data) => {
+    createVoucher: async (data) => {
         try {
             const result = await axios.post(DEFAULT_PATH, getFormData(data));
 
-            return { result: true, discount: result.data };
+            return { result: true, voucher: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    editDiscount: async (id, data) => {
+    editVoucher: async (id, data) => {
         try {
             const result = await axios.post(`${DEFAULT_PATH}/${id}`, getFormData(data));
 
-            return { result: true, discount: result.data };
+            return { result: true, voucher: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    deleteDiscount: async (id) => {
+    deleteVoucher: async (id) => {
         try {
             await axios.delete(`${DEFAULT_PATH}/${id}`);
 
@@ -122,4 +125,4 @@ const discountsApi = {
     },
 };
 
-export default discountsApi;
+export default vouchersApi;

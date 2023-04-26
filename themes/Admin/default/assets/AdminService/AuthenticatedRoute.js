@@ -118,9 +118,12 @@ const AuthenticatedRouteObj = [
     () => ({ path: Constant.CARTS_BASE_PATH, component: Component.CartsList }),
     () => ({ path: `${Constant.CARTS_BASE_PATH}/:id`, component: Component.CartsDetail }),
 
-    () => ({ path: Constant.DISCOUNTS_BASE_PATH, component: Component.DiscountsList }),
-    () => ({ path: Constant.DISCOUNTS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateDiscount }),
-    () => ({ path: `${Constant.DISCOUNTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditDiscount }),
+    () => ({ path: Constant.VOUCHERS_BASE_PATH, component: Component.VouchersList }),
+    () => ({ path: Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH, component: Component.CreateVoucher }),
+    () => ({ path: `${Constant.VOUCHERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, component: Component.EditVoucher }),
+
+    () => ({ path: Constant.ORDERS_BASE_PATH, component: Component.OrdersList }),
+    () => ({ path: `${Constant.ORDERS_BASE_PATH}/:id`, component: Component.OrdersDetail }),
 ];
 
 /**

@@ -27,7 +27,7 @@ import { checkArray, checkObject, checkPosition, checkString } from '@Services/u
 
 const MenuObj = [
     () => ({
-        title: 'PROGRAMMATION',
+        title: 'PROGRAMMER',
         menu: [
             {
                 name: 'Evènements',
@@ -45,11 +45,11 @@ const MenuObj = [
             { name: 'Clients', link: Constant.CUSTOMERS_BASE_PATH, icon: <PeopleIcon /> },
             { name: 'Commandes', link: Constant.ORDERS_BASE_PATH, icon: <ShoppingCartIcon /> },
             { name: 'Paniers', link: Constant.CARTS_BASE_PATH, icon: <ShoppingBasketIcon /> },
-            { name: 'Réductions', link: Constant.DISCOUNTS_BASE_PATH, icon: <MoneyOffIcon /> },
+            { name: 'Réductions', link: Constant.VOUCHERS_BASE_PATH, icon: <MoneyOffIcon /> },
         ],
     }),
     () => ({
-        title: 'PERSONNALISATION',
+        title: 'PERSONNALISER',
         menu: [
             { name: 'Menus', link: Constant.MENUS_BASE_PATH, icon: <MenuIcon /> },
             { name: 'Pages', link: Constant.PAGES_BASE_PATH, relatedLinks: [Constant.PAGE_BLOCKS_BASE_PATH], icon: <DescriptionIcon /> },
@@ -70,7 +70,7 @@ const MenuObj = [
         ],
     }),
     () => ({
-        title: 'ADMINISTRATION',
+        title: 'ADMINISTRER',
         menu: [
             { name: 'Paramètres', link: Constant.PARAMETERS_BASE_PATH, icon: <SettingsIcon /> },
             { name: 'Langues', link: Constant.LANGUAGES_BASE_PATH, icon: <LanguageIcon /> },

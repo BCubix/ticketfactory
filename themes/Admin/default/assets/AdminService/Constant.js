@@ -52,7 +52,7 @@ const ConstantObj = {
     CUSTOMERS_BASE_PATH: '/admin/clients',
     ORDERS_BASE_PATH: '/admin/commandes',
     CARTS_BASE_PATH: '/admin/paniers',
-    DISCOUNTS_BASE_PATH: '/admin/reductions',
+    VOUCHERS_BASE_PATH: '/admin/reductions',
 
     EDIT_PATH: '/modifier',
     CREATE_PATH: '/nouveau',

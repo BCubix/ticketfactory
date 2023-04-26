@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-export const CustomerCartPart = ({ customer }) => {
+export const CustomerOrderPart = ({ customer }) => {
     return (
         <Grid item xs={12} md={5}>
             <Component.CmtCard sx={{ position: 'relative' }} overflow="hidden">

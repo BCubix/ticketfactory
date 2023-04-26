@@ -29,6 +29,11 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[ORM\Column]
+    private ?float $total = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
     #[ORM\ManyToOne(inversedBy: 'carts')]
     private ?Customer $customer = null;
 
@@ -36,17 +41,35 @@ class Cart extends Datable
     #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartRow::class, orphanRemoval: true)]
     private Collection $cartRows;
-    
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'carts')]
+    private Collection $vouchers;
+
 
     public function __construct()
     {
         $this->cartRows = new ArrayCollection();
+        $this->vouchers = new ArrayCollection();
     }
     
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getTotal(): ?float
+    {
+        return $this->total;
+    }
+
+    public function setTotal(float $total): self
+    {
+        $this->total = $total;
+
+        return $this;
     }
 
     public function getCustomer(): ?Customer
@@ -86,6 +109,33 @@ class Cart extends Datable
             if ($cartRow->getCart() === $this) {
                 $cartRow->setCart(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Voucher>
+     */
+    public function getVouchers(): Collection
+    {
+        return $this->vouchers;
+    }
+
+    public function addVoucher(Voucher $voucher): self
+    {
+        if (!$this->vouchers->contains($voucher)) {
+            $this->vouchers->add($voucher);
+            $voucher->addCart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoucher(Voucher $voucher): self
+    {
+        if ($this->vouchers->removeElement($voucher)) {
+            $voucher->removeCart($this);
         }
 
         return $this;
