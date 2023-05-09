@@ -1,3 +1,36 @@
+@font-face {
+    font-family: 'icomoon';
+    src: url('../../fonts/icomoon.eot?dcxkbn');
+    src: url('../../fonts/icomoon.eot?dcxkbn#iefix') format('embedded-opentype'),
+         url('../../fonts/icomoon.ttf?dcxkbn') format('truetype'),
+         url('../../fonts/icomoon.woff?dcxkbn') format('woff'),
+         url('../../fonts/icomoon.svg?dcxkbn#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+
+%icon {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "icomoon";
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+    text-decoration: inherit;
+    text-transform: none;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="ico-"], [class*=" ico-"] {
+    @extend %icon;
+}
+
 [class^="icon-"], [class*=" icon-"] {
     position: relative;
     display: block;
@@ -9,6 +42,23 @@
     transition: $transition-base;
 }
 
+@function icon-char($filename) {
+    $char: "";
+  
+    @if $filename == arrow {
+        $char: "\E900";
+    }
+    @if $filename == close {
+        $char: "\E902";
+    }
+
+    @return $char;
+}
+
+@mixin icon($filename) {
+    content: icon-char($filename);
+}
+
 .icon-cart {
     background-image: url('../../icons/cart.png');
     max-height: rem(32);
@@ -18,4 +68,22 @@
 .icon-user {
     background-image: url('../../icons/user.png');
     max-height: rem(40);
+}
+
+.ico-close {
+    &::before {
+        @include icon(close);
+    }
+}
+%ico-close {
+    @include icon(close);
+}
+
+.ico-arrow {
+    &::before {
+        @include icon(arrow);
+    }
+}
+%ico-arrow {
+    @include icon(arrow);
 }

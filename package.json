@@ -84,6 +84,7 @@
         "react-slugify": "^3.0.0",
         "recharts": "^2.3.2",
         "redux": "^4.2.0",
+        "slick-carousel": "^1.8.1",
         "tinymce": "^6.4.0",
         "yup": "^0.32.11"
     }

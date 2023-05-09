@@ -28,7 +28,7 @@
         display: block;
   
         @include media('>=md') {
-          height: rem(80);
+          height: rem(50);
         }
       }
     }

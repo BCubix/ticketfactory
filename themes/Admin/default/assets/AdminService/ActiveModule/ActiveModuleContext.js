@@ -1,20 +1,18 @@
 export function ActiveModuleContext(modulesActive) {
-    if (!modulesActive)
-        return;
+    if (!modulesActive) return;
 
-    const list = require.context(`@/../../../../modules`, true, /\.*\/assets\/index.js$/);
+    const list = require.context(`@/../../../../modules`, true, /\.*\/assets\/Admin\/index.js$/);
 
     list.keys().map((item) => {
         const arrayPath = item.split('/');
-        if (!arrayPath || arrayPath.length < 1)
-            return;
+        if (!arrayPath || arrayPath.length < 1) return;
 
         const moduleName = arrayPath[1];
 
-        if (modulesActive.find(moduleActive => moduleActive.name === moduleName)) {
+        if (modulesActive.find((moduleActive) => moduleActive.name === moduleName)) {
             const func = list(item).default;
 
-            if (typeof func === "function") {
+            if (typeof func === 'function') {
                 func();
             }
         }

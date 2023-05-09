@@ -1,0 +1,162 @@
+# Global
+global.days.monday: Monday
+global.days.tuesday: Tuesday
+global.days.wednesday: Wednesday
+global.days.thursday: Thursday
+global.days.friday: Friday
+global.days.saturday: Saturday
+global.days.sunday: Sunday
+
+global.datetime-format: dd/MM/yyyy - h':'mm a
+global.date-format: EEEE d MMMM
+global.time-format: h':'mm a
+
+global.and: and
+global.from: From
+global.to: to
+global.details: Details
+global.book: Book
+global.subscribe: Subscribe
+global.search: Search
+global.filter: Filter
+global.close: Close
+global.mandatory: Mandatory fields
+global.phone: PHONE
+global.mail: MAIL
+global.see-all: See all
+global.caisse: The Caisse des Dépôts supports the entire program of the Théâtre des Champs-Elysées
+global.web-description: "The Théâtre des Champs Elysées offers different shows : Operas, Concerts, Orchestras, Recitals, Dances ... Season 2021-2022"
+global.social-description: "Discover 2021-2022 new season and subscribe online. 5 subscription packages (Operas, Dance, concerts, recitals and ballets)."
+global.view: View
+global.accessibility: Accessibility
+global.season: Season
+
+# Menu
+menu.menu: Menu
+menu.calendar: Calendar
+menu.my-account: My account
+menu.subscriber: Subscriber
+menu.non-subscriber: Non subscriber
+menu.young-card: Under 26
+menu.group: Group
+menu.patron: Patron
+menu.search: Search
+
+# Breadcrumb
+breadcrumb.home: Home
+breadcrumb.calendar: Calendar
+breadcrumb.contact: Contact
+
+# Home
+home.new-season: New season
+home.all-season: All season
+home.whats_on: What's on
+home.waiting-list: Waiting list
+home.last-places: Last places
+home.all_videos: All videos
+home.all_articles: All articles
+home.follow_us: Follow us
+home.subscribe-1: Subscribe
+home.subscribe-2: to newsletter
+home.corona.title: TCE at home
+home.corona.content: During the confinement and while waiting to have the pleasure of meeting you, we invite you each week to see and listen to some of the highlights that took place at the Theater.
+
+# Events
+event.cast: Cast
+event.program: Programme
+event.to-read: About
+event.audios: Listen
+event.videos: Watch
+event.blog: Read
+event.share-on: Share on
+event.dates: Dates
+event.prices: Prices
+event.free: FREE
+event.subscribe: Subscribe
+event.know-more: Learn more
+event.read-more: Read more
+event.press: In the press
+event.linked: You may also like
+event.back-to: Back to season
+
+event.room-program: Programme book
+event.room-map: Seating plan
+event.other-dates: More dates
+event.mobile-dates: See the detail
+
+event.price-annotation-4: 'CAT. 4: reduced visibility'
+event.price-annotation-5: 'CAT. 5: reduced visibility / on sale from the box office and online from september 2021'
+event.price-annotation-6: 'CAT. 6: no visibility / on sale 1h before the performance from the box office'
+
+event.status.canceled: Cancelled
+event.status.canceled-acc: Cancelled
+eventeeventvent.status.delayed: Postponed
+event.status.delayed-acc: Postponed
+event.status.new_date: New date
+event.status.last_tickets: Last tickets
+
+# Products
+products.buy: Buy
+products.details: Details
+products.video: Video
+
+# Medias
+media.placeholder: Artist, composer...
+media.filter-by: Filter by
+media.from: Available from
+media.to: Available to
+media.read: Read
+media.see-also: See also
+media.see-more: See more
+
+# Newsletter
+newsletter.miss: Mrs.
+newsletter.mister: Mr.
+newsletter.yes: Yes
+newsletter.no: No
+newsletter.firstName: First name
+newsletter.lastName: Last name
+newsletter.email: Email
+newsletter.zipcode: Zipcode
+newsletter.city: City
+newsletter.save: Subscribe
+newsletter.congratulations: Congratulations
+newsletter.message: Your registration has been taken into account.
+newsletter.back-home: Back to homepage
+newsletter.message1: I want to subscribe to the Théâtre des Champs-Elysées newsletter
+newsletter.message2: We do not use nor communicate your personal data without your consent
+newsletter.message3: I accept to receive by email from the Théâtre des Champs-Elysées, informations and/or preferential offers about performances / benefits.
+newsletter.message4: I accept to receive by email from the Théâtre des Champs-Elysées, informations and/or preferential offers about performances / benefits from institutions and partners cultural events.
+newsletter.message5: I allow the Théâtre des Champs-Elysées to transfer my electronic coordinates to a third party partner.
+
+# Search
+search.search: Search...
+search.no-result: There is no result found
+search.quit_search: Quit search
+
+# Calendrier
+calendar.filter1: Filter by category
+calendar.filter2: Filter by category
+
+# Patrons
+patrons.individuals: Individual Patrons
+patrons.companies: Corporate Patrons
+patrons.whats-more: What's more
+
+# Errors
+error.title: Oh no !
+error.message1: This page no longer exists at this address.
+error.message2: Please use the search bar at the top to find it.
+
+# cookies
+cookies.continue-accept: Continue without accepting
+cookies.title1: We respect your privacy
+cookies.desc1: With your consent, we use cookies or similar technologies to store and access personal information such as your visit to this website. You can withdraw your consent or object to processin based on legitimate interest at any time by cliking on "Find out more" or in your privacy policy on this website.
+cookies.title2: Welcome to the Théâtre des Champs-Elysées website
+cookies.desc2Begin: The Théâtre des Champs-Elysées and its partners set cookies and use non-sensitive information from your device to improve our products and display personalized advertising and content. You can accept or refuse these different operations. To find out more about cookies, the data we use, the processing operations we carry out and the partners with whom we work, you can consult
+cookies.desc2End: our cookies dedicated page
+cookies.btn.know-more: Learn more
+cookies.btn.accept-close: Acccept & Close
+cookies.btn.save-warning: Fill all your preferences, then save to continue.
+cookies.btn.save-close: Save & Close
+cookies.btn.accept-all: Accept all

@@ -104,9 +104,10 @@ class RouterController extends WebsiteController
             'home' => 'App\Controller\Website\HomeController::index',
             'newsletter' => 'App\Controller\Website\NewsletterController::index',
             'calendar' => 'App\Controller\Website\CalendarController::index',
-            'cookies' => 'App\Controller\Website\CookiesController::index'
+            'cookies' => 'App\Controller\Website\CookiesController::index',
+            'contact' => 'App\Controller\Website\ContactRequestController::index'
         ];
-
+        
         if (isset($mappingArray[$page->getKeyword()])) {
             return $this->forward($mappingArray[$page->getKeyword()], [
                 'page'  => $page,

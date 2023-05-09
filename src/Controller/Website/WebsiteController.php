@@ -3,6 +3,7 @@
 namespace App\Controller\Website;
 
 use App\Manager\ManagerFactory;
+use App\Manager\ModuleManager;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,17 +20,20 @@ abstract class WebsiteController extends AbstractFOSRestController
     protected $rs;
     protected $mf;
     protected $sf;
+    protected $mm;
 
     public function __construct(
         EntityManagerInterface $em,
         RequestStack $rs,
         ManagerFactory $mf,
-        ServiceFactory $sf
+        ServiceFactory $sf,
+        ModuleManager $mm
     ) {
         $this->em = $em;
         $this->rs = $rs;
         $this->mf = $mf;
         $this->sf = $sf;
+        $this->mm = $mm;
     }
 
     protected function getRequest(): Request
@@ -66,10 +70,17 @@ abstract class WebsiteController extends AbstractFOSRestController
 
     protected function websiteRender(string $twigFilename, array $parameters = []): Response
     {
+        $modules = $this->mm->getAll(['active' => 1]);
         $tm = $this->mf->get('theme');
 
+        $modulesName = [];
+        foreach ($modules['results'] as $module) {
+            $modulesName[] = $module['name'];
+        }
+        $modulesName = implode(",", $modulesName);
+
         if (!$tm->isSSRActive()) {
-            $parameters = array_merge($parameters, ['serverSideRendering' => false]);
+            $parameters = array_merge($parameters, ['serverSideRendering' => false, 'modules' => $modulesName]);
             return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
         }
 
@@ -88,7 +99,7 @@ abstract class WebsiteController extends AbstractFOSRestController
             ->render()
         ;
 
-        $parameters = array_merge($parameters, ['render' => $render, 'serverSideRendering' => true]);
+        $parameters = array_merge($parameters, ['render' => $render, 'serverSideRendering' => true, 'modules' => $modulesName]);
         return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
     }
 }

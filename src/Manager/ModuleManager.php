@@ -58,14 +58,6 @@ class ModuleManager extends ModuleThemeManager
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
-        // Check index.js in assets
-        if ($nodeKey === 'assets') {
-            if (!isset($nodeValue[0]) || $nodeValue[0] !== 'index.js') {
-                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_ASSETS_FILE_INDEX_NOT_FOUND);
-            }
-            return;
-        }
-
         // Check file bundle in src
         if ($nodeKey === 'src') {
             if (!isset($nodeValue[0]) || $nodeValue[0] !== $rootName . '.php') {

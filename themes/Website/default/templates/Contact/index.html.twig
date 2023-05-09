@@ -1,0 +1,87 @@
+{% extends websiteTemplates('base.html.twig') %}
+{% form_theme form websiteTemplates('_partials/theme.html.twig') %}
+
+{% block body %}
+<main>
+    {{ hook('contactHeader') }}
+    {{ hook('contactContent') }}
+
+    <div class="page container">
+        <span class="ariane-thread">
+            <a href='{{ keywordPath('home') }}'>Accueil</a> / Contact
+        </span>
+
+        <div class="contact row">
+            <div class="col-xs-12 col-lg-6">
+                <div class="contact_form">
+                    <h1 class="contact_title">Contact</h1>
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="flash-message {{ label }} z-depth-2">
+                                {{message}}
+
+                                <a href="#" class="remove-flash-message">
+                                    <i class="material-icons">cancel</i>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    <h2 class="contact_subtitle">Un besoin ? Une question ?</h2>
+
+
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        {{ form_errors(form) }}
+
+                        <div class="form-field">
+                            {{ form_label(form.firstName) }}
+                            {{ form_widget(form.firstName) }}
+                            {{ form_errors(form.firstName) }}
+                        </div>
+
+                        <div class="form-field">
+                            {{ form_label(form.lastName) }}
+                            {{ form_widget(form.lastName) }}
+                            {{ form_errors(form.lastName) }}
+                        </div>
+
+                        <div class="form-field">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="form-field">
+                            {{ form_label(form.phone) }}
+                            {{ form_widget(form.phone) }}
+                            {{ form_errors(form.phone) }}
+                        </div>
+                        
+                        <div class="form-field">
+                            {{ form_label(form.subject) }}
+                            {{ form_widget(form.subject) }}
+                            {{ form_errors(form.subject) }}
+                        </div>
+
+                        <div class="form-field">
+                            {{ form_label(form.message) }}
+                            {{ form_widget(form.message, {'attr': {'class': 'tinymce'}}) }}
+                            {{ form_errors(form.message) }}
+                        </div>
+
+                    <div class="submit-row">
+                        {{ form_widget(form.send, {'attr': {'class': 'contact_sendButton icon-goto'}}) }}
+                    </div>
+
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-lg-6 contact_image">
+                <img src="{{ asset('/build/front/img/contactPoster.png') }}" alt="Anna PAVLOVA">
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock body %}

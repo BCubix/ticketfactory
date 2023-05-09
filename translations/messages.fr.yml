@@ -1,0 +1,163 @@
+# Global
+global.days.monday: Lundi
+global.days.tuesday: Mardi
+global.days.wednesday: Mercredi
+global.days.thursday: Jeudi
+global.days.friday: Vendredi
+global.days.saturday: Samedi
+global.days.sunday: Dimanche
+
+global.datetime-format: dd/MM/yyyy - HH'H'mm
+global.date-format: EEEE d MMMM
+global.time-format: HH'H'mm
+
+global.and: et
+global.from: Du
+global.to: au
+global.details: Details
+global.book: Reserver
+global.subscribe: S'abonner
+global.search: Rechercher
+global.filter: Filtrer
+global.close: Fermer
+global.mandatory: Champs obligatoires
+global.phone: TEL
+global.mail: MAIL
+global.see-all: Tout voir
+global.caisse: La Caisse des Dépôts soutient l'ensemble de la programmation du Théâtre des Champs-Elysées
+global.web-description: "Le Théâtre des Champs Elysées vous propose différents spectacles : Opéras, Concerts, Orchestres, Récitals, Danses... Saison 2021-2022"
+global.social-description: "Découvrez la nouvelle saison 2021-22 et abonnez-vous en ligne à partir de 4 spectacles à choisir parmi les opéras, concerts, récitals et ballets."
+global.view: Consulter
+global.accessibility: Accessibilite
+global.season: Saison
+
+# Menu
+menu.menu: Menu
+menu.calendar: Calendrier
+menu.my-account: Mon compte
+menu.subscriber: Abonné
+menu.non-subscriber: Non abonné
+menu.young-card: Espace Jeunes
+menu.group: Groupe
+menu.patron: Mécène
+menu.search: Rechercher
+
+# Breadcrumb
+breadcrumb.home: Accueil
+breadcrumb.calendar: Calendrier
+breadcrumb.contact: Contact
+
+# Home
+home.new-season: Nouvelle saison
+home.all-season: Toute la saison
+home.whats_on: A l'affiche
+home.waiting-list: Liste d'attente
+home.last-places: Dernières places
+home.all_videos: Toutes les videos
+home.all_articles: Tous les articles
+home.follow_us: Suivez-nous
+home.subscribe-1: Inscrivez-vous
+home.subscribe-2: à la newsletter
+home.corona.title: Le TCE chez vous
+home.corona.content: Pendant la période de confinement et en attendant d'avoir le plaisir de vous retrouver, nous vous proposons chaque semaine de (re)voir et (re)écouter quelques-uns des moments forts qui ont eu lieu sur la scène du Théâtre.
+
+# Events
+event.cast: Distribution
+event.program: Programme
+event.to-read: En quelques mots
+event.videos: Voir
+event.audios: Ecouter
+event.blog: Lire
+event.share-on: Partager sur
+event.dates: Dates
+event.prices: Tarifs
+event.free: GRATUIT
+event.subscribe: Abonnez-vous
+event.know-more: En savoir plus
+event.read-more: Lire la suite
+event.press: La presse en parle
+event.linked: Vous aimerez aussi
+event.back-to: Revenir a la saison
+
+event.room-program: Programme de salle
+event.room-map: Plan de salle
+event.other-dates: Voir les autres dates
+event.mobile-dates: Voir le detail
+
+event.price-annotation-4: 'CAT. 4 : visibilité réduite'
+event.price-annotation-5: 'CAT. 5 : visibilité très réduite / en vente aux caisses et en ligne en septembre 2021'
+event.price-annotation-6: 'CAT. 6 : sans visibilité / en vente aux caisses 1h avant le spectacle'
+
+event.status.canceled: Annule
+event.status.canceled-acc: Annulé
+event.status.delayed: Reporte
+event.status.delayed-acc: Reporté
+event.status.new_date: Nouvelle date
+event.status.last_tickets: Dernieres places
+
+# Products
+products.buy: Acheter
+products.details: Details
+products.video: Video
+
+# Medias
+media.placeholder: Artiste, compositeur...
+media.filter-by: Filtrer par
+media.from: Disponible à partir du
+media.to: Disponible jusqu'au
+media.read: Lire
+media.see-also: Et aussi
+media.see-more: Voir plus
+
+# Newsletter
+newsletter.miss: Madame
+newsletter.mister: Monsieur
+newsletter.yes: Oui
+newsletter.no: Non
+newsletter.firstName: Prénom
+newsletter.lastName: Nom
+newsletter.email: Mail
+newsletter.zipcode: Code postal
+newsletter.city: Ville
+newsletter.save: M'inscrire
+newsletter.congratulations: Felicitations
+newsletter.message: Votre inscription à la newsletter a bien été prise en compte.
+newsletter.back-home: Retour à l'accueil
+newsletter.message1: Je souhaite m'inscrire à la newsletter du Théâtre des Champs-Elysées
+newsletter.message2: Nous n’utilisons pas ni ne comuniquons vos données personnelles sans votre autorisation
+newsletter.message3: J’accepte de recevoir par voie électronique, de la part du Théâtre des Champs-Elysées, des informations et / ou des offres préférentielles sur ses spectacles / prestations.
+newsletter.message4: J’accepte de recevoir par voie électronique, de la part du Théâtre des Champs-Elysées, des informations et / ou des offres préférentielles sur des spectacles / prestations d’établissements et événements culturels partenaires.
+newsletter.message5: J’accepte que mes coordonnées électroniques soient transmises par le Théâtre des Champs-Elysées à un tiers partenaire.
+
+# Search
+search.search: Rechercher...
+search.no-result: Aucun résultat n'a été trouvé
+search.quit_search: Quitter la recherche
+
+# Calendrier
+calendar.filter1: Filtrer par genre
+calendar.filter2: Filtrez par genre
+
+# Patrons
+patrons.individuals: Particuliers
+patrons.companies: Entreprises
+patrons.whats-more: Et aussi
+
+# Errors
+error.title: Oh non !
+error.message1 : Cette page n'existe plus à cette adresse.
+error.message2 : Utilisez la barre de recherche en haut pour la retrouver.
+
+# cookies
+cookies.continue-accept: Continuer sans accepter
+cookies.title1: Nous respectons votre vie privée
+cookies.desc1: Avec votre accord, nous utilisons des cookies ou technologies similaires pour stocker et accéder à des informations personnelles comme votre visite sur ce site. Vous pouvez retirer votre consentement ou vous opposer aux traitements basés sur l'intérêt légitime à tout moment en cliquant sur "En savoir plus" ou dans notre page dédiée aux cookies sur ce site.
+cookies.title2: Bienvenue sur le site du Théâtre des Champs-Elysées
+cookies.desc2Begin: Le Théâtre des Champs-Elysées et ses partenaires déposent des cookies et utilisent des informations non sensibles de votre appareil pour améliorer leurs produits et afficher des publicités et contenus personnalisés. Vous pouvez accepter ou refuser ces différentes opérations. Pour en savoir plus sur les cookies, les données que nous utilisons, les traitements que nous réalisons et les partenaires avec qui nous travaillons, vous pouvez consulter
+cookies.desc2End: notre page dédiée à la gestion des cookies
+cookies.btn.know-more: En savoir plus
+cookies.btn.accept-close: Accepter & Fermer
+cookies.btn.save-warning: Définissez toutes vos préférences puis enregistrez pour continuer.
+cookies.btn.save-close: Enregistrer & Fermer
+cookies.btn.accept-all: Tout accepter
+cookies.btn.reject-all: Tout refuser

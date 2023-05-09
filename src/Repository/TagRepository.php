@@ -35,4 +35,17 @@ class TagRepository extends CrudRepository
     {
         parent::__construct($registry, Tag::class);
     }
+
+    public function findBySlugForWebsite(int $languageId, string $slug): ?Tag
+    {
+        return $this->createQueryBuilder('s')
+            ->innerJoin('s.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('s.active = 1')
+            ->andWhere('s.slug = :slug')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

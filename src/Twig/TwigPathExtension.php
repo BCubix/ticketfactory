@@ -41,6 +41,6 @@ class TwigPathExtension extends AbstractExtension
 
     public function orchestratorPath(mixed $element, $params = [], $absolute = RouterInterface::ABSOLUTE_PATH)
     {
-        return $this->us->orchestratorPath($element, $params, $absolute);
+        return $this->us->tfPath($element, $params, $absolute);
     }
 }

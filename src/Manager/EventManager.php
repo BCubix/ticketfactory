@@ -8,10 +8,10 @@ class EventManager extends AbstractManager
 {
     public const SERVICE_NAME = 'event';
 
-    public function getFromUrl(array $eventFormat, array $slugs): ?Event
+    public function getFromUrl(array $slugs): ?Event
     {
         $eventFormat = $this->mf->get('parameter')->get('event_url_format');
-        $eventFormat = explode('/', $eventFormat);
+        $eventFormats = explode('/', $eventFormat);
 
         $languageId = $this->getLanguageId();
         $event = null;

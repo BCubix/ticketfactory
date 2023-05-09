@@ -1,0 +1,20 @@
+// Text
+
+.u-txt {
+  &-upper    { text-transform: uppercase !important; }
+  &-lower    { text-transform: lowercase !important; }
+  &-center   { text-align: center !important; }
+  &-left     { text-align: left !important; }
+  &-right    { text-align: right !important; }
+  &-justify  { text-align: justify !important; }
+  &-nowrap   { white-space: nowrap !important; }
+  &-break    { word-wrap: break-word !important; }
+}
+
+.u-list-reset {
+  @extend %list-reset;
+}
+
+.u-sr-only {
+  @extend %sr-only;
+}

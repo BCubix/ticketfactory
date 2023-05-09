@@ -158,4 +158,17 @@ class EventCategoryRepository extends NestedTreeRepository
             ->getResult()
         ;
     }
+
+    public function findBySlugForWebsite(int $languageId, string $slug): ?EventCategory
+    {
+        return $this->createQueryBuilder('s')
+            ->innerJoin('s.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('s.active = 1')
+            ->andWhere('s.slug = :slug')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

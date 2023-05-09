@@ -27,7 +27,7 @@ const parametersApi = {
 
             data.parameters.forEach((parameter, index) => {
                 formData.append(`parameters[${index}][paramKey]`, parameter.paramKey);
-                formData.append(`parameters[${index}][paramValue]`, parameter.paramValue);
+                formData.append(`parameters[${index}][paramValue]`, parameter.paramValue || '');
             });
 
             const result = await axios.post('/parametres', formData);

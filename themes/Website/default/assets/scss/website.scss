@@ -5,8 +5,10 @@
 @import 'base/mixins';
 @import 'base/variables';
 @import 'base/icons';
+@import 'base/text';
 
 @import 'node_modules/include-media/dist/_include-media';
+@import 'node_modules/slick-carousel/slick/slick.scss';
 
 @import 'base/reboot';
 @import 'base/type';
@@ -19,3 +21,6 @@
 @import 'components/header';
 @import 'components/menu';
 
+
+@import 'components/alert';
+@import 'components/slider';
