@@ -84,6 +84,10 @@ class ThemeManager extends ModuleThemeManager
 
     protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
     {
+        if ($nodeKey === 'assets') {
+            return;
+        }
+
         if ($nodeKey === 'config') {
             if (!isset($nodeValue[0]) || $nodeValue[0] !== "config.yaml") {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_CONFIG_FILE_NOT_FOUND);
@@ -186,21 +190,26 @@ class ThemeManager extends ModuleThemeManager
         $file = new FileManipulator($webpackFilePath);
         $content = $file->getContent();
 
-        $needleAppEntry = ".addEntry('app', './themes/Admin/default/assets/index.js')";
-        $needleWebsiteEntry = ".addEntry('website', './themes/Website/" . $name . "/assets/index.js')";
+        $positionLine = "// <<< Variables";
+        $endPositionLine = "// >>> Variables";
+        $needleAppEntry = "const adminThemeName = 'default';";
+        $needleWebsiteEntry = "const websiteThemeName = '" . $name . "';" . PHP_EOL;
 
         // Find position of the end of app entry in content
-        $position = $file->getPosition($needleAppEntry) + strlen($needleAppEntry);
+        $position = $file->getPosition($positionLine) + strlen($positionLine);
         // Add content start the beginning content to the end of app entry
         $newContent = substr($content, 0, $position);
 
+        $newContent .= PHP_EOL . $needleAppEntry;
         if (!$remove) {
             // Add website entry
-            $newContent .= PHP_EOL . "    " . $needleWebsiteEntry;
+            $newContent .= PHP_EOL . $needleWebsiteEntry;
         } else {
             // Find position of the end of website entry in content
-            $position = $file->getPosition($needleWebsiteEntry) + strlen($needleWebsiteEntry);
+            $newContent .= PHP_EOL . "const websiteThemeName = '';";
         }
+
+        $position = $file->getPosition($endPositionLine);
 
         // Add rest of content
         $newContent .= substr($content, $position);

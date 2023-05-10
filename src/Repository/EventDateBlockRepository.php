@@ -11,4 +11,19 @@ class EventDateBlockRepository extends CrudRepository
     {
         parent::__construct($registry, EventDateBlock::class);
     }
+
+    public function findEventDateBlocksForWebsite(int $eventId)
+    {
+        return $this->createQueryBuilder('edb')
+            ->addSelect('ed')
+            ->innerJoin('edb.event', 'e')
+            ->innerJoin('edb.eventDates', 'ed')
+            ->where('e.id = :eventId')
+            ->setParameter('eventId', $eventId)
+            ->orderBy('edb.id', 'ASC')
+            ->addOrderBy('ed.eventDate', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

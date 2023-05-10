@@ -56,4 +56,40 @@ class EventRepository extends CrudRepository
     {
         parent::__construct($registry, Event::class);
     }
+
+    public function findAllForWebsite(int $languageId, array $filters): ?array
+    {
+        $events = $this->createQueryBuilder('e')
+            ->addSelect('s')
+            ->addSelect('c')
+            ->addSelect('em')
+            ->addSelect('m')
+            ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->innerJoin('e.season', 's')
+            ->innerJoin('e.eventCategories', 'c')
+            ->leftJoin('e.eventMedias', 'em')
+            ->leftJoin('em.media', 'm')
+    	    ->where('e.active = 1')
+        ;
+
+        if (!empty($filters['season'])) {
+            $events
+                ->andWhere('s.id = :seasonId')
+                ->setParameter('seasonId', $filters['season'])
+            ;
+        }
+
+        if (!empty($filters['category'])) {
+            $events
+                ->andWhere('c.id = :categoryId')
+                ->setParameter('categoryId', $filters['category'])
+            ;
+        }
+
+        return $events
+            ->setParameter('languageId', $languageId)
+    	    ->getQuery()
+    	    ->getResult()
+    	;
+    }
 }

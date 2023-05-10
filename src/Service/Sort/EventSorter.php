@@ -4,6 +4,7 @@ namespace App\Service\Sort;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
+use App\Service\Formatter\DateTimeFormatter;
 
 class EventSorter
 {

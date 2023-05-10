@@ -1,0 +1,37 @@
+{% set className = 'card ' %}
+{% if event.getEndDate() < date() %}
+    {% set className = className ~ ' is-done' %}
+{% endif %}
+
+{% if hasBtns is not defined or hasBtns %}
+    {% set className = className ~ ' has-btns' %}
+{% endif %}
+
+<div class="{{ className }}">
+    <div class="card__thumb">
+        <a href="{{ orchestratorPath(event) }}">
+            <img src="{{ tfAsset(event.getMainMedia()) }}" alt="{{ event.getMainMedia().alt }}">
+        </a>
+    </div>
+    <div class="card__content">
+        <time class="card__date">
+            {{ eventDatesStr(event) }}
+        </time>
+
+        <h3 class="card__title">
+            <a href="{{ orchestratorPath(event) }}">
+                {{ event.name }}
+            </a>
+        </h3>
+
+        {% if event.chapo is not null %}
+            <div class="card__author">{{ event.chapo }}</div>
+        {% endif %}
+
+        {% if hasBtns is not defined or hasBtns %}
+        <div class="card__btns">
+            <a class="btn" href="{{ orchestratorPath(event) }}">{% trans %}global.details{% endtrans %}</a>
+        </div>
+        {% endif %}
+    </div>
+</div>

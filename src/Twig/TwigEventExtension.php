@@ -7,7 +7,7 @@ use App\Entity\Event\EventDate;
 use App\Manager\EventDateManager;
 use App\Manager\EventManager;
 use App\Manager\LanguageManager;
-use App\Utils\DateTimeFormatter;
+use App\Service\Formatter\DateTimeFormatter;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;

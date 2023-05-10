@@ -29,7 +29,6 @@ import '../scss/website.scss';
 
         setupModules() {
             const modulesName = $('.initScript').data('modules');
-            console.log(modulesName);
             if (!modulesName) {
                 return;
             }
