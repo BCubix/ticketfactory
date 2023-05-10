@@ -1,5 +1,103 @@
+{% extends websiteTemplates('base.html.twig') %}
+
+{% block meta %}
+<title>{{ page.metaTitle }}</title>
+<meta name="description" content="{{ page.metaDescription }}" />
+{% endblock meta %}
+
+{% block socialTags %}
+{% set socialImgPath = (page.socialImage is null ? null: tfAsset(page.socialImage)) %}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.twTitle }}">
+<meta name="twitter:description" content="{{ page.twDescription }}">
+{% if socialImgPath is not null %}
+    <meta name="twitter:image" content="{{ app.request.schemeAndHttpHost ~ socialImgPath }}">
+{% endif %}
+
+<meta property="og:title" content="{{ page.fbTitle }}">
+<meta property="og:description" content="{{ page.fbDescription }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ app.request.uri }}">
+{% if socialImgPath is not null %}
+    <meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ socialImgPath }}">
+{% endif %}
+{% endblock socialTags %}
+
 {% block body %}
 <main>
-    Page {{page.title}}
+    {{ hook('pageHeader') }}
+    {{ hook('pageContentBeforeBlocks') }}
+    
+    <section class="section section--gray">
+        <div class="container">
+            <div class="content">
+                <h1 class="content__title">{{ page.title }}</h1>
+
+                {% if page.subtitle is not null %}
+                <div class="content__lead">{{ page.subtitle | raw }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    {% for pageBlock in page.pageBlocks %}
+        <section class="section {% if loop.index0 % 2 == 1 %}section--gray {% endif %} section--sm">
+            <div class="container">
+                <div class="content">
+                        {% if pageBlock.name is not null %}
+                            <h2>{{ pageBlock.name }}</h2>
+                        {% endif %}
+
+                        {% if pageBlock.blockType == 1 %}
+                            <div class="slider-event">
+                                <div class="slider-event__slides js-slider-event">
+                                    {% for column in pageBlock.columns %}
+                                        {% if column.content.getRealType() == 'image' %}
+                                            <div class="slider-event__slide">
+                                                <figure class="figure">
+                                                    <img src="{{ tfAsset(column.content) }}" alt="{{ column.content.alt }}">
+
+                                                    {% if column.content.legend %}
+                                                    <figcaption class="figure__legend">{{ column.content.legend }}</figcaption>
+                                                    {% endif %}
+                                                </figure>
+                                            </div>
+                                        {% elseif column.content.getRealType() == 'video' %}
+                                            <div class="slider-videos__slide">
+                                                <iframe src="{{ tfAsset(column.content) }}" frameborder="0"></iframe>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            {% for column in pageBlock.columns %}
+                                {{ column.content | raw }}
+                            {% endfor %}
+                        {% endif %}
+                </div>
+            </div>
+        </section>
+    {% endfor %}
+
+    {# {% if page.pageFroms | length > 0 %}
+    <div class="container">
+        <h2 class="linked__title">{% trans %}patrons.whats-more{% endtrans %}</h2>
+        <div class="card__linked js-cards-container">
+            {% for refPage in page.pageFroms %}
+            <div class="card">
+                <a class="card__thumb" href="{{ orchestratorPath(refPage) }}" target="_blank">
+                    <img src="{{ tfAsset(refPage.image) }}" alt="{{ refPage.image.alt }}">
+                </a>
+                <div class="card__content">
+                    <p class="card__title">{{ refPage.title }}</p>
+                    <div class="card__desc">{{ refPage.content | raw }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %} #}
+
 </main>
 {% endblock body %}
