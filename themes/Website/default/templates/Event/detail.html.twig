@@ -1,0 +1,99 @@
+{% extends websiteTemplates('base.html.twig') %}
+
+{% block meta %}
+<title>{{ event.metaTitle }}</title>
+<meta name="description" content="{{ event.metaDescription }}" />
+{% endblock meta %}
+
+{% block socialTags %}
+{% set socialImgPath = (event.socialImage is null ? tfAsset(medias.main) : tfAsset(event.socialImage)) %}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ event.twTitle }}">
+<meta name="twitter:description" content="{{ event.twDescription }}">
+<meta name="twitter:image" content="{{ app.request.schemeAndHttpHost ~ socialImgPath }}">
+
+<meta property="og:title" content="{{ event.fbTitle }}">
+<meta property="og:description" content="{{ event.fbDescription }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ app.request.uri }}">
+<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ socialImgPath }}">
+{% endblock socialTags %}
+
+{% block body %}
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="event-head">
+                    <h1 class="event-head__title">
+                       {{ event.name }}
+
+                        <div class="event-head__intro">{{ event.chapo | raw }}</div>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-7 col-lg-8">
+                <div class="slider-event u-mbl">
+                    <div class="slider-event__slides js-slider-event">
+                        {% for slide in medias.image %}
+                            <div class="slider-event__slide">
+                                <figure class="figure">
+                                    <img src="{{ tfAsset(slide) }}" alt="{{ slide.alt }}">
+                                    {% if slide.legend %}
+                                    <figcaption class="figure__legend">{{ slide.legend }}</figcaption>
+                                    {% endif %}
+                                </figure>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                 {% if event.description is not null %}
+                    <div class="event-block" id="section2">
+                        <div class="event-block__content">
+                            {{ event.description | raw }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medias.video | length > 0 %}
+                    <div class="event-block" id="section4">
+                        <h2 class="event-block__title js--scroll-section js--more-section is-open">
+                            {% trans %}event.videos{% endtrans %}
+                        </h2>
+                        <div class="event-block__content slider-videos">
+                            <div class="slider-videos__slides js-slider-event-videos">
+                                {% for video in medias.video %}
+                                <div class="slider-videos__slide">
+                                    <div class="push">
+                                        <a class="push__link js-popin" href="{{ orchestratorPath(video) }}">
+                                            {% include websiteTemplates('Media/_media-content.html.twig') with {'media': video} %}
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            {% if medias.video | length > 1 %}
+                            <div class="slider-videos__thumbs js-slider-event-thumbs">
+                                {% for video in medias.video %}
+                                <div class="slider-videos__thumb">
+                                    <img src="{{ video.getRealThumbnail() }}" />
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock body %}

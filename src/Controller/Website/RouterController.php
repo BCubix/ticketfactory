@@ -152,7 +152,7 @@ class RouterController extends WebsiteController
         }
         
         $event = $this->mf->get('event')->getFromUrl($slugs);
-        if (null === $event || count($slugs) > 0) {
+        if (null === $event) {
             return null;
         }
 

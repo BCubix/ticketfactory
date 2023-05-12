@@ -6,6 +6,7 @@ use App\Entity\Event\Event;
 use App\Entity\Event\EventDateBlock;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
+use App\Service\File\MimeTypeMapping;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -201,5 +202,45 @@ class EventManager extends AbstractManager
                     DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
                 );
         }
+    }
+
+    public function getMediasFromEvent($event): array
+    {
+        $medias = [];
+        foreach (MimeTypeMapping::getAllCategories() as $type) {
+            $type = iconv("utf-8", "ascii//TRANSLIT", $type);
+            $type = strtolower($type);
+
+            $medias[$type] = [];
+        }
+
+        $eventMedias = $event->getEventMedias()->toArray();
+        usort($eventMedias, function($a, $b) {
+            if ($a->getPosition() == $b->getPosition()) {
+                return 0;
+            }
+
+            if ($a->getPosition() > $b->getPosition()) {
+                return 1;
+            }
+
+            return -1;
+        });
+
+        foreach ($eventMedias as $eventMedia) {
+            $media = $eventMedia->getMedia();
+
+            if ($eventMedia->isMainImg()) {
+                $medias['main'] = $media;
+            }
+
+            $type = MimeTypeMapping::getTypeFromMime($media->getDocumentType());
+            $type = iconv("utf-8", "ascii//TRANSLIT", $type);
+            $type = strtolower($type);
+
+            $medias[$type][] = $media;
+        }
+
+        return $medias;
     }
 }

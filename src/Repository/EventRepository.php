@@ -92,4 +92,28 @@ class EventRepository extends CrudRepository
     	    ->getResult()
     	;
     }
+
+    public function findOneForWebsite(int $languageId, int $pageId): ?Event
+    {
+        return $this->createQueryBuilder('e')
+            ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->andWhere('e.id = :pageId')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('pageId', $pageId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findBySlugForWebsite(int $languageId, string $slug): ?Event
+    {
+        return $this->createQueryBuilder('e')
+            ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('e.slug = :slug')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
