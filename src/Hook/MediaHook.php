@@ -4,8 +4,9 @@ namespace App\Hook;
 
 use App\Event\HookEvent;
 use App\Manager\ImageFormatManager;
+use App\Service\Addon\Hook;
 
-class MediaHook
+class MediaHook extends Hook
 {
     private $ifm;
 
@@ -13,6 +14,7 @@ class MediaHook
     {
         $this->ifm = $ifm;
     }
+    
     public function hookMediaInstantiated(HookEvent $event)
     {
         $media = $event->getParam('object');

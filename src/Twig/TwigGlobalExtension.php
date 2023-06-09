@@ -3,7 +3,7 @@
 namespace App\Twig;
 
 use App\Manager\LanguageManager;
-use App\Service\Hook\HookService;
+use App\Manager\HookManager;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -11,12 +11,12 @@ use Twig\TwigFunction;
 class TwigGlobalExtension extends AbstractExtension
 {
     protected $lm;
-    protected $hs;
+    protected $hm;
 
-    public function __construct(LanguageManager $lm, HookService $hs)
+    public function __construct(LanguageManager $lm, HookManager $hm)
     {
        $this->lm = $lm;
-       $this->hs = $hs;
+       $this->hm = $hm;
     }
 
     public function getFunctions()
@@ -34,7 +34,7 @@ class TwigGlobalExtension extends AbstractExtension
 
     public function hook(string $hookName, array $parameters = []): ?string
     {
-        $event = $this->hs->exec($hookName, $parameters);
+        $event = $this->hm->exec($hookName, $parameters);
 
         return html_entity_decode(implode($event->getResponses()));
     }

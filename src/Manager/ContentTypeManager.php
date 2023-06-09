@@ -5,13 +5,13 @@ namespace App\Manager;
 use App\Entity\Content\ContentType;
 use App\Entity\Content\ContentTypeField;
 use App\Exception\ApiException;
+use App\Kernel;
+use App\Manager\ManagerFactory;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class ContentTypeManager extends AbstractManager
 {
@@ -23,13 +23,14 @@ class ContentTypeManager extends AbstractManager
     protected $types;
 
     public function __construct(
+        Kernel $kl,
         ManagerFactory $mf,
         ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
         FormFactoryInterface $ff
     ) {
-        parent::__construct($mf, $sf, $em, $rs);
+        parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->ff = $ff;
         $this->types = $this->loadTypes();

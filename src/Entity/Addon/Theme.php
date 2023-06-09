@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Theme;
+namespace App\Entity\Addon;
 
 use App\Repository\ThemeRepository;
 

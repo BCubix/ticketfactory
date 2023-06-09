@@ -102,4 +102,9 @@ abstract class WebsiteController extends AbstractFOSRestController
         $parameters = array_merge($parameters, ['render' => $render, 'serverSideRendering' => true, 'modules' => $modulesName]);
         return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
     }
+
+    protected function renderModule(string $path, array $parameters): string
+    {
+        return $this->sf->get('module')->renderModule($path, $parameters);
+    }
 }

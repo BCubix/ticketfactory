@@ -4,24 +4,10 @@ namespace App\Hook;
 
 use App\Entity\Event\EventCategory;
 use App\Event\HookEvent;
-use App\Exception\ApiException;
-use App\Manager\LanguageManager;
-use App\Manager\EventCategoryManager;
+use App\Service\Addon\Hook;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
-
-class LanguageHook
+class LanguageHook extends Hook
 {
-    private $em;
-    private $ecm;
-
-    public function __construct(EntityManagerInterface $em, EventCategoryManager $ecm)
-    {
-        $this->em = $em;
-        $this->ecm = $ecm;
-    }
-
     public function hookLanguageSaved(HookEvent $event)
     {
         $state = $event->getParam('state');
@@ -31,7 +17,7 @@ class LanguageHook
 
         $language = $event->getParam('sObject');
         $rootCategory = $this->em->getRepository(EventCategory::class)->findRootCategory();
-        $newCategory = $this->ecm->translateCategory($rootCategory, $language->getId());
+        $newCategory = $this->mf->get('eventCategory')->translateCategory($rootCategory, $language->getId());
         $this->em->persist($newCategory);
 
         /**

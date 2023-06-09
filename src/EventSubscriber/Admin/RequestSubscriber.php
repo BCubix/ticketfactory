@@ -3,9 +3,9 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Entity\Hook\Hook;
+use App\Manager\HookManager;
 use App\Manager\ModuleManager;
 use App\Service\File\PathGetter;
-use App\Service\Hook\HookService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,7 +19,7 @@ class RequestSubscriber implements EventSubscriberInterface
     private $pg;
     private $em;
     private $mm;
-    private $hs;
+    private $hm;
     private $rs;
     private $container;
 
@@ -27,14 +27,14 @@ class RequestSubscriber implements EventSubscriberInterface
         PathGetter             $pg,
         EntityManagerInterface $em,
         ModuleManager          $mm,
-        HookService            $hs,
+        HookManager            $hm,
         RequestStack           $rs,
         ContainerInterface     $container
     ) {
         $this->pg = $pg;
         $this->em = $em;
         $this->mm = $mm;
-        $this->hs = $hs;
+        $this->hm = $hm;
         $this->rs = $rs;
 
         $this->container = $container;
@@ -53,27 +53,25 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Register hook module
+        // Register module hooks
         $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
         foreach ($hooks as $hook) {
             $module = $hook->getModule();
-            if (null !== $module) {
-                if (!$module->isActive()) {
-                    continue;
-                }
-
-                $moduleConfig = $this->mm->getModuleConfigInstance($module->getName(), $this->hs);
-                $this->hs->register($hook->getName(), $moduleConfig, $hook->getPosition());
+            if (null == $module || !$module->isActive()) {
+                continue;
             }
+
+            $methodName = ('hook' . ucfirst($hook->getName()));
+
+            $this->hm->register($hook->getName(), $hook->getModule(), $hook->getClassname(), $hook->getPosition());
         }
 
-        // Register hook system
+        // Register system hooks
         $hooksSystem = $this->getAllHookSystem();
         foreach ($hooksSystem as $hookSystem) {
-            $hookInstance = $hookSystem['hookInstance'];
-
             foreach ($hookSystem['hookMethods'] as $hookMethod) {
-                $this->hs->register($hookMethod, $hookInstance);
+                $classname = $hookSystem['hookInstance']::class;
+                $this->hm->register($hookMethod, null, $classname);
             }
         }
     }

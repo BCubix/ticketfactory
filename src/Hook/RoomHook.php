@@ -4,10 +4,11 @@ namespace App\Hook;
 
 use App\Event\HookEvent;
 use App\Exception\ApiException;
+use App\Service\Addon\Hook;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class RoomHook
+class RoomHook extends Hook
 {
     public function hookRoomInstantiated(HookEvent $event)
     {

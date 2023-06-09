@@ -2,12 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Module\Module;
+use App\Entity\Addon\Module;
 use App\Exception\ApiException;
-use App\Manager\ModuleManager;
+use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\ModuleManager;
 use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
 use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,11 +30,11 @@ class ModuleController extends AdminController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs,
+        LanguageManager $lm,
+        HookManager $hm,
         ModuleManager $mm,
-        LanguageManager $lm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
 
         $this->mm = $mm;
     }
@@ -69,17 +69,16 @@ class ModuleController extends AdminController
     public function active(Request $request, string $moduleName): View
     {
         $actionStr = $request->get('action');
-        $action = $actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL;
+        $action = ($actionStr !== null ? intval($actionStr) : Module::ACTION_INSTALL);
 
         $this->em->getConnection()->beginTransaction();
-        $this->em->getConnection()->setAutoCommit(false);
+
         try {
-            $module = $this->mm->active($moduleName, $action, $action === Module::ACTION_INSTALL, true);
-        } catch (\Exception $e) {
+            $module = $this->mm->active($moduleName, $action);
+        } finally {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();
             }
-            throw $e;
         }
 
         return $this->view($module, Response::HTTP_OK);

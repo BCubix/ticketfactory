@@ -2,50 +2,51 @@
 
 namespace App\Manager;
 
-use App\Entity\Module\Module;
+use App\Entity\Addon\Module as ModuleEntity;
 use App\Exception\ApiException;
-use App\Service\Addon\ModuleConfig;
-use App\Service\Exec\ExecCommand;
-use App\Service\Object\GetClass;
+use App\Service\Addon\Module;
 
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Yaml\Yaml;
 
-class ModuleManager extends ModuleThemeManager
+class ModuleManager extends AddonManager
 {
     public const SERVICE_NAME = 'module';
 
-    private const ACTIONS = [
-        Module::ACTION_INSTALL          => 'install',
-        Module::ACTION_DISABLE          => 'disable',
-        Module::ACTION_UNINSTALL        => 'uninstall',
-        Module::ACTION_UNINSTALL_DELETE => 'uninstall',
-    ];
-
-    public const ZIP_FILES_OR_DIRS_NOT_CORRESPONDED = "Le zip contient des fichiers ou dossiers qui ne correspondent pas à l'architecture d'un thème";
-    public const ZIP_FILE_CONFIG_NOT_FOUND = "Le dossier du module ne contient pas le fichier de configuration.";
-    public const ZIP_ASSETS_FILE_INDEX_NOT_FOUND = "Le dossier assets ne contient pas le fichier index.js.";
-    public const ZIP_SRC_FILE_BUNDLE_NOT_FOUND = "Le dossier src ne contient pas le fichier bundle.";
-
     public function getConfiguration(string $objectName): array
     {
-        return $this->callConfig($objectName, 'getInfo');
+        $config = Yaml::parseFile($this->getDir() . '/' . $objectName . '/config/config.yaml');
+        if (!$config) {
+            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
+                "Le fichier de configuration du module $objectName est vide.");
+        }
+
+        $processor = new Processor();
+        $module = new Module();
+
+        return $processor->processConfiguration($module, ['module' => $config]);
     }
 
     public function getImage(string $objectName): array
     {
-        $imagePathWithoutExt = $this->getDir() . "/$objectName/logo";
+        $imagePathWithoutExt = $this->getDir() . '/' . $objectName . '/logo';
+        $imageUrlWithoutExt = 'modules/' . $objectName . '/logo';
 
-        $ext = is_file("$imagePathWithoutExt.png") ? 'png' :
-              (is_file("$imagePathWithoutExt.jpg") ? 'jpg' : null);
+        $ext = null;
+        if (is_file($imagePathWithoutExt . '.png')) {
+            $ext = 'png';
+        } else if (is_file($imagePathWithoutExt . '.jpg')) {
+            $ext = 'jpg';
+        }
 
         if (null !== $ext) {
-            $imageUrlWithoutExt = "modules/$objectName/logo";
+            $sourceFile = $imagePathWithoutExt . $ext;
+            $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $sourceFile;
+            $this->sf->get('file')->copy($sourceFile, $targetFile);
 
-            $originFile = "$imagePathWithoutExt.$ext";
-            $targetFile = "{$this->sf->get('pathGetter')->getProjectDir()}public/$imageUrlWithoutExt.$ext";
-            $this->fs->copy($originFile, $targetFile);
-
-            $ext = "/$imageUrlWithoutExt.$ext";
+            $ext = ('/' . $sourceFile);
         }
 
         return ['logoUrl' => $ext];
@@ -56,85 +57,32 @@ class ModuleManager extends ModuleThemeManager
         return $this->sf->get('pathGetter')->getModulesDir();
     }
 
-    protected function checkNode(int|string $nodeKey, string|array $nodeValue, string $rootName): void
-    {
-        // Check file bundle in src
-        if ($nodeKey === 'src') {
-            if (!isset($nodeValue[0]) || $nodeValue[0] !== $rootName . '.php') {
-                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_SRC_FILE_BUNDLE_NOT_FOUND);
-            }
-            return;
-        }
-
-        if (in_array($nodeKey, ['config', 'templates'])) {
-            return;
-        }
-
-        // Check files
-        if (is_numeric($nodeKey)) {
-            // Logo
-            if ($nodeValue === "logo.jpg" || $nodeValue === "logo.png") {
-                return;
-            }
-
-            // Configuration file
-            if ($nodeValue !== $rootName . 'Config.php' && $nodeValue !== strtolower($rootName) . '.html.twig') {
-                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, static::ZIP_FILE_CONFIG_NOT_FOUND);
-            }
-
-            return;
-        }
-
-        throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
-            static::ZIP_FILES_OR_DIRS_NOT_CORRESPONDED . ' : ' . (is_numeric($nodeKey) ? $nodeValue : $nodeKey));
-    }
-
     public function getAll(array $filters = []): array
     {
-        $filters['page'] = !isset($filters['page']) ? 0 : $filters['page'];
+        $filters['page'] = isset($filters['page']) ? $filters['page'] : 0;
+        $filters['active'] = isset($filters['active']) ? $filters['active'] : 0;
         $filters['sortField'] = 'name';
         $filters['sortOrder'] = 'ASC';
-        $modules = $this->em->getRepository(Module::class)->findAllForAdmin($filters);
 
-        $modulesInDisk = parent::getAll($filters);
-        $indexDisk = 0;
-        $lenDisk = count($modulesInDisk);
-
+        $diskModules = parent::getAll($filters);
+        $dbModulesTmp = $this->em->getRepository(ModuleEntity::class)->findAllForAdmin($filters);
+        
         $results = [];
+        $dbModules = [];
+        foreach ($dbModulesTmp['results'] as $dbModuleTmp) {
+            $dbModules[$dbModuleTmp->getName()] = $dbModuleTmp;
+        }
 
-        $active = isset($filters['active']) && $filters['active'] === '1';
-
-        for ($i = 0; $i < $modules['total']; ++$i, ++$indexDisk) {
-            $moduleName = $modules['results'][$i]->getName();
-
-            // If active, skip all module not installed
-            while ($indexDisk < $lenDisk && $moduleName !== $modulesInDisk[$indexDisk]['name']) {
-                if (!$active) { // Add module no already installed
-                    $results[] = [
-                        ...$modulesInDisk[$indexDisk],
-                        'active' => false,
-                    ];
-                }
-                $indexDisk++;
-            }
-
-            if ($indexDisk === $lenDisk) {
-                throw new ApiException(Response::HTTP_NOT_FOUND, 1404, "Le module $moduleName n'a pas de dossier enregistré.");
+        foreach ($diskModules as $diskModule) {
+            $active = false;
+            if (isset($dbModules[$diskModule['name']])) {
+                $active = $dbModules[$diskModule['name']]->isActive();
             }
 
             $results[] = [
-                ...$modulesInDisk[$indexDisk],
-                'active' => $modules['results'][$i]->isActive()
+                ...$diskModule,
+                'active' => $active
             ];
-        }
-
-        if (!$active) { // Add module no already installed
-            for (; $indexDisk < $lenDisk; ++$indexDisk) {
-                $results[] = [
-                    ...$modulesInDisk[$indexDisk],
-                    'active' => false,
-                ];
-            }
         }
 
         return ['results' => $results, 'total' => count($results)];
@@ -146,133 +94,154 @@ class ModuleManager extends ModuleThemeManager
 
         $originFile = $this->getDir() . "/$objectName/config/migrations/Version$objectName.php";
         if (is_file($originFile)) {
-            $targetFile = "{$this->sf->get('pathGetter')->getProjectDir()}migrations/Version$objectName.php";
-            $this->fs->copy($originFile, $targetFile);
+            $this->fs->copy($originFile, $this->getMigrationFile($objectName));
         }
 
         return $result;
     }
 
-    public function deleteInDisk(string $objectName): void
+    public function active(string $moduleName, int $action, bool $clearAssets = true): ?Module
     {
-        parent::deleteInDisk($objectName);
-
-        $this->fs->remove("{$this->sf->get('pathGetter')->getProjectDir()}migrations/Version$objectName.php");
-    }
-
-    /**
-     * Active module.
-     *
-     * @param string $moduleName
-     * @param int $action
-     * @param bool $active
-     * @param bool $transaction
-     *
-     * @return Module|null
-     * @throws \Exception
-     */
-    public function active(string $moduleName, int $action, bool $active, bool $transaction = false, bool $install = true): Module|null
-    {
-        $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
-
+        $module = $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($moduleName);
         $modulePath = $this->getDir() . '/' . $moduleName;
+
+        // If the module folder does not exist, check the entry in database and exit
         if (!is_dir($modulePath)) {
             if (null !== $module) {
+                $this->disableHooks($module);
+
                 $this->em->remove($module);
                 $this->em->flush();
-                if ($transaction) {
+
+                if ($this->em->getConnection()->isTransactionActive()) {
                     $this->em->getConnection()->commit();
                 }
             }
+
             return null;
         }
 
-        $install = $install && null === $module && $action === Module::ACTION_INSTALL;
+        // The module is not registered in database
         if (null === $module) {
             switch ($action) {
-                case Module::ACTION_UNINSTALL_DELETE:
-                    $this->deleteInDisk($moduleName);
-                    break;
-
-                case Module::ACTION_INSTALL:
+                // Module must be installed
+                case ModuleEntity::ACTION_INSTALL:
+                case ModuleEntity::ACTION_DISABLE:
                     $this->install($moduleName);
 
-                    $module = new Module();
+                    $module = new ModuleEntity();
                     $module->setName($moduleName);
+                    
                     break;
 
+                // Module uninstall, nothing to do
+                case ModuleEntity::ACTION_UNINSTALL:
+                case ModuleEntity::ACTION_UNINSTALL_DELETE:
                 default:
                     break;
             }
         }
 
+        // The module either exists in database or just was created and is not still saved
         if (null !== $module) {
-            if ($action === Module::ACTION_UNINSTALL_DELETE) {
-                // Important: Call uninstallation before delete module
-                $this->callConfig($moduleName, self::ACTIONS[$action]);
+            switch ($action) {
+                case ModuleEntity::ACTION_INSTALL:
+                case ModuleEntity::ACTION_DISABLE:
+                    $this->enableHooks($module);
 
-                $this->em->remove($module);
-                $this->em->flush();
-                if ($transaction) {
-                    $this->em->getConnection()->commit();
-                }
+                    $module->setActive($action == ModuleEntity::ACTION_INSTALL);
 
-                $this->deleteInDisk($moduleName);
-                $this->clear();
-            } else if ($active !== $module->isActive()) { // Ignore if already same active
-                $module->setActive($active);
+                    $this->em->persist($module);
+                    $this->em->flush();
 
-                $this->em->persist($module);
-                $this->em->flush();
-                if ($transaction) {
-                    $this->em->getConnection()->commit();
-                }
+                    // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
+                    if (!$clearAssets && $this->em->getConnection()->isTransactionActive()) {
+                        $this->em->getConnection()->commit();
+                    }
+                    
+                    break;
 
-                // Important: Call config after install module
-                $this->callConfig($moduleName, self::ACTIONS[$action]);
-                $this->clear();
-                if ($install) {
-                    ExecCommand::exec('yarn run encore production');
-                }
+                case ModuleEntity::ACTION_UNINSTALL:
+                case ModuleEntity::ACTION_UNINSTALL_DELETE:
+                    $this->disableHooks($module);
+
+                    $this->em->remove($module);
+                    $this->em->flush();
+
+                    // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
+                    if (!$clearAssets && $this->em->getConnection()->isTransactionActive()) {
+                        $this->em->getConnection()->commit();
+                    }
+
+                    if ($action === ModuleEntity::ACTION_INSTALL) {
+                        $this->delete($moduleName);
+                    }
+                    
+                    break;
+
+                default:
+                    break;
             }
+
+            $this->clear($clearAssets);
         }
 
         return $module;
     }
 
-    /**
-     * Call module configuration function.
-     *
-     * @param string $name
-     * @param string $functionName
-     * @param array $args
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function callConfig(string $name, string $functionName, array $args = []): mixed
+    public function delete(string $objectName): void
     {
-        $moduleConfig = $this->getModuleConfigInstance($name);
-
-        if (!method_exists($moduleConfig, $functionName)) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
-                "La classe {$name}Config ne contient pas la fonction $functionName.");
+        $migrationFile = $this->getMigrationFile($objectName);
+        if (is_file($migrationFile)) {
+            $this->sf->get('file')->remove($migrationFile);
         }
 
-        return $moduleConfig->{$functionName}(...$args);
+        parent::delete($themeName);
     }
 
-    /**
-     * Get instance of module configuration class.
-     *
-     * @param string $name
-     *
-     * @return ModuleConfig
-     * @throws \Exception
-     */
-    public function getModuleConfigInstance(string $name): ModuleConfig
+    public function getModuleInstance($moduleName): ?Bundle
     {
-        return GetClass::getClass($this->getDir() . "/$name/{$name}Config.php",
-            $name . 'Config', [$this->getDir(), $this->sf->get('hook')]);
+        foreach ($this->kl->getBundles() as $bundleName => $bundleInstance) {
+            if ($moduleName === $bundleName) {
+                return $bundleInstance;
+            }
+        }
+        
+        return null;
+    }
+
+    protected function getMigrationFile(string $objectName): string
+    {
+        $migrationFile = 'Version' . $objectName . '.php';
+        $migrationFile = $this->sf->get('pathGetter')->getMigrationsDir(). '/' . $migrationFile;
+
+        return $migrationFile;
+    }
+
+    protected function enableHooks(ModuleEntity $module): void
+    {
+        $existingHooks = [];
+        foreach ($module->getHooks() as $existingHook) {
+            $existingHooks[] = $existingHook->getName();
+        }
+
+        $newHooks = $this->getConfiguration($module->getName());
+        if (!isset($newHooks['hooks'])) {
+            return;
+        }
+
+        $hm = $this->mf->get('hook');
+        foreach($newHooks['hooks'] as $hookName => $hookClass) {
+            if (!in_array($hookName, $existingHooks)) {
+                $hm->register($hookName, $module, $hookClass);
+            }
+        }
+    }
+
+    protected function disableHooks(ModuleEntity $module): void
+    {
+        foreach ($module->getHooks() as $hook) {
+            $this->em->remove($hook);
+        }
     }
 }

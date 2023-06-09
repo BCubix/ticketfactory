@@ -33,7 +33,6 @@ return function (RoutingConfigurator $routes) {
         ;
     }
 
-
     // Core - Admin
     $routes
         ->import('../../src/Controller/Admin', 'annotation')
@@ -52,6 +51,7 @@ return function (RoutingConfigurator $routes) {
     } catch (\Exception $e) {
         $modulesActive = [];
     }
+
     $moduleDir = (new PathGetter(__DIR__.'/../..'))->getModulesDir();
     foreach ($modulesActive as $moduleActive) {
         $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Admin';
@@ -64,7 +64,9 @@ return function (RoutingConfigurator $routes) {
 
         $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Website';
         if (is_dir($controllersPath)) {
-            $routes->import($controllersPath, 'annotation');
+            $routes
+                ->import($controllersPath, 'annotation')
+            ;
         }
     }
 

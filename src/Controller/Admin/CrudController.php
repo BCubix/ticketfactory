@@ -3,12 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Exception\ApiException;
+use App\Manager\HookManager;
 use App\Manager\LanguageManager;
 use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
-
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -34,10 +33,10 @@ abstract class CrudController extends AdminController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs,
-        LanguageManager $lm
+        LanguageManager $lm,
+        HookManager $hm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;
@@ -72,7 +71,7 @@ abstract class CrudController extends AdminController
         $object = new $this->entityClass();
         $iObject = CloneObject::cloneObject($object);
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'add'
         ]);
@@ -87,7 +86,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec($this->entityClassName . 'Validated', [
+        $this->hm->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
             'state'   => 'add'
@@ -96,7 +95,7 @@ abstract class CrudController extends AdminController
         $this->em->persist($object);
         $this->em->flush();
 
-        $this->hs->exec($this->entityClassName . 'Saved', [
+        $this->hm->exec($this->entityClassName . 'Saved', [
             'iObject' => $iObject,
             'sObject' => $object,
             'state'   => 'add'
@@ -116,7 +115,7 @@ abstract class CrudController extends AdminController
 
         $iObject = CloneObject::cloneObject($object);
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'edit'
         ]);
@@ -131,7 +130,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec($this->entityClassName . 'Validated', [
+        $this->hm->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
             'state'   => 'edit'
@@ -140,7 +139,7 @@ abstract class CrudController extends AdminController
         $this->em->persist($object);
         $this->em->flush();
 
-        $this->hs->exec($this->entityClassName . 'Saved', [
+        $this->hm->exec($this->entityClassName . 'Saved', [
             'iObject' => $iObject,
             'sObject' => $object,
             'state'   => 'edit'
@@ -158,7 +157,7 @@ abstract class CrudController extends AdminController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'duplicate'
         ]);
@@ -181,7 +180,7 @@ abstract class CrudController extends AdminController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'delete'
         ]);

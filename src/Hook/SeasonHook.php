@@ -2,13 +2,13 @@
 
 namespace App\Hook;
 
-use App\Entity\Event\Season;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
+use App\Service\Addon\Hook;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class SeasonHook
+class SeasonHook extends Hook
 {
     public function hookSeasonInstantiated(HookEvent $event)
     {

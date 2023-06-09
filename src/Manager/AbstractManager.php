@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Language\Language;
+use App\Kernel;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,13 +12,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AbstractManager
 {
+    protected $kl;
     protected $mf;
     protected $sf;
     protected $em;
     protected $rs;
 
-    public function __construct(ManagerFactory $mf, ServiceFactory $sf, EntityManagerInterface $em, RequestStack $rs)
-    {
+    public function __construct(
+        Kernel $kl,
+        ManagerFactory $mf,
+        ServiceFactory $sf,
+        EntityManagerInterface $em,
+        RequestStack $rs
+    ) {
+        $this->kl = $kl;
         $this->mf = $mf;
         $this->sf = $sf;
         $this->em = $em;

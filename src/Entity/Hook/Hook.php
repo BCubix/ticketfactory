@@ -2,7 +2,7 @@
 
 namespace App\Entity\Hook;
 
-use App\Entity\Module\Module;
+use App\Entity\Addon\Module;
 use App\Repository\HookRepository;
 
 use Doctrine\DBAL\Types\Types;
@@ -36,6 +36,11 @@ class Hook
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_hook_all', 'a_hook_one'])]
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private $classname;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_hook_all', 'a_hook_one'])]
     #[ORM\Column(type: Types::INTEGER)]
     private $position;
 
@@ -64,6 +69,18 @@ class Hook
     public function setModule(?Module $module): self
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    public function getClassName(): string
+    {
+        return $this->classname;
+    }
+
+    public function setClassName(string $classname): self
+    {
+        $this->classname = $classname;
 
         return $this;
     }

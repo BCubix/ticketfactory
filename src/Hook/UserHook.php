@@ -2,26 +2,18 @@
 
 namespace App\Hook;
 
-use App\Entity\User\User;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
-use App\Manager\UserManager;
+use App\Service\Addon\Hook;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class UserHook
+class UserHook extends Hook
 {
-    private $um;
-
-    public function __construct(UserManager $um)
-    {
-        $this->um = $um;
-    }
-
     public function hookUserInstantiated(HookEvent $event)
     {
         $user = $event->getParam('object');
-        $admins = $this->um->getAdminUsers();
+        $admins = $this->mf->get('user')->getAdminUsers();
 
         if (count($admins) == 1 && $admins[0]->getId() == $user->getId()) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer le dernier compte administrateur.');
@@ -31,6 +23,6 @@ class UserHook
     public function hookUserValidated(HookEvent $event)
     {
         $user = $event->getParam('vObject');
-        $this->um->upgradePassword($user);
+        $this->mf->get('user')->upgradePassword($user);
     }
 }

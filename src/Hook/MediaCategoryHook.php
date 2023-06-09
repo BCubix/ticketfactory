@@ -4,21 +4,10 @@ namespace App\Hook;
 
 use App\Entity\Media\MediaCategory;
 use App\Event\HookEvent;
-use App\Exception\ApiException;
+use App\Service\Addon\Hook;
 
-
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
-
-class MediaCategoryHook
+class MediaCategoryHook extends Hook
 {
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     public function hookEventCategorySaved(HookEvent $event)
     {
         $state = $event->getParam('state');

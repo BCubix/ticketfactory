@@ -2,12 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Theme\Theme;
+use App\Entity\Addon\Theme;
 use App\Exception\ApiException;
+use App\Manager\HookManager;
 use App\Manager\ThemeManager;
 use App\Manager\LanguageManager;
 use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
 use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,11 +29,11 @@ class ThemeController extends AdminController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs,
-        ThemeManager $tm,
-        LanguageManager $lm
+        LanguageManager $lm,
+        HookManager $hm,
+        ThemeManager $tm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
 
         $this->tm = $tm;
     }
@@ -64,14 +64,13 @@ class ThemeController extends AdminController
     public function active(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
-        $this->em->getConnection()->setAutoCommit(false);
+
         try {
-            $theme = $this->tm->active($themeName, true);
-        } catch (\Exception $e) {
+            $theme = $this->tm->active($themeName);
+        } finally {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();
             }
-            throw $e;
         }
 
         return $this->view($theme, Response::HTTP_OK);
@@ -82,14 +81,13 @@ class ThemeController extends AdminController
     public function delete(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
-        $this->em->getConnection()->setAutoCommit(false);
+        
         try {
             $this->tm->delete($themeName, true);
-        } catch (\Exception $e) {
+        } finally {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();
             }
-            throw $e;
         }
 
         return $this->view(null, Response::HTTP_OK);

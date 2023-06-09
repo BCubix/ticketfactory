@@ -4,12 +4,10 @@ namespace App\EventSubscriber\Admin;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Entity\Module\Module;
-use App\Entity\Theme\Theme;
+use App\Entity\Addon\Module;
 use App\Exception\ApiException;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
-use App\Service\Hook\HookService;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
@@ -35,15 +33,13 @@ class FileUploader implements EventSubscriberInterface
     private $rootPath;
     private $mm;
     private $tm;
-    private $hs;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookService $hs)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
         $this->mm = $mm;
         $this->tm = $tm;
-        $this->hs = $hs;
     }
 
     public static function getSubscribedEvents(): array
@@ -102,7 +98,7 @@ class FileUploader implements EventSubscriberInterface
 
         $this->moveFile($media, $event->getRequest()->get('filePath') . "/");
 
-        $this->hs->exec('MediaSaved', [
+        $this->hm->exec('MediaSaved', [
             'sObject' => $media,
             'state'   => 'add'
         ]);
@@ -126,7 +122,7 @@ class FileUploader implements EventSubscriberInterface
         $response["filename"] = $event->getFile()->getFilename();
 
         $name = $this->mm->unzip($response["filename"]);
-        $this->mm->active($name, Module::ACTION_INSTALL, true);
+        $this->mm->active($name, Module::ACTION_INSTALL);
 
         return $response;
     }
@@ -138,12 +134,7 @@ class FileUploader implements EventSubscriberInterface
         $response["filename"] = $event->getFile()->getFilename();
 
         $name = $this->tm->unzip($response["filename"]);
-
-        $theme = new Theme();
-        $theme->setName($name);
-
-        $this->em->persist($theme);
-        $this->em->flush();
+        $this->tm->active($name);
 
         return $response;
     }

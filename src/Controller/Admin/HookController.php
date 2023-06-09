@@ -2,41 +2,18 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Addon\Module;
 use App\Entity\Hook\Hook;
-use App\Entity\Module\Module;
 use App\Exception\ApiException;
-use App\Manager\HookManager;
-use App\Manager\LanguageManager;
-use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
-use App\Service\Log\Logger;
 
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class HookController extends AdminController
 {
-    private $hm;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        SerializerInterface $se,
-        FormErrorsCollector $fec,
-        Logger $log,
-        HookService $hs,
-        HookManager $hm,
-        LanguageManager $lm
-    ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
-
-        $this->hm = $hm;
-    }
-
     #[Rest\Get('/hooks')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
     public function getAll(Request $request): View
@@ -66,7 +43,7 @@ class HookController extends AdminController
         $hook = new Hook();
         $hook->setName($hookName);
         $hook->setModule($module);
-        $hook->setPosition($this->hs->getPosition($hookName));
+        $hook->setPosition($this->hm->getPosition($hookName));
 
         $this->em->persist($hook);
         $this->em->flush();

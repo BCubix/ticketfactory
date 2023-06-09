@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
+use App\Kernel;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,13 +23,14 @@ class ImageFormatManager extends AbstractManager
     protected $fs;
 
     public function __construct(
+        Kernel $kl,
         ManagerFactory $mf,
         ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
         Filesystem $fs
     ) {
-        parent::__construct($mf, $sf, $em, $rs);
+        parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->pm = $this->mf->get('parameter');
         $this->mm = $this->mf->get('media');

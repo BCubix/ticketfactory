@@ -31,33 +31,26 @@ class Kernel extends BaseKernel
         } else {
             $container->import($configDir.'/{services}.php');
         }
+
+        $this->configureModulesServices($container);
     }
 
     public function registerBundles(): iterable
     {
-        $bundles = require $this->getBundlesPath();
+        $bundles = require_once $this->getBundlesPath();
 
-        try {
-            $modulesActive = Db::getInstance()->query("SELECT * FROM module WHERE active = '1'");
-        } catch (\Exception $e) {
-            $modulesActive = [];
-        }
-
-        $pg = new PathGetter($this->getProjectDir());
-        $moduleDir = $pg->getModulesDir();
+        $modulesActive = $this->getActiveModules();
+        $modulesDir = $this->getModulesDir();
 
         // Add active modules in bundles list
         foreach ($modulesActive as $moduleActive) {
             $moduleName = $moduleActive['name'];
 
-            // Register first the namespace of module
-            $moduleConfig = GetClass::getClass($moduleDir . "/$moduleName/{$moduleName}Config.php",
-                "{$moduleName}Config", [ $moduleDir, null ]);
-            $moduleConfig->register();
-
             // Find file bundle in module
-            $bundleFilePath = $moduleDir . '/' . $moduleName . '/src/' . $moduleName . '.php';
-            if (!is_file($bundleFilePath)) {
+            $bundleFilePath = $modulesDir . '/' . $moduleName . '/src/' . $moduleName . '.php';
+            if (is_file($bundleFilePath)) {
+                require_once $bundleFilePath;
+            } else {
                 throw new FileNotFoundException("Le module $moduleName n'a pas de fichier bundle.");
             }
 
@@ -67,10 +60,16 @@ class Kernel extends BaseKernel
 
             $bundles[$moduleNamespace] = ['all' => true];
         }
-
+        
         foreach ($bundles as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
-                yield new $class();
+                $bundle = new $class();
+
+                if (method_exists($bundle, 'register')) {
+                    $bundle->register();
+                }
+
+                yield $bundle;
             }
         }
     }
@@ -80,5 +79,43 @@ class Kernel extends BaseKernel
         $configDir = $this->getConfigDir();
         $routes->import($configDir.'/{routes}/annotations.php');
         $routes->import($configDir.'/{routes}/framework.yaml');
+    }
+
+    private function configureModulesServices(ContainerConfigurator &$container): void
+    {
+        $modulesActive = $this->getActiveModules();
+        $services = $container->services();
+
+        // Declare active modules services
+        foreach ($modulesActive as $key => $moduleActive) {
+            $moduleName = $moduleActive['name'];
+            $moduleNamespace = 'TicketFactory\\Module\\' . $moduleName . '\\';
+            $modulePath = ('../modules/' . $moduleName . '/src/');
+
+            $services
+                ->load($moduleNamespace, $modulePath)
+                ->exclude($modulePath . '{DependencyInjection,Entity}')
+                ->exclude($modulePath . $moduleName . '.php')
+                ->public()
+                ->autowire()
+                ->autoconfigure()
+            ;
+        }   
+    }
+
+    private function getActiveModules(): array
+    {
+        try {
+            return Db::getInstance()->query("SELECT * FROM module WHERE active = '1'");
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    private function getModulesDir(): string
+    {
+        $pg = new PathGetter($this->getProjectDir());
+
+        return $pg->getModulesDir();
     }
 }

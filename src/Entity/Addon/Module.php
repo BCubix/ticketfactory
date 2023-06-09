@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Module;
+namespace App\Entity\Addon;
 
 use App\Entity\Datable;
 use App\Entity\Hook\Hook;

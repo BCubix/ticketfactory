@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\User\User;
+use App\Kernel;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,13 +18,14 @@ class UserManager extends AbstractManager
     protected $ph;
 
     public function __construct(
+        Kernel $kl,
         ManagerFactory $mf,
         ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
         UserPasswordHasherInterface $ph
     ) {
-        parent::__construct($mf, $sf, $em, $rs);
+        parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->ph = $ph;
     }

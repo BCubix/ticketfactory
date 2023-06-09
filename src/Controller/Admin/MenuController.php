@@ -4,12 +4,11 @@ namespace App\Controller\Admin;
 
 use App\Exception\ApiException;
 use App\Entity\Menu\MenuEntry;
-use App\Manager\MenuEntryManager;
+use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\MenuEntryManager;
 use App\Form\Admin\Menu\MenuEntryType;
-use App\Form\Admin\Filters\FilterMenuEntryType;
 use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
 use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,11 +34,11 @@ class MenuController extends CrudController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs,
         LanguageManager $lm,
+        HookManager $hm,
         MenuEntryManager $mem
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
 
         $this->mem = $mem;
     }

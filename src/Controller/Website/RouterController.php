@@ -19,6 +19,10 @@ class RouterController extends WebsiteController
             return !empty($value);
         });
 
+        if ($slugs[0] == 'calendrier') {
+            return $this->forward('TicketFactory\Module\Calendar\Controller\Website\CalendarController::index');
+        }
+
         // If url ends with trailing slash, we redirect to the same url without it
         if (count($slugs) > 1 && empty($slugs[count($slugs) - 1])) {
             array_pop($slugs);

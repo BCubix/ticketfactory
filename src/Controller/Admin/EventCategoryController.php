@@ -5,11 +5,10 @@ namespace App\Controller\Admin;
 use App\Exception\ApiException;
 use App\Entity\Event\EventCategory;
 use App\Form\Admin\Event\EventCategoryType;
-use App\Form\Admin\Filters\FilterEventCategoryType;
 use App\Manager\EventCategoryManager;
+use App\Manager\HookManager;
 use App\Manager\LanguageManager;
 use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
 use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +16,6 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,11 +34,11 @@ class EventCategoryController extends CrudController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs,
-        EventCategoryManager $ecm,
-        LanguageManager $lm
+        LanguageManager $lm,
+        HookManager $hm,
+        EventCategoryManager $ecm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
 
         $this->ecm = $ecm;
     }
@@ -103,7 +101,7 @@ class EventCategoryController extends CrudController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'delete'
         ]);

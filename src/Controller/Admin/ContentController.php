@@ -53,7 +53,7 @@ class ContentController extends CrudController
         $object = new $this->entityClass();
         $iObject = CloneObject::cloneObject($object);
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'add'
         ]);
@@ -70,7 +70,7 @@ class ContentController extends CrudController
 
         $this->lm->setTranslationsProperties($object);
 
-        $this->hs->exec($this->entityClassName . 'Validated', [
+        $this->hm->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
             'state'   => 'add'
@@ -97,7 +97,7 @@ class ContentController extends CrudController
 
         $iObject = CloneObject::cloneObject($object);
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state' => 'edit'
         ]);
@@ -112,7 +112,7 @@ class ContentController extends CrudController
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 
-        $this->hs->exec($this->entityClassName . 'Validated', [
+        $this->hm->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
             'state'   => 'edit'

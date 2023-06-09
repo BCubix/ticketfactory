@@ -3,22 +3,15 @@
 namespace App\Hook;
 
 use App\Event\HookEvent;
-use App\Manager\VersionnedEntityManager;
+use App\Service\Addon\Hook;
 
-class EventHook
+class EventHook extends Hook
 {
-    private $vem;
-
-    public function __construct(VersionnedEntityManager $vem)
-    {
-        $this->vem = $vem;
-    }
-
     public function hookEventSaved(HookEvent $event)
     {
         $iObject = $event->getParam('iObject');
         $sObject = $event->getParam('sObject');
 
-        //$this->vem->checkVersionnedEntity($sObject, $iObject);
+        //$this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
     }
 }

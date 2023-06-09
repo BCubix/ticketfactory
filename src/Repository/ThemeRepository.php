@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Theme\Theme;
+use App\Entity\Addon\Theme;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ThemeRepository extends CrudRepository

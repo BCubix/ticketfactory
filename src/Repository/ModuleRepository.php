@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Module\Module;
+use App\Entity\Addon\Module;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ModuleRepository extends CrudRepository

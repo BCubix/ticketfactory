@@ -5,10 +5,10 @@ namespace App\Controller\Admin;
 use App\Entity\Media\MediaCategory;
 use App\Exception\ApiException;
 use App\Form\Admin\Media\MediaCategoryType;
+use App\Manager\HookManager;
 use App\Manager\LanguageManager;
 use App\Manager\MediaCategoryManager;
 use App\Service\Error\FormErrorsCollector;
-use App\Service\Hook\HookService;
 use App\Service\Log\Logger;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,11 +34,11 @@ class MediaCategoryController extends CrudController
         SerializerInterface $se,
         FormErrorsCollector $fec,
         Logger $log,
-        HookService $hs,
-        MediaCategoryManager $mcm,
-        LanguageManager $lm
+        LanguageManager $lm,
+        HookManager $hm,
+        MediaCategoryManager $mcm
     ) {
-        parent::__construct($em, $se, $fec, $log, $hs, $lm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
 
         $this->mcm = $mcm;
     }
@@ -102,7 +102,7 @@ class MediaCategoryController extends CrudController
             throw $this->createNotFoundException(static::NOT_FOUND_MESSAGE);
         }
 
-        $this->hs->exec($this->entityClassName . 'Instantiated', [
+        $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
             'state'  => 'delete'
         ]);
