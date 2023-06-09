@@ -3,10 +3,27 @@
 namespace App\Manager;
 
 use App\Entity\Event\Event;
+use App\Entity\Event\EventDateBlock;
+use App\Service\Formatter\DateTimeFormatter;
+use App\Service\ServiceFactory;
+use App\Service\File\MimeTypeMapping;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventManager extends AbstractManager
 {
     public const SERVICE_NAME = 'event';
+
+    protected $tr;
+
+    public function __construct(ManagerFactory $mf, ServiceFactory $sf, EntityManagerInterface $em, RequestStack $rs, TranslatorInterface $tr)
+    {
+        parent::__construct($mf, $sf, $em, $rs);
+
+        $this->tr = $tr;
+    }
 
     public function getFromUrl(array $slugs): ?Event
     {
@@ -81,6 +98,21 @@ class EventManager extends AbstractManager
         return $event;
     }
 
+    public function getEvents(array $filters): array
+    {
+        $events = $this->em->getRepository(Event::class)->findAllForWebsite($this->getLanguageId(), $filters);
+
+        // Dates
+        foreach ($events as &$event) {
+            $eventDateBlocks = $this->em->getRepository(EventDateBlock::class)->findEventDateBlocksForWebsite($event->getId());
+            foreach ($eventDateBlocks as $eventDateBlock) {
+                $event->addEventDateBlock($eventDateBlock);
+            }
+        }
+
+        return $events;
+    }
+
     public function getUrlSlugs(Event $event): array
     {
         $eventFormats = $this->mf->get('parameter')->get('event_url_format');
@@ -134,5 +166,81 @@ class EventManager extends AbstractManager
         }
         
         return $url;
+    }
+
+    public function getEventDatesStr($event, $format = null): string
+    {
+        if ($format == null) {
+            $format = $this->tr->trans('global.datetime-format');
+        }
+
+        $datesNb = 0;
+        foreach ($event->getEventDateBlocks() as $dateBlock) {
+            foreach ($dateBlock->getEventDates() as $eventDate) {
+                $datesNb++;
+            }
+        }
+
+        switch ($datesNb) {
+            case 0:
+                return '';
+
+            case 1:
+                return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format));
+
+            case 2:
+                return (
+                    DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
+                    $this->tr->trans('global.and') . ' ' .
+                    DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
+                );
+
+            default:
+                return (
+                    DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
+                    $this->tr->trans('global.to') . ' ' .
+                    DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
+                );
+        }
+    }
+
+    public function getMediasFromEvent($event): array
+    {
+        $medias = [];
+        foreach (MimeTypeMapping::getAllCategories() as $type) {
+            $type = iconv("utf-8", "ascii//TRANSLIT", $type);
+            $type = strtolower($type);
+
+            $medias[$type] = [];
+        }
+
+        $eventMedias = $event->getEventMedias()->toArray();
+        usort($eventMedias, function($a, $b) {
+            if ($a->getPosition() == $b->getPosition()) {
+                return 0;
+            }
+
+            if ($a->getPosition() > $b->getPosition()) {
+                return 1;
+            }
+
+            return -1;
+        });
+
+        foreach ($eventMedias as $eventMedia) {
+            $media = $eventMedia->getMedia();
+
+            if ($eventMedia->isMainImg()) {
+                $medias['main'] = $media;
+            }
+
+            $type = MimeTypeMapping::getTypeFromMime($media->getDocumentType());
+            $type = iconv("utf-8", "ascii//TRANSLIT", $type);
+            $type = strtolower($type);
+
+            $medias[$type][] = $media;
+        }
+
+        return $medias;
     }
 }

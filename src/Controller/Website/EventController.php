@@ -4,14 +4,15 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 use App\Entity\User\User;
+use App\Entity\Event\Event;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PageController extends WebsiteController
+class EventController extends WebsiteController
 {
-    public function index(Page $page)
+    public function index(Event $event)
     {
         $userAddress = $this->getRequest()->get('u');
         $userPass = $this->getRequest()->get('t');
@@ -21,12 +22,16 @@ class PageController extends WebsiteController
             $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
         }
 
-
-        if (null === $page || (false === $page->isActive() && (null === $user || !in_array("ROLE_ADMIN", $user->getRoles())))) {
-            throw $this->createNotFoundException('This page does not exist.');
+        if (null === $event || (false === $event->isActive() && (null === $user || !in_array("ROLE_ADMIN", $user->getRoles())))) {
+            throw $this->createNotFoundException('This event does not exist.');
         }
 
-        return $this->websiteRender('Page/index.html.twig', [ 'page' => $page]);
+        $medias = $this->mf->get('event')->getMediasFromEvent($event);
+
+        return $this->websiteRender('Event/detail.html.twig', [
+            'event'  => $event,
+            'medias' => $medias,
+        ]);
     }
 }
 

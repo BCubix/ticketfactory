@@ -4,11 +4,11 @@
 // Base
 @import 'base/mixins';
 @import 'base/variables';
+@import 'base/mixins-icons';
 @import 'base/icons';
 @import 'base/text';
 
 @import 'node_modules/include-media/dist/_include-media';
-@import 'node_modules/slick-carousel/slick/slick.scss';
 
 @import 'base/reboot';
 @import 'base/type';
@@ -20,3 +20,5 @@
 @import 'components/dots';
 @import 'components/header';
 @import 'components/menu';
+@import 'components/event-head';
+@import 'components/figure';

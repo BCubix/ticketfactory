@@ -1,0 +1,18 @@
+<a class="card card--link {{ isDone ? 'is-done' : ''}} {{ color ? event.season.getClassName() : '' }}" href="{{ orchestratorPath(event) }}">
+    <div class="card__thumb">
+        <img src="{{ tfAsset(event.getMainMedia()) }}" alt="{{ event.getMainMedia().alt }}">
+    </div>
+    <div class="card__content">
+        <time class="card__date">
+            {{ eventDatesStr(event) }}
+        </time>
+
+        <h2 class="card__title">
+            {{ event.name }}
+        </h2>
+
+        {% if event.chapo is not null %}
+            <div class="card__author">{{ event.chapo }}</div>
+        {% endif %}
+    </div>
+</a>

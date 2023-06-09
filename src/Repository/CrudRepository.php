@@ -143,4 +143,17 @@ abstract class CrudRepository extends AbstractRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findTranslationForWebsite(int $languageId, $languageGroup)
+    {
+        return $this->createQueryBuilder('e')
+            ->innerJoin('e.lang', 'l')
+            ->where('e.languageGroup = :languageGroup')
+            ->andWhere('l.id = :languageId')
+            ->setParameter('languageGroup', $languageGroup->toBinary())
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

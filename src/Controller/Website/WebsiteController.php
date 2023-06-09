@@ -4,6 +4,7 @@ namespace App\Controller\Website;
 
 use App\Manager\ManagerFactory;
 use App\Manager\ModuleManager;
+use App\Entity\Language\Language;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;

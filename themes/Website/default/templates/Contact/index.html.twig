@@ -7,10 +7,6 @@
     {{ hook('contactContent') }}
 
     <div class="page container">
-        <span class="ariane-thread">
-            <a href='{{ keywordPath('home') }}'>Accueil</a> / Contact
-        </span>
-
         <div class="contact row">
             <div class="col-xs-12 col-lg-6">
                 <div class="contact_form">
@@ -76,10 +72,6 @@
                     {{ form_rest(form) }}
                     {{ form_end(form) }}
                 </div>
-            </div>
-
-            <div class="col-xs-12 col-lg-6 contact_image">
-                <img src="{{ asset('/build/front/img/contactPoster.png') }}" alt="Anna PAVLOVA">
             </div>
         </div>
     </div>

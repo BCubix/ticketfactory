@@ -1,0 +1,36 @@
+{% extends websiteTemplates('base.html.twig') %}
+
+{% block body %}
+<main>
+    {{ hook('seasonHeader') }}
+    {{ hook('seasonContent') }}
+
+    {% if activeEvents | length > 0 %}
+    <section class="section section--gray">
+        <div class="container">
+            <div class="row">
+                {% for event in activeEvents %}
+                <div class="col-xs-12 col-sm-6 col-md-4" >
+                    {% include websiteTemplates('Event/_card.html.twig') with {'event': event} %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if inactiveEvents | length > 0 %}
+    <section class="section section--gray">
+        <div class="container">
+            <div class="row">
+                {% for event in inactiveEvents %}
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    {% include websiteTemplates('Event/_link-card.html.twig') with {'event': event, 'isDone': true, 'showTweet': true, 'color': false} %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</main>
+{% endblock body %}

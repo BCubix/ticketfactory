@@ -25,7 +25,7 @@ class ContactRequestController extends WebsiteController
 
             $this->addFlash('contact-success', "Votre message à bien été envoyé");
 
-            return $this->redirectToRoute('/');
+            return $this->redirect($this->sf->get('urlService')->keywordPath('home', []));
         }
 
         return $this->websiteRender('Contact/index.html.twig', ['contact' => $object, 'form' => $form->createView()]);
