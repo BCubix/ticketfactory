@@ -1,8 +1,9 @@
 name: Ticket Factory
 display_name: Ticket Factory - Default Theme
+type: theme
 version: 1.0.0
 author:
     name: "Ticket Factory"
     email: "hi@bcubix.com"
-global_settings:
+settings:
     
