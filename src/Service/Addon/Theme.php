@@ -6,7 +6,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 class Theme extends Addon
 {
-    public const SERVICE_NAME = 'themeConfig';
+    public const SERVICE_NAME = 'theme';
 
     protected function addSettings(ArrayNodeDefinition $node): void
     {

@@ -14,6 +14,7 @@ use Spatie\Ssr\Engines\Node;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
 
 abstract class WebsiteController extends AbstractFOSRestController
 {
@@ -22,19 +23,22 @@ abstract class WebsiteController extends AbstractFOSRestController
     protected $mf;
     protected $sf;
     protected $mm;
+    protected $tg;
 
     public function __construct(
         EntityManagerInterface $em,
         RequestStack $rs,
         ManagerFactory $mf,
         ServiceFactory $sf,
-        ModuleManager $mm
+        ModuleManager $mm,
+        Environment $tg
     ) {
         $this->em = $em;
         $this->rs = $rs;
         $this->mf = $mf;
         $this->sf = $sf;
         $this->mm = $mm;
+        $this->tg = $tg;
     }
 
     protected function getRequest(): Request
@@ -104,8 +108,10 @@ abstract class WebsiteController extends AbstractFOSRestController
         return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
     }
 
-    protected function renderModule(string $path, array $parameters): string
+    protected function renderModule(string $moduleName, string $path, array $parameters): string
     {
-        return $this->sf->get('module')->renderModule($path, $parameters);
+        $path = ('@modules/' . $moduleName . '/templates/' . $path);
+
+        return $this->tg->render($path, $parameters);
     }
 }

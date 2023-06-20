@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDateBlock;
+use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
 use App\Service\File\MimeTypeMapping;
@@ -18,9 +19,15 @@ class EventManager extends AbstractManager
 
     protected $tr;
 
-    public function __construct(ManagerFactory $mf, ServiceFactory $sf, EntityManagerInterface $em, RequestStack $rs, TranslatorInterface $tr)
-    {
-        parent::__construct($mf, $sf, $em, $rs);
+    public function __construct(
+        Kernel $kl,
+        ManagerFactory $mf,
+        ServiceFactory $sf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        TranslatorInterface $tr
+    ) {
+        parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->tr = $tr;
     }

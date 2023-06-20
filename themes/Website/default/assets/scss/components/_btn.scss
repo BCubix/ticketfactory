@@ -1,0 +1,57 @@
+.btn {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 rem(30);
+  height: rem(40);
+  line-height: rem(40);
+  text-align: center;
+  font-size: rem(14);
+  font-weight: 500;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  font-family: $font1;
+  background-color: $color1;
+  border-radius: rem(5);
+  transition: $transition-base;
+
+  [class*="icon"] {
+    vertical-align: middle;
+    margin-right: rem(10);
+    font-size: rem(20);
+    position: relative;
+    top: rem(-1);
+  }
+
+  &:hover {
+    background-color: $color1-dark;
+  }
+
+  &--c2 {
+    background-color: $color2;
+
+    &:hover {
+      background-color: $color2-dark;
+    }
+  }
+
+  &--c2-inversed {
+    background-color: #FFFFFF;
+    color: $color2;
+    border: solid 2px $color2;
+    font-weight: bold;
+    font-size: rem(16);
+    margin-top: rem(10);
+
+    &:hover {
+      background-color: $color2;
+      color: #FFFFFF;
+    }
+  }
+
+  &--full {
+    width: 100%;
+  }
+}

@@ -4,5 +4,7 @@
 <main>
     {{ hook('homeHeader') }}
     {{ hook('homeContent') }}
+
+    {% include websiteTemplates('Home/_theater.html.twig') %}
 </main>
 {% endblock body %}

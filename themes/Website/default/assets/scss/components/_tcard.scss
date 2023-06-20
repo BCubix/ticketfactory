@@ -1,0 +1,38 @@
+.tcard {
+    background-color: $color2-light;
+    padding: rem(50) 0;
+    
+    &__thumb {
+        overflow: hidden;
+        width: 100%;
+        height: rem(400);
+        border-radius: rem(5);
+
+        a {
+            display: block;
+            height: 100%;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    
+    &__content {
+        height: 100%;
+        padding-left: rem(40);
+    }
+
+    &__subtitle {
+        font-size: rem(18);
+        font-weight: 600;
+        color: $color1;
+        margin-bottom: rem(20);
+    }
+
+    &__description {
+        margin-bottom: rem(20);
+    }
+}

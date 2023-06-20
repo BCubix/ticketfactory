@@ -4,13 +4,46 @@
     &::after {
         content: '';
         display: block;
-        height: rem(35);
-        width: 100%;
-        position: relative;
-        background: url('../../img/dot.svg');
+        position: absolute;
+        background-image: url('../../img/doty.svg');
         background-repeat: repeat;
         background-size: rem(35) rem(35);
-        transform: translateY(-50%);
         z-index: 30;
+    }
+    
+    &--t::after {
+        height: rem(35);
+        width: 100%;
+        left: 0;
+        top: 0;
+        transform: translateY(-50%);
+    }
+
+    &--b::after {
+        height: rem(35);
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        transform: translateY(50%);
+    }
+
+    &--l::after {
+        height: 100%;
+        width: rem(35);
+        left: 0;
+        top: 0;
+        transform: translateX(-50%);
+    }
+
+    &--r::after {
+        height: 100%;
+        width: rem(35);
+        right: 0;
+        top: 0;
+        transform: translateX(50%);
+    }
+
+    &--blue::after {
+        background-image: url('../../img/dotb.svg');
     }
 }

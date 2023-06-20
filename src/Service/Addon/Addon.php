@@ -10,8 +10,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 abstract class Addon extends Bundle implements ConfigurationInterface
 {
-    public const SERVICE_NAME = 'themeConfig';
-
     protected $cl;
 
     public function __construct()

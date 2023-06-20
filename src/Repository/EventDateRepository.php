@@ -45,4 +45,35 @@ class EventDateRepository extends CrudRepository
             ->getResult()
         ;
     }
+
+    public function getCalendarForWebsite(\DateTime $beginDate, \DateTime $endDate, ?int $categoryId)
+    {
+        $results = $this
+            ->createQueryBuilder('ed')
+            ->addSelect('edb')
+            ->addSelect('e')
+            ->addSelect('ec')
+            ->innerjoin('ed.eventDateBlock', 'edb')
+            ->innerjoin('edb.event', 'e')
+            ->innerjoin('e.eventCategories', 'ec')
+            ->where('e.active = 1')
+            ->andWhere('ec.active = 1')
+            ->andWhere('(ed.eventDate BETWEEN :beginDate AND :endDate) OR (ed.reportDate BETWEEN :beginDate AND :endDate)')
+        ;
+
+        if (null !== $categoryId) {
+            $results = $results
+                ->andWhere('ec.id = :categoryId')
+                ->setParameter('categoryId', $categoryId)
+            ;
+        }
+
+        return $results
+            ->setParameter('beginDate', $beginDate)
+            ->setParameter('endDate', $endDate)
+            ->orderBy('ed.eventDate', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

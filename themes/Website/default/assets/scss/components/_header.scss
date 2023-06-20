@@ -1,11 +1,7 @@
 .header {
-    height: rem(50);
+    height: rem(70);
     position: relative;
     z-index: 1000;
-  
-    @include media('>=md') {
-      height: rem(80);
-    }
 
     &_container {
       display: flex;

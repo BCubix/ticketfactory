@@ -12,8 +12,23 @@ h6, .h6 {
 
 // Emphasis
 
-small,
-.small {
+small, .small {
   font-weight: normal;
   font-size: 80%;
+}
+
+.title {
+  &.h1 {
+    color: $color1;
+    font-size: rem(50);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  &.h2 {
+    color: $color1;
+    font-size: rem(32);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 }
