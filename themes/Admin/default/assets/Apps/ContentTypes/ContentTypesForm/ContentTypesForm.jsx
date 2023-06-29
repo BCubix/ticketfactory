@@ -6,7 +6,6 @@ import { Button, FormHelperText, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
 
@@ -51,6 +50,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                 fields: initialValues?.fields || [],
                 pageParent: initialValues?.pageParent?.id || '',
                 maxObjectNb: initialValues?.maxObjectNb || '',
+                keyword: initialValues?.keyword || '',
                 pageType: initialValues?.pageType || false,
             }}
             validationSchema={contentTypeSchema}
@@ -65,7 +65,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un type de contenus`}>
                     <Component.CmtFormBlock title="Informations générales">
                         <Grid container spacing={4}>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={6}>
                                 <Component.CmtTextField
                                     value={values.name}
                                     onChange={handleChange}
@@ -76,7 +76,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                                     error={touched.name && errors.name}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={6}>
                                 <Component.CmtSelectField
                                     label="Page parente"
                                     required
@@ -89,7 +89,7 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                                     errors={touched.pageParent && errors.pageParent}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={6}>
                                 <Component.CmtTextField
                                     value={values.maxObjectNb}
                                     onChange={handleChange}
@@ -99,6 +99,9 @@ export const ContentTypesForm = ({ initialValues = null, submitForm, pagesList }
                                     error={touched.maxObjectNb && errors.maxObjectNb}
                                     type={'number'}
                                 />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Component.CmtKeywordInput values={values} setFieldValue={setFieldValue} name="keyword" />
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>

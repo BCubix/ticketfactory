@@ -4,13 +4,14 @@ import { useDispatch } from 'react-redux';
 import moment from 'moment/moment';
 
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Button, Dialog, DialogTitle, Grid, IconButton, InputLabel, Slide, Typography } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, InputLabel, Slide, Typography } from '@mui/material';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const TYPE = 'slider';
 
@@ -45,30 +46,39 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const FormComponent = ({ values, setFieldValue, name, field, label }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
+    const [createDialog, setCreateDialog] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
+    const [imageMediasTotal, setImageMediasTotal] = useState(null);
+    const [mediaFilters, setMediaFilters] = useState({
+        title: '',
+        active: null,
+        sort: 'id ASC',
+        page: 1,
+        limit: 20,
+    });
 
     const getMedias = async () => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediasApi.getMediasList({ ...mediaFilters, type: ['Image'] });
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+            setList(result.medias);
+            setImageMediasTotal(result.total);
+        });
+    };
 
-            return;
-        }
-
-        const result = await Api.mediasApi.getMedias();
-
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.medias);
+    const handleSubmit = () => {
+        setCreateDialog(false);
+        getMedias();
+        NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
     };
 
     useEffect(() => {
         getMedias();
-    }, []);
+    }, [mediaFilters]);
 
     useEffect(() => {
         if (!values[field.name]) {
@@ -89,7 +99,7 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                 <DialogTitle sx={{ borderBottom: '1px solid #d3d3d3' }}>
                     <Box display={'flex'} justifyContent="space-between">
                         <Typography component="h1" variant="h5" fontSize={20}>
-                            Ajouter des images au slider
+                            Ajouter {field?.options?.multiple ? 'des images' : 'une image'}
                         </Typography>
 
                         <IconButton
@@ -108,20 +118,45 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                 </DialogTitle>
                 <Box height="100%" width={'100%'} sx={{ padding: 0 }}>
                     <Grid container sx={{ height: '100%' }}>
-                        <Grid item xs={12} md={9}>
+                        <Grid item xs={12} md={9} sx={{ paddingInline: 5, paddingTop: 5 }}>
+                            <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                Créer un nouveau média
+                            </Component.CreateButton>
+
+                            <Component.MediasFilters filters={mediaFilters} changeFilters={(values) => setMediaFilters(values)} />
+
                             <Box display="flex" px={5} py={10} flexWrap="wrap">
                                 {list?.map((item, index) => (
                                     <Component.CmtMediaElement
                                         key={index}
                                         onClick={() => setSelectedMedia(item)}
-                                        sx={{
-                                            border: values[field.name].includes(item.id) ? '1px solid #FF0000' : '0px',
-                                        }}
+                                        position="relative"
+                                        sx={
+                                            (field.options.multiple && values[field.name].includes(item.id)) || values[field.name] === item.id
+                                                ? {
+                                                      outline: (theme) => `1px solid ${theme.palette.crud.create.textColor}`,
+                                                      outlineOffset: '-1px',
+                                                  }
+                                                : {}
+                                        }
                                     >
+                                        {(field.options.multiple && values[field.name].includes(item.id)) ||
+                                            (values[field.name] === item.id && (
+                                                <CheckIcon sx={{ color: (theme) => theme.palette.crud.create.textColor, position: 'absolute', top: 5, right: 5 }} />
+                                            ))}
                                         <Component.CmtDisplayMediaType media={item} width={'100%'} />
                                     </Component.CmtMediaElement>
                                 ))}
                             </Box>
+
+                            <Component.CmtPagination
+                                page={mediaFilters.page}
+                                total={imageMediasTotal}
+                                limit={mediaFilters.limit}
+                                setPage={(newValue) => setMediaFilters({ ...mediaFilters, page: newValue })}
+                                setLimit={(newValue) => setMediaFilters({ ...mediaFilters, limit: newValue })}
+                                length={list?.length}
+                            />
                         </Grid>
                         <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%' }}>
                             <DisplayMediaInformation
@@ -135,7 +170,14 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                         </Grid>
                     </Grid>
                 </Box>
+                <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
+                    <DialogTitle sx={{ fontSize: 20 }}>Ajouter un fichier</DialogTitle>
+                    <DialogContent>
+                        <Component.CreateMedia handleSubmit={handleSubmit} />
+                    </DialogContent>
+                </Dialog>
             </Dialog>
+
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
                     {field.helper}
@@ -158,19 +200,6 @@ const DisplayMediaInformation = ({ onClose, selectedMedia, values, field, setFie
 
     return (
         <Box position="relative" px={10}>
-            <IconButton
-                aria-label="close"
-                onClick={onClose}
-                sx={{
-                    position: 'absolute',
-                    right: 8,
-                    top: 8,
-                    color: (theme) => theme.palette.grey[500],
-                }}
-            >
-                <CloseIcon />
-            </IconButton>
-
             <Box sx={{ paddingTop: 10 }}>
                 <Box>
                     <Typography component="span" variant="body2">

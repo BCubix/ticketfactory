@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 import { Box, Button } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
 
@@ -67,6 +66,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                 contentType: initVal?.contentType?.id || selectedContentType?.id,
                 lang: initVal?.lang?.id || '',
                 languageGroup: initVal?.languageGroup || '',
+                page: initVal?.page?.id || '',
                 editSlug: false,
                 seo: {
                     metaTitle: initVal?.metaTitle || '',

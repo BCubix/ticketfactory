@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 import { Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 import ContentModules from '@Apps/Contents/ContentsForm/ContentModules/index';
 
@@ -13,20 +12,18 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
     return (
         <>
             <Component.CmtFormBlock title={label}>
-                {values && (
-                    <Component.DisplayContentForm
-                        values={values[field.name]}
-                        errors={(errors && errors[field.name]?.parameters) || {}}
-                        touched={(touched && touched[field.name]?.parameters) || {}}
-                        handleBlur={handleBlur}
-                        handleChange={handleChange}
-                        setFieldTouched={setFieldTouched}
-                        setFieldValue={setFieldValue}
-                        contentType={field?.parameters}
-                        contentModules={contentModules}
-                        prefixName={`${name}.`}
-                    />
-                )}
+                <Component.DisplayContentForm
+                    values={(values && values[field.name]) || {}}
+                    errors={(errors && errors[field.name]?.parameters) || {}}
+                    touched={(touched && touched[field.name]?.parameters) || {}}
+                    handleBlur={handleBlur}
+                    handleChange={handleChange}
+                    setFieldTouched={setFieldTouched}
+                    setFieldValue={setFieldValue}
+                    contentType={field?.parameters}
+                    contentModules={contentModules}
+                    prefixName={`${name}.`}
+                />
 
                 {field.helper && (
                     <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
