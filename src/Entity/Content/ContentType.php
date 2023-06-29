@@ -50,6 +50,9 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(nullable: true)]
     private ?int $maxObjectNb = null;
 
+    #[ORM\Column(length: 191, nullable: true, unique: true)]
+    private ?string $keyword = null;
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
     #[ORM\Column(type: 'json')]
@@ -121,6 +124,18 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     public function setMaxObjectNb(?int $maxObjectNb): self
     {
         $this->maxObjectNb = $maxObjectNb;
+
+        return $this;
+    }
+
+    public function getKeyword(): ?string
+    {
+        return $this->keyword;
+    }
+
+    public function setKeyword(?string $keyword): self
+    {
+        $this->keyword = $keyword;
 
         return $this;
     }

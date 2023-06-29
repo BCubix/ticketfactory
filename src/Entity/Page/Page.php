@@ -60,6 +60,11 @@ class Page extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $controller = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
@@ -151,6 +156,18 @@ class Page extends Datable
     public function setKeyword(?string $keyword): self
     {
         $this->keyword = $keyword;
+
+        return $this;
+    }
+
+    public function getController(): ?string
+    {
+        return $this->controller;
+    }
+
+    public function setController(?string $controller): self
+    {
+        $this->controller = $controller;
 
         return $this;
     }

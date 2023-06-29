@@ -19,10 +19,6 @@ class RouterController extends WebsiteController
             return !empty($value);
         });
 
-        if ($slugs[0] == 'calendrier') {
-            return $this->forward('TicketFactory\Module\Calendar\Controller\Website\CalendarController::index', ['slugs' => $slugs]);
-        }
-
         // If url ends with trailing slash, we redirect to the same url without it
         if (count($slugs) > 1 && empty($slugs[count($slugs) - 1])) {
             array_pop($slugs);
@@ -103,17 +99,9 @@ class RouterController extends WebsiteController
         if (null == $page) {
             throw $this->createNotFoundException('Cette page n\'existe pas.');
         }
-
-        $mappingArray = [
-            'home' => 'App\Controller\Website\HomeController::index',
-            'newsletter' => 'App\Controller\Website\NewsletterController::index',
-            'calendar' => 'App\Controller\Website\CalendarController::index',
-            'cookies' => 'App\Controller\Website\CookiesController::index',
-            'contact' => 'App\Controller\Website\ContactRequestController::index'
-        ];
         
-        if (isset($mappingArray[$page->getKeyword()])) {
-            return $this->forward($mappingArray[$page->getKeyword()], [
+        if (null !== $page->getController()) {
+            return $this->forward($page->getController(), [
                 'page'  => $page,
                 'slugs' => $slugs
             ]);
