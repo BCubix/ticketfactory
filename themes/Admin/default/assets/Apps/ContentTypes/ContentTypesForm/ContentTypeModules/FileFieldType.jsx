@@ -115,7 +115,7 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, setField
                             variant="standard"
                             id="imageType"
                             fullWidth
-                            value={values.validations.type}
+                            value={values.validations.type || []}
                             multiple
                             onChange={(e) => {
                                 setFieldValue(`${prefixName}fields.${index}.validations.type`, e.target.value);
@@ -158,7 +158,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 
 const getInitialValues = () => ({
     options: { required: false, disabled: false, multiple: false },
-    validations: { minSize: '', maxSize: '', type: [] }
+    validations: { minSize: '', maxSize: '', type: [] },
 });
 
 export default {

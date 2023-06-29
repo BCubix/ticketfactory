@@ -112,6 +112,7 @@ const contentTypesApi = {
             formData.append('pageType', data.pageType ? 1 : 0);
             formData.append('displayBlocks', data.displayBlocks ? 1 : 0);
             formData.append('maxObjectNb', data.maxObjectNb);
+            formData.append('keyword', data.keyword || '');
             formData.append('pageParent', data.pageParent || '');
 
             data.fields?.forEach((el, index) => {
@@ -135,6 +136,7 @@ const contentTypesApi = {
             formData.append('pageType', data.pageType ? 1 : 0);
             formData.append('displayBlocks', data.displayBlocks ? 1 : 0);
             formData.append('maxObjectNb', data.maxObjectNb);
+            formData.append('keyword', data.keyword || '');
             formData.append('pageParent', data.pageParent || '');
 
             data.fields?.forEach((el, index) => {

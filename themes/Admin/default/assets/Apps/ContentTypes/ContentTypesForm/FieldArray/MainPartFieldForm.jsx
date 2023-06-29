@@ -3,7 +3,6 @@ import React, { useMemo } from 'react';
 import { FormControl, InputLabel, ListSubheader, MenuItem, Select } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
@@ -21,7 +20,7 @@ export const MainPartFieldForm = ({
     contentTypesModules,
 }) => {
     const handleChangeFieldType = (value) => {
-        contentTypesModules[value]?.setInitialValues(`${prefixName}fields.${index}`, setFieldValue);
+        contentTypesModules[value]?.setInitialValues(`${prefixName}fields.${index}`, setFieldValue, contentTypesModules);
     };
 
     const getSelectEntryList = useMemo(() => {
@@ -128,7 +127,7 @@ export const MainPartFieldForm = ({
                 <ComplementInformation
                     values={values}
                     index={index}
-                    errors={errors}
+                    errors={errors || {}}
                     touched={touched}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
