@@ -3,11 +3,13 @@
 namespace App\Form\Admin\Content\Types;
 
 use App\Entity\Content\ContentTypeField;
+use App\Form\Admin\Content\ContentFieldsType;
 use App\Form\Admin\Content\ContentTypeFieldType;
 use App\Manager\ContentTypeManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
@@ -32,20 +34,22 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
     {
         $resolver->setDefaults([
             'contentTypes' => [],
+            'entry_type'   => ContentFieldsType::class,
             'allow_add'    => true,
             'allow_delete' => true,
             'delete_empty' => true,
+            'by_reference' => false
         ]);
     }
 
     public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
     {
         $childrenContentType = $ctf->getParameters();
-        if (!isset($childrenContentType['fields'])) {
+        if (!isset($childrenContentType['fields']) || !isset($childrenContentType['fields'][0])) {
             return [];
         }
 
-        $fieldType = $childrenContentType['fields'];
+        $fieldType = $childrenContentType['fields'][0];
         $fields = [];
 
         foreach ($cf as $childrenCf) {
@@ -64,11 +68,11 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
     public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
     {
         $childrenContentType = $ctf->getParameters();
-        if (!isset($childrenContentType['fields'])) {
+        if (!isset($childrenContentType['fields']) || !isset($childrenContentType['fields'][0])) {
             return [];
         }
 
-        $fieldType = $childrenContentType['fields'];
+        $fieldType = $childrenContentType['fields'][0];
         $fields = [];
 
         foreach ($cf as $childrenCf) {

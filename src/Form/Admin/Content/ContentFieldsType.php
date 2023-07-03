@@ -5,13 +5,12 @@ namespace App\Form\Admin\Content;
 use App\Manager\ContentTypeManager;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentFieldsType extends AbstractType implements DataMapperInterface
+class ContentFieldsType extends AbstractType
 {
     protected $ctm;
 
@@ -26,8 +25,6 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
             FormEvents::PRE_SET_DATA,
             [$this, 'onPreSetData']
         );
-
-        //$builder->setDataMapper($this);
     }
 
     public function onPreSetData(FormEvent $event): void
@@ -40,7 +37,7 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
             $component = $this->ctm->getContentTypeFieldFromType($contentType['type']);
 
             if (isset($contentType['children'])) {
-                $options['contentTypes'] = $contentType['children'];
+                $options['entry_options'] = ['contentTypes' => $contentType['children']];
             }
 
             if (isset($contentType['choices'])) {
@@ -52,38 +49,6 @@ class ContentFieldsType extends AbstractType implements DataMapperInterface
                 $component,
                 $options
             );
-        }
-    }
-
-    public function mapDataToForms($viewData, \Traversable $forms): void
-    {
-        if (null === $viewData) {
-            return;
-        }
-
-        if (!is_array($viewData)) {
-            throw new UnexpectedTypeException($viewData, 'array');
-        }
-
-        $forms = iterator_to_array($forms);
-
-        foreach ($forms as $formKey => $form) {
-            foreach($viewData as $dataKey => $dataVal) {
-                if ($dataKey == $formKey) {
-                    $forms[$formKey]->setData($dataVal);
-                    break;
-                }
-            }
-        }
-    }
-
-    public function mapFormsToData(\Traversable $forms, &$viewData): void
-    {
-        $forms = iterator_to_array($forms);
-
-        $viewData = [];
-        foreach ($forms as $key => $field) {
-            $viewData[$key] = $forms[$key]->getData();
         }
     }
 
