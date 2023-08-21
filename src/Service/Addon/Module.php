@@ -88,7 +88,6 @@ class Module extends Addon
     {
         // Namespace prefix of module
         //$prefix = 'TicketFactory\\Module\\' . $this->name . '\\';
-
         $this->cl->setPsr4($this->getNamespace() . '\\', $this->getPath());
         $this->cl->register();
     }

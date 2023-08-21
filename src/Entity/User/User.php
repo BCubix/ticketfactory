@@ -141,7 +141,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 

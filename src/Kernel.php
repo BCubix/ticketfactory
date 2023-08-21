@@ -60,7 +60,7 @@ class Kernel extends BaseKernel
 
             $bundles[$moduleNamespace] = ['all' => true];
         }
-        
+        //dd($bundles);
         foreach ($bundles as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
                 $bundle = new $class();
