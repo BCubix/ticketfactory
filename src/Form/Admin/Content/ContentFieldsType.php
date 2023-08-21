@@ -37,7 +37,12 @@ class ContentFieldsType extends AbstractType
             $component = $this->ctm->getContentTypeFieldFromType($contentType['type']);
 
             if (isset($contentType['children'])) {
-                $options['entry_options'] = ['contentTypes' => $contentType['children']];
+                if ($contentType['type'] == 'collection') {
+                    $options['entry_options'] = ['contentTypes' => $contentType['children']];
+                } else {
+                    $options['contentTypes'] = $contentType['children'];
+                }
+                
             }
 
             if (isset($contentType['choices'])) {

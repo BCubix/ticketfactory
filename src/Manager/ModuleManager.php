@@ -94,7 +94,7 @@ class ModuleManager extends AddonManager
 
         $originFile = $this->getDir() . "/$objectName/config/migrations/Version$objectName.php";
         if (is_file($originFile)) {
-            $this->fs->copy($originFile, $this->getMigrationFile($objectName));
+            $this->sf->get("file")->copy($originFile, $this->getMigrationFile($objectName));
         }
 
         return $result;
@@ -147,12 +147,12 @@ class ModuleManager extends AddonManager
             switch ($action) {
                 case ModuleEntity::ACTION_INSTALL:
                 case ModuleEntity::ACTION_DISABLE:
-                    $this->enableHooks($module);
-
                     $module->setActive($action == ModuleEntity::ACTION_INSTALL);
 
                     $this->em->persist($module);
                     $this->em->flush();
+
+                    $this->enableHooks($module);
 
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
                     if (!$clearAssets && $this->em->getConnection()->isTransactionActive()) {

@@ -2,6 +2,9 @@
 
 namespace App\Manager;
 
+use Symfony\Component\HttpFoundation\Response;
+use App\Exception\ApiException;
+
 abstract class AddonManager extends AbstractManager
 {
     /**
@@ -44,8 +47,8 @@ abstract class AddonManager extends AbstractManager
 
         // Create a temporary directory to check zip content
         $tmpDirPath = $this->getDir() . '/tmp' . basename($zipName, '.zip');
-        $this->fs->mkdir($tmpDirPath);
-        Zip::unzip($zipPath, $tmpDirPath, false);
+        $this->sf->get('file')->mkdir($tmpDirPath);
+        $this->sf->get('zip')->unzip($zipPath, $tmpDirPath, false);
 
         // Separate modules and themes
         $names = [
@@ -59,7 +62,7 @@ abstract class AddonManager extends AbstractManager
 
         try {
             // Iterate over archive content
-            $dir = new \DirectoryIterator($objectName);
+            $dir = new \DirectoryIterator($tmpDirPath);
             foreach ($dir as $node) {
                 if ($node->isDot()) {
                     continue;
@@ -73,15 +76,16 @@ abstract class AddonManager extends AbstractManager
                 if ($node->isDir()) {
                     $name = $node->getBasename();
 
-                    $tree = [$name => Tree::build($node->getPathname())];
+                    $tree = [$name => $this->sf->get('tree')->build($node->getPathname())];
                     if (!$tree) {
                         throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'L\'archive est vide.');
                     }
 
                     // Add the addon in the list to install among its type
-                    $config = $this->checkConfigFile($tree, $name);
+                    $this->checkConfigFile($tree, $name);
+                    $config = $this->mf->get("module")->getConfiguration('/tmp' . basename($zipName, '.zip') . "/" .$name);
                     if (isset($config['type']) && in_array($config['type'], array_keys($names))) {
-                        $names[$config['type']] = $name;
+                        $names[$config['type']][] = $name;
                     }
                 }
             }
@@ -92,7 +96,7 @@ abstract class AddonManager extends AbstractManager
                     $targetDir = $addOnPath . '/' . $name;
 
                     // If the module already exists on filesystem, we skip it
-                    if (is_dir($target)) {
+                    if (is_dir($targetDir)) {
                         continue;
                     }
 
@@ -108,7 +112,7 @@ abstract class AddonManager extends AbstractManager
             }
         } finally {
             // Remove temporary folder
-            $this->fs->remove($tmpDirPath);
+            $this->sf->get('file')->remove($tmpDirPath);
         }
 
         return $names;
@@ -151,7 +155,7 @@ abstract class AddonManager extends AbstractManager
      */
     public function install(string $objectName): array
     {
-        return true;
+        return [];
     }
 
     /**
@@ -182,10 +186,10 @@ abstract class AddonManager extends AbstractManager
      */
     public function clear($clearAssets = true): void
     {
-        ExecService::execClearCache();
+        $this->sf->get('execService')->execClearCache();
 
         if ($clearAssets) {
-            ExecService::execEncore();
+            $this->sf->get('execService')->execEncore();
         }
     }
 
@@ -209,7 +213,7 @@ abstract class AddonManager extends AbstractManager
             }
         }
         
-        if ($configFound) {
+        if (!$configFound) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Le fichier de configuration du thème n\'existe pas.');
         }
     }

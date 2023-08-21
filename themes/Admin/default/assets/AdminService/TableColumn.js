@@ -79,7 +79,7 @@ const TableColumnObj = {
         },
         { name: 'displayName', label: 'Nom', width: '10%' },
         { name: 'version', label: 'Version', width: '5%' },
-        { name: 'author', label: 'Auteur', width: '10%' },
+        { name: 'author.name', label: 'Auteur', width: '10%' },
         { name: 'description', label: 'Description', width: '58%' },
     ],
     PageBlocksList: [

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormHelperText } from '@mui/material';
+import { Card, CardContent, FormHelperText } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Box } from '@mui/system';
 
@@ -13,17 +13,24 @@ const ComplementInformation = ({ values, index, handleChange, handleBlur, setFie
     return (
         <>
             <Box p={2}>
-                <Component.ContentTypeFieldArrayForm
-                    values={values.parameters || {}}
-                    errors={errors?.parameters}
-                    touched={touched?.parameters}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                    prefixName={`${prefixName}fields.${index}.parameters.`}
-                    contentTypesModules={contentTypesModules}
-                />
+                <Card sx={{ position: 'relative', overflow: 'visible', marginBottom: 7 }} className="contentTypeArrayElement">
+                    <CardContent>
+                        <Box p={2}>
+                            <Component.FieldArrayElem
+                                values={values?.parameters?.fields?.at(0)}
+                                errors={errors?.parameters?.fields?.at(0)}
+                                touched={touched?.parameters?.fields?.at(0)}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                prefixName={`${prefixName}fields.${index}.parameters.`}
+                                index={0}
+                                contentTypesModules={contentTypesModules}
+                            />
+                        </Box>
+                    </CardContent>
+                </Card>
             </Box>
             {errors && errors[`${prefixName}fields.${index}`] && typeof errors[`${prefixName}fields.${index}`] === 'string' && (
                 <FormHelperText error>{errors[`${prefixName}fields.${index}`]}</FormHelperText>

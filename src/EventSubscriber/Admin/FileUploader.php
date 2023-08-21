@@ -8,6 +8,7 @@ use App\Entity\Addon\Module;
 use App\Exception\ApiException;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
+use App\Manager\HookManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
@@ -33,13 +34,15 @@ class FileUploader implements EventSubscriberInterface
     private $rootPath;
     private $mm;
     private $tm;
+    private $hm;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
         $this->mm = $mm;
         $this->tm = $tm;
+        $this->hm = $hm;
     }
 
     public static function getSubscribedEvents(): array
@@ -121,8 +124,11 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->mm->unzip($response["filename"]);
-        $this->mm->active($name, Module::ACTION_INSTALL);
+        $names = $this->mm->unzip($response["filename"]);
+
+        foreach ($names['module'] as $name) {
+            $this->mm->active($name, Module::ACTION_INSTALL);
+        }
 
         return $response;
     }
@@ -133,8 +139,15 @@ class FileUploader implements EventSubscriberInterface
         $response['success'] = true;
         $response["filename"] = $event->getFile()->getFilename();
 
-        $name = $this->tm->unzip($response["filename"]);
-        $this->tm->active($name);
+        $names = $this->tm->unzip($response["filename"]);
+
+        foreach ($names['module'] as $name) {
+            $this->mm->active($name, Module::ACTION_INSTALL);
+        }
+
+        foreach ($names['theme'] as $name) {
+            $this->mm->active($name, Module::ACTION_INSTALL);
+        }
 
         return $response;
     }
