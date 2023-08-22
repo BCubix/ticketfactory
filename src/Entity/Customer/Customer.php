@@ -4,6 +4,7 @@ namespace App\Entity\Customer;
 
 use App\Entity\Order\Cart;
 use App\Entity\Datable;
+use App\Entity\Order\Order;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,7 +31,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -40,7 +41,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
@@ -49,19 +50,19 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
 
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstName = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
 
     #[Assert\Choice(callback: 'getCivilitiesKeys', message: 'Vous devez choisir une civilité valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 3, nullable: true)]
     private ?string $civility = null;
 
@@ -76,11 +77,15 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Cart::class)]
     private Collection $carts;
+
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true)]
+    private Collection $orders;
     
 
     public function __construct()
     {
         $this->carts = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
 
@@ -269,5 +274,35 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
 
     public function getCivilitiesKeys() {
         return array_keys(self::CIVILITIES);
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
+
+        return $this;
     }
 }

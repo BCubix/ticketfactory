@@ -76,4 +76,27 @@ class EventDateRepository extends CrudRepository
             ->getResult()
         ;
     }
+
+    public function findOneByIdForWebsite(int $id, ?int $eventId = null) {
+        $result = $this->createQueryBuilder("ed")
+            ->addSelect("edb")
+            ->addSelect("e")
+            ->innerJoin("ed.eventDateBlock", "edb")
+            ->innerJoin("edb.event", "e", 'WITH', "e.active = 1")
+            ->where("ed.id = :eventDateId")
+            ->setParameter("eventDateId", $id)
+        ;
+            
+        if (null !== $eventId) {
+            $result = $result
+                ->andWhere("e.id = :eventId")
+                ->setParameter("eventId", $eventId)
+            ;
+        }
+
+        return $result
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

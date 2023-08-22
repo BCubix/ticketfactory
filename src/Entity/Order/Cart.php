@@ -21,31 +21,34 @@ class Cart extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column]
     private ?float $total = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne(inversedBy: 'carts')]
     private ?Customer $customer = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartRow::class, orphanRemoval: true)]
     private Collection $cartRows;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'carts')]
     private Collection $vouchers;
+
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
+    private ?Order $linkedOrder = null;
 
 
     public function __construct()
@@ -137,6 +140,23 @@ class Cart extends Datable
         if ($this->vouchers->removeElement($voucher)) {
             $voucher->removeCart($this);
         }
+
+        return $this;
+    }
+
+    public function getLinkedOrder(): ?Order
+    {
+        return $this->linkedOrder;
+    }
+
+    public function setLinkedOrder(Order $linkedOrder): self
+    {
+        // set the owning side of the relation if necessary
+        if ($linkedOrder->getCart() !== $this) {
+            $linkedOrder->setCart($this);
+        }
+
+        $this->linkedOrder = $linkedOrder;
 
         return $this;
     }

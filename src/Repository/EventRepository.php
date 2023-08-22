@@ -97,9 +97,21 @@ class EventRepository extends CrudRepository
     {
         return $this->createQueryBuilder('e')
             ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where("e.active = 1")
             ->andWhere('e.id = :pageId')
             ->setParameter('languageId', $languageId)
             ->setParameter('pageId', $pageId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findOneByIdForWebsite(int $eventId): ?Event
+    {
+        return $this->createQueryBuilder('e')
+            ->where("e.active = 1")
+            ->andWhere('e.id = :eventId')
+            ->setParameter('eventId', $eventId)
             ->getQuery()
             ->getOneOrNullResult()
         ;

@@ -20,16 +20,34 @@
 {% endblock socialTags %}
 
 {% block body %}
-<main>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="event-head">
-                    <h1 class="event-head__title">
-                       {{ event.name }}
+<main class="event-detail">
+    <div class="event-detail_header">
+        <div class="container event-detail_header_banner">
+            <h1 class="event-head__title">
+                {{ event.name }}
+                <div class="event-head__intro">{{ event.chapo | raw }}</div>
+            </h1>
 
-                        <div class="event-head__intro">{{ event.chapo | raw }}</div>
-                    </h1>
+            <div class="envent-detail_header_detail">
+                <div class="detail">
+                    <p>Catégorie :</p>
+                    <p>{{event.mainCategory.name }}</p>
+                </div>
+
+                {% if event.season is not null %}
+                <div class="detail">
+                    <p>Saison :</p>
+                    <p>{{event.season.name}}</p>
+                </div>
+                {% endif %}
+
+                <div class="detail">
+                    <p>Dates :</p>
+                    <p></p>
+                </div>
+                <div class="detail">
+                    <p></p>
+                    <p></p>
                 </div>
             </div>
         </div>
@@ -37,7 +55,56 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-md-7 col-lg-8">
+            <div class="col-xs-12 col-md-6 col-lg-7 event-detail_mainImg">
+                <img src="{{ tfAsset(medias.main) }}" alt="{{ medias.main.alt }}" class="full-width">
+            </div>
+            
+            <div class="col-xs-12 col-md-6 col-lg-5">
+                {% if event.description is not null %}
+                    <div class="event-block" id="section2">
+                        <div class="event-block__content">
+                            {{ event.description | raw }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div>
+                    {{ form_start(eventReservationForm, {'attr': {'class': 'event-reservation_form js-event-reservation-form'}}) }}
+                    {{ form_errors(eventReservationForm) }}
+
+                    <div class="form-input">
+                        {{ form_label(eventReservationForm.eventDate) }}
+                        {{ form_widget(eventReservationForm.eventDate) }}
+                        {{ form_errors(eventReservationForm.eventDate) }}
+                    </div>
+
+                    <div class="form-input">
+                        {{ form_label(eventReservationForm.eventPrice) }}
+                        {{ form_widget(eventReservationForm.eventPrice) }}
+                        {{ form_errors(eventReservationForm.eventPrice) }}
+                    </div>
+
+                    <div class="form-input">
+                        {{ form_label(eventReservationForm.quantity) }}
+                        {{ form_widget(eventReservationForm.quantity) }}
+                        {{ form_errors(eventReservationForm.quantity) }}
+                    </div>
+
+                        {{ form_widget(eventReservationForm.add) }}
+
+                    {{ form_rest(eventReservationForm) }}
+                    {{ form_end(eventReservationForm) }}
+                </div>
+                <div class="event-detail_dates">
+                    {% if (event.eventDateBlocks | length > 0) and (event.eventDateBlocks[0].eventDates | length > 0) %}
+                    <div class="widget">
+                        {% include websiteTemplates('Event/_dates.html.twig') with {'event': event} %}
+                    </div>
+                    {% endif %}
+                <div>
+            </div>
+
+            {# <div class="col-xs-12 col-md-7 col-lg-7">
                 <div class="slider-event u-mbl">
                     <div class="slider-event__slides js-slider-event">
                         {% for slide in medias.image %}
@@ -91,7 +158,8 @@
                         </div>
                     </div>
                 {% endif %}
-            </div>
+            </div> #}
+
         </div>
     </div>
 

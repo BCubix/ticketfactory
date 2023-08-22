@@ -23,52 +23,52 @@ class CartRow
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Event $eventId = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?EventDate $eventDateId = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?EventPrice $eventPriceId = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne]
     private ?SeatingPlan $seatingPlanId = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column]
     private array $names = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column]
     private ?float $unitPrice = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column]
     private ?int $quantity = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column]
     private ?float $total = null;
 
@@ -77,7 +77,7 @@ class CartRow
     private ?Cart $cart = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one'])]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'cartRows')]
     private Collection $vouchers;
 

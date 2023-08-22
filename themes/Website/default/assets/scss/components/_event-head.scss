@@ -6,7 +6,8 @@
     }
   
     &__title {
-      color: $color1;
+      z-index: 10;
+      color: $color2;
   
       h1 {
         font-size: rem(30);
@@ -39,7 +40,8 @@
   
     &__intro {
       font-size: rem(17);
-      margin: 0;
+      margin: rem(20) 0 0 0;
+
   
       @include media('>=md') {
         font-size: rem(20);

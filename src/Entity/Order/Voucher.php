@@ -24,7 +24,7 @@ class Voucher extends Datable
     ];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -33,36 +33,36 @@ class Voucher extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom du bon de réduction doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du bon de réduction doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[Assert\Length(max: 50, maxMessage: 'Le code du bon de réduction doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le code du bon de réduction doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $code = null;
 
     #[Assert\NotBlank(message: 'Le montant de la réduction doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column]
     private ?float $discount = null;
 
     #[Assert\NotBlank(message: "l'unité de la réduction doit être renseigné.")]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $unit = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $beginDate = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endDate = null;
 

@@ -1,8 +1,11 @@
 // Import vendors
 import $ from 'jquery';
+import './modernizer';
+import 'slick-carousel';
 
 // Import modules
 import { utils } from './modules/utils';
+import { forms } from './modules/forms';
 
 // Load SCSS
 import '../scss/website.scss';
@@ -19,6 +22,7 @@ import '../scss/website.scss';
         init() {
             this.setupHash();
             this.setupModules();
+            this.setupSlider();
         }
 
         setupHash() {
@@ -53,6 +57,22 @@ import '../scss/website.scss';
                         func();
                     }
                 }
+            });
+        }
+
+        setupSlider() {
+            $('.js-slider').slick({
+                fade: true,
+                autoplay: true,
+                autoplaySpeed: 3000,
+            });
+
+            $('.js-slider-event').slick({
+                autoplay: true,
+                autoplaySpeed: 3000,
+                pauseOnFocus: true,
+                pauseOnHover: true,
+                adaptiveHeight: true,
             });
         }
     }
