@@ -77,7 +77,7 @@ class EventDateRepository extends CrudRepository
         ;
     }
 
-    public function findOneByIdForWebsite(int $id, ?int $eventId = null) {
+    public function findOneByIdForWebsite(int $id, ?int $eventId = null): ?EventDate {
         $result = $this->createQueryBuilder("ed")
             ->addSelect("edb")
             ->addSelect("e")
@@ -97,6 +97,27 @@ class EventDateRepository extends CrudRepository
         return $result
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    public function findAllByEventForWebsiteOption(int $eventId)
+    {
+        return $this->createQueryBuilder("ed")
+            ->addSelect('edb')
+            ->addSelect('e')
+            ->innerjoin('ed.eventDateBlock', 'edb')
+            ->innerjoin('edb.event', 'e')
+            ->where('e.id = :eventId')
+            ->setParameter("eventId", $eventId)
+            ->orderBy("ed.eventDate", 'ASC')
+        ;
+    }
+
+    public function findAllByEventForWebsite(int $eventId)
+    {
+        return $this->findAllByEventForWebsiteOption($eventId)
+            ->getQuery()
+            ->getResult();
         ;
     }
 }

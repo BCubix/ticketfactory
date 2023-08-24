@@ -41,11 +41,15 @@ class EventController extends WebsiteController
         }
 
         $medias = $this->mf->get('event')->getMediasFromEvent($event);
+        $eventDates = $this->mf->get('event')->getEventDatesFromEvent($event);
+        $eventPrices = $this->mf->get('event')->getEventPricesFromEvent($event);
 
         return $this->websiteRender('Event/detail.html.twig', [
             'event'                => $event,
             'medias'               => $medias,
-            'eventReservationForm' => $eventReservationForm->createView()
+            'eventReservationForm' => $eventReservationForm->createView(),
+            'eventDates'           => $eventDates,
+            'eventPrices'          => $eventPrices,
         ]);
     }
 }

@@ -35,3 +35,109 @@
         @include icon(arrow);
     }
 }
+
+
+.ico-calendar {
+    &::before {
+        @include icon(calendar);
+    }
+}
+
+
+.ico-facebook {
+    &::before {
+        @include icon(facebook);
+    }
+}
+
+
+.ico-goto {
+    &::before {
+        @include icon(goto);
+    }
+}
+
+.ico-info {
+    &::before {
+        @include icon(info);
+    }
+}
+
+.ico-instagram {
+    &::before {
+        @include icon(instagram);
+    }
+}
+
+.ico-play {
+    &::before {
+        @include icon(play);
+    }
+}
+
+.ico-search {
+    &::before {
+        @include icon(search);
+    }
+}
+
+.ico-seatingplan {
+    &::before {
+        @include icon(seatingplan);
+    }
+}
+
+.ico-send {
+    &::before {
+        @include icon(send);
+    }
+}
+
+.ico-tiktok {
+    &::before {
+        @include icon(tiktok);
+    }
+}
+
+.ico-timer {
+    &::before {
+        @include icon(timer);
+    }
+}
+
+.ico-twitter {
+    &::before {
+        @include icon(twitter);
+    }
+}
+
+.ico-user {
+    &::before {
+        @include icon(user);
+    }
+}
+
+.ico-youtube {
+    &::before {
+        @include icon(youtube);
+    }
+}
+
+.ico-delete {
+    &::before {
+        @include icon(delete);
+    }
+}
+
+.ico-minus {
+    &::before {
+        @include icon(minus);
+    }
+}
+
+.ico-add {
+    &::before {
+        @include icon(adding);
+    }
+}
+

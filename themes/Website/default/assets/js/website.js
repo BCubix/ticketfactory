@@ -5,7 +5,8 @@ import 'slick-carousel';
 
 // Import modules
 import { utils } from './modules/utils';
-import { forms } from './modules/forms';
+import { Forms } from './modules/forms';
+import { Cart } from './modules/cart';
 
 // Load SCSS
 import '../scss/website.scss';
@@ -23,6 +24,9 @@ import '../scss/website.scss';
             this.setupHash();
             this.setupModules();
             this.setupSlider();
+
+            new Forms();
+            new Cart();
         }
 
         setupHash() {

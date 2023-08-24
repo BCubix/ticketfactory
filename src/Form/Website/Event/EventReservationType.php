@@ -25,44 +25,28 @@ class EventReservationType extends AbstractType
             ->add('eventDate',            EntityType::class,               [
                 'label'         => "Date",
                 'class'         => EventDate::class,
-                'choice_label'  => function (EventDate $eventDate): string {
-                    return $eventDate->getEventDate()->format('Y-m-d H:i:s');
-                },
                 'required'      => true,
                 'multiple'      => false,
                 'placeholder'   => "Date",
+                'choice_label'  => 'id',
                 'query_builder' => function (EventDateRepository $edr) use ($eventId) {
-                    return $edr
-                        ->createQueryBuilder('ed')
-                        ->addSelect('edb')
-                        ->addSelect('e')
-                        ->innerjoin('ed.eventDateBlock', 'edb')
-                        ->innerjoin('edb.event', 'e')
-                        ->where('e.id = :eventId')
-                        ->setParameter("eventId", $eventId)
-                        ->orderBy("ed.eventDate", 'ASC')
-                    ;
-                }
+                    return $edr->findAllByEventForWebsiteOption($eventId);
+                },
+                'attr'           => ['class' => "form_input_hidden js-event-reservation-date-input"],
+                'label_attr'     => ['class' => "form_label_hidden"]
             ])
             ->add('eventPrice',            EntityType::class,               [
                 'label'         => "Prix",
                 'class'         => EventPrice::class,
-                'choice_label'  => 'price',
+                'choice_label'  => 'id',
                 'required'      => true,
                 'multiple'      => false,
                 'placeholder'   => "Prix",
                 'query_builder' => function (EventPriceRepository $epr) use ($eventId) {
-                    return $epr
-                        ->createQueryBuilder('ep')
-                        ->addSelect('epb')
-                        ->addSelect('e')
-                        ->innerjoin('ep.eventPriceBlock', 'epb')
-                        ->innerjoin('epb.event', 'e')
-                        ->where('e.id = :eventId')
-                        ->setParameter("eventId", $eventId)
-                        ->orderBy("ep.id", 'ASC')
-                    ;
-                }
+                    return $epr->findAllByEventForWebsiteOption($eventId);
+                },
+                'attr'           => ['class' => "form_input_hidden js-event-reservation-price-input"],
+                'label_attr'     => ['class' => "form_label_hidden"]
             ])
             ->add('quantity',             NumberType::class,           [
                 'label' => 'Quantité',
