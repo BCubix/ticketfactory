@@ -25,7 +25,7 @@ class EventReservationType extends AbstractType
             ->add('eventDate',            EntityType::class,               [
                 'label'         => "Date",
                 'class'         => EventDate::class,
-                'required'      => true,
+                'required'      => false,
                 'multiple'      => false,
                 'placeholder'   => "Date",
                 'choice_label'  => 'id',
@@ -33,27 +33,31 @@ class EventReservationType extends AbstractType
                     return $edr->findAllByEventForWebsiteOption($eventId);
                 },
                 'attr'           => ['class' => "form_input_hidden js-event-reservation-date-input"],
-                'label_attr'     => ['class' => "form_label_hidden"]
+                'label_attr'     => ['class' => "form_label_hidden"],
             ])
             ->add('eventPrice',            EntityType::class,               [
                 'label'         => "Prix",
                 'class'         => EventPrice::class,
                 'choice_label'  => 'id',
-                'required'      => true,
+                'required'      => false,
                 'multiple'      => false,
                 'placeholder'   => "Prix",
                 'query_builder' => function (EventPriceRepository $epr) use ($eventId) {
                     return $epr->findAllByEventForWebsiteOption($eventId);
                 },
                 'attr'           => ['class' => "form_input_hidden js-event-reservation-price-input"],
-                'label_attr'     => ['class' => "form_label_hidden"]
+                'label_attr'     => ['class' => "form_label_hidden"],
             ])
             ->add('quantity',             NumberType::class,           [
-                'label' => 'Quantité',
-                'required' => true
+                'label'         => 'Quantité',
+                'required'      => false,
+                'attr'          => ["class" => "form_field", 'placeholder' => "Quantité"],
             ])
             ->add('add',                 SubmitType::class,               [
-                'label' => 'Ajouter au panier'
+                'label'      => 'Ajouter au panier',
+                'label_html' => true,
+                "label"      => "<span><i class='icon icon-cart'></i> Ajouter au panier</span>",
+                "attr"       => ["class" => "submit-button"]
             ])
         ;
     }

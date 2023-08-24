@@ -7,6 +7,7 @@ use App\Entity\Event\EventDateBlock;
 use App\Entity\Event\EventDate;
 use App\Entity\Event\EventPrice;
 use App\Entity\Media\Media;
+
 use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
@@ -212,6 +213,16 @@ class EventManager extends AbstractManager
                     DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
                 );
         }
+    }
+
+    public function getEventPricesStr(Event $event): string
+    {
+        $eventPrice = $this->em->getRepository(EventPrice::class)->findSmallestPriceForWebsite($event->getId());
+        if (null === $eventPrice) {
+            return "";
+        }
+
+        return $eventPrice->getPrice();
     }
 
     public function getMediasFromEvent($event): array

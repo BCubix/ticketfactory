@@ -55,4 +55,20 @@ class EventPriceRepository extends CrudRepository
             ->getResult();
         ;
     }
+
+    public function findSmallestPriceForWebsite(int $eventId)
+    {
+        return $this->createQueryBuilder("ep")
+            ->addSelect('epb')
+            ->addSelect('e')
+            ->innerjoin('ep.eventPriceBlock', 'epb')
+            ->innerjoin('epb.event', 'e')
+            ->where('e.id = :eventId')
+            ->setParameter("eventId", $eventId)
+            ->orderBy("ep.price", 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

@@ -37,7 +37,10 @@ class EventController extends WebsiteController
             $formData["eventPrice"] = $formData["eventPrice"]->getId();
             $this->mf->get("cart")->addEventToCart($formData);
 
-            return new Response(null, 200);
+            return $this->websiteRender("_partials/_notification.html.twig", [
+                'title' => 'Succès',
+                'message' => "Votre article à été ajouté au panier."
+            ]);
         }
 
         $medias = $this->mf->get('event')->getMediasFromEvent($event);

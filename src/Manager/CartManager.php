@@ -136,9 +136,9 @@ class CartManager extends AbstractManager
 
                     $newCartRow = $cartRow;
                 }
-
-                $newCart[] = $cartRow;
             }
+
+            $newCart[] = $cartRow;
         }
 
 
