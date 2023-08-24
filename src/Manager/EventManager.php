@@ -4,6 +4,10 @@ namespace App\Manager;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDateBlock;
+use App\Entity\Event\EventDate;
+use App\Entity\Event\EventPrice;
+use App\Entity\Media\Media;
+
 use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
@@ -211,6 +215,16 @@ class EventManager extends AbstractManager
         }
     }
 
+    public function getEventPricesStr(Event $event): string
+    {
+        $eventPrice = $this->em->getRepository(EventPrice::class)->findSmallestPriceForWebsite($event->getId());
+        if (null === $eventPrice) {
+            return "";
+        }
+
+        return $eventPrice->getPrice();
+    }
+
     public function getMediasFromEvent($event): array
     {
         $medias = [];
@@ -249,5 +263,32 @@ class EventManager extends AbstractManager
         }
 
         return $medias;
+    }
+
+    public function getMainImageFromEvent(Event $event): ?Media
+    {
+        $eventMedias = $event->getEventMedias()->toArray();
+        
+        foreach ($eventMedias as $eventMedia) {
+            if ($eventMedia->isMainImg()) {
+                return $eventMedia->getMedia();
+            }
+        }
+
+        return null;
+    }
+
+    public function getEventDatesFromEvent(Event $event): ?array
+    {
+        $eventDates = $this->em->getRepository(EventDate::class)->findAllByEventForWebsite($event->getId());
+
+        return $eventDates;
+    }
+
+    public function getEventPricesFromEvent(Event $event): ?array
+    {
+        $eventPrices = $this->em->getRepository(EventPrice::class)->findAllByEventForWebsite($event->getId());
+
+        return $eventPrices;
     }
 }

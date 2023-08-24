@@ -39,9 +39,10 @@ class CartManager extends AbstractManager
         }
 
         foreach ($cart as $cartRow) {
-            $event = $this->em->getRepository(Event::class)->findOneByIdForFront($cartRow["event"]);
+            $event = $this->em->getRepository(Event::class)->findOneByIdForWebsite($cartRow["event"]);
             $eventDate = $this->em->getRepository(EventDate::class)->findOneByIdForWebsite($cartRow["eventDate"], $cartRow["event"]);
             $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($cartRow["eventPrice"], $cartRow["event"]);
+            $mainImg = $this->mf->get("event")->getMainImageFromEvent($event);
 
             if ($event && $eventDate && $eventPrice) {
                 $reservedEvents[] = [
@@ -49,6 +50,7 @@ class CartManager extends AbstractManager
                     "eventDate"  => $eventDate,
                     "eventPrice" => $eventPrice,
                     "quantity"   => $cartRow["quantity"],
+                    "mainImg"    => $mainImg
                 ];
             }
         }
@@ -61,6 +63,29 @@ class CartManager extends AbstractManager
         $session = $this->rs->getSession();
 
         return $session->get("cart", null);
+    }
+
+    public function getOneEventInfos(array $element) {
+        if (null === $element || !isset($element["event"]) || !isset($element["eventDate"]) || !isset($element["eventPrice"])) {
+            return null;
+        }
+
+        $event = $this->em->getRepository(Event::class)->findOneByIdForWebsite($element["event"]);
+        $eventDate = $this->em->getRepository(EventDate::class)->findOneByIdForWebsite($element["eventDate"], $element["event"]);
+        $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($element["eventPrice"], $element["event"]);
+        $mainImg = $this->mf->get("event")->getMainImageFromEvent($event);
+
+        if ($event && $eventDate && $eventPrice) {
+            return [
+                "event"      => $event,
+                "eventDate"  => $eventDate,
+                "eventPrice" => $eventPrice->toArray(),
+                "quantity"   => $element["quantity"],
+                "mainImg"    => $mainImg->toArray(),
+            ];
+        }
+
+        return null;
     }
 
     public function addEventToCart(array $element): void
@@ -85,6 +110,59 @@ class CartManager extends AbstractManager
 
         if (!$isPushed) {
             $newCart[] = $element; 
+        }
+
+        $session->set("cart", $newCart);
+    }
+
+    public function updateQuantity(array $element, int $quantityChange): ?array
+    {
+        $session = $this->rs->getSession();
+        $cart = $session->get("cart", []);
+        $newCart = [];
+        $newCartRow = [];
+
+        foreach ($cart as $cartRow) {
+            if ($element["event"] === $cartRow["event"] &&
+                $element["eventDate"] === $cartRow["eventDate"] &&
+                $element["eventPrice"] === $cartRow["eventPrice"]
+            ) {
+                $quantity = $cartRow['quantity'] + $quantityChange;
+                if ($quantity > 0) {
+                    $cartRow = [
+                        ...$cartRow,
+                        "quantity" => $quantity
+                    ];
+
+                    $newCartRow = $cartRow;
+                }
+            }
+
+            $newCart[] = $cartRow;
+        }
+
+
+        $session->set("cart", $newCart);
+        
+        $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($element["eventPrice"], $element["event"]);
+        $newCartRow["price"] = $eventPrice->getPrice();
+
+        return $newCartRow;
+    }
+
+    public function deleteItem(array $element): void
+    {
+        $session = $this->rs->getSession();
+        $cart = $session->get("cart", []);
+        $newCart = [];
+
+        foreach ($cart as $cartRow) {
+            if ($element["event"] !== $cartRow["event"] ||
+                $element["eventDate"] !== $cartRow["eventDate"] ||
+                $element["eventPrice"] !== $cartRow["eventPrice"]
+            ) {
+                $newCart[] = $cartRow;
+            }
         }
 
         $session->set("cart", $newCart);

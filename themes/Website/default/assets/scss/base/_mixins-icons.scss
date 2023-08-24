@@ -30,11 +30,62 @@
 @function icon-char($filename) {
     $char: "";
   
-    @if $filename == arrow {
+    @if $filename == delete {
         $char: "\E900";
     }
-    @if $filename == close {
+    @if $filename == adding {
         $char: "\E902";
+    }
+    @if $filename == arrow {
+        $char: "\E903";
+    }
+    @if $filename == calendar {
+        $char: "\E904";
+    }
+    @if $filename == close {
+        $char: "\E905";
+    }
+    @if $filename == facebook {
+        $char: "\E906";
+    }
+    @if $filename == goto {
+        $char: "\E907";
+    }
+    @if $filename == info {
+        $char: "\E908";
+    }
+    @if $filename == instagram {
+        $char: "\E909";
+    }
+    @if $filename == play {
+        $char: "\E90a";
+    }
+    @if $filename == search {
+        $char: "\E90b";
+    }
+    @if $filename == seatingplan {
+        $char: "\E90c";
+    }
+    @if $filename == send {
+        $char: "\E90d";
+    }
+    @if $filename == tiktok {
+        $char: "\E90e";
+    }
+    @if $filename == timer {
+        $char: "\E90f";
+    }
+    @if $filename == twitter {
+        $char: "\E910";
+    }
+    @if $filename == user {
+        $char: "\E911";
+    }
+    @if $filename == youtube {
+        $char: "\E912";
+    }
+    @if $filename == minus {
+        $char: "\E913";
     }
 
     @return $char;
@@ -44,10 +95,77 @@
     content: icon-char($filename);
 }
 
-%ico-close {
-    @include icon(close);
+%ico-delete {
+    @include icon(delete);
+}
+
+%ico-remove {
+    @include icon(minus);
+}
+
+%ico-adding {
+    @include icon(adding);
 }
 
 %ico-arrow {
     @include icon(arrow);
+}
+
+%ico-calendar {
+    @include icon(calendar);
+}
+
+%ico-close {
+    @include icon(close);
+}
+
+%ico-facebook {
+    @include icon(facebook);
+}
+
+%ico-goto {
+    @include icon(goto);
+}
+%ico-info {
+    @include icon(info);
+}
+
+%ico-instagram {
+    @include icon(instagram);
+}
+
+%ico-play {
+    @include icon(play);
+}
+
+%ico-search {
+    @include icon(search);
+}
+
+%ico-seatingplan {
+    @include icon(seatingplan);
+}
+
+%ico-send {
+    @include icon(send);
+}
+
+%ico-tiktok {
+    @include icon(tiktok);
+}
+
+%ico-timer {
+    @include icon(timer);
+}
+
+%ico-twitter {
+    @include icon(twitter);
+}
+
+%ico-user {
+    @include icon(user);
+}
+
+%ico-youtube {
+    @include icon(youtube);
 }

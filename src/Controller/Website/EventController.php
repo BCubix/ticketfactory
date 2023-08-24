@@ -37,15 +37,22 @@ class EventController extends WebsiteController
             $formData["eventPrice"] = $formData["eventPrice"]->getId();
             $this->mf->get("cart")->addEventToCart($formData);
 
-            return new Response(null, 200);
+            return $this->websiteRender("_partials/_notification.html.twig", [
+                'title' => 'Succès',
+                'message' => "Votre article à été ajouté au panier."
+            ]);
         }
 
         $medias = $this->mf->get('event')->getMediasFromEvent($event);
+        $eventDates = $this->mf->get('event')->getEventDatesFromEvent($event);
+        $eventPrices = $this->mf->get('event')->getEventPricesFromEvent($event);
 
         return $this->websiteRender('Event/detail.html.twig', [
             'event'                => $event,
             'medias'               => $medias,
-            'eventReservationForm' => $eventReservationForm->createView()
+            'eventReservationForm' => $eventReservationForm->createView(),
+            'eventDates'           => $eventDates,
+            'eventPrices'          => $eventPrices,
         ]);
     }
 }

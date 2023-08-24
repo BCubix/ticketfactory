@@ -24,3 +24,17 @@ button {
   padding: 0;
   background-color: transparent;
 }
+
+.form {
+  &_input {
+    &_hidden {
+      display: none !important;
+    }
+  }
+
+  &_label {
+    &_hidden {
+      display: none !important;
+    }
+  }
+}
