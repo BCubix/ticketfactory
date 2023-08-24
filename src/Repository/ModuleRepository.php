@@ -30,6 +30,6 @@ class ModuleRepository extends CrudRepository
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult()
-            ;
+        ;
     }
 }

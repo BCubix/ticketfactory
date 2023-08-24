@@ -40,7 +40,7 @@ class ThemeManager extends AddonManager
         }
 
         if (null !== $ext) {
-            $sourceFile = $imagePathWithoutExt . $ext;
+            $sourceFile = $imagePathWithoutExt . '.' . $ext;
             $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $sourceFile;
             $this->sf->get('file')->copy($sourceFile, $targetFile);
 

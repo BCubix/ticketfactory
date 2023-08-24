@@ -42,11 +42,12 @@ class ModuleManager extends AddonManager
         }
 
         if (null !== $ext) {
-            $sourceFile = $imagePathWithoutExt . $ext;
-            $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $sourceFile;
-            $this->sf->get('file')->copy($sourceFile, $targetFile);
+            $sourceFile = $imagePathWithoutExt . '.' . $ext;
+            $targetName = 'logo-' . $objectName . '.' . $ext;
+            $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $targetName;
 
-            $ext = ('/' . $sourceFile);
+            $this->sf->get('file')->copy($sourceFile, $targetFile);
+            $ext = ('/' . $targetName);
         }
 
         return ['logoUrl' => $ext];
@@ -60,15 +61,16 @@ class ModuleManager extends AddonManager
     public function getAll(array $filters = []): array
     {
         $filters['page'] = isset($filters['page']) ? $filters['page'] : 0;
-        $filters['active'] = isset($filters['active']) ? $filters['active'] : 0;
+        $filters['active'] = isset($filters['active']) ? $filters['active'] : null;
         $filters['sortField'] = 'name';
         $filters['sortOrder'] = 'ASC';
 
         $diskModules = parent::getAll($filters);
         $dbModulesTmp = $this->em->getRepository(ModuleEntity::class)->findAllForAdmin($filters);
-        
+
         $results = [];
         $dbModules = [];
+
         foreach ($dbModulesTmp['results'] as $dbModuleTmp) {
             $dbModules[$dbModuleTmp->getName()] = $dbModuleTmp;
         }
@@ -100,7 +102,7 @@ class ModuleManager extends AddonManager
         return $result;
     }
 
-    public function active(string $moduleName, int $action, bool $clearAssets = true): ?Module
+    public function active(string $moduleName, int $action, bool $clearAssets = true): ?ModuleEntity
     {
         $module = $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($moduleName);
         $modulePath = $this->getDir() . '/' . $moduleName;
@@ -131,7 +133,7 @@ class ModuleManager extends AddonManager
 
                     $module = new ModuleEntity();
                     $module->setName($moduleName);
-                    
+
                     break;
 
                 // Module uninstall, nothing to do
@@ -144,6 +146,11 @@ class ModuleManager extends AddonManager
 
         // The module either exists in database or just was created and is not still saved
         if (null !== $module) {
+            /*if ($action == ModuleEntity::ACTION_INSTALL) {
+                $moduleInstance = $this->getModuleInstance($moduleName);
+                $moduleInstance->register();
+            }*/
+
             switch ($action) {
                 case ModuleEntity::ACTION_INSTALL:
                 case ModuleEntity::ACTION_DISABLE:
@@ -154,11 +161,11 @@ class ModuleManager extends AddonManager
 
                     $this->enableHooks($module);
 
-                    // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
-                    if (!$clearAssets && $this->em->getConnection()->isTransactionActive()) {
+                    // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is true
+                    if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {
                         $this->em->getConnection()->commit();
                     }
-                    
+
                     break;
 
                 case ModuleEntity::ACTION_UNINSTALL:
@@ -176,14 +183,14 @@ class ModuleManager extends AddonManager
                     if ($action === ModuleEntity::ACTION_INSTALL) {
                         $this->delete($moduleName);
                     }
-                    
+
                     break;
 
                 default:
                     break;
             }
 
-            $this->clear($clearAssets);
+            $this->clear(false); //$clearAssets);
         }
 
         return $module;
@@ -206,7 +213,7 @@ class ModuleManager extends AddonManager
                 return $bundleInstance;
             }
         }
-        
+
         return null;
     }
 

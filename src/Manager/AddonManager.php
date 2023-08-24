@@ -135,6 +135,11 @@ abstract class AddonManager extends AbstractManager
             $objectName = basename($path);
             $object = array_merge($this->getConfiguration($objectName), $this->getImage($objectName));
 
+            if (isset($object['display_name'])) {
+                $object['displayName'] = $object['display_name'];
+                unset($object['display_name']);
+            }
+
             if (isset($object['settings'])) {
                 unset($object['settings']);
             }
@@ -144,7 +149,7 @@ abstract class AddonManager extends AbstractManager
 
         return $results;
     }
-    
+
     /**
      * Installs the addon
      *

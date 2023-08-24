@@ -62,7 +62,7 @@ class RouterController extends WebsiteController
         if (null !== $content) {
             return $content;
         }
-        
+
         throw $this->createNotFoundException('Cette page n\'existe pas.');
     }
 
@@ -99,7 +99,7 @@ class RouterController extends WebsiteController
         if (null == $page) {
             throw $this->createNotFoundException('Cette page n\'existe pas.');
         }
-        
+
         if (null !== $page->getController()) {
             return $this->forward($page->getController(), [
                 'page'  => $page,

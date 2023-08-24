@@ -37,7 +37,7 @@ class Kernel extends BaseKernel
 
     public function registerBundles(): iterable
     {
-        $bundles = require_once $this->getBundlesPath();
+        $bundles = require $this->getBundlesPath();
 
         $modulesActive = $this->getActiveModules();
         $modulesDir = $this->getModulesDir();
@@ -60,7 +60,7 @@ class Kernel extends BaseKernel
 
             $bundles[$moduleNamespace] = ['all' => true];
         }
-        //dd($bundles);
+
         foreach ($bundles as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? false) {
                 $bundle = new $class();

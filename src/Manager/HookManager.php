@@ -40,7 +40,7 @@ class HookManager extends AbstractManager
     {
         $result = [];
 
-        $modules = $this->mf->get('module')->getAllInDisk();
+        $modules = $this->mf->get('module')->getAll();
         $hooks = $this->em->getRepository(Hook::class)->findAllHooksForAdmin();
 
         $hookName = null;
@@ -62,8 +62,9 @@ class HookManager extends AbstractManager
             }
 
             $moduleName = $module->getName();
+
             // Search config of the module
-            $moduleConfigArray = array_filter($modules, function ($moduleInfos) use ($moduleName) {
+            $moduleConfigArray = array_filter($modules['results'], function ($moduleInfos) use ($moduleName) {
                 return $moduleInfos['name'] === $moduleName;
             });
 

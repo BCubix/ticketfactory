@@ -67,6 +67,6 @@ class SeasonManager extends AbstractManager
             $year--;
         }
 
-        return $year;
+        return ($year+1);
     }
 }

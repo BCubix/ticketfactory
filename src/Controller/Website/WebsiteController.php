@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Spatie\Ssr\Renderer;
 use Spatie\Ssr\Engines\Node;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -75,28 +76,57 @@ abstract class WebsiteController extends AbstractFOSRestController
 
     protected function websiteRender(string $twigFilename, array $parameters = []): Response
     {
-        $modules = $this->mm->getAll(['active' => 1]);
         $tm = $this->mf->get('theme');
-        $eventCart = $this->mf->get("cart")->getCart();
-        if (null !== $eventCart) {
-            //$this->get("session")->remove("cart");
-            //dd($eventCart);
+        $parameters = array_merge($parameters, $this->getOtherParameters());
+
+        return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
+    }
+
+    protected function renderModuleView(string $moduleName, string $path, array $parameters): string
+    {
+        $path = ('@modules/' . $moduleName . '/templates/' . $path);
+        $parameters = array_merge($parameters, $this->getOtherParameters());
+
+        return $this->tg->render($path, $parameters);
+    }
+
+    protected function renderModule(string $moduleName, string $path, array $parameters): Response
+    {
+        $path = ('@modules/' . $moduleName . '/templates/' . $path);
+        $parameters = array_merge($parameters, $this->getOtherParameters());
+        $content = $this->tg->render($path, $parameters);
+
+        $response = new Response();
+        foreach ($parameters as $v) {
+            if ($v instanceof FormInterface && $v->isSubmitted() && !$v->isValid()) {
+                $response->setStatusCode(422);
+                break;
+            }
         }
 
+        $response->setContent($content);
+
+        return $response;
+    }
+
+    protected function getOtherParameters(): array
+    {
+        $modules = $this->mm->getAll(['active' => 1]);
         $modulesName = [];
+
         foreach ($modules['results'] as $module) {
             $modulesName[] = $module['name'];
         }
         $modulesName = implode(",", $modulesName);
 
+        $tm = $this->mf->get('theme');
         if (!$tm->isSSRActive()) {
-            $parameters = array_merge($parameters, ['serverSideRendering' => false, 'modules' => $modulesName]);
-            return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
+            return ['serverSideRendering' => false, 'modules' => $modulesName];
         }
 
         $uri = $this->rs->getMainRequest()->getPathInfo();
-        $serverPath = $this->mf->get('theme')->getWebsiteServerPath();
 
+        $serverPath = $this->mf->get('theme')->getWebsiteServerPath();
         $engine = new Node('node', $serverPath);
         $renderer = new Renderer($engine);
 
@@ -109,14 +139,6 @@ abstract class WebsiteController extends AbstractFOSRestController
             ->render()
         ;
 
-        $parameters = array_merge($parameters, ['render' => $render, 'serverSideRendering' => true, 'modules' => $modulesName]);
-        return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
-    }
-
-    protected function renderModule(string $moduleName, string $path, array $parameters): string
-    {
-        $path = ('@modules/' . $moduleName . '/templates/' . $path);
-
-        return $this->tg->render($path, $parameters);
+        return ['render' => $render, 'serverSideRendering' => true, 'modules' => $modulesName];
     }
 }

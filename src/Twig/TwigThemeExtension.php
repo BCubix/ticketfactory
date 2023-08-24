@@ -21,6 +21,7 @@ class TwigThemeExtension extends AbstractExtension
         return [
             new TwigFunction('adminTemplates',   [$this, 'adminTemplates']),
             new TwigFunction('websiteTemplates', [$this, 'websiteTemplates']),
+            new TwigFunction('moduleTemplates', [$this, 'moduleTemplates']),
         ];
     }
 
@@ -32,5 +33,10 @@ class TwigThemeExtension extends AbstractExtension
     public function websiteTemplates(string $twigFilename): string
     {
         return $this->tm->getWebsiteTemplatesPath() . $twigFilename;
+    }
+
+    public function moduleTemplates(string $moduleName, string $twigFilename): string
+    {
+        return ('@modules/' . $moduleName . '/templates/' . $twigFilename);
     }
 }

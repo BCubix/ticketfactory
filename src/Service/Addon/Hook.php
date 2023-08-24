@@ -30,9 +30,9 @@ abstract class Hook
     protected function getModuleName(): string
     {
         $reflected = new \ReflectionObject($this);
-        
+
         $dirname = \dirname($reflected->getFileName());
-        
+
         $moduleName = explode('/', $dirname);
         $moduleIndex = array_search('modules', $moduleName, true);
 
