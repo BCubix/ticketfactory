@@ -2,18 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\CartRow;
+use App\Entity\Order\CartRow;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<CartRow>
- *
- * @method CartRow|null find($id, $lockMode = null, $lockVersion = null)
- * @method CartRow|null findOneBy(array $criteria, array $orderBy = null)
- * @method CartRow[]    findAll()
- * @method CartRow[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class CartRowRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -21,46 +13,38 @@ class CartRowRepository extends CrudRepository
         parent::__construct($registry, CartRow::class);
     }
 
-    public function save(CartRow $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    public function findOneById(int $id): ?CartRow {
+        return $this->createQueryBuilder("cr")
+            ->where("cr.id = :id")
+            ->setParameter("id", $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
-    public function remove(CartRow $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    public function findOneByIdForWebsite(int $id): ?CartRow {
+        return $this->createQueryBuilder("cr")
+            ->addSelect("c")
+            ->leftJoin("cr.cart", "c")
+            ->where("c.active = 1")
+            ->andWhere("cr.id = :id")
+            ->setParameter("id", $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
-//    /**
-//     * @return CartRow[] Returns an array of CartRow objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?CartRow
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneCartRowByCartForWebsite(int $cartId, int $eventDateId): ?CartRow {
+        return $this->createQueryBuilder("cr")
+            ->addSelect("c")
+            ->addSelect("ed")
+            ->innerJoin("cr.cart", "c", "WITH", "c.id = :cartId")
+            ->leftJoin("cr.eventDate", "ed")
+            ->where("ed.id = :eventDateId")
+            ->setParameter("cartId", $cartId)
+            ->setParameter("eventDateId", $eventDateId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
+use App\Entity\Media\Media;
 use App\Manager\EventDateManager;
 use App\Manager\EventManager;
 use App\Manager\LanguageManager;
@@ -35,7 +36,8 @@ class TwigEventExtension extends AbstractExtension
         return [
             new TwigFunction('eventDatesStr', [$this, 'eventDatesStr']),
             new TwigFunction('eventPricesStr', [$this, 'eventPricesStr']),
-            new TwigFunction('eventDateStateStr', [$this, 'eventDateStateStr'])
+            new TwigFunction('eventDateStateStr', [$this, 'eventDateStateStr']),
+            new TwigFunction('getMainImageFromEvent', [$this, 'getMainImageFromEvent']),
         ];
     }
 
@@ -59,6 +61,11 @@ class TwigEventExtension extends AbstractExtension
     public function eventPricesStr(Event $event): string
     {
         return $this->em->getEventPricesStr($event);
+    }
+
+    public function getMainImageFromEvent(Event $event): ?Media
+    {
+        return $this->em->getMainImageFromEvent($event);
     }
 
     public function eventDateStateStr(EventDate $eventDate): string

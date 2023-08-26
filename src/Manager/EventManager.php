@@ -109,6 +109,20 @@ class EventManager extends AbstractManager
         return $event;
     }
 
+    public function getEventPricesReservationDefault(Event $event): array
+    {
+        $defaultPrices = [];
+        $eventPrices = $this->em->getRepository(EventPrice::class)->findAllByEventForWebsite($event->getId());
+
+        foreach ($eventPrices as $eventPrice) {
+            $defaultPrices[] = [
+                "eventPrice" => $eventPrice,
+                "quantity"   => 0,
+            ];
+        }
+        return $defaultPrices;
+    }
+
     public function getEvents(array $filters): array
     {
         $events = $this->em->getRepository(Event::class)->findAllForWebsite($this->getLanguageId(), $filters);
