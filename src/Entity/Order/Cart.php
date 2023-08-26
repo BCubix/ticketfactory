@@ -39,7 +39,7 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartRow::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartRow::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $cartRows;
 
     #[JMS\Expose()]

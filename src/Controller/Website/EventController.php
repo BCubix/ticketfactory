@@ -29,13 +29,12 @@ class EventController extends WebsiteController
         }
 
         $eventReservationForm = $this->createForm(EventReservationType::class, null, ['eventId' => $event->getId()]);
+        $eventReservationForm->get('eventPrices')->setData($this->mf->get("event")->getEventPricesReservationDefault($event));
         $eventReservationForm->handleRequest($this->getRequest());
         if ($eventReservationForm->isSubmitted() && $eventReservationForm->isValid()) {
             $formData = $eventReservationForm->getData();
-            $formData["event"] = $event->getId();
-            $formData["eventDate"] = $formData["eventDate"]->getId();
-            $formData["eventPrice"] = $formData["eventPrice"]->getId();
-            $this->mf->get("cart")->addEventToCart($formData);
+
+            $this->mf->get("cart")->addEventToCart($event, $formData);
 
             return $this->websiteRender("_partials/_notification.html.twig", [
                 'title' => 'Succès',

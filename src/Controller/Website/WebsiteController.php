@@ -77,11 +77,16 @@ abstract class WebsiteController extends AbstractFOSRestController
     {
         $modules = $this->mm->getAll(['active' => 1]);
         $tm = $this->mf->get('theme');
-        $eventCart = $this->mf->get("cart")->getCart();
+        /* $eventCart = $this->mf->get("cart")->getCart();
+        $eventCartId = $this->get("session")->get("cartId", null);
         if (null !== $eventCart) {
-            //$this->get("session")->remove("cart");
+            $this->get("session")->remove("cart");
             //dd($eventCart);
         }
+        if (null !== $eventCartId) {
+            $this->get("session")->remove("cartId");
+            //dd($eventCart);
+        } */
 
         $modulesName = [];
         foreach ($modules['results'] as $module) {

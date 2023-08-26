@@ -37,7 +37,7 @@ class Kernel extends BaseKernel
 
     public function registerBundles(): iterable
     {
-        $bundles = require_once $this->getBundlesPath();
+        $bundles = require $this->getBundlesPath();
 
         $modulesActive = $this->getActiveModules();
         $modulesDir = $this->getModulesDir();
