@@ -159,7 +159,7 @@ class ModuleManager extends AddonManager
                     $this->em->persist($module);
                     $this->em->flush();
 
-                    $this->enableHooks($module);
+                    ($action == ModuleEntity::ACTION_INSTALL ? $this->enableHooks($module) : $this->disableHooks($module));
 
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is true
                     if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {

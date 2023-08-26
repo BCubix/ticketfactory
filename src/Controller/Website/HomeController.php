@@ -10,7 +10,9 @@ class HomeController extends WebsiteController
     {
         $page = $this->mf->get('page')->getByKeyword('home');
 
-        return $this->websiteRender('Home/index.html.twig');
+        return $this->websiteRender('Home/index.html.twig', [
+            'page' => $page
+        ]);
     }
 }
 

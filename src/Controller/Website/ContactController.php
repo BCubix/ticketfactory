@@ -7,16 +7,16 @@ use App\Form\Website\ContactRequest\ContactRequestType;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class ContactRequestController extends WebsiteController
+class ContactController extends WebsiteController
 {
     public function index(Request $request)
     {
         $page = $this->mf->get('page')->getByKeyword('contact');
 
         $object = new ContactRequest();
-        $object->setActive(true);
+        $object->setActive(false);
 
-        $form = $this->createForm(ContactRequestType::class, $object, ['operation' => 'add']);
+        $form = $this->createForm(ContactRequestType::class, $object);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -25,10 +25,11 @@ class ContactRequestController extends WebsiteController
 
             $this->addFlash('contact-success', "Votre message à bien été envoyé");
 
-            return $this->redirect($this->sf->get('urlService')->keywordPath('home', []));
+            return $this->redirect($this->sf->get('urlService')->keywordPath('contact', []));
         }
 
         return $this->websiteRender('Contact/index.html.twig', [
+            'page'    => $page,
             'contact' => $object,
             'form' => $form->createView()
         ]);

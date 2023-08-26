@@ -26,7 +26,9 @@ class PageController extends WebsiteController
             throw $this->createNotFoundException('This page does not exist.');
         }
 
-        return $this->websiteRender('Page/index.html.twig', [ 'page' => $page]);
+        return $this->websiteRender('Page/index.html.twig', [
+            'page' => $page
+        ]);
     }
 }
 

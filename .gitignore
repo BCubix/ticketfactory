@@ -28,6 +28,7 @@ yarn.lock
 
 ###> ticketfactory/tf-parameters ###
 public/.htaccess
+public/logo-*
 modules/
 ###< ticketfactory/tf-parameters ###
 

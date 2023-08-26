@@ -15,6 +15,7 @@ use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class HookManager extends AbstractManager
@@ -162,10 +163,15 @@ class HookManager extends AbstractManager
             $this->em->flush();
         }
 
-        $classInstance = $this->kl->getContainer()->get($classname);
-        $methodName = ('hook' . ucfirst($hook->getName()));
+        try {
+            $classInstance = $this->kl->getContainer()->get($classname);
+            $methodName = ('hook' . ucfirst($hook->getName()));
 
-        $this->ed->addListener($hookName, [$classInstance, $methodName]);
+            $this->ed->addListener($hookName, [$classInstance, $methodName]);
+        } catch (ServiceNotFoundException $e) {
+            // At installation, the service is not found because the bundle is not still registered
+            // Ignore and wait for page refresh
+        }
     }
 
     /**

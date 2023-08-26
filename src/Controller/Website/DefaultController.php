@@ -121,12 +121,8 @@ class DefaultController extends WebsiteController
 
     public function generateFooter()
     {
-        $footerMenus = $this->mf->get('menuEntry')->getOneMenu('Footer');
+        $menus = $this->mf->get('menuEntry')->getAllMenus();
 
-        $menus = [];
-        if (isset($footerMenus['__children'])) {
-            $menus = $footerMenus['__children'];
-        }
         return $this->websiteRender('_partials/footer.html.twig', [
             'menus'  => $menus
         ]);

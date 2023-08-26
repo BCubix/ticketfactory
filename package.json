@@ -67,7 +67,7 @@
         "ignore-styles": "^5.0.1",
         "include-media": "^2.0.0",
         "jquery": "^3.6.0",
-        "mapbox-gl": "^2.10.0",
+        "mapbox-gl": "^2.15.0",
         "mapbox-gl-geocoder": "^2.0.1",
         "moment": "^2.29.4",
         "normalize.scss": "^0.1.0",
