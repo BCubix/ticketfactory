@@ -44,7 +44,13 @@ services:
     App\EventSubscriber\Admin\FrontUrlSubscriber:
         tags:
             - { name: jms_serializer.event_subscriber }
-    
+
+    App\EventSubscriber\Website\RedirectionSubscriber:
+        arguments:
+            $websiteHost: '%env(WEBSITE_HOST)%'
+        tags:
+            - { name: kernel.event_subscriber }
+
     # Server Side Rendering
     limenius_react.react_renderer:
         class: App\Service\Rendering\CustomPhpExecJsReactRenderer

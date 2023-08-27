@@ -27,4 +27,17 @@ class RedirectionRepository extends CrudRepository
     {
         parent::__construct($registry, Redirection::class);
     }
+
+    public function findOneForFront(string $fromPath)
+    {
+        return $this
+            ->createQueryBuilder('r')
+            ->where('r.active = 1')
+            ->andWhere('r.redirectFrom = :fromPath')
+            ->orderBy('r.createdAt', 'DESC')
+            ->setParameter('fromPath', $fromPath)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
