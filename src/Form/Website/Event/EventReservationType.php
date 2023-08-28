@@ -10,9 +10,8 @@ use App\Repository\EventPriceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventReservationType extends AbstractType
@@ -22,7 +21,7 @@ class EventReservationType extends AbstractType
         $eventId = $options['eventId'];
 
         $builder
-            ->add('eventDate',            EntityType::class,               [
+            ->add('eventDate',            EntityType::class,              [
                 'label'         => "Date",
                 'class'         => EventDate::class,
                 'required'      => false,
@@ -32,32 +31,23 @@ class EventReservationType extends AbstractType
                 'query_builder' => function (EventDateRepository $edr) use ($eventId) {
                     return $edr->findAllByEventForWebsiteOption($eventId);
                 },
-                'attr'           => ['class' => "form_input_hidden js-event-reservation-date-input"],
-                'label_attr'     => ['class' => "form_label_hidden"],
+                'attr'          => ['class' => "form_input_hidden js-event-reservation-date-input"],
+                'label_attr'    => ['class' => "form_label_hidden"],
             ])
-            ->add('eventPrice',            EntityType::class,               [
-                'label'         => "Prix",
-                'class'         => EventPrice::class,
-                'choice_label'  => 'id',
-                'required'      => false,
-                'multiple'      => false,
-                'placeholder'   => "Prix",
-                'query_builder' => function (EventPriceRepository $epr) use ($eventId) {
-                    return $epr->findAllByEventForWebsiteOption($eventId);
-                },
-                'attr'           => ['class' => "form_input_hidden js-event-reservation-price-input"],
-                'label_attr'     => ['class' => "form_label_hidden"],
-            ])
-            ->add('quantity',             NumberType::class,           [
-                'label'         => 'Quantité',
-                'required'      => false,
-                'attr'          => ["class" => "form_field", 'placeholder' => "Quantité"],
+            ->add('eventPrices',            CollectionType::class,            [
+                'entry_type'    => EventReservationSeatsType::class,
+                'entry_options' => ["eventId" => $eventId],
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'delete_empty'  => true,
+                'by_reference'  => false,
+                'attr'          => ['class' => "form_input_hidden js-event-reservation-prices-list"],
             ])
             ->add('add',                 SubmitType::class,               [
-                'label'      => 'Ajouter au panier',
-                'label_html' => true,
-                "label"      => "<span><i class='icon icon-cart'></i> Ajouter au panier</span>",
-                "attr"       => ["class" => "submit-button"]
+                'label'         => 'Ajouter au panier',
+                'label_html'    => true,
+                "label"         => "<span><i class='icon icon-cart'></i> Ajouter au panier</span>",
+                "attr"          => ["class" => "submit-button"]
             ])
         ;
     }

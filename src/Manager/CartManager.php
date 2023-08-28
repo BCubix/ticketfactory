@@ -9,10 +9,15 @@ use App\Service\File\MimeTypeMapping;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
 use App\Entity\Event\EventPrice;
+use App\Entity\Order\Cart;
+use App\Entity\Order\CartRow;
+use App\Entity\Order\CartSeat;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Exception\ApiException;
+use Symfony\Component\HttpFoundation\Response;
 
 class CartManager extends AbstractManager
 {
@@ -28,143 +33,202 @@ class CartManager extends AbstractManager
         parent::__construct($kl, $mf, $sf, $em, $rs);
     }
 
-    public function getCartForFront(): ?array
-    {
-        $session = $this->rs->getSession();
-        $cart = $session->get("cart", null);
-        $reservedEvents = [];
+    public function createNewCart(): Cart {
+        $cart = new Cart();
+        $cart->setActive(true);
+        $cart->setTotal(0);
 
-        if (null === $cart) {
-            return $reservedEvents;
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartId", $cart->getId());
+
+        return $cart;
+    }
+
+    public function createNewCartRow(Cart $cart, Event $event, EventDate $eventDate): CartRow {
+        $cartRow = new CartRow();
+        $cartRow->setEvent($event);
+        $cartRow->setEventDate($eventDate);
+        $cartRow->setTotal(0);
+
+        $cart->addCartRow($cartRow);
+
+        $this->em->persist($cartRow);
+        $this->em->flush();
+
+        return $cartRow;
+    }
+
+    public function addNewCartSeats(CartRow $cartRow, EventPrice $eventPrice, int $quantity): CartRow {
+        foreach (range(1, $quantity) as $index) {
+            $seat = new CartSeat();
+            $seat->setEventPrice($eventPrice);
+
+            $cartRow->addCartSeat($seat);
         }
 
-        foreach ($cart as $cartRow) {
-            $event = $this->em->getRepository(Event::class)->findOneByIdForWebsite($cartRow["event"]);
-            $eventDate = $this->em->getRepository(EventDate::class)->findOneByIdForWebsite($cartRow["eventDate"], $cartRow["event"]);
-            $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($cartRow["eventPrice"], $cartRow["event"]);
-            $mainImg = $this->mf->get("event")->getMainImageFromEvent($event);
+        return $this->calculateCartRowTotal($cartRow);
+    }
 
-            if ($event && $eventDate && $eventPrice) {
-                $reservedEvents[] = [
-                    "event"      => $event,
-                    "eventDate"  => $eventDate,
-                    "eventPrice" => $eventPrice,
-                    "quantity"   => $cartRow["quantity"],
-                    "mainImg"    => $mainImg
-                ];
+    public function calculateCartRowTotal(CartRow $cartRow): CartRow {
+        $total = 0;
+
+        foreach($cartRow->getCartSeats() as $seat) {
+            $total += $seat->getEventPrice()->getPrice();
+        }
+
+        $cartRow->setTotal($total);
+
+        return $cartRow;
+    }
+
+    public function calculateCartTotal(Cart $cart): Cart {
+        $total = 0;
+
+        foreach($cart->getCartRows() as $row) {
+            $total += $this->calculateCartRowTotal($row)->getTotal();
+        }
+
+        $cart->setTotal($total);
+
+        return $cart;
+    }
+
+    public function addEventToCart(Event $event, array $data): void
+    {
+        $session = $this->rs->getSession();
+        $eventDate = $data["eventDate"];
+        $eventPrices = $data["eventPrices"];
+
+        if (null === $eventDate || null === $eventPrices) {
+            $message = null === $eventDate ? "La date spécifié n'existe pas." : "Le placement demandé n'existe pas";
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, $message);
+        }
+
+        $cartId = $session->get("cartId", null);
+        $cart = $cartId ? $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId) : $this->createNewCart();
+        if (null === $cart) {
+            $cart = $this->createNewCart();
+        }
+
+        $cartRow = null === $cartId ? null : $this->em->getRepository(CartRow::class)->findOneCartRowByCartForWebsite($cart->getId(), $eventDate->getId());
+        if (null === $cartRow) {
+            $cartRow = $this->createNewCartRow($cart, $event, $eventDate);
+        }
+
+        foreach($eventPrices as $eventPrice) {
+            if ($eventPrice['quantity'] > 0) {
+                $this->addNewCartSeats($cartRow, $eventPrice["eventPrice"], $eventPrice['quantity']);
             }
         }
 
-        return $reservedEvents;
+        $cart = $this->calculateCartTotal($cart);
+        $this->em->persist($cart);
+        $this->em->flush();
     }
 
-    public function getCart(): ?array
+    public function getCart(): ?Cart
     {
         $session = $this->rs->getSession();
+        $cartId = $session->get("cartId", null);
 
-        return $session->get("cart", null);
-    }
-
-    public function getOneEventInfos(array $element) {
-        if (null === $element || !isset($element["event"]) || !isset($element["eventDate"]) || !isset($element["eventPrice"])) {
+        if (null === $cartId) {
             return null;
         }
 
-        $event = $this->em->getRepository(Event::class)->findOneByIdForWebsite($element["event"]);
-        $eventDate = $this->em->getRepository(EventDate::class)->findOneByIdForWebsite($element["eventDate"], $element["event"]);
-        $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($element["eventPrice"], $element["event"]);
-        $mainImg = $this->mf->get("event")->getMainImageFromEvent($event);
-
-        if ($event && $eventDate && $eventPrice) {
-            return [
-                "event"      => $event,
-                "eventDate"  => $eventDate,
-                "eventPrice" => $eventPrice->toArray(),
-                "quantity"   => $element["quantity"],
-                "mainImg"    => $mainImg->toArray(),
-            ];
-        }
-
-        return null;
+        return $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId);
     }
 
-    public function addEventToCart(array $element): void
+    public function getCartSeatsGrouped($cartRow): ?array
     {
-        $session = $this->rs->getSession();
-        $cart = $session->get("cart", []);
-        $isPushed = false;
-        $newCart = [];
+        $cartSeats = $this->em->getRepository(CartSeat::class)->findGroupedCartSeatsForWebsite($cartRow->getId());
+        $groupedSeats = [];
 
-        foreach ($cart as $cartRow) {
-            $eventId = $cartRow["event"] === $element["event"];
-            $eventDate = $cartRow["eventDate"] === $element["eventDate"];
-            $eventPrice = $cartRow["eventPrice"] === $element["eventPrice"];
-
-            if ($eventId && $eventDate && $eventPrice) {
-                $cartRow["quantity"] += $element["quantity"];
-                $isPushed = true;
-            }
-
-            $newCart[] = $cartRow;
-        }
-
-        if (!$isPushed) {
-            $newCart[] = $element; 
-        }
-
-        $session->set("cart", $newCart);
-    }
-
-    public function updateQuantity(array $element, int $quantityChange): ?array
-    {
-        $session = $this->rs->getSession();
-        $cart = $session->get("cart", []);
-        $newCart = [];
-        $newCartRow = [];
-
-        foreach ($cart as $cartRow) {
-            if ($element["event"] === $cartRow["event"] &&
-                $element["eventDate"] === $cartRow["eventDate"] &&
-                $element["eventPrice"] === $cartRow["eventPrice"]
-            ) {
-                $quantity = $cartRow['quantity'] + $quantityChange;
-                if ($quantity > 0) {
-                    $cartRow = [
-                        ...$cartRow,
-                        "quantity" => $quantity
-                    ];
-
-                    $newCartRow = $cartRow;
-                }
-            }
-
-            $newCart[] = $cartRow;
-        }
-
-
-        $session->set("cart", $newCart);
-        
-        $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($element["eventPrice"], $element["event"]);
-        $newCartRow["price"] = $eventPrice->getPrice();
-
-        return $newCartRow;
-    }
-
-    public function deleteItem(array $element): void
-    {
-        $session = $this->rs->getSession();
-        $cart = $session->get("cart", []);
-        $newCart = [];
-
-        foreach ($cart as $cartRow) {
-            if ($element["event"] !== $cartRow["event"] ||
-                $element["eventDate"] !== $cartRow["eventDate"] ||
-                $element["eventPrice"] !== $cartRow["eventPrice"]
-            ) {
-                $newCart[] = $cartRow;
+        foreach($cartSeats as $cartSeat) {
+            $eventPrice = $cartSeat->getEventPrice();
+            $eventPriceId = $eventPrice->getId();
+            if (!isset($groupedSeats[$eventPriceId])) {
+                $groupedSeats[$eventPriceId] = [
+                    'eventPrice' => $eventPrice,
+                    'quantity'   => 1,
+                    'total'      => $eventPrice->getPrice(),
+                ];
+            } else {
+                $groupedSeats[$eventPriceId]['quantity'] += 1;
+                $groupedSeats[$eventPriceId]['total'] += $eventPrice->getPrice();
             }
         }
 
-        $session->set("cart", $newCart);
+        return $groupedSeats;
+    }
+
+    public function updateQuantity(array $element, int $quantityChange): ?CartRow
+    {
+        $cartRow = $this->em->getRepository(CartRow::class)->findOneByIdForWebsite($element['cartRowId']);
+        $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($element["eventPriceId"]);
+
+        if (null === $cartRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        if ($quantityChange === 0) {
+            return $cartRow;
+        }
+
+        $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($element["cartRowId"], $element["eventPriceId"]);
+        $count = count($cartSeats);
+
+        if ($quantityChange < 0) {
+            if ($count + $quantityChange < 1) {
+                return $cartRow;
+            }
+
+            foreach (range(0, ($quantityChange * (-1)) - 1) as $index) {
+                $cartRow->removeCartSeat($cartSeats[$index]);
+            }
+        } else {
+            $cartRow = $this->addNewCartSeats($cartRow, $eventPrice, $quantityChange);
+        }
+
+        $cart = $this->calculateCartTotal($cartRow->getCart());
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        return $cartRow;
+    }
+
+    public function deleteCartRow(int $cartRowId): void
+    {
+        $cartRow = $this->em->getRepository(CartRow::class)->findOneByIdForWebsite($cartRowId);
+
+        if (null === $cartRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        $this->em->remove($cartRow);
+        $this->em->flush();
+    }
+
+    public function deleteCartSeats(array $data): ?CartRow
+    {
+        $cartRow = $this->em->getRepository(CartRow::class)->findOneByIdForWebsite($data['cartRowId']);
+        if (null === $cartRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($data["cartRowId"], $data["eventPriceId"]);
+        foreach($cartSeats as $seat) {
+            $cartRow->removeCartSeat($seat);
+        }
+
+        if (count($cartRow->getCartSeats()) === 0) {
+            $this->em->remove($cartRow);
+            $cartRow = null;
+        }
+
+        $this->em->flush();
+
+        return $cartRow;
     }
 }

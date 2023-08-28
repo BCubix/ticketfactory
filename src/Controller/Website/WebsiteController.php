@@ -103,7 +103,7 @@ abstract class WebsiteController extends AbstractFOSRestController
                 break;
             }
         }
-
+       
         $response->setContent($content);
 
         return $response;
