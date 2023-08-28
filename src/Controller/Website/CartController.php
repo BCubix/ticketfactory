@@ -33,13 +33,7 @@ class CartController extends WebsiteController
     #[Route("/panier/supprimer", name: "tf_website_cart_remove_row", priority: 1)]
     public function removeRow()
     {
-<<<<<<< HEAD
-        $event = $this->getRequest()->get('event');
-        $eventDate = $this->getRequest()->get('eventDate');
-        $eventPrice = $this->getRequest()->get('eventPrice');
-=======
         $cartRowId = $this->getRequest()->get('cartRowId'); 
->>>>>>> 3d3d845ebd1e570904105f36d8da99f0ff733b55
 
         $this->mf->get("cart")->deleteCartRow($cartRowId);
 
