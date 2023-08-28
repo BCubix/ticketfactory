@@ -13,6 +13,24 @@ class PageController extends WebsiteController
 {
     public function index(Page $page)
     {
+        $this->checkAccessPage($page);
+
+        return $this->websiteRender('Page/index.html.twig', [
+            'page' => $page
+        ]);
+    }
+
+    public function history(Page $page)
+    {
+        $this->checkAccessPage($page);
+
+        return $this->websiteRender('Page/history.html.twig', [
+            'page' => $page
+        ]);
+    }
+
+    private function checkAccessPage(Page $page): void
+    {
         $userAddress = $this->getRequest()->get('u');
         $userPass = $this->getRequest()->get('t');
         $user = null;
@@ -25,10 +43,6 @@ class PageController extends WebsiteController
         if (null === $page || (false === $page->isActive() && (null === $user || !in_array("ROLE_ADMIN", $user->getRoles())))) {
             throw $this->createNotFoundException('This page does not exist.');
         }
-
-        return $this->websiteRender('Page/index.html.twig', [
-            'page' => $page
-        ]);
     }
 }
 
