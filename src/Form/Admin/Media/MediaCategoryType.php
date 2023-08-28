@@ -31,8 +31,7 @@ class MediaCategoryType extends AbstractType
                 'query_builder' => function (MediaCategoryRepository $mcr) {
                     return $mcr
                         ->createQueryBuilder('mc')
-                        ->orderBy('mc.name', 'ASC')
-                    ;
+                        ->orderBy('mc.name', 'ASC');
                 }
             ])
             ->add('lang',                 EntityType::class,          [
@@ -42,18 +41,17 @@ class MediaCategoryType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
-            ->add('languageGroup',        UuidType::class,            [])
-        ;
+            ->add('languageGroup',        UuidType::class,            []);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => MediaCategory::class,
+            'csrf_protection' => false
         ]);
     }
 }

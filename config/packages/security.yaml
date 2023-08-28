@@ -8,29 +8,24 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
+        tf_customer_provider:
+            entity:
+                class: App\Entity\Customer\Customer
+
         tf_user_provider:
             entity:
                 class: App\Entity\User\User
 
     firewalls:
+        # Profiler & assets
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        admin_login:
-            pattern: ^/admin/api/login
-            stateless: true
-            json_login:
-                check_path: admin_api_login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-
-        refresh:
-            pattern: ^/admin/api/token/refresh
-            stateless: true
-
+        # Admin
         admin:
             pattern: ^/admin
+            provider: tf_user_provider
             stateless: true
             entry_point: jwt
             json_login:
@@ -41,15 +36,30 @@ security:
             refresh_jwt:
                 check_path: admin_api_refresh_token
 
+        refresh:
+            pattern: ^/admin/api/token/refresh
+            stateless: true
+
+        # Frontend
         main:
-            lazy: true
-            provider: tf_user_provider
+            pattern: ^/
+            provider: tf_customer_provider
+            form_login:
+                login_path: tf_website_connection
+                check_path: tf_website_login
+                default_target_path: tf_website_account
+                enable_csrf: true
+            logout:
+                path: tf_website_logout
+                target: tf_website_connection
 
     access_control:
         - { path: ^/admin/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/admin/api/forgot-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin/api/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin/api, roles: ROLE_ADMIN }
+        - { path: ^/mon-compte/(login|logout|connexion), roles: PUBLIC_ACCESS }
+        - { path: ^/mon-compte, roles: ROLE_CUSTOMER }
 
 when@test:
     security:

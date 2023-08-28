@@ -23,14 +23,14 @@ class ContactRequestType extends AbstractType
             ->add('email',                EmailType::class,           [])
             ->add('phone',                TextType::class,            [])
             ->add('subject',              TextType::class,            [])
-            ->add('message',              TextareaType::class,        [])
-        ;
+            ->add('message',              TextareaType::class,        []);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContactRequest::class
+            'data_class' => ContactRequest::class,
+            'csrf_protection' => false
         ]);
     }
 }

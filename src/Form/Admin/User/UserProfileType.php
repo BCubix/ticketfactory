@@ -19,14 +19,14 @@ class UserProfileType extends AbstractType
             ->add('email',                EmailType::class,           [])
             ->add('plainPassword',        PasswordType::class,        [])
             ->add('firstName',            TextType::class,            [])
-            ->add('lastName',             TextType::class,            [])
-        ;
+            ->add('lastName',             TextType::class,            []);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class
+            'data_class' => User::class,
+            'csrf_protection' => false
         ]);
     }
 }

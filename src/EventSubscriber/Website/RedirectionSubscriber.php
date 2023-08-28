@@ -34,11 +34,11 @@ class RedirectionSubscriber implements EventSubscriberInterface
 
     public function checkRedirections(RequestEvent $event)
     {
-        /*if (!$event->isMainRequest()) {
-            return;
-        }*/
-        
         if ($event->getRequest()->getHost() != $this->websiteHost) {
+            return;
+        }
+
+        if (!$event->isMainRequest()) {
             return;
         }
 

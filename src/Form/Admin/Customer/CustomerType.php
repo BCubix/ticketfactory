@@ -26,14 +26,14 @@ class CustomerType extends AbstractType
             ->add('civility',             ChoiceType::class,          [
                 'choices'  => array_flip(Customer::CIVILITIES)
             ])
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
-        ;
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Customer::class
+            'data_class' => Customer::class,
+            'csrf_protection' => false
         ]);
     }
 }

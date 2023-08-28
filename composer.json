@@ -34,6 +34,7 @@
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/runtime": "*",
         "symfony/security-bundle": "^5.4",
+        "symfony/security-csrf": "5.4.*",
         "symfony/serializer": "5.4.*",
         "symfony/translation": "^6.0",
         "symfony/twig-bundle": "^5.4",

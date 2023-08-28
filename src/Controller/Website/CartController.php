@@ -2,13 +2,9 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\ContactRequest\ContactRequest;
-use App\Form\Website\ContactRequest\ContactRequestType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends WebsiteController
 {

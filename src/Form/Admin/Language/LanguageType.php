@@ -22,14 +22,14 @@ class LanguageType extends AbstractType
             ->add('locale',               TextType::class,            [])
             ->add('datetimeFormat',       TextType::class,            [])
             ->add('dateFormat',           TextType::class,            [])
-            ->add('timeFormat',           TextType::class,            [])
-        ;
+            ->add('timeFormat',           TextType::class,            []);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Language::class,
+            'csrf_protection' => false
         ]);
     }
 }

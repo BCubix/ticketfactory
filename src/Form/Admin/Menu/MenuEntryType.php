@@ -31,12 +31,10 @@ class MenuEntryType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
-            ->add('languageGroup',        UuidType::class,            [])
-        ;
+            ->add('languageGroup',        UuidType::class,            []);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
@@ -62,8 +60,7 @@ class MenuEntryType extends AbstractType
                     'allow_delete' => true,
                     'delete_empty' => true,
                     'by_reference' => false
-                ])
-            ;
+                ]);
         }
     }
 
@@ -80,8 +77,7 @@ class MenuEntryType extends AbstractType
                     'allow_delete' => true,
                     'delete_empty' => true,
                     'by_reference' => false
-                ])
-            ;
+                ]);
         }
     }
 
@@ -89,6 +85,7 @@ class MenuEntryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MenuEntry::class,
+            'csrf_protection' => false
         ]);
     }
 }

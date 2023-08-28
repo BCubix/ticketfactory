@@ -29,7 +29,7 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
         parent::__construct($registry, Customer::class);
     }
 
-    public function loadCustomerByIdentifier(string $email): ?Customer
+    public function loadUserByIdentifier(string $email): ?Customer
     {
         $email = strtolower($email);
 
@@ -38,8 +38,7 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
             ->andWhere('c.active = 1')
             ->setParameter('email', $email)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function loadUserByUsername(string $email): ?Customer
@@ -56,7 +55,6 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
             ->setParameter('customerPass', '%' . $customerPass)
             ->andWhere('u.active = 1')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

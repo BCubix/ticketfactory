@@ -33,8 +33,7 @@ class PageType extends AbstractType
                 'query_builder' => function (PageRepository $pr) {
                     return $pr
                         ->createQueryBuilder('p')
-                        ->orderBy('p.title', 'ASC')
-                    ;
+                        ->orderBy('p.title', 'ASC');
                 }
             ])
             ->add('slug',                 TextType::class,            [])
@@ -52,21 +51,20 @@ class PageType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => Page::class,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Page::class,
+            'csrf_protection' => false
         ]);
     }
 }

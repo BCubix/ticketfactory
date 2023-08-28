@@ -41,16 +41,14 @@ class VoucherType extends AbstractType
                 'format'         => 'yyyy-MM-dd',
                 'html5'          => false
             ])
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
-        ;
-
-        
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Voucher::class
+            'data_class' => Voucher::class,
+            'csrf_protection' => false
         ]);
     }
 }

@@ -32,8 +32,7 @@ class MediaType extends AbstractType
                 'query_builder' => function (MediaCategoryRepository $mcr) {
                     return $mcr
                         ->createQueryBuilder('mc')
-                        ->orderBy('mc.name', 'ASC')
-                    ;
+                        ->orderBy('mc.name', 'ASC');
                 }
             ])
             ->add('mediaCategories',      EntityType::class,          [
@@ -43,22 +42,21 @@ class MediaType extends AbstractType
                 'query_builder' => function (MediaCategoryRepository $mcr) {
                     return $mcr
                         ->createQueryBuilder('mc')
-                        ->orderBy('mc.name', 'ASC')
-                    ;
+                        ->orderBy('mc.name', 'ASC');
                 }
             ])
             ->add('iframe',                 CheckboxType::class,        ['false_values' => ['0']])
             ->add('documentUrl',            TextType::class,            [])
             ->add('documentType',           ChoiceType::class,          [
                 'choices'  => MimeTypeMapping::getAllMimes(),
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Media::class,
+            'csrf_protection' => false
         ]);
     }
 }
