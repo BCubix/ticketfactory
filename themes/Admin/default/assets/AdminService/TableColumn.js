@@ -144,11 +144,16 @@ const TableColumnObj = {
             name: 'name',
             label: 'Nom',
             width: '30%',
-            renderFunction: (item) => (
-                <Typography>
-                    {item.customer?.civility} {item.customer?.firstName} {item.customer?.lastName}
-                </Typography>
-            ),
+            renderFunction: (item) => {
+                if (item.customer) {
+                    return (
+                        <Typography>
+                            {item.customer?.civility} {item.customer?.firstName} {item.customer?.lastName}
+                        </Typography>
+                    );
+                }
+                return <Typography>-----------</Typography>;
+            },
         },
         {
             name: 'total',

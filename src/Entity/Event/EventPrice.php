@@ -19,7 +19,7 @@ class EventPrice
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -28,24 +28,24 @@ class EventPrice
     #[Assert\Length(max: 250, maxMessage: 'Le nom du tarif doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du tarif doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
 
     #[Assert\PositiveOrZero(message: 'Le tarif doit être un nombre supérieur ou égal à 0.')]
     #[Assert\NotBlank(message: 'Le tarif doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(type: 'float')]
     private $price;
 
@@ -54,7 +54,7 @@ class EventPrice
     private $eventPriceBlock;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;

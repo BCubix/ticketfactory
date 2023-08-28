@@ -5,6 +5,7 @@ namespace App\Form\Admin\Parameter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ParametersContainerType extends AbstractType
 {
@@ -20,5 +21,12 @@ class ParametersContainerType extends AbstractType
                 'by_reference' => false,
             ])
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'csrf_protection' => false
+        ]);
     }
 }

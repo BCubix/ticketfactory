@@ -165,7 +165,10 @@ class HookManager extends AbstractManager
 
         try {
             $classInstance = $this->kl->getContainer()->get($classname);
-            $methodName = ('hook' . ucfirst($hook->getName()));
+            $methodName = $hook->getName();
+            if (!str_starts_with($methodName, 'hook')) {
+                $methodName = ('hook' . ucfirst($hook->getName()));
+            }
 
             $this->ed->addListener($hookName, [$classInstance, $methodName]);
         } catch (ServiceNotFoundException $e) {
@@ -247,6 +250,10 @@ class HookManager extends AbstractManager
 
         $hookArgs = array_merge(['languageId' => $language->getId()], $hookArgs);
         $event = new HookEvent($hookArgs);
+
+        if (!str_starts_with($hookName, 'hook')) {
+            $hookName = ('hook' . ucfirst($hookName));
+        }
 
         return $this->ed->dispatch($event, $hookName);
     }

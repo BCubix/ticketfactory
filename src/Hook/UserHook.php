@@ -23,6 +23,7 @@ class UserHook extends Hook
     public function hookUserValidated(HookEvent $event)
     {
         $user = $event->getParam('vObject');
+        
         $this->mf->get('user')->upgradePassword($user);
     }
 }
