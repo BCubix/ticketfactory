@@ -9,41 +9,35 @@ return function (RoutingConfigurator $routes) {
     // Kernel
     $routes->import('../../src/Kernel.php', 'annotation');
 
-    // Security
-    $routes->add('admin_api_login_check', '/admin/api/login_check');
-    $routes->add('gesdinet_jwt_refresh_token', '/admin/api/token/refresh')
-           ->controller(["gesdinet.jwtrefreshtoken", 'refresh'])
-    ;
-
-
+    // Debug
     if ($routes->env() == 'dev') {
         $routes
             ->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', 'xml')
-            ->prefix('/_wdt')
-        ;
+            ->prefix('/_wdt');
 
         $routes
             ->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', 'xml')
-            ->prefix('/_profiler')
-        ;
+            ->prefix('/_profiler');
 
         $routes
             ->import('@FrameworkBundle/Resources/config/routing/errors.xml', 'xml')
-            ->prefix('/_error')
-        ;
+            ->prefix('/_error');
     }
+
+    // Core - Admin security
+    $routes->add('admin_api_login_check', '/admin/api/login_check');
+    $routes->add('gesdinet_jwt_refresh_token', '/admin/api/token/refresh')
+        ->controller(["gesdinet.jwtrefreshtoken", 'refresh']);
 
     // Core - Admin
     $routes
         ->import('../../src/Controller/Admin', 'annotation')
-        ->prefix('/admin')
-    ;
+        ->prefix('/admin');
 
     // Core - Admin upload
     $routes
         ->import('.', 'uploader')
-        ->prefix('/admin/api')
-    ;
+        ->prefix('/admin/api');
 
     // Modules
     try {
@@ -52,23 +46,22 @@ return function (RoutingConfigurator $routes) {
         $modulesActive = [];
     }
 
-    $moduleDir = (new PathGetter(__DIR__.'/../..'))->getModulesDir();
+    $moduleDir = (new PathGetter(__DIR__ . '/../..'))->getModulesDir();
     foreach ($modulesActive as $moduleActive) {
         $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Admin';
         if (is_dir($controllersPath)) {
             $routes
                 ->import($controllersPath, 'annotation')
-                ->prefix('/admin')
-            ;
+                ->prefix('/admin');
         }
 
         $controllersPath = $moduleDir . '/' . $moduleActive['name'] . '/src/Controller/Website';
         if (is_dir($controllersPath)) {
             $routes
-                ->import($controllersPath, 'annotation')
-            ;
+                ->import($controllersPath, 'annotation');
         }
     }
 
+    // Core - Website
     $routes->import('../../src/Controller/Website', 'annotation');
 };

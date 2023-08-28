@@ -16,7 +16,8 @@ class ParameterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA,
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $parameter = $event->getData();
                 $form = $event->getForm();
@@ -32,9 +33,9 @@ class ParameterType extends AbstractType
                         ]);
                         break;
 
-                    // We use a TextType to store the fileName as the upload is handled by the listener
+                        // We use a TextType to store the fileName as the upload is handled by the listener
                     case "upload":
-                        $form->add('paramValue', TextType::class, []); 
+                        $form->add('paramValue', TextType::class, []);
                         break;
 
                     default:
@@ -45,14 +46,14 @@ class ParameterType extends AbstractType
                         break;
                 }
             }
-        )
-        ;
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Parameter::class
+            'data_class' => Parameter::class,
+            'csrf_protection' => false
         ]);
     }
 }

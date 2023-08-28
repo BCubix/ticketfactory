@@ -26,18 +26,17 @@ class SeatingPlanType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
-            ->add('languageGroup',        UuidType::class,            [])
-        ;
+            ->add('languageGroup',        UuidType::class,            []);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => SeatingPlan::class,
+            'csrf_protection' => false
         ]);
     }
 }

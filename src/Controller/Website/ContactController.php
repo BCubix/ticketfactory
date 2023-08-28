@@ -3,16 +3,15 @@
 namespace App\Controller\Website;
 
 use App\Entity\ContactRequest\ContactRequest;
+use App\Entity\Page\Page;
 use App\Form\Website\ContactRequest\ContactRequestType;
 
 use Symfony\Component\HttpFoundation\Request;
 
 class ContactController extends WebsiteController
 {
-    public function index(Request $request)
+    public function index(Request $request, Page $page)
     {
-        $page = $this->mf->get('page')->getByKeyword('contact');
-
         $object = new ContactRequest();
         $object->setActive(false);
 

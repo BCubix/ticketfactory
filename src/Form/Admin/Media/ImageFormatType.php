@@ -22,14 +22,14 @@ class ImageFormatType extends AbstractType
             ->add('name',                 TextType::class,            [])
             ->add('width',                IntegerType::class,         [])
             ->add('height',               IntegerType::class,         [])
-            ->add('themeUse',             CheckboxType::class,        ['false_values' => ['0']])
-        ;
+            ->add('themeUse',             CheckboxType::class,        ['false_values' => ['0']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ImageFormat::class,
+            'csrf_protection' => false
         ]);
     }
 }

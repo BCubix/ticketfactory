@@ -2,13 +2,9 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\ContactRequest\ContactRequest;
-use App\Form\Website\ContactRequest\ContactRequestType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends WebsiteController
 {
@@ -37,8 +33,8 @@ class CartController extends WebsiteController
     #[Route("/panier/supprimer", name: "tf_website_cart_remove_item", priority: 1)]
     public function removeItem()
     {
-        $event = $this->getRequest()->get('event'); 
-        $eventDate = $this->getRequest()->get('eventDate'); 
+        $event = $this->getRequest()->get('event');
+        $eventDate = $this->getRequest()->get('eventDate');
         $eventPrice = $this->getRequest()->get('eventPrice');
 
         $element = [
@@ -54,8 +50,8 @@ class CartController extends WebsiteController
 
     private function changeQuantity(int $quantityChange)
     {
-        $event = $this->getRequest()->get('event'); 
-        $eventDate = $this->getRequest()->get('eventDate'); 
+        $event = $this->getRequest()->get('event');
+        $eventDate = $this->getRequest()->get('eventDate');
         $eventPrice = $this->getRequest()->get('eventPrice');
 
         $element = [

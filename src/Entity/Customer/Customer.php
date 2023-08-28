@@ -48,6 +48,12 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
 
+    #[Assert\Length(max: 15, maxMessage: 'Le numéro de téléphone doit être inférieur à {{ limit }} caractères.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
+
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
@@ -59,6 +65,11 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_customer_all', 'a_customer_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_user_all', 'a_user_one'])]
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
     #[Assert\Choice(callback: 'getCivilitiesKeys', message: 'Vous devez choisir une civilité valide.')]
     #[JMS\Expose()]
@@ -80,7 +91,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true)]
     private Collection $orders;
-    
+
 
     public function __construct()
     {
@@ -118,6 +129,18 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
         return $this;
     }
 
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getFirstName(): ?string
     {
         return $this->firstName;
@@ -138,6 +161,21 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_CUSTOMER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
@@ -187,19 +225,6 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     {
         $this->plainPassword = $plainPassword;
 
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        return ['ROLE_CUSTOMER'];
-    }
-
-    public function setRoles(array $roles): self
-    {
         return $this;
     }
 
@@ -272,7 +297,8 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
         return $this;
     }
 
-    public function getCivilitiesKeys() {
+    public function getCivilitiesKeys()
+    {
         return array_keys(self::CIVILITIES);
     }
 

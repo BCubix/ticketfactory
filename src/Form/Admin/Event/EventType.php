@@ -57,8 +57,7 @@ class EventType extends AbstractType
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
                         ->createQueryBuilder('ec')
-                        ->orderBy('ec.name', 'ASC')
-                    ;
+                        ->orderBy('ec.name', 'ASC');
                 }
             ])
             ->add('eventCategories',      EntityType::class,          [
@@ -68,8 +67,7 @@ class EventType extends AbstractType
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
                         ->createQueryBuilder('ec')
-                        ->orderBy('ec.name', 'ASC')
-                    ;
+                        ->orderBy('ec.name', 'ASC');
                 }
             ])
             ->add('room',                 EntityType::class,          [
@@ -79,8 +77,7 @@ class EventType extends AbstractType
                 'query_builder' => function (RoomRepository $rr) {
                     return $rr
                         ->createQueryBuilder('r')
-                        ->orderBy('r.name', 'ASC')
-                    ;
+                        ->orderBy('r.name', 'ASC');
                 }
             ])
             ->add('season',               EntityType::class,          [
@@ -90,8 +87,7 @@ class EventType extends AbstractType
                 'query_builder' => function (SeasonRepository $sr) {
                     return $sr
                         ->createQueryBuilder('s')
-                        ->orderBy('s.name', 'ASC')
-                    ;
+                        ->orderBy('s.name', 'ASC');
                 }
             ])
             ->add('tags',                 EntityType::class,          [
@@ -101,8 +97,7 @@ class EventType extends AbstractType
                 'query_builder' => function (TagRepository $tr) {
                     return $tr
                         ->createQueryBuilder('t')
-                        ->orderBy('t.name', 'ASC')
-                    ;
+                        ->orderBy('t.name', 'ASC');
                 }
             ])
             ->add('eventMedias',          CollectionType::class,      [
@@ -119,21 +114,20 @@ class EventType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => Event::class,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
+            'csrf_protection' => false
         ]);
     }
 }

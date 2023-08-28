@@ -32,8 +32,7 @@ class EventCategoryType extends AbstractType
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
                         ->createQueryBuilder('ec')
-                        ->orderBy('ec.name', 'ASC')
-                    ;
+                        ->orderBy('ec.name', 'ASC');
                 }
             ])
             ->add('lang',                 EntityType::class,          [
@@ -43,21 +42,20 @@ class EventCategoryType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => EventCategory::class,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventCategory::class,
+            'csrf_protection' => false
         ]);
     }
 }

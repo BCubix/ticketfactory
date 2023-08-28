@@ -34,8 +34,7 @@ class ContentType extends AbstractType
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
-                        ->orderBy('l.name', 'ASC')
-                    ;
+                        ->orderBy('l.name', 'ASC');
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
@@ -49,11 +48,9 @@ class ContentType extends AbstractType
                 'query_builder' => function (PageRepository $pr) {
                     return $pr
                         ->createQueryBuilder('p')
-                        ->orderBy('p.title', 'ASC')
-                    ;
+                        ->orderBy('p.title', 'ASC');
                 }
-            ])
-        ;
+            ]);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
@@ -78,7 +75,8 @@ class ContentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Content::class
+            'data_class' => Content::class,
+            'csrf_protection' => false
         ]);
 
         $resolver->setRequired('content_type');

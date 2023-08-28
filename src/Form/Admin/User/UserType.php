@@ -29,8 +29,7 @@ class UserType extends AbstractType
                 'expanded' => false,
                 'choices'  => array_flip(User::ROLE_TYPE)
             ])
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
-        ;
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0']]);
 
         $builder
             ->get('roles')
@@ -45,14 +44,14 @@ class UserType extends AbstractType
                 function ($roles) {
                     return [$roles];
                 }
-            ))
-        ;
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class
+            'data_class' => User::class,
+            'csrf_protection' => false
         ]);
     }
 }

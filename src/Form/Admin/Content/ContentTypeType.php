@@ -33,8 +33,7 @@ class ContentTypeType extends AbstractType
                 'query_builder' => function (PageRepository $pr) {
                     return $pr
                         ->createQueryBuilder('p')
-                        ->orderBy('p.title', 'ASC')
-                    ;
+                        ->orderBy('p.title', 'ASC');
                 }
             ])
             ->add('fields',               CollectionType::class,      [
@@ -43,14 +42,14 @@ class ContentTypeType extends AbstractType
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'by_reference' => false
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContentType::class
+            'data_class' => ContentType::class,
+            'csrf_protection' => false
         ]);
     }
 }

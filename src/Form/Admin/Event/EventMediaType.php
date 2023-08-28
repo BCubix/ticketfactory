@@ -26,20 +26,19 @@ class EventMediaType extends AbstractType
                 'multiple'      => false,
                 'query_builder' => function (MediaRepository $mr) {
                     return $mr
-                    ->createQueryBuilder('m')
-                    ->orderBy('m.title', 'ASC')
-                    ;
+                        ->createQueryBuilder('m')
+                        ->orderBy('m.title', 'ASC');
                 }
             ])
             ->add('mainImg',                CheckboxType::class,        ['false_values' => ['0']])
-            ->add('position',               NumberType::class,          [])
-        ;
+            ->add('position',               NumberType::class,          []);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventMedia::class,
+            'csrf_protection' => false
         ]);
     }
 }

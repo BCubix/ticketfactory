@@ -24,14 +24,14 @@ class RedirectionType extends AbstractType
                 ]
             ])
             ->add('redirectFrom',         TextType::class,            [])
-            ->add('redirectTo',           TextType::class,            [])
-        ;
+            ->add('redirectTo',           TextType::class,            []);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Redirection::class
+            'data_class' => Redirection::class,
+            'csrf_protection' => false
         ]);
     }
 }

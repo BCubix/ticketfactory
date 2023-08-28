@@ -23,8 +23,7 @@ class PageColumnType extends AbstractType
             ->add('s',                    IntegerType::class,         [])
             ->add('m',                    IntegerType::class,         [])
             ->add('l',                    IntegerType::class,         [])
-            ->add('xl',                   IntegerType::class,         [])
-        ;
+            ->add('xl',                   IntegerType::class,         []);
 
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
@@ -57,6 +56,7 @@ class PageColumnType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PageColumn::class,
+            'csrf_protection' => false
         ]);
     }
 }
