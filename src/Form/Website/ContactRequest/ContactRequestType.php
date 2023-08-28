@@ -20,39 +20,50 @@ class ContactRequestType extends AbstractType
         $builder
             ->add('firstName',            TextType::class,            [
                 'label' => 'Prénom',
-                'required' => true
+                'required' => true,
+                'label_attr' => ['class' => 'form_label'],
+                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('lastName',             TextType::class,            [
                 'label' => 'Nom',
-                'required' => true
+                'required' => true,
+                'label_attr' => ['class' => 'form_label'],
+                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('email',                EmailType::class,           [
                 'label' => 'Email',
-                'required' => true
+                'required' => true,
+                'label_attr' => ['class' => 'form_label'],
+                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('phone',                TextType::class,            [
                 'label' => 'Téléphone',
-                'required' => false
+                'required' => false,
+                'label_attr' => ['class' => 'form_label'],
+                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('subject',              TextType::class,            [
                 'label' => 'Objet',
-                'required' => true
+                'required' => true,
+                'label_attr' => ['class' => 'form_label'],
+                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('message',              TextareaType::class,        [
                 'label' => 'Message',
-                'required' => true
+                'required' => true,
+                'label_attr' => ['class' => 'form_label'],
+                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('send',                     SubmitType::class,               [
+                'attr' => ['class' => 'btn'],
                 'label' => 'Envoyer'
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContactRequest::class,
-            'operation' => 'add'
+            'data_class' => ContactRequest::class
         ]);
     }
 }
