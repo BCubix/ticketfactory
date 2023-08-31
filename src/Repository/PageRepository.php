@@ -39,7 +39,9 @@ class PageRepository extends CrudRepository
     public function findOneForWebsite(int $languageId, int $pageId): ?Page
     {
         return $this->createQueryBuilder('p')
+            ->addSelect('pc')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->leftJoin('p.contents', 'pc')
             ->andWhere('p.id = :pageId')
             ->setParameter('languageId', $languageId)
             ->setParameter('pageId', $pageId)
@@ -51,7 +53,9 @@ class PageRepository extends CrudRepository
     public function findByKeywordForWebsite(int $languageId, string $keyword): array
     {
         return $this->createQueryBuilder('p')
+            ->addSelect('pc')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->leftJoin('p.contents', 'pc')
             ->where('p.keyword = :keyword')
             ->setParameter('languageId', $languageId)
             ->setParameter('keyword', $keyword)
@@ -63,7 +67,9 @@ class PageRepository extends CrudRepository
     public function findBySlugForWebsite(int $languageId, string $slug): ?Page
     {
         return $this->createQueryBuilder('p')
+            ->addSelect('pc')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->leftJoin('p.contents', 'pc')
             ->where('p.slug = :slug')
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)

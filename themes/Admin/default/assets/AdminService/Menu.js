@@ -213,7 +213,7 @@ export function setSubMenu(position, title, name, link, icon) {
  *
  * @throws {Error} Parameters are not corresponded of type script.
  */
-export function insertSubMenu(position, title, name, link, icon) {
+export function insertSubMenu(position, title, name, link, icon, options = {}) {
     checkPosition(position);
     checkString(title);
     checkString(name);
@@ -226,7 +226,7 @@ export function insertSubMenu(position, title, name, link, icon) {
     }
 
     const menu = MenuObj[index]();
-    menu.menu.splice(position - 1, 0, { name: name, link: link, icon: icon });
+    menu.menu.splice(position - 1, 0, { name: name, link: link, icon: icon, ...options });
 
     MenuObj[index] = () => ({
         title: menu.title,

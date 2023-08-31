@@ -1,29 +1,19 @@
-import React from "react";
-import { Draggable } from "react-beautiful-dnd";
+import React from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import UnpublishedIcon from "@mui/icons-material/Unpublished";
-import { Avatar, TableCell, TableRow, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import { Avatar, TableCell, TableRow, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
 export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) => {
     return (
-        <Draggable
-            key={index}
-            draggableId={index.toString()}
-            index={index}
-            isCombineEnabled
-            ignoreContainerClipping
-        >
+        <Draggable key={index} draggableId={index.toString()} index={index} isCombineEnabled ignoreContainerClipping>
             {(provided, snapshot) => (
-                <TableRow
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    isDragging={snapshot.isDragging}
-                >
-                    <TableCell sx={{ width: '1%' }}>
+                <TableRow ref={provided.innerRef} {...provided.draggableProps} isDragging={snapshot.isDragging}>
+                    <TableCell sx={{ width: '5%' }}>
                         <Box
                             height="100%"
                             sx={{
@@ -40,17 +30,13 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
                         </Box>
                     </TableCell>
                     <TableCell sx={{ width: '3%' }}>
-                        <Typography>
-                            {index + 1}
-                        </Typography>
+                        <Typography>{index + 1}</Typography>
                     </TableCell>
                     <TableCell sx={{ width: '5%' }}>
-                        <Avatar src={module.logoUrl}/>
+                        <Avatar src={module.logoUrl} />
                     </TableCell>
                     <TableCell sx={{ width: '10%' }}>
-                        <Typography>
-                            {module.displayName}
-                        </Typography>
+                        <Typography>{module.displayName}</Typography>
                         <Typography variant="subtitle1" color="text.secondary" fontSize={13}>
                             {`v${module.version}`}
                         </Typography>
