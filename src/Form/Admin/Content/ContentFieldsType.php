@@ -42,7 +42,6 @@ class ContentFieldsType extends AbstractType
                 } else {
                     $options['contentTypes'] = $contentType['children'];
                 }
-                
             }
 
             if (isset($contentType['choices'])) {

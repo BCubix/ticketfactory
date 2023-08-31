@@ -12,6 +12,13 @@ class ContactController extends WebsiteController
 {
     public function index(Request $request, Page $page)
     {
+        $pageTypeBlocks = [];
+        foreach ($page->getContents() as $content) {
+            foreach($content->getFields() as $key => $field) {
+                $pageTypeBlocks[$key] = $field;
+            }
+        }
+
         $object = new ContactRequest();
         $object->setActive(false);
 
@@ -28,9 +35,10 @@ class ContactController extends WebsiteController
         }
 
         return $this->websiteRender('Contact/index.html.twig', [
-            'page'    => $page,
-            'contact' => $object,
-            'form' => $form->createView()
+            'page'           => $page,
+            'contact'        => $object,
+            'pageTypeBlocks' => $pageTypeBlocks,
+            'form'           => $form->createView()
         ]);
     }
 }
