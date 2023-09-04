@@ -46,16 +46,22 @@ class EventDateRepository extends CrudRepository
         ;
     }
 
-    public function getCalendarForWebsite(\DateTime $beginDate, \DateTime $endDate, ?int $categoryId)
+    public function getCalendarForWebsite(\DateTime $beginDate, \DateTime $endDate, array $filters)
     {
+        $categoryId = (empty($filters['eventCategory']) ? null : $filters['eventCategory']->getId());
+        $roomId     = (empty($filters['room']) ? null : $filters['room']->getId());
+        $firstDay   = (empty($filters['firstDay']) ? null : $filters['firstDay']);
+
         $results = $this
             ->createQueryBuilder('ed')
             ->addSelect('edb')
             ->addSelect('e')
             ->addSelect('ec')
+            ->addSelect('r')
             ->innerjoin('ed.eventDateBlock', 'edb')
             ->innerjoin('edb.event', 'e')
             ->innerjoin('e.eventCategories', 'ec')
+            ->leftJoin('e.room', 'r')
             ->where('e.active = 1')
             ->andWhere('ec.active = 1')
             ->andWhere('(ed.eventDate BETWEEN :beginDate AND :endDate) OR (ed.reportDate BETWEEN :beginDate AND :endDate)')
@@ -65,6 +71,20 @@ class EventDateRepository extends CrudRepository
             $results = $results
                 ->andWhere('ec.id = :categoryId')
                 ->setParameter('categoryId', $categoryId)
+            ;
+        }
+
+        if (null !== $roomId) {
+            $results = $results
+                ->andWhere('r.id = :roomId')
+                ->setParameter('roomId', $roomId)
+            ;
+        }
+
+        if (null !== $firstDay) {
+            $results = $results
+                ->andWhere('ed.eventDate > :firstDay')
+                ->setParameter('firstDay', new \DateTime($firstDay))
             ;
         }
 

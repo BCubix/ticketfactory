@@ -44,8 +44,8 @@ class ConnectionController extends WebsiteController
         $signupForm->handleRequest($request);
 
         if ($signupForm->isSubmitted() && $signupForm->isValid()) {
-            $customer = $this->em->getRepository(Customer::class)->findOneByEmail($customer->getEmail());
-            if (null === $customer) {
+            $customerBase = $this->em->getRepository(Customer::class)->findOneByEmail($customer->getEmail());
+            if (null === $customerBase) {
                 $this->mf->get("customer")->checkEmailAddress($customer);
                 $this->em->persist($customer);
 
