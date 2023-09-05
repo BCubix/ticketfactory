@@ -289,6 +289,17 @@ class ParamFixtures extends Fixture
         $parameter->setBreakpointsValue('xs-12 md-6');
         $om->persist($parameter);
 
+        $parameter = new Parameter();
+        $parameter->setName("Adresse email d'envoi");
+        $parameter->setType("string");
+        $parameter->setParamKey("email_sender");
+        $parameter->setParamValue('hi@sender.com');
+        $parameter->setAvailableValue(null);
+        $parameter->setTabName("Paramètres généraux");
+        $parameter->setBlockName('Email');
+        $parameter->setBreakpointsValue('xs-12 md-6');
+        $om->persist($parameter);
+
         $om->flush();
     }
 }
