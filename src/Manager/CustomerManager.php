@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Uid\Uuid;
 
 class CustomerManager extends AbstractManager
@@ -26,10 +27,12 @@ class CustomerManager extends AbstractManager
         EntityManagerInterface $em,
         RequestStack $rs,
         UserPasswordHasherInterface $ph,
+        RouterInterface $router
     ) {
         parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->ph = $ph;
+        $this->router = $router;
     }
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $customer): void
@@ -47,12 +50,19 @@ class CustomerManager extends AbstractManager
         $this->em->persist($customer);
     }
 
-    public function checkEmailAddress(Customer $customer)
+    public function checkEmailAddress(Customer $customer): void
     {
         $newEmail = mb_convert_case($customer->getEmail(), MB_CASE_LOWER);
         $customer->setEmail($newEmail);
 
-        $customer->setActive(true);
+        $customer->setActive(false);
         $customer->setEmailToken(Uuid::v4());
+
+        $path = $this->router->generate(
+            'tf_website_email_validation',
+            ['email' => $customer->getEmail(), 'token' => $customer->getEmailToken()],
+            RouterInterface::ABSOLUTE_URL
+        );
+        $this->sf->get("mailer")->sendRegistrationEmail($customer, $path);
     }
 }

@@ -67,4 +67,28 @@ class ConnectionController extends WebsiteController
             'login_error'    => $error
         ]);
     }
+
+    #[Route("/email-validation", name: "tf_website_email_validation", priority: 1)]
+    public function validationAction(Request $request)
+    {
+        $email = $request->get('email');
+        $token = $request->get('token');
+
+        $emailValid = false;
+        $customer = $this->em->getRepository(Customer::class)->findOneByUidForFront($email, $token);
+
+        if (null !== $customer) {
+            $customer->setActive(true);
+            $customer->setEmailToken(null);
+
+            $this->em->persist($customer);
+            $this->em->flush();
+
+            $this->addFlash('notice', 'Votre adresse email a bien été validée.');
+        } else {
+            $this->addFlash('error', 'Votre adresse email n\'a pas été trouvée ou a été déjà validée. Veuillez contacter nos équipes pour tenter de résoudre le problème.');
+        }
+
+        return $this->redirectToRoute("tf_website_connection");
+    }
 }

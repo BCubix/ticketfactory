@@ -57,4 +57,17 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneByUidForFront(string $email, string $token): ?Customer
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->where('c.email = :email')
+            ->andWhere('c.emailToken = :token')
+            ->setParameter('email', $email)
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
