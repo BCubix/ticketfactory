@@ -20,14 +20,17 @@ class Mailer
         $this->mf = $mf;
     }
 
-    public function sendResetPasswordEmail($user, $path) {
+    public function sendResetPasswordEmail($customer, $path) {
+        $emailTemplate = $this->mf->get("theme")->getWebsiteTemplatesPath() . "Email/reset-password.html.twig";
+        $sender = $this->mf->get("parameter")->get("email_sender");
+
         $message = (new TemplatedEmail())
-            ->from($this->sender)
-            ->to($user->getEmail())
+            ->from($sender)
+            ->to($customer->getEmail())
             ->subject('Réinitialisation du mot de passe')
-            ->htmlTemplate('Admin/default/Email/reset-password.html.twig')
+            ->htmlTemplate($emailTemplate)
             ->context([
-                'user' => $user,
+                'customer' => $customer,
                 'path' => $path
             ])
         ;

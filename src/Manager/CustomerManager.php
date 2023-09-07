@@ -65,4 +65,19 @@ class CustomerManager extends AbstractManager
         );
         $this->sf->get("mailer")->sendRegistrationEmail($customer, $path);
     }
+
+    public function forgotPassword(Customer $customer): void
+    {
+        $customer->setEmailToken(Uuid::v4());
+
+        $this->em->persist($customer);
+
+        $path = $this->router->generate(
+            'tf_website_reset_password',
+            ['email' => $customer->getEmail(), 'token' => $customer->getEmailToken()],
+            RouterInterface::ABSOLUTE_URL
+        );
+
+        $this->sf->get("mailer")->sendResetPasswordEmail($customer, $path);
+    }
 }

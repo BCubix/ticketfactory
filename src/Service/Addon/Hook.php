@@ -3,6 +3,7 @@
 namespace App\Service\Addon;
 
 use App\Manager\ManagerFactory;
+use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Twig\Environment;
@@ -12,12 +13,14 @@ abstract class Hook
     protected $em;
     protected $tg;
     protected $mf;
+    protected $sf;
 
-    public function __construct(EntityManagerInterface $em, Environment $tg, ManagerFactory $mf)
+    public function __construct(EntityManagerInterface $em, Environment $tg, ManagerFactory $mf, ServiceFactory $sf)
     {
         $this->em = $em;
         $this->tg = $tg;
         $this->mf = $mf;
+        $this->sf = $sf;
     }
 
     public function renderModule(string $path, array $parameters): string

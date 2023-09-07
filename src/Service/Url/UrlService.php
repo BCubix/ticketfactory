@@ -31,6 +31,13 @@ class UrlService
         $this->router = $router;
     }
 
+    public function generateUrl(string $key, ?array $options = []): string
+    {
+        $url = $this->router->generate($key, $options);
+
+        return $url;
+    }
+
     public function keywordPath(string $keyword, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
         $element = $this->pam->getByKeyword($keyword);
