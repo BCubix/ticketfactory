@@ -41,13 +41,27 @@ security:
             stateless: true
 
         # Frontend
+        tunnel:
+            pattern: ^/commande
+            provider: tf_customer_provider
+            context: customer_context
+            form_login:
+                login_path: tf_website_order_connection
+                check_path: tf_website_order_login
+                use_referer: true
+                enable_csrf: true
+            logout:
+                path: tf_website_logout
+                target: tf_website_order_connection
+
         main:
             pattern: ^/
             provider: tf_customer_provider
+            context: customer_context
             form_login:
                 login_path: tf_website_connection
                 check_path: tf_website_login
-                default_target_path: tf_website_account
+                use_referer: true
                 enable_csrf: true
             logout:
                 path: tf_website_logout
@@ -60,6 +74,8 @@ security:
         - { path: ^/admin/api, roles: ROLE_ADMIN }
         - { path: ^/mon-compte/(login|logout|connexion), roles: PUBLIC_ACCESS }
         - { path: ^/mon-compte, roles: ROLE_CUSTOMER }
+        - { path: ^/commande/(login|logout|connexion), roles: PUBLIC_ACCESS }
+        - { path: ^/commande/*, roles: ROLE_CUSTOMER }
 
 when@test:
     security:

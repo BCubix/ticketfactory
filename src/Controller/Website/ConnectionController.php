@@ -32,7 +32,7 @@ class ConnectionController extends WebsiteController
         $page = $this->mf->get('page')->getByKeyword('connection');
 
         if (null !== $this->getUser()) {
-            return $this->redirect($homeUrl);
+            return $this->redirectToRoute("tf_website_account");
         }
 
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -65,7 +65,8 @@ class ConnectionController extends WebsiteController
             'page'           => $page,
             'signupForm'     => $signupForm->createView(),
             'last_username'  => $lastUsername,
-            'login_error'    => $error
+            'login_error'    => $error,
+            'signinPath'     => $this->generateUrl('tf_website_login'),
         ]);
     }
 
