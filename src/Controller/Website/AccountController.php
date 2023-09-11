@@ -16,13 +16,14 @@ class AccountController extends WebsiteController
     {
         $page = $this->mf->get('page')->getByKeyword('account');
         $customer = $this->getUser();
+        $customerBase = clone $customer;
 
         $profileForm = $this->createForm(CustomerProfileType::class, $customer);
         $profileForm->handleRequest($request);
 
         if ($profileForm->isSubmitted() && $profileForm->isValid()) {
             $customer = $this->em->getRepository(Customer::class)->findOneByEmail($customer->getEmail());
-            if (null === $customer) {
+            if (null === $customer || $customerBase->getEmail() === $customer->getEmail()) {
                 $this->mf->get("customer")->upgradePassword($customer);
                 $this->em->persist($customer);
                 $this->em->flush();

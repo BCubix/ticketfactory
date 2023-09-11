@@ -4,7 +4,11 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 use App\Entity\Customer\Customer;
+use App\Entity\Order\Order;
+use App\Entity\Order\OrderStatus;
 use App\Form\Website\Customer\CustomerType;
+use App\Form\Website\Customer\CustomerAddressType;
+use App\Form\Website\Customer\AddressType;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,6 +70,7 @@ class OrderController extends WebsiteController
     public function orderAddress (Request $request)
     {
         $customer = $this->getUser();
+        $page = $this->mf->get('page')->getByKeyword("order-address");
         $cart = $this->mf->get("cart")->getCart();
 
         if (null === $customer) {
@@ -78,6 +83,67 @@ class OrderController extends WebsiteController
             return $this->redirectToRoute('tf_website_cart');
         }
 
-        dd("Ok");
+        $addressForm = $this->createForm(AddressType::class, $customer->getAddress());
+        $addressForm->handleRequest($request);
+
+        if ($addressForm->isSubmitted() && $addressForm->isValid()) {
+            $this->em->persist($customer);
+            $this->em->flush();
+
+            return $this->redirectToRoute("tf_website_order_payment");
+        }
+
+        return $this->websiteRender('Order/address.html.twig', [
+            'page'        => $page,
+            'addressForm' => $addressForm->createView(),
+            'orderStep'   => 2
+        ]);
+    }
+
+    #[Route("/commande/paiement", name: "tf_website_order_payment", priority: 1)]
+    public function orderPayment(Request $request)
+    {
+        $page = $this->mf->get("page")->getByKeyword('order-payment');
+
+        return $this->websiteRender("Order/payment.html.twig", [
+            'page'      => $page,
+            'orderStep' => 3,
+        ]);
+    }
+
+    #[Route("/commande/commande-validee", name: "tf_website_order_validated", priority: 1)]
+    public function orderValidated(Request $request)
+    {
+        $page = $this->mf->get("page")->getByKeyword('order-validated');
+
+        $cart = $this->mf->get("cart")->getCart();
+        if (null === $cart) {
+            $this->addFlash('Erreur',  "Vous n'avez pas de panier.");
+
+            return $this->redirectToRoute('tf_website_cart');
+        }
+
+        $status = $this->em->getRepository(OrderStatus::class)->findOneByKeywordForWebsite("waiting");
+        if (null === $status) {
+            $this->addFlash('Erreur',  "Une erreur est survenue.");
+
+            return $this->redirectToRoute('tf_website_cart');
+        }
+
+        $customer = $this->getUser();
+        if (null === $customer) {
+            $this->addFlash('Erreur',  "Une erreur est survenue.");
+
+            return $this->redirectToRoute('tf_website_cart');
+        }
+
+        $order = $this->mf->get('order')->createNewOrder($customer, $status, $cart);
+
+        $this->em->flush();
+
+        return $this->websiteRender("Order/validated.html.twig", [
+            'page'      => $page,
+            'orderStep' => 3,
+        ]);
     }
 }

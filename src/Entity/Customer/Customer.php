@@ -92,6 +92,9 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true)]
     private Collection $orders;
 
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
+
 
     public function __construct()
     {
@@ -328,6 +331,23 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
                 $order->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(Address $address): self
+    {
+        // set the owning side of the relation if necessary
+        if ($address->getCustomer() !== $this) {
+            $address->setCustomer($this);
+        }
+
+        $this->address = $address;
 
         return $this;
     }
