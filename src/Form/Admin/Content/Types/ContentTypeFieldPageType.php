@@ -21,6 +21,8 @@ class ContentTypeFieldPageType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'class'         => Page::class,
             'choice_label'  => 'title',
@@ -28,8 +30,7 @@ class ContentTypeFieldPageType extends ContentTypeFieldAbstractType
             'query_builder' => function (PageRepository $pr) {
                 return $pr
                     ->createQueryBuilder('p')
-                    ->orderBy('p.title', 'ASC')
-                ;
+                    ->orderBy('p.title', 'ASC');
             }
         ]);
     }
@@ -52,7 +53,8 @@ class ContentTypeFieldPageType extends ContentTypeFieldAbstractType
         return $this->em->getRepository(Page::class)->find($cf);
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [
             'disabled' => [
                 'class' => CheckboxType::class,

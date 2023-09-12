@@ -17,16 +17,17 @@ class ContentTypeFieldRadioType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $choices = [];
+        parent::configureOptions($resolver);
 
         $resolver->setDefaults([
             'expanded' => true,
             'multiple' => false,
-            'choices'  => $choices
+            'choices'  => []
         ]);
     }
 
-    public static function getParameters() {
+    public static function getParameters()
+    {
         return [
             'choices' => ['class' => TextType::class]
         ];

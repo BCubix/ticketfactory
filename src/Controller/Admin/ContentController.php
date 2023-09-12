@@ -26,7 +26,7 @@ class ContentController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Ce contenu n'existe pas.";
 
     #[Rest\Get('/contents')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
@@ -105,7 +105,7 @@ class ContentController extends CrudController
         $form = $this->createForm($this->typeClass, $object, ['content_type' => $object->getContentType()]);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
         $form->submit($fields);
-
+        
         if (!$form->isSubmitted() || !$form->isValid()) {
             $errors = $this->fec->getErrorsFromForm($form);
 

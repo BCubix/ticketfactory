@@ -49,7 +49,7 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
                     } else {
                         $fields[$childrenCfName] = $childrenCf;
                     }
-                    
+
                     break;
                 }
             }
@@ -66,7 +66,7 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
         }
 
         $fields = [];
-
+        //dd($cf, $ctf);
         foreach ($cf as $childrenCfName => $childrenCf) {
             foreach ($childrenContentType['fields'] as $childrenCt) {
 
@@ -78,7 +78,7 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
                     } else {
                         $fields[$childrenCfName] = $childrenCf;
                     }
-                    
+
                     break;
                 }
             }
@@ -87,11 +87,13 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
         return $fields;
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [];
     }
 
-    public static function getParameters() {
+    public static function getParameters()
+    {
         return [
             'fields' => [
                 'class' => CollectionType::class,

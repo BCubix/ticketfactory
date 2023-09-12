@@ -32,6 +32,8 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'contentTypes' => [],
             'entry_type'   => ContentFieldsType::class,
@@ -54,6 +56,10 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
 
         foreach ($cf as $childrenCf) {
             $component = $this->ctm->getContentTypeInstanceFromType($fieldType->getType());
+
+            if ($fieldType->getType() == 'group') {
+                $childrenCf = array_pop($childrenCf);
+            }
 
             if (method_exists($component, 'jsonContentSerialize')) {
                 $fields[] = $component->jsonContentSerialize($childrenCf, $fieldType);
@@ -79,7 +85,13 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
             $component = $this->ctm->getContentTypeInstanceFromType($fieldType->getType());
 
             if (method_exists($component, 'jsonContentDeserialize')) {
-                $fields[] = $component->jsonContentDeserialize($childrenCf, $fieldType);
+                $tmpFields = $component->jsonContentDeserialize($childrenCf, $fieldType);
+
+                if ($fieldType->getType() == 'group') {
+                    $tmpFields = [$fieldType->getName() => $tmpFields];
+                }
+
+                $fields[] = $tmpFields;
             } else {
                 $fields[] = $childrenCf;
             }
@@ -88,11 +100,13 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
         return $fields;
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [];
     }
 
-    public static function getParameters() {
+    public static function getParameters()
+    {
         return [
             'fields' => [
                 'class' => CollectionType::class,

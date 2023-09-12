@@ -16,6 +16,8 @@ class ContentTypeFieldUrlType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'default_protocol' => 'https'
         ]);

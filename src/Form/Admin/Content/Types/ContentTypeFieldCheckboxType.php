@@ -18,16 +18,17 @@ class ContentTypeFieldCheckboxType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $choices = [];
+        parent::configureOptions($resolver);
 
         $resolver->setDefaults([
             'expanded' => true,
             'multiple' => true,
-            'choices'  => $choices
+            'choices'  => []
         ]);
     }
 
-    public static function getValidations() {
+    public static function getValidations()
+    {
         return [
             'isTrue' => [
                 'class' => CheckboxType::class,
@@ -38,7 +39,8 @@ class ContentTypeFieldCheckboxType extends ContentTypeFieldAbstractType
         ];
     }
 
-    public static function getParameters() {
+    public static function getParameters()
+    {
         return [
             'choices' => ['class' => TextType::class]
         ];
@@ -48,7 +50,7 @@ class ContentTypeFieldCheckboxType extends ContentTypeFieldAbstractType
     {
         $lineList = [];
         $resultList = [];
-        
+
         $choices = str_replace("\r", "", $choices);
         $lineList = explode("\n", $choices);
 

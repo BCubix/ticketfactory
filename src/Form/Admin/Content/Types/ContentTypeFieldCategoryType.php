@@ -19,25 +19,10 @@ class ContentTypeFieldCategoryType extends ContentTypeFieldAbstractType
         return EntityType::class;
     }
 
-    public static function getOptions() {
-        return [
-            'disabled' => [
-                'class' => CheckboxType::class,
-                'options' => [
-                    'false_values' => ['0', 'null', 'false']
-                ]
-            ],
-            'required' => [
-                'class' => CheckboxType::class,
-                'options' => [
-                    'false_values' => ['0', 'null', 'false']
-                ]
-            ],
-        ];
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'class'         => EventCategory::class,
             'choice_label'  => 'name',
@@ -45,8 +30,7 @@ class ContentTypeFieldCategoryType extends ContentTypeFieldAbstractType
             'query_builder' => function (EventCategoryRepository $ecr) {
                 return $ecr
                     ->createQueryBuilder('ec')
-                    ->orderBy('ec.name', 'ASC')
-                ;
+                    ->orderBy('ec.name', 'ASC');
             }
         ]);
     }
@@ -67,5 +51,23 @@ class ContentTypeFieldCategoryType extends ContentTypeFieldAbstractType
         }
 
         return $this->em->getRepository(EventCategory::class)->find($cf);
+    }
+
+    public static function getOptions()
+    {
+        return [
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ],
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ],
+        ];
     }
 }

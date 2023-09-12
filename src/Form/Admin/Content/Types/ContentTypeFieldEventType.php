@@ -20,6 +20,8 @@ class ContentTypeFieldEventType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'class'         => Event::class,
             'choice_label'  => 'name',
@@ -27,8 +29,7 @@ class ContentTypeFieldEventType extends ContentTypeFieldAbstractType
             'query_builder' => function (EventRepository $er) {
                 return $er
                     ->createQueryBuilder('e')
-                    ->orderBy('e.name', 'ASC')
-                ;
+                    ->orderBy('e.name', 'ASC');
             }
         ]);
     }

@@ -20,6 +20,8 @@ class ContentTypeFieldContentType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'class'         => Content::class,
             'choice_label'  => 'title',
@@ -27,8 +29,7 @@ class ContentTypeFieldContentType extends ContentTypeFieldAbstractType
             'query_builder' => function (ContentRepository $cr) {
                 return $cr
                     ->createQueryBuilder('c')
-                    ->orderBy('c.title', 'ASC')
-                ;
+                    ->orderBy('c.title', 'ASC');
             }
         ]);
     }

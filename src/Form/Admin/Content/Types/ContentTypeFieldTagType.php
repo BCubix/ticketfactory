@@ -20,6 +20,8 @@ class ContentTypeFieldTagType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'class'         => Tag::class,
             'choice_label'  => 'name',
@@ -27,8 +29,7 @@ class ContentTypeFieldTagType extends ContentTypeFieldAbstractType
             'query_builder' => function (TagRepository $tr) {
                 return $tr
                     ->createQueryBuilder('t')
-                    ->orderBy('t.name', 'ASC')
-                ;
+                    ->orderBy('t.name', 'ASC');
             }
         ]);
     }

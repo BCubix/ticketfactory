@@ -23,6 +23,8 @@ class ContentTypeFieldImageType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'class'         => Media::class,
             'choice_label'  => 'title',
@@ -30,8 +32,7 @@ class ContentTypeFieldImageType extends ContentTypeFieldAbstractType
             'query_builder' => function (MediaRepository $mr) {
                 return $mr
                     ->createQueryBuilder('m')
-                    ->orderBy('m.title', 'ASC')
-                ;
+                    ->orderBy('m.title', 'ASC');
             }
         ]);
     }
@@ -54,7 +55,8 @@ class ContentTypeFieldImageType extends ContentTypeFieldAbstractType
         return $this->em->getRepository(Media::class)->find($cf);
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [
             'disabled' => [
                 'class' => CheckboxType::class,
@@ -77,7 +79,8 @@ class ContentTypeFieldImageType extends ContentTypeFieldAbstractType
         ];
     }
 
-    public static function getValidations() {
+    public static function getValidations()
+    {
         return [
             'minSize' => ['class' => IntegerType::class],
             'maxSize' => ['class' => IntegerType::class],

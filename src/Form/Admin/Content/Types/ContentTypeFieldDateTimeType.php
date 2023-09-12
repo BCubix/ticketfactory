@@ -19,6 +19,8 @@ class ContentTypeFieldDateTimeType extends ContentTypeFieldAbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'format' => 'yyyy-MM-dd HH:mm',
             'html5' => false,
@@ -37,11 +39,12 @@ class ContentTypeFieldDateTimeType extends ContentTypeFieldAbstractType
     public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
     {
         $tz = new \DateTimeZone($cf['timezone']);
-        
+
         return new \DateTime($cf['date'], $tz);
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [
             'disabled' => [
                 'class' => CheckboxType::class,
@@ -58,7 +61,8 @@ class ContentTypeFieldDateTimeType extends ContentTypeFieldAbstractType
         ];
     }
 
-    public static function getValidations() {
+    public static function getValidations()
+    {
         return [
             'disablePast' => [
                 'class' => CheckboxType::class
