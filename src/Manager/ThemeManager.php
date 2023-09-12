@@ -70,7 +70,7 @@ class ThemeManager extends AddonManager
         }
 
         // If the theme is already enabled, nothing to do
-        $mainThemeName = $this->mf->get('parameter')->get('main_theme');
+        $mainThemeName = $this->mf->get('parameter')->getCoreParameter('main_theme');
         if ($themeName === $mainThemeName) {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->commit();
@@ -79,11 +79,21 @@ class ThemeManager extends AddonManager
             return $theme;
         }
 
+        $settings = $this->getConfiguration($themeName)['settings'];
+        if (isset($settings["parameters"])) {
+            $this->addParameters($themeName, $settings["parameters"]);
+        }
+
         // Apply configs : disable old theme config and enable new theme config
         $themes = [$themeName => Module::ACTION_INSTALL];
         $mainTheme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($mainThemeName);
         if (null !== $mainTheme) {
             $themes = [$mainThemeName => Module::ACTION_DISABLE];
+
+            $settings = $this->getConfiguration($mainThemeName)['settings'];
+            if (isset($settings["parameters"])) {
+                $this->removeParameters($mainThemeName, $settings["parameters"]);
+            }
         }
 
         foreach ($themes as $themeName => $themeAction) {
@@ -91,7 +101,7 @@ class ThemeManager extends AddonManager
         }
 
         // Apply new theme as enabled in parameters and commit transaction
-        $this->mf->get('parameter')->set('main_theme', $themeName);
+        $this->mf->get('parameter')->set('core_main_theme', $themeName);
         $this->em->flush();
 
         if ($this->em->getConnection()->isTransactionActive()) {
@@ -110,7 +120,7 @@ class ThemeManager extends AddonManager
             return;
         }
 
-        $mainThemeName = $this->mf->get('parameter')->get('main_theme');
+        $mainThemeName = $this->mf->get('parameter')->getCoreParameter('main_theme');
         if ($themeName === $mainThemeName) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Vous ne pouvez pas supprimer le thème actuellement utilisé.');
         }
@@ -123,7 +133,7 @@ class ThemeManager extends AddonManager
 
     public function isSSRActive()
     {
-        $themeName = $this->mf->get('parameter')->get('main_theme');
+        $themeName = $this->mf->get('parameter')->getCoreParameter('main_theme');
         $configuration = $this->getConfiguration($themeName);
 
         if (array_key_exists("server_side_rendering", $configuration)) {
@@ -137,14 +147,14 @@ class ThemeManager extends AddonManager
 
     public function getAdminTemplatesPath(): string
     {
-        $themePath = $this->mf->get('parameter')->get('admin_theme');
+        $themePath = $this->mf->get('parameter')->getCoreParameter('admin_theme');
 
         return ('Admin/' . $themePath . '/templates/');
     }
 
     public function getWebsiteTemplatesPath(): string
     {
-        $themePath = $this->mf->get('parameter')->get('main_theme');
+        $themePath = $this->mf->get('parameter')->getCoreParameter('main_theme');
 
         return ('Website/' . $themePath . '/templates/');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Parameter\Parameter;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\ApiException;
 
@@ -221,5 +222,57 @@ abstract class AddonManager extends AbstractManager
         if (!$configFound) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Le fichier de configuration du thème n\'existe pas.');
         }
+    }
+
+    protected function addParameters(string $moduleName, ?array $parameters): void
+    {
+        if (null === $parameters || count($parameters) === 0) {
+            return;
+        }
+
+        foreach ($parameters as $key => $parameter) {
+            $parameterKey = $moduleName . '_' . $key;
+
+            if (null === $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($parameterKey)) {
+                $newParameter = new Parameter();
+                $newParameter->setName($parameter['displayName']);
+                $newParameter->setType($parameter['type']);
+                $newParameter->setParamKey($parameterKey);
+                $newParameter->setParamValue($parameter['defaultValue']);
+                $newParameter->setTabName($parameter['tabName']);
+                $newParameter->setBlockName($parameter['blockName']);
+                $newParameter->setBreakpointsValue($parameter['breakpointValue']);
+
+                if (isset($parameter['availableValue'])) {
+                    $availableValue = [];
+
+                    foreach ($parameter['availableValue'] as $k => $avValue) {
+                        $availableValue[] = [
+                            'id'    => $k,
+                            'name'  => $avValue,
+                        ];
+                    }
+
+                    $newParameter->setAvailableValue($availableValue);
+                }
+
+                $this->em->persist($newParameter);
+            }
+        }
+
+        $this->em->flush();
+    }
+
+    protected function removeParameters(string $objectName, array $parameters): void
+    {
+        foreach ($parameters as $key => $parameter) {
+            $storedParameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($objectName . '_' . $key);
+
+            dump($storedParameter);
+            $this->em->remove($storedParameter);
+        }
+
+        $this->em->flush();
+        dd("WTF");
     }
 }

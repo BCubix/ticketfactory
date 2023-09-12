@@ -77,7 +77,7 @@ class UrlService
         $keyword = array_pop($keyword);
         $keyword = lcfirst($keyword);
 
-        $page = $this->prm->get('page_' . $keyword);
+        $page = $this->prm->getCoreParameter('page_' . $keyword);
         while ($page !== null) {
             $slugs[] = $page->getSlug();
             $page = $page->getParent();
@@ -90,7 +90,7 @@ class UrlService
     {
         $slugs = $this->em->getUrlSlugs($event);
 
-        $page = $this->prm->get('page_event');
+        $page = $this->prm->getCoreParameter('page_event');
         while ($page !== null) {
             $slugs[] = $page->getSlug();
             $page = $page->getParent();

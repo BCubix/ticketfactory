@@ -33,6 +33,16 @@ class ParameterManager extends AbstractManager
         return $this->getParameterValue($this->getParameter($key));
     }
 
+    public function getModuleParameter(string $objectName, string $key): mixed
+    {
+        return $this->getParameterValue($this->getParameter($objectName . '_' . $key));
+    }
+
+    public function getCoreParameter(string $key): mixed
+    {
+        return $this->getParameterValue($this->getParameter('core_' . $key));
+    }
+
     public function set(string $key, mixed $newValue)
     {
         $parameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($key);

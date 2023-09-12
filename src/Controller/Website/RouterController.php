@@ -115,7 +115,7 @@ class RouterController extends WebsiteController
 
     private function forwardEventRelation(string $keyword, ?Page $page, array $slugs): ?Response
     {
-        $refPage = $this->mf->get('parameter')->get('page_' . $keyword);
+        $refPage = $this->mf->get('parameter')->getCoreParameter('page_' . $keyword);
         if ($page != $refPage) {
             return null;
         }
@@ -138,7 +138,7 @@ class RouterController extends WebsiteController
 
     private function forwardEvent(?Page $page, array $slugs): ?Response
     {
-        $refPage = $this->mf->get('parameter')->get('page_event');
+        $refPage = $this->mf->get('parameter')->getCoreParameter('page_event');
         if ($page != $refPage) {
             return null;
         }

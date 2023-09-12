@@ -28,7 +28,7 @@ class Module extends Addon
         ;
     }
 
-    protected function addSettings(ArrayNodeDefinition $node): void
+    /* protected function addSettings(ArrayNodeDefinition $node): void
     {
         $node
             ->children()
@@ -36,7 +36,7 @@ class Module extends Addon
                 ->end()
             ->end()
         ;
-    }
+    } */
 
     public function getConfiguration(): array
     {
@@ -74,6 +74,7 @@ class Module extends Addon
             'author' => $config['author'],
             'version' => $config['version'],
             'hooks' => $config['hooks'],
+            'settings' => $config['settings'],
         ];
     }
 

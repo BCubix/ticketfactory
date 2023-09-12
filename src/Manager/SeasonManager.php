@@ -58,7 +58,7 @@ class SeasonManager extends AbstractManager
 
     private function getSeasonYearFromDate(\Datetime $date): int
     {
-        $limitMonth = $this->mf->get('parameter')->get('season_month');
+        $limitMonth = $this->mf->get('parameter')->getCoreParameter('season_month');
 
         $month = (int) $date->format('m');
         $year  = $date->format('Y');

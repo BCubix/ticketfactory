@@ -124,13 +124,13 @@ class ImageFormatManager extends AbstractManager
         }
 
         // Define the new image extension
-        $newType = $this->pm->get('image_format');
+        $newType = $this->pm->getCoreParameter('image_format');
         if ($newType == 0) {
             $newType = $srcType;
         }
 
         // Check if image must be cropped
-        $crop = $this->pm->get('image_to_crop');
+        $crop = $this->pm->getCoreParameter('image_to_crop');
 
         // New dimensions initialisation
         $srcX  = 0;
@@ -264,13 +264,13 @@ class ImageFormatManager extends AbstractManager
         switch ($type) {
             case IMAGETYPE_WEBP:
                 $filename = $filenameWithoutExt . '.webp';
-                $quality = (int) $this->pm->get('image_webp_quality') ?? 75;
+                $quality = (int) $this->pm->getCoreParameter('image_webp_quality') ?? 75;
                 $success = imagewebp($resource, $filename, $quality);
                 break;
 
             case IMAGETYPE_PNG:
                 $filename = $filenameWithoutExt . '.png';
-                $quality = (int) $this->pm->get('image_png_quality') ?? 75;
+                $quality = (int) $this->pm->getCoreParameter('image_png_quality') ?? 75;
                 $quality = (int) ($quality * 9 / 100);
                 $success = imagepng($resource, $filename, $quality);
                 break;
@@ -280,7 +280,7 @@ class ImageFormatManager extends AbstractManager
                 imageinterlace($resource, 1);
 
                 $filename = $filenameWithoutExt . '.jpg';
-                $quality = (int) $this->pm->get('image_jpg_quality') ?? 90;
+                $quality = (int) $this->pm->getCoreParameter('image_jpg_quality') ?? 90;
                 $success = imagejpeg($resource, $filename, $quality);
                 break;
         }

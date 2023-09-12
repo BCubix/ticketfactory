@@ -166,6 +166,11 @@ class ModuleManager extends AddonManager
                         $this->em->getConnection()->commit();
                     }
 
+                    $settings = $this->getConfiguration($moduleName)['settings'];
+                    if ($action == ModuleEntity::ACTION_INSTALL && isset($settings["parameters"])) {
+                        $this->addParameters($moduleName, $settings["parameters"]);
+                    }
+
                     break;
 
                 case ModuleEntity::ACTION_UNINSTALL:
@@ -182,6 +187,11 @@ class ModuleManager extends AddonManager
 
                     if ($action === ModuleEntity::ACTION_INSTALL) {
                         $this->delete($moduleName);
+                    }
+
+                    $settings = $this->getConfiguration($moduleName)['settings'];
+                    if (isset($settings["parameters"])) {
+                        $this->removeParameters($moduleName, $settings["parameters"]);
                     }
 
                     break;

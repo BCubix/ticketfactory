@@ -19,7 +19,6 @@ abstract class Addon extends Bundle implements ConfigurationInterface
 
     public abstract function getConfiguration(): array;
     public abstract function getInfo(): array;
-    protected abstract function addSettings(ArrayNodeDefinition $node): void;
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
@@ -98,4 +97,63 @@ abstract class Addon extends Bundle implements ConfigurationInterface
     {
         
     }
+
+    protected function addSettings(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->children()
+                ->arrayNode('settings')->isRequired()
+                    ->children()
+                        ->arrayNode('parameters')
+                            ->useAttributeAsKey('name')
+                                ->arrayPrototype()
+                                    ->children()
+                                        ->scalarNode('displayName')->isRequired()->cannotBeEmpty()
+                                            ->validate()
+                                                ->ifTrue(function ($v) { return !is_string($v); } )
+                                                ->thenInvalid('required string')
+                                            ->end()
+                                        ->end()
+                                        ->scalarNode('type')->isRequired()->cannotBeEmpty()
+                                            ->validate()
+                                                ->ifTrue(function ($v) { return !is_string($v); } )
+                                                ->thenInvalid('required string')
+                                            ->end()
+                                        ->end()
+                                        ->scalarNode('defaultValue')->defaultValue(null)->end()
+                                        ->arrayNode('availableValue')
+                                            ->useAttributeAsKey('id')
+                                                ->scalarPrototype()
+                                                ->cannotBeEmpty()
+                                            ->end()
+                                        ->end()
+                                        ->scalarNode('tabName')->isRequired()->cannotBeEmpty()
+                                            ->validate()
+                                                ->ifTrue(function ($v) { return !is_string($v); } )
+                                                ->thenInvalid('required string')
+                                            ->end()
+                                        ->end()
+                                        ->scalarNode('blockName')->isRequired()->cannotBeEmpty()
+                                            ->validate()
+                                                ->ifTrue(function ($v) { return !is_string($v); } )
+                                                ->thenInvalid('required string')
+                                            ->end()
+                                        ->end()
+                                        ->scalarNode('breakpointValue')
+                                            ->defaultValue('xs-12 md-6')
+                                            ->validate()
+                                                ->ifTrue(function ($v) { return !is_string($v); } )
+                                                ->thenInvalid('required string')
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
 }

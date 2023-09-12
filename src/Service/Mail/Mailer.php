@@ -22,7 +22,7 @@ class Mailer
 
     public function sendResetPasswordEmail($customer, $path) {
         $emailTemplate = $this->mf->get("theme")->getWebsiteTemplatesPath() . "Email/reset-password.html.twig";
-        $sender = $this->mf->get("parameter")->get("email_sender");
+        $sender = $this->mf->get("parameter")->getCoreParameter("email_sender");
 
         $message = (new TemplatedEmail())
             ->from($sender)
@@ -40,7 +40,7 @@ class Mailer
 
     public function sendRegistrationEmail(Customer $customer, string $path) {
         $emailTemplate = $this->mf->get("theme")->getWebsiteTemplatesPath() . "Email/customer-registration.html.twig";
-        $sender = $this->mf->get("parameter")->get("email_sender");
+        $sender = $this->mf->get("parameter")->getCoreParameter("email_sender");
 
 
         $message = (new TemplatedEmail())
