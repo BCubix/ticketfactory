@@ -23,4 +23,18 @@ class CartRepository extends CrudRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function getLatestCart(int $customerId): ?Cart
+    {
+        return $this->createQueryBuilder("c")
+            ->addSelect("cu")
+            ->innerJoin("c.customer", "cu", "WITH", "cu.id = :customerId")
+            ->where("c.active = 1")
+            ->setParameter("customerId", $customerId)
+            ->orderBy("c.updatedAt", "DESC")
+            ->setMaxResults(1)
+            ->getquery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

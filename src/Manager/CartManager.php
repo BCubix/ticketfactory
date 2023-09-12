@@ -18,10 +18,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Exception\ApiException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 
 class CartManager extends AbstractManager
 {
     public const SERVICE_NAME = 'cart';
+
+    private $sc;
 
     public function __construct(
         Kernel $kl,
@@ -29,7 +32,10 @@ class CartManager extends AbstractManager
         ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
+        Security $sc,
     ) {
+        $this->sc = $sc;
+
         parent::__construct($kl, $mf, $sf, $em, $rs);
     }
 
@@ -42,6 +48,7 @@ class CartManager extends AbstractManager
         $this->em->flush();
 
         $this->rs->getSession()->set("cartId", $cart->getId());
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
         return $cart;
     }
@@ -56,6 +63,8 @@ class CartManager extends AbstractManager
 
         $this->em->persist($cartRow);
         $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
         return $cartRow;
     }
@@ -131,13 +140,64 @@ class CartManager extends AbstractManager
     public function getCart(): ?Cart
     {
         $session = $this->rs->getSession();
-        $cartId = $session->get("cartId", null);
+        $cart = null;
 
-        if (null === $cartId) {
-            return null;
+        $cartId = $session->get("cartId", null);
+        if (null !== $cartId) {
+            $cart =  $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId);
         }
 
-        return $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId);
+        $customer = $this->sc->getUser();
+        if (null !== $customer) {
+            $customerCart = $this->em->getRepository(Cart::class)->getLatestCart($customer->getId());
+            $sessionUpdatedAt = $session->get("cartUpdatedAt", null);
+
+            if (null !== $cart) {
+                if (null === $customerCart) {
+                    $session->set("cartUpdatedAt", new \DateTimeImmutable("now"));
+
+                    $customer->setCart($cart);
+                    $this->em->persist();
+                    $this->em->flush();
+
+                    return $cart;
+                }
+
+                if (null === $sessionUpdatedAt) {
+                    $session->set("cartId", $customerCart->getId());
+                    $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
+
+                    return $customerCart;
+                }
+
+                $sessionUpdatedAt = $sessionUpdatedAt;
+                $cartUpdatedAt = $customerCart->getUpdatedAt();
+
+                if ($sessionUpdatedAt > $cartUpdatedAt) {
+                    $cart->setCustomer($customer);
+                    $this->em->persist($cart);
+                    $this->em->flush();
+
+                    return $cart;
+                } else {
+                    $session->set("cartId", $customerCart->getId());
+                    $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
+
+                    return $customerCart;
+                }
+            } else {
+                if (null !== $customerCart) {
+                    $session->set("cartId", $customerCart->getId());
+                    $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
+
+                    return $customerCart;
+                }
+
+                return null;
+            }
+        }
+
+        return $cart;
     }
 
     public function getCartSeatsGrouped($cartRow): ?array
@@ -195,6 +255,8 @@ class CartManager extends AbstractManager
         $this->em->persist($cart);
         $this->em->flush();
 
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
         return $cartRow;
     }
 
@@ -206,8 +268,12 @@ class CartManager extends AbstractManager
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
         }
 
+        $cart = $cartRow->getCart();
+
         $this->em->remove($cartRow);
         $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
     }
 
     public function deleteCartSeats(array $data): ?CartRow
@@ -216,6 +282,8 @@ class CartManager extends AbstractManager
         if (null === $cartRow) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
         }
+
+        $cart = $cartRow->getCart();
 
         $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($data["cartRowId"], $data["eventPriceId"]);
         foreach($cartSeats as $seat) {
@@ -228,6 +296,8 @@ class CartManager extends AbstractManager
         }
 
         $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
         return $cartRow;
     }

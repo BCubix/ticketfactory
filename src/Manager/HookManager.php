@@ -251,10 +251,6 @@ class HookManager extends AbstractManager
         $hookArgs = array_merge(['languageId' => $language->getId()], $hookArgs);
         $event = new HookEvent($hookArgs);
 
-        if (!str_starts_with($hookName, 'hook')) {
-            $hookName = ('hook' . ucfirst($hookName));
-        }
-
         return $this->ed->dispatch($event, $hookName);
     }
 }
