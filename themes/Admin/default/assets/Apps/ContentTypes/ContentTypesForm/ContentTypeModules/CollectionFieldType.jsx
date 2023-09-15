@@ -3,8 +3,8 @@ import { Card, CardContent, FormHelperText } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Box } from '@mui/system';
 
-const NAME = 'Tableau';
-const LABEL = 'Tableau';
+const NAME = 'Collection';
+const LABEL = 'Collection';
 
 const TYPE = 'collection';
 const TYPE_GROUP_NAME = 'Groupes';

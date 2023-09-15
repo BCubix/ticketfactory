@@ -180,6 +180,11 @@ class ModuleManager extends AddonManager
                     $this->em->remove($module);
                     $this->em->flush();
 
+                    $settings = $this->getConfiguration($moduleName)['settings'];
+                    if (isset($settings["parameters"])) {
+                        $this->removeParameters($moduleName, $settings["parameters"]);
+                    }
+
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
                     if (!$clearAssets && $this->em->getConnection()->isTransactionActive()) {
                         $this->em->getConnection()->commit();
@@ -187,11 +192,6 @@ class ModuleManager extends AddonManager
 
                     if ($action === ModuleEntity::ACTION_INSTALL) {
                         $this->delete($moduleName);
-                    }
-
-                    $settings = $this->getConfiguration($moduleName)['settings'];
-                    if (isset($settings["parameters"])) {
-                        $this->removeParameters($moduleName, $settings["parameters"]);
                     }
 
                     break;
