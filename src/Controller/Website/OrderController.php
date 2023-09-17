@@ -137,7 +137,10 @@ class OrderController extends WebsiteController
             return $this->redirectToRoute('tf_website_cart');
         }
 
-        $order = $this->mf->get('order')->createNewOrder($customer, $status, $cart);
+        $order = $cart->getLinkedOrder();
+        if (null === $order) {
+            $order = $this->mf->get('order')->createNewOrder($customer, $status, $cart);
+        }
 
         $this->em->flush();
 
