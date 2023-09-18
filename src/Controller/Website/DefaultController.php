@@ -28,8 +28,12 @@ class DefaultController extends WebsiteController
         ]);
     }
 
-    public function generateBreadcrumb($element, ?Season $season): Response
+    public function generateBreadcrumb($element): Response
     {
+        $currentSeason = $this->mf->get("season")->getCurrentSeason();
+        $season = $currentSeason;
+        $seasonBack = null;
+
         $breadcrumbs = [];
 
         if (null !== $element) {
@@ -40,8 +44,8 @@ class DefaultController extends WebsiteController
                     }
 
                     $breadcrumbs[$element->getShortTitle()] = '';
-                    $breadcrumbs[$element->getMainCategory()->getName()] = $this->ps->orchestratorPath($element->getMainCategory(), ['season' => $season]);
-                    $breadcrumbs[$element->getSeason()->getName()] = $this->ps->orchestratorPath($element->getSeason());
+                    $breadcrumbs[$element->getMainCategory()->getName()] = $this->sf->get('urlService')->tfPath($element->getMainCategory(), ['season' => $season]);
+                    $breadcrumbs[$element->getSeason()->getName()] = $this->sf->get('urlService')->tfPath($element->getSeason());
                     break;
 
                 case EventCategory::class:
@@ -50,7 +54,7 @@ class DefaultController extends WebsiteController
                     }
 
                     $breadcrumbs[$element->getName()] = '';
-                    $breadcrumbs[$season->getName()] = $this->ps->orchestratorPath($season);
+                    $breadcrumbs[$season->getName()] = $this->sf->get('urlService')->tfPath($season);
                     break;
 
                 case Season::class:
@@ -70,7 +74,7 @@ class DefaultController extends WebsiteController
 
                     while (null != $element->getParent()) {
                         $element = $element->getParent();
-                        $breadcrumbs[$element->getTitle()] = $this->ps->orchestratorPath($element);
+                        $breadcrumbs[$element->getTitle()] = $this->sf->get('urlService')->tfPath($element);
                     }
                     break;
             }
@@ -111,7 +115,7 @@ class DefaultController extends WebsiteController
                 }
             }
 
-            $url = $this->ps->orchestratorPath($newElement, $params);
+            $url = $this->sf->get('urlService')->tfPath($newElement, $params);
         }
 
         $this->em->clear();

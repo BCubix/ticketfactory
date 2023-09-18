@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-const TYPE = 'number';
+const TYPE = 'int';
 
 function getType() {
     return TYPE;

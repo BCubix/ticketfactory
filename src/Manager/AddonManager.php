@@ -268,11 +268,11 @@ abstract class AddonManager extends AbstractManager
         foreach ($parameters as $key => $parameter) {
             $storedParameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($objectName . '_' . $key);
 
-            dump($storedParameter);
-            $this->em->remove($storedParameter);
+            if (null !== $storedParameter) {
+                $this->em->remove($storedParameter);
+            }
         }
 
         $this->em->flush();
-        dd("WTF");
     }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Grid } from '@mui/material';
-import { Component } from '@/AdminService/Component';
+import { FormControl, FormControlLabel, Grid, Switch } from '@mui/material';
 
 const TYPE = 'bool';
 
@@ -10,7 +9,7 @@ function getType() {
 
 const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFieldValue, indexTab, indexBlock, indexParam }) => {
     return (
-        <Grid item key={indexParam} {...paramBreakpoints}>
+        <Grid item key={indexParam} {...paramBreakpoints} display="flex" alignItems="center">
             <FormControl fullWidth>
                 <FormControlLabel
                     size="small"

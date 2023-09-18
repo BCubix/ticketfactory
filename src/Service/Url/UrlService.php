@@ -50,6 +50,10 @@ class UrlService
 
     public function tfPath(mixed $element, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
+        if (null === $element) {
+            return '';
+        }
+
         switch (ClassUtils::getClass($element)) {
             case EventCategory::class:
             case Season::class:
