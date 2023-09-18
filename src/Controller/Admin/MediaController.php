@@ -71,7 +71,7 @@ class MediaController extends CrudController
 
         $types = [];
         foreach ($filters['type'] as $type) {
-            $types[] = MimeTypeMapping::getMimesFromType($type);
+            $types = array_merge($types, MimeTypeMapping::getMimesFromType($type));
         }
 
         $filters['type'] = $types;
