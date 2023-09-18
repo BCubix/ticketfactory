@@ -24,8 +24,16 @@ class PageController extends WebsiteController
     {
         $this->checkAccessPage($page);
 
+        $pageContents = [];
+        foreach ($page->getContents() as $content) {
+            foreach($content->getFields() as $key => $field) {
+                $pageContents[$key] = $field;
+            }
+        }
+
         return $this->websiteRender('Page/history.html.twig', [
-            'page' => $page
+            'page'         => $page,
+            'pageContents' => $pageContents
         ]);
     }
 
