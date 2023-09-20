@@ -4,6 +4,7 @@ namespace App\Entity\Event;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
+use App\Entity\Order\Voucher;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\EventCategoryRepository;
 
@@ -107,12 +108,16 @@ class EventCategory extends Datable
     #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
     public $frontUrl;
 
+    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'eventCategories')]
+    private Collection $vouchers;
+
 
     public function __construct()
     {
         $this->children   = new ArrayCollection();
         $this->mainEvents = new ArrayCollection();
         $this->events     = new ArrayCollection();
+        $this->vouchers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -328,5 +333,32 @@ class EventCategory extends Datable
     #[ORM\PreUpdate]
     public function completeSeo() {
         $this->completeFields($this->getName());
+    }
+
+    /**
+     * @return Collection<int, Voucher>
+     */
+    public function getVouchers(): Collection
+    {
+        return $this->vouchers;
+    }
+
+    public function addVoucher(Voucher $voucher): self
+    {
+        if (!$this->vouchers->contains($voucher)) {
+            $this->vouchers->add($voucher);
+            $voucher->addEventCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoucher(Voucher $voucher): self
+    {
+        if ($this->vouchers->removeElement($voucher)) {
+            $voucher->removeEventCategory($this);
+        }
+
+        return $this;
     }
 }

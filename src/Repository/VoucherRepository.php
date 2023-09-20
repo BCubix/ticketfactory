@@ -13,21 +13,40 @@ class VoucherRepository extends CrudRepository
         parent::__construct($registry, Voucher::class);
     }
 
-    public function save(Voucher $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    public function findVouchersByCustomerForWebsite(int $userId): array {
+        return $this->createQueryBuilder('v')
+            ->addSelect('c')
+            ->leftJoin('v.carts', 'c')
+            ->innerJoin('c.linkedOrder', 'o')
+            ->innerJoin('c.customer', 'u', 'WITH', 'u.id = :userId')
+            ->where('v.active = 1')
+            ->andWhere('c.active = 1')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
-    public function remove(Voucher $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
+    public function findAllByCartForWebsite(int $cartId): array {
+        return $this->createQueryBuilder('v')
+            ->addSelect('c')
+            ->innerJoin('v.carts', 'c', 'WITH', 'c.id = :cartId')
+            ->where('v.active = 1')
+            ->andWhere('c.active = 1')
+            ->setParameter('cartId', $cartId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    public function findOneByCodeForWebsite(string $code): ?Voucher
+    {
+        return $this->createQueryBuilder('v')
+            ->where('v.code = :code')
+            ->andWhere('v.active = 1')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 }

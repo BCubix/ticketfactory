@@ -12,9 +12,11 @@ class CartController extends WebsiteController
     public function index()
     {
         $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
 
         return $this->websiteRender('Cart/index.html.twig', [
-            "cart" => $cart
+            "cart" => $cart,
+            'discount' => $discount,
         ]);
     }
 
@@ -37,7 +39,13 @@ class CartController extends WebsiteController
 
         $this->mf->get("cart")->deleteCartRow($cartRowId);
 
-        return new Response(null, 200);
+        $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
+
+        return $this->websiteRender('Cart/_index.html.twig', [
+            "cart" => $cart,
+            'discount' => $discount,
+        ]);
     }
 
     #[Route("/panier/supprimer-des-places", name: "tf_website_cart_remove_seats", priority: 1)]
@@ -47,13 +55,36 @@ class CartController extends WebsiteController
         $eventPriceId = $this->getRequest()->get('eventPriceId');
 
         $cartRow = $this->mf->get("cart")->deleteCartSeats(['cartRowId' => $cartRowId, 'eventPriceId' => $eventPriceId]);
-        if (null === $cartRow) {
-            return new Response(null, 200);
+
+        $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
+
+        return $this->websiteRender('Cart/_index.html.twig', [
+            "cart" => $cart,
+            'discount' => $discount,
+        ]);
+    }
+
+    #[Route("/panier/ajouter-un-code", name: "tf_website_cart_add_voucher", priority: 1)]
+    public function addVoucher()
+    {
+        $cart = $this->mf->get("cart")->getCart();
+        $code = $this->getRequest()->get('code');
+
+
+        if (null !== $cart && null !== $code) {
+            $this->mf->get("cart")->addVoucher($cart, $code);
+
+            $cart = $this->mf->get("cart")->getCart();
+            $discount = $this->mf->get("cart")->calculateDiscount($cart);
+
+            return $this->websiteRender('Cart/_index.html.twig', [
+                "cart" => $cart,
+                'discount' => $discount,
+            ]);
         }
 
-        return $this->websiteRender('Cart/_cartRow.html.twig', [
-            "cartRow" => $cartRow,
-        ]);
+        return new Response(null, 200);
     }
 
     private function changeQuantity(int $quantityChange)
@@ -63,14 +94,16 @@ class CartController extends WebsiteController
         $cartRowId = $request->get("cartRowId");
         $eventPriceId = $request->get("eventPriceId");
 
-        $cartRow = $this->mf->get("cart")->updateQuantity(["cartRowId" => $cartRowId, "eventPriceId" => $eventPriceId], $quantityChange);
-
-        if (count($cartRow->getCartSeats()) === 0) {
-            return new Response(null, 200);
+        if (null !== $cartRowId && null !== $eventPriceId) {
+            $cartRow = $this->mf->get("cart")->updateQuantity(["cartRowId" => $cartRowId, "eventPriceId" => $eventPriceId], $quantityChange);
         }
 
-        return $this->websiteRender('Cart/_cartRow.html.twig', [
-            "cartRow" => $cartRow,
+        $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
+
+        return $this->websiteRender('Cart/_index.html.twig', [
+            "cart" => $cart,
+            'discount' => $discount,
         ]);
     }
 }

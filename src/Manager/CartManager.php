@@ -10,6 +10,7 @@ use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
 use App\Entity\Event\EventPrice;
 use App\Entity\Order\Cart;
+use App\Entity\Order\Voucher;
 use App\Entity\Order\CartRow;
 use App\Entity\Order\CartSeat;
 
@@ -273,6 +274,8 @@ class CartManager extends AbstractManager
         $this->em->remove($cartRow);
         $this->em->flush();
 
+        $this->checkVoucherForCart($cart);
+
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
     }
 
@@ -291,6 +294,7 @@ class CartManager extends AbstractManager
         }
 
         if (count($cartRow->getCartSeats()) === 0) {
+            $this->checkVoucherForCart($cart);
             $this->em->remove($cartRow);
             $cartRow = null;
         }
@@ -300,5 +304,98 @@ class CartManager extends AbstractManager
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
         return $cartRow;
+    }
+
+    public function calculateDiscount(?Cart $cart): int
+    {
+        $discount = 0;
+
+        if (null === $cart) {
+            return $discount;
+        }
+
+        $vouchers = $this->em->getRepository(Voucher::class)->findAllByCartForWebsite($cart->getId());
+        if (count($vouchers) === 0) {
+            return $discount;
+        }
+
+        foreach ($vouchers as $voucher) {
+            foreach ($cart->getCartRows() as $row) {
+                if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
+                    if ($voucher->getUnit() === "%") {
+                        $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                    } else {
+                        $discount += $voucher->getDiscount();
+                    }
+                }
+            }
+        }
+
+        return $discount;
+    }
+
+    public function checkVoucherForEventCategory(Voucher $voucher, int $eventId): bool
+    {
+        $eventCategoriesId = [];
+
+        foreach ($voucher->getEventCategories() as $category) {
+            $eventCategoriesId[] = $category->getId();
+        }
+
+        $result = $this->em->getRepository(Event::class)->findOneByCategoriesForWebsite($eventCategoriesId, $eventId);
+
+        if (null === $result) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function checkVoucherForCart(Cart $cart) {
+        $vouchers = $this->em->getRepository(Voucher::class)->findAllByCartForWebsite($cart->getId());
+
+        if (count($vouchers) === 0) {
+            return;
+        }
+
+        foreach ($vouchers as $voucher) {
+            $checked = false;
+            foreach ($cart->getCartRows() as $row) {
+                if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
+                    $checked = true;
+                    break;
+                }
+            }
+
+            if (!$checked) {
+                $voucher->removeCart($cart);
+                $this->em->persist($voucher);
+            }
+        }
+
+        $this->em->flush();
+    }
+
+    public function addVoucher(Cart $cart, string $code): bool {
+        $voucher = $this->em->getRepository(Voucher::class)->findOneByCodeForWebsite($code);
+
+        if (null === $voucher) {
+            return false;
+        }
+
+        foreach ($cart->getCartRows() as $row) {
+            if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
+                $cart->addVoucher($voucher);
+
+                $this->em->persist($cart);
+                $this->em->flush();
+
+                return true;
+            }
+        }
+
+
+
+        return false;
     }
 }

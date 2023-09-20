@@ -14,6 +14,16 @@ export const EditVoucher = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [voucher, setVoucher] = useState(null);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const categories = await Api.categoriesApi.getCategories();
+            if (categories.result) {
+                setCategories(categories?.categories);
+            }
+        });
+    }, []);
 
     const getVoucher = async (id) => {
         apiMiddleware(dispatch, async () => {
@@ -48,9 +58,9 @@ export const EditVoucher = () => {
         });
     };
 
-    if (!voucher) {
+    if (!voucher || categories.length < 1) {
         return <></>;
     }
 
-    return <Component.VouchersForm handleSubmit={handleSubmit} initialValues={voucher} />;
+    return <Component.VouchersForm handleSubmit={handleSubmit} initialValues={voucher} eventCategoriesList={categories} />;
 };

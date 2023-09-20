@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,16 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 export const CreateVoucher = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const categories = await Api.categoriesApi.getCategories();
+            if (categories.result) {
+                setCategories(categories?.categories);
+            }
+        });
+    }, []);
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
@@ -24,5 +34,9 @@ export const CreateVoucher = () => {
         });
     };
 
-    return <Component.VouchersForm handleSubmit={handleSubmit} />;
+    if (categories.length < 1) {
+        return <></>;
+    }
+
+    return <Component.VouchersForm handleSubmit={handleSubmit} eventCategoriesList={categories} />;
 };

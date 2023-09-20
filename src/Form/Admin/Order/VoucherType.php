@@ -3,8 +3,11 @@
 namespace App\Form\Admin\Order;
 
 use App\Entity\Order\Voucher;
+use App\Entity\Event\EventCategory;
+use App\Repository\EventCategoryRepository;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,6 +21,7 @@ class VoucherType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'false', 'null']])
             ->add('name',                 TextType::class,            [])
             ->add('code',                 TextType::class,            [])
             ->add('discount',             TextType::class,            [])
@@ -41,7 +45,17 @@ class VoucherType extends AbstractType
                 'format'         => 'yyyy-MM-dd',
                 'html5'          => false
             ])
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']]);
+            ->add('eventCategories',      EntityType::class,       [
+                'class'         => EventCategory::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function (EventCategoryRepository $ecr) {
+                    return $ecr
+                        ->createQueryBuilder('ec')
+                        ->orderBy('ec.name', 'ASC');
+                }
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

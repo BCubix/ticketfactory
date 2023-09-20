@@ -1,19 +1,74 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, Grid, InputAdornment } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Button, Checkbox, Grid, InputAdornment, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 import moment from 'moment';
+import { TreeItem, TreeView } from '@mui/lab';
+import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
 const VOUCHER_UNIT = [
     { label: 'Euros', value: '€' },
     { label: 'Pour cent', value: '%' },
 ];
 
-export const VouchersForm = ({ handleSubmit, initialValues = null }) => {
+const displayCategoriesOptions = (list, values, setFieldValue) => {
+    if (!list || list?.length === 0) {
+        return <></>;
+    }
+
+    const handleCheckCategory = (id) => {
+        let categories = [...values?.eventCategories];
+        const check = categories?.includes(id);
+
+        if (check) {
+            categories = categories?.filter((el) => el !== id);
+            setFieldValue('eventCategories', categories);
+        } else {
+            categories.push(id);
+            setFieldValue('eventCategories', categories);
+        }
+    };
+
+    return (
+        <TreeItem
+            key={list.id}
+            nodeId={list?.id?.toString()}
+            label={
+                <Box display="flex" alignItems={'center'}>
+                    <Checkbox
+                        checked={values?.eventCategories?.includes(list.id)}
+                        id={`eventCategoriesValue-${list.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCheckCategory(list.id);
+                        }}
+                    />
+                    {list?.name}
+                </Box>
+            }
+        >
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setFieldValue))}
+        </TreeItem>
+    );
+};
+
+export const VouchersForm = ({ handleSubmit, initialValues = null, eventCategoriesList = [] }) => {
+    const defaultExpend = useMemo(() => {
+        let list = [];
+
+        initialValues?.eventCategories?.forEach((el) => {
+            list.push(...getDefaultParentPath(eventCategoriesList, el));
+        });
+
+        return list;
+    }, []);
+
     const voucherSchema = Yup.object().shape({
         name: Yup.string().required('Veuillez renseigner un nom pour le bon'),
         code: Yup.string().required('Veuillez renseigner le code du bon.'),
@@ -41,6 +96,7 @@ export const VouchersForm = ({ handleSubmit, initialValues = null }) => {
                 beginDate: initialValues?.beginDate || '',
                 endDate: initialValues?.endDate || '',
                 active: initialValues?.active || false,
+                eventCategories: initialValues?.eventCategories ? initialValues?.eventCategories?.map((el) => el.id) : [],
             }}
             validationSchema={voucherSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -115,6 +171,30 @@ export const VouchersForm = ({ handleSubmit, initialValues = null }) => {
                                     errors={touched.unit && errors.unit}
                                     handleBlur={handleBlur}
                                 />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <Box display="flex" justifyContent={'space-between'}>
+                                    <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
+                                        Catégories d'évènements rattachées
+                                    </Typography>
+                                </Box>
+                                <TreeView
+                                    size="small"
+                                    id="eventCategories"
+                                    label="Catégories"
+                                    defaultCollapseIcon={<ExpandMoreIcon />}
+                                    defaultExpanded={[eventCategoriesList.id?.toString(), ...defaultExpend]}
+                                    defaultExpandIcon={<ChevronRightIcon />}
+                                    sx={{ flexGrow: 1, overflowY: 'auto' }}
+                                >
+                                    {displayCategoriesOptions(eventCategoriesList, values, setFieldValue)}
+                                </TreeView>
+                                {touched?.eventCategories && errors?.eventCategories && (
+                                    <Typography sx={{ fontSize: 12 }} color="error" id="eventCategories-helper-text">
+                                        {touched?.eventCategories && errors?.eventCategories}
+                                    </Typography>
+                                )}
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>

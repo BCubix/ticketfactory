@@ -3,6 +3,7 @@
 namespace App\Controller\Website;
 
 use App\Entity\Customer\Customer;
+use App\Entity\Order\Voucher;
 use App\Form\Website\Customer\CustomerProfileType;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -60,9 +61,13 @@ class AccountController extends WebsiteController
     public function vouchers(): Response
     {
         $page = $this->mf->get('page')->getByKeyword('vouchers');
+        $customer = $this->getUser();
+
+        $vouchers = $this->em->getRepository(Voucher::class)->findVouchersByCustomerForWebsite($customer->getId());
 
         return $this->websiteRender('Account/vouchers.html.twig', [
-            'page'     => $page
+            'page'     => $page,
+            'vouchers' => $vouchers,
         ]);
     }
 }

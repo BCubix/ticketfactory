@@ -128,4 +128,18 @@ class EventRepository extends CrudRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findOneByCategoriesForWebsite(array $categories, int $eventId): ?Event
+    {
+        return $this->createQueryBuilder('e')
+            ->addSelect("ec")
+            ->innerJoin("e.eventCategories", "ec", 'WITH', 'ec.id IN (:eventCategories)')
+            ->where("e.id = :eventId")
+            ->andWhere("e.active = 1")
+            ->setParameter("eventId", $eventId)
+            ->setParameter("eventCategories", $categories)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

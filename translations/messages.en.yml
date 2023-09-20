@@ -25,8 +25,8 @@ global.phone: PHONE
 global.mail: MAIL
 global.see-all: See all
 global.caisse: The Caisse des Dépôts supports the entire program of the Théâtre des Champs-Elysées
-global.web-description: "The Théâtre des Champs Elysées offers different shows : Operas, Concerts, Orchestras, Recitals, Dances ... Season 2021-2022"
-global.social-description: "Discover 2021-2022 new season and subscribe online. 5 subscription packages (Operas, Dance, concerts, recitals and ballets)."
+global.web-description: 'The Théâtre des Champs Elysées offers different shows : Operas, Concerts, Orchestras, Recitals, Dances ... Season 2021-2022'
+global.social-description: 'Discover 2021-2022 new season and subscribe online. 5 subscription packages (Operas, Dance, concerts, recitals and ballets).'
 global.view: View
 global.accessibility: Accessibility
 global.season: Season
@@ -160,3 +160,9 @@ cookies.btn.accept-close: Acccept & Close
 cookies.btn.save-warning: Fill all your preferences, then save to continue.
 cookies.btn.save-close: Save & Close
 cookies.btn.accept-all: Accept all
+
+# cart
+cart.subtotal: Subtotal
+cart.total: Total
+cart.haveVoucher: Do you have a voucher ?
+cart.addVoucher: Add

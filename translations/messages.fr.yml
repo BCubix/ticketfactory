@@ -25,8 +25,8 @@ global.phone: TEL
 global.mail: MAIL
 global.see-all: Tout voir
 global.caisse: La Caisse des Dépôts soutient l'ensemble de la programmation du Théâtre des Champs-Elysées
-global.web-description: "Le Théâtre des Champs Elysées vous propose différents spectacles : Opéras, Concerts, Orchestres, Récitals, Danses... Saison 2021-2022"
-global.social-description: "Découvrez la nouvelle saison 2021-22 et abonnez-vous en ligne à partir de 4 spectacles à choisir parmi les opéras, concerts, récitals et ballets."
+global.web-description: 'Le Théâtre des Champs Elysées vous propose différents spectacles : Opéras, Concerts, Orchestres, Récitals, Danses... Saison 2021-2022'
+global.social-description: 'Découvrez la nouvelle saison 2021-22 et abonnez-vous en ligne à partir de 4 spectacles à choisir parmi les opéras, concerts, récitals et ballets.'
 global.view: Consulter
 global.accessibility: Accessibilite
 global.season: Saison
@@ -145,8 +145,8 @@ patrons.whats-more: Et aussi
 
 # Errors
 error.title: Oh non !
-error.message1 : Cette page n'existe plus à cette adresse.
-error.message2 : Utilisez la barre de recherche en haut pour la retrouver.
+error.message1: Cette page n'existe plus à cette adresse.
+error.message2: Utilisez la barre de recherche en haut pour la retrouver.
 
 # cookies
 cookies.continue-accept: Continuer sans accepter
@@ -161,3 +161,9 @@ cookies.btn.save-warning: Définissez toutes vos préférences puis enregistrez 
 cookies.btn.save-close: Enregistrer & Fermer
 cookies.btn.accept-all: Tout accepter
 cookies.btn.reject-all: Tout refuser
+
+# cart
+cart.subtotal: Sous-total
+cart.total: Total
+cart.haveVoucher: Vous avez un code promo ?
+cart.addVoucher: Ajouter

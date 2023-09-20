@@ -3,6 +3,7 @@
 namespace App\Entity\Order;
 
 use App\Entity\Datable;
+use App\Entity\Event\EventCategory;
 use App\Repository\VoucherRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -72,10 +73,16 @@ class Voucher extends Datable
     #[ORM\ManyToMany(targetEntity: CartRow::class, inversedBy: 'vouchers')]
     private Collection $cartRows;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\ManyToMany(targetEntity: EventCategory::class, inversedBy: 'vouchers')]
+    private Collection $eventCategories;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->cartRows = new ArrayCollection();
+        $this->eventCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -199,6 +206,30 @@ class Voucher extends Datable
     public function removeCartRow(CartRow $cartRow): self
     {
         $this->cartRows->removeElement($cartRow);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventCategory>
+     */
+    public function getEventCategories(): Collection
+    {
+        return $this->eventCategories;
+    }
+
+    public function addEventCategory(EventCategory $eventCategory): self
+    {
+        if (!$this->eventCategories->contains($eventCategory)) {
+            $this->eventCategories->add($eventCategory);
+        }
+
+        return $this;
+    }
+
+    public function removeEventCategory(EventCategory $eventCategory): self
+    {
+        $this->eventCategories->removeElement($eventCategory);
 
         return $this;
     }

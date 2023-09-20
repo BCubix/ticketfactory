@@ -37,6 +37,10 @@ const getFormData = (data) => {
     formData.append('endDate', data.endDate);
     formData.append('active', data.active ? 1 : 0);
 
+    data?.eventCategories.forEach((element, index) => {
+        formData.append(`eventCategories[${index}]`, element);
+    });
+
     return formData;
 };
 
@@ -110,6 +114,8 @@ const vouchersApi = {
 
             return { result: true, voucher: result.data };
         } catch (error) {
+            console.error(error);
+
             return { result: false, error: error?.response?.data };
         }
     },
