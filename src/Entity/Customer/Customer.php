@@ -86,7 +86,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[Assert\Regex(pattern: '/^\S*(?=\S{10,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/', message: 'Le mot de passe ne répond pas aux exigences de sécurité.')]
     private $plainPassword;
 
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Cart::class)]
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Cart::class, orphanRemoval: true)]
     private Collection $carts;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true)]

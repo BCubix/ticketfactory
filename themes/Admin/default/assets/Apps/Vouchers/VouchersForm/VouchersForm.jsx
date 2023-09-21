@@ -207,7 +207,7 @@ export const VouchersForm = ({ handleSubmit, initialValues = null, eventCategori
                                         fullWidth
                                         value={values.beginDate}
                                         setValue={(newValue) => {
-                                            setFieldValue(`beginDate`, moment(newValue).format('YYYY-MM-DD'));
+                                            setFieldValue(`beginDate`, newValue ? moment(newValue).format('YYYY-MM-DD') : '');
                                         }}
                                         onTouched={setFieldTouched}
                                         name={`beginDate`}
@@ -223,7 +223,7 @@ export const VouchersForm = ({ handleSubmit, initialValues = null, eventCategori
                                         fullWidth
                                         value={values.endDate}
                                         setValue={(newValue) => {
-                                            setFieldValue(`endDate`, moment(newValue).format('YYYY-MM-DD'));
+                                            setFieldValue(`endDate`, newValue ? moment(newValue).format('YYYY-MM-DD') : '');
                                         }}
                                         onTouched={setFieldTouched}
                                         name={`endDate`}

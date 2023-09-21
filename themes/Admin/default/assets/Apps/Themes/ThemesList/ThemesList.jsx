@@ -31,7 +31,7 @@ export const ThemesList = () => {
         }
 
         apiMiddleware(dispatch, async () => {
-            const result = await Api.parametersApi.getParameterValueByKey('main_theme');
+            const result = await Api.parametersApi.getParameterValueByKey('core_main_theme');
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 return;
