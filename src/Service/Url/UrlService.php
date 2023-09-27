@@ -2,6 +2,7 @@
 
 namespace App\Service\Url;
 
+use App\Entity\Content\Content;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
@@ -66,6 +67,9 @@ class UrlService
             case Page::class:
                 return $this->pagePath($element, $parameters, $absolute);
 
+            case Content::class:
+                return $this->contentPath($element, $parameters, $absolute);
+
             default:
                 return '';
         }
@@ -114,10 +118,24 @@ class UrlService
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
     }
 
+    public function contentPath(Content $content, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
+    {
+        $contentType = $content->getContentType();
+        $page = $contentType->isPageType() ? $content->getPage() : $contentType->getPageParent();
+
+        $slugs = [];
+        while ($page !== null) {
+            $slugs[] = $page->getSlug();
+            $page = $page->getParent();
+        }
+
+        return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
+    }
+
     private function generateFromMainSlugs(array $slugs, array $parameters, $absolute)
     {
         $slugs = array_reverse($slugs);
-        $slugs = array_filter($slugs, function($value) {
+        $slugs = array_filter($slugs, function ($value) {
             return !empty($value);
         });
 
