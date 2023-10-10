@@ -5,6 +5,7 @@ namespace App\Entity\Media;
 use App\Entity\Datable;
 use App\Repository\ImageFormatRepository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -56,6 +57,14 @@ class ImageFormat extends Datable
     #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\Column(type: 'boolean')]
     private ?bool $themeUse = null;
+
+    #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'mediaCategories')]
+    private $medias;
+
+    public function __construct()
+    {
+        $this->medias = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -118,6 +127,30 @@ class ImageFormat extends Datable
     public function setThemeUse(bool $themeUse): self
     {
         $this->themeUse = $themeUse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): self
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): self
+    {
+        $this->medias->removeElement($media);
 
         return $this;
     }

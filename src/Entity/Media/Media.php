@@ -89,11 +89,17 @@ class Media extends Datable
     #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
     private $mediaCategories;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one'])]
+    #[ORM\ManyToMany(targetEntity: ImageFormat::class, inversedBy: 'medias')]
+    private $imageFormats;
+
 
     public function __construct()
     {
         $this->eventMedias = new ArrayCollection();
         $this->mediaCategories = new ArrayCollection();
+        $this->imageFormats = new ArrayCollection();
     }
 
 
@@ -206,6 +212,33 @@ class Media extends Datable
     public function setDocumentUrl(?string $documentUrl): self
     {
         $this->documentUrl = $documentUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImageFormat>
+     */
+    public function getImageFormats(): Collection
+    {
+        return $this->imageFormats;
+    }
+
+    public function addImageFormat(ImageFormat $imageFormat): self
+    {
+        if (!$this->imageFormats->contains($imageFormat)) {
+            $this->imageFormats->add($imageFormat);
+            $imageFormat->addMedia($this); // Ajoutez cette ligne pour synchroniser les deux côtés de la relation
+        }
+
+        return $this;
+    }
+
+    public function removeImageFormat(ImageFormat $imageFormat): self
+    {
+        if ($this->imageFormats->removeElement($imageFormat)) {
+            $imageFormat->removeMedia($this); // Ajoutez cette ligne pour synchroniser les deux côtés de la relation
+        }
 
         return $this;
     }
