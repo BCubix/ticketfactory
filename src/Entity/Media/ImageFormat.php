@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Repository\ImageFormatRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -58,8 +59,8 @@ class ImageFormat extends Datable
     #[ORM\Column(type: 'boolean')]
     private ?bool $themeUse = null;
 
-    #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'mediaCategories')]
-    private $medias;
+    #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'imageFormats')]
+    private Collection $medias;
 
     public function __construct()
     {
@@ -143,6 +144,7 @@ class ImageFormat extends Datable
     {
         if (!$this->medias->contains($media)) {
             $this->medias->add($media);
+            $media->addImageFormat($this);
         }
 
         return $this;
@@ -150,7 +152,9 @@ class ImageFormat extends Datable
 
     public function removeMedia(Media $media): self
     {
-        $this->medias->removeElement($media);
+        if ($this->medias->removeElement($media)) {
+            $media->removeImageFormat($this);
+        }
 
         return $this;
     }
