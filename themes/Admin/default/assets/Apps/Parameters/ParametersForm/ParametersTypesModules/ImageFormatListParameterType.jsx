@@ -19,7 +19,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramAvailableValue, pa
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
-            Api.imageFormatsApi.getAllImageFormat().then((result) => {
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
                 if (result.result) {
                     setList(result.imageFormat);
                     return;
