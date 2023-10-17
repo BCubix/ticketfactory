@@ -10,6 +10,7 @@ class ImageFormatRepository extends CrudRepository
 {
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
+        ['id', 'o.id', 'in'],
         ['name', 'o.name', 'search'],
     ];
 

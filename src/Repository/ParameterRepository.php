@@ -17,6 +17,15 @@ class ParameterRepository extends CrudRepository
         parent::__construct($registry, Parameter::class);
     }
 
+    public function findAllForAdminArrayByType(string $key)
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.type = :key')
+            ->setParameter('key', $key)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     public function findAllForAdminArray(): array
     {
         return $this->createQueryBuilder('o')

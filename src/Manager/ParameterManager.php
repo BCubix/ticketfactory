@@ -55,8 +55,11 @@ class ParameterManager extends AbstractManager
 
         $availableValue = $parameter->getAvailableValue();
         if (null !== $availableValue && !in_array($newValue, $availableValue)) {
-            throw new ApiException(Response::HTTP_NOT_FOUND, 1404,
-                "Le paramètre(s) avec la clé $key ne contient pas la valeur $newValue dans les valeurs disponibles.");
+            throw new ApiException(
+                Response::HTTP_NOT_FOUND,
+                1404,
+                "Le paramètre(s) avec la clé $key ne contient pas la valeur $newValue dans les valeurs disponibles."
+            );
         }
 
         $parameter->setParamValue($newValue);
@@ -76,13 +79,13 @@ class ParameterManager extends AbstractManager
     public function getParameterValue(Parameter $parameter): mixed
     {
         $format = $parameter->getType();
-        $value  = $parameter->getParamValue();
+        $value = $parameter->getParamValue();
 
         if (null === $value || "null" === $value) {
             return null;
         }
 
-        switch($format) {
+        switch ($format) {
             case 'int':
                 return intval($value);
 
@@ -91,7 +94,7 @@ class ParameterManager extends AbstractManager
 
             case 'upload':
                 return ('/uploads/parameter/' . $value);
-            
+
             case 'Page':
                 return $this->em->getRepository(Page::class)->findOneForAdmin($value);
 

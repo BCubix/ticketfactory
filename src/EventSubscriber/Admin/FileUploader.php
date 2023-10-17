@@ -5,10 +5,13 @@ namespace App\EventSubscriber\Admin;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Entity\Addon\Module;
+use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
+use App\Manager\ImageFormatManager;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
 use App\Manager\HookManager;
+
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
@@ -35,14 +38,16 @@ class FileUploader implements EventSubscriberInterface
     private $mm;
     private $tm;
     private $hm;
+    private $ifm;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm, ImageFormatManager $ifm)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
         $this->mm = $mm;
         $this->tm = $tm;
         $this->hm = $hm;
+        $this->ifm = $ifm;
     }
 
     public static function getSubscribedEvents(): array
@@ -103,9 +108,13 @@ class FileUploader implements EventSubscriberInterface
 
         $this->hm->exec('MediaSaved', [
             'sObject' => $media,
-            'state'   => 'add'
+            'state' => 'add'
         ]);
+        $parameters = $this->em->getRepository(Parameter::class)->findAllForAdminArrayByType('ImageFormat');
+        $arraytest = explode(",", $parameters->getParamValue());
 
+        $imageFormats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0, 'active' => 1, 'id' => $arraytest]);
+        $this->ifm->generateThumbnails($imageFormats, [$media]);
         return $response;
     }
 
@@ -174,7 +183,7 @@ class FileUploader implements EventSubscriberInterface
         $stringId = (string) $id;
         $path = "";
 
-        foreach(str_split($stringId) as $charParsedId) {
+        foreach (str_split($stringId) as $charParsedId) {
             $path = $path . $charParsedId . "/";
         }
 
@@ -183,14 +192,14 @@ class FileUploader implements EventSubscriberInterface
 
     private function createMediaThumbnails(Media $media)
     {
-        $imageFormat = $this->em->getRepository(ImageFormat::class)->findAllForAdmin([ "page" => 0]);
+        $imageFormat = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(["page" => 0]);
         if (null === $imageFormat) {
             return;
         }
 
         $imageFormat = $imageFormat["result"];
 
-        foreach($imageFormat as $format) {
+        foreach ($imageFormat as $format) {
 
         }
     }
