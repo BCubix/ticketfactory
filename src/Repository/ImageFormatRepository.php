@@ -10,7 +10,6 @@ class ImageFormatRepository extends CrudRepository
 {
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
-        ['id', 'o.id', 'in'],
         ['name', 'o.name', 'search'],
     ];
 
@@ -26,7 +25,15 @@ class ImageFormatRepository extends CrudRepository
     {
         parent::__construct($registry, ImageFormat::class);
     }
-
+    public function findImageFormatById(array $id): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
     public function findOneByNameForAdmin(string $name)
     {
         return $this->createQueryBuilder('u')

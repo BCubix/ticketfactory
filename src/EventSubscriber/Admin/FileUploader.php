@@ -101,6 +101,17 @@ class FileUploader implements EventSubscriberInterface
         $media->setDocumentSize($file->getSize());
         $media->setDocumentUrl($url);
 
+        $imageFormParameters = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin('Image_form_list');
+        $formats = [];
+
+        if ($imageFormParameters != null) {
+            $imageFormatIdArray = explode(",", $imageFormParameters->getParamValue());
+            $formats = $this->em->getRepository(ImageFormat::class)->findImageFormatById($imageFormatIdArray);
+            foreach ($formats['results'] as $format) {
+                $media->addImageFormat($format);
+            }
+        }
+
         $this->em->persist($media);
         $this->em->flush();
 
@@ -110,11 +121,6 @@ class FileUploader implements EventSubscriberInterface
             'sObject' => $media,
             'state' => 'add'
         ]);
-        $parameters = $this->em->getRepository(Parameter::class)->findAllForAdminArrayByType('ImageFormat');
-        $arraytest = explode(",", $parameters->getParamValue());
-
-        $imageFormats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0, 'active' => 1, 'id' => $arraytest]);
-        $this->ifm->generateThumbnails($imageFormats, [$media]);
         return $response;
     }
 

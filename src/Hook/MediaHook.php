@@ -14,7 +14,7 @@ class MediaHook extends Hook
     {
         $this->ifm = $ifm;
     }
-    
+
     public function hookMediaInstantiated(HookEvent $event)
     {
         $media = $event->getParam('object');
@@ -30,6 +30,8 @@ class MediaHook extends Hook
     public function hookMediaSaved(HookEvent $event)
     {
         $media = $event->getParam('sObject');
+        //var_dump($media->getId());
+        //die;
 
         $this->ifm->generateThumbnails(null, [$media]);
     }
