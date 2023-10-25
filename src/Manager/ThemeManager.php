@@ -17,8 +17,11 @@ class ThemeManager extends AddonManager
     {
         $config = Yaml::parseFile($this->getDir() . '/' . $objectName . '/config/config.yaml');
         if (!$config) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "Le fichier de configuration du thème $objectName est vide.");
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "Le fichier de configuration du thème $objectName est vide."
+            );
         }
 
         $processor = new Processor();

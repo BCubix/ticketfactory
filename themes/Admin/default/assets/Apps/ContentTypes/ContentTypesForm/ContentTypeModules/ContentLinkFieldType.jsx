@@ -2,10 +2,10 @@ import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-const NAME = 'contentLink';
+const NAME = 'content';
 const LABEL = 'Lien vers un contenu';
 
-const TYPE = 'contentLink';
+const TYPE = 'content';
 const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {

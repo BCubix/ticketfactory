@@ -6,8 +6,9 @@ import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-const TYPE = 'tag';
+const TYPE = 'content';
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [
@@ -23,26 +24,20 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
-    const getLinks = async () => {
-        const check = await Api.authApi.checkIsAuth();
+    const getContents = async () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.contentsApi.getContents({ page: 0 });
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
 
-            return;
-        }
-
-        const result = await Api.tagsApi.getTags();
-
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.tags);
+            setList(result.contents);
+        });
     };
 
     useEffect(() => {
-        getLinks();
+        getContents();
     }, []);
 
     useEffect(() => {
@@ -56,12 +51,12 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
     return (
         <>
             <FormControl fullWidth>
-                <InputLabel id={`tagLink-${label}-label`} size="small">
+                <InputLabel id={`contentLink-${label}-label`} size="small">
                     {label}
                 </InputLabel>
                 <Select
-                    labelId={`tagLink-${label}-label`}
-                    id={`tagLink-${label}`}
+                    labelId={`contentLink-${label}-label`}
+                    id={`contentLink-${label}`}
                     size="small"
                     variant="standard"
                     value={values[field.name]}
@@ -74,7 +69,7 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
                 >
                     {list?.map((item, index) => (
                         <MenuItem key={index} value={item.id}>
-                            <ListItemText>{item.name}</ListItemText>
+                            <ListItemText>{item.title}</ListItemText>
                         </MenuItem>
                     ))}
                 </Select>

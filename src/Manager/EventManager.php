@@ -12,7 +12,7 @@ use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
 use App\Service\File\MimeTypeMapping;
-
+use App\Service\Sort\EventSorter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -22,6 +22,13 @@ class EventManager extends AbstractManager
     public const SERVICE_NAME = 'event';
 
     protected $tr;
+
+    private const WEBSITE_SORTS = [
+        'nameAsc' => ['name', 'ASC'],
+        'nameDesc' => ['name', 'DESC'],
+        'chronoAsc' => ['beginDate', 'ASC'],
+        'chronoDesc' => ['beginDate', 'DESC'],
+    ];
 
     public function __construct(
         Kernel $kl,
@@ -49,7 +56,7 @@ class EventManager extends AbstractManager
                 case '%id%':
                     $event = $this->em->getRepository(Event::class)->findByIdForWebsite($languageId, $slugs[$key]);
                     break;
-        
+
                 case '%slug%':
                     $event = $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $slugs[$key]);
                     break;
@@ -70,31 +77,31 @@ class EventManager extends AbstractManager
                         return null;
                     }
                     break;
-        
+
                 case '%season%':
                     if (null == $event->getSeason() || $event->getSeason()->getSlug() !== $slugs[$key]) {
                         return null;
                     }
                     break;
-        
+
                 case '%room%':
                     if (null == $event->getRoom() || $event->getRoom()->getSlug() !== $slugs[$key]) {
                         return null;
                     }
                     break;
-        
+
                 case '%year%':
                     if ($event->getBeginDate()->format('Y') !== $slugs[$key]) {
                         return null;
                     }
                     break;
-        
+
                 case '%month%':
                     if ($event->getBeginDate()->format('m') !== $slugs[$key]) {
                         return null;
                     }
                     break;
-                    
+
                 case '%day%':
                     if ($event->getBeginDate()->format('d') !== $slugs[$key]) {
                         return null;
@@ -105,7 +112,7 @@ class EventManager extends AbstractManager
                     break;
             }
         }
-        
+
         return $event;
     }
 
@@ -138,6 +145,15 @@ class EventManager extends AbstractManager
         return $events;
     }
 
+    public function getSortedEvents(array $filters): array
+    {
+        [$sortField, $sortOrder] = $this->getDefaultParameters($filters);
+
+        $events = $this->getEvents($filters);
+
+        return EventSorter::sortEvents($events, true, $sortField, $sortOrder);
+    }
+
     public function getUrlSlugs(Event $event): array
     {
         $eventFormats = $this->mf->get('parameter')->getCoreParameter('event_url_format');
@@ -151,7 +167,7 @@ class EventManager extends AbstractManager
                 case '%id%':
                     $url[] = $event->getId();
                     break;
-        
+
                 case '%slug%':
                     $url[] = $event->getSlug();
                     break;
@@ -159,27 +175,27 @@ class EventManager extends AbstractManager
                 case '%category%':
                     $url[] = $event->getMainCategory();
                     break;
-        
+
                 case '%season%':
                     if (null !== $event->getSeason()) {
                         $url[] = $event->getSeason()->getSlug();
                     }
                     break;
-        
+
                 case '%room%':
                     if (null !== $event->getRoom()) {
                         $url[] = $event->getRoom()->getSlug();
                     }
                     break;
-        
+
                 case '%year%':
                     $url[] = $event->getBeginDate()->format('Y');
                     break;
-        
+
                 case '%month%':
                     $url[] = $event->getBeginDate()->format('m');
                     break;
-                    
+
                 case '%day%':
                     $url[] = $event->getBeginDate()->format('d');
                     break;
@@ -189,7 +205,7 @@ class EventManager extends AbstractManager
                     break;
             }
         }
-        
+
         return $url;
     }
 
@@ -214,15 +230,13 @@ class EventManager extends AbstractManager
                 return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format));
 
             case 2:
-                return (
-                    DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
+                return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
                     $this->tr->trans('global.and') . ' ' .
                     DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
                 );
 
             default:
-                return (
-                    DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
+                return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
                     $this->tr->trans('global.to') . ' ' .
                     DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
                 );
@@ -250,7 +264,7 @@ class EventManager extends AbstractManager
         }
 
         $eventMedias = $event->getEventMedias()->toArray();
-        usort($eventMedias, function($a, $b) {
+        usort($eventMedias, function ($a, $b) {
             if ($a->getPosition() == $b->getPosition()) {
                 return 0;
             }
@@ -282,7 +296,7 @@ class EventManager extends AbstractManager
     public function getMainImageFromEvent(Event $event): ?Media
     {
         $eventMedias = $event->getEventMedias()->toArray();
-        
+
         foreach ($eventMedias as $eventMedia) {
             if ($eventMedia->isMainImg()) {
                 return $eventMedia->getMedia();
@@ -304,5 +318,18 @@ class EventManager extends AbstractManager
         $eventPrices = $this->em->getRepository(EventPrice::class)->findAllByEventForWebsite($event->getId());
 
         return $eventPrices;
+    }
+
+    private function getDefaultParameters($filters): array
+    {
+        [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];
+        if (isset($filters['sort']) && isset(self::WEBSITE_SORTS[$filters['sort']])) {
+            [$sortField, $sortOrder] = self::WEBSITE_SORTS[$filters['sort']];
+        }
+
+        return array_values([
+            "sortField"  => $sortField,
+            "sortOrder"  => $sortOrder
+        ]);
     }
 }

@@ -9,7 +9,7 @@ import { Constant } from '@/AdminService/Constant';
 
 import { loginFailure } from '@Redux/profile/profileSlice';
 
-const TYPE = 'eventLink';
+const TYPE = 'event';
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [

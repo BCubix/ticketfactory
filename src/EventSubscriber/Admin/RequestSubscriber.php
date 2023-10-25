@@ -61,8 +61,6 @@ class RequestSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $methodName = ('hook' . ucfirst($hook->getName()));
-
             $this->hm->register($hook->getName(), $hook->getModule(), $hook->getClassname(), $hook->getPosition());
         }
 

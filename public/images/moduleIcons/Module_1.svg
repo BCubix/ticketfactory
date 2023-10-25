@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1080 1080">
+  <defs>
+    <clipPath id="h">
+      <rect x="155.27" y="155.27" width="769.47" height="769.47" style="fill: none;"/>
+    </clipPath>
+    <clipPath id="n">
+      <rect x="155.27" y="155.27" width="769.47" height="769.47" style="fill: none;"/>
+    </clipPath>
+  </defs>
+  <rect id="b" data-name="Rectangle 85" x="64.52" y="64.52" width="950.96" height="950.96" rx="126.8" ry="126.8" style="fill: #ffc828;"/>
+  <g>
+    <g id="c" data-name="g287">
+      <path id="d" data-name="path289" d="M317.58,643.7v-246.47h-96.18v277.55" style="fill: none; stroke: #2e71b3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 34px;"/>
+    </g>
+    <g id="e" data-name="g291">
+      <path id="f" data-name="path293" d="M678.26,555.03v-244.97h-96.18v190.86" style="fill: none; stroke: #2e71b3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 34px;"/>
+    </g>
+    <g id="g" data-name="g295">
+      <g style="clip-path: url(#h);">
+        <g id="i" data-name="g297">
+          <g id="j" data-name="g303">
+            <path id="k" data-name="path305" d="M858.61,729.36V170.29h-96.18v440.84" style="fill: none; stroke: #225486; stroke-linecap: round; stroke-linejoin: round; stroke-width: 34px;"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="l" data-name="g307">
+      <path id="m" data-name="path309" d="M497.92,499.71v-213.32h-96.18v250.47" style="fill: none; stroke: #225486; stroke-linecap: round; stroke-linejoin: round; stroke-width: 34px;"/>
+    </g>
+    <g style="clip-path: url(#n);">
+      <g id="o" data-name="g313">
+        <g id="p" data-name="g319">
+          <path id="q" data-name="path321" d="M601.62,909.71h214.96c51.43,0,93.12-41.69,93.12-93.12,0-39.06-24.05-72.47-58.14-86.31,1.48-6.59,2.29-13.44,2.29-20.48,0-51.43-41.69-93.12-93.12-93.12-14.49,0-28.21,3.31-40.44,9.22-28.76-74.85-101.32-127.98-186.29-127.98-95.85,0-175.91,67.6-195.12,157.72-12.2-3.79-25.17-5.84-38.62-5.84-71.77,0-129.95,58.18-129.95,129.95s58.18,129.95,129.95,129.95h166.11" style="fill: none; stroke: #eea400; stroke-linecap: round; stroke-linejoin: round; stroke-width: 34px;"/>
+        </g>
+        <g id="r" data-name="g323">
+          <path id="s" data-name="path325" d="M533.99,909.71h0" style="fill: none; stroke: #eea400; stroke-linecap: round; stroke-linejoin: round; stroke-width: 34px;"/>
+        </g>
+      </g>
+    </g>
+    <g id="t" data-name="Picto recherche">
+      <g id="u" data-name="Loupe">
+        <path id="v" data-name="Tracé 782" d="M606.82,761.02l24.6,24.53c11.17,11.15,22.37,22.32,33.47,33.48,4.53,3.27,5.55,9.6,2.28,14.12-3.27,4.53-9.6,5.55-14.12,2.28-.88-.64-1.65-1.41-2.29-2.29-17.82-17.71-35.58-35.48-53.29-53.3-1.42-1.71-2.67-3.55-3.74-5.49-42.2,35.53-105.21,30.12-140.75-12.08-35.53-42.2-30.12-105.21,12.08-140.75,42.2-35.53,105.21-30.12,140.75,12.08,30.91,36.71,31.34,90.22,1.03,127.43h-.01Zm2.37-63.46c-.08-44.06-35.86-79.7-79.92-79.62-44.06,.08-79.7,35.86-79.62,79.92s35.86,79.7,79.92,79.62c.06,0,.13,0,.19,0,43.96-.24,79.46-35.96,79.43-79.92Z" style="fill: #0075b1; stroke: #2e71b3; stroke-miterlimit: 10; stroke-width: 12px;"/>
+      </g>
+    </g>
+  </g>
+</svg>

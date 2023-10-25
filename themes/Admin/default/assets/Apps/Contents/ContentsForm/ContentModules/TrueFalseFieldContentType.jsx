@@ -18,7 +18,7 @@ const FormComponent = ({ values, setFieldValue, handleBlur, name, errors, field,
                     onBlur={handleBlur}
                     label={label}
                     labelPlacement="start"
-                    control={<Switch />}
+                    control={<Switch checked={Boolean(values[field.name])} />}
                     sx={{
                         display: 'flex',
                         justifyContent: 'flex-end',

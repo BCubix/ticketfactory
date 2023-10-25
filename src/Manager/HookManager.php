@@ -147,6 +147,10 @@ class HookManager extends AbstractManager
      */
     public function register(string $hookName, ?ModuleEntity $module, string $classname, ?int $position = null): void
     {
+        if (str_starts_with($hookName, 'hook')) {
+            $hookName = substr($hookName, 4);
+        }
+
         $hook = $this->getHook($hookName, $module);
         if (null === $hook) {
             if ($position === null) {
