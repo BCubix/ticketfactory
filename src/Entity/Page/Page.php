@@ -47,7 +47,7 @@ class Page extends Datable
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $subtitle;
 
-    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(length: 123, unique: true)]
@@ -296,7 +296,8 @@ class Page extends Datable
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function completeSeo() {
+    public function completeSeo()
+    {
         $this->completeFields($this->getTitle());
     }
 

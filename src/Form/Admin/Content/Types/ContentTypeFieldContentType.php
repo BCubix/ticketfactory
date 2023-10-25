@@ -7,6 +7,7 @@ use App\Entity\Content\ContentTypeField;
 use App\Repository\ContentRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldContentType extends ContentTypeFieldAbstractType
@@ -32,6 +33,24 @@ class ContentTypeFieldContentType extends ContentTypeFieldAbstractType
                     ->orderBy('c.title', 'ASC');
             }
         ]);
+    }
+
+    public static function getOptions()
+    {
+        return [
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ],
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ]
+        ];
     }
 
     public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed

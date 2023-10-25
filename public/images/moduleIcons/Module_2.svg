@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect id="b" data-name="Rectangle 85" x="64.52" y="64.52" width="950.96" height="950.96" rx="126.8" ry="126.8" style="fill: #ffc828;"/>
+  <path d="M551.73,498.18h46.65v46.65h-46.65v-46.65Z" style="fill: #005783;"/>
+  <path d="M464.98,285.05h46.65v46.65h-46.65v-46.65Z" style="fill: #eea400;"/>
+  <path d="M689.15,664.38h46.65v46.65h-46.65v-46.65Z" style="fill: #005783;"/>
+  <path d="M352.53,700.73h46.65v46.65h-46.65v-46.65Z" style="fill: #005783;"/>
+  <path d="M665.82,551.2h46.65v46.65h-46.65v-46.65Z" style="fill: #eea400;"/>
+  <path d="M266.65,551.2h46.65v46.65h-46.65v-46.65Z" style="fill: #eea400;"/>
+  <circle cx="399.18" cy="448.32" r="75.02" style="fill: none; stroke: #2e71b3; stroke-miterlimit: 10; stroke-width: 34px;"/>
+  <circle cx="540" cy="711.02" r="75.02" style="fill: none; stroke: #2e71b3; stroke-miterlimit: 10; stroke-width: 34px;"/>
+  <path d="M755.24,489.01c-102.15,0-184.95-82.81-184.95-184.95,0-35.06,9.76-67.84,26.7-95.78-18.52-3.16-37.56-4.81-56.99-4.81-185.86,0-336.54,150.67-336.54,336.54,0,185.86,150.67,336.54,336.54,336.54s336.54-150.67,336.54-336.54c0-30.15-3.97-59.37-11.41-87.18-30.73,22.73-68.74,36.18-109.89,36.18Z" style="fill: none; stroke: #225486; stroke-miterlimit: 10; stroke-width: 34px;"/>
+</svg>

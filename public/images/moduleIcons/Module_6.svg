@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect id="b" data-name="Rectangle 85" x="64.52" y="64.52" width="950.96" height="950.96" rx="126.8" ry="126.8" style="fill: #ffc828;"/>
+  <g>
+    <g id="c" data-name="g1802">
+      <path id="d" data-name="path1804" d="M376.1,458.19v28.55c0,7.42,6.01,13.43,13.43,13.43h300.94c7.42,0,13.43-6.01,13.43-13.43v-28.55c0-7.42-6.01-13.43-13.43-13.43H389.53c-7.42,0-13.43,6.01-13.43,13.43Z" style="fill: none; stroke: #eea400; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="e" data-name="g1806">
+      <path id="f" data-name="path1808" d="M376.1,582.42v28.55c0,7.42,6.01,13.43,13.43,13.43h300.94c7.42,0,13.43-6.01,13.43-13.43v-28.55c0-7.42-6.01-13.43-13.43-13.43H389.53c-7.42,0-13.43,6.01-13.43,13.43Z" style="fill: none; stroke: #2e71b3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="g" data-name="g1810">
+      <path id="h" data-name="path1812" d="M565.53,701.11h-51.06c-14.73,0-26.66,11.94-26.66,26.67v1.49c0,14.73,11.94,26.67,26.66,26.67h51.06c14.73,0,26.67-11.94,26.67-26.67v-1.49c0-14.73-11.94-26.67-26.67-26.67Z" style="fill: none; stroke: #225486; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="i" data-name="g1814">
+      <path id="j" data-name="path1816" d="M770.19,176.34H309.81c-17.34,0-31.4,14.06-31.4,31.4v79.54H801.59v-79.54c0-17.34-14.06-31.4-31.4-31.4Z" style="fill: none; stroke: #225486; stroke-linecap: round; stroke-linejoin: round; stroke-width: 32px;"/>
+    </g>
+    <g id="k" data-name="g1818">
+      <path id="l" data-name="path1820" d="M278.41,373.6v443.68c0,17.34,14.06,31.4,31.4,31.4h282.38" style="fill: none; stroke: #225486; stroke-linecap: round; stroke-linejoin: round; stroke-width: 30px;"/>
+    </g>
+    <g id="m" data-name="g1822">
+      <path id="n" data-name="path1824" d="M782.41,846.22c11.27-4.77,19.18-15.93,19.18-28.93V207.74c0-17.34-14.06-31.4-31.4-31.4H309.81c-17.34,0-31.4,14.06-31.4,31.4v121.96" style="fill: none; stroke: #225486; stroke-linecap: round; stroke-linejoin: round; stroke-width: 30px;"/>
+    </g>
+    <g id="o" data-name="g1826">
+      <path id="p" data-name="path1828" d="M348.07,209.21c-12.48,0-22.6,10.12-22.6,22.6s10.12,22.6,22.6,22.6,22.6-10.12,22.6-22.6-10.12-22.6-22.6-22.6Z" style="fill: none; stroke: #2e71b3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="q" data-name="g1830">
+      <path id="r" data-name="path1832" d="M435.91,209.21c-12.48,0-22.6,10.12-22.6,22.6s10.12,22.6,22.6,22.6,22.6-10.12,22.6-22.6-10.12-22.6-22.6-22.6Z" style="fill: none; stroke: #eea400; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="s" data-name="g1834">
+      <path id="t" data-name="path1836" d="M523.76,209.21c-12.48,0-22.6,10.12-22.6,22.6s10.12,22.6,22.6,22.6,22.6-10.12,22.6-22.6-10.12-22.6-22.6-22.6Z" style="fill: none; stroke: #2e71b3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="u" data-name="g1838">
+      <path id="v" data-name="path1840" d="M762.23,795.31l-113.87-65.74c-5.16-2.98-11.61,.74-11.61,6.7v131.49c0,5.96,6.45,9.68,11.61,6.7l29.33-16.93c4.32-2.49,9.84-1.01,12.33,3.3l22.23,38.5c2.39,4.14,7.69,5.56,11.84,3.17l24.56-14.18c4.15-2.39,5.57-7.69,3.17-11.84l-22.23-38.5c-2.49-4.32-1.01-9.84,3.3-12.33l29.33-16.94c5.16-2.98,5.16-10.43,0-13.4Z" style="fill: none; stroke: #eea400; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+    <g id="w" data-name="g1790">
+      <path id="x" data-name="path1792" d="M435.92,373.6h208.17" style="fill: none; stroke: #2e71b3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 24px;"/>
+    </g>
+  </g>
+</svg>

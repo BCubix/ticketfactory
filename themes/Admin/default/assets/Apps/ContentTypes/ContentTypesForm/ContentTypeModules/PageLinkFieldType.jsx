@@ -2,7 +2,7 @@ import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-const NAME = 'pageLink';
+const NAME = 'page';
 const LABEL = 'Lien vers une page';
 
 const TYPE = 'page';

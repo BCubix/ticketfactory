@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Event\Event;
-use App\Service\Sort\EventSorter;
 
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -59,38 +58,58 @@ class EventRepository extends CrudRepository
 
     public function findAllForWebsite(int $languageId, array $filters): ?array
     {
+
         $events = $this->createQueryBuilder('e')
             ->addSelect('s')
             ->addSelect('c')
             ->addSelect('em')
             ->addSelect('m')
+            ->addSelect('r')
             ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('e.season', 's')
             ->innerJoin('e.eventCategories', 'c')
+            ->innerJoin('e.room', 'r')
             ->leftJoin('e.eventMedias', 'em')
             ->leftJoin('em.media', 'm')
-    	    ->where('e.active = 1')
-        ;
+            ->where('e.active = 1');
 
         if (!empty($filters['season'])) {
             $events
                 ->andWhere('s.id = :seasonId')
-                ->setParameter('seasonId', $filters['season'])
-            ;
+                ->setParameter('seasonId', $filters['season']);
         }
 
         if (!empty($filters['category'])) {
             $events
                 ->andWhere('c.id = :categoryId')
-                ->setParameter('categoryId', $filters['category'])
-            ;
+                ->setParameter('categoryId', $filters['category']);
+        }
+
+        if (!empty($filters['room'])) {
+            $events
+                ->andWhere('r.id = :roomId')
+                ->setParameter('roomId', $filters['room']);
+        }
+
+        if (!empty($filters['month'])) {
+            try {
+                $beginDate = new \DateTime('20' . $filters['month'] . '-01');
+                $endDate = clone $beginDate;
+                $endDate->add(new \DateInterval('P1M'));
+
+                $events
+                    ->andWhere('ed.eventDate > :beginDate')
+                    ->andWhere('ed.eventDate < :endDate')
+                    ->setParameter('beginDate', $beginDate)
+                    ->setParameter('endDate', $endDate);
+            } catch (\Exception $e) {
+            }
         }
 
         return $events
             ->setParameter('languageId', $languageId)
-    	    ->getQuery()
-    	    ->getResult()
-    	;
+            ->getQuery()
+            ->getResult();
     }
 
     public function findOneForWebsite(int $languageId, int $pageId): ?Event
@@ -102,8 +121,7 @@ class EventRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('pageId', $pageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneByIdForWebsite(int $eventId): ?Event
@@ -113,8 +131,7 @@ class EventRepository extends CrudRepository
             ->andWhere('e.id = :eventId')
             ->setParameter('eventId', $eventId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findBySlugForWebsite(int $languageId, string $slug): ?Event
@@ -125,8 +142,7 @@ class EventRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneByCategoriesForWebsite(array $categories, int $eventId): ?Event
@@ -139,7 +155,6 @@ class EventRepository extends CrudRepository
             ->setParameter("eventId", $eventId)
             ->setParameter("eventCategories", $categories)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

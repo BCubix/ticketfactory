@@ -2,10 +2,10 @@ import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-const NAME = 'eventLink';
+const NAME = 'event';
 const LABEL = 'Lien vers un évènement';
 
-const TYPE = 'eventLink';
+const TYPE = 'event';
 const TYPE_GROUP_NAME = 'Liens';
 
 const Options = ({ values, index, setFieldValue, prefixName }) => {

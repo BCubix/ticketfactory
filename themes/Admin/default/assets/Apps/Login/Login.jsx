@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Avatar, AvatarGroup, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, Typography } from '@mui/material';
+import { Avatar, Box, Button, Link, Tooltip, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
@@ -65,6 +65,21 @@ export const Login = () => {
                                 </Typography>
                             </Box>
                             <Box sx={{ mt: { xs: 5, md: 25 }, width: '100%' }}>
+                                <Box className="notification notification-error" sx={{ '&::before': { display: 'none' } }}>
+                                    <Typography sx={{ marginBottom: 3 }}>Identifiants de démo:</Typography>
+                                    <Typography sx={{ margin: 0 }}>
+                                        Email:{' '}
+                                        <Typography component="b" fontWeight={500}>
+                                            thomas.anderson@matrix.com
+                                        </Typography>
+                                    </Typography>
+                                    <Typography sx={{ margin: 0 }}>
+                                        Mot de passe:{' '}
+                                        <Typography component="b" fontWeight={500}>
+                                            matrix
+                                        </Typography>
+                                    </Typography>
+                                </Box>
                                 <Component.CmtTextField
                                     margin="normal"
                                     value={values.username}
@@ -155,25 +170,24 @@ export const Login = () => {
                             {' '}
                             modules{' '}
                         </Typography>
-                        de la market place (liaisons billetterie, CRM, outils tiers)...{' '}
                     </Typography>
 
                     <Stack direction="row" spacing={10} sx={{ mt: 20 }}>
-                        <LoginModulePresentation alt="Module 1">M1</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 2">M2</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 3">M3</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 4">M4</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 5">M5</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 6">M6</LoginModulePresentation>
+                        <LoginModulePresentation title="Optimisation SEO" src={`${Constant.MODULES_ICONS_PATH}/Module_1.svg`} />
+                        <LoginModulePresentation title="Bandeau cookies" src={`${Constant.MODULES_ICONS_PATH}/Module_2.svg`} />
+                        <LoginModulePresentation title="Bandeaux promos" src={`${Constant.MODULES_ICONS_PATH}/Module_3.svg`} />
+                        <LoginModulePresentation title="Paniers abandonnées" src={`${Constant.MODULES_ICONS_PATH}/Module_4.svg`} />
+                        <LoginModulePresentation title="Evénements connexes" src={`${Constant.MODULES_ICONS_PATH}/Module_5.svg`} />
+                        <LoginModulePresentation title="Création de formulaires" src={`${Constant.MODULES_ICONS_PATH}/Module_6.svg`} />
                     </Stack>
 
                     <Stack direction="row" spacing={10} sx={{ mt: 6 }}>
-                        <LoginModulePresentation alt="Module 1">M1</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 2">M2</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 3">M3</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 4">M4</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 5">M5</LoginModulePresentation>
-                        <LoginModulePresentation alt="Module 6">M6</LoginModulePresentation>
+                        <LoginModulePresentation title="Inscription newsletter" src={`${Constant.MODULES_ICONS_PATH}/Module_7.svg`} />
+                        <LoginModulePresentation title="Rédaction d'avis" src={`${Constant.MODULES_ICONS_PATH}/Module_8.svg`} />
+                        <LoginModulePresentation title="Meilleures ventes" src={`${Constant.MODULES_ICONS_PATH}/Module_9.svg`} />
+                        <LoginModulePresentation title="Messages flash" src={`${Constant.MODULES_ICONS_PATH}/Module_10.svg`} />
+                        <LoginModulePresentation title="Statistiques avancées" src={`${Constant.MODULES_ICONS_PATH}/Module_11.svg`} />
+                        <LoginModulePresentation title="Prochains événements" src={`${Constant.MODULES_ICONS_PATH}/Module_12.svg`} />
                     </Stack>
                 </Box>
             </Component.LoginBackgroundWrapper>
@@ -181,9 +195,17 @@ export const Login = () => {
     );
 };
 
-const LoginModulePresentation = ({ alt, children }) => {
+const LoginModulePresentation = ({ alt, title = '', src = null, children }) => {
+    if (src) {
+        return (
+            <Tooltip title={title}>
+                <Avatar src={src} alt={alt || title} sx={{ width: 64, height: 64 }} variant="square" />
+            </Tooltip>
+        );
+    }
+
     return (
-        <Avatar alt={alt} sx={{ width: 64, height: 64 }}>
+        <Avatar alt={alt || title} sx={{ width: 64, height: 64 }}>
             {children}
         </Avatar>
     );
