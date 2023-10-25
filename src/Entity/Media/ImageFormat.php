@@ -21,7 +21,7 @@ class ImageFormat extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one', 'a_all'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -59,6 +59,8 @@ class ImageFormat extends Datable
     #[ORM\Column(type: 'boolean')]
     private ?bool $themeUse = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
     #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'imageFormats')]
     private Collection $medias;
 

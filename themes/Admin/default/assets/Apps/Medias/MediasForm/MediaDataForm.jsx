@@ -100,6 +100,7 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
 
     return (
         <Formik
+            enableReinitialize={true}
             initialValues={{
                 alt: media?.alt || '',
                 title: media?.title || '',

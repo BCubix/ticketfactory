@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardContent, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
@@ -20,6 +20,10 @@ export const MediasList = () => {
     const [editDialog, setEditDialog] = useState(null);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+    const [loadedImage, setLoadedImage] = useState([]);
+    const [imageUploads, setImageUploads] = useState([]);
+    const [sidebarDialog, setSidebarDialog] = useState(null);
+    var idImageSidebar = useRef(0);
 
     useEffect(() => {
         if (!loading && !medias && !error) {
@@ -27,10 +31,29 @@ export const MediasList = () => {
         }
     }, []);
 
-    const handleSubmit = () => {
+    const handleEditMultiple = () => {
+        const updatedArray = imageUploads.filter((item) => item.id !== idImageSidebar.current);
+        setImageUploads(updatedArray);
+        if (updatedArray.length >= 1) {
+            idImageSidebar.current = updatedArray[0]?.id;
+            setEditDialog(idImageSidebar.current);
+        } else {
+            setEditDialog(null);
+        }
+    };
+
+    const handleSubmit = (imageArray) => {
         setCreateDialog(false);
         dispatch(getMediasAction());
-        NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
+        const parsedImageArray = imageArray.map((imgStr) => JSON.parse(imgStr));
+
+        if (parsedImageArray.length > 1) NotificationManager.success('Vos éléments ont bien été ajoutés.', 'Succès', Constant.REDIRECTION_TIME);
+        else NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
+
+        setImageUploads(parsedImageArray);
+        idImageSidebar.current = parsedImageArray[0]?.id;
+        setEditDialog(idImageSidebar.current);
+        setSidebarDialog(true);
     };
 
     const handleAddIframe = (values) => {
@@ -136,7 +159,7 @@ export const MediasList = () => {
             <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un fichier</DialogTitle>
                 <DialogContent>
-                    <Component.CreateMedia handleSubmit={handleSubmit} />
+                    <Component.CreateMedia handleSubmit={handleSubmit} setLoadedImage={setLoadedImage} loadedImage={loadedImage} />
                 </DialogContent>
             </Dialog>
 
@@ -167,15 +190,27 @@ export const MediasList = () => {
             </Dialog>
 
             <Dialog fullWidth maxWidth="lg" open={Boolean(editDialog)} onClose={() => setEditDialog(false)}>
+                {editDialog && sidebarDialog && (
+                    <Component.ImageUploads
+                        imageUploads={imageUploads}
+                        onSelect={(id) => {
+                            idImageSidebar.current = id;
+                            setEditDialog(idImageSidebar.current);
+                        }}
+                    />
+                )}
                 <DialogTitle sx={{ fontSize: 20 }}>Modifier un fichier</DialogTitle>
                 <DialogContent dividers>
                     <Component.EditMedia
                         id={editDialog}
                         onCancel={() => {
                             setEditDialog(null);
+                            setSidebarDialog(false);
                         }}
                         editSuccess={() => {
-                            setEditDialog(null);
+                            if (sidebarDialog) {
+                                handleEditMultiple();
+                            } else setEditDialog(null);
                         }}
                         deleteElement={(id) => setDeleteDialog(id)}
                     />

@@ -11,9 +11,12 @@ use App\Manager\ImageFormatManager;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
 use App\Manager\HookManager;
+use App\Service\File\MimeTypeMapping;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Oneup\UploaderBundle\UploadEvents;
@@ -39,8 +42,9 @@ class FileUploader implements EventSubscriberInterface
     private $tm;
     private $hm;
     private $ifm;
+    private $se;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm, ImageFormatManager $ifm)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm, ImageFormatManager $ifm, SerializerInterface $se)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
@@ -48,6 +52,7 @@ class FileUploader implements EventSubscriberInterface
         $this->tm = $tm;
         $this->hm = $hm;
         $this->ifm = $ifm;
+        $this->se = $se;
     }
 
     public static function getSubscribedEvents(): array
@@ -100,14 +105,18 @@ class FileUploader implements EventSubscriberInterface
         $media->setDocumentType($type);
         $media->setDocumentSize($file->getSize());
         $media->setDocumentUrl($url);
+        $typeCheck = MimeTypeMapping::getTypeFromMime($type);
 
-        $imageFormParameters = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin('Image_form_list');
         $formats = [];
+        if ($typeCheck === "Image") {
+            $imageFormParameters = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin('Image_form_list');
 
-        if ($imageFormParameters != null) {
-            $imageFormatIdArray = explode(",", $imageFormParameters->getParamValue());
-            $formats = $this->em->getRepository(ImageFormat::class)->findImageFormatById($imageFormatIdArray);
-            foreach ($formats['results'] as $format) {
+            if ($imageFormParameters != null) {
+                $tmpStringImageForm = str_replace(' ', '', $imageFormParameters->getParamValue());
+                $imageFormatIdArray = explode(",", $tmpStringImageForm);
+                $formats = $this->em->getRepository(ImageFormat::class)->findImageFormatById($imageFormatIdArray);
+            }
+            foreach ($formats["results"] as $format) {
                 $media->addImageFormat($format);
             }
         }
@@ -116,11 +125,14 @@ class FileUploader implements EventSubscriberInterface
         $this->em->flush();
 
         $this->moveFile($media, $event->getRequest()->get('filePath') . "/");
-
         $this->hm->exec('MediaSaved', [
             'sObject' => $media,
-            'state' => 'add'
+            'state' => 'add',
+            'formats' => $formats
         ]);
+
+        $context = SerializationContext::create()->setGroups(['a_edit']);
+        $response["media"] = $this->se->serialize($media, 'json', $context);
         return $response;
     }
 

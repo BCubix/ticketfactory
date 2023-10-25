@@ -25,14 +25,18 @@ class ImageFormatRepository extends CrudRepository
     {
         parent::__construct($registry, ImageFormat::class);
     }
-    public function findImageFormatById(array $id): array
+    public function findImageFormatById(array $ids): array
     {
-        return $this->createQueryBuilder('u')
-            ->where('u.id = :id')
-            ->setParameter('id', $id)
+        $results = $this->createQueryBuilder('u')
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids)
             ->getQuery()
-            ->getArrayResult()
-        ;
+            ->getResult();
+
+        return [
+            'results' => $results,
+            'total' => count($results)
+        ];
     }
     public function findOneByNameForAdmin(string $name)
     {

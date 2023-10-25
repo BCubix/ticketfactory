@@ -24,14 +24,14 @@ class Media extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_all', 'a_edit'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_article_one', 'a_event_one', 'a_media_one', 'a_media_all'])]
+    #[JMS\Groups(['a_article_one', 'a_event_one', 'a_media_one', 'a_media_all',])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $alt = null;
 
@@ -72,7 +72,7 @@ class Media extends Datable
     private ?string $documentSize = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_all', 'a_edit'])]
     #[ORM\Column(type: 'string', length: 2047)]
     private ?string $documentUrl = null;
 
@@ -89,6 +89,8 @@ class Media extends Datable
     #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
     private $mediaCategories;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one'])]
     #[ORM\ManyToMany(targetEntity: ImageFormat::class, inversedBy: 'media')]
     private Collection $imageFormats;
 
