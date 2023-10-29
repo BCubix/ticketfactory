@@ -41,6 +41,8 @@ api.interceptors.response.use(
             } else {
                 error.config.headers['Authorization'] = 'Bearer ' + result.token;
             }
+        } else if (status === 401 && error?.config?.url === '/token/refresh') {
+            useDispatch(logoutAction());
         }
 
         throw error;

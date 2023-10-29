@@ -7,6 +7,7 @@ import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { getSeoFormData } from './seoApi';
 
 var controller = null;
 
@@ -168,6 +169,8 @@ const eventsApi = {
                 formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
 
+            getSeoFormData(formData, data);
+
             const result = await axios.post('/events', formData);
 
             return { result: true, event: result.data };
@@ -228,6 +231,8 @@ const eventsApi = {
                 formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
                 formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
+
+            getSeoFormData(formData, data);
 
             const result = await axios.post(`/events/${id}`, formData);
 

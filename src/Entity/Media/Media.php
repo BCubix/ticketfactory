@@ -248,6 +248,9 @@ class Media extends Datable
     public function setMainCategory(?MediaCategory $mainCategory): self
     {
         $this->mainCategory = $mainCategory;
+        if (null !== $mainCategory) {
+            $this->addMediaCategory($mainCategory);
+        }
 
         return $this;
     }

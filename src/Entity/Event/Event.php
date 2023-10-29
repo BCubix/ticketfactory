@@ -268,6 +268,9 @@ class Event extends Datable
     public function setMainCategory(?EventCategory $mainCategory): self
     {
         $this->mainCategory = $mainCategory;
+        if (null !== $mainCategory) {
+            $this->addEventCategory($mainCategory);
+        }
 
         return $this;
     }
@@ -388,10 +391,10 @@ class Event extends Datable
     }
 
     /**
-    * Renvoie la première date de représentation de l'événement
-    *
-    * @return EventDate
-    */
+     * Renvoie la première date de représentation de l'événement
+     *
+     * @return EventDate
+     */
     #[JMS\Expose()]
     #[JMS\VirtualProperty()]
     #[JMS\SerializedName("beginDate")]
@@ -402,10 +405,10 @@ class Event extends Datable
     }
 
     /**
-    * Renvoie la dernière date de représentation du spectacle
-    *
-    * @return Datetime
-    */
+     * Renvoie la dernière date de représentation du spectacle
+     *
+     * @return Datetime
+     */
     #[JMS\Expose()]
     #[JMS\VirtualProperty()]
     #[JMS\SerializedName("endDate")]
@@ -415,11 +418,11 @@ class Event extends Datable
         return EventSorter::getReferenceDate($this, EventSorter::LAST_DATE, $objectString);
     }
 
-   /**
-    * Renvoie le media principal associé à l'évenement
-    *
-    * @return Media
-    */
+    /**
+     * Renvoie le media principal associé à l'évenement
+     *
+     * @return Media
+     */
     public function getMainMedia()
     {
         foreach ($this->getEventMedias() as $eventMedia) {
@@ -439,7 +442,8 @@ class Event extends Datable
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function completeSeo() {
+    public function completeSeo()
+    {
         $this->completeFields($this->getName());
     }
 }

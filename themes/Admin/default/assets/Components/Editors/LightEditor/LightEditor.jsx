@@ -62,6 +62,7 @@ export const LightEditor = ({ value, onChange, className, ...rest }) => {
             init={{
                 height: 300,
                 menubar: true,
+                entity_encoding: 'raw',
                 plugins: [
                     'autolink',
                     'link',
@@ -82,6 +83,9 @@ export const LightEditor = ({ value, onChange, className, ...rest }) => {
                 toolbar:
                     'code | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | forecolor backcolor | customArrow customText',
                 content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
+
+                relative_urls: false,
+                image_caption: true,
             }}
             {...rest}
         />
