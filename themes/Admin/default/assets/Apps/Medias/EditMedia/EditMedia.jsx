@@ -20,6 +20,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     const [editImage, setEditImage] = useState(false);
     const [mediaType, setMediaType] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+    const [mediaParameterList, setMediaFormatList] = useState(null);
 
     const getMedia = async () => {
         apiMiddleware(dispatch, async () => {
@@ -30,13 +31,16 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                 return;
             }
 
+            const idsImageFormat = result.media.imageFormats.map((format) => format.id);
             setMedia(result.media);
+            setMediaFormatList(idsImageFormat.toString());
             setMediaType(getMediaType(result?.media?.documentType));
         });
     };
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
+            console.log(values);
             const result = await Api.mediasApi.editMedia(id, values);
 
             if (!result.result) {
@@ -94,6 +98,8 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                     mediaType={mediaType}
                     mediaCategoriesList={mediaCategoriesList}
                     setEditImage={setEditImage}
+                    mediaParameterList={mediaParameterList}
+                    setMediaFormatList={setMediaFormatList}
                 />
             )}
         </Grid>

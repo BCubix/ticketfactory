@@ -37,8 +37,12 @@ export const MediasList = () => {
         if (updatedArray.length >= 1) {
             idImageSidebar.current = updatedArray[0]?.id;
             setEditDialog(idImageSidebar.current);
-        } else {
-            setEditDialog(null);
+            if (updatedArray.length === 1) {
+                setSidebarDialog(false);
+            }
+            if (updatedArray.length === 0) {
+                setEditDialog(null);
+            }
         }
     };
 
@@ -53,7 +57,9 @@ export const MediasList = () => {
         setImageUploads(parsedImageArray);
         idImageSidebar.current = parsedImageArray[0]?.id;
         setEditDialog(idImageSidebar.current);
-        setSidebarDialog(true);
+        if (parsedImageArray.length > 1) {
+            setSidebarDialog(true);
+        }
     };
 
     const handleAddIframe = (values) => {
