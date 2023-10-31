@@ -98,8 +98,8 @@ class ImageFormatManager extends AbstractManager
                 } else {
                     // Rm only format request
                     foreach ($formats['results'] as $format) {
-                        $mediaThumbnailPath = $this->mm->getFilePathFromFormat($mediaFile, $format);
-                        $this->fs->remove($mediaThumbnailPath);
+                        $mediaThumbnailPath = $this->mm->getFormattedMediaPathFromFormat($media, $format);
+                        $this->fs->remove($this->sf->get('pathGetter')->getPublicDir() . $mediaThumbnailPath);
                     }
                 }
             } catch (IOException $ioe) {

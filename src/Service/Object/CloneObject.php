@@ -23,11 +23,11 @@ class CloneObject
         $attributes = $reflectionProperty->getAttributes();
 
         if (count($attributes) > 0) {
-            foreach($attributes as $attribute) {
+            foreach ($attributes as $attribute) {
                 $arguments = $attribute->getArguments();
                 $name = $attribute->getName();
 
-                if ($name ===  "Doctrine\ORM\Mapping\Column" && array_key_exists("type", $arguments)) {
+                if ($name === "Doctrine\ORM\Mapping\Column" && array_key_exists("type", $arguments)) {
                     return $arguments["type"];
                 } else if (array_key_exists($name, self::RELATIONS_TYPE_MAP)) {
                     return self::RELATIONS_TYPE_MAP[$name];
@@ -67,6 +67,12 @@ class CloneObject
                         $newObject->$methodName($newElement);
                     }
                 }
+            } else if ($type === "ManyToMany") {
+                $newCollection = new ArrayCollection();
+                foreach ($value as $relatedObject) {
+                    $newCollection->add($relatedObject);
+                }
+                $reflectionProperty->setValue($newObject, $newCollection);
             } else if ($type === "OneToOne") {
                 $reflectionProperty->setValue($newObject, null);
             }
