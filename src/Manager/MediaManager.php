@@ -16,6 +16,16 @@ class MediaManager extends AbstractManager
         return $this->sf->get('pathGetter')->getPublicDir() . $media->getDocumentUrl();
     }
 
+    public function checkFormatMedia(Media $media, ImageFormat $imageFormat): bool
+    {
+        foreach ($media->getImageFormats() as $format) {
+            if ($format->getId() === $imageFormat->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public function checkFileFromPath(string $path): bool
     {
@@ -66,7 +76,7 @@ class MediaManager extends AbstractManager
         return $filePath . '/' . implode('.', $fileNameArr) . '-' . $format->getSlug() . $extension;
     }
 
-    public function getFormattedImageUrl(Media $media, ?string $keyword): ?string
+    public function getFormattedImage(Media $media, ?string $keyword): ?Media
     {
         $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($keyword);
 
@@ -80,12 +90,14 @@ class MediaManager extends AbstractManager
             return null;
         }
 
-        return $filePath;
+        $media->setDocumentUrl($filePath);
+
+        return $media;
     }
 
     public function getFormattedImageUrlFromFormat(Media $media, ?ImageFormat $imageFormat): ?string
     {
-        if (null === $imageFormat) {
+        if (null === $imageFormat || !$this->checkFormatMedia($media, $imageFormat)) {
             return null;
         }
 
@@ -103,12 +115,12 @@ class MediaManager extends AbstractManager
         $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($keyword);
 
         if (null === $imageFormat) {
-            return $medias[0];
+            return null;
         }
 
         foreach ($medias as $media) {
             if ($media->getRealType() === 'image') {
-                foreach ($media->getImageFormats as $format) {
+                foreach ($media->getImageFormats() as $format) {
                     if ($format->getId() === $imageFormat->getId()) {
                         $filePath = $this->getFormattedMediaPathFromFormat($media, $imageFormat);
                         if ($this->checkFileFromPath($filePath)) {
@@ -120,6 +132,6 @@ class MediaManager extends AbstractManager
             }
         }
 
-        return $medias[0];
+        return null;
     }
 }

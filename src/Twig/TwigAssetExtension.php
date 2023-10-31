@@ -30,17 +30,17 @@ class TwigAssetExtension extends AbstractExtension
         return $media->getDocumentUrl();
     }
 
-    public function formattedAsset(?Media $media, ?string $slug = null): string
+    public function formattedAsset(?Media $media, ?string $slug = null): ?Media
     {
         if (null === $media) {
-            return '';
+            return null;
         }
 
         if (null === $slug) {
-            return $media->getDocumentUrl();
+            return $media;
         }
 
-        return $this->mm->getFormattedImageUrl($media, $slug);
+        return $this->mm->getFormattedImage($media, $slug);
     }
 
     public function getFirstFormattedAsset(mixed $medias, ?string $slug = null): ?Media

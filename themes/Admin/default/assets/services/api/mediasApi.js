@@ -160,6 +160,7 @@ const mediasApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
+            formData.append('thumbnail', data?.thumbnail?.id || '');
             formData.append('iframe', 1);
             formData.append('documentType', data.documentType);
             data?.mediaCategories?.forEach((category, index) => {
@@ -184,6 +185,7 @@ const mediasApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
+            formData.append('thumbnail', data?.thumbnail?.id || '');
             formData.append('iframe', 1);
             formData.append('documentType', data.documentType);
             data?.mediaCategories?.forEach((category, index) => {
@@ -208,6 +210,7 @@ const mediasApi = {
             formData.append('active', data.active ? 1 : 0);
             formData.append('mainCategory', data.mainCategory || '');
             formData.append('documentUrl', data.documentUrl || '');
+            formData.append('thumbnail', data?.thumbnail?.id || '');
             formData.append('iframe', data.iframe ? 1 : 0);
             formData.append('documentType', data.documentType || '');
             data?.mediaCategories?.forEach((category, index) => {

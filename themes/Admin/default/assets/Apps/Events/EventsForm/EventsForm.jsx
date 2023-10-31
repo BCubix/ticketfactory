@@ -81,7 +81,6 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                 multipleDateBlock: initValues?.eventDateBlocks?.length > 1 || false,
                 eventMedias:
                     initValues?.eventMedias?.map((el) => ({
-                        mainImg: el.mainImg,
                         position: el.position,
                         id: el.media?.id,
                         media: el.media,

@@ -281,10 +281,6 @@ class EventManager extends AbstractManager
         foreach ($eventMedias as $eventMedia) {
             $media = $eventMedia->getMedia();
 
-            if ($eventMedia->isMainImg()) {
-                $medias['main'] = $media;
-            }
-
             $type = MimeTypeMapping::getTypeFromMime($media->getDocumentType());
             $type = iconv("utf-8", "ascii//TRANSLIT", $type);
             $type = strtolower($type);

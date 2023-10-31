@@ -164,7 +164,6 @@ const eventsApi = {
 
             data.eventMedias?.forEach((eventMedia, index) => {
                 formData.append(`eventMedias[${index}][media]`, eventMedia.id);
-                formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
                 formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
 
@@ -225,7 +224,6 @@ const eventsApi = {
 
             data.eventMedias?.forEach((eventMedia, index) => {
                 formData.append(`eventMedias[${index}][media]`, eventMedia.id);
-                formData.append(`eventMedias[${index}][mainImg]`, eventMedia.mainImg ? 1 : 0);
                 formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
 

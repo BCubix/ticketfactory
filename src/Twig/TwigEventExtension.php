@@ -36,7 +36,6 @@ class TwigEventExtension extends AbstractExtension
         return [
             new TwigFunction('eventDatesStr', [$this, 'eventDatesStr']),
             new TwigFunction('eventPricesStr', [$this, 'eventPricesStr']),
-            new TwigFunction('eventDateStateStr', [$this, 'eventDateStateStr']),
             new TwigFunction('getMainImageFromEvent', [$this, 'getMainImageFromEvent']),
             new TwigFunction('getFirstFormattedMediaForEvent', [$this, 'getFirstFormattedMediaForEvent']),
         ];
@@ -69,11 +68,6 @@ class TwigEventExtension extends AbstractExtension
         return $this->em->getMainImageFromEvent($event);
     }
 
-    public function eventDateStateStr(EventDate $eventDate): string
-    {
-        return $this->edm->getEventDateStateStr($eventDate);
-    }
-
     public function formatDateTime(\DateTime $dateTime, string $format = null): string
     {
         $locale = $this->rs->getMainRequest()->getLocale();
@@ -103,8 +97,12 @@ class TwigEventExtension extends AbstractExtension
 
     public function getFirstFormattedMediaForEvent($eventMedias, string $slug): ?EventMedia
     {
-        if (count($eventMedias) === 0 || null === $slug) {
+        if (count($eventMedias) === 0) {
             return null;
+        }
+
+        if (null === $slug) {
+            return $eventMedias[0];
         }
 
         return $this->em->getFirstFormattedMedia($eventMedias, $slug);
