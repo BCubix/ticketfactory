@@ -16,6 +16,16 @@ class MediaManager extends AbstractManager
         return $this->sf->get('pathGetter')->getPublicDir() . $media->getDocumentUrl();
     }
 
+
+    public function checkFileFromPath(string $path): bool
+    {
+        if (file_exists($this->sf->get('pathGetter')->getPublicDir() . $path)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getFilePathFromFormat(File $mediaFile, Imageformat $format): ?string
     {
         $filePath = $mediaFile->getPath();
@@ -26,6 +36,90 @@ class MediaManager extends AbstractManager
         $extension = $fileNameArr[count($fileNameArr) - 1];
         unset($fileNameArr[count($fileNameArr) - 1]);
 
-        return $filePath . implode('.', $fileNameArr) . '-' . $format->getSlug() . '.' . $extension;
+        return $filePath . '/' . implode('.', $fileNameArr) . '-' . $format->getSlug() . '.' . $extension;
+    }
+
+    public function getFormattedMediaPathFromFormat(Media $media, Imageformat $format): ?string
+    {
+        $filePath = substr($media->getDocumentUrl(), 0, strrpos($media->getDocumentUrl(), '/'));
+
+        $fileName = $media->getDocumentFileName();
+        $fileNameArr = explode('.', $fileName);
+        unset($fileNameArr[count($fileNameArr) - 1]);
+
+        $formattedExtension = $this->mf->get('parameter')->getCoreParameter('image_format');
+        $extension = '';
+
+        switch ($formattedExtension) {
+            case IMAGETYPE_WEBP:
+                $extension = ".webp";
+                break;
+            case IMAGETYPE_PNG:
+                $extension = ".png";
+                break;
+            case IMAGETYPE_JPEG:
+            default:
+                $extension = ".jpg";
+                break;
+        }
+
+        return $filePath . '/' . implode('.', $fileNameArr) . '-' . $format->getSlug() . $extension;
+    }
+
+    public function getFormattedImageUrl(Media $media, ?string $keyword): ?string
+    {
+        $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($keyword);
+
+        if (null === $imageFormat) {
+            return null;
+        }
+
+        $filePath = $this->getFormattedMediaPathFromFormat($media, $imageFormat);
+
+        if (!$this->checkFileFromPath($filePath)) {
+            return null;
+        }
+
+        return $filePath;
+    }
+
+    public function getFormattedImageUrlFromFormat(Media $media, ?ImageFormat $imageFormat): ?string
+    {
+        if (null === $imageFormat) {
+            return null;
+        }
+
+        $filePath = $this->getFormattedMediaPathFromFormat($media, $imageFormat);
+
+        if (!$this->checkFileFromPath($filePath)) {
+            return null;
+        }
+
+        return $filePath;
+    }
+
+    public function getFirstFormattedMedia(mixed $medias, string $keyword): ?Media
+    {
+        $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($keyword);
+
+        if (null === $imageFormat) {
+            return $medias[0];
+        }
+
+        foreach ($medias as $media) {
+            if ($media->getRealType() === 'image') {
+                foreach ($media->getImageFormats as $format) {
+                    if ($format->getId() === $imageFormat->getId()) {
+                        $filePath = $this->getFormattedMediaPathFromFormat($media, $imageFormat);
+                        if ($this->checkFileFromPath($filePath)) {
+                            $media->setDocumentUrl($filePath);
+                            return $media;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $medias[0];
     }
 }

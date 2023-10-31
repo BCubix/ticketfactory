@@ -43,9 +43,11 @@ class ImageFormatManager extends AbstractManager
         if (null === $formats) {
             $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         }
+
         if (null === $medias) {
             $medias = $this->em->getRepository(Media::class)->findByTypeForAdmin('Image');
         }
+
         $success = true;
         foreach ($medias as $media) {
             try {

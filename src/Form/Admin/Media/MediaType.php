@@ -2,8 +2,10 @@
 
 namespace App\Form\Admin\Media;
 
+use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Entity\Media\MediaCategory;
+use App\Repository\ImageFormatRepository;
 use App\Repository\MediaRepository;
 use App\Repository\MediaCategoryRepository;
 use App\Service\File\MimeTypeMapping;
@@ -43,6 +45,26 @@ class MediaType extends AbstractType
                     return $mcr
                         ->createQueryBuilder('mc')
                         ->orderBy('mc.name', 'ASC');
+                }
+            ])
+            ->add('thumbnail',             EntityType::class,          [
+                'class'         => Media::class,
+                'choice_label'  => 'media',
+                'multiple'      => false,
+                'query_builder' => function (MediaRepository $mr) {
+                    return $mr
+                        ->createQueryBuilder('m')
+                        ->orderBy('m.title', 'ASC');
+                }
+            ])
+            ->add('imageFormats',      EntityType::class,          [
+                'class'         => ImageFormat::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function (ImageFormatRepository $ifr) {
+                    return $ifr
+                        ->createQueryBuilder('if')
+                        ->orderBy('if.name', 'ASC');
                 }
             ])
             ->add('iframe',                 CheckboxType::class,        ['false_values' => ['0']])

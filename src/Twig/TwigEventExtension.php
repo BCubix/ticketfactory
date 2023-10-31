@@ -4,14 +4,14 @@ namespace App\Twig;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
+use App\Entity\Event\EventMedia;
 use App\Entity\Media\Media;
 use App\Manager\EventDateManager;
 use App\Manager\EventManager;
 use App\Manager\LanguageManager;
 use App\Service\Formatter\DateTimeFormatter;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -38,6 +38,7 @@ class TwigEventExtension extends AbstractExtension
             new TwigFunction('eventPricesStr', [$this, 'eventPricesStr']),
             new TwigFunction('eventDateStateStr', [$this, 'eventDateStateStr']),
             new TwigFunction('getMainImageFromEvent', [$this, 'getMainImageFromEvent']),
+            new TwigFunction('getFirstFormattedMediaForEvent', [$this, 'getFirstFormattedMediaForEvent']),
         ];
     }
 
@@ -98,5 +99,14 @@ class TwigEventExtension extends AbstractExtension
         $format ??= $language->getTimeFormat();
 
         return DateTimeFormatter::formatTime($time, $locale, $format);
+    }
+
+    public function getFirstFormattedMediaForEvent($eventMedias, string $slug): ?EventMedia
+    {
+        if (count($eventMedias) === 0 || null === $slug) {
+            return null;
+        }
+
+        return $this->em->getFirstFormattedMedia($eventMedias, $slug);
     }
 }

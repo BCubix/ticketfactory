@@ -2,9 +2,7 @@
 
 namespace App\Hook;
 
-use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-use App\Entity\Parameter\Parameter;
 use App\Event\HookEvent;
 use App\Manager\ImageFormatManager;
 use App\Service\Addon\Hook;
@@ -29,6 +27,7 @@ class MediaHook extends Hook
 
         $this->ifm->deleteThumbnails(null, [$media]);
     }
+
     public function suppressImageFormat(Media $mediaIobject, Media $mediaSobject)
     {
 
@@ -38,15 +37,20 @@ class MediaHook extends Hook
         foreach ($mediaIobjectImageFormat->toArray() as $imageFormatmediaIobject) {
             $i = false;
             foreach ($mediaSobjectImageFormat->toArray() as $imageFormatmediaSobject) {
-                if ($imageFormatmediaSobject->getId() === $imageFormatmediaIobject) {
+                if ($imageFormatmediaSobject->getId() === $imageFormatmediaIobject->getId()) {
                     $i = true;
                     break;
                 }
             }
-            if ($i != true) {
+            if ($i !== true) {
                 $suppressArray[] = $imageFormatmediaIobject;
             }
         }
+
+        if (count($suppressArray) === 0) {
+            return;
+        }
+
         $this->ifm->deleteThumbnails(['results' => $suppressArray], [$mediaSobject]);
     }
 
@@ -59,17 +63,23 @@ class MediaHook extends Hook
         foreach ($mediaSobjectImageFormat->toArray() as $imageFormatmediaSobject) {
             $i = false;
             foreach ($mediaIobjectImageFormat->toArray() as $imageFormatmediaIobject) {
-                if ($imageFormatmediaIobject->getId() == $imageFormatmediaSobject->getId()) {
+                if ($imageFormatmediaIobject->getId() === $imageFormatmediaSobject->getId()) {
                     $i = true;
                     break;
                 }
             }
-            if ($i != true) {
+            if ($i !== true) {
                 $addArray[] = $imageFormatmediaSobject;
             }
         }
+
+        if (count($addArray) === 0) {
+            return;
+        }
+
         $this->ifm->generateThumbnails(['results' => $addArray], [$mediaSobject]);
     }
+
     public function mediaEdit(HookEvent $event)
     {
         $mediaIobject = $event->getParam('iObject');

@@ -76,7 +76,7 @@ const imageFormatsApi = {
 
             const result = await axios.get('/image-formats', { params: params });
 
-            return { result: true, imageFormat: result.data?.results, total: result?.data?.total };
+            return { result: true, imageFormats: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

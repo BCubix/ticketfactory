@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { NotificationManager } from "react-notifications";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { useDispatch } from 'react-redux';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const ImageFormatParameters = () => {
     const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export const ImageFormatParameters = () => {
             }
 
             const parameters = result.parameters
-                .filter(({ paramKey }) => paramKey.startsWith('image_'))
+                .filter(({ paramKey }) => paramKey.startsWith('core_image_'))
                 .reduce((param, { paramKey, paramValue }) => {
                     param[paramKey] = paramValue;
                     return param;
@@ -31,20 +31,14 @@ export const ImageFormatParameters = () => {
     }, []);
 
     const handleSubmit = async (values) => {
-        const parameters = Object.entries(values).map(([key, value]) =>(
-            { paramKey: key, paramValue: typeof value === "boolean" ? (value ? "1" : "0") : value }
-        ));
+        const parameters = Object.entries(values).map(([key, value]) => ({ paramKey: key, paramValue: typeof value === 'boolean' ? (value ? '1' : '0') : value }));
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.parametersApi.editParameters({ parameters: parameters });
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             } else {
-                NotificationManager.success(
-                    'Les paramètres des images ont bien été modifiés.',
-                    'Succès',
-                    Constant.REDIRECTION_TIME
-                );
+                NotificationManager.success('Les paramètres des images ont bien été modifiés.', 'Succès', Constant.REDIRECTION_TIME);
             }
         });
     };
@@ -53,10 +47,5 @@ export const ImageFormatParameters = () => {
         return <></>;
     }
 
-    return (
-        <Component.ImageFormatParametersForm
-            initialValues={imageFormatParameters}
-            handleSubmit={handleSubmit}
-        />
-    );
+    return <Component.ImageFormatParametersForm initialValues={imageFormatParameters} handleSubmit={handleSubmit} />;
 };

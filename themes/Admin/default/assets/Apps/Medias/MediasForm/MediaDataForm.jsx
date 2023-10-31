@@ -62,84 +62,42 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
     </Grid>
 );
 
-const Formats = ({ mediaParameterList, setMediaFormatList, values, setFieldValue }) => {
-    const dispatch = useDispatch();
-    const [list, setList] = useState([]);
-
-    useEffect(() => {
-        apiMiddleware(dispatch, async () => {
-            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
-                if (result.result) {
-                    setList(result.imageFormat);
-                } else {
-                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
-                }
-            });
-        });
-    }, [dispatch]);
-
-    const handleCheckboxChange = (item) => {
-        var arrayList = mediaParameterList.replace(/\s+/g, '').split(',');
-        var imageFormats = [...values?.imageFormats];
-        var indexValue = arrayList.indexOf(item.id.toString());
-        var idListImageFormat = list.map((el) => el.id);
-
-        if (indexValue !== -1) {
-            arrayList.splice(indexValue, 1);
-            imageFormats = imageFormats?.filter((imageFormat) => imageFormat.id !== item.id);
-            setFieldValue('imageFormats', imageFormats);
-        } else {
-            arrayList.push(item.id.toString());
-            imageFormats.push(list[idListImageFormat.indexOf(item.id)]);
-
-            setFieldValue('imageFormats', imageFormats);
-
-            if (!values.imageFormats) {
-                setFieldValue('imageFormats', item.id);
-            }
-        }
-        console.log(imageFormats);
-        setMediaFormatList(arrayList.toString());
-    };
-
+const Formats = ({ values, setFieldValue, touched, errors, imageFormatList }) => {
     return (
-        <Grid container spacing={2}>
-            <FormControl fullWidth sx={{ marginBlock: 3, display: 'flex', flexDirection: 'row', flexWrap: 'nowrap' }}>
-                {list.map((item) => (
-                    <Grid item key={item.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={mediaParameterList ? mediaParameterList.replace(/\s+/g, '').split(',').includes(String(item.id)) : false}
-                                    onChange={() => handleCheckboxChange(item)}
-                                    value={item.id}
-                                    name={item.name}
-                                    color="primary"
-                                />
-                            }
-                            label={item.name}
-                        />
-                    </Grid>
-                ))}
-            </FormControl>
+        <Grid container spacing={4} sx={{ marginTop: 3 }}>
+            <Grid item xs={12}>
+                <Component.CmtSelectField
+                    label="Formats"
+                    multiple
+                    name={`imageFormats`}
+                    value={values.imageFormats}
+                    list={imageFormatList}
+                    getValue={(item) => item.id}
+                    getName={(item) => item.name}
+                    setFieldValue={setFieldValue}
+                    errors={touched.imageFormats && errors.iamgeFormats}
+                />
+            </Grid>
         </Grid>
     );
 };
 
 const Categories = ({ values, setFieldValue, errors, touched, mediaCategoriesList }) => (
-    <Grid item xs={12}>
-        <Component.MediaParentCategoryPartForm
-            sx={{ mt: 3 }}
-            values={values}
-            mediaCategoriesList={mediaCategoriesList}
-            setFieldValue={setFieldValue}
-            touched={touched}
-            errors={errors}
-        />
+    <Grid container spacing={4} sx={{ marginTop: 3 }}>
+        <Grid item xs={12}>
+            <Component.MediaParentCategoryPartForm
+                sx={{ mt: 3 }}
+                values={values}
+                mediaCategoriesList={mediaCategoriesList}
+                setFieldValue={setFieldValue}
+                touched={touched}
+                errors={errors}
+            />
+        </Grid>
     </Grid>
 );
 
-export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, mediaParameterList, setMediaFormatList }) => {
+export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, mediaParameterList, setMediaFormatList, imageFormatList }) => {
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du fichier'),
     });
@@ -156,7 +114,7 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                 documentType: media?.documentType || '',
                 mediaCategories: media?.mediaCategories ? media?.mediaCategories?.map((el) => el.id) : [],
                 realThumbnail: media?.realThumbnail || '',
-                imageFormats: media?.imageFormats ? media?.imageFormats : [],
+                imageFormats: media?.imageFormats ? media?.imageFormats?.map((el) => el.id) : [],
             }}
             validationSchema={mediaSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -165,8 +123,9 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
-                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5 }}>
+                <Box component="form" onSubmit={handleSubmit} sx={{ margin: 5, width: '100%' }}>
                     <Component.CmtTabs
+                        containerStyle={{ width: '100%' }}
                         list={[
                             {
                                 label: 'Informations générales',
@@ -194,9 +153,7 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                             {
                                 label: 'Formats',
                                 id: 'formats',
-                                component: (
-                                    <Formats mediaParameterList={mediaParameterList} setMediaFormatList={setMediaFormatList} values={values} setFieldValue={setFieldValue} />
-                                ),
+                                component: <Formats values={values} setFieldValue={setFieldValue} touched={touched} errors={errors} imageFormatList={imageFormatList} />,
                             },
                         ]}
                     />

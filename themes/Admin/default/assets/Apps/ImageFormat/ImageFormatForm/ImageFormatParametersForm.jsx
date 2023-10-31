@@ -13,15 +13,15 @@ const IMAGETYPE_JPG = '2';
 
 export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }) => {
     const imageFormatsParameterSchema = Yup.object().shape({
-        image_webp_quality: Yup.number()
+        core_image_webp_quality: Yup.number()
             .required("Veuillez renseigner la qualité d'image WEBP.")
             .min(0, 'Veuillez renseigner un nombre valide.')
             .max(100, 'Veuillez renseigner un nombre valide.'),
-        image_png_quality: Yup.number()
+        core_image_png_quality: Yup.number()
             .required("Veuillez renseigner la qualité d'image PNG.")
             .min(0, 'Veuillez renseigner un nombre valide.')
             .max(100, 'Veuillez renseigner un nombre valide.'),
-        image_jpg_quality: Yup.number()
+        core_image_jpg_quality: Yup.number()
             .required("Veuillez renseigner la qualité d'image JPG.")
             .min(0, 'Veuillez renseigner un nombre valide.')
             .max(100, 'Veuillez renseigner un nombre valide.'),
@@ -30,11 +30,11 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
     return (
         <Formik
             initialValues={{
-                image_webp_quality: initialValues?.image_webp_quality || '',
-                image_png_quality: initialValues?.image_png_quality || '',
-                image_jpg_quality: initialValues?.image_jpg_quality || '',
-                image_format: initialValues?.image_format || IMAGETYPE_WEBP,
-                image_to_crop: initialValues?.image_to_crop || false,
+                core_image_webp_quality: initialValues?.core_image_webp_quality || '',
+                core_image_png_quality: initialValues?.core_image_png_quality || '',
+                core_image_jpg_quality: initialValues?.core_image_jpg_quality || '',
+                core_image_format: initialValues?.core_image_format || IMAGETYPE_WEBP,
+                core_image_to_crop: initialValues?.core_image_to_crop || false,
             }}
             validationSchema={imageFormatsParameterSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -47,34 +47,34 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={4} md={4}>
                             <Component.CmtTextField
-                                value={values.image_webp_quality}
+                                value={values.core_image_webp_quality}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 label="Qualité d'image WEBP"
-                                name="image_webp_quality"
-                                error={touched.image_webp_quality && errors.image_webp_quality}
+                                name="core_image_webp_quality"
+                                error={touched.core_image_webp_quality && errors.core_image_webp_quality}
                                 required
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4}>
                             <Component.CmtTextField
-                                value={values.image_png_quality}
+                                value={values.core_image_png_quality}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 label="Qualité d'image PNG"
-                                name="image_png_quality"
-                                error={touched.image_png_quality && errors.image_png_quality}
+                                name="core_image_png_quality"
+                                error={touched.core_image_png_quality && errors.core_image_png_quality}
                                 required
                             />
                         </Grid>
                         <Grid item xs={12} sm={4} md={4}>
                             <Component.CmtTextField
-                                value={values.image_jpg_quality}
+                                value={values.core_image_jpg_quality}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 label="Qualité d'image JPG"
-                                name="image_jpg_quality"
-                                error={touched.image_jpg_quality && errors.image_jpg_quality}
+                                name="core_image_jpg_quality"
+                                error={touched.core_image_jpg_quality && errors.core_image_jpg_quality}
                                 required
                             />
                         </Grid>
@@ -90,9 +90,9 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                             labelId="imageFormat-label"
                             variant="standard"
                             size="small"
-                            value={values.image_format}
+                            value={values.core_image_format}
                             onChange={(e) => {
-                                setFieldValue('image_format', e.target.value);
+                                setFieldValue('core_image_format', e.target.value);
                             }}
                         >
                             <MenuItem key={'webp'} value={IMAGETYPE_WEBP} id={`selectImageFormatValue-webp`}>
@@ -108,7 +108,7 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                     </FormControl>
 
                     <FormControl fullWidth sx={{ mt: 3 }}>
-                        <FormLabel id="image_to_crop-label" className="required-input" sx={{ fontSize: '12px' }}>
+                        <FormLabel id="core_image_to_crop-label" className="required-input" sx={{ fontSize: '12px' }}>
                             Supprimer les anciennes miniatures
                         </FormLabel>
                         <Stack direction="row" spacing={1} alignItems="center">
@@ -116,9 +116,9 @@ export const ImageFormatParametersForm = ({ initialValues = null, handleSubmit }
                             <Switch
                                 label="Supprimer les anciennes miniatures"
                                 variant="standard"
-                                checked={Boolean(values.image_to_crop)}
+                                checked={Boolean(values.core_image_to_crop)}
                                 onChange={(e) => {
-                                    setFieldValue('image_to_crop', e.target.checked);
+                                    setFieldValue('core_image_to_crop', e.target.checked);
                                 }}
                             />
                             <Typography>Rogner les images</Typography>

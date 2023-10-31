@@ -11,6 +11,7 @@ use App\Manager\ImageFormatManager;
 use App\Manager\ModuleManager;
 use App\Manager\ThemeManager;
 use App\Manager\HookManager;
+use App\Manager\ManagerFactory;
 use App\Service\File\MimeTypeMapping;
 
 
@@ -43,8 +44,9 @@ class FileUploader implements EventSubscriberInterface
     private $hm;
     private $ifm;
     private $se;
+    private $mf;
 
-    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm, ImageFormatManager $ifm, SerializerInterface $se)
+    public function __construct(EntityManagerInterface $em, string $rootPath, ModuleManager $mm, ThemeManager $tm, HookManager $hm, ManagerFactory $mf, ImageFormatManager $ifm, SerializerInterface $se)
     {
         $this->em = $em;
         $this->rootPath = $rootPath;
@@ -53,6 +55,7 @@ class FileUploader implements EventSubscriberInterface
         $this->hm = $hm;
         $this->ifm = $ifm;
         $this->se = $se;
+        $this->mf = $mf;
     }
 
     public static function getSubscribedEvents(): array
@@ -109,10 +112,10 @@ class FileUploader implements EventSubscriberInterface
 
         $formats = [];
         if ($typeCheck === "Image") {
-            $imageFormParameters = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin('Image_form_list');
+            $imageFormParameters = $this->mf->get('parameter')->getCoreParameter('default_image_formats');
 
-            if ($imageFormParameters != null) {
-                $tmpStringImageForm = str_replace(' ', '', $imageFormParameters->getParamValue());
+            if ($imageFormParameters !== null) {
+                $tmpStringImageForm = str_replace(' ', '', $imageFormParameters);
                 $imageFormatIdArray = explode(",", $tmpStringImageForm);
                 $formats = $this->em->getRepository(ImageFormat::class)->findImageFormatById($imageFormatIdArray);
             }
@@ -218,7 +221,6 @@ class FileUploader implements EventSubscriberInterface
         $imageFormat = $imageFormat["result"];
 
         foreach ($imageFormat as $format) {
-
         }
     }
 }

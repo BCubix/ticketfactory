@@ -214,6 +214,10 @@ const mediasApi = {
                 formData.append(`mediaCategories[${index}]`, category);
             });
 
+            data?.imageFormats?.forEach((format, index) => {
+                formData.append(`imageFormats[${index}]`, format);
+            });
+
             const result = await axios.post(`/medias/${id}`, formData);
 
             return { result: true, media: result.data };

@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormHelperText, InputLabel, ListItemText, ListSubheader, MenuItem, Select } from '@mui/material';
+import { Checkbox, FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
 import React from 'react';
 
 export const CmtSelectField = ({
@@ -38,7 +38,8 @@ export const CmtSelectField = ({
                         let renderName = [];
 
                         selected?.forEach((elem) => {
-                            const name = getName(list.find((el) => el.id === elem));
+                            const name = getName(list.find((el) => getValue(el) === elem));
+
                             if (name) {
                                 renderName.push(name);
                             }

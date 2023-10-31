@@ -79,10 +79,19 @@ class Media extends Datable
     #[ORM\OneToMany(mappedBy: 'media', targetEntity: EventMedia::class, orphanRemoval: true)]
     private Collection $eventMedias;
 
+    #[ORM\OneToMany(mappedBy: 'thumbnail', targetEntity: self::class)]
+    private Collection $mediaThumbnail;
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_media_one'])]
     #[ORM\ManyToOne(targetEntity: MediaCategory::class, inversedBy: 'mainMedias')]
     private $mainCategory;
+
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one'])]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'mediaThumbnail')]
+    private ?self $thumbnail = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_media_one'])]
@@ -101,6 +110,7 @@ class Media extends Datable
         $this->eventMedias = new ArrayCollection();
         $this->mediaCategories = new ArrayCollection();
         $this->imageFormats = new ArrayCollection();
+        $this->mediaThumbnail = new ArrayCollection();
     }
 
 
@@ -248,6 +258,36 @@ class Media extends Datable
         return $this;
     }
 
+    /**
+     * @return Collection<int, self>
+     */
+    public function getMediaThumbnail(): Collection
+    {
+        return $this->mediaThumbnail;
+    }
+
+    public function addMediaThumbnail(self $mediaThumbnail): self
+    {
+        if (!$this->mediaThumbnail->contains($mediaThumbnail)) {
+            $this->mediaThumbnail->add($mediaThumbnail);
+            $mediaThumbnail->setThumbnail($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMediaThumbnail(self $mediaThumbnail): self
+    {
+        if ($this->mediaThumbnail->removeElement($mediaThumbnail)) {
+            // set the owning side to null (unless already changed)
+            if ($mediaThumbnail->getThumbnail() === $this) {
+                $mediaThumbnail->setThumbnail(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getMainCategory(): ?MediaCategory
     {
         return $this->mainCategory;
@@ -256,6 +296,18 @@ class Media extends Datable
     public function setMainCategory(?MediaCategory $mainCategory): self
     {
         $this->mainCategory = $mainCategory;
+
+        return $this;
+    }
+
+    public function getThumbnail(): ?self
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(?self $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
 
         return $this;
     }
@@ -284,28 +336,6 @@ class Media extends Datable
         return $this;
     }
 
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
-    #[JMS\SerializedName("realType")]
-    #[JMS\VirtualProperty()]
-    public function getRealType(): string
-    {
-        $type = MimeTypeMapping::getTypeFromMime($this->getDocumentType());
-        $type = iconv("utf-8", "ascii//TRANSLIT", $type);
-        $type = strtolower($type);
-
-        if (in_array($type, ['image', 'audio', 'video'])) {
-            return $type;
-        }
-
-        return 'text';
-    }
-
-    public function isYoutube()
-    {
-        return preg_match('#youtube\.com#i', $this->getDocumentUrl());
-    }
-
     /**
      * @return Collection<int, ImageFormat>
      */
@@ -328,5 +358,27 @@ class Media extends Datable
         $this->imageFormats->removeElement($imageFormat);
 
         return $this;
+    }
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all'])]
+    #[JMS\SerializedName("realType")]
+    #[JMS\VirtualProperty()]
+    public function getRealType(): string
+    {
+        $type = MimeTypeMapping::getTypeFromMime($this->getDocumentType());
+        $type = iconv("utf-8", "ascii//TRANSLIT", $type);
+        $type = strtolower($type);
+
+        if (in_array($type, ['image', 'audio', 'video'])) {
+            return $type;
+        }
+
+        return 'text';
+    }
+
+    public function isYoutube()
+    {
+        return preg_match('#youtube\.com#i', $this->getDocumentUrl());
     }
 }

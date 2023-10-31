@@ -10,7 +10,6 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getMediasAction } from '@Redux/medias/mediasSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
 
 import { getMediaType } from '@Services/utils/getMediaType';
 
@@ -21,6 +20,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
     const [mediaType, setMediaType] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
     const [mediaParameterList, setMediaFormatList] = useState(null);
+    const [imageFormatList, setImageFormatList] = useState([]);
 
     const getMedia = async () => {
         apiMiddleware(dispatch, async () => {
@@ -40,7 +40,6 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
-            console.log(values);
             const result = await Api.mediasApi.editMedia(id, values);
 
             if (!result.result) {
@@ -79,6 +78,15 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
             }
 
             setMediaCategoriesList(result.mediaCategories);
+
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                    onCancel();
+                }
+            });
         });
     }, []);
 
@@ -100,6 +108,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
                     setEditImage={setEditImage}
                     mediaParameterList={mediaParameterList}
                     setMediaFormatList={setMediaFormatList}
+                    imageFormatList={imageFormatList}
                 />
             )}
         </Grid>
