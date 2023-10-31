@@ -19,7 +19,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramAvailableValue, pa
                     name={`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`}
                     value={paramValue ? paramValue.split(', ') : []}
                     list={paramAvailableValue}
-                    getValue={(item) => item?.id}
+                    getValue={(item) => item?.id?.toString()}
                     getName={(item) => item?.name}
                     setFieldValue={(name, value) => {
                         setFieldValue(name, value.join(', '));

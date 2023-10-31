@@ -6,6 +6,7 @@ use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Kernel;
 use App\Service\ServiceFactory;
+use App\Entity\Parameter\Parameter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -133,10 +134,10 @@ class ImageFormatManager extends AbstractManager
         $crop = $this->pm->getCoreParameter('image_to_crop');
 
         // New dimensions initialisation
-        $srcX  = 0;
-        $srcY  = 0;
-        $srcW  = $originW;
-        $srcH  = $originH;
+        $srcX = 0;
+        $srcY = 0;
+        $srcW = $originW;
+        $srcH = $originH;
 
         $destX = 0;
         $destY = 0;

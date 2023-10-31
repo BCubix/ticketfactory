@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
@@ -7,13 +7,26 @@ import { loginFailure } from '@Redux/profile/profileSlice';
 
 export const CreateMedia = ({ handleSubmit }) => {
     const dispatch = useDispatch();
+    const [imageCounter, setImageCounter] = useState(0);
+    var countImage = useRef(0);
+    var imageArray = [];
 
+    const createUploadImageArray = (image) => {
+        imageArray.push(image);
+        countImage.current -= 1;
+        if (countImage.current === 0) handleSubmit(imageArray);
+    };
     useEffect(() => {
         intitializeDropzone({
             logFail: (error) => dispatch(loginFailure({ error: error })),
             onSuccess: handleSubmit,
+            createUploadImageArray: createUploadImageArray,
+            setImageCounter: setImageCounter,
         });
     }, []);
+    useEffect(() => {
+        countImage.current = imageCounter;
+    }, [imageCounter]);
 
     return (
         <Component.DropzoneWrapper id="dropzone" className="js-dropzone dropzone-element">

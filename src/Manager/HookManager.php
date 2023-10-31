@@ -72,8 +72,9 @@ class HookManager extends AbstractManager
             // Add module in the hook list
             // (Must be count($r) === 1 so we can use array_pop)
             $result[$indexResult]['modules'][] = [
-                ...array_pop($moduleConfigArray),  // all module config (name, displayName, ...)
-                'position' => $hook->getPosition()        // position of the module in the hook
+                ...array_pop($moduleConfigArray),
+                // all module config (name, displayName, ...)
+                'position' => $hook->getPosition() // position of the module in the hook
             ];
         }
 

@@ -17,8 +17,6 @@ export const DisplayEventMediaElement = ({ title, mediasList, mediaType, openEdi
                             key={index}
                             sx={{
                                 position: 'relative',
-                                outline: (theme) => item.mainImg && `3px solid ${theme.palette.crud.action.textColor}`,
-                                outlineOffset: item.mainImg && '-3px',
                             }}
                             onClick={() => {
                                 openEditModal({
@@ -29,26 +27,6 @@ export const DisplayEventMediaElement = ({ title, mediasList, mediaType, openEdi
                             className="eventMediaElement"
                         >
                             <Component.CmtDisplayMediaType media={item.media} width={'100%'} height={'auto'} className="eventMediaType" />
-
-                            {mediaType === 'image' && (
-                                <Radio
-                                    checked={values.eventMedias.at(valueIndex)?.mainImg}
-                                    className="showOnHover"
-                                    sx={{ position: 'absolute', right: 2, top: 2 }}
-                                    title="Image principale"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-
-                                        let newValue = values.eventMedias.map((el, ind) => {
-                                            return {
-                                                ...el,
-                                                mainImg: ind === valueIndex ? true : false,
-                                            };
-                                        });
-                                        setFieldValue(name, newValue);
-                                    }}
-                                />
-                            )}
                         </Component.CmtMediaElement>
                     );
                 })}

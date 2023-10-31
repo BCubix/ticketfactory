@@ -177,7 +177,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                     if (newValue.map((el) => el.id).includes(selectedMedia?.id)) {
                         newValue = newValue.filter((el) => el.id !== selectedMedia?.id);
                     } else {
-                        newValue.push({ id: selectedMedia?.id, mainImg: false, mainImgCalendar: false, position: newValue?.length + 1, media: selectedMedia });
+                        newValue.push({ id: selectedMedia?.id, position: newValue?.length + 1, media: selectedMedia });
                     }
 
                     setFieldValue(name, newValue);

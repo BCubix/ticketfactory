@@ -24,14 +24,14 @@ class Media extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_all', 'a_edit'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_article_one', 'a_event_one', 'a_media_one', 'a_media_all'])]
+    #[JMS\Groups(['a_article_one', 'a_event_one', 'a_media_one', 'a_media_all',])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $alt = null;
 
@@ -72,28 +72,45 @@ class Media extends Datable
     private ?string $documentSize = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_all', 'a_edit'])]
     #[ORM\Column(type: 'string', length: 2047)]
     private ?string $documentUrl = null;
 
     #[ORM\OneToMany(mappedBy: 'media', targetEntity: EventMedia::class, orphanRemoval: true)]
     private Collection $eventMedias;
 
+    #[ORM\OneToMany(mappedBy: 'thumbnail', targetEntity: self::class)]
+    private Collection $mediaThumbnail;
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_media_one'])]
     #[ORM\ManyToOne(targetEntity: MediaCategory::class, inversedBy: 'mainMedias')]
     private $mainCategory;
+
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one'])]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'mediaThumbnail')]
+    private ?self $thumbnail = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_media_one'])]
     #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
     private $mediaCategories;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_media_one'])]
+    #[ORM\ManyToMany(targetEntity: ImageFormat::class, inversedBy: 'media')]
+    private Collection $imageFormats;
+
+
 
     public function __construct()
     {
         $this->eventMedias = new ArrayCollection();
         $this->mediaCategories = new ArrayCollection();
+        $this->imageFormats = new ArrayCollection();
+        $this->mediaThumbnail = new ArrayCollection();
     }
 
 
@@ -210,6 +227,7 @@ class Media extends Datable
         return $this;
     }
 
+
     /**
      * @return Collection<int, EventMedia>
      */
@@ -240,6 +258,36 @@ class Media extends Datable
         return $this;
     }
 
+    /**
+     * @return Collection<int, self>
+     */
+    public function getMediaThumbnail(): Collection
+    {
+        return $this->mediaThumbnail;
+    }
+
+    public function addMediaThumbnail(self $mediaThumbnail): self
+    {
+        if (!$this->mediaThumbnail->contains($mediaThumbnail)) {
+            $this->mediaThumbnail->add($mediaThumbnail);
+            $mediaThumbnail->setThumbnail($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMediaThumbnail(self $mediaThumbnail): self
+    {
+        if ($this->mediaThumbnail->removeElement($mediaThumbnail)) {
+            // set the owning side to null (unless already changed)
+            if ($mediaThumbnail->getThumbnail() === $this) {
+                $mediaThumbnail->setThumbnail(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getMainCategory(): ?MediaCategory
     {
         return $this->mainCategory;
@@ -251,6 +299,18 @@ class Media extends Datable
         if (null !== $mainCategory) {
             $this->addMediaCategory($mainCategory);
         }
+
+        return $this;
+    }
+
+    public function getThumbnail(): ?self
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(?self $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
 
         return $this;
     }
@@ -275,6 +335,30 @@ class Media extends Datable
     public function removeMediaCategory(MediaCategory $mediaCategory): self
     {
         $this->mediaCategories->removeElement($mediaCategory);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImageFormat>
+     */
+    public function getImageFormats(): Collection
+    {
+        return $this->imageFormats;
+    }
+
+    public function addImageFormat(ImageFormat $imageFormat): self
+    {
+        if (!$this->imageFormats->contains($imageFormat)) {
+            $this->imageFormats->add($imageFormat);
+        }
+
+        return $this;
+    }
+
+    public function removeImageFormat(ImageFormat $imageFormat): self
+    {
+        $this->imageFormats->removeElement($imageFormat);
 
         return $this;
     }

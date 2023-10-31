@@ -5,7 +5,9 @@ namespace App\Manager;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDateBlock;
 use App\Entity\Event\EventDate;
+use App\Entity\Event\EventMedia;
 use App\Entity\Event\EventPrice;
+use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 
 use App\Kernel;
@@ -279,10 +281,6 @@ class EventManager extends AbstractManager
         foreach ($eventMedias as $eventMedia) {
             $media = $eventMedia->getMedia();
 
-            if ($eventMedia->isMainImg()) {
-                $medias['main'] = $media;
-            }
-
             $type = MimeTypeMapping::getTypeFromMime($media->getDocumentType());
             $type = iconv("utf-8", "ascii//TRANSLIT", $type);
             $type = strtolower($type);
@@ -318,6 +316,26 @@ class EventManager extends AbstractManager
         $eventPrices = $this->em->getRepository(EventPrice::class)->findAllByEventForWebsite($event->getId());
 
         return $eventPrices;
+    }
+
+    public function getFirstFormattedMedia($eventMedias, string $slug): ?EventMedia
+    {
+        $mediaManager = $this->mf->get('media');
+        $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($slug);
+
+        if (null === $imageFormat) {
+            return null;
+        }
+
+        foreach ($eventMedias as $eventMedia) {
+            $mediaUrl = $mediaManager->getFormattedImageUrlFromFormat($eventMedia->getMedia(), $imageFormat);
+            if (null !== $mediaUrl) {
+                $eventMedia->getMedia()->setDocumentUrl($mediaUrl);
+                return $eventMedia;
+            }
+        }
+
+        return null;
     }
 
     private function getDefaultParameters($filters): array

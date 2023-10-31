@@ -11,10 +11,12 @@ class MediaRepository extends CrudRepository
 {
     protected const SELECTS = [
         'ec' => null,
+        'if' => null,
     ];
 
     protected const JOINS = [
         ['leftJoin', 'o.mediaCategories', 'ec'],
+        ['leftJoin', 'o.imageFormats', 'if'],
     ];
 
     protected const FILTERS = [
@@ -47,7 +49,6 @@ class MediaRepository extends CrudRepository
             ->where('m.documentType IN (:mimes)')
             ->setParameter('mimes', $mimes)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

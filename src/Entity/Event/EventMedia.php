@@ -26,11 +26,6 @@ class EventMedia
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
     #[ORM\Column]
-    private ?bool $mainImg = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
-    #[ORM\Column]
     private ?int $position = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventMedias')]
@@ -46,18 +41,6 @@ class EventMedia
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function isMainImg(): ?bool
-    {
-        return $this->mainImg;
-    }
-
-    public function setMainImg(bool $mainImg): self
-    {
-        $this->mainImg = $mainImg;
-
-        return $this;
     }
 
     public function getPosition(): ?int

@@ -22,8 +22,6 @@ export const DeleteEventMedias = ({ eventMedias, setFieldValue }) => {
                             key={index}
                             sx={{
                                 position: 'relative',
-                                outline: (theme) => item.mainImg && `3px solid ${theme.palette.crud.action.textColor}`,
-                                outlineOffset: item.mainImg && '-3px',
                                 overflow: 'visible',
                             }}
                             className="eventMediaElement"

@@ -1,4 +1,4 @@
-import { Constant } from "@/AdminService/Constant";
+import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
@@ -65,6 +65,22 @@ const imageFormatsApi = {
         }
     },
 
+    getAllImageFormat: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            const result = await axios.get('/image-formats', { params: params });
+
+            return { result: true, imageFormats: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
     createImageFormat: async (data) => {
         try {
             let formData = new FormData();
@@ -115,21 +131,25 @@ const imageFormatsApi = {
 
     generateImageFormat: async (data, chunkMediaIndex) => {
         try {
-            let url = '/image-formats/generate'
+            console.log('RENTREEEEEEEEEE');
+
+            let url = '/image-formats/generate';
             if (data.formatId !== -1) {
                 url += `/${data.formatId}`;
             }
 
-            url += `?deleteOldThumbnails=${data.deleteOldThumbnails ? 1 : 0}`
-            url += `&chunkMediaIndex=${chunkMediaIndex}`
+            url += `?deleteOldThumbnails=${data.deleteOldThumbnails ? 1 : 0}`;
+            url += `&chunkMediaIndex=${chunkMediaIndex}`;
 
+            console.log(url);
             const result = await axios.post(url);
+            console.log(result);
 
             return { result: true, imageFormat: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
-    }
+    },
 };
 
 export default imageFormatsApi;

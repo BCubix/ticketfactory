@@ -5,17 +5,16 @@ import { Constant } from '@/AdminService/Constant';
 
 var countChunk = 0;
 
-export function intitializeDropzone({ logFail, onSuccess, id = null }) {
+export function intitializeDropzone({ logFail, onSuccess, id = null, setImageCounter, createUploadImageArray }) {
     $('.js-dropzone').each(function (_, element) {
-        initDropzoneElement({ element, logFail, onSuccess, id });
+        initDropzoneElement({ element, logFail, onSuccess, id, setImageCounter, createUploadImageArray });
     });
 }
 
-export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
+export const initDropzoneElement = ({ element, logFail, onSuccess, id, setImageCounter, createUploadImageArray }) => {
     if (!element) {
         return;
     }
-
     let dZone = new Dropzone(`#${element.id}`, {
         url: Constant.MEDIA_UPLOAD_URL,
         chunking: false,
@@ -29,6 +28,7 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
     });
 
     dZone.on('addedfile', async (file) => {
+        setImageCounter((prevCount) => prevCount + 1);
         const check = await checkAuth();
 
         if (!check) {
@@ -38,9 +38,8 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
         $(element).find('.js-dropzone-label').hide();
     });
 
-    dZone.on('success', function (file, response) {
+    dZone.on('success', async function (file, response) {
         $(`#${element.id}_documentFileName`).val(`upload-${response.filename}`);
-
         countChunk -= 1;
 
         if (countChunk === 0) {
@@ -48,7 +47,11 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id }) => {
         }
 
         if (onSuccess) {
-            onSuccess();
+            const data = {
+                formatId: -1,
+                deleteOldThumbnails: true,
+            };
+            createUploadImageArray(response.media);
         }
     });
 
