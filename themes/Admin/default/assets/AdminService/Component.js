@@ -251,6 +251,7 @@ import { CreateLanguage } from '@Apps/Languages/CreateLanguage/CreateLanguage';
 import { EditLanguage } from '@Apps/Languages/EditLanguage/EditLanguage';
 import { LanguagesForm } from '@Apps/Languages/LanguagesForm/LanguagesForm';
 import { AppProvider } from '@/Config/AppProvider';
+import { ImageUploads } from '../Apps/Medias/ImageUploads/ImageUploads';
 
 const ComponentObj = {
     App: App,
@@ -520,6 +521,7 @@ const ComponentObj = {
 
     CmtImageCard: CmtImageCard,
     CmtImage: CmtImage,
+    ImageUploads: ImageUploads,
     CmtMediaModal: CmtMediaModal,
     CmtMediaModalInfos: CmtMediaModalInfos,
 
