@@ -126,7 +126,7 @@ class EventManager extends AbstractManager
         foreach ($eventPrices as $eventPrice) {
             $defaultPrices[] = [
                 "eventPrice" => $eventPrice,
-                "quantity"   => 0,
+                "quantity" => 0,
             ];
         }
         return $defaultPrices;
@@ -290,20 +290,6 @@ class EventManager extends AbstractManager
 
         return $medias;
     }
-
-    public function getMainImageFromEvent(Event $event): ?Media
-    {
-        $eventMedias = $event->getEventMedias()->toArray();
-
-        foreach ($eventMedias as $eventMedia) {
-            if ($eventMedia->isMainImg()) {
-                return $eventMedia->getMedia();
-            }
-        }
-
-        return null;
-    }
-
     public function getEventDatesFromEvent(Event $event): ?array
     {
         $eventDates = $this->em->getRepository(EventDate::class)->findAllByEventForWebsite($event->getId());
@@ -346,8 +332,8 @@ class EventManager extends AbstractManager
         }
 
         return array_values([
-            "sortField"  => $sortField,
-            "sortOrder"  => $sortOrder
+            "sortField" => $sortField,
+            "sortOrder" => $sortOrder
         ]);
     }
 }

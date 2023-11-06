@@ -80,7 +80,7 @@ class Event extends Datable
     #[Assert\NotNull(message: 'La catégorie principale de l\'événement doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventMedia::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventMedia::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $eventMedias;
 
     #[JMS\Expose()]
@@ -127,11 +127,11 @@ class Event extends Datable
         $this->spectacleTos = new ArrayCollection();
         $this->spectacleTags = new ArrayCollection();
         /*** < Module: ModuleTCE ***/
-        $this->eventCategories  = new ArrayCollection();
-        $this->eventDateBlocks  = new ArrayCollection();
+        $this->eventCategories = new ArrayCollection();
+        $this->eventDateBlocks = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
-        $this->eventMedias      = new ArrayCollection();
-        $this->tags             = new ArrayCollection();
+        $this->eventMedias = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
 
@@ -416,28 +416,6 @@ class Event extends Datable
     public function getEndDate($objectString = EventSorter::STRING_DATE)
     {
         return EventSorter::getReferenceDate($this, EventSorter::LAST_DATE, $objectString);
-    }
-
-    /**
-     * Renvoie le media principal associé à l'évenement
-     *
-     * @return Media
-     */
-    public function getMainMedia()
-    {
-        foreach ($this->getEventMedias() as $eventMedia) {
-            if ($eventMedia->isMainImg()) {
-                return $eventMedia->getMedia();
-            }
-        }
-
-        foreach ($this->getEventMedias() as $eventMedia) {
-            if ($eventMedia->getRealType() == 'image') {
-                return $eventMedia->getMedia();
-            }
-        }
-
-        return null;
     }
 
     #[ORM\PrePersist]

@@ -25,9 +25,11 @@ class TwigAssetExtension extends AbstractExtension
         ];
     }
 
-    public function tfAsset(?Media $media): string
+    public function tfAsset(?Media $media): ?string
     {
-        return $media->getDocumentUrl();
+        if ($media)
+            return $media->getDocumentUrl();
+        return null;
     }
 
     public function formattedAsset(?Media $media, ?string $slug = null): ?Media
@@ -48,8 +50,8 @@ class TwigAssetExtension extends AbstractExtension
         if (count($medias) === 0) {
             return null;
         }
-
         if (null === $slug) {
+            dd($medias);
             return $medias[0];
         }
 
