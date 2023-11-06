@@ -72,7 +72,7 @@ abstract class AddonManager extends AbstractManager
                 if ($node->isFile()) {
                     throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Une archive ne peut contenir que des dossiers à sa racine.');
                 }
-                
+
                 // The addon's directory must contain a valid config file
                 if ($node->isDir()) {
                     $name = $node->getBasename();
@@ -84,7 +84,7 @@ abstract class AddonManager extends AbstractManager
 
                     // Add the addon in the list to install among its type
                     $this->checkConfigFile($tree, $name);
-                    $config = $this->mf->get("module")->getConfiguration('/tmp' . basename($zipName, '.zip') . "/" .$name);
+                    $config = $this->mf->get("module")->getConfiguration('/tmp' . basename($zipName, '.zip') . "/" . $name);
                     if (isset($config['type']) && in_array($config['type'], array_keys($names))) {
                         $names[$config['type']][] = $name;
                     }
@@ -218,7 +218,7 @@ abstract class AddonManager extends AbstractManager
                 }
             }
         }
-        
+
         if (!$configFound) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Le fichier de configuration du thème n\'existe pas.');
         }

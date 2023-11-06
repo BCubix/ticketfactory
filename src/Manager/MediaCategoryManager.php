@@ -7,7 +7,6 @@ use App\Entity\Language\Language;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MediaCategoryManager extends AbstractManager
 {
@@ -132,8 +131,8 @@ class MediaCategoryManager extends AbstractManager
             return;
         }
 
-        
-        foreach($translatedObjects as $object) {
+
+        foreach ($translatedObjects as $object) {
             $object->setPosition($position);
             $this->em->persist($object);
         }
@@ -148,7 +147,6 @@ class MediaCategoryManager extends AbstractManager
                 $this->em->persist($list[$i - 1]);
 
                 $this->orderTranslatedElement($list[$i - 1], $i + 1);
-
             }
         } else {
             // Down position of all element between src exclude to dest include

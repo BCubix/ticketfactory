@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Entity\User\User;
 use App\Exception\ApiException;
 use App\Manager\UserManager;
-use App\Service\Error\FormErrorsCollector;
 use App\Service\Mail\Mailer;
 use App\Service\Security\TokenGenerator;
 
@@ -38,7 +37,7 @@ class AuthenticationController extends AdminController
         $this->em->flush();
 
         $path = '/admin/modifier-mon-mot-de-passe?email=' . urlencode($user->getEmail()) . '&token=' . urlencode($user->getEmailToken());
-        $mailer->sendResetPasswordEmail($user, $path);
+        $mailer->sendResetUserPasswordEmail($user, $path);
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }

@@ -46,8 +46,7 @@ class PageRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('pageId', $pageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findByKeywordForWebsite(int $languageId, string $keyword): array
@@ -60,8 +59,7 @@ class PageRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('keyword', $keyword)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findBySlugForWebsite(int $languageId, string $slug): ?Page
@@ -74,7 +72,6 @@ class PageRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

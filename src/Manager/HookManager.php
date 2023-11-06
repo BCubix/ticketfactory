@@ -10,7 +10,6 @@ use App\Exception\ApiException;
 use App\Kernel;
 use App\Manager\ManagerFactory;
 use App\Service\Addon\Module;
-use App\Service\Addon\Hook as HookConfig;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;

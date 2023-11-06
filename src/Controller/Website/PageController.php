@@ -26,7 +26,7 @@ class PageController extends WebsiteController
 
         $pageContents = [];
         foreach ($page->getContents() as $content) {
-            foreach($content->getFields() as $key => $field) {
+            foreach ($content->getFields() as $key => $field) {
                 $pageContents[$key] = $field;
             }
         }
@@ -53,4 +53,3 @@ class PageController extends WebsiteController
         }
     }
 }
-

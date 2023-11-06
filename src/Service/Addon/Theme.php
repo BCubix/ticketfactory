@@ -2,7 +2,11 @@
 
 namespace App\Service\Addon;
 
+use App\Exception\ApiException;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Yaml\Yaml;
 
 class Theme extends Addon
 {

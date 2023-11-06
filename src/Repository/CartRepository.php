@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Order\Cart;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 
@@ -14,7 +13,8 @@ class CartRepository extends CrudRepository
         parent::__construct($registry, Cart::class);
     }
 
-    public function findOneByIdForWebsite(int $id): ?Cart {
+    public function findOneByIdForWebsite(int $id): ?Cart
+    {
         return $this->createQueryBuilder("c")
             ->addSelect("cr")
             ->leftJoin("c.cartRows", "cr")
@@ -22,8 +22,7 @@ class CartRepository extends CrudRepository
             ->andWhere("c.id = :id")
             ->setParameter("id", $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function getLatestCart(int $customerId): ?Cart
@@ -38,7 +37,6 @@ class CartRepository extends CrudRepository
             ->orderBy("c.updatedAt", "DESC")
             ->setMaxResults(1)
             ->getquery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

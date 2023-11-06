@@ -210,17 +210,4 @@ class FileUploader implements EventSubscriberInterface
 
         return $path;
     }
-
-    private function createMediaThumbnails(Media $media)
-    {
-        $imageFormat = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(["page" => 0]);
-        if (null === $imageFormat) {
-            return;
-        }
-
-        $imageFormat = $imageFormat["result"];
-
-        foreach ($imageFormat as $format) {
-        }
-    }
 }

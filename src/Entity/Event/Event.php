@@ -63,6 +63,25 @@ class Event extends Datable
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column(nullable: true)]
+    private ?int $ticketingId = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column]
+    private ?bool $useThirdPartyTicketing = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $thirdPartyTicketingUrl = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $eventLength = null;
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
     #[JMS\Expose()]

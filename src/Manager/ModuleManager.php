@@ -19,8 +19,11 @@ class ModuleManager extends AddonManager
     {
         $config = Yaml::parseFile($this->getDir() . '/' . $objectName . '/config/config.yaml');
         if (!$config) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "Le fichier de configuration du module $objectName est vide.");
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "Le fichier de configuration du module $objectName est vide."
+            );
         }
 
         $processor = new Processor();
@@ -32,7 +35,6 @@ class ModuleManager extends AddonManager
     public function getImage(string $objectName): array
     {
         $imagePathWithoutExt = $this->getDir() . '/' . $objectName . '/logo';
-        $imageUrlWithoutExt = 'modules/' . $objectName . '/logo';
 
         $ext = null;
         if (is_file($imagePathWithoutExt . '.png')) {
@@ -126,7 +128,7 @@ class ModuleManager extends AddonManager
         // The module is not registered in database
         if (null === $module) {
             switch ($action) {
-                // Module must be installed
+                    // Module must be installed
                 case ModuleEntity::ACTION_INSTALL:
                 case ModuleEntity::ACTION_DISABLE:
                     $this->install($moduleName);
@@ -136,7 +138,7 @@ class ModuleManager extends AddonManager
 
                     break;
 
-                // Module uninstall, nothing to do
+                    // Module uninstall, nothing to do
                 case ModuleEntity::ACTION_UNINSTALL:
                 case ModuleEntity::ACTION_UNINSTALL_DELETE:
                 default:
@@ -213,7 +215,7 @@ class ModuleManager extends AddonManager
             $this->sf->get('file')->remove($migrationFile);
         }
 
-        parent::delete($themeName);
+        parent::delete($objectName);
     }
 
     public function getModuleInstance($moduleName): ?Bundle
@@ -230,7 +232,7 @@ class ModuleManager extends AddonManager
     protected function getMigrationFile(string $objectName): string
     {
         $migrationFile = 'Version' . $objectName . '.php';
-        $migrationFile = $this->sf->get('pathGetter')->getMigrationsDir(). '/' . $migrationFile;
+        $migrationFile = $this->sf->get('pathGetter')->getMigrationsDir() . '/' . $migrationFile;
 
         return $migrationFile;
     }
@@ -248,7 +250,7 @@ class ModuleManager extends AddonManager
         }
 
         $hm = $this->mf->get('hook');
-        foreach($newHooks['hooks'] as $hookName => $hookClass) {
+        foreach ($newHooks['hooks'] as $hookName => $hookClass) {
             if (!in_array($hookName, $existingHooks)) {
                 $hm->register($hookName, $module, $hookClass);
             }

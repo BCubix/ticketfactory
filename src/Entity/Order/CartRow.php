@@ -4,16 +4,13 @@ namespace App\Entity\Order;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
-use App\Entity\Event\EventPrice;
 use App\Entity\Event\SeatingPlan;
 use App\Repository\CartRowRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: CartRowRepository::class)]
@@ -71,7 +68,7 @@ class CartRow
         $this->vouchers = new ArrayCollection();
         $this->cartSeats = new ArrayCollection();
     }
-    
+
 
     public function getId(): ?int
     {

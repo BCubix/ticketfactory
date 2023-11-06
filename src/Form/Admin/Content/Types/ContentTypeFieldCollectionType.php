@@ -9,7 +9,6 @@ use App\Manager\ContentTypeManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType

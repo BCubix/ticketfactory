@@ -12,7 +12,8 @@ class EventPriceRepository extends CrudRepository
         parent::__construct($registry, EventPrice::class);
     }
 
-    public function findOneByIdForWebsite(int $id) {
+    public function findOneByIdForWebsite(int $id)
+    {
         return $this->createQueryBuilder("ep")
             ->addSelect("epb")
             ->addSelect("e")
@@ -21,8 +22,7 @@ class EventPriceRepository extends CrudRepository
             ->where("ep.id = :eventPriceId")
             ->setParameter("eventPriceId", $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findAllByEventForWebsiteOption(int $eventId)
@@ -34,16 +34,14 @@ class EventPriceRepository extends CrudRepository
             ->innerjoin('epb.event', 'e')
             ->where('e.id = :eventId')
             ->setParameter("eventId", $eventId)
-            ->orderBy("ep.price", 'ASC')
-        ;
+            ->orderBy("ep.price", 'ASC');
     }
 
     public function findAllByEventForWebsite(int $eventId)
     {
         return $this->findAllByEventForWebsiteOption($eventId)
             ->getQuery()
-            ->getResult();
-        ;
+            ->getResult();;
     }
 
     public function findSmallestPriceForWebsite(int $eventId)
@@ -58,7 +56,6 @@ class EventPriceRepository extends CrudRepository
             ->orderBy("ep.price", 'ASC')
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

@@ -11,6 +11,7 @@ use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class ContentTypeManager extends AbstractManager
@@ -36,11 +37,13 @@ class ContentTypeManager extends AbstractManager
         $this->types = $this->loadTypes();
     }
 
-    public function getFieldsSelect() {
+    public function getFieldsSelect()
+    {
         return $this->types;
     }
 
-    public function getContentTypeFromId(int $contentTypeId) {
+    public function getContentTypeFromId(int $contentTypeId)
+    {
         $contentType = $this->em->getRepository(ContentType::class)->findOneForAdmin($contentTypeId);
         if (null === $contentType) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, 'Ce type de contenu n\'existe pas.');
@@ -49,7 +52,8 @@ class ContentTypeManager extends AbstractManager
         return $contentType;
     }
 
-    public function getContentTypeFieldFromType(string $contentType) {
+    public function getContentTypeFieldFromType(string $contentType)
+    {
         if (isset($this->types[$contentType])) {
             $contentTypeField = $this->types[$contentType];
             $contentTypeField = ltrim($contentTypeField, $contentTypeField[0]);
@@ -64,16 +68,18 @@ class ContentTypeManager extends AbstractManager
         );
     }
 
-    public function getContentTypeInstanceFromType(string $contentType) {
+    public function getContentTypeInstanceFromType(string $contentType)
+    {
         $contentTypeField = $this->getContentTypeFieldFromType($contentType);
 
         $form = $this->ff->create($contentTypeField);
         $type = $form->getConfig()->getType()->getInnerType();
-        
+
         return $type;
     }
 
-    public function getOptionsFromField(ContentTypeField $contentTypeField) {
+    public function getOptionsFromField(ContentTypeField $contentTypeField)
+    {
         $component = $this->getContentTypeFieldFromType($contentTypeField->getType());
         $explicitOptions = $component::getOptions();
 
@@ -115,7 +121,8 @@ class ContentTypeManager extends AbstractManager
         return $filledOptions;
     }
 
-    public function getParametersFromField(ContentTypeField $contentTypeField) {
+    public function getParametersFromField(ContentTypeField $contentTypeField)
+    {
         $component = $this->getContentTypeFieldFromType($contentTypeField->getType());
         $expectedParameters = $component::getParameters();
 
@@ -132,7 +139,8 @@ class ContentTypeManager extends AbstractManager
         return $parameters;
     }
 
-    private function loadTypes() {
+    private function loadTypes()
+    {
         $types = [];
         $files = glob($this->sf->get('pathGetter')->getProjectDir() . self::TYPE_FILES_PATH);
 

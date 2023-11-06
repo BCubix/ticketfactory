@@ -195,7 +195,7 @@ export const MediasList = () => {
                 </DialogContent>
             </Dialog>
 
-            <Dialog fullWidth maxWidth="lg" open={Boolean(editDialog)} onClose={() => setEditDialog(false)}>
+            <Dialog fullWidth maxWidth="lg" open={Boolean(editDialog)} onClose={() => setEditDialog(false)} PaperProps={{ sx: { overflow: 'visible' } }}>
                 {editDialog && sidebarDialog && (
                     <Component.ImageUploads
                         imageUploads={imageUploads}

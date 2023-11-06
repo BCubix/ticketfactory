@@ -6,7 +6,6 @@ use App\Entity\ContactRequest\ContactRequest;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,8 +20,8 @@ class ContactRequestType extends AbstractType
             ->add('firstName',            TextType::class,            [
                 'label' => 'Prénom',
                 'required' => true,
+                'attr' => ['class' => 'form_input', 'placeholder' => ""],
                 'label_attr' => ['class' => 'form_label'],
-                'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('lastName',             TextType::class,            [
                 'label' => 'Nom',
@@ -33,8 +32,8 @@ class ContactRequestType extends AbstractType
             ->add('email',                EmailType::class,           [
                 'label' => 'Email',
                 'required' => true,
-                'label_attr' => ['class' => 'form_label'],
-                'attr' => ['class' => 'form_input', 'placeholder' => ""]
+                'attr' => ['class' => 'form_input', 'placeholder' => ""],
+                'label_attr' => ['class' => 'form_label']
             ])
             ->add('phone',                TextType::class,            [
                 'label' => 'Téléphone',
@@ -51,12 +50,12 @@ class ContactRequestType extends AbstractType
             ->add('message',              TextareaType::class,        [
                 'label' => 'Message',
                 'required' => true,
-                'label_attr' => ['class' => 'form_label'],
-                'attr' => ['class' => 'form_input', 'placeholder' => ""]
+                'attr' => ['class' => 'form_input', 'placeholder' => ""],
+                'label_attr' => ['class' => 'form_label']
             ])
             ->add('send',                     SubmitType::class,               [
+                'label' => 'Envoyer',
                 'attr' => ['class' => 'btn'],
-                'label' => 'Envoyer'
             ]);
     }
 

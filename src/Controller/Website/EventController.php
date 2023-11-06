@@ -2,15 +2,10 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\Page\Page;
 use App\Entity\User\User;
 use App\Entity\Event\Event;
 use App\Form\Website\Event\EventReservationType;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session;
 
 class EventController extends WebsiteController
 {
@@ -55,4 +50,3 @@ class EventController extends WebsiteController
         ]);
     }
 }
-

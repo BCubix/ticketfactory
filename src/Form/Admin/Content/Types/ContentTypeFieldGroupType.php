@@ -9,7 +9,6 @@ use App\Manager\ContentTypeManager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
 {
@@ -66,7 +65,7 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
         }
 
         $fields = [];
-        //dd($cf, $ctf);
+
         foreach ($cf as $childrenCfName => $childrenCf) {
             foreach ($childrenContentType['fields'] as $childrenCt) {
 

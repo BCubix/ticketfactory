@@ -23,7 +23,7 @@ class PageBlockType extends AbstractType
     {
         $builder
             ->add('name',                 TextType::class,            [])
-            ->add('saveAsModel',          CheckboxType::class,        ['false_values' => ['0']])
+            ->add('saveAsModel',          CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('blockType',            IntegerType::class,         [])
             ->add('columns',              CollectionType::class,      [
                 'entry_type'   => PageColumnType::class,

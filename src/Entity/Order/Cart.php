@@ -8,10 +8,8 @@ use App\Repository\CartRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
 #[ORM\Entity(repositoryClass: CartRepository::class)]
@@ -56,7 +54,7 @@ class Cart extends Datable
         $this->cartRows = new ArrayCollection();
         $this->vouchers = new ArrayCollection();
     }
-    
+
 
     public function getId(): ?int
     {

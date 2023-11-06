@@ -23,7 +23,7 @@ class PageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('title',                TextType::class,            [])
             ->add('subtitle',             TextareaType::class,        [])
             ->add('parent',               EntityType::class,          [

@@ -1,14 +1,20 @@
+import { Box } from '@mui/system';
 import React from 'react';
 export const ImageUploads = ({ imageUploads, onSelect }) => {
     return (
-        <div style={{ width: '100%', borderRight: '1px solid gray' }}>
-            <ul style={{ display: 'flex', listStyleType: 'none', padding: 0 }}>
+        <Box sx={{ width: 100, borderRight: '1px solid gray', position: 'absolute', right: '100%' }}>
+            <Box component="ul" sx={{ listStyleType: 'none', padding: 0 }}>
                 {imageUploads.map((image) => (
-                    <li key={image.id} onClick={() => onSelect(image.id)} style={{ margin: 1 }}>
-                        <img src={image.documentUrl} alt={`Image-${image.id}`} style={{ width: 'auto', height: 'auto', maxHeight: '60px', maxWidth: '100%' }} />
-                    </li>
+                    <Box component="li" sx={{ marginBottom: 3 }} key={image.id} onClick={() => onSelect(image.id)} style={{ margin: 1 }}>
+                        <Box
+                            component="img"
+                            src={image.documentUrl}
+                            alt={`Image-${image.id}`}
+                            sx={{ width: 'auto', height: 'auto', maxHeight: '60px', maxWidth: '100%', borderRadius: '3px', cursor: 'pointer' }}
+                        />
+                    </Box>
                 ))}
-            </ul>
-        </div>
+            </Box>
+        </Box>
     );
 };

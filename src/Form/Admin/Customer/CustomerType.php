@@ -26,7 +26,7 @@ class CustomerType extends AbstractType
             ->add('civility',             ChoiceType::class,          [
                 'choices'  => array_flip(Customer::CIVILITIES)
             ])
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']]);
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

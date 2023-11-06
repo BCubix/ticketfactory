@@ -29,7 +29,6 @@ class ModuleRepository extends CrudRepository
             ->where('u.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

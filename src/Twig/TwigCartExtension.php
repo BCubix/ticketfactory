@@ -4,12 +4,8 @@ namespace App\Twig;
 
 use App\Entity\Order\CartRow;
 use App\Manager\CartManager;
-use App\Service\Formatter\DateTimeFormatter;
 
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class TwigCartExtension extends AbstractExtension
