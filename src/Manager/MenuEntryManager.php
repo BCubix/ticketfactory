@@ -6,8 +6,6 @@ use App\Entity\Menu\MenuEntry;
 use App\Entity\Language\Language;
 use App\Service\Object\CloneObject;
 
-use Doctrine\ORM\EntityManagerInterface;
-
 class MenuEntryManager extends AbstractManager
 {
     public const SERVICE_NAME = 'menuEntry';
@@ -33,12 +31,12 @@ class MenuEntryManager extends AbstractManager
 
         $menuEntries = $repository->findAllForWebsite($this->getLanguageId());
         $menus = $repository->buildTree($menuEntries);
-        
+
         foreach ($menus as $key => $menu) {
             $menus[$menu['keyword']] = $menu;
             unset($menus[$key]);
         }
-        
+
         return $menus;
     }
 

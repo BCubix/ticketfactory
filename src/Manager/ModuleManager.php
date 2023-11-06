@@ -35,7 +35,6 @@ class ModuleManager extends AddonManager
     public function getImage(string $objectName): array
     {
         $imagePathWithoutExt = $this->getDir() . '/' . $objectName . '/logo';
-        $imageUrlWithoutExt = 'modules/' . $objectName . '/logo';
 
         $ext = null;
         if (is_file($imagePathWithoutExt . '.png')) {
@@ -216,7 +215,7 @@ class ModuleManager extends AddonManager
             $this->sf->get('file')->remove($migrationFile);
         }
 
-        parent::delete($themeName);
+        parent::delete($objectName);
     }
 
     public function getModuleInstance($moduleName): ?Bundle
