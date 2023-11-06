@@ -2,6 +2,8 @@
 
 namespace App\Manager;
 
+use App\Entity\Media\ImageFormat;
+use App\Entity\Addon\Module;
 use App\Exception\ApiException;
 use App\Service\Addon\Theme;
 
@@ -33,7 +35,6 @@ class ThemeManager extends AddonManager
     public function getImage(string $objectName): array
     {
         $imagePathWithoutExt = $this->getDir() . '/' . $objectName . '/preview';
-        $imageUrlWithoutExt = 'themes/' . $objectName . '/preview';
 
         $ext = null;
         if (is_file($imagePathWithoutExt . '.png')) {
@@ -116,7 +117,7 @@ class ThemeManager extends AddonManager
         return $theme;
     }
 
-    public function delete(string $objectName): void
+    public function delete(string $themeName): void
     {
         $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {

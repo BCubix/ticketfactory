@@ -19,8 +19,7 @@ class ParametersContainerType extends AbstractType
                 'allow_delete' => false,
                 'delete_empty' => false,
                 'by_reference' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

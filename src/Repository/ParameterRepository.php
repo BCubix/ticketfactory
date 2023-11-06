@@ -21,8 +21,7 @@ class ParameterRepository extends CrudRepository
     {
         return $this->createQueryBuilder('o')
             ->getQuery()
-            ->getArrayResult()
-        ;
+            ->getArrayResult();
     }
 
     public function findOneByKeyForAdmin(string $key)
@@ -31,7 +30,6 @@ class ParameterRepository extends CrudRepository
             ->where('o.paramKey = :key')
             ->setParameter('key', $key)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

@@ -20,10 +20,10 @@ class ContentTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('name',                 TextType::class,            [])
-            ->add('pageType',             CheckboxType::class,        ['false_values' => ['0']])
-            ->add('displayBlocks',        CheckboxType::class,        ['false_values' => ['0']])
+            ->add('pageType',             CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
+            ->add('displayBlocks',        CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('maxObjectNb',          IntegerType::class,         [])
             ->add('keyword',              TextType::class,            [])
             ->add('pageParent',           EntityType::class,          [

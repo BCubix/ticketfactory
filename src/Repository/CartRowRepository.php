@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Order\CartRow;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class CartRowRepository extends CrudRepository
@@ -13,16 +12,17 @@ class CartRowRepository extends CrudRepository
         parent::__construct($registry, CartRow::class);
     }
 
-    public function findOneById(int $id): ?CartRow {
+    public function findOneById(int $id): ?CartRow
+    {
         return $this->createQueryBuilder("cr")
             ->where("cr.id = :id")
             ->setParameter("id", $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
-    public function findOneByIdForWebsite(int $id): ?CartRow {
+    public function findOneByIdForWebsite(int $id): ?CartRow
+    {
         return $this->createQueryBuilder("cr")
             ->addSelect("c")
             ->leftJoin("cr.cart", "c")
@@ -30,11 +30,11 @@ class CartRowRepository extends CrudRepository
             ->andWhere("cr.id = :id")
             ->setParameter("id", $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
-    public function findOneCartRowByCartForWebsite(int $cartId, int $eventDateId): ?CartRow {
+    public function findOneCartRowByCartForWebsite(int $cartId, int $eventDateId): ?CartRow
+    {
         return $this->createQueryBuilder("cr")
             ->addSelect("c")
             ->addSelect("ed")
@@ -44,7 +44,6 @@ class CartRowRepository extends CrudRepository
             ->setParameter("cartId", $cartId)
             ->setParameter("eventDateId", $eventDateId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

@@ -5,10 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Content\Content;
 use App\Exception\ApiException;
 use App\Form\Admin\Content\ContentType;
-use App\Form\Admin\Filters\FilterContentType;
 use App\Manager\ContentTypeManager;
-use App\Service\Error\FormErrorsCollector;
-use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -105,7 +102,7 @@ class ContentController extends CrudController
         $form = $this->createForm($this->typeClass, $object, ['content_type' => $object->getContentType()]);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
         $form->submit($fields);
-        
+
         if (!$form->isSubmitted() || !$form->isValid()) {
             $errors = $this->fec->getErrorsFromForm($form);
 

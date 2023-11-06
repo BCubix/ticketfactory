@@ -13,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class VoucherType extends AbstractType
@@ -54,8 +53,7 @@ class VoucherType extends AbstractType
                         ->createQueryBuilder('ec')
                         ->orderBy('ec.name', 'ASC');
                 }
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

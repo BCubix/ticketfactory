@@ -63,6 +63,25 @@ class Event extends Datable
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column(nullable: true)]
+    private ?int $ticketingId = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column]
+    private ?bool $useThirdPartyTicketing = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $thirdPartyTicketingUrl = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $eventLength = null;
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
     #[JMS\Expose()]
@@ -120,13 +139,6 @@ class Event extends Datable
 
     public function __construct()
     {
-        /*** > Module: ModuleTCE ***/
-        $this->spectacleBlogs = new ArrayCollection();
-        $this->spectaclePresses = new ArrayCollection();
-        $this->spectacleFroms = new ArrayCollection();
-        $this->spectacleTos = new ArrayCollection();
-        $this->spectacleTags = new ArrayCollection();
-        /*** < Module: ModuleTCE ***/
         $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();

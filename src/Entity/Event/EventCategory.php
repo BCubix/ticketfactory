@@ -331,7 +331,8 @@ class EventCategory extends Datable
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function completeSeo() {
+    public function completeSeo()
+    {
         $this->completeFields($this->getName());
     }
 

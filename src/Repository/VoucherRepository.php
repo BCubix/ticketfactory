@@ -13,7 +13,8 @@ class VoucherRepository extends CrudRepository
         parent::__construct($registry, Voucher::class);
     }
 
-    public function findVouchersByCustomerForWebsite(int $userId): array {
+    public function findVouchersByCustomerForWebsite(int $userId): array
+    {
         return $this->createQueryBuilder('v')
             ->addSelect('c')
             ->leftJoin('v.carts', 'c')
@@ -23,11 +24,11 @@ class VoucherRepository extends CrudRepository
             ->andWhere('c.active = 1')
             ->setParameter('userId', $userId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-    public function findAllByCartForWebsite(int $cartId): array {
+    public function findAllByCartForWebsite(int $cartId): array
+    {
         return $this->createQueryBuilder('v')
             ->addSelect('c')
             ->innerJoin('v.carts', 'c', 'WITH', 'c.id = :cartId')
@@ -35,8 +36,7 @@ class VoucherRepository extends CrudRepository
             ->andWhere('c.active = 1')
             ->setParameter('cartId', $cartId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findOneByCodeForWebsite(string $code): ?Voucher
@@ -46,7 +46,6 @@ class VoucherRepository extends CrudRepository
             ->andWhere('v.active = 1')
             ->setParameter('code', $code)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

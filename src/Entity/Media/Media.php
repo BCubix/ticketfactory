@@ -13,7 +13,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\ExclusionPolicy('all')]
 #[ORM\HasLifecycleCallbacks]
@@ -383,5 +382,35 @@ class Media extends Datable
     public function isYoutube()
     {
         return preg_match('#youtube\.com#i', $this->getDocumentUrl());
+    }
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all'])]
+    #[JMS\SerializedName("realThumbnail")]
+    #[JMS\VirtualProperty()]
+    public function getRealThumbnail($quality = 'maxresdefault'): ?string
+    {
+        if (null !== $this->getThumbnail()) {
+            return $this->getThumbnail()->getDocumentUrl();
+        }
+
+        $matches = [];
+        if (preg_match('#youtube.com/watch\?v=([a-zA-Z0-9_\-]+)#is', $this->getDocumentUrl(), $matches)) {
+            return 'https://img.youtube.com/vi/' . $matches[1] . '/' . $quality . '.jpg';
+        }
+
+        if (preg_match('#youtube.com/embed/([a-zA-Z0-9_\-]+)#is', $this->getDocumentUrl(), $matches)) {
+            return 'https://img.youtube.com/vi/' . $matches[1] . '/' . $quality . '.jpg';
+        }
+
+        if (preg_match('#youtu\.be/([a-zA-Z0-9_\-]+)#is', $this->getDocumentUrl(), $matches)) {
+            return 'https://img.youtube.com/vi/' . $matches[1] . '/' . $quality . '.jpg';
+        }
+
+        if ($this->getRealType() == 'image') {
+            return $this->getDocumentUrl();
+        }
+
+        return null;
     }
 }

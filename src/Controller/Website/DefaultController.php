@@ -2,17 +2,13 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\Article\Article;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
 use App\Entity\Language\Language;
-use App\Entity\Media\Media;
-use App\Entity\Media\MediaCategory;
 
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends WebsiteController
@@ -88,7 +84,8 @@ class DefaultController extends WebsiteController
         ]);
     }
 
-    public function renderTradUrl($element, $season = null) {
+    public function renderTradUrl($element, $season = null)
+    {
         $currentLocale = $this->getLocale();
         $newLocale = ($currentLocale == 'fr' ? 'en' : 'fr');
 

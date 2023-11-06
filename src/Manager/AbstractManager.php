@@ -8,7 +8,6 @@ use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AbstractManager
 {
@@ -32,7 +31,8 @@ class AbstractManager
         $this->rs = $rs;
     }
 
-    public function getLocale() {
+    public function getLocale()
+    {
         return $this->rs->getMainRequest()->getLocale();
     }
 
@@ -41,7 +41,8 @@ class AbstractManager
         return $this->em->getRepository(Language::class)->findDefaultForWebsite()->getId();
     }
 
-    public function getLanguageId() {
+    public function getLanguageId()
+    {
         $locale = $this->getLocale();
 
         $language = $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);

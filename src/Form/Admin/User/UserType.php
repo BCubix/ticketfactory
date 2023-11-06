@@ -23,13 +23,13 @@ class UserType extends AbstractType
             ->add('plainPassword',        PasswordType::class,        [])
             ->add('firstName',            TextType::class,            [])
             ->add('lastName',             TextType::class,            [])
-            ->add('roles', ChoiceType::class, [
+            ->add('roles',                ChoiceType::class,          [
                 'required' => true,
                 'multiple' => false,
                 'expanded' => false,
                 'choices'  => array_flip(User::ROLE_TYPE)
             ])
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']]);
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']]);
 
         $builder
             ->get('roles')

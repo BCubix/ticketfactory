@@ -78,6 +78,6 @@ class CustomerManager extends AbstractManager
             RouterInterface::ABSOLUTE_URL
         );
 
-        $this->sf->get("mailer")->sendResetPasswordEmail($customer, $path);
+        $this->sf->get("mailer")->sendResetCustomerPasswordEmail($customer, $path);
     }
 }

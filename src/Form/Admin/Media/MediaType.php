@@ -23,7 +23,7 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('alt',                  TextType::class,            [])
             ->add('legend',               TextType::class,            [])
             ->add('title',                TextType::class,            [])
@@ -67,7 +67,7 @@ class MediaType extends AbstractType
                         ->orderBy('if.name', 'ASC');
                 }
             ])
-            ->add('iframe',                 CheckboxType::class,        ['false_values' => ['0']])
+            ->add('iframe',                 CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('documentUrl',            TextType::class,            [])
             ->add('documentType',           ChoiceType::class,          [
                 'choices'  => MimeTypeMapping::getAllMimes(),

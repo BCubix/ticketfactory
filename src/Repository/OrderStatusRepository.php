@@ -19,7 +19,6 @@ class OrderStatusRepository extends ServiceEntityRepository
             ->where("os.keyword = :keyword")
             ->setParameter("keyword", $keyword)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

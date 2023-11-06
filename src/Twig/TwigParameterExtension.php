@@ -13,7 +13,7 @@ class TwigParameterExtension extends AbstractExtension
 
     public function __construct(ParameterManager $pm)
     {
-       $this->pm = $pm;
+        $this->pm = $pm;
     }
 
     public function getFunctions()

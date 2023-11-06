@@ -5,10 +5,7 @@ namespace App\Manager;
 use App\Entity\Page\Page;
 use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
-use App\Service\File\PathGetter;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 class ParameterManager extends AbstractManager

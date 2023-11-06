@@ -67,7 +67,6 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
             ->setParameter('email', $email)
             ->setParameter('token', $token)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

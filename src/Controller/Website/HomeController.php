@@ -12,7 +12,7 @@ class HomeController extends WebsiteController
     {
         $pageTypeBlocks = [];
         foreach ($page->getContents() as $content) {
-            foreach($content->getFields() as $key => $field) {
+            foreach ($content->getFields() as $key => $field) {
                 $pageTypeBlocks[$key] = $field;
             }
         }
@@ -23,4 +23,3 @@ class HomeController extends WebsiteController
         ]);
     }
 }
-

@@ -16,12 +16,12 @@ class ImageFormatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('slug',                 TextType::class,            [])
             ->add('name',                 TextType::class,            [])
             ->add('width',                IntegerType::class,         [])
             ->add('height',               IntegerType::class,         [])
-            ->add('themeUse',             CheckboxType::class,        ['false_values' => ['0']]);
+            ->add('themeUse',             CheckboxType::class,        ['false_values' => ['0', 'null', 'false']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
