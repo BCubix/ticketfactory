@@ -35,13 +35,14 @@ const EditValidateIcon = ({ editMode, name, handleSubmit, handleSetEditMode, set
     );
 };
 
-export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, displayMeta = false, updatedMedia = null }) => {
+export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, displayMeta = false, updatedMedia = null, imageFormatList }) => {
     const dispatch = useDispatch();
     const selectedMediaId = useRef(selectedMedia?.id);
     const [editMode, setEditMode] = useState({
         title: false,
         alt: false,
         legend: false,
+        imageFormats: false,
     });
 
     const mediaSchema = Yup.object().shape({
@@ -63,6 +64,9 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
 
     const handleChangeMediaInfos = async (values) => {
         apiMiddleware(dispatch, async () => {
+            console.log('///////////////////////////////');
+            console.log(values[values.submittedInput]);
+            console.log('///////////////////////////////');
             const result = await Api.mediasApi.editMedia(selectedMedia?.id, { ...selectedMedia, [values.submittedInput]: values[values.submittedInput] });
 
             if (!result.result) {
@@ -78,7 +82,13 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
 
     return (
         <Formik
-            initialValues={{ title: selectedMedia?.title || '', alt: selectedMedia?.alt || '', legend: selectedMedia?.legend || '', submittedInput: '' }}
+            initialValues={{
+                title: selectedMedia?.title || '',
+                alt: selectedMedia?.alt || '',
+                legend: selectedMedia?.legend || '',
+                submittedInput: '',
+                imageFormats: selectedMedia?.imageFormats ? selectedMedia?.imageFormats?.map((el) => el.id) : [],
+            }}
             validationSchema={mediaSchema}
             onSubmit={async (values, { setSubmitting }) => {
                 if (!values.submittedInput) {
@@ -162,6 +172,36 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
                         <EditValidateIcon
                             editMode={editMode.legend}
                             name="legend"
+                            handleSubmit={handleSubmit}
+                            handleSetEditMode={handleSetEditMode}
+                            setFieldValue={setFieldValue}
+                        />
+                    </Box>
+                    <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
+                        {editMode.imageFormats ? (
+                            <Component.CmtSelectField
+                                label="Formats"
+                                multiple
+                                name={`imageFormats`}
+                                value={values?.imageFormats}
+                                list={imageFormatList}
+                                getValue={(item) => item.id}
+                                getName={(item) => item.name}
+                                setFieldValue={setFieldValue}
+                                errors={touched.imageFormats && errors.imageFormats}
+                            />
+                        ) : (
+                            <Box width="100%">
+                                <Typography fontSize={10} variant="body2">
+                                    Format
+                                </Typography>
+                                <Typography variant="body1">{selectedMedia?.imageFormats.map((format) => format.name).join(' - ')}</Typography>
+                            </Box>
+                        )}
+
+                        <EditValidateIcon
+                            editMode={editMode.imageFormats}
+                            name="imageFormats"
                             handleSubmit={handleSubmit}
                             handleSetEditMode={handleSetEditMode}
                             setFieldValue={setFieldValue}

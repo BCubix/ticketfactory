@@ -87,10 +87,12 @@ import { MediaCategoriesList } from '@Apps/MediaCategories/MediaCategoriesList/M
 import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
 import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
 import { EditMedia } from '@Apps/Medias/EditMedia/EditMedia';
+import { ImageUploads } from '@Apps/Medias/ImageUploads/ImageUploads';
 import { MediaDataForm } from '@Apps/Medias/MediasForm/MediaDataForm';
 import { IframeMediaForm } from '@Apps/Medias/MediasForm/IframeMediaForm';
 import { MediaImageForm } from '@Apps/Medias/MediasForm/MediaImageForm';
 import { MediaParentCategoryPartForm } from '@Apps/Medias/MediasForm/MediaParentCategoryPartForm';
+import { MediaParentFormatPartForm } from '@Apps/Medias/MediasForm/MediaParentFormatPartForm';
 import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
 import { MediasSorters } from '@Apps/Medias/MediasList/MediasFilters/MediasSorters';
 import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
@@ -360,10 +362,12 @@ const ComponentObj = {
     DropzoneWrapper: DropzoneWrapper,
     CreateMedia: CreateMedia,
     EditMedia: EditMedia,
+    ImageUploads: ImageUploads,
     MediaDataForm: MediaDataForm,
     IframeMediaForm: IframeMediaForm,
     MediaImageForm: MediaImageForm,
     MediaParentCategoryPartForm: MediaParentCategoryPartForm,
+    MediaParentFormatPartForm: MediaParentFormatPartForm,
     MediasFilters: MediasFilters,
     MediasSorters: MediasSorters,
     RotatingIcons: RotatingIcons,

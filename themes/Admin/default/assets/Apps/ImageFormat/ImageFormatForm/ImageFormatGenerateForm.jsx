@@ -1,17 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
 
-import {
-    Button,
-    FormControl,
-    FormLabel,
-    InputLabel,
-    MenuItem,
-    Select,
-    Switch,
-    Typography
-} from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Button, FormControl, FormLabel, InputLabel, MenuItem, Select, Switch, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
@@ -27,17 +18,7 @@ export const ImageFormatGenerateForm = ({ imageFormats, handleSubmit }) => {
                 setSubmitting(false);
             }}
         >
-            {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldValue,
-                setFieldTouched,
-                isSubmitting
-            }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtFormBlock title="Génération des miniatures" sx={{ mt: 5 }}>
                     <FormControl fullWidth sx={{ mt: 3 }}>
                         <InputLabel id="imageFormat-label" size="small" className="required-input">
@@ -70,9 +51,7 @@ export const ImageFormatGenerateForm = ({ imageFormats, handleSubmit }) => {
                             Supprimer les anciennes miniatures
                         </FormLabel>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography>
-                                Ne pas supprimer
-                            </Typography>
+                            <Typography>Ne pas supprimer</Typography>
                             <Switch
                                 label="Supprimer les anciennes miniatures"
                                 variant="standard"
@@ -81,9 +60,7 @@ export const ImageFormatGenerateForm = ({ imageFormats, handleSubmit }) => {
                                     setFieldValue('deleteOldThumbnails', e.target.checked);
                                 }}
                             />
-                            <Typography>
-                                Supprimer
-                            </Typography>
+                            <Typography>Supprimer</Typography>
                         </Stack>
                     </FormControl>
 

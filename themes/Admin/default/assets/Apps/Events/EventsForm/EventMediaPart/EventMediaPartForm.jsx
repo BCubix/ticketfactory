@@ -40,6 +40,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
     const [medias, setMedias] = useState(null);
     const [mediasTotal, setMediasTotal] = useState(null);
     const [mediasFilters, setMediasFilters] = useState(filterInit);
+    const [imageFormatList, setImageFormatList] = useState([]);
 
     const getMedias = () => {
         apiMiddleware(dispatch, async () => {
@@ -50,6 +51,15 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
             }
             setMedias(result?.medias);
             setMediasTotal(result.total);
+
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                    onCancel();
+                }
+            });
         });
     };
 
@@ -179,7 +189,6 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                     } else {
                         newValue.push({ id: selectedMedia?.id, position: newValue?.length + 1, media: selectedMedia });
                     }
-
                     setFieldValue(name, newValue);
                 }}
                 AddMediaLabel="Ajouter"
@@ -189,6 +198,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                 total={mediasTotal}
                 categoriesList={mediaCategoriesList}
                 updatedMedia={updatedMedia}
+                imageFormatList={imageFormatList}
             />
 
             <Component.EditEventMediaModal
@@ -202,6 +212,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                 name={name}
                 setFieldValue={setFieldValue}
                 updatedMedia={updatedMedia}
+                imageFormatList={imageFormatList}
             />
         </>
     );
