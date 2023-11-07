@@ -20,7 +20,7 @@ class MediaController extends CrudController
     protected const TYPE_CLASS = MediaType::class;
 
     #[Rest\Get('/medias')]
-    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
+    #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {

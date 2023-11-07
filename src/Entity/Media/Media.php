@@ -98,7 +98,7 @@ class Media extends Datable
     private $mediaCategories;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_one'])]
+    #[JMS\Groups(['a_media_one', 'a_event_one', 'a_media_all'])]
     #[ORM\ManyToMany(targetEntity: ImageFormat::class, inversedBy: 'media')]
     private Collection $imageFormats;
 

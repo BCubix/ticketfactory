@@ -90,7 +90,6 @@ const mediasApi = {
             const result = await axios.get('/medias', {
                 params: params,
             });
-
             return { result: true, medias: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };
@@ -220,7 +219,9 @@ const mediasApi = {
             data?.imageFormats?.forEach((format, index) => {
                 formData.append(`imageFormats[${index}]`, format);
             });
-
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
             const result = await axios.post(`/medias/${id}`, formData);
 
             return { result: true, media: result.data };

@@ -75,7 +75,7 @@ const Formats = ({ values, setFieldValue, touched, errors, imageFormatList }) =>
                     getValue={(item) => item.id}
                     getName={(item) => item.name}
                     setFieldValue={setFieldValue}
-                    errors={touched.imageFormats && errors.iamgeFormats}
+                    errors={touched.imageFormats && errors.imageFormats}
                 />
             </Grid>
         </Grid>

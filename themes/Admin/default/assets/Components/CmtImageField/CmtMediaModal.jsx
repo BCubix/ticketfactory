@@ -28,6 +28,7 @@ export const CmtMediaModal = ({
     total,
     categoriesList,
     updatedMedia = null,
+    imageFormatList,
 }) => {
     const [createDialog, setCreateDialog] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
@@ -134,6 +135,7 @@ export const CmtMediaModal = ({
                                     updatedMedia(newMedia);
                                 }
                             }}
+                            imageFormatList={imageFormatList}
                         />
                     </Grid>
                 </Grid>

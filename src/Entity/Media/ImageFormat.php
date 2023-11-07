@@ -30,7 +30,7 @@ class ImageFormat extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom du format doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du format doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one', 'a_all'])]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
