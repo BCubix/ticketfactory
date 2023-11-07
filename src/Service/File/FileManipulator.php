@@ -4,7 +4,6 @@ namespace App\Service\File;
 
 use App\Exception\ApiException;
 
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 

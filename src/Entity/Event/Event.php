@@ -139,18 +139,11 @@ class Event extends Datable
 
     public function __construct()
     {
-        /*** > Module: ModuleTCE ***/
-        $this->spectacleBlogs = new ArrayCollection();
-        $this->spectaclePresses = new ArrayCollection();
-        $this->spectacleFroms = new ArrayCollection();
-        $this->spectacleTos = new ArrayCollection();
-        $this->spectacleTags = new ArrayCollection();
-        /*** < Module: ModuleTCE ***/
-        $this->eventCategories = new ArrayCollection();
-        $this->eventDateBlocks = new ArrayCollection();
+        $this->eventCategories  = new ArrayCollection();
+        $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
-        $this->eventMedias = new ArrayCollection();
-        $this->tags = new ArrayCollection();
+        $this->eventMedias      = new ArrayCollection();
+        $this->tags             = new ArrayCollection();
     }
 
 

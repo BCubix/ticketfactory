@@ -26,16 +26,6 @@ class Module extends Addon
             ->end();
     }
 
-    /* protected function addSettings(ArrayNodeDefinition $node): void
-    {
-        $node
-            ->children()
-                ->arrayNode('settings')->isRequired()
-                ->end()
-            ->end()
-        ;
-    } */
-
     public function getConfiguration(): array
     {
         $configPath = $this->getPath() . '/../config/config.yaml';

@@ -282,7 +282,7 @@ class ParamFixtures extends Fixture
             ], [
                 "id"   => 12,
                 "name" => "Décembre"
-            ], 
+            ],
         ]);
         $parameter->setTabName("Paramètres généraux");
         $parameter->setBlockName('Saison');

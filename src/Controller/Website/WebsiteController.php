@@ -103,7 +103,7 @@ abstract class WebsiteController extends AbstractFOSRestController
                 break;
             }
         }
-       
+
         $response->setContent($content);
 
         return $response;
@@ -136,8 +136,7 @@ abstract class WebsiteController extends AbstractFOSRestController
             ->context('uri', $uri)
             ->fallback('<div id="app"></div>')
             ->entry($serverPath . "index.js")
-            ->render()
-        ;
+            ->render();
 
         return ['render' => $render, 'serverSideRendering' => true, 'modules' => $modulesName];
     }

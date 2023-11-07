@@ -51,7 +51,6 @@ class TwigAssetExtension extends AbstractExtension
             return null;
         }
         if (null === $slug) {
-            dd($medias);
             return $medias[0];
         }
 
