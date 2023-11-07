@@ -16,6 +16,10 @@ class Language extends Datable
     /*** > Trait ***/
     /*** < Trait ***/
 
+    public function __construct()
+    {
+    }
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]
     #[ORM\Id]

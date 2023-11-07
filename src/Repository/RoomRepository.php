@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class RoomRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'el' => null
     ];
@@ -47,7 +50,6 @@ class RoomRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

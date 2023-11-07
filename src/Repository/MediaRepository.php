@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class MediaRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'ec' => null,
         'if' => null,

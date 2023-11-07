@@ -7,6 +7,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ThemeRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['name', 'o.name', 'search']
@@ -29,7 +32,6 @@ class ThemeRepository extends CrudRepository
             ->where('u.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 }

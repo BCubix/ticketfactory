@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class PageRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'el' => null
     ];

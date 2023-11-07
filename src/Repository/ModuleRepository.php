@@ -7,6 +7,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ModuleRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['name', 'o.name', 'search']

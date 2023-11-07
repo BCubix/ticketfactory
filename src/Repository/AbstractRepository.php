@@ -7,6 +7,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 abstract class AbstractRepository extends ServiceEntityRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     //protected const SELECTS = [];
     protected const JOINS   = [];
     protected const FILTERS = [];
@@ -52,7 +55,6 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         return [$filterField, $filterOperator, $filterConst, $filterValue];
-
     }
 
     protected function getSortParameters(array $filters): array

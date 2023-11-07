@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class CartRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Cart::class);

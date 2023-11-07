@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class TagRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'el' => null
     ];
@@ -30,7 +33,7 @@ class TagRepository extends CrudRepository
         'active' => 'o.active',
         'name' => 'o.name'
     ];
-    
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Tag::class);
@@ -45,7 +48,6 @@ class TagRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

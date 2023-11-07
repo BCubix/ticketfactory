@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class OrderRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'os' => null,
         'ocu' => null,

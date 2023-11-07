@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ImageFormatRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['name', 'o.name', 'search'],

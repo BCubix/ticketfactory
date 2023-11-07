@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class SeasonRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'el' => null
     ];
@@ -39,14 +42,13 @@ class SeasonRepository extends CrudRepository
 
     public function findAllForWebsite(int $languageId)
     {
-    	return $this->createQueryBuilder('s')
+        return $this->createQueryBuilder('s')
             ->innerJoin('s.lang', 'l', 'WITH', 'l.id = :languageId')
-    		->where('s.active = 1')
-    		->orderBy('s.id', 'ASC')
+            ->where('s.active = 1')
+            ->orderBy('s.id', 'ASC')
             ->setParameter('languageId', $languageId)
-    		->getQuery()
-    		->getResult()
-    	;
+            ->getQuery()
+            ->getResult();
     }
 
     public function findOneForWebsite(int $languageId, int $seasonId): ?Season
@@ -58,21 +60,19 @@ class SeasonRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('seasonId', $seasonId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findByBeginYearForWebsite(int $languageId, int $defaultYear)
     {
-    	return $this
-    		->createQueryBuilder('s')
+        return $this
+            ->createQueryBuilder('s')
             ->innerJoin('s.lang', 'l', 'WITH', 'l.id = :languageId')
             ->where('s.beginYear = :defaultYear')
             ->setParameter('languageId', $languageId)
             ->setParameter('defaultYear', $defaultYear)
             ->getQuery()
-    		->getOneOrNullResult()
-    	;
+            ->getOneOrNullResult();
     }
 
     public function findBySlugForWebsite(int $languageId, string $slug): ?Season
@@ -84,7 +84,6 @@ class SeasonRepository extends CrudRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

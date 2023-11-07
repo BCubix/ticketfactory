@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class VersionnedEntityRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, VersionnedEntity::class);
@@ -23,8 +26,7 @@ class VersionnedEntityRepository extends CrudRepository
             ->setParameter('entityKeyword', $entityKeyword)
             ->setParameter('entityId', $entityId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findEntityVersionForAdmin($entityKeyword, $versionId): ?VersionnedEntity
@@ -37,7 +39,6 @@ class VersionnedEntityRepository extends CrudRepository
             ->setParameter('entityKeyword', $entityKeyword)
             ->setParameter('versionId', $versionId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class SeatingPlanRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['name', 'o.name', 'search']
     ];

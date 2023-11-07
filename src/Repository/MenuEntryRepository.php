@@ -5,11 +5,13 @@ namespace App\Repository;
 use App\Entity\Menu\MenuEntry;
 use App\Entity\Language\Language;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class MenuEntryRepository extends NestedTreeRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function findAllForAdmin(array $filters = []): array
     {
         if (isset($filters['lang'])) {
@@ -26,8 +28,7 @@ class MenuEntryRepository extends NestedTreeRepository
             ->andWhere('el.id = :languageId')
             ->setParameter('languageId', $langId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findOneForAdmin(int $id): ?MenuEntry
@@ -36,8 +37,7 @@ class MenuEntryRepository extends NestedTreeRepository
             ->where('o.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = []): array
@@ -47,8 +47,7 @@ class MenuEntryRepository extends NestedTreeRepository
         $results = $this
             ->createQueryBuilder('o')
             ->addSelect('el')
-            ->leftJoin('o.lang', 'el')
-        ;
+            ->leftJoin('o.lang', 'el');
 
         return $results
             ->andWhere('o.languageGroup IN (:languageGroupList)')
@@ -58,8 +57,7 @@ class MenuEntryRepository extends NestedTreeRepository
             ->addOrderBy('el.isDefault', 'DESC')
             ->addOrderBy('el.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllForWebsite(int $languageId): array
@@ -70,8 +68,7 @@ class MenuEntryRepository extends NestedTreeRepository
             ->orderBy('me.root, me.lft', 'ASC')
             ->setParameter('languageId', $languageId)
             ->getQuery()
-            ->getArrayResult()
-        ;
+            ->getArrayResult();
     }
 
     public function findByKeywordForWebsite(int $languageId, string $keyword): array
@@ -83,10 +80,9 @@ class MenuEntryRepository extends NestedTreeRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('keyword', $keyword)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
 
-        if(null == $root) {
+        if (null == $root) {
             return [];
         }
 
@@ -104,7 +100,6 @@ class MenuEntryRepository extends NestedTreeRepository
             ->setParameter('lft', $root->getLft())
             ->setParameter('rgt', $root->getRgt())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

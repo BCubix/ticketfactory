@@ -22,14 +22,14 @@ class Kernel extends BaseKernel
     {
         $configDir = $this->getConfigDir();
 
-        $container->import($configDir.'/{packages}/*.yaml');
-        $container->import($configDir.'/{packages}/'.$this->environment.'/*.yaml');
+        $container->import($configDir . '/{packages}/*.yaml');
+        $container->import($configDir . '/{packages}/' . $this->environment . '/*.yaml');
 
-        if (is_file($configDir.'/services.yaml')) {
-            $container->import($configDir.'/services.yaml');
-            $container->import($configDir.'/{services}_'.$this->environment.'.yaml');
+        if (is_file($configDir . '/services.yaml')) {
+            $container->import($configDir . '/services.yaml');
+            $container->import($configDir . '/{services}_' . $this->environment . '.yaml');
         } else {
-            $container->import($configDir.'/{services}.php');
+            $container->import($configDir . '/{services}.php');
         }
 
         $this->configureModulesServices($container);
@@ -77,8 +77,8 @@ class Kernel extends BaseKernel
     private function configureRoutes(RoutingConfigurator $routes): void
     {
         $configDir = $this->getConfigDir();
-        $routes->import($configDir.'/{routes}/annotations.php');
-        $routes->import($configDir.'/{routes}/framework.yaml');
+        $routes->import($configDir . '/{routes}/annotations.php');
+        $routes->import($configDir . '/{routes}/framework.yaml');
     }
 
     private function configureModulesServices(ContainerConfigurator &$container): void
@@ -98,9 +98,8 @@ class Kernel extends BaseKernel
                 ->exclude($modulePath . $moduleName . '.php')
                 ->public()
                 ->autowire()
-                ->autoconfigure()
-            ;
-        }   
+                ->autoconfigure();
+        }
     }
 
     private function getActiveModules(): array
@@ -112,7 +111,7 @@ class Kernel extends BaseKernel
         }
     }
 
-    private function getModulesDir(): string
+    public function getModulesDir(): string
     {
         $pg = new PathGetter($this->getProjectDir());
 

@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class LogRepository extends AbstractRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['id', 'l.id', 'equals'],
         ['severity', 'l.severity', 'equals'],
@@ -49,20 +52,17 @@ class LogRepository extends AbstractRepository
 
             $results
                 ->andWhere($filterField . ' ' . $filterOperator . ' ' . $filterConst)
-			    ->setParameter($filterConst, $filterValue)
-		    ;
+                ->setParameter($filterConst, $filterValue);
         }
 
         if ($page != 0) {
             $results = $results
                 ->setFirstResult(($page - 1) * $limit)
-                ->setMaxResults($limit)
-            ;
+                ->setMaxResults($limit);
         }
 
         $results = $results
-            ->orderBy($sortField, $sortOrder)
-        ;
+            ->orderBy($sortField, $sortOrder);
 
         $results = new Paginator($results);
 

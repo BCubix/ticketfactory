@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class OrderStatusRepository extends ServiceEntityRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, OrderStatus::class);

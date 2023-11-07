@@ -7,6 +7,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class HookRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hook::class);
@@ -18,8 +21,7 @@ class HookRepository extends CrudRepository
             ->orderBy('u.name', 'ASC')
             ->addOrderBy('u.position', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findOneByNameForAdmin(string $name)
@@ -28,8 +30,7 @@ class HookRepository extends CrudRepository
             ->where('u.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findAllByNameForAdmin(string $name)
@@ -39,8 +40,7 @@ class HookRepository extends CrudRepository
             ->setParameter('name', $name)
             ->orderBy('u.position', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findOneByNameAndModuleNameForAdmin(string $hookName, string $moduleName)
@@ -52,7 +52,6 @@ class HookRepository extends CrudRepository
             ->setParameter('hookName', $hookName)
             ->setParameter('moduleName', $moduleName)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

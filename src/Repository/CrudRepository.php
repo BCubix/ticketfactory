@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 abstract class CrudRepository extends AbstractRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry, string $className)
     {
         parent::__construct($registry, $className);
@@ -52,27 +55,23 @@ abstract class CrudRepository extends AbstractRepository
 
             $results
                 ->andWhere($filterField . ' ' . $filterOperator . ' ' . $filterConstComplete)
-                ->setParameter($filterConst, $filterValue)
-            ;
+                ->setParameter($filterConst, $filterValue);
         }
 
         if (static::IS_TRANSLATABLE && !isset($filters['lang'])) {
             $results
                 ->andWhere('el.id = :defaultLangId')
-                ->setParameter("defaultLangId", $defaultLanguage->getId())
-            ;
+                ->setParameter("defaultLangId", $defaultLanguage->getId());
         }
 
         if ($page != 0) {
             $results = $results
                 ->setFirstResult(($page - 1) * $limit)
-                ->setMaxResults($limit)
-            ;
+                ->setMaxResults($limit);
         }
 
         $results = $results
-            ->orderBy($sortField, $sortOrder)
-        ;
+            ->orderBy($sortField, $sortOrder);
 
         $results = new Paginator($results);
 
@@ -88,8 +87,7 @@ abstract class CrudRepository extends AbstractRepository
             ->where('o.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, $filters)
@@ -116,8 +114,7 @@ abstract class CrudRepository extends AbstractRepository
             ->addOrderBy('el.isDefault', 'DESC')
             ->addOrderBy('el.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findOneByLanguageForAdmin(int $languageId, string $languageGroup)
@@ -140,8 +137,7 @@ abstract class CrudRepository extends AbstractRepository
             ->andWhere('el.id = :languageId')
             ->setParameter('languageId', $languageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findTranslationForWebsite(int $languageId, $languageGroup)
@@ -153,7 +149,6 @@ abstract class CrudRepository extends AbstractRepository
             ->setParameter('languageGroup', $languageGroup->toBinary())
             ->setParameter('languageId', $languageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

@@ -9,6 +9,9 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 class CustomerRepository extends CrudRepository implements UserLoaderInterface
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['email', 'o.email', 'search'],

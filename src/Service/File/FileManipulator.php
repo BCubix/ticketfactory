@@ -14,9 +14,9 @@ class FileManipulator
 
     private $fs;
 
-    public function __construct(FileSystem $fs)
+    public function __construct()
     {
-        $this->fs = $fs;
+        $this->fs = new FileSystem();
     }
 
     /**
@@ -26,8 +26,11 @@ class FileManipulator
     {
         $content = file_get_contents($filePath);
         if (false === $content) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400,
-                "La lecture du fichier $filePath a échoué.");
+            throw new ApiException(
+                Response::HTTP_BAD_REQUEST,
+                1400,
+                "La lecture du fichier $filePath a échoué."
+            );
         }
 
         return $content;
@@ -43,8 +46,11 @@ class FileManipulator
     {
         $result = file_put_contents($filePath, $newContent);
         if (false === $result) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "L'écriture dans le fichier $filePath a échoué.");
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "L'écriture dans le fichier $filePath a échoué."
+            );
         }
     }
 
@@ -65,8 +71,11 @@ class FileManipulator
         }
 
         if (false === $position) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "'$needle' n'a pas été trouvé dans le fichier $this->filePath.");
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "'$needle' n'a pas été trouvé dans le fichier $filePath."
+            );
         }
 
         return $position;
@@ -87,7 +96,7 @@ class FileManipulator
             if ($node->isDot()) {
                 continue;
             }
-            
+
             if ($node->isFile()) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, Zip::ZIP_FIRST_DIR_REQUIRED);
             }

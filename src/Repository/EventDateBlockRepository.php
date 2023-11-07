@@ -7,6 +7,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EventDateBlockRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, EventDateBlock::class);
@@ -23,7 +26,6 @@ class EventDateBlockRepository extends CrudRepository
             ->orderBy('edb.id', 'ASC')
             ->addOrderBy('ed.eventDate', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

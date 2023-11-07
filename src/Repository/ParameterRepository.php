@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ParameterRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['paramKey', 'o.paramKey', 'search'],
     ];

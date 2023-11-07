@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class VoucherRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Voucher::class);

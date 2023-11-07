@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ContentRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'el' => null
     ];
@@ -46,8 +49,7 @@ class ContentRepository extends CrudRepository
             ->where('ct.id = :id')
             ->setParameter('id', $contentTypeId)
             ->getQuery()
-            ->getSingleScalarResult()
-        ;
+            ->getSingleScalarResult();
     }
 
     public function findContentByPageIdForAdmin(int $pageId)
@@ -59,7 +61,6 @@ class ContentRepository extends CrudRepository
             ->andWhere('p.id = :pageId')
             ->setParameter("pageId", $pageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

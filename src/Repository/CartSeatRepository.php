@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class CartSeatRepository extends ServiceEntityRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CartSeat::class);
@@ -25,8 +28,7 @@ class CartSeatRepository extends ServiceEntityRepository
             ->setParameter("cartRowId", $cartRowId)
             ->orderBy("ep.price", "ASC")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllByEventPriceForWebsite(int $cartRowId, int $eventPriceId): ?array
@@ -42,7 +44,6 @@ class CartSeatRepository extends ServiceEntityRepository
             ->setParameter("eventPriceId", $eventPriceId)
             ->orderBy("cs.id", "DESC")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

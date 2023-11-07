@@ -148,11 +148,6 @@ class ModuleManager extends AddonManager
 
         // The module either exists in database or just was created and is not still saved
         if (null !== $module) {
-            /*if ($action == ModuleEntity::ACTION_INSTALL) {
-                $moduleInstance = $this->getModuleInstance($moduleName);
-                $moduleInstance->register();
-            }*/
-
             switch ($action) {
                 case ModuleEntity::ACTION_INSTALL:
                 case ModuleEntity::ACTION_DISABLE:
@@ -160,6 +155,8 @@ class ModuleManager extends AddonManager
 
                     $this->em->persist($module);
                     $this->em->flush();
+
+                    $this->callConfig($moduleName, "trait", [$action == ModuleEntity::ACTION_DISABLE]);
 
                     ($action == ModuleEntity::ACTION_INSTALL ? $this->enableHooks($module) : $this->disableHooks($module));
 
@@ -181,6 +178,8 @@ class ModuleManager extends AddonManager
 
                     $this->em->remove($module);
                     $this->em->flush();
+
+                    $this->callConfig($moduleName, "trait", [true]);
 
                     $settings = $this->getConfiguration($moduleName)['settings'];
                     if (isset($settings["parameters"])) {
@@ -229,6 +228,27 @@ class ModuleManager extends AddonManager
         return null;
     }
 
+    public function importModuleInstance($moduleName): ?Bundle
+    {
+        $modulesDir = $this->kl->getModulesDir();
+
+        $bundleFilePath = $modulesDir . '/' . $moduleName . '/src/' . $moduleName . '.php';
+        if (is_file($bundleFilePath)) {
+            require_once $bundleFilePath;
+            $bundleFileName = substr(basename($bundleFilePath), 0, -4);
+            $moduleNamespace = 'TicketFactory\\Module\\' . $moduleName . '\\' . $bundleFileName;
+
+            $bundle = new $moduleNamespace;
+            if (method_exists($bundle, 'register')) {
+                $bundle->register();
+            }
+
+            return $bundle;
+        }
+
+        return null;
+    }
+
     protected function getMigrationFile(string $objectName): string
     {
         $migrationFile = 'Version' . $objectName . '.php';
@@ -262,5 +282,38 @@ class ModuleManager extends AddonManager
         foreach ($module->getHooks() as $hook) {
             $this->em->remove($hook);
         }
+    }
+
+    /**
+     * Call module configuration function.
+     *
+     * @param string $name
+     * @param string $functionName
+     * @param array $args
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function callConfig(string $name, string $functionName, array $args = []): mixed
+    {
+        $moduleConfig = $this->importModuleInstance($name);
+
+        if (!$moduleConfig) {
+            throw new ApiException(
+                Response::HTTP_BAD_REQUEST,
+                1400,
+                "La classe {$name} n'existe pas."
+            );
+        }
+
+        if (!method_exists($moduleConfig, $functionName)) {
+            throw new ApiException(
+                Response::HTTP_BAD_REQUEST,
+                1400,
+                "La classe {$name} ne contient pas la fonction $functionName."
+            );
+        }
+
+        return $moduleConfig->{$functionName}(...$args);
     }
 }

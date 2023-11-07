@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ContactRequestRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['firstName', 'o.firstName', 'search'],

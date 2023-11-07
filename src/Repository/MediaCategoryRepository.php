@@ -3,12 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\Language\Language;
-use App\Entity\Media\MediaCategory;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class MediaCategoryRepository extends NestedTreeRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function findAllForAdmin(array $filters = [], int $categoryId = null)
     {
         if (isset($filters['lang'])) {
@@ -29,8 +31,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->orderBy('c.position', 'ASC')
             ->setParameter('categoryId', $categoryId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneForAdmin(int $id)
@@ -39,11 +40,11 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->where('o.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
-    public function findRootCategory($languageId = null) {
+    public function findRootCategory($languageId = null)
+    {
         if (null === $languageId) {
             $langId = $this->getEntityManager()->getRepository(Language::class)->findDefaultForAdmin()->getId();
         } else {
@@ -58,8 +59,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->andWhere('el.id = :languageId')
             ->setParameter('languageId', $langId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneByLanguageForAdmin(int $languageId, string $languageGroup)
@@ -67,8 +67,7 @@ class MediaCategoryRepository extends NestedTreeRepository
         $results = $this
             ->createQueryBuilder('o')
             ->addSelect('el')
-            ->leftJoin('o.lang', 'el')
-        ;
+            ->leftJoin('o.lang', 'el');
 
         return $results
             ->where('o.languageGroup = :languageGroup')
@@ -76,8 +75,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->andWhere('el.id = :languageId')
             ->setParameter('languageId', $languageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findAllByLanguageGroupForAdmin(string $languageGroup)
@@ -87,8 +85,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->where('o.languageGroup = :languageGroup')
             ->setParameter('languageGroup', $languageGroup)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = [])
@@ -104,8 +101,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->addOrderBy('el.isDefault', 'DESC')
             ->addOrderBy('el.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllByParentForAdmin(int $parendId): array
@@ -123,8 +119,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->setParameter('parentId', $parendId)
             ->orderBy('o.position', "ASC")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllTranslationsByElementForAdmin(string $languageGroup): array
@@ -138,8 +133,7 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->andWhere("l.id != :defaultLanguageId")
             ->setParameter("defaultLanguageId", $defaultLanguage->getId())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findMaxPositionForAdmin(?int $parentId): array
@@ -156,7 +150,6 @@ class MediaCategoryRepository extends NestedTreeRepository
             ->setMaxResults(1)
             ->orderBy('o.position', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

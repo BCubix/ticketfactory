@@ -5,11 +5,13 @@ namespace App\Repository;
 use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class EventCategoryRepository extends NestedTreeRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function findAllForAdmin(array $filters = [], int $categoryId = null): ?EventCategory
     {
         if (isset($filters['lang'])) {
@@ -30,8 +32,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->orderBy('c.position', 'ASC')
             ->setParameter('categoryId', $categoryId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneForAdmin(int $id): ?EventCategory
@@ -40,8 +41,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->where('o.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findRootCategory($languageId = null): ?EventCategory
@@ -60,8 +60,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->andWhere('el.id = :languageId')
             ->setParameter('languageId', $langId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findOneByLanguageForAdmin(int $languageId, string $languageGroup): ?EventCategory
@@ -75,8 +74,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->andWhere('el.id = :languageId')
             ->setParameter('languageId', $languageId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findAllByLanguageGroupForAdmin(string $languageGroup): array
@@ -86,8 +84,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->where('o.languageGroup = :languageGroup')
             ->setParameter('languageGroup', $languageGroup)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, array $filters = []): array
@@ -103,8 +100,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->addOrderBy('el.isDefault', 'DESC')
             ->addOrderBy('el.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllByParentForAdmin(int $parendId): array
@@ -122,8 +118,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->setParameter('parentId', $parendId)
             ->orderBy('o.position', "ASC")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findAllTranslationsByElementForAdmin(string $languageGroup): array
@@ -137,8 +132,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->andWhere("l.id != :defaultLanguageId")
             ->setParameter("defaultLanguageId", $defaultLanguage->getId())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findMaxPositionForAdmin(?int $parentId): array
@@ -155,8 +149,7 @@ class EventCategoryRepository extends NestedTreeRepository
             ->setMaxResults(1)
             ->orderBy('o.position', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findBySlugForWebsite(int $languageId, string $slug): ?EventCategory
@@ -168,7 +161,6 @@ class EventCategoryRepository extends NestedTreeRepository
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

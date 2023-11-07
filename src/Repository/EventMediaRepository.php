@@ -7,6 +7,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EventMediaRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, EventMedia::class);

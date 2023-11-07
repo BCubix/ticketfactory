@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EventRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const SELECTS = [
         'ec' => null,
         'es' => null,

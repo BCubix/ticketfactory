@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class LanguageRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Language::class);
@@ -19,8 +22,7 @@ class LanguageRepository extends CrudRepository
         return $this->createQueryBuilder('l')
             ->where('l.isDefault = 1')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findDefaultForWebsite()
@@ -29,8 +31,7 @@ class LanguageRepository extends CrudRepository
             ->where('l.active = 1')
             ->andWhere('l.isDefault = 1')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function findByLocaleForWebsite($locale)
@@ -40,7 +41,6 @@ class LanguageRepository extends CrudRepository
             ->andWhere('l.locale = :locale')
             ->setParameter('locale', $locale)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

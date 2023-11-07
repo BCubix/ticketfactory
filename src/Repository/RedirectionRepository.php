@@ -8,6 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class RedirectionRepository extends CrudRepository
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['redirectType', 'o.redirectType', 'equals'],
@@ -37,7 +40,6 @@ class RedirectionRepository extends CrudRepository
             ->orderBy('r.createdAt', 'DESC')
             ->setParameter('fromPath', $fromPath)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

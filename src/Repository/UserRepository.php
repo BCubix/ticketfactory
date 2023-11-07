@@ -9,6 +9,9 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 class UserRepository extends CrudRepository implements UserLoaderInterface
 {
+    /*** > Trait ***/
+    /*** < Trait ***/
+
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['email', 'o.email', 'search'],
@@ -40,8 +43,7 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
             ->andWhere('u.active = 1')
             ->setParameter('email', $email)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     public function loadUserByUsername(string $email): ?User
@@ -55,8 +57,7 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
             ->where('u.roles LIKE :adminRole')
             ->setParameter('adminRole', 'ROLE_ADMIN')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function getUserByTokenForWebsite($userEmail, $userPass): ?User
@@ -68,7 +69,6 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
             ->setParameter('userPass', '%' . $userPass)
             ->andWhere('u.active = 1')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }
