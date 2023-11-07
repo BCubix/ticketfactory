@@ -217,11 +217,10 @@ const mediasApi = {
             });
 
             data?.imageFormats?.forEach((format, index) => {
-                formData.append(`imageFormats[${index}]`, format);
+                const valueToAppend = format.id ? format.id : format;
+                formData.append(`imageFormats[${index}]`, valueToAppend);
             });
-            for (let [key, value] of formData.entries()) {
-                console.log(key, value);
-            }
+
             const result = await axios.post(`/medias/${id}`, formData);
 
             return { result: true, media: result.data };

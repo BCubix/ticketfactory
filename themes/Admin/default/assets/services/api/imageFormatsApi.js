@@ -131,8 +131,6 @@ const imageFormatsApi = {
 
     generateImageFormat: async (data, chunkMediaIndex) => {
         try {
-            console.log('RENTREEEEEEEEEE');
-
             let url = '/image-formats/generate';
             if (data.formatId !== -1) {
                 url += `/${data.formatId}`;
@@ -141,9 +139,7 @@ const imageFormatsApi = {
             url += `?deleteOldThumbnails=${data.deleteOldThumbnails ? 1 : 0}`;
             url += `&chunkMediaIndex=${chunkMediaIndex}`;
 
-            console.log(url);
             const result = await axios.post(url);
-            console.log(result);
 
             return { result: true, imageFormat: result.data };
         } catch (error) {

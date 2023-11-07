@@ -56,7 +56,7 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
 
     useEffect(() => {
         if (selectedMediaId.current !== selectedMedia?.id) {
-            setEditMode({ title: false, alt: false, legend: false });
+            setEditMode({ title: false, alt: false, legend: false, imageFormats: false });
         }
 
         selectedMediaId.current = selectedMedia?.id;
@@ -64,11 +64,7 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
 
     const handleChangeMediaInfos = async (values) => {
         apiMiddleware(dispatch, async () => {
-            console.log('///////////////////////////////');
-            console.log(values[values.submittedInput]);
-            console.log('///////////////////////////////');
             const result = await Api.mediasApi.editMedia(selectedMedia?.id, { ...selectedMedia, [values.submittedInput]: values[values.submittedInput] });
-
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 return;
@@ -79,7 +75,6 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
             }
         });
     };
-
     return (
         <Formik
             initialValues={{
