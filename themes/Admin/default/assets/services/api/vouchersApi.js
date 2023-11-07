@@ -114,8 +114,6 @@ const vouchersApi = {
 
             return { result: true, voucher: result.data };
         } catch (error) {
-            console.error(error);
-
             return { result: false, error: error?.response?.data };
         }
     },

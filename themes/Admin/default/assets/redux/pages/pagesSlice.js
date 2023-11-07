@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Api } from "@/AdminService/Api";
+import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
@@ -84,7 +84,6 @@ export function changePagesFilters(filters, page = 1) {
     };
 }
 
-export const { getPages, getPagesSuccess, getPagesFailure, resetPages, updatePagesFilters } =
-    pagesSlice.actions;
+export const { getPages, getPagesSuccess, getPagesFailure, resetPages, updatePagesFilters } = pagesSlice.actions;
 export const pagesSelector = (state) => state.pages;
 export default pagesSlice.reducer;

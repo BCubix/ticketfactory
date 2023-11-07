@@ -2,7 +2,6 @@ import React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-const NAME = 'tag';
 const LABEL = 'Lien vers un tag';
 
 const TYPE = 'tag';

@@ -82,6 +82,7 @@ class Event extends Datable
     #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $eventLength = null;
+
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
     #[JMS\Expose()]
@@ -208,6 +209,54 @@ class Event extends Datable
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTicketingId(): ?int
+    {
+        return $this->ticketingId;
+    }
+
+    public function setTicketingId(?int $ticketingId): self
+    {
+        $this->ticketingId = $ticketingId;
+
+        return $this;
+    }
+
+    public function isUseThirdPartyTicketing(): ?bool
+    {
+        return $this->useThirdPartyTicketing;
+    }
+
+    public function setUseThirdPartyTicketing(bool $useThirdPartyTicketing): self
+    {
+        $this->useThirdPartyTicketing = $useThirdPartyTicketing;
+
+        return $this;
+    }
+
+    public function getThirdPartyTicketingUrl(): ?string
+    {
+        return $this->thirdPartyTicketingUrl;
+    }
+
+    public function setThirdPartyTicketingUrl(?string $thirdPartyTicketingUrl): self
+    {
+        $this->thirdPartyTicketingUrl = $thirdPartyTicketingUrl;
+
+        return $this;
+    }
+
+    public function getEventLength(): ?string
+    {
+        return $this->eventLength;
+    }
+
+    public function setEventLength(?string $eventLength): self
+    {
+        $this->eventLength = $eventLength;
 
         return $this;
     }

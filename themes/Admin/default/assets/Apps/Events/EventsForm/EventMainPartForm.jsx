@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid } from '@mui/material';
+import { FormControlLabel, Grid, Switch } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -94,6 +94,60 @@ export const EventMainPartForm = ({
                             getName={(item) => item.name}
                             setFieldValue={setFieldValue}
                             errors={touched.season && errors.season}
+                        />
+                    </Grid>
+                </Grid>
+            </Component.CmtFormBlock>
+
+            <Component.CmtFormBlock title={'Informations annexes'}>
+                <Grid container spacing={4}>
+                    <Grid item xs={12} sm={6} display="flex" alignItems="center" flexWrap={'wrap'}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={Boolean(values.useThirdPartyTicketing)}
+                                    onChange={(e) => {
+                                        setFieldValue('useThirdPartyTicketing', e.target.checked);
+                                    }}
+                                />
+                            }
+                            label={'Utiliser une billetterie externe ?'}
+                            labelPlacement="start"
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        {values.useThirdPartyTicketing ? (
+                            <Component.CmtTextField
+                                value={values.thirdPartyTicketingUrl}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                label="Url de billetterie externe"
+                                name="thirdPartyTicketingUrl"
+                                error={touched.thirdPartyTicketingUrl && errors.thirdPartyTicketingUrl}
+                                type="url"
+                            />
+                        ) : (
+                            <Component.CmtTextField
+                                value={values.ticketingId}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                label="Identifiant billetterie"
+                                name="ticketingId"
+                                error={touched.ticketingId && errors.ticketingId}
+                                type="number"
+                            />
+                        )}
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <Component.CmtTextField
+                            value={values.eventLength}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            label="Durée de l'évènement"
+                            name="eventLength"
+                            error={touched.eventLength && errors.eventLength}
                         />
                     </Grid>
                 </Grid>
