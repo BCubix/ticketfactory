@@ -253,7 +253,6 @@ import { CreateLanguage } from '@Apps/Languages/CreateLanguage/CreateLanguage';
 import { EditLanguage } from '@Apps/Languages/EditLanguage/EditLanguage';
 import { LanguagesForm } from '@Apps/Languages/LanguagesForm/LanguagesForm';
 import { AppProvider } from '@/Config/AppProvider';
-import { ImageUploads } from '../Apps/Medias/ImageUploads/ImageUploads';
 
 const ComponentObj = {
     App: App,
@@ -363,7 +362,6 @@ const ComponentObj = {
     DropzoneWrapper: DropzoneWrapper,
     CreateMedia: CreateMedia,
     EditMedia: EditMedia,
-    ImageUploads: ImageUploads,
     MediaDataForm: MediaDataForm,
     IframeMediaForm: IframeMediaForm,
     MediaImageForm: MediaImageForm,
