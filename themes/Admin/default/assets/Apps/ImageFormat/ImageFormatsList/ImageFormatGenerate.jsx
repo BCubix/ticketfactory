@@ -20,7 +20,7 @@ export const ImageFormatGenerate = () => {
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.imageFormatsApi.getImageFormats({ page: 0 });
+            const result = await Api.imageFormatsApi.getAllImageFormat();
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 return;
