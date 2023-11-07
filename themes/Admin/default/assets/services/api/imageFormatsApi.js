@@ -81,6 +81,7 @@ const imageFormatsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
     createImageFormat: async (data) => {
         try {
             let formData = new FormData();

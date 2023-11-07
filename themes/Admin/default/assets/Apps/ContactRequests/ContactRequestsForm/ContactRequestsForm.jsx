@@ -9,13 +9,7 @@ import { Component } from '@/AdminService/Component';
 
 export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
     const contactRequestSchema = Yup.object().shape({
-        firstName: Yup.string().required('Veuillez renseigner le prénom.'),
-        lastName: Yup.string().required('Veuillez renseigner le nom.'),
         email: Yup.string().required("Veuillez renseigner l'adresse email.").email('Email invalide'),
-        phone: Yup.string()
-            .required('Veuillez renseigner le numéro de téléphone.')
-            .matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Le numéro est invalide.'),
-        subject: Yup.string().required("Veuillez renseigner l'object de la demande."),
         message: Yup.string().required('Veuillez renseigner le message.'),
     });
 
@@ -48,7 +42,6 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Prénom'}
                                     name="firstName"
                                     error={touched.firstName && errors.firstName}
-                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -59,7 +52,6 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Nom'}
                                     name="lastName"
                                     error={touched.lastName && errors.lastName}
-                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -81,7 +73,6 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Numéro de téléphone'}
                                     name="phone"
                                     error={touched.phone && errors.phone}
-                                    required
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -92,7 +83,6 @@ export const ContactRequestsForm = ({ handleSubmit, initialValues = null }) => {
                                     label={'Objet'}
                                     name="subject"
                                     error={touched.subject && errors.subject}
-                                    required
                                 />
                             </Grid>
                             <Grid item xs={12}>

@@ -35,12 +35,6 @@ abstract class CrudRepository extends AbstractRepository
             }
         }
 
-        /*$results->select('o');
-        foreach (static::SELECTS as $selectKey => $selectValue) {
-            $selectComplete = ((null === $selectValue) ? $selectKey : ($selectValue . ' AS ' . $selectKey));
-            $results->addSelect($selectComplete);
-        }*/
-
         foreach (static::FILTERS as $filterArray) {
             if (!isset($filters[$filterArray[0]]) || is_null($filters[$filterArray[0]])) {
                 continue;

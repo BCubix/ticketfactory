@@ -89,6 +89,10 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
                 editSlug: false,
                 lang: initValues?.lang?.id || '',
                 languageGroup: initValues?.languageGroup || '',
+                ticketingId: initValues?.ticketingId || '',
+                useThirdPartyTicketing: initValues?.useThirdPartyTicketing || false,
+                thirdPartyTicketingUrl: initValues?.thirdPartyTicketingUrl || '',
+                eventLength: initValues?.eventLength || '',
                 seo: {
                     metaTitle: initValues?.metaTitle || '',
                     metaDescription: initValues?.metaDescription || '',

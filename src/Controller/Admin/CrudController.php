@@ -73,7 +73,7 @@ abstract class CrudController extends AdminController
 
         $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'add'
+            'state'  => 'add'
         ]);
         $form = $this->createForm($this->typeClass, $object);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
@@ -88,7 +88,7 @@ abstract class CrudController extends AdminController
         $this->hm->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
-            'state' => 'add'
+            'state'   => 'add'
         ]);
 
         $this->em->persist($object);
@@ -97,7 +97,7 @@ abstract class CrudController extends AdminController
         $this->hm->exec($this->entityClassName . 'Saved', [
             'iObject' => $iObject,
             'sObject' => $object,
-            'state' => 'add'
+            'state'   => 'add'
         ]);
 
         $this->log->log(0, 0, 'Created object.', $this->entityClass, $object->getId());
@@ -116,7 +116,7 @@ abstract class CrudController extends AdminController
 
         $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'edit'
+            'state'  => 'edit'
         ]);
 
         $form = $this->createForm($this->typeClass, $object);
@@ -132,7 +132,7 @@ abstract class CrudController extends AdminController
         $this->hm->exec($this->entityClassName . 'Validated', [
             'iObject' => $iObject,
             'vObject' => $object,
-            'state' => 'edit'
+            'state'   => 'edit'
         ]);
 
         $this->em->persist($object);
@@ -141,7 +141,7 @@ abstract class CrudController extends AdminController
         $this->hm->exec($this->entityClassName . 'Saved', [
             'iObject' => $iObject,
             'sObject' => $object,
-            'state' => 'edit'
+            'state'   => 'edit'
         ]);
 
         $this->log->log(0, 0, 'Updated object.', $this->entityClass, $object->getId());
@@ -158,7 +158,7 @@ abstract class CrudController extends AdminController
 
         $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'duplicate'
+            'state'  => 'duplicate'
         ]);
 
         $nObject = CloneObject::cloneObject($object);
@@ -181,7 +181,7 @@ abstract class CrudController extends AdminController
 
         $this->hm->exec($this->entityClassName . 'Instantiated', [
             'object' => $object,
-            'state' => 'delete'
+            'state'  => 'delete'
         ]);
 
         $this->lm->deleteTranslation($object, $this->entityClass);

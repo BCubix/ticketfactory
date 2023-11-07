@@ -122,6 +122,10 @@ const eventsApi = {
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang || '');
             formData.append('languageGroup', data.languageGroup || '');
+            formData.append('ticketingId', data.ticketingId);
+            formData.append('useThirdPartyTicketing', data.useThirdPartyTicketing);
+            formData.append('thirdPartyTicketingUrl', data.thirdPartyTicketingUrl);
+            formData.append('eventLength', data.eventLength);
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
@@ -192,6 +196,10 @@ const eventsApi = {
             formData.append('slug', changeSlug(data.slug));
             formData.append('lang', data.lang);
             formData.append('languageGroup', data.languageGroup);
+            formData.append('ticketingId', data.ticketingId);
+            formData.append('useThirdPartyTicketing', data.useThirdPartyTicketing);
+            formData.append('thirdPartyTicketingUrl', data.thirdPartyTicketingUrl);
+            formData.append('eventLength', data.eventLength);
 
             data?.eventDateBlocks?.forEach((dateBlock, index) => {
                 formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);

@@ -4,7 +4,6 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,7 +14,7 @@ class RouterController extends WebsiteController
     {
         // We explode url to get path as slug tokens
         $slugs = explode('/', $slugs);
-        array_filter($slugs, function($value) {
+        array_filter($slugs, function ($value) {
             return !empty($value);
         });
 
@@ -142,7 +141,7 @@ class RouterController extends WebsiteController
         if ($page != $refPage) {
             return null;
         }
-        
+
         $event = $this->mf->get('event')->getFromUrl($slugs);
         if (null === $event) {
             return null;
