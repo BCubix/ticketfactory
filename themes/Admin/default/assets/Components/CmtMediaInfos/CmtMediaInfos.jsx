@@ -75,6 +75,7 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
             }
         });
     };
+
     return (
         <Formik
             initialValues={{
