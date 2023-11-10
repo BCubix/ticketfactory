@@ -16,8 +16,8 @@ class TwigPathExtension extends AbstractExtension
 
     public function __construct(UrlService $us, MenuEntryManager $mm)
     {
-       $this->us = $us;
-       $this->mm = $mm;
+        $this->us = $us;
+        $this->mm = $mm;
     }
 
     public function getFunctions()
@@ -25,7 +25,7 @@ class TwigPathExtension extends AbstractExtension
         return [
             new TwigFunction('menuPath', [$this, 'menuPath']),
             new TwigFunction('keywordPath', [$this, 'keywordPath']),
-            new TwigFunction('orchestratorPath', [$this, 'orchestratorPath'])
+            new TwigFunction('tfPath', [$this, 'tfPath'])
         ];
     }
 
@@ -39,7 +39,7 @@ class TwigPathExtension extends AbstractExtension
         return $this->us->keywordPath($keyword, $params, $absolute);
     }
 
-    public function orchestratorPath(mixed $element, $params = [], $absolute = RouterInterface::ABSOLUTE_PATH)
+    public function tfPath(mixed $element, $params = [], $absolute = RouterInterface::ABSOLUTE_PATH)
     {
         return $this->us->tfPath($element, $params, $absolute);
     }

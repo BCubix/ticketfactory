@@ -1,5 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
+
 export const ImageUploads = ({ imageUploads, onSelect }) => {
     return (
         <Box sx={{ width: 100, borderRight: '1px solid gray', position: 'absolute', right: '100%' }}>
