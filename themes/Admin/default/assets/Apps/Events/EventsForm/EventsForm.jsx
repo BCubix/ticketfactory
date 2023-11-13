@@ -105,12 +105,19 @@ const LIST = {
     },
     components: [
         {
-            id: 'form',
-            component: (props) => <SeasonsForm {...props} />,
-            children: {
-                id: 'event-form-tabs',
-                component: (props) => <SeasonsForm {...props} />,
-            },
+            keyId: 'form',
+            component: (props) => <EventsForm {...props} />,
+
+            children: [
+                {
+                    keyId: 'event-form-tabs',
+                    component: (props) => <CmtTabs {...props} />,
+                },
+                {
+                    keyId: 'event-form-validation',
+                    component: (props) => <CmtTabs {...props} />,
+                },
+            ],
         },
     ],
 };
