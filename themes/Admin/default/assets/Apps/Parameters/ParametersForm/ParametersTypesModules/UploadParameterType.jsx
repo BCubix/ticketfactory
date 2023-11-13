@@ -30,7 +30,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFi
         intitializeParamsDropzone({
             logFail: (error) => dispatch(loginFailure({ error: error })),
             onSuccess: handleSubmit,
-            dropzoneId: `js-dropzone-${paramName}`,
+            dropzoneId: `js-dropzone-${paramKey}`,
             id: id,
             fileType,
             maxWeight,
@@ -43,7 +43,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFi
             <Box display="flex" alignItems="center" sx={{ paddingTop: 2, height: 100 }}>
                 {paramValue && <Box component="img" src={`${Constant.PARAMETER_FILE_BASE_URL}/${paramValue}`} height={100} marginRight={4} />}
                 <Box
-                    id={`js-dropzone-${paramName}`}
+                    id={`js-dropzone-${paramKey}`}
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',

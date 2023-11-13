@@ -122,7 +122,7 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                                         onClick={() => setSelectedMedia(item)}
                                         position="relative"
                                         sx={
-                                            (field.options.multiple && values[field.name].includes(item.id)) || values[field.name] === item.id
+                                            (field.options.multiple && values[field.name]?.includes(item.id)) || values[field.name] === item.id
                                                 ? {
                                                       outline: (theme) => `1px solid ${theme.palette.crud.create.textColor}`,
                                                       outlineOffset: '-1px',
@@ -130,7 +130,7 @@ const FormComponent = ({ values, setFieldValue, name, field, label }) => {
                                                 : {}
                                         }
                                     >
-                                        {(field.options.multiple && values[field.name].includes(item.id)) ||
+                                        {(field.options.multiple && values[field.name]?.includes(item.id)) ||
                                             (values[field.name] === item.id && (
                                                 <CheckIcon sx={{ color: (theme) => theme.palette.crud.create.textColor, position: 'absolute', top: 5, right: 5 }} />
                                             ))}
@@ -284,9 +284,9 @@ const DisplayMediaInformation = ({ onClose, selectedMedia, values, field, setFie
                     let newValue = null;
 
                     if (field.options.multiple) {
-                        newValue = value;
+                        newValue = value || [];
 
-                        if (newValue.includes(selectedMedia?.id)) {
+                        if (newValue?.includes(selectedMedia?.id)) {
                             newValue = newValue.filter((el) => el !== selectedMedia?.id);
                         } else {
                             newValue.push(selectedMedia?.id);

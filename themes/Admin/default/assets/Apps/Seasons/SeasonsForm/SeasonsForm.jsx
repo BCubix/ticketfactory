@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -6,39 +6,86 @@ import { Button, Grid, Box } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { changeSlug } from '@Services/utils/changeSlug';
+import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
-export const SeasonsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
-    const initValues = translateInitialValues || initialValues;
+const LIST = {
+    form: {
+        initialSchema: {
+            name: (initValues) => initValues?.name || '',
+            active: (initValues) => initValues?.active || false,
+            beginYear: (initValues) => initValues?.beginYear || '',
+            slug: (initValues) => initValues?.slug || '',
+            lang: (initValues) => initValues?.lang?.id || '',
+            languageGroup: (initValues) => initValues?.languageGroup || '',
+            editSlug: false,
+            seo: {
+                metaTitle: (initValues) => initValues?.metaTitle || '',
+                metaDescription: (initValues) => initValues?.metaDescription || '',
+                socialImage: (initValues) => initValues?.socialImage || null,
+                fbTitle: (initValues) => initValues?.fbTitle || '',
+                fbDescription: (initValues) => initValues?.fbDescription || '',
+                twTitle: (initValues) => initValues?.twTitle || '',
+                twDescription: (initValues) => initValues?.twDescription || '',
+            },
+        },
+        validationSchema: {
+            name: Yup.string().required('Veuillez renseigner le nom de la saison.').max(250, 'Le nom renseigné est trop long.'),
+            beginYear: Yup.number()
+                .required("Veuillez renseigner l'année de début.")
+                .min(1970, 'Veuillez renseigner une année valide.')
+                .max(2100, 'Veuillez renseigner une année valide.'),
+        },
+    },
+    components: [
+        {
+            id: 'form',
+            component: (props) => <SeasonsForm {...props} />,
+            children: {
+                id: 'event-form-tabs',
+                component: (props) => <SeasonsForm {...props} />,
+            },
+        },
+    ],
+};
 
-    const seasonsSchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom de la saison.').max(250, 'Le nom renseigné est trop long.'),
-        beginYear: Yup.number()
-            .required("Veuillez renseigner l'année de début.")
-            .min(1970, 'Veuillez renseigner une année valide.')
-            .max(2100, 'Veuillez renseigner une année valide.'),
-    });
+export const SeasonsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, ...componentProps }) => {
+    let initValues = translateInitialValues || initialValues;
+
+    useEffect();
 
     return (
+        <>
+            {LIST.components.map((elem, index) => {
+                const { component, ...props } = elem;
+                const Component = component;
+
+                if (!Component) {
+                    return <></>;
+                }
+
+                return (
+                    <Component
+                        key={index}
+                        initValues={initValues}
+                        handleSubmit={handleSubmit}
+                        initialValues={initialValues}
+                        translateInitialValues={translateInitialValues}
+                        initialSchema={LIST.form.initialSchema}
+                        validationSchema={Yup.object().shape(LIST.form.validationSchema)}
+                        {...componentProps}
+                        {...props}
+                    />
+                );
+            })}
+        </>
+    );
+};
+
+const FormikSeason = ({ initialValues, initValues, initialSchema, validationSchema, handleSubmit }) => {
+    return (
         <Formik
-            initialValues={{
-                name: initValues?.name || '',
-                active: initValues?.active || false,
-                beginYear: initValues?.beginYear || '',
-                slug: initValues?.slug || '',
-                lang: initValues?.lang?.id || '',
-                languageGroup: initValues?.languageGroup || '',
-                editSlug: false,
-                seo: {
-                    metaTitle: initValues?.metaTitle || '',
-                    metaDescription: initValues?.metaDescription || '',
-                    socialImage: initValues?.socialImage || null,
-                    fbTitle: initValues?.fbTitle || '',
-                    fbDescription: initValues?.fbDescription || '',
-                    twTitle: initValues?.twTitle || '',
-                    twDescription: initValues?.twDescription || '',
-                },
-            }}
-            validationSchema={seasonsSchema}
+            initialValues={constructInitialValues(initialSchema, initValues)}
+            validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
