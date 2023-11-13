@@ -75,6 +75,7 @@ abstract class CrudController extends AdminController
             'object' => $object,
             'state'  => 'add'
         ]);
+
         $form = $this->createForm($this->typeClass, $object);
         $fields = array_replace_recursive($request->request->all(), $request->files->all());
         $form->submit($fields);

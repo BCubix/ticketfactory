@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Addon\Module;
+use App\Entity\Addon\Theme as ThemeEntity;
 use App\Exception\ApiException;
 use App\Service\Addon\Theme;
 
@@ -59,14 +60,14 @@ class ThemeManager extends AddonManager
         return $this->sf->get('pathGetter')->getThemesDir();
     }
 
-    public function active(string $themeName): Theme
+    public function active(string $themeName): ThemeEntity
     {
         // Ensure the theme to enable is in database
-        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
+        $theme = $this->em->getRepository(ThemeEntity::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
             $this->install($themeName);
 
-            $theme = new Theme();
+            $theme = new ThemeEntity();
             $theme->setName($themeName);
 
             $this->em->persist($theme);
@@ -90,7 +91,7 @@ class ThemeManager extends AddonManager
 
         // Apply configs : disable old theme config and enable new theme config
         $themes = [$themeName => Module::ACTION_INSTALL];
-        $mainTheme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($mainThemeName);
+        $mainTheme = $this->em->getRepository(ThemeEntity::class)->findOneByNameForAdmin($mainThemeName);
         if (null !== $mainTheme) {
             $themes = [$mainThemeName => Module::ACTION_DISABLE];
 

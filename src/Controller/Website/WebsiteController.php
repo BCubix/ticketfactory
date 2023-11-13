@@ -82,9 +82,22 @@ abstract class WebsiteController extends AbstractFOSRestController
         return $this->render($tm->getWebsiteTemplatesPath() . $twigFilename, $parameters);
     }
 
+    protected function getModulePath(string $moduleName, string $path): string
+    {
+        $overrideModulePath = $this->mf->get('parameter')->getCoreParameter('main_theme') . '/module/' . $moduleName . '/templates/' . $path;
+
+        if (file_exists($this->sf->get('pathGetter')->getThemesDir() . '/' .  $overrideModulePath)) {
+            $path = 'Website/' . $overrideModulePath;
+        } else {
+            $path = ('@modules/' . $moduleName . '/templates/' . $path);
+        }
+
+        return $path;
+    }
+
     protected function renderModuleView(string $moduleName, string $path, array $parameters): string
     {
-        $path = ('@modules/' . $moduleName . '/templates/' . $path);
+        $path = $this->getModulePath($moduleName, $path);
         $parameters = array_merge($parameters, $this->getOtherParameters());
 
         return $this->tg->render($path, $parameters);
@@ -92,7 +105,7 @@ abstract class WebsiteController extends AbstractFOSRestController
 
     protected function renderModule(string $moduleName, string $path, array $parameters): Response
     {
-        $path = ('@modules/' . $moduleName . '/templates/' . $path);
+        $path = $this->getModulePath($moduleName, $path);
         $parameters = array_merge($parameters, $this->getOtherParameters());
         $content = $this->tg->render($path, $parameters);
 

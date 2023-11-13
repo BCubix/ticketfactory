@@ -4,8 +4,6 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class HomeController extends WebsiteController
 {
     public function index(Page $page)

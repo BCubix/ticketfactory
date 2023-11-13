@@ -74,6 +74,15 @@ class Page extends Datable
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: PageBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $pageBlocks;
 
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true)]
+    private $pages;
+
+    #[ORM\OneToMany(mappedBy: 'pageParent', targetEntity: ContentType::class, orphanRemoval: true)]
+    private $contentTypes;
+
+    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private Collection $contents;
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\ManyToOne(targetEntity: Language::class)]
@@ -81,22 +90,13 @@ class Page extends Datable
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_all', 'a_page_one'])]
-    public $frontUrl;
-
-    #[JMS\Expose()]
     #[JMS\Groups(['a_page_one'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'pages')]
     private $parent;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true)]
-    private $pages;
-
-    #[ORM\OneToMany(mappedBy: 'pageParent', targetEntity: ContentType::class, orphanRemoval: true)]
-    private $contentTypes;
-
-    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class)]
-    private Collection $contents;
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    public $frontUrl;
 
 
     public function __construct()
@@ -210,30 +210,6 @@ class Page extends Datable
         return $this;
     }
 
-    public function getLang(): ?Language
-    {
-        return $this->lang;
-    }
-
-    public function setLang(?Language $lang): self
-    {
-        $this->lang = $lang;
-
-        return $this;
-    }
-
-    public function getParent(): ?self
-    {
-        return $this->parent;
-    }
-
-    public function setParent(?self $parent): self
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, self>
      */
@@ -327,6 +303,30 @@ class Page extends Datable
                 $content->setPage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
 
         return $this;
     }

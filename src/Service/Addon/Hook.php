@@ -25,7 +25,13 @@ abstract class Hook
 
     public function renderModule(string $path, array $parameters): string
     {
-        $path = ('@modules/' . $this->getModuleName() . '/templates/' . $path);
+        $overrideModulePath = $this->mf->get('parameter')->getCoreParameter('main_theme') . '/module/' . $this->getModuleName() . '/templates/' . $path;
+
+        if (file_exists($this->sf->get('pathGetter')->getThemesDir() . '/' .  $overrideModulePath)) {
+            $path = 'Website/' . $overrideModulePath;
+        } else {
+            $path = ('@modules/' . $this->getModuleName() . '/templates/' . $path);
+        }
 
         return $this->tg->render($path, $parameters);
     }
