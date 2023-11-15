@@ -6,99 +6,139 @@ import { Component } from '@/AdminService/Component';
 
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const EventMainPartForm = ({
-    values,
-    handleChange,
-    handleBlur,
-    touched,
-    errors,
-    setFieldTouched,
-    setFieldValue,
-    roomsList,
-    seasonsList,
-    categoriesList,
-    tagsList,
-    editMode,
-}) => {
+export const LIST = {
+    blocks: [
+        {
+            keyId: 'block-general-info',
+            title: 'Informations générales',
+            component: (props) => <EventMainPartGeneralInfo {...props} />,
+
+            fields: [
+                {
+                    keyId: 'input-name',
+                    xs: 12,
+                    component: (props) => <EventMainField {...props} />,
+
+                    inputField: (props) => ({
+                        label: 'Nom',
+                        name: 'name',
+                        required: 'required',
+                        sx: { marginBottom: 6 },
+
+                        error: props.touched.name && props.errors.name,
+                        onChange: (e) => {
+                            props.setFieldValue('name', e.target.value);
+                            if (!props.values.editSlug && !props.editMode) {
+                                props.setFieldValue('slug', changeSlug(e.target.value));
+                            }
+                        },
+                        onBlur: props.handleBlur,
+
+                        component: (props) => <Component.CmtTextField {...props} />,
+                    }),
+                },
+            ],
+        },
+        { keyId: 'seo-form', component: (props) => <Component.SEOForm {...props} /> },
+    ],
+};
+
+export const EventMainPartForm = ({ ...props }) => <Component.CmtDisplayComponents list={LIST.blocks} {...props} />;
+
+const EventMainField = ({ inputField, ...props }) => {
+    const { component: Input, ...inputProps } = inputField(props);
+    return (
+        <Grid item {...props}>
+            <Input {...inputProps} />
+        </Grid>
+    );
+};
+
+const EventMainPartGeneralInfo = ({ title, fields, ...props }) => {
+    return (
+        <Component.CmtFormBlock title={title}>
+            <Grid container spacing={4}>
+                <Component.CmtDisplayComponents list={fields} {...props} />
+                {/* <Grid item xs={12}>
+                    <Component.CmtTextField
+                        value={values.name}
+                        onChange={(e) => {
+                            setFieldValue('name', e.target.value);
+                            if (!values.editSlug && !editMode) {
+                                setFieldValue('slug', changeSlug(e.target.value));
+                            }
+                        }}
+                        onBlur={handleBlur}
+                        label="Nom"
+                        name="name"
+                        error={touched.name && errors.name}
+                        required
+                        sx={{ marginBottom: 6 }}
+                    />
+                    <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Component.CmtTextField
+                        value={values.chapo}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label="Chapô"
+                        name="chapo"
+                        error={touched.chapo && errors.chapo}
+                        multiline
+                        rows={4}
+                        required
+                        sx={{ marginTop: 1 }}
+                    />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Component.CmtEditorField
+                        label="Description"
+                        required
+                        id={`description`}
+                        name={`description`}
+                        value={values.description}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        errors={touched.description && errors.description}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <Component.CmtSelectField
+                        label="Salle"
+                        name={`room`}
+                        value={values.room}
+                        list={roomsList}
+                        getValue={(item) => item.id}
+                        getName={(item) => item.name}
+                        setFieldValue={setFieldValue}
+                        errors={touched.room && errors.room}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <Component.CmtSelectField
+                        label="Saison"
+                        name={`season`}
+                        value={values.season}
+                        list={seasonsList}
+                        getValue={(item) => item.id}
+                        getName={(item) => item.name}
+                        setFieldValue={setFieldValue}
+                        errors={touched.season && errors.season}
+                    />
+                </Grid> */}
+            </Grid>
+        </Component.CmtFormBlock>
+    );
+};
+
+const EventMainPartAnnex = () => {
     return (
         <>
-            <Component.CmtFormBlock title={'Informations générales'}>
-                <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                        <Component.CmtTextField
-                            value={values.name}
-                            onChange={(e) => {
-                                setFieldValue('name', e.target.value);
-                                if (!values.editSlug && !editMode) {
-                                    setFieldValue('slug', changeSlug(e.target.value));
-                                }
-                            }}
-                            onBlur={handleBlur}
-                            label="Nom"
-                            name="name"
-                            error={touched.name && errors.name}
-                            required
-                            sx={{ marginBottom: 6 }}
-                        />
-                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Component.CmtTextField
-                            value={values.chapo}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            label="Chapô"
-                            name="chapo"
-                            error={touched.chapo && errors.chapo}
-                            multiline
-                            rows={4}
-                            required
-                            sx={{ marginTop: 1 }}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Component.CmtEditorField
-                            label="Description"
-                            required
-                            id={`description`}
-                            name={`description`}
-                            value={values.description}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            errors={touched.description && errors.description}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                        <Component.CmtSelectField
-                            label="Salle"
-                            name={`room`}
-                            value={values.room}
-                            list={roomsList}
-                            getValue={(item) => item.id}
-                            getName={(item) => item.name}
-                            setFieldValue={setFieldValue}
-                            errors={touched.room && errors.room}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                        <Component.CmtSelectField
-                            label="Saison"
-                            name={`season`}
-                            value={values.season}
-                            list={seasonsList}
-                            getValue={(item) => item.id}
-                            getName={(item) => item.name}
-                            setFieldValue={setFieldValue}
-                            errors={touched.season && errors.season}
-                        />
-                    </Grid>
-                </Grid>
-            </Component.CmtFormBlock>
-
             <Component.CmtFormBlock title={'Informations annexes'}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={6} display="flex" alignItems="center" flexWrap={'wrap'}>

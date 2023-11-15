@@ -253,6 +253,7 @@ import { CreateLanguage } from '@Apps/Languages/CreateLanguage/CreateLanguage';
 import { EditLanguage } from '@Apps/Languages/EditLanguage/EditLanguage';
 import { LanguagesForm } from '@Apps/Languages/LanguagesForm/LanguagesForm';
 import { AppProvider } from '@/Config/AppProvider';
+import { CmtDisplayComponents } from "@Components/CmtDisplayComponents/CmtDisplayComponents";
 
 const ComponentObj = {
     App: App,
@@ -556,6 +557,8 @@ const ComponentObj = {
     MenuTitle: MenuTitle,
     MenuItemButton: MenuItemButton,
     SideMenu: SideMenu,
+
+    CmtDisplayComponents : CmtDisplayComponents,
 };
 
 /**

@@ -59,18 +59,18 @@ const initialSchema = {
             ...el,
             lang: el?.lang?.id || '',
             eventDates: el.eventDates?.map((date) => ({ ...date, lang: date.lang.id || '' })),
-        })) || [{ name: 'Dates', eventDates: [], lang: (initValues) => initValues?.lang?.id || '' }],
+        })) || [{ name: 'Dates', eventDates: [], lang: initValues?.lang?.id || '' }],
     eventPriceBlocks: (initValues) =>
         initValues?.eventPriceBlocks?.map((el) => ({
             ...el,
             lang: el?.lang?.id || '',
             eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
-        })) || [{ name: 'Tarifs', eventPrices: [], lang: (initValues) => initValues?.lang?.id || '' }],
-    eventCategories: (initValues) => (initValues?.eventCategories ? (initValues) => initValues?.eventCategories?.map((el) => el.id) : [categoriesList.id]),
+        })) || [{ name: 'Tarifs', eventPrices: [], lang: initValues?.lang?.id || '' }],
+    eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList.id]),
     room: (initValues) => initValues?.room?.id || '',
     season: (initValues) => initValues?.season?.id || '',
-    tags: (initValues) => (initValues?.tags ? (initValues) => initValues?.tags?.map((el) => el.id) : []),
-    mainCategory: (initValues) => initValues?.mainCategory?.id || categoriesList.id,
+    tags: (initValues) => (initValues?.tags ? initValues?.tags?.map((el) => el.id) : []),
+    mainCategory: (initValues, { categoriesList }) => initValues?.mainCategory?.id || categoriesList.id,
     multiplePriceBlock: (initValues) => initValues?.eventPriceBlocks?.length > 1 || false,
     multipleDateBlock: (initValues) => initValues?.eventDateBlocks?.length > 1 || false,
     eventMedias: (initValues) =>
@@ -98,77 +98,109 @@ const initialSchema = {
     },
 };
 
-const LIST = {
+export const LIST = {
     form: {
         initialSchema: initialSchema,
         validationSchema: validationSchema,
     },
     components: [
         {
-            keyId: 'form',
-            component: (props) => <EventsForm {...props} />,
+            keyId: 'tabs',
+            component: (props) => <TabsEvent {...props} />,
+
+            tabs: [
+                {
+                    keyId: 'event-tab',
+                    label: 'Evènement',
+                    component: (props) => <Component.EventMainPartForm {...props} />,
+                },
+                {
+                    keyId: 'dates-tab',
+                    label: 'Dates',
+                    component: (props) => <Component.EventsDateBlockForm {...props} />,
+                },
+                {
+                    keyId: 'prices-tab',
+                    label: 'Tarifs',
+                    component: (props) => <Component.EventsPriceBlockForm {...props} />,
+                },
+                {
+                    keyId: 'medias-tab',
+                    label: 'Médias',
+                    component: (props) => <Component.EventMediaPartForm {...props} />,
+                },
+            ],
+        },
+        {
+            keyId: 'box',
+            component: (props) => <BoxEvent {...props} />,
 
             children: [
-                {
-                    keyId: 'event-form-tabs',
-                    component: (props) => <CmtTabs {...props} />,
-                },
-                {
-                    keyId: 'event-form-validation',
-                    component: (props) => <CmtTabs {...props} />,
-                },
+                { keyId: 'active-field', component: (props) => <ActiveFieldEvent {...props} /> },
+                { keyId: 'button', component: (props) => <ButtonEvent {...props} /> },
             ],
         },
     ],
 };
 
-export const EventsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, categoriesList, roomsList, seasonsList, tagsList }) => {
+export const EventsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, ...props }) => {
     const initValues = translateInitialValues || initialValues;
 
-    if (!categoriesList || !roomsList || !seasonsList || !tagsList) {
+    if (!props.categoriesList || !props.roomsList || !props.seasonsList || !props.tagsList) {
         return <></>;
     }
-
     return (
         <Formik
-            initialValues={constructInitialValues(initialSchema, initValues)}
+            initialValues={constructInitialValues(LIST.form.initialSchema, initValues, { props })}
             validationSchema={Yup.object().shape(LIST.form.validationSchema)}
+            translateInitialValues={translateInitialValues}
             onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
-
                 setSubmitting(false);
             }}
         >
             {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}>
-                    <Component.CmtTabs
-                        containerStyle={{ mt: 3 }}
-                        list={Tab.EventsFormTabList({
-                            values,
-                            handleChange,
-                            handleBlur,
-                            touched,
-                            errors,
-                            setFieldTouched,
-                            setFieldValue,
-                            roomsList,
-                            seasonsList,
-                            categoriesList,
-                            tagsList,
-                            initialValues: initValues,
-                            editMode: Boolean(initialValues),
-                        })}
+                    <Component.CmtDisplayComponents
+                        list={LIST.components}
+                        initialValues={initialValues}
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        handleSubmit={handleSubmit}
+                        setFieldTouched={setFieldTouched}
+                        setFieldValue={setFieldValue}
+                        isSubmitting={isSubmitting}
+                        {...props}
                     />
-
-                    <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
-                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Evènement actif ?" />
-
-                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
-                            {initialValues ? 'Modifier' : 'Créer'}
-                        </Button>
-                    </Box>
                 </Component.CmtPageWrapper>
             )}
         </Formik>
+    );
+};
+
+const TabsEvent = ({ tabs, ...props }) => {
+    return <Component.CmtTabs containerStyle={{ mt: 3 }} list={tabs.map((elem) => ({ id: elem.keyId, label: elem.label, component: elem.component(props) }))} />;
+};
+
+const BoxEvent = ({ children, ...props }) => {
+    return (
+        <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
+            <Component.CmtDisplayComponents list={children} {...props} />
+        </Box>
+    );
+};
+
+const ActiveFieldEvent = ({ values, setFieldValue }) => {
+    return <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Evènement actif ?" />;
+};
+
+const ButtonEvent = ({ isSubmitting, initialValues }) => {
+    return (
+        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
+            {initialValues ? 'Modifier' : 'Créer'}
+        </Button>
     );
 };
