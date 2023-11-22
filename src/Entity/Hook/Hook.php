@@ -44,6 +44,9 @@ class Hook
     #[ORM\Column(type: Types::INTEGER)]
     private $position;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $displayHook = null;
+
     public function getId(): int
     {
         return $this->id;
@@ -93,6 +96,18 @@ class Hook
     public function setPosition($position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getDisplayHook(): ?string
+    {
+        return $this->displayHook;
+    }
+
+    public function setDisplayHook(?string $displayHook): static
+    {
+        $this->displayHook = $displayHook;
 
         return $this;
     }

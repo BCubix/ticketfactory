@@ -6,19 +6,50 @@ use App\Entity\Addon\Module;
 use App\Entity\Hook\Hook;
 use App\Exception\ApiException;
 
+use App\Manager\HookManager;
+use App\Manager\LanguageManager;
+use App\Manager\ModuleManager;
+use App\Service\Error\FormErrorsCollector;
+use App\Service\Log\Logger;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class HookController extends AdminController
 {
+    protected $mm;
+    public function __construct(
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        LanguageManager $lm,
+        HookManager $hm,
+        ModuleManager $mm,
+    ) {
+        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+
+        $this->mm = $mm;
+    }
+
+
     #[Rest\Get('/hooks')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
     public function getAll(Request $request): View
     {
         $result = $this->hm->getAllModulesByHook();
+        return $this->view($result, Response::HTTP_OK);
+    }
+
+    #[Rest\Get('/hooks/displaylist')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
+    public function getAllDisplayHooks(Request $request): View
+    {
+        $result = $this->hm->getAllDisplayHook();
         return $this->view($result, Response::HTTP_OK);
     }
 
@@ -29,6 +60,7 @@ class HookController extends AdminController
         $rq = $request->request->all();
         $hookName = $rq['hookName'];
         $moduleName = $rq['moduleName'];
+        $displayHook = $rq['displayHook'];
 
         $module = $this->em->getRepository(Module::class)->findOneByNameForAdmin($moduleName);
         if (null === $module) {
@@ -41,8 +73,27 @@ class HookController extends AdminController
         }
 
         $hook = new Hook();
-        $hook->setName($hookName);
+
+
+        $moduleInstance = $this->mm->importModuleInstance($module->getName());
+        $configModule = $moduleInstance->getConfiguration();
+        $name = null;
+        if ($configModule["hooks"]) {
+            foreach ($configModule["hooks"] as $key => $value) {
+                if ($value === $hookName) {
+                    $name = $key;
+                    break;
+                }
+            }
+        }
+        if ($displayHook === '' || $displayHook === null) {
+            $hook->setName($name);
+        } else {
+            $hook->setDisplayHook($name);
+            $hook->setName($displayHook);
+        }
         $hook->setModule($module);
+        $hook->setClassName($hookName);
         $hook->setPosition($this->hm->getPosition($hookName));
 
         $this->em->persist($hook);

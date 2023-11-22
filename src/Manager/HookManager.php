@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\Hook\Hook;
 use App\Entity\Addon\Module as ModuleEntity;
 use App\Entity\Language\Language;
+use App\Entity\Page\Page;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
 use App\Kernel;
@@ -16,12 +17,19 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Security\Core\Security;
+
 
 class HookManager extends AbstractManager
 {
     public const SERVICE_NAME = 'hook';
 
     protected $ed;
+    protected $tm;
+    protected $pm;
+    protected $mm;
+    protected $sc;
 
     public function __construct(
         Kernel $kl,
@@ -29,12 +37,50 @@ class HookManager extends AbstractManager
         ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
-        EventDispatcherInterface $ed
+        EventDispatcherInterface $ed,
+        ThemeManager $tm,
+        ParameterManager $pm,
+        ModuleManager $mm,
+        Security $sc,
     ) {
         parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->ed = $ed;
+        $this->tm = $tm;
+        $this->pm = $pm;
+        $this->mm = $mm;
+        $this->sc = $sc;
     }
+
+    public function getAllDisplayHook(): array
+    {
+
+
+        $finder = new Finder();
+        $path = $this->tm->getDir() . '/' . $this->pm->get('core_main_theme') . '/templates';
+        $finder->in($path);
+        $result = [];
+
+        $motif = "/({{| )hook\([\'\"]display[a-zA-Z]+[\'\"](,.+)?\)/";
+
+        foreach ($finder->files()->name('*') as $file) {
+            $contenu = file($file->getRealPath());
+            foreach ($contenu as $ligne) {
+                if (preg_match($motif, $ligne)) {
+                    $ligne = trim($ligne, "\t, '', \n, hook, {, }, (\', (\",\"),");
+                    $ligne = str_replace('", {', '', $ligne);
+                    $ligne = explode('\'', $ligne);
+                    if ($ligne[0]) {
+                        $result[] = $ligne[0];
+                    }
+                }
+            }
+        }
+        $resultat = array_unique($result);
+        sort($resultat);
+        return $resultat;
+    }
+
 
     public function getAllModulesByHook(): array
     {
@@ -169,11 +215,17 @@ class HookManager extends AbstractManager
 
         try {
             $classInstance = $this->kl->getContainer()->get($classname);
-            $methodName = $hook->getName();
-            if (!str_starts_with($methodName, 'hook')) {
-                $methodName = ('hook' . ucfirst($hook->getName()));
+
+            if ($hook->getDisplayHook() === null) {
+
+                $methodName = $hook->getName();
+            } else {
+                $methodName = $hook->getDisplayHook();
             }
 
+            if (!str_starts_with($methodName, 'hook')) {
+                $methodName = ('hook' . ucfirst($methodName));
+            }
             $this->ed->addListener($hookName, [$classInstance, $methodName]);
         } catch (ServiceNotFoundException $e) {
             // At installation, the service is not found because the bundle is not still registered
@@ -249,12 +301,18 @@ class HookManager extends AbstractManager
      */
     public function exec(string $hookName, array $hookArgs = []): HookEvent
     {
-        $locale = $this->rs->getMainRequest()->getLocale();
-        $language = $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);
+        $request = $this->rs->getMainRequest();
+        $currentPageSlug = preg_replace('/^\//', '', $request->getRequestUri(), 1);
 
-        $hookArgs = array_merge(['languageId' => $language->getId()], $hookArgs);
+        $locale = $request->getLocale();
+        $language = $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);
+        $customer = $this->sc->getUser();
+        $page = $this->em->getRepository(Page::class)->findBySlugForWebsite($language->getId(), $currentPageSlug);
+
+        $hookArgs = array_merge(['languageId' => $language->getId(), 'customer' => $customer, 'currentPage' => $page], $hookArgs);
         $event = new HookEvent($hookArgs);
 
         return $this->ed->dispatch($event, $hookName);
     }
+
 }

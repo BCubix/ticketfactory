@@ -11,10 +11,20 @@ const hooksApi = {
         }
     },
 
+    getDisplayHooksList: async () => {
+        try {
+            const result = await axios.get('/hooks/displaylist');
+            return { result: true, hooks: result?.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     createHook: async (data) => {
         try {
             let formData = new FormData();
 
+            formData.append('displayHook', data.displayHookList);
             formData.append('hookName', data.hookName);
             formData.append('moduleName', data.moduleName);
 

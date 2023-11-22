@@ -3,18 +3,19 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getHooksAction, hooksSelector } from "@Redux/hooks/hooksSlice";
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { getHooksAction, hooksSelector } from '@Redux/hooks/hooksSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateHook = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [modulesActive, setModulesActive] = useState(null);
+    const [displayHookList, setDisplayHookList] = useState(null);
 
     useEffect(() => {
         if (!loading && !hooks && !error) {
@@ -25,6 +26,11 @@ export const CreateHook = () => {
             const result = await Api.modulesApi.getModulesActive();
             if (result.result) {
                 setModulesActive(result.modules);
+            }
+
+            const resultDisplay = await Api.hooksApi.getDisplayHooksList();
+            if (resultDisplay.result) {
+                setDisplayHookList(resultDisplay.hooks);
             }
         });
     }, []);
@@ -39,12 +45,11 @@ export const CreateHook = () => {
                 navigate(Constant.HOOKS_BASE_PATH);
             }
         });
-    }
+    };
 
-    if (null === modulesActive || null === hooks) {
+    if (null === modulesActive || null === hooks || !displayHookList) {
         return <></>;
     }
 
-    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks}/>;
-}
-
+    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} displayHookList={displayHookList} />;
+};
