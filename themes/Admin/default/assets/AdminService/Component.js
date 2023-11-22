@@ -253,7 +253,9 @@ import { CreateLanguage } from '@Apps/Languages/CreateLanguage/CreateLanguage';
 import { EditLanguage } from '@Apps/Languages/EditLanguage/EditLanguage';
 import { LanguagesForm } from '@Apps/Languages/LanguagesForm/LanguagesForm';
 import { AppProvider } from '@/Config/AppProvider';
-import { CmtDisplayComponents } from "@Components/CmtDisplayComponents/CmtDisplayComponents";
+import { CmtDisplayComponents } from '@Components/CmtDisplayComponents/CmtDisplayComponents';
+import { CmtDisplayBlocks } from "@Components/CmtDisplayBlocks/CmtDisplayBlocks";
+import { CmtDisplayFields } from "@Components/CmtDisplayFields/CmtDisplayFields";
 
 const ComponentObj = {
     App: App,
@@ -558,7 +560,9 @@ const ComponentObj = {
     MenuItemButton: MenuItemButton,
     SideMenu: SideMenu,
 
-    CmtDisplayComponents : CmtDisplayComponents,
+    CmtDisplayComponents: CmtDisplayComponents,
+    CmtDisplayBlocks: CmtDisplayBlocks,
+    CmtDisplayFields: CmtDisplayFields,
 };
 
 /**

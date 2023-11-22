@@ -4,7 +4,7 @@ export const CmtDisplayComponents = ({list, ...inheritedProps}) => {
     return (
         <>
             {list?.map((elem, index) => {
-                const { component: Component, ...props } = elem;
+                const { component: Component, keyId, ...props } = elem;
 
                 if (!Component) {
                     return <React.Fragment key={index} />;
