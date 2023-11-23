@@ -7,7 +7,7 @@ import { CardContent, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
-import { cartsSelector, getCartsAction, changeCartsFilters } from '@Redux/carts/cartsSlice';
+import { cartsSelector, getCartsAction, changeCartsFilters } from '@Apps/Carts/redux/carts/cartsSlice';
 
 export const CartsList = () => {
     const { loading, carts, filters, total, error } = useSelector(cartsSelector);

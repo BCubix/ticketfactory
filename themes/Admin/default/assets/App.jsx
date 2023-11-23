@@ -9,9 +9,9 @@ import { createTheme, ThemeProvider } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
-import { profileInitAction, profileSelector } from '@Redux/profile/profileSlice';
-import { getParametersAction, parametersSelector } from '@Redux/parameters/parametersSlice';
-import { getLanguagesAction, languagesSelector } from '@Redux/languages/languagesSlice';
+import { profileInitAction, profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
+import { getParametersAction, parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
+import { getLanguagesAction, languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import defaultTheme from '@Services/themes/defaultTheme';
 

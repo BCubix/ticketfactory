@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { getVouchersAction } from '@Redux/vouchers/vouchersSlice';
+import { getVouchersAction } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditVoucher = () => {

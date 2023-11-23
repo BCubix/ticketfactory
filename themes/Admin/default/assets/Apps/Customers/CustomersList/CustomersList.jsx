@@ -8,7 +8,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
-import { customersSelector, getCustomersAction, changeCustomersFilters } from '@Redux/customers/customersSlice';
+import { customersSelector, getCustomersAction, changeCustomersFilters } from '@Apps/Customers/redux/customers/customersSlice';
 
 export const CustomersList = () => {
     const { loading, customers, filters, total, error } = useSelector(customersSelector);

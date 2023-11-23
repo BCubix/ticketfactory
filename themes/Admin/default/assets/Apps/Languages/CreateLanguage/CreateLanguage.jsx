@@ -9,7 +9,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Api } from '@/AdminService/Api';
 
-import { getLanguagesAction } from '@Redux/languages/languagesSlice';
+import { getLanguagesAction } from '@Apps/Languages/redux/languages/languagesSlice';
 
 export const CreateLanguage = () => {
     const dispatch = useDispatch();

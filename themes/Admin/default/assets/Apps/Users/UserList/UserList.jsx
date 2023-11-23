@@ -10,7 +10,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeUsersFilters, getUsersAction, usersSelector } from '@Redux/users/usersSlice';
+import { changeUsersFilters, getUsersAction, usersSelector } from '@Apps/Users/redux/users/usersSlice';
 
 export const UserList = () => {
     const { loading, users, filters, total, error } = useSelector(usersSelector);

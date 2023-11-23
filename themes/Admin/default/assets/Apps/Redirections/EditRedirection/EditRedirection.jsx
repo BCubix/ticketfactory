@@ -3,12 +3,12 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { getRedirectionsAction } from '@Redux/redirections/redirectionsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getRedirectionsAction } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
 
 export const EditRedirection = () => {
     const dispatch = useDispatch();
@@ -59,11 +59,7 @@ export const EditRedirection = () => {
         const result = await Api.redirectionsApi.editRedirection(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La redirection a bien été modifiée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La redirection a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getRedirectionsAction());
 

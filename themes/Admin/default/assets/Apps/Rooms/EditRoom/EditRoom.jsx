@@ -3,12 +3,12 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { getRoomsAction } from '@Redux/rooms/roomsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getRoomsAction } from '@Apps/Rooms/redux/rooms/roomsSlice';
 
 export const EditRoom = () => {
     const dispatch = useDispatch();
@@ -59,11 +59,7 @@ export const EditRoom = () => {
         const result = await Api.roomsApi.editRoom(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La salle a bien été modifiée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La salle a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getRoomsAction());
 

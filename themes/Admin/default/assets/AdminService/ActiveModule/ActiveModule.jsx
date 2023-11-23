@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { ActiveModuleContext } from '@/AdminService/ActiveModule/ActiveModuleContext';
@@ -6,7 +6,7 @@ import { ActiveModuleContext } from '@/AdminService/ActiveModule/ActiveModuleCon
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 
-import { loginFailure, profileSelector, setModulesLoaded } from '@Redux/profile/profileSlice';
+import { loginFailure, profileSelector, setModulesLoaded } from '@Apps/Auth/redux/profile/profileSlice';
 import { useSelector } from 'react-redux';
 
 export const ActiveModule = () => {

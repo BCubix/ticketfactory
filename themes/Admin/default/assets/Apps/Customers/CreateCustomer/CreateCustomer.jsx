@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { getCustomersAction } from '@Redux/customers/customersSlice';
+import { getCustomersAction } from '@Apps/Customers/redux/customers/customersSlice';
 
 export const CreateCustomer = () => {
     const dispatch = useDispatch();

@@ -7,8 +7,8 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateCategory = () => {

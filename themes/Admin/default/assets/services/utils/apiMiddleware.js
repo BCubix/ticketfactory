@@ -1,5 +1,5 @@
-import { Api } from "@/AdminService/Api";
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { Api } from '@/AdminService/Api';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const apiMiddleware = async (dispatch, next) => {
     const check = await Api.authApi.checkIsAuth();

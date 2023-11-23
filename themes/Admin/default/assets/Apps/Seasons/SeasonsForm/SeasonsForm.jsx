@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -39,19 +39,13 @@ const LIST = {
     components: [
         {
             id: 'form',
-            component: (props) => <SeasonsForm {...props} />,
-            children: {
-                id: 'event-form-tabs',
-                component: (props) => <SeasonsForm {...props} />,
-            },
+            component: (props) => <FormikSeason {...props} />,
         },
     ],
 };
 
 export const SeasonsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, ...componentProps }) => {
     let initValues = translateInitialValues || initialValues;
-
-    useEffect();
 
     return (
         <>

@@ -3,12 +3,12 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { getTagsAction } from '@Redux/tags/tagsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getTagsAction } from '@Apps/Tags/redux/tags/tagsSlice';
 
 export const EditTag = () => {
     const dispatch = useDispatch();
@@ -51,11 +51,7 @@ export const EditTag = () => {
         const result = await Api.tagsApi.editTag(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La catégorie a bien été modifiée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La catégorie a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getTagsAction());
 

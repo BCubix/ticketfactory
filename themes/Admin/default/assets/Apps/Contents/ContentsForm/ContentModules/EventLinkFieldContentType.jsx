@@ -7,7 +7,7 @@ import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 const TYPE = 'event';
 

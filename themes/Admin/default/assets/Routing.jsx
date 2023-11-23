@@ -5,12 +5,12 @@ import 'react-notifications/lib/notifications.css';
 
 import { Backdrop, CircularProgress } from '@mui/material';
 
-import { AuthenticatedRoute } from "@/AdminService/AuthenticatedRoute";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { NonAuthenticatedRoute } from "@/AdminService/NonAuthenticatedRoute";
+import { AuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { NonAuthenticatedRoute } from '@/AdminService/NonAuthenticatedRoute';
 
-import { profileSelector } from '@Redux/profile/profileSlice';
+import { profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
 
 import '@Style/index.scss';
 
@@ -23,10 +23,7 @@ const AuthenticatedLayout = ({ children }) => {
 
     if (loading) {
         return (
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
-            >
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
         );
@@ -43,16 +40,7 @@ export const Routing = () => {
     return (
         <Routes>
             {NonAuthenticatedRoute.map((item, index) => (
-                <Route
-                    key={index}
-                    path={item.path}
-                    exact={item.exact ? true : false}
-                    element={
-                        item.tabValue
-                            ? <item.component tabValue={item.tabValue} />
-                            : <item.component />
-                    }
-                />
+                <Route key={index} path={item.path} exact={item.exact ? true : false} element={item.tabValue ? <item.component tabValue={item.tabValue} /> : <item.component />} />
             ))}
 
             {AuthenticatedRoute.map((item, index) => (
@@ -60,14 +48,7 @@ export const Routing = () => {
                     key={index}
                     path={item.path}
                     exact={item.exact ? true : false}
-                    element={
-                        <AuthenticatedLayout>
-                            {item.tabValue
-                                ? <item.component tabValue={item.tabValue} />
-                                : <item.component />
-                            }
-                        </AuthenticatedLayout>
-                    }
+                    element={<AuthenticatedLayout>{item.tabValue ? <item.component tabValue={item.tabValue} /> : <item.component />}</AuthenticatedLayout>}
                 />
             ))}
         </Routes>

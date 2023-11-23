@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getPageBlocksAction } from '@Redux/pageBlocks/pageBlocksSlice';
+import { getPageBlocksAction } from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditPageBlock = () => {

@@ -9,8 +9,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeContactRequestsFilters, contactRequestsSelector, getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { changeContactRequestsFilters, contactRequestsSelector, getContactRequestsAction } from '@Apps/ContactRequests/redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const ContactRequestsList = () => {
     const { loading, contactRequests, filters, total, error } = useSelector(contactRequestsSelector);

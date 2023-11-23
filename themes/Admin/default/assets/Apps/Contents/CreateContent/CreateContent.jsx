@@ -7,8 +7,8 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getContentsAction } from '@Redux/contents/contentsSlice';
-import { contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
+import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
+import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateContent = () => {

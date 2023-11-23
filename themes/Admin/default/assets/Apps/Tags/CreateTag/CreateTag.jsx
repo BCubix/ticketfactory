@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getTagsAction } from '@Redux/tags/tagsSlice';
+import { getTagsAction } from '@Apps/Tags/redux/tags/tagsSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateTag = () => {

@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
-import { useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { Typography } from "@mui/material";
+import { Typography } from '@mui/material';
 
-import { Component } from "@/AdminService/Component";
+import { Component } from '@/AdminService/Component';
 
-import { intitializeDropzone } from "@Apps/Modules/UploadModule/utils/dropzone";
+import { intitializeDropzone } from '@Apps/Modules/UploadModule/utils/dropzone';
 
-import { loginFailure } from "@Redux/profile/profileSlice";
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const UploadModule = ({ handleSubmit, handleAdded, handleFail }) => {
     const dispatch = useDispatch();
@@ -28,4 +28,4 @@ export const UploadModule = ({ handleSubmit, handleAdded, handleFail }) => {
             </Typography>
         </Component.DropzoneWrapper>
     );
-}
+};

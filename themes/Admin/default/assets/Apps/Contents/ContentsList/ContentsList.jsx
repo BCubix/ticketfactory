@@ -11,8 +11,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeContentsFilters, contentsSelector, getContentsAction } from '@Redux/contents/contentsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { changeContentsFilters, contentsSelector, getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

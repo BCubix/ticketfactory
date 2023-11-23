@@ -7,7 +7,7 @@ import { CardContent, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
-import { ordersSelector, getOrdersAction, changeOrdersFilters } from '@Redux/orders/ordersSlice';
+import { ordersSelector, getOrdersAction, changeOrdersFilters } from '@Apps/Orders/redux/orders/ordersSlice';
 
 export const OrdersList = () => {
     const { loading, orders, filters, total, error } = useSelector(ordersSelector);

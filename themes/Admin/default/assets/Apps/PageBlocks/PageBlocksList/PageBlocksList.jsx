@@ -9,7 +9,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changePageBlocksFilters, getPageBlocksAction, pageBlocksSelector } from '@Redux/pageBlocks/pageBlocksSlice';
+import { changePageBlocksFilters, getPageBlocksAction, pageBlocksSelector } from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

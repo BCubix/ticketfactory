@@ -3,12 +3,12 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getHooksAction, hooksSelector } from "@Redux/hooks/hooksSlice";
-import { apiMiddleware } from "@Services/utils/apiMiddleware";
+import { getHooksAction, hooksSelector } from '@Apps/Hooks/redux/hooks/hooksSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateHook = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
@@ -39,12 +39,11 @@ export const CreateHook = () => {
                 navigate(Constant.HOOKS_BASE_PATH);
             }
         });
-    }
+    };
 
     if (null === modulesActive || null === hooks) {
         return <></>;
     }
 
-    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks}/>;
-}
-
+    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} />;
+};

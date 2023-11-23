@@ -10,7 +10,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeVouchersFilters, getVouchersAction, vouchersSelector } from '@Redux/vouchers/vouchersSlice';
+import { changeVouchersFilters, getVouchersAction, vouchersSelector } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 
 export const VouchersList = () => {
     const { loading, vouchers, filters, total, error } = useSelector(vouchersSelector);

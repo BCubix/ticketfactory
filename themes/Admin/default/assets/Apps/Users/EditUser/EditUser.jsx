@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { getUsersAction } from '@Redux/users/usersSlice';
+import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditUser = () => {

@@ -3,13 +3,13 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getContentsAction } from '@Redux/contents/contentsSlice';
-import { contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
+import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const EditContent = () => {
     const dispatch = useDispatch();
@@ -30,11 +30,7 @@ export const EditContent = () => {
         const result = await Api.contentsApi.editContent(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'Le contenu a bien été modifié.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('Le contenu a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getContentsAction());
 
@@ -83,11 +79,5 @@ export const EditContent = () => {
         return <></>;
     }
 
-    return (
-        <Component.ContentsForm
-            handleSubmit={handleSubmit}
-            initialValues={content}
-            selectedContentType={content?.contentType}
-        />
-    );
+    return <Component.ContentsForm handleSubmit={handleSubmit} initialValues={content} selectedContentType={content?.contentType} />;
 };

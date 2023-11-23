@@ -9,7 +9,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getMediasAction } from '@Redux/medias/mediasSlice';
+import { getMediasAction } from '@Apps/Medias/redux/medias/mediasSlice';
 
 import { getMediaType } from '@Services/utils/getMediaType';
 

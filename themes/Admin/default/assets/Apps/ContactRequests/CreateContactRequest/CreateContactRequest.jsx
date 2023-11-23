@@ -3,12 +3,12 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getContactRequestsAction } from '@Apps/ContactRequests/redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const CreateContactRequests = () => {
     const dispatch = useDispatch();
@@ -26,11 +26,7 @@ export const CreateContactRequests = () => {
         const result = await Api.contactRequestsApi.createContactRequest(values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La demande de contact a bien été créée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La demande de contact a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getContactRequestsAction());
 

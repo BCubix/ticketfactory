@@ -11,8 +11,9 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeEventsFilters, eventsSelector, getEventsAction } from '@Redux/events/eventsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getEventsAction, changeEventsFilters, eventsSelector } from '@Apps/Events/redux/events/eventsSlice';
+
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EventsList = () => {

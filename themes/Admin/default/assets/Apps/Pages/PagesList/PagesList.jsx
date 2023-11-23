@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { Button, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 
-import { changePagesFilters } from '@Redux/pages/pagesSlice';
+import { changePagesFilters } from '@Apps/Pages/redux/pages/pagesSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { getPagesAction, pagesSelector } from '@Redux/pages/pagesSlice';
+import { getPagesAction, pagesSelector } from '@Apps/Pages/redux/pages/pagesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

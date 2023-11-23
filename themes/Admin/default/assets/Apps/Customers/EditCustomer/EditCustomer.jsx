@@ -9,7 +9,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getCustomersAction } from '@Redux/customers/customersSlice';
+import { getCustomersAction } from '@Apps/Customers/redux/customers/customersSlice';
 
 export const EditCustomer = () => {
     const dispatch = useDispatch();

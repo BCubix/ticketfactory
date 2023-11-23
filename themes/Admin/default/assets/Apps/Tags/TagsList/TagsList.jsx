@@ -10,7 +10,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeTagsFilters, getTagsAction, tagsSelector } from '@Redux/tags/tagsSlice';
+import { changeTagsFilters, getTagsAction, tagsSelector } from '@Apps/Tags/redux/tags/tagsSlice';
 
 export const TagsList = () => {
     const { loading, tags, filters, total, error } = useSelector(tagsSelector);

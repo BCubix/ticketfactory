@@ -11,8 +11,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { mediaCategoriesSelector } from '@Redux/mediaCategories/mediaCategoriesSlice';
-import { getMediaCategoriesAction } from '@Redux/mediaCategories/mediaCategoriesSlice';
+import { mediaCategoriesSelector } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
+import { getMediaCategoriesAction } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';

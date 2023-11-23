@@ -11,9 +11,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { categoriesSelector } from '@Redux/categories/categoriesSlice';
-import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { categoriesSelector, getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';

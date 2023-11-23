@@ -10,21 +10,38 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getMenusAction, menusSelector } from '@Redux/menus/menusSlice';
-import { languagesSelector } from '@Redux/languages/languagesSlice';
+import { getMenusAction, menusSelector } from '@Apps/Menus/redux/menus/menusSlice';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
+
+const LIST = {
+    form: {
+        initialSchema: {
+            name: (translationInitialValues) => translationInitialValues?.name || '',
+            type: (translationInitialValues) => translationInitialValues?.menuType || null,
+            value: (translationInitialValues) => translationInitialValues?.value || null,
+            children: (translationInitialValues) => (translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : []),
+            maxLevel: (translationInitialValues) => translationInitialValues?.maxLevel || 3,
+            lang: (translationInitialValues) => translationInitialValues?.lang?.id || '',
+            languageGroup: (translationInitialValues) => translationInitialValues?.languageGroup || '',
+        },
+    },
+    components: [
+        {
+            keyId: 'form',
+            component: (props) => <InitForm {...props} />,
+        },
+    ],
+};
 
 export const MenusList = () => {
     const { loading, menus, error } = useSelector(menusSelector);
     const languagesData = useSelector(languagesSelector);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [deleteDialog, setDeleteDialog] = useState(false);
     const [initialValues, setInitialValues] = useState(null);
     const [translationInitialValues, setTranslationInitialValues] = useState(null);
-    const [translateDialog, setTranslateDialog] = useState(false);
 
     useEffect(() => {
         if (!loading && !menus && !error) {
@@ -133,6 +150,49 @@ export const MenusList = () => {
     if (!menus || !initialValues || !translationInitialValues || !languagesData.languages) {
         return <></>;
     }
+
+    return (
+        <>
+            {LIST.components.map((item, index) => {
+                let { component: Component, ...props } = item;
+
+                if (!Component) {
+                    return <React.Fragment key={index} />;
+                }
+
+                return (
+                    <Component
+                        key={index}
+                        changeFormikInitialValues={changeFormikInitialValues}
+                        menus={menus}
+                        languageList={languageList}
+                        deserializeChildrenData={deserializeChildrenData}
+                        handleDelete={handleDelete}
+                        updateMenu={updateMenu}
+                        translationInitialValues={translationInitialValues}
+                        initialValues={initialValues}
+                        {...props}
+                    />
+                );
+            })}
+        </>
+    );
+};
+
+const InitForm = ({
+    languageList,
+    changeFormikInitialValues,
+    translationInitialValues,
+    handleDelete,
+    updateMenu,
+    menus,
+    initialValues,
+    setInitialValues,
+    deserializeChildrenData,
+}) => {
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [translateDialog, setTranslateDialog] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <Formik

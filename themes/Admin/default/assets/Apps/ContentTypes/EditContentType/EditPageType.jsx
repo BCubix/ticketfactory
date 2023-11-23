@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getPageTypesAction } from '@Redux/pageTypes/pageTypesSlice';
+import { getPageTypesAction } from '@Apps/ContentTypes/redux/pageTypes/pageTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditPageType = () => {

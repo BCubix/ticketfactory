@@ -12,8 +12,8 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getDashboardAction } from '@Redux/dashboard/dashboardSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getDashboardAction } from '@Apps/Home/redux/dashboard/dashboardSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const ThirdCardDashboard = ({ data }) => {
     const dispatch = useDispatch();

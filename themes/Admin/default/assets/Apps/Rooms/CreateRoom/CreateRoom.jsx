@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getRoomsAction } from '@Redux/rooms/roomsSlice';
+import { getRoomsAction } from '@Apps/Rooms/redux/rooms/roomsSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateRoom = () => {

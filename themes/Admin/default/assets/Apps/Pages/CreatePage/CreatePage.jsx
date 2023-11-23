@@ -7,10 +7,10 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getPagesAction } from '@Redux/pages/pagesSlice';
+import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
-import { languagesSelector } from '@Redux/languages/languagesSlice';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 export const CreatePage = () => {
     const dispatch = useDispatch();

@@ -12,7 +12,7 @@ import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
-import { menusListDataSelector, setMenusListData } from '@Redux/menus/menusListDataSlice';
+import { menusListDataSelector, setMenusListData } from '@Apps/Menus/redux/menus/menusListDataSlice';
 import { TreeItem, TreeView } from '@mui/lab';
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 

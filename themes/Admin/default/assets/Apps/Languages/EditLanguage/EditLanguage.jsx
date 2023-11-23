@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getLanguagesAction } from '@Redux/languages/languagesSlice';
+import { getLanguagesAction } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import { NotificationManager } from "react-notifications";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { NotificationManager } from 'react-notifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getParametersAction, parametersSelector } from "@Redux/parameters/parametersSlice";
-import { loginFailure } from "@Redux/profile/profileSlice";
+import { getParametersAction, parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const ParametersMenu = () => {
     const { loading, parameters, error } = useSelector(parametersSelector);
@@ -44,10 +44,5 @@ export const ParametersMenu = () => {
         return <></>;
     }
 
-    return (
-        <Component.ParametersForm
-            handleSubmit={handleSubmit}
-            parameters={parameters}
-        />
-    );
-}
+    return <Component.ParametersForm handleSubmit={handleSubmit} parameters={parameters} />;
+};

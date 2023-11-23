@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box, CardContent, Typography } from '@mui/material';
-import { redirectionsSelector } from '@Redux/redirections/redirectionsSlice';
+import { redirectionsSelector } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { changeRedirectionsFilters, getRedirectionsAction } from '@Redux/redirections/redirectionsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { changeRedirectionsFilters, getRedirectionsAction } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
 
 export const RedirectionsList = () => {
     const { loading, redirections, filters, total, error } = useSelector(redirectionsSelector);

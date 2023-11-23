@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getEventsAction } from '@Redux/events/eventsSlice';
+import { getEventsAction } from '@Apps/Events/redux/events/eventsSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

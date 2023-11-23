@@ -9,8 +9,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { changeRoomsFilters, getRoomsAction, roomsSelector } from '@Redux/rooms/roomsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { changeRoomsFilters, getRoomsAction, roomsSelector } from '@Apps/Rooms/redux/rooms/roomsSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

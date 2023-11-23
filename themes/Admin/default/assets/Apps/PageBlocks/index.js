@@ -1,0 +1,44 @@
+import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
+import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
+import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
+import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
+import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
+import { PageBlocksList } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
+import { CreatePageBlockFormat } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
+
+import { setReducer } from '@/AdminService/Reducer';
+import { setApi } from '@/AdminService/Api';
+import { Constant, setConstant } from '@/AdminService/Constant';
+import { Component, setComponent } from '@/AdminService/Component';
+import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+
+import pageBlocksApi from '@Apps/PageBlocks/services/api/pageBlocksApi';
+import pageBlocksReducer from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
+
+export const initConstant = () => {
+    setConstant('PAGE_BLOCKS_BASE_PATH', '/admin/page-blocks');
+};
+
+export const initComponent = () => {
+    setComponent('PageBlockColumnPart', PageBlockColumnPart);
+    setComponent('CreatePageBlock', CreatePageBlock);
+    setComponent('EditPageBlock', EditPageBlock);
+    setComponent('PageBlocksForm', PageBlocksForm);
+    setComponent('PageBlocksFilters', PageBlocksFilters);
+    setComponent('PageBlocksList', PageBlocksList);
+    setComponent('CreatePageBlockFormat', CreatePageBlockFormat);
+};
+
+export const initApi = () => {
+    setApi('pageBlocksApi', pageBlocksApi);
+};
+
+export const initAuthenticatedRoutes = () => {
+    setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH, Component.PagesMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageBlock);
+    setAuthenticatedRoute(`${Constant.PAGE_BLOCKS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageBlock);
+};
+
+export const initReducer = () => {
+    setReducer('pageBlocks', pageBlocksReducer);
+};

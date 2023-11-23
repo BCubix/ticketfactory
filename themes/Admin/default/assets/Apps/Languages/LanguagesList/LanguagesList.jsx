@@ -9,7 +9,7 @@ import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 import { Api } from '@/AdminService/Api';
 
-import { getLanguagesAction, languagesSelector } from '@Redux/languages/languagesSlice';
+import { getLanguagesAction, languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

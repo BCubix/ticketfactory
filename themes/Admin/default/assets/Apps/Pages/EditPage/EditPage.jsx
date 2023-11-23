@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getPagesAction } from '@Redux/pages/pagesSlice';
+import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditPage = () => {

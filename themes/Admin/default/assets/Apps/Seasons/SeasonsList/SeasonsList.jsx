@@ -9,7 +9,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeSeasonsFilters, getSeasonsAction, seasonsSelector } from '@Redux/seasons/seasonsSlice';
+import { changeSeasonsFilters, getSeasonsAction, seasonsSelector } from '@Apps/Seasons/redux/seasons/seasonsSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 

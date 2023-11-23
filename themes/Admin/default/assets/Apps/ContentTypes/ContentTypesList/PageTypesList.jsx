@@ -10,8 +10,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changePageTypesFilters, pageTypesSelector, getPageTypesAction } from '@Redux/pageTypes/pageTypesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { changePageTypesFilters, pageTypesSelector, getPageTypesAction } from '@Apps/ContentTypes/redux/pageTypes/pageTypesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const PageTypesList = () => {
     const dispatch = useDispatch();

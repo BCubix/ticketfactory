@@ -10,8 +10,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeContentTypesFilters, contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { changeContentTypesFilters, contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const ContentTypesList = () => {
     const dispatch = useDispatch();

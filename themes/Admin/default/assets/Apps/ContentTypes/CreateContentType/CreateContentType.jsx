@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
+import { getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateContentType = () => {

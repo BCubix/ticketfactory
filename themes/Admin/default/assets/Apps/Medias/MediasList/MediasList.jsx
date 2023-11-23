@@ -8,7 +8,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { changeMediasFilters, getMediasAction, mediasSelector } from '@Redux/medias/mediasSlice';
+import { changeMediasFilters, getMediasAction, mediasSelector } from '@Apps/Medias/redux/medias/mediasSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const MediasList = () => {

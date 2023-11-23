@@ -11,7 +11,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const LogUserName = (item) => {
     return (
