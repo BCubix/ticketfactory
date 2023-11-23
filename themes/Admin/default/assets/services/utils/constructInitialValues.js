@@ -1,4 +1,4 @@
-export const constructInitialValues = (initialSchema, initialValues, props) => {
+export const constructInitialValues = (initialSchema, initialValues, otherParams = {}) => {
     let result = {};
 
     if (!initialSchema) {
@@ -7,9 +7,9 @@ export const constructInitialValues = (initialSchema, initialValues, props) => {
 
     Object.entries(initialSchema).forEach(([key, value]) => {
         if (typeof value === 'function') {
-            result[key] = value(initialValues, props);
+            result[key] = value(initialValues, otherParams);
         } else if (typeof value === 'object') {
-            result[key] = constructInitialValues(value, initialValues, props);
+            result[key] = constructInitialValues(value, initialValues, otherParams);
         } else {
             result[key] = value;
         }

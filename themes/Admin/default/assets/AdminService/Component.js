@@ -69,6 +69,9 @@ import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
 
 import { AppProvider } from '@/Config/AppProvider';
+import { CmtDisplayComponents } from '@Components/CmtDisplayComponents/CmtDisplayComponents';
+import { CmtDisplayBlocks } from "@Components/CmtDisplayBlocks/CmtDisplayBlocks";
+import { CmtDisplayFields } from "@Components/CmtDisplayFields/CmtDisplayFields";
 
 const ComponentObj = {
     App: App,
@@ -149,6 +152,10 @@ const ComponentObj = {
     MenuTitle: MenuTitle,
     MenuItemButton: MenuItemButton,
     SideMenu: SideMenu,
+
+    CmtDisplayComponents: CmtDisplayComponents,
+    CmtDisplayBlocks: CmtDisplayBlocks,
+    CmtDisplayFields: CmtDisplayFields,
 };
 
 /**
