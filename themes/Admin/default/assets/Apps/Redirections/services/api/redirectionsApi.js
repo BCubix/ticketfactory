@@ -1,38 +1,16 @@
 import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'redirectType', sortName: 'filters[redirectType]' },
-    { name: 'redirectFrom', sortName: 'filters[redirectFrom]' },
-    { name: 'redirectTo', sortName: 'filters[redirectTo]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const redirectionsApi = {
     getRedirections: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.redirections?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

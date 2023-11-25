@@ -1,94 +1,90 @@
-import React from 'react';
-import { Formik } from 'formik';
+import { changeSlug } from '@Services/utils/changeSlug';
+import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import * as Yup from 'yup';
 
-import { Button, FormHelperText, InputLabel } from '@mui/material';
-import { Box } from '@mui/system';
+export const tagsInitialSchema = {
+    name: (initValues) => initValues?.name || '',
+    active: (initValues) => initValues?.active || false,
+    description: (initValues) => initValues?.description || '',
+    slug: (initValues) => initValues?.slug || '',
+    lang: (initValues) => initValues?.lang?.id || '',
+    languageGroup: (initValues) => initValues?.languageGroup || '',
+    editSlug: false,
+    seo: SeoInitialValues,
+};
 
-import { Component } from '@/AdminService/Component';
+export const tagsValidationSchema = {
+    name: Yup.string().required('Veuillez renseigner le nom du tag.'),
+};
 
-import { changeSlug } from '@Services/utils/changeSlug';
-
-export const TagsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
-    const initValues = translateInitialValues || initialValues;
-
-    const tagSchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom du tag.'),
-    });
-
-    return (
-        <Formik
-            initialValues={{
-                name: initValues?.name || '',
-                active: initValues?.active || false,
-                description: initValues?.description || '',
-                slug: initValues?.slug || '',
-                lang: initValues?.lang?.id || '',
-                languageGroup: initValues?.languageGroup || '',
-                editSlug: false,
-                seo: {
-                    metaTitle: initValues?.metaTitle || '',
-                    metaDescription: initValues?.metaDescription || '',
-                    socialImage: initValues?.socialImage || null,
-                    fbTitle: initValues?.fbTitle || '',
-                    fbDescription: initValues?.fbDescription || '',
-                    twTitle: initValues?.twTitle || '',
-                    twDescription: initValues?.twDescription || '',
+export const tagsForm = {
+    submitLine: {
+        activeInput: true,
+        activeLabel: 'Tag actif ?',
+    },
+    api: {
+        dataFields: {
+            active: { type: 'boolean' },
+            name: { type: 'string' },
+            description: { type: 'string' },
+            slug: { type: 'slug' },
+            lang: { type: 'string' },
+            languageGroup: { type: 'string' },
+            seo: SeoApiDataFields,
+        },
+    },
+    fields: [
+        {
+            type: 'tabs',
+            keyId: 'tag',
+            label: 'Tag',
+            fields: [
+                {
+                    type: 'block',
+                    title: 'Informations générales',
+                    keyId: 'block-general-info',
+                    fields: [
+                        {
+                            keyId: 'input-name',
+                            style: { xs: 12 },
+                            inputs: [
+                                {
+                                    name: 'name',
+                                    label: 'Nom',
+                                    inputType: 'textField',
+                                    required: true,
+                                    custom: {
+                                        handleChange:
+                                            ({ values, initialValues, setFieldValue }) =>
+                                            (e) => {
+                                                setFieldValue('name', e.target.value);
+                                                if (!values.editSlug && !initialValues) {
+                                                    setFieldValue('slug', changeSlug(e.target.value));
+                                                }
+                                            },
+                                    },
+                                },
+                                {
+                                    name: 'slug',
+                                    inputType: 'slugInput',
+                                },
+                            ],
+                        },
+                        {
+                            keyId: 'input-description',
+                            style: { xs: 12 },
+                            input: {
+                                name: 'description',
+                                label: 'Description',
+                                inputType: 'editorField',
+                            },
+                        },
+                    ],
                 },
-            }}
-            validationSchema={tagSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-                handleSubmit(values);
-                setSubmitting(false);
-            }}
-        >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
-                <Component.CmtPageWrapper title={`${initialValues ? 'Modification' : 'Création'} d'un tag`} component="form" onSubmit={handleSubmit}>
-                    <Component.CmtFormBlock title="Informations générales">
-                        <Component.CmtTextField
-                            value={values.name}
-                            onChange={(e) => {
-                                setFieldValue('name', e.target.value);
-                                if (!values.editSlug && !initialValues) {
-                                    setFieldValue('slug', changeSlug(e.target.value));
-                                }
-                            }}
-                            onBlur={handleBlur}
-                            label="Nom"
-                            name="name"
-                            error={touched.name && errors.name}
-                            sx={{ marginBottom: 2 }}
-                            required
-                        />
-                        <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
-
-                        <InputLabel id="description" sx={{ marginTop: 3 }}>
-                            Description
-                        </InputLabel>
-                        <Component.LightEditorFormControl id="descriptionControl">
-                            <Component.LightEditor
-                                labelId="description"
-                                value={values.description}
-                                onBlur={() => setFieldTouched('description', true, false)}
-                                onChange={(val) => {
-                                    setFieldValue('description', val);
-                                }}
-                            />
-                            <FormHelperText error>{touched.description && errors.description}</FormHelperText>
-                        </Component.LightEditorFormControl>
-                    </Component.CmtFormBlock>
-
-                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
-
-                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
-                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Tag actif ?" />
-
-                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
-                            {initialValues ? 'Modifier' : 'Créer'}
-                        </Button>
-                    </Box>
-                </Component.CmtPageWrapper>
-            )}
-        </Formik>
-    );
+                SeoInitialFormInputs,
+            ],
+        },
+    ],
+    ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

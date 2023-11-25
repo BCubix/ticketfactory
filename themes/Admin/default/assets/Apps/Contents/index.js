@@ -4,7 +4,7 @@ import { ContentsForm } from '@Apps/Contents/ContentsForm/ContentsForm';
 import { DisplayContentField } from '@Apps/Contents/ContentsForm/DisplayContentField';
 import { DisplayContentForm } from '@Apps/Contents/ContentsForm/DisplayContentForm';
 import { ContentsFilters } from '@Apps/Contents/ContentsList/ContentsFilters/ContentsFilters';
-import { ContentsList } from '@Apps/Contents/ContentsList/ContentsList';
+import { ContentsList, contentsListCrud } from '@Apps/Contents/ContentsList/ContentsList';
 import { CreateContent } from '@Apps/Contents/CreateContent/CreateContent';
 import { EditContent } from '@Apps/Contents/EditContent/EditContent';
 
@@ -14,6 +14,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import contentsReducer from './redux/contents/contentsSlice';
 import contentsApi from './services/api/contentsApi';
@@ -21,7 +22,7 @@ import contentsApi from './services/api/contentsApi';
 import SourceIcon from '@mui/icons-material/Source';
 
 export const initConstant = () => {
-    setConstant('CONTENT_BASE_PATH', '/admin/contenus');
+    setConstant('CONTENTS_BASE_PATH', '/admin/contenus');
 };
 
 export const initComponent = () => {
@@ -39,15 +40,25 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.CONTENT_BASE_PATH, Component.ContentsList);
-    setAuthenticatedRoute(Constant.CONTENT_BASE_PATH + Constant.CREATE_PATH, Component.CreateContent);
-    setAuthenticatedRoute(`${Constant.CONTENT_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContent);
+    setAuthenticatedRoute(Constant.CONTENTS_BASE_PATH, Component.ContentsList);
+    setAuthenticatedRoute(Constant.CONTENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateContent);
+    setAuthenticatedRoute(`${Constant.CONTENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContent);
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Contenus', Constant.CONTENT_BASE_PATH, <SourceIcon />);
+    insertSubMenu(2, 'PERSONNALISER', 'Contenus', Constant.CONTENTS_BASE_PATH, <SourceIcon />);
 };
 
 export const initReducer = () => {
     setReducer('contents', contentsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: contentsListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('contents', crud);
 };

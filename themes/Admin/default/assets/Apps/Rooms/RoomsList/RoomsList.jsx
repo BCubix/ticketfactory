@@ -1,118 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Box, CardContent, Typography } from '@mui/material';
+import React from 'react';
 
 import { Api } from '@/AdminService/Api';
+import { Crud } from '@/AdminService/Crud';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { changeRoomsFilters, getRoomsAction, roomsSelector } from '@Apps/Rooms/redux/rooms/roomsSlice';
 
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
+export const roomsListCrud = {
+    title: 'Salles',
+    listTitle: 'Liste des salles',
+    filtersData: [
+        { key: 'active', type: 'boolean' },
+        'name',
+        'page',
+        'lang',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
+    pagination: true,
+    tableContextualMenu: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '20%', sortable: true },
+        { name: 'seatsNb', label: 'Nombre de places', width: '15%', sortable: true },
+        { name: 'area', label: 'Superficie', width: '15%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+    ],
+    loadDataAction: () => getRoomsAction(),
+    changeFiltersActions: (props) => changeRoomsFilters(props),
+    dataSelector: roomsSelector,
+    dataList: (selector) => selector.rooms,
+    duplicate: (props) => Api.roomsApi.duplicateRoom(props),
+    delete: (props) => Api.roomsApi.deleteRoom(props),
+    links: {
+        new: () => `${Constant.ROOMS_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.ROOMS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.ROOMS_BASE_PATH}${Constant.CREATE_PATH}?roomId=${id}&languageId=${languageId}`,
+    },
+    messages: {
+        duplicateValidation: 'La salle a bien été dupliquée',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette salle ?',
+    },
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
+};
 
 export const RoomsList = () => {
-    const { loading, rooms, filters, total, error } = useSelector(roomsSelector);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [deleteDialog, setDeleteDialog] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !rooms && !error) {
-            dispatch(getRoomsAction());
-        }
-    }, []);
-
-    const handleDelete = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        await Api.roomsApi.deleteRoom(id);
-
-        dispatch(getRoomsAction());
-
-        setDeleteDialog(null);
-    };
-
-    const handleDuplicate = (id) => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.roomsApi.duplicateRoom(id);
-
-            if (result?.result) {
-                NotificationManager.success('La salle a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
-
-                dispatch(getRoomsAction());
-            } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-            }
-        });
-    };
-
-    return (
-        <>
-            <Component.CmtPageWrapper title="Salles">
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <Component.CmtCardHeader
-                        title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des salles {rooms && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + rooms.length} sur ${total})`}
-                                </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH)}>
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
-                        }
-                    />
-                    <CardContent>
-                        <Component.RoomsFilters filters={filters} changeFilters={(values) => dispatch(changeRoomsFilters(values))} />
-
-                        <Component.ListTable
-                            contextualMenu
-                            table={TableColumn.RoomsList}
-                            list={rooms}
-                            onDuplicate={(id) => {
-                                handleDuplicate(id);
-                            }}
-                            onEdit={(id) => {
-                                navigate(`${Constant.ROOMS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onTranslate={(id, languageId) => {
-                                navigate(`${Constant.ROOMS_BASE_PATH}${Constant.CREATE_PATH}?roomId=${id}&languageId=${languageId}`);
-                            }}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeRoomsFilters(newFilters))}
-                            onDelete={(id) => setDeleteDialog(id)}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) => dispatch(changeRoomsFilters({ ...filters }, newValue))}
-                            setLimit={(newValue) => {
-                                dispatch(changeRoomsFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={rooms?.length}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">Êtes-vous sûr de vouloir supprimer cette salle ?</Typography>
-
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
-        </>
-    );
+    return <Component.CmtCrudList listCrud={Crud?.rooms?.list} />;
 };

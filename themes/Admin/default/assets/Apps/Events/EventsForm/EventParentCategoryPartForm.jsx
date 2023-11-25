@@ -71,7 +71,6 @@ export const EventParentCategoryPartForm = ({ values, categoriesList, setFieldVa
     const defaultExpend = useMemo(() => {
         let list = [];
 
-        console.log(values);
         values?.eventCategories?.forEach((el) => {
             list.push(...getDefaultParentPath(categoriesList, el));
         });

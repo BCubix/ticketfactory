@@ -76,7 +76,7 @@ const contentTypesApi = {
         }
     },
 
-    getAllContentTypes: async (filters) => {
+    getAllContentTypes: async (filters = {}) => {
         try {
             let params = {};
 

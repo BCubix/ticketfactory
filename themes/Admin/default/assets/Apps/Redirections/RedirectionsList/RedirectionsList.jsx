@@ -1,96 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Box, CardContent, Typography } from '@mui/material';
+import React from 'react';
 import { redirectionsSelector } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
+import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { changeRedirectionsFilters, getRedirectionsAction } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
+import CategoryIcon from '@mui/icons-material/Category';
+
+export const redirectionsListCrud = {
+    title: 'Redirections',
+    listTitle: 'Liste des redirections',
+    filtersData: [
+        { key: 'active', type: 'boolean' },
+        'redirectType',
+        'redirectFrom',
+        'redirectTo',
+        'page',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        {
+            key: 'redirectType',
+            title: 'Chercher par type de redirection',
+            label: 'Type de redirection',
+            type: 'multipleList',
+            icon: <CategoryIcon />,
+            parameters: {
+                nameValue: 'value',
+                nameLabel: 'label',
+            },
+            list: Constant.REDIRECTION_TYPES,
+        },
+        { key: 'redirectFrom', title: 'Chercher par source de la redirection', label: 'Redirigé depuis', type: 'search' },
+        { key: 'redirectTo', title: 'Chercher par destination de la redirection', label: 'Redirigé vers', type: 'search' },
+    ],
+    pagination: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'redirectType', label: 'Type de redirection', width: '20%', sortable: true },
+        { name: 'redirectFrom', label: 'Redirigé depuis', width: '25%', sortable: true },
+        { name: 'redirectTo', label: 'Redirigé vers', width: '25%', sortable: true },
+    ],
+    loadDataAction: () => getRedirectionsAction(),
+    changeFiltersActions: (props) => changeRedirectionsFilters(props),
+    dataSelector: redirectionsSelector,
+    dataList: (selector) => selector.redirections,
+    delete: (props) => Api.redirectionsApi.deleteRedirection(props),
+    links: {
+        new: () => `${Constant.REDIRECTIONS_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.REDIRECTIONS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+    },
+    messages: {
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette salle ?',
+    },
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
+};
 
 export const RedirectionsList = () => {
-    const { loading, redirections, filters, total, error } = useSelector(redirectionsSelector);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [deleteDialog, setDeleteDialog] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !redirections && !error) {
-            dispatch(getRedirectionsAction());
-        }
-    }, []);
-
-    const handleDelete = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        await Api.redirectionsApi.deleteRedirection(id);
-
-        dispatch(getRedirectionsAction());
-
-        setDeleteDialog(null);
-    };
-
-    return (
-        <>
-            <Component.CmtPageWrapper title="Redirections">
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <Component.CmtCardHeader
-                        title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des redirections{' '}
-                                    {redirections && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + redirections.length} sur ${total})`}
-                                </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.REDIRECTIONS_BASE_PATH + Constant.CREATE_PATH)}>
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
-                        }
-                    />
-                    <CardContent>
-                        <Component.RedirectionsFilters filters={filters} changeFilters={(values) => dispatch(changeRedirectionsFilters(values))} />
-
-                        <Component.ListTable
-                            table={TableColumn.RedirectionsList}
-                            list={redirections}
-                            onEdit={(id) => {
-                                navigate(`${Constant.REDIRECTIONS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onDelete={(id) => setDeleteDialog(id)}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeRedirectionsFilters(newFilters))}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) => dispatch(changeRedirectionsFilters({ ...filters }, newValue))}
-                            setLimit={(newValue) => {
-                                dispatch(changeRedirectionsFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={redirections?.length}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">Êtes-vous sûr de vouloir supprimer cette redirection ?</Typography>
-
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
-        </>
-    );
+    return <Component.CmtCrudList listCrud={Crud?.redirections?.list} />;
 };

@@ -2,39 +2,18 @@ import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 
 const DEFAULT_PATH = '/carts';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'orderId', sortName: 'filters[orderId]' },
-    { name: 'date', sortName: 'filters[date]' },
-    { name: 'clientName', sortName: 'filters[clientName]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const cartsApi = {
     getCarts: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.events?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

@@ -69,13 +69,21 @@ import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
 
 import { AppProvider } from '@/Config/AppProvider';
+import { CmtCrudList } from '@Components/CmtCrudList/CmtCrudList';
+import { CmtCrudForm } from '@Components/CmtCrudForm/CmtCrudForm';
+import { CmtFiltersList } from '@Components/CmtCrudList/CmtFiltersList';
 import { CmtDisplayComponents } from '@Components/CmtDisplayComponents/CmtDisplayComponents';
-import { CmtDisplayBlocks } from "@Components/CmtDisplayBlocks/CmtDisplayBlocks";
-import { CmtDisplayFields } from "@Components/CmtDisplayFields/CmtDisplayFields";
+import { CmtDisplayBlocks } from '@Components/CmtDisplayBlocks/CmtDisplayBlocks';
+import { CmtDisplayFields } from '@Components/CmtDisplayFields/CmtDisplayFields';
+import { CmtActiveBlock } from '@Components/CmtActiveBlock/CmtActiveBlock';
 
 const ComponentObj = {
     App: App,
     Routing: Routing,
+
+    CmtCrudList: CmtCrudList,
+    CmtCrudForm: CmtCrudForm,
+    CmtFiltersList: CmtFiltersList,
 
     CmtDisplayMediaInfos: CmtDisplayMediaInfos,
     CmtDisplayMediaMeta: CmtDisplayMediaMeta,
@@ -156,6 +164,7 @@ const ComponentObj = {
     CmtDisplayComponents: CmtDisplayComponents,
     CmtDisplayBlocks: CmtDisplayBlocks,
     CmtDisplayFields: CmtDisplayFields,
+    CmtActiveBlock: CmtActiveBlock,
 };
 
 /**

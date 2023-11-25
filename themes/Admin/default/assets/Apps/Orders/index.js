@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { OrdersList } from '@Apps/Orders/OrdersList/OrdersList';
+import { OrdersList, ordersListCrud } from '@Apps/Orders/OrdersList/OrdersList';
 import { OrdersFilters } from '@Apps/Orders/OrdersList/OrdersFilters/OrdersFIlters';
 import { OrdersDetail } from '@Apps/Orders/OrdersDetail/OrdersDetail';
 import { CartOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CartOrderPart';
@@ -16,6 +16,7 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 
 import ordersReducer from './redux/orders/ordersSlice';
 import ordersApi from './services/api/ordersApi';
+import { setCrud } from '@/AdminService/Crud';
 
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
@@ -47,4 +48,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('orders', ordersReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: ordersListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('orders', crud);
 };

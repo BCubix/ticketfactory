@@ -4,7 +4,7 @@ import { CreateRedirection } from '@Apps/Redirections/CreateRedirection/CreateRe
 import { EditRedirection } from '@Apps/Redirections/EditRedirection/EditRedirection';
 import { RedirectionsForm } from '@Apps/Redirections/RedirectionsForm/RedirectionsForm';
 import { RedirectionsFilters } from '@Apps/Redirections/RedirectionsList/RedirectionsFilters/RedirectionsFilters';
-import { RedirectionsList } from '@Apps/Redirections/RedirectionsList/RedirectionsList';
+import { RedirectionsList, redirectionsListCrud } from '@Apps/Redirections/RedirectionsList/RedirectionsList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -12,6 +12,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import redirectionsReducer from '@Apps/Redirections/redux/redirections/redirectionsSlice';
 import redirectionsApi from '@Apps/Redirections/services/api/redirectionsApi';
@@ -46,4 +47,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('redirections', redirectionsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: redirectionsListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('redirections', crud);
 };

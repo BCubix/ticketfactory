@@ -8,69 +8,16 @@ import { copyData } from '@Services/utils/copyData';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'name', sortName: 'filters[name]' },
-    {
-        name: 'category',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[category][${index}]`] = el;
-            });
-        },
-    },
-    {
-        name: 'season',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[season][${index}]`] = el;
-            });
-        },
-    },
-    {
-        name: 'room',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[room][${index}]`] = el;
-            });
-        },
-    },
-    {
-        name: 'tags',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[tags][${index}]`] = el;
-            });
-        },
-    },
-    { name: 'lang', sortName: 'filters[lang]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const eventsApi = {
     getEvents: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.events?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

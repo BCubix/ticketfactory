@@ -3,7 +3,7 @@ import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBloc
 import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
 import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
 import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
-import { PageBlocksList } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
+import { PageBlocksList, pageBlocksListCrud } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
 import { CreatePageBlockFormat } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
 
 import { setReducer } from '@/AdminService/Reducer';
@@ -14,6 +14,7 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 
 import pageBlocksApi from '@Apps/PageBlocks/services/api/pageBlocksApi';
 import pageBlocksReducer from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
+import { setCrud } from '@/AdminService/Crud';
 
 export const initConstant = () => {
     setConstant('PAGE_BLOCKS_BASE_PATH', '/admin/page-blocks');
@@ -41,4 +42,14 @@ export const initAuthenticatedRoutes = () => {
 
 export const initReducer = () => {
     setReducer('pageBlocks', pageBlocksReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: pageBlocksListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('pageBlocks', crud);
 };

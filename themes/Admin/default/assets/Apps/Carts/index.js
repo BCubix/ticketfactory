@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CartsList } from '@Apps/Carts/CartsList/CartsList';
+import { CartsList, cartsListCrud } from '@Apps/Carts/CartsList/CartsList';
 import { CartsFilters } from '@Apps/Carts/CartsList/CartsFilters/CartsFilters';
 import { CartsDetail } from '@Apps/Carts/CartsDetail/CartsDetail';
 import { CustomerCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CustomerCartPart';
@@ -12,6 +12,7 @@ import { insertSubMenu } from '@/AdminService/Menu';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
+import { setCrud } from '@/AdminService/Crud';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 
 import cartsApi from './services/api/cartsApi';
@@ -47,4 +48,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('carts', cartsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: cartsListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('carts', crud);
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { ActiveModule } from '@/AdminService/ActiveModule/ActiveModule';
 
-const FUNCTIONS_LIST = ['initConstant', 'initComponent', 'initApi', 'initAuthenticatedRoutes', 'initNonAuthenticatedRoutes', 'initMenu', 'initReducer', 'default'];
+const FUNCTIONS_LIST = ['initConstant', 'initComponent', 'initApi', 'initAuthenticatedRoutes', 'initNonAuthenticatedRoutes', 'initMenu', 'initReducer', 'initCrud', 'default'];
 
 export const ActiveApp = () => {
     const [appLoaded, setAppLoaded] = useState(false);

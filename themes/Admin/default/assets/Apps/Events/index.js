@@ -15,8 +15,7 @@ import { EventsDateBlockForm } from '@Apps/Events/EventsForm/EventsDateBlockForm
 import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
 import { EventsForm } from '@Apps/Events/EventsForm/EventsForm';
 import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
-import { EventsFilters } from '@Apps/Events/EventsList/EventsFilters/EventsFilters';
-import { EventsList } from '@Apps/Events/EventsList/EventsList';
+import { EventsList, eventsListCrud } from '@Apps/Events/EventsList/EventsList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -24,6 +23,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import eventsReducer from './redux/events/eventsSlice';
 import eventsApi from './services/api/eventsApi';
@@ -50,7 +50,6 @@ export const initComponent = () => {
     setComponent('EventsDateForm', EventsDateForm);
     setComponent('EventsForm', EventsForm);
     setComponent('EventsPriceForm', EventsPriceForm);
-    setComponent('EventsFilters', EventsFilters);
     setComponent('EventsList', EventsList);
 };
 
@@ -70,4 +69,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('events', eventsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: eventsListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('events', crud);
 };

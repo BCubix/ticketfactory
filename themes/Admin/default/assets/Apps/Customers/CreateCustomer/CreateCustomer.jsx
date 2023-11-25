@@ -8,6 +8,17 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getCustomersAction } from '@Apps/Customers/redux/customers/customersSlice';
+import { customersInitialSchema, customersValidationSchema, customersForm } from '../CustomersForm/CustomersForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const customersCreateCrud = {
+    form: {
+        title: "Creation d'un utilisateur",
+        initialSchema: customersInitialSchema,
+        validationSchema: customersValidationSchema,
+    },
+    ...customersForm,
+};
 
 export const CreateCustomer = () => {
     const dispatch = useDispatch();
@@ -24,5 +35,5 @@ export const CreateCustomer = () => {
         });
     };
 
-    return <Component.CustomersForm handleSubmit={handleSubmit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.customers?.add} />;
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const CmtDisplayComponents = ({list, ...inheritedProps}) => {
+export const CmtDisplayComponents = ({ list, ...inheritedProps }) => {
     return (
         <>
             {list?.map((elem, index) => {

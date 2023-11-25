@@ -7,8 +7,19 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { getRoomsAction } from '@Apps/Rooms/redux/rooms/roomsSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { roomsInitialSchema, roomsValidationSchema, roomsForm } from '@Apps/Rooms/RoomsForm/RoomsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const roomsEditCrud = {
+    form: {
+        title: "Modification d'une salle",
+        initialSchema: roomsInitialSchema,
+        validationSchema: roomsValidationSchema,
+    },
+    ...roomsForm,
+};
 
 export const EditRoom = () => {
     const dispatch = useDispatch();
@@ -17,25 +28,19 @@ export const EditRoom = () => {
     const [room, setRoom] = useState(null);
 
     const getRoom = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.roomsApi.getOneRoom(id);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            return;
-        }
+                navigate(Constant.ROOMS_BASE_PATH);
 
-        const result = await Api.roomsApi.getOneRoom(id);
+                return;
+            }
 
-        if (!result.result) {
-            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-
-            navigate(Constant.ROOMS_BASE_PATH);
-
-            return;
-        }
-
-        setRoom(result.room);
+            setRoom(result.room);
+        });
     };
 
     useEffect(() => {
@@ -48,28 +53,20 @@ export const EditRoom = () => {
     }, [id]);
 
     const handleSubmit = async (values) => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.roomsApi.editRoom(id, values);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.roomsApi.editRoom(id, values);
-
-        if (result.result) {
-            NotificationManager.success('La salle a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
-
-            dispatch(getRoomsAction());
-
-            navigate(Constant.ROOMS_BASE_PATH);
-        }
+            if (result.result) {
+                NotificationManager.success('La salle a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(getRoomsAction());
+                navigate(Constant.ROOMS_BASE_PATH);
+            }
+        });
     };
 
     if (!room) {
         return <></>;
     }
 
-    return <Component.RoomsForm handleSubmit={handleSubmit} initialValues={room} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={room} formCrud={Crud?.rooms?.edit} />;
 };

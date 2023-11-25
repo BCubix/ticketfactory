@@ -10,6 +10,18 @@ import { Constant } from '@/AdminService/Constant';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { getTagsAction } from '@Apps/Tags/redux/tags/tagsSlice';
 
+import { tagsInitialSchema, tagsValidationSchema, tagsForm } from '@Apps/Tags/TagsForm/TagsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const tagsEditCrud = {
+    form: {
+        title: "Modification d'un tag",
+        initialSchema: tagsInitialSchema,
+        validationSchema: tagsValidationSchema,
+    },
+    ...tagsForm,
+};
+
 export const EditTag = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -63,5 +75,5 @@ export const EditTag = () => {
         return <></>;
     }
 
-    return <Component.TagsForm handleSubmit={handleSubmit} initialValues={tag} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={tag} formCrud={Crud?.tags?.edit} />;
 };

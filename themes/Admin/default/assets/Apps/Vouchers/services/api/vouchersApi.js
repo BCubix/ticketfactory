@@ -1,55 +1,19 @@
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-
+import { Crud } from '@/AdminService/Crud';
+import { constructFormData } from '@Services/utils/constructFormData';
 import { Constant } from '@/AdminService/Constant';
 
 const DEFAULT_PATH = '/vouchers';
 
 var controller = null;
 
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('name', data.name);
-    formData.append('code', data.code);
-    formData.append('discount', data.discount);
-    formData.append('unit', data.unit);
-    formData.append('beginDate', data.beginDate);
-    formData.append('endDate', data.endDate);
-    formData.append('active', data.active ? 1 : 0);
-
-    data?.eventCategories.forEach((element, index) => {
-        formData.append(`eventCategories[${index}]`, element);
-    });
-
-    return formData;
-};
-
 const vouchersApi = {
     getVouchers: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.vouchers?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -98,9 +62,9 @@ const vouchersApi = {
         }
     },
 
-    createVoucher: async (data) => {
+    createVoucher: async (values) => {
         try {
-            const result = await axios.post(DEFAULT_PATH, getFormData(data));
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.vouchers?.add?.api?.dataFields }));
 
             return { result: true, voucher: result.data };
         } catch (error) {
@@ -108,9 +72,9 @@ const vouchersApi = {
         }
     },
 
-    editVoucher: async (id, data) => {
+    editVoucher: async (id, values) => {
         try {
-            const result = await axios.post(`${DEFAULT_PATH}/${id}`, getFormData(data));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.vouchers?.edit?.api?.dataFields }));
 
             return { result: true, voucher: result.data };
         } catch (error) {

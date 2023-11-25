@@ -8,6 +8,17 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { getVouchersAction } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { vouchersInitialSchema, vouchersValidationSchema, vouchersForm } from '@Apps/Vouchers/VouchersForm/VouchersForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const vouchersEditCrud = {
+    form: {
+        title: "Modification d'un coupon de réduction",
+        initialSchema: vouchersInitialSchema,
+        validationSchema: vouchersValidationSchema,
+    },
+    ...vouchersForm,
+};
 
 export const EditVoucher = () => {
     const dispatch = useDispatch();
@@ -62,5 +73,5 @@ export const EditVoucher = () => {
         return <></>;
     }
 
-    return <Component.VouchersForm handleSubmit={handleSubmit} initialValues={voucher} eventCategoriesList={categories} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={voucher} eventCategoriesList={categories} formCrud={Crud?.vouchers?.edit} />;
 };

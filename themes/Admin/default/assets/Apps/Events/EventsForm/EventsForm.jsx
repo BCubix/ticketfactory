@@ -66,11 +66,11 @@ const initialSchema = {
             lang: el?.lang?.id || '',
             eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
         })) || [{ name: 'Tarifs', eventPrices: [], lang: initValues?.lang?.id || '' }],
-    eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList.id]),
+    eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues) => initValues?.room?.id || '',
     season: (initValues) => initValues?.season?.id || '',
     tags: (initValues) => (initValues?.tags ? initValues?.tags?.map((el) => el.id) : []),
-    mainCategory: (initValues, { categoriesList }) => initValues?.mainCategory?.id || categoriesList.id,
+    mainCategory: (initValues, { categoriesList }) => initValues?.mainCategory?.id || categoriesList?.id,
     multiplePriceBlock: (initValues) => initValues?.eventPriceBlocks?.length > 1 || false,
     multipleDateBlock: (initValues) => initValues?.eventDateBlocks?.length > 1 || false,
     eventMedias: (initValues) =>

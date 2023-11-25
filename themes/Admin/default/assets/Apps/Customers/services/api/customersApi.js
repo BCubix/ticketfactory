@@ -2,55 +2,19 @@ import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 const DEFAULT_PATH = '/customers';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'email', sortName: 'filters[email]' },
-    { name: 'firstName', sortName: 'filters[firstName]' },
-    { name: 'lastName', sortName: 'filters[lastName]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('firstName', data.firstName);
-    formData.append('lastName', data.lastName);
-    formData.append('email', data.email);
-    formData.append('civility', data.civility);
-    formData.append('active', data.active ? 1 : 0);
-
-    if (data.plainPassword && data.confirmPassword) {
-        formData.append('plainPassword', data.plainPassword);
-    }
-
-    return formData;
-};
 
 const customersApi = {
     getCustomers: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.events?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -99,9 +63,9 @@ const customersApi = {
         }
     },
 
-    createCustomer: async (data) => {
+    createCustomer: async (values) => {
         try {
-            const result = await axios.post(DEFAULT_PATH, getFormData(data));
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.customers?.add?.api?.dataFields }));
 
             return { result: true, customer: result.data };
         } catch (error) {
@@ -109,9 +73,9 @@ const customersApi = {
         }
     },
 
-    editCustomer: async (id, data) => {
+    editCustomer: async (id, values) => {
         try {
-            const result = await axios.post(`${DEFAULT_PATH}/${id}`, getFormData(data));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.customers?.edit?.api?.dataFields }));
 
             return { result: true, customer: result.data };
         } catch (error) {

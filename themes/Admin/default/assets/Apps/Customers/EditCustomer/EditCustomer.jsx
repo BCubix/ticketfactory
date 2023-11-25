@@ -10,6 +10,17 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getCustomersAction } from '@Apps/Customers/redux/customers/customersSlice';
+import { customersInitialSchema, customersValidationSchema, customersForm } from '../CustomersForm/CustomersForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const customersEditCrud = {
+    form: {
+        title: "Modification d'un utilisateur",
+        initialSchema: customersInitialSchema,
+        validationSchema: customersValidationSchema,
+    },
+    ...customersForm,
+};
 
 export const EditCustomer = () => {
     const dispatch = useDispatch();
@@ -54,5 +65,5 @@ export const EditCustomer = () => {
         return <></>;
     }
 
-    return <Component.CustomersForm handleSubmit={handleSubmit} initialValues={customer} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={customer} formCrud={Crud?.customers?.edit} />;
 };

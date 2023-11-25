@@ -3,30 +3,16 @@ import axios from '@Services/api/config';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    { name: 'name', sortName: 'filters[name]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const pageBlocksApi = {
     getPageBlocks: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.redirections?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

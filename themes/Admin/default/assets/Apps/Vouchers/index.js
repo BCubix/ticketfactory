@@ -1,10 +1,8 @@
 import React from 'react';
 
-import { VouchersList } from '@Apps/Vouchers/VouchersList/VouchersList';
+import { VouchersList, vouchersListCrud } from '@Apps/Vouchers/VouchersList/VouchersList';
 import { CreateVoucher } from '@Apps/Vouchers/CreateVoucher/CreateVoucher';
 import { EditVoucher } from '@Apps/Vouchers/EditVoucher/EditVoucher';
-import { VouchersForm } from '@Apps/Vouchers/VouchersForm/VouchersForm';
-import { VouchersFilters } from '@Apps/Vouchers/VouchersList/VouchersFilters/VouchersFilters';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -12,11 +10,14 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import vouchersReducer from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import vouchersApi from '@Apps/Vouchers/services/api/vouchersApi';
 
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import { vouchersCreateCrud } from './CreateVoucher/CreateVoucher';
+import { vouchersEditCrud } from './EditVoucher/EditVoucher';
 
 export const initConstant = () => {
     setConstant('VOUCHERS_BASE_PATH', '/admin/reductions');
@@ -26,8 +27,6 @@ export const initComponent = () => {
     setComponent('VouchersList', VouchersList);
     setComponent('CreateVoucher', CreateVoucher);
     setComponent('EditVoucher', EditVoucher);
-    setComponent('VouchersForm', VouchersForm);
-    setComponent('VouchersFilters', VouchersFilters);
 };
 
 export const initApi = () => {
@@ -46,4 +45,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('vouchers', vouchersReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: vouchersListCrud,
+        add: vouchersCreateCrud,
+        edit: vouchersEditCrud,
+    };
+
+    setCrud('vouchers', crud);
 };

@@ -6,37 +6,9 @@ import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'title', sortName: 'filters[title]' },
-    {
-        name: 'contentType',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[contentType][${index}]`] = el;
-            });
-        },
-    },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const getFormData = (data) => {
     let formData = new FormData();
@@ -86,7 +58,7 @@ const contentsApi = {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.contents?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

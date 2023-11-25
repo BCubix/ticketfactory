@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getSeasonsAction } from '@Apps/Seasons/redux/seasons/seasonsSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { seasonsInitialSchema, seasonsValidationSchema, seasonsForm } from '../SeasonsForm/SeasonsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const seasonsCreateCrud = {
+    form: {
+        title: "Création d'une saison",
+        initialSchema: seasonsInitialSchema,
+        validationSchema: seasonsValidationSchema,
+    },
+    ...seasonsForm,
+};
 
 export const CreateSeason = () => {
     const dispatch = useDispatch();
@@ -51,5 +62,5 @@ export const CreateSeason = () => {
         return <></>;
     }
 
-    return <Component.SeasonsForm handleSubmit={handleSubmit} translateInitialValues={initialValues} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} translateInitialValues={initialValues} formCrud={Crud?.seasons?.add} />;
 };

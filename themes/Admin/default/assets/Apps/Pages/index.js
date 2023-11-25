@@ -6,7 +6,7 @@ import { PagesBlocksPart } from '@Apps/Pages/PagesForm/PagesBlocksPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 import { PagesBlocksSliderPart } from '@Apps/Pages/PagesForm/PagesBlocksSliderPart';
 import { PagesFilters } from '@Apps/Pages/PagesList/PagesFilters/PagesFilters';
-import { PagesList } from '@Apps/Pages/PagesList/PagesList';
+import { PagesList, pagesListCrud } from '@Apps/Pages/PagesList/PagesList';
 import { PagesMenu } from '@Apps/Pages/PagesMenu/PagesMenu';
 import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
 import { PageHistory } from '@Apps/Pages/PageHistory/PageHistory';
@@ -21,6 +21,7 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import pagesApi from '@Apps/Pages/services/api/pagesApi';
 import pageHistoryApi from '@Apps/Pages/services/api/pageHistoryApi';
 import pagesReducer from '@Apps/Pages/redux/pages/pagesSlice';
+import { setCrud } from '@/AdminService/Crud';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 
@@ -61,4 +62,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('pages', pagesReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: pagesListCrud,
+        add: {},
+        edit: {},
+    };
+
+    setCrud('pages', crud);
 };

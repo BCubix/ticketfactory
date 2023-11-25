@@ -64,7 +64,7 @@ export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, 
 
         apiMiddleware(dispatch, async () => {
             const defaultLanguage = languagesData.languages.find((el) => el.isDefault);
-            const result = await getList(defaultLanguage?.id);
+            const result = await getList({ lang: defaultLanguage?.id });
 
             if (result) {
                 setDisplayList(result);

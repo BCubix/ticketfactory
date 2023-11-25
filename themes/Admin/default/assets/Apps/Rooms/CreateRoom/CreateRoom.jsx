@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getRoomsAction } from '@Apps/Rooms/redux/rooms/roomsSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { roomsInitialSchema, roomsValidationSchema, roomsForm } from '@Apps/Rooms/RoomsForm/RoomsForm.jsx';
+
+export const roomsCreateCrud = {
+    form: {
+        title: "Creation d'une salle",
+        initialSchema: roomsInitialSchema,
+        validationSchema: roomsValidationSchema,
+    },
+    ...roomsForm,
+};
 
 export const CreateRoom = () => {
     const dispatch = useDispatch();
@@ -51,5 +62,5 @@ export const CreateRoom = () => {
         return <></>;
     }
 
-    return <Component.RoomsForm handleSubmit={handleSubmit} translateInitialValues={initialValues} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} translateInitialValues={initialValues} formCrud={Crud?.rooms?.add} />;
 };

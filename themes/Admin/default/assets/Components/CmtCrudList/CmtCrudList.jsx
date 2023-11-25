@@ -1,0 +1,176 @@
+import React, { useEffect, useState } from 'react';
+
+import { NotificationManager } from 'react-notifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Box, CardContent, Typography } from '@mui/material';
+
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+
+export const DEFAULT_CRUD_LIST_COMPONENTS = {
+    wrapperComponent: (props) => <Component.CmtCrudList {...props} />,
+    components: [
+        {
+            component: ({ objectData, listCrud, dispatch }) => (
+                <Component.CmtFiltersList
+                    filters={objectData?.filters}
+                    filtersList={listCrud?.filterList}
+                    changeFilters={(values) => dispatch(listCrud?.changeFiltersActions(values))}
+                />
+            ),
+        },
+        {
+            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog }) => (
+                <Component.ListTable
+                    contextualMenu={Boolean(listCrud?.tableContextualMenu)}
+                    table={listCrud?.tableList}
+                    list={listCrud?.dataList(objectData)}
+                    onEdit={
+                        listCrud?.links?.edit
+                            ? (id) => {
+                                  navigate(listCrud?.links?.edit(id));
+                              }
+                            : null
+                    }
+                    onDuplicate={
+                        listCrud?.duplicate
+                            ? (id) => {
+                                  handleDuplicate(id);
+                              }
+                            : null
+                    }
+                    onTranslate={
+                        listCrud?.links?.translate
+                            ? (id, languageId) => {
+                                  navigate(listCrud?.links?.translate(id, languageId));
+                              }
+                            : null
+                    }
+                    onClick={
+                        listCrud?.links?.detail
+                            ? (itemId) => {
+                                  navigate(listCrud?.links?.detail(itemId));
+                              }
+                            : null
+                    }
+                    onPreview={
+                        listCrud?.links?.preview
+                            ? (item) => {
+                                  navigate(listCrud?.links?.preview(item));
+                              }
+                            : null
+                    }
+                    onDelete={listCrud?.delete ? (id) => setDeleteDialog(id) : null}
+                    filters={objectData?.filters}
+                    changeFilters={(newFilters) => dispatch(listCrud?.changeFiltersActions(newFilters))}
+                />
+            ),
+        },
+        {
+            component: ({ objectData, listCrud, dispatch }) => (
+                <Component.CmtPagination
+                    page={objectData?.filters.page}
+                    total={objectData?.total}
+                    limit={objectData?.filters.limit}
+                    setPage={(newValue) => dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters }, newValue))}
+                    setLimit={(newValue) => {
+                        dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters, limit: newValue }));
+                    }}
+                    length={listCrud?.dataList(objectData)?.length}
+                />
+            ),
+        },
+    ],
+};
+
+export const CmtCrudList = ({ listCrud, ...props }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [deleteDialog, setDeleteDialog] = useState(null);
+    const objectData = useSelector(listCrud.dataSelector);
+
+    useEffect(() => {
+        if (!objectData?.loading && !listCrud?.dataList(objectData) && !objectData?.error) {
+            dispatch(listCrud?.loadDataAction());
+        }
+    }, []);
+
+    const handleDelete = async (id) => {
+        await listCrud.delete(id);
+
+        dispatch(listCrud?.loadDataAction());
+        setDeleteDialog(null);
+    };
+
+    const handleDuplicate = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await listCrud?.duplicate(id);
+            if (result?.result) {
+                NotificationManager.success(listCrud?.messages?.duplicateValidation || "L'objet à bien été dupliqué.", 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(listCrud?.loadDataActions());
+            } else {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            }
+        });
+    };
+
+    return (
+        <>
+            <Component.CmtPageWrapper title={listCrud?.title || ''}>
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                    <Component.CmtCardHeader
+                        title={
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    {listCrud?.listTitle}{' '}
+                                    {listCrud?.dataList(objectData) &&
+                                        `(${(objectData?.filters.page - 1) * objectData?.filters.limit + 1} - ${
+                                            (objectData?.filters.page - 1) * objectData?.filters.limit + listCrud?.dataList(objectData)?.length
+                                        } sur ${objectData?.total})`}
+                                </Typography>
+                                {(listCrud?.new || listCrud?.links?.new) && (
+                                    <Component.CreateButton
+                                        variant="contained"
+                                        onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
+                                    >
+                                        Nouveau
+                                    </Component.CreateButton>
+                                )}
+                            </Box>
+                        }
+                    />
+                    <CardContent>
+                        {listCrud?.components?.map((item, index) => {
+                            const { component: ItemComponent } = item;
+
+                            if (!ItemComponent) {
+                                return <></>;
+                            }
+
+                            return (
+                                <ItemComponent
+                                    objectData={objectData}
+                                    listCrud={listCrud}
+                                    navigate={navigate}
+                                    dispatch={dispatch}
+                                    handleDuplicate={handleDuplicate}
+                                    setDeleteDialog={setDeleteDialog}
+                                    {...props}
+                                />
+                            );
+                        })}
+                    </CardContent>
+                </Component.CmtCard>
+            </Component.CmtPageWrapper>
+            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+                <Box textAlign="center" py={3}>
+                    <Typography component="p">{listCrud?.messages?.confirmationDelete}</Typography>
+
+                    <Typography component="p">Cette action est irréversible.</Typography>
+                </Box>
+            </Component.DeleteDialog>
+        </>
+    );
+};

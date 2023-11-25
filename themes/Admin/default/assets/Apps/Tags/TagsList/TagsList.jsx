@@ -1,91 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import { CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import React from 'react';
 
 import { Api } from '@/AdminService/Api';
+import { Crud } from '@/AdminService/Crud';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeTagsFilters, getTagsAction, tagsSelector } from '@Apps/Tags/redux/tags/tagsSlice';
 
+export const tagsListCrud = {
+    title: 'Tags',
+    listTitle: 'Liste des tags',
+    filtersData: [
+        { key: 'active', type: 'boolean' },
+        'name',
+        'page',
+        'lang',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
+    pagination: true,
+    tableContextualMenu: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '50%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+    ],
+    loadDataAction: () => getTagsAction(),
+    changeFiltersActions: (props) => changeTagsFilters(props),
+    dataSelector: tagsSelector,
+    dataList: (selector) => selector.tags,
+    duplicate: (props) => Api.tagsApi.duplicateTag(props),
+    delete: (props) => Api.tagsApi.deleteTag(props),
+    links: {
+        new: () => `${Constant.TAGS_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.TAGS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.TAGS_BASE_PATH}${Constant.CREATE_PATH}?tagId=${id}&languageId=${languageId}`,
+    },
+    messages: {
+        duplicateValidation: 'Le tag a bien été dupliquée',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer ce tag ?',
+    },
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
+};
+
 export const TagsList = () => {
-    const { loading, tags, filters, total, error } = useSelector(tagsSelector);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [deleteDialog, setDeleteDialog] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !tags && !error) {
-            dispatch(getTagsAction());
-        }
-    }, []);
-
-    const handleDelete = async (id) => {
-        await Api.tagsApi.deleteTag(id);
-
-        dispatch(getTagsAction());
-
-        setDeleteDialog(null);
-    };
-
-    return (
-        <>
-            <Component.CmtPageWrapper title="Tags">
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <Component.CmtCardHeader
-                        title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des tags {tags && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + tags.length} sur ${total})`}
-                                </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH)}>
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
-                        }
-                    />
-                    <CardContent>
-                        <Component.TagsFilters filters={filters} changeFilters={(values) => dispatch(changeTagsFilters(values))} />
-
-                        <Component.ListTable
-                            contextualMenu
-                            table={TableColumn.TagsList}
-                            list={tags}
-                            onEdit={(id) => {
-                                navigate(`${Constant.TAGS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onTranslate={(id, languageId) => {
-                                navigate(`${Constant.TAGS_BASE_PATH}${Constant.CREATE_PATH}?tagId=${id}&languageId=${languageId}`);
-                            }}
-                            onDelete={(id) => setDeleteDialog(id)}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeTagsFilters(newFilters))}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) => dispatch(changeTagsFilters({ ...filters }, newValue))}
-                            setLimit={(newValue) => {
-                                dispatch(changeTagsFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={tags?.length}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">Êtes-vous sûr de vouloir supprimer ce tag ?</Typography>
-
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
-        </>
-    );
+    return <Component.CmtCrudList listCrud={Crud?.tags?.list} />;
 };

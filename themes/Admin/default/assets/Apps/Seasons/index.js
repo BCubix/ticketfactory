@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { CreateSeason } from '@Apps/Seasons/CreateSeason/CreateSeason';
-import { EditSeason } from '@Apps/Seasons/EditSeason/EditSeason';
-import { SeasonsForm } from '@Apps/Seasons/SeasonsForm/SeasonsForm';
-import { SeasonsFilters } from '@Apps/Seasons/SeasonsList/SeasonsFilters/SeasonsFilters';
+import { CreateSeason, seasonsCreateCrud } from '@Apps/Seasons/CreateSeason/CreateSeason';
+import { EditSeason, seasonsEditCrud } from '@Apps/Seasons/EditSeason/EditSeason';
 import { SeasonsList } from '@Apps/Seasons/SeasonsList/SeasonsList';
+
+import { seasonsListCrud } from '@Apps/Seasons/SeasonsList/SeasonsList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -17,6 +17,7 @@ import seasonsReducer from '@Apps/Seasons/redux/seasons/seasonsSlice';
 import seasonsApi from '@Apps/Seasons/services/api/seasonsApi';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { setCrud } from '@/AdminService/Crud';
 
 export const initConstant = () => {
     setConstant('SEASONS_BASE_PATH', '/admin/saisons');
@@ -25,8 +26,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('CreateSeason', CreateSeason);
     setComponent('EditSeason', EditSeason);
-    setComponent('SeasonsForm', SeasonsForm);
-    setComponent('SeasonsFilters', SeasonsFilters);
     setComponent('SeasonsList', SeasonsList);
 };
 
@@ -46,4 +45,14 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('seasons', seasonsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: seasonsListCrud,
+        add: seasonsCreateCrud,
+        edit: seasonsEditCrud,
+    };
+
+    setCrud('seasons', crud);
 };

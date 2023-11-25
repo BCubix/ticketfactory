@@ -1,57 +1,19 @@
 import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'beginYear', sortName: 'filters[beginYear]' },
-    { name: 'name', sortName: 'filters[name]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'lang', sortName: 'filters[lang]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('name', data.name);
-    formData.append('beginYear', data.beginYear);
-    formData.append('slug', changeSlug(data.slug));
-    formData.append('lang', data.lang);
-    formData.append('languageGroup', data.languageGroup);
-
-    getSeoFormData(formData, data);
-
-    return formData;
-};
 
 const seasonsApi = {
     getSeasons: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.seasons?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -104,9 +66,9 @@ const seasonsApi = {
         }
     },
 
-    createSeason: async (data) => {
+    createSeason: async (values) => {
         try {
-            const result = await axios.post('/seasons', getFormData(data));
+            const result = await axios.post('/seasons', constructFormData({ values, dataFields: Crud?.seasons?.add?.api?.dataFields }));
 
             return { result: true, season: result.data };
         } catch (error) {
@@ -114,9 +76,9 @@ const seasonsApi = {
         }
     },
 
-    editSeason: async (id, data) => {
+    editSeason: async (id, values) => {
         try {
-            const result = await axios.post(`/seasons/${id}`, getFormData(data));
+            const result = await axios.post(`/seasons/${id}`, constructFormData({ values, dataFields: Crud?.seasons?.edit?.api?.dataFields }));
 
             return { result: true, season: result.data };
         } catch (error) {
