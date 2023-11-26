@@ -9,15 +9,120 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
 
 import { categoriesSelector, getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
+import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-export const CategoriesList = () => {
+export const categoriesListCrud = {
+    title: 'Catégories',
+    listTitle: 'Liste des catégories',
+    tableContextualMenu: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '50%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+    ],
+    loadDataAction: () => getCategoriesAction(),
+    changeFiltersActions: (props, page) => changeCategoriesFilters(props, page),
+    dataSelector: categoriesSelector,
+    dataList: (selector) => selector.categories?.children,
+    duplicate: (props) => Api.categoriesApi.duplicateCategory(props),
+    delete: (props) => Api.categoriesApi.deleteCategory(props),
+    links: {
+        new: () => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}`,
+    },
+    messages: {
+        duplicateValidation: 'La catégorie a bien été dupliquée',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette catégories ?',
+    },
+    wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS.wrapperComponent,
+    components: [
+        {
+            component: ({ listCrud, category, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => (
+                <Component.ListTable
+                    contextualMenu
+                    table={listCrud?.tableList}
+                    list={category?.children}
+                    onEdit={(id) => {
+                        navigate(`${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                    }}
+                    onDelete={(id) => setDeleteDialog(id)}
+                    onClick={(elemId) => {
+                        navigate(`${Constant.CATEGORIES_BASE_PATH}/${elemId}`);
+                    }}
+                    onDuplicate={(id) => {
+                        handleDuplicate(id);
+                    }}
+                    onTranslate={(id, languageId) => {
+                        navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}${path ? `?parentId=${path.at(-1)?.id}` : ''}`);
+                    }}
+                    onDragEnd={handleDragEnd}
+                />
+            ),
+        },
+    ],
+    headerComponents: [
+        {
+            component: ({ listCrud, category, path, navigate }) => (
+                <Box display="flex" alignItems="center" pt={5}>
+                    <Component.CmtBreadCrumb list={path} />
+                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(category.id))}>
+                        <Component.EditCategoryLink component="span" variant="body1">
+                            Modifier
+                        </Component.EditCategoryLink>
+                    </Box>
+                </Box>
+            ),
+        },
+    ],
+    deleteComponent: ({ deleteDialog, setDeleteDialog, setDeleteEvent, deleteEvents, handleDelete }) => (
+        <Component.DeleteDialog
+            open={deleteDialog ? true : false}
+            onCancel={() => {
+                setDeleteDialog(null);
+                setDeleteEvent(false);
+            }}
+            deleteText={'Valider'}
+            onDelete={() => handleDelete(deleteDialog, deleteEvents)}
+        >
+            <Box textAlign="center" py={3}>
+                <Typography component="p">
+                    Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie ou souhaitez-vous les rattacher à la catégorie parente ?
+                </Typography>
+
+                <Box className="flex row-center" mt={5}>
+                    <RadioGroup
+                        defaultValue={false}
+                        name="delete-event-radio-choice"
+                        value={deleteEvents}
+                        onChange={(e) => {
+                            setDeleteEvent(e.target.value);
+                        }}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            width: '100%',
+                        }}
+                    >
+                        <FormControlLabel value={true} control={<Radio />} label={'Suprimer'} />
+                        <FormControlLabel value={false} control={<Radio />} label={'Rattacher à la catégorie parente'} />
+                    </RadioGroup>
+                </Box>
+            </Box>
+        </Component.DeleteDialog>
+    ),
+};
+
+export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) => {
     const { loading, categories, error } = useSelector(categoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -140,93 +245,86 @@ export const CategoriesList = () => {
 
     return (
         <>
-            <Component.CmtPageWrapper title="Catégories">
-                <Box display="flex" alignItems="center" pt={5}>
-                    <Component.CmtBreadCrumb list={path} />
-                    <Box pl={3} onClick={() => navigate(`${Constant.CATEGORIES_BASE_PATH}/${id || categories.id}${Constant.EDIT_PATH}`)}>
-                        <Component.EditCategoryLink component="span" variant="body1">
-                            Modifier
-                        </Component.EditCategoryLink>
-                    </Box>
-                </Box>
+            <Component.CmtPageWrapper title={listCrud?.title || ''}>
+                {listCrud?.headerComponents?.map((item, index) => {
+                    const { component: ItemComponent } = item;
 
-                <Component.CmtCard sx={{ width: '100%', mt: 2 }}>
+                    if (!ItemComponent) {
+                        return <></>;
+                    }
+
+                    return (
+                        <ItemComponent
+                            key={index}
+                            objectData={useSelector(categoriesSelector)}
+                            listCrud={listCrud}
+                            navigate={navigate}
+                            dispatch={dispatch}
+                            handleDuplicate={handleDuplicate}
+                            setDeleteDialog={setDeleteDialog}
+                            path={path}
+                            {...props}
+                        />
+                    );
+                })}
+
+                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
                             <Box display="flex" justifyContent="space-between" alignItems="center">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des catégories
+                                    {listCrud?.listTitle}
                                 </Typography>
-                                <Component.CreateButton
-                                    variant="contained"
-                                    onClick={() => navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}${path ? `?parentId=${path.at(-1)?.id}` : ''}`)}
-                                >
-                                    Nouveau
-                                </Component.CreateButton>
+                                {(listCrud?.new || listCrud?.links?.new) && (
+                                    <Component.CreateButton
+                                        variant="contained"
+                                        onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
+                                    >
+                                        Nouveau
+                                    </Component.CreateButton>
+                                )}
                             </Box>
                         }
                     />
                     <CardContent>
-                        <Component.ListTable
-                            contextualMenu
-                            table={TableColumn.CategoriesList}
-                            list={category?.children}
-                            onEdit={(id) => {
-                                navigate(`${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onDelete={(id) => setDeleteDialog(id)}
-                            onClick={(elemId) => {
-                                navigate(`${Constant.CATEGORIES_BASE_PATH}/${elemId}`);
-                            }}
-                            onDuplicate={(id) => {
-                                handleDuplicate(id);
-                            }}
-                            onTranslate={(id, languageId) => {
-                                navigate(
-                                    `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}${path ? `?parentId=${path.at(-1)?.id}` : ''}`
-                                );
-                            }}
-                            onDragEnd={handleDragEnd}
-                        />
+                        {listCrud?.components?.map((item, index) => {
+                            const { component: ItemComponent } = item;
+
+                            if (!ItemComponent) {
+                                return <></>;
+                            }
+
+                            return (
+                                <ItemComponent
+                                    key={index}
+                                    categories={categories}
+                                    category={category}
+                                    handleDragEnd={handleDragEnd}
+                                    listCrud={listCrud}
+                                    path={path}
+                                    objectData={useSelector(categoriesSelector)}
+                                    navigate={navigate}
+                                    dispatch={dispatch}
+                                    handleDuplicate={handleDuplicate}
+                                    setDeleteDialog={setDeleteDialog}
+                                    {...props}
+                                />
+                            );
+                        })}
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
+            {listCrud?.deleteComponent ? (
+                <listCrud.deleteComponent {...props} {...{ deleteDialog, setDeleteDialog, setDeleteEvent, deleteEvents, handleDelete }} />
+            ) : (
+                <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+                    <Box textAlign="center" py={3}>
+                        <Typography component="p">{listCrud?.messages?.confirmationDelete}</Typography>
 
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => {
-                    setDeleteDialog(null);
-                    setDeleteEvent(false);
-                }}
-                deleteText={'Valider'}
-                onDelete={() => handleDelete(deleteDialog, deleteEvents)}
-            >
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie ou souhaitez-vous les rattacher à la catégorie parente ?
-                    </Typography>
-
-                    <Box className="flex row-center" mt={5}>
-                        <RadioGroup
-                            defaultValue={false}
-                            name="delete-event-radio-choice"
-                            value={deleteEvents}
-                            onChange={(e) => {
-                                setDeleteEvent(e.target.value);
-                            }}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                                width: '100%',
-                            }}
-                        >
-                            <FormControlLabel value={true} control={<Radio />} label={'Suprimer'} />
-                            <FormControlLabel value={false} control={<Radio />} label={'Rattacher à la catégorie parente'} />
-                        </RadioGroup>
+                        <Typography component="p">Cette action est irréversible.</Typography>
                     </Box>
-                </Box>
-            </Component.DeleteDialog>
+                </Component.DeleteDialog>
+            )}
         </>
     );
 };

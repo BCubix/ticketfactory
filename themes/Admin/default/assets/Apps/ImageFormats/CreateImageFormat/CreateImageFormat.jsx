@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getImageFormatsAction } from '@Apps/ImageFormats/redux/imageFormats/imageFormatSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { Crud } from '@/AdminService/Crud';
+import { imageFormatsInitialSchema, imageFormatsValidationSchema, imageFormatsForm } from '../ImageFormatsForm/ImageFormatsForm';
+
+export const imageFormatsCreateCrud = {
+    form: {
+        title: "Creation d'un format d'image",
+        initialSchema: imageFormatsInitialSchema,
+        validationSchema: imageFormatsValidationSchema,
+    },
+    ...imageFormatsForm,
+};
 
 export const CreateImageFormat = () => {
     const dispatch = useDispatch();
@@ -19,7 +30,6 @@ export const CreateImageFormat = () => {
 
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
-
             return;
         }
 
@@ -27,12 +37,10 @@ export const CreateImageFormat = () => {
 
         if (result.result) {
             NotificationManager.success('Le format a bien été créé. Pensez à générer les miniatures ici-dessous !', 'Succès', Constant.REDIRECTION_TIME);
-
             dispatch(getImageFormatsAction());
-
             navigate(Constant.IMAGE_FORMATS_BASE_PATH);
         }
     };
 
-    return <Component.ImageFormatsForm handleSubmit={handleSubmit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.imageFormats?.add} />;
 };

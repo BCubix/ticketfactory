@@ -8,8 +8,7 @@ export const CmtPagination = ({ page, total, limit, setPage, setLimit, length = 
     return (
         <Box display={'flex'} justifyContent="space-between" alignItems="center" mt={5}>
             <Typography>
-                {(page - 1) * limit + 1} - {(page - 1) * limit + length} sur {total} (page {page} /{' '}
-                {nbPage})
+                {(page - 1) * limit + 1} - {(page - 1) * limit + length} sur {total} (page {page} / {nbPage})
             </Typography>
             <Pagination
                 count={nbPage}
@@ -22,13 +21,7 @@ export const CmtPagination = ({ page, total, limit, setPage, setLimit, length = 
             />
 
             <Box display="flex">
-                <Select
-                    variant="standard"
-                    size="small"
-                    value={limit}
-                    onChange={(e) => setLimit(e.target.value)}
-                    sx={{ marginInline: 2 }}
-                >
+                <Select variant="standard" size="small" value={limit} onChange={(e) => setLimit(e.target.value)} sx={{ marginInline: 2 }}>
                     <MenuItem value={20}>20</MenuItem>
                     <MenuItem value={50}>50</MenuItem>
                     <MenuItem value={100}>100</MenuItem>

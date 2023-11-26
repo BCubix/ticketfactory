@@ -4,7 +4,7 @@ import { NotificationManager } from 'react-notifications';
 import { Box } from '@mui/system';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 
-import { changePagesFilters, pagesSelector } from '@Apps/Pages/redux/pages/pagesSlice';
+import { changePagesFilters, getPagesAction, pagesSelector } from '@Apps/Pages/redux/pages/pagesSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -47,11 +47,12 @@ export const pagesListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getPagesAction(),
-    changeFiltersActions: (props) => changePagesFilters(props),
+    changeFiltersActions: (props, page) => changePagesFilters(props, page),
     dataSelector: pagesSelector,
     dataList: (selector) => selector.pages,
     duplicate: (props) => Api.pagesApi.duplicatePage(props),
     delete: (props) => Api.pagesApi.deletePage(props),
+    new: ({ setCreateDialog }) => setCreateDialog(true),
     links: {
         new: () => `${Constant.PAGES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
@@ -74,6 +75,7 @@ const CreateNewPageDialog = ({
     handleGetAvailable,
     contentTypes,
     availableCreateContent,
+    navigate,
 }) => {
     return (
         <Dialog open={createDialog} onClose={() => setCreateDialog(false)} fullWidth maxWidth="sm">
@@ -202,7 +204,7 @@ export const PagesList = () => {
 
     return (
         <Component.CmtCrudList
-            listCrud={Crud?.contents?.list}
+            listCrud={Crud?.pages?.list}
             createDialog={createDialog}
             setCreateDialog={setCreateDialog}
             formContentType={formContentType}

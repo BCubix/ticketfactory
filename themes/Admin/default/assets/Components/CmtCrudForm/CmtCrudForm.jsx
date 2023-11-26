@@ -16,7 +16,7 @@ export const DEFAULT_CRUD_FORM_COMPONENTS = {
     ],
 };
 
-const DisplayFormTabs = ({ tabs, ...props }) => {
+export const DisplayFormTabs = ({ tabs, ...props }) => {
     return (
         <Component.CmtTabs
             containerStyle={{ mt: 3 }}
@@ -29,18 +29,33 @@ const DisplayFormTabs = ({ tabs, ...props }) => {
     );
 };
 
+export const initYup = (list, props) => {
+    let result = {};
+
+    Object.entries(list)?.map(([key, value]) => {
+        if (typeof value === 'function') {
+            result[key] = value(props);
+        } else {
+            result[key] = value;
+        }
+    });
+
+    return result;
+};
+
 export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, handleSubmit, ...props }) => {
     const initValues = translateInitialValues || initialValues;
 
     return (
         <Formik
             initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { props })}
-            validationSchema={Yup.object().shape(formCrud.form.validationSchema)}
+            validationSchema={Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }))}
             translateInitialValues={translateInitialValues}
             onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
             }}
+            {...(formCrud?.form?.formProps || {})}
         >
             {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={formCrud?.form?.title}>

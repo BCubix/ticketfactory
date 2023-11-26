@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getImageFormatsAction } from '@Apps/ImageFormats/redux/imageFormats/imageFormatSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { Crud } from '@/AdminService/Crud';
+import { imageFormatsInitialSchema, imageFormatsValidationSchema, imageFormatsForm } from '../ImageFormatsForm/ImageFormatsForm';
+
+export const imageFormatsEditCrud = {
+    form: {
+        title: "Modification d'un format d'image",
+        initialSchema: imageFormatsInitialSchema,
+        validationSchema: imageFormatsValidationSchema,
+    },
+    ...imageFormatsForm,
+};
 
 export const EditImageFormat = () => {
     const dispatch = useDispatch();
@@ -63,5 +74,5 @@ export const EditImageFormat = () => {
         return <></>;
     }
 
-    return <Component.ImageFormatsForm handleSubmit={handleSubmit} initialValues={imageFormat} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={imageFormat} formCrud={Crud?.imageFormats?.edit} />;
 };

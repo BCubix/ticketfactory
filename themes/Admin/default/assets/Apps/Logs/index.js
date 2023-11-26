@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { LogsList, LogTags, LogUserName } from '@Apps/Logs/LogsList/LogsList';
+import { LogsList, LogTags, LogUserName, logsListCrud } from '@Apps/Logs/LogsList/LogsList';
 
 import { insertSubMenu } from '@/AdminService/Menu';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import logsApi from './services/api/logsApi';
 
@@ -31,5 +32,13 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(3, 'ADMINISTRER', 'Logs', Constant.LOGS_BASE_PATH, <HistoryIcon />);
+    insertSubMenu(6, 'ADMINISTRER', 'Logs', Constant.LOGS_BASE_PATH, <HistoryIcon />);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: logsListCrud,
+    };
+
+    setCrud('logs', crud);
 };

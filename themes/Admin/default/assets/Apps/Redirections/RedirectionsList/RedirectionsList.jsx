@@ -56,7 +56,7 @@ export const redirectionsListCrud = {
         { name: 'redirectTo', label: 'Redirigé vers', width: '25%', sortable: true },
     ],
     loadDataAction: () => getRedirectionsAction(),
-    changeFiltersActions: (props) => changeRedirectionsFilters(props),
+    changeFiltersActions: (props, page) => changeRedirectionsFilters(props, page),
     dataSelector: redirectionsSelector,
     dataList: (selector) => selector.redirections,
     delete: (props) => Api.redirectionsApi.deleteRedirection(props),

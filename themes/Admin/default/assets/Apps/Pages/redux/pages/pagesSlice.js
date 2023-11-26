@@ -79,6 +79,7 @@ export function changePagesFilters(filters, page = 1) {
 
         filters.page = page;
 
+        console.log(filters);
         dispatch(updatePagesFilters({ filters: filters }));
         dispatch(getPagesAction(filters));
     };

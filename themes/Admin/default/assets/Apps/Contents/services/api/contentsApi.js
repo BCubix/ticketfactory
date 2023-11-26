@@ -1,57 +1,13 @@
 import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
 import { Crud } from '@/AdminService/Crud';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 var controller = null;
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('title', data.title);
-    formData.append('slug', changeSlug(data.slug));
-    formData.append('page', data.page || '');
-    formData.append('lang', data.lang);
-    formData.append('languageGroup', data.languageGroup);
-
-    if (data.page) {
-        formData.append('page', data.page);
-    }
-
-    Object.entries(data.fields)?.map(([key, value]) => {
-        serializeData(value, `fields[${key}]`, formData);
-    });
-
-    getSeoFormData(formData, data);
-
-    return formData;
-};
-
-const serializeData = (element, name, formData) => {
-    if (null !== element && typeof element !== 'object') {
-        formData.append(name, element);
-
-        return;
-    }
-
-    Object.entries(element).map(([key, value]) => {
-        if (null !== value && typeof value === 'object') {
-            serializeData(value, `${name}[${key}]`, formData);
-        } else if (null !== value && Array.isArray(value)) {
-            value.forEach((el, index) => {
-                serializeData(el, `${name}[${key}][${index}]`, formData);
-            });
-        } else {
-            formData.append(`${name}[${key}]`, value !== null ? value : '');
-        }
-    });
-};
 
 const contentsApi = {
     getContents: async (filters) => {
@@ -96,22 +52,24 @@ const contentsApi = {
         }
     },
 
-    createContent: async (data) => {
+    createContent: async (values) => {
         try {
-            const result = await axios.post(`/contents/${data.contentType}/create`, getFormData(data));
+            const result = await axios.post(`/contents/${values.contentType}/create`, constructFormData({ values, dataFields: Crud?.contents?.add?.api?.dataFields }));
 
             return { result: true, content: result.data };
         } catch (error) {
+            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },
 
-    editContent: async (id, data) => {
+    editContent: async (id, values) => {
         try {
-            const result = await axios.post(`/contents/${id}/edit`, getFormData(data));
+            const result = await axios.post(`/contents/${id}/edit`, constructFormData({ values, dataFields: Crud?.contents?.edit?.api?.dataFields }));
 
             return { result: true, content: result.data };
         } catch (error) {
+            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

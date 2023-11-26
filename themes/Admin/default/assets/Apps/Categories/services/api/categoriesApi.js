@@ -1,24 +1,8 @@
 import axios from '@Services/api/config';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '../../../../services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('name', data.name);
-    formData.append('parent', data.parent);
-    formData.append('slug', changeSlug(data.slug));
-    formData.append('keyword', changeSlug(data.keyword));
-    formData.append('lang', data.lang);
-    formData.append('languageGroup', data.languageGroup);
-
-    getSeoFormData(formData, data);
-
-    return formData;
-};
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
 
 const categoriesApi = {
     getCategories: async (filters) => {
@@ -51,9 +35,9 @@ const categoriesApi = {
         }
     },
 
-    createCategory: async (data) => {
+    createCategory: async (values) => {
         try {
-            const result = await axios.post('/event-categories', getFormData(data));
+            const result = await axios.post('/event-categories', constructFormData({ values, dataFields: Crud?.categories?.add?.api?.dataFields }));
 
             return { result: true, category: result.data };
         } catch (error) {
@@ -61,9 +45,9 @@ const categoriesApi = {
         }
     },
 
-    editCategory: async (id, data) => {
+    editCategory: async (id, values) => {
         try {
-            const result = await axios.post(`/event-categories/${id}`, getFormData(data));
+            const result = await axios.post(`/event-categories/${id}`, constructFormData({ values, dataFields: Crud?.categories?.edit?.api?.dataFields }));
 
             return { result: true, category: result.data };
         } catch (error) {

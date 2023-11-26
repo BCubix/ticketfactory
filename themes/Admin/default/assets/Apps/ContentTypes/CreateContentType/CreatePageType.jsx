@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,22 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getPageTypesAction } from '@Apps/ContentTypes/redux/pageTypes/pageTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import ContentTypesModules from '../ContentTypesForm/ContentTypeModules';
+import { pageTypesInitialSchema, pageTypesValidationSchema, pageTypesForm } from '../ContentTypesForm/PageTypesForm';
+
+export const pageTypesCreateCrud = {
+    form: {
+        title: "Création d'un type de page",
+        initialSchema: pageTypesInitialSchema,
+        validationSchema: pageTypesValidationSchema,
+        formProps: {
+            validateOnChange: false,
+            validateOnBlur: true,
+        },
+    },
+    ...pageTypesForm,
+};
 
 export const CreatePageType = () => {
     const dispatch = useDispatch();
@@ -42,9 +58,13 @@ export const CreatePageType = () => {
         });
     }, []);
 
+    const getContentTypesModules = useMemo(() => {
+        return ContentTypesModules();
+    }, []);
+
     if (!pagesList) {
         return <></>;
     }
 
-    return <Component.PageTypesForm submitForm={handleSubmit} pagesList={pagesList} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} pagesList={pagesList} getContentTypesModules={getContentTypesModules} formCrud={Crud?.pageTypes?.add} />;
 };

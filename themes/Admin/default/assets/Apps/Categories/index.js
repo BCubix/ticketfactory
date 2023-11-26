@@ -1,12 +1,11 @@
 import React from 'react';
 
-import { CategoriesForm } from '@Apps/Categories/CategoriesForm/CategoriesForm';
 import { ParentCategoryPartForm } from '@Apps/Categories/CategoriesForm/ParentCategoryPartForm';
-import { CategoriesList } from '@Apps/Categories/CategoriesList/CategoriesList';
+import { CategoriesList, categoriesListCrud } from '@Apps/Categories/CategoriesList/CategoriesList';
 import { EditCategoryLink } from '@Apps/Categories/CategoriesList/sc.EditCategoryLink';
 import { CategoriesMenu } from '@Apps/Categories/CategoriesMenu/CategoriesMenu';
-import { CreateCategory } from '@Apps/Categories/CreateCategory/CreateCategory';
-import { EditCategory } from '@Apps/Categories/EditCategory/EditCategory';
+import { CreateCategory, categoriesCreateCrud } from '@Apps/Categories/CreateCategory/CreateCategory';
+import { EditCategory, categoriesEditCrud } from '@Apps/Categories/EditCategory/EditCategory';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -14,6 +13,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import categoriesReducer from './redux/categories/categoriesSlice';
 import categoriesApi from './services/api/categoriesApi';
@@ -25,7 +25,6 @@ export const initConstant = () => {
 };
 
 export const initComponent = () => {
-    setComponent('CategoriesForm', CategoriesForm);
     setComponent('ParentCategoryPartForm', ParentCategoryPartForm);
     setComponent('CategoriesList', CategoriesList);
     setComponent('EditCategoryLink', EditCategoryLink);
@@ -46,9 +45,19 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PROGRAMMER', 'Catégories', Constant.CATEGORIES_BASE_PATH, <CategoryIcon />, { relatedLinks: [Constant.TAGS_BASE_PATH] });
+    insertSubMenu(1, 'PROGRAMMER', 'Catégories', Constant.CATEGORIES_BASE_PATH, <CategoryIcon />, { relatedLinks: [Constant.TAGS_BASE_PATH] });
 };
 
 export const initReducer = () => {
     setReducer('categories', categoriesReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: categoriesListCrud,
+        add: categoriesCreateCrud,
+        edit: categoriesEditCrud,
+    };
+
+    setCrud('categories', crud);
 };

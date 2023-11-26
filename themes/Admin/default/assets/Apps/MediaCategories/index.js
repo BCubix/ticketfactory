@@ -2,13 +2,14 @@ import { CreateMediaCategory } from '@Apps/MediaCategories/CreateMediaCategory/C
 import { EditMediaCategory } from '@Apps/MediaCategories/EditMediaCategory/EditMediaCategory';
 import { MediaCategoriesForm } from '@Apps/MediaCategories/MediaCategoriesForm/MediaCategoriesForm';
 import { ParentMediaCategoryPartForm } from '@Apps/MediaCategories/MediaCategoriesForm/ParentMediaCategoryPartForm';
-import { MediaCategoriesList } from '@Apps/MediaCategories/MediaCategoriesList/MediaCategoriesList';
+import { MediaCategoriesList, mediaCategoriesListCrud } from '@Apps/MediaCategories/MediaCategoriesList/MediaCategoriesList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import mediaCategoriesReducer from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 import mediaCategoriesApi from './services/api/mediaCategoriesApi';
@@ -38,4 +39,12 @@ export const initAuthenticatedRoutes = () => {
 
 export const initReducer = () => {
     setReducer('mediaCategories', mediaCategoriesReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: mediaCategoriesListCrud,
+    };
+
+    setCrud('mediaCategories', crud);
 };

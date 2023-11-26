@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getContactRequestsAction } from '@Apps/ContactRequests/redux/contactRequests/contactRequestsSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { Crud } from '@/AdminService/Crud';
+import { contactRequestsInitialSchema, contactRequestsValidationSchema, contactRequestsForm } from '@Apps/ContactRequests/ContactRequestsForm/ContactRequestsForm.jsx';
+
+export const contactRequestsEditCrud = {
+    form: {
+        title: "Modification d'une demande de contact",
+        initialSchema: contactRequestsInitialSchema,
+        validationSchema: contactRequestsValidationSchema,
+    },
+    ...contactRequestsForm,
+};
 
 export const EditContactRequest = () => {
     const dispatch = useDispatch();
@@ -71,5 +82,5 @@ export const EditContactRequest = () => {
         return <></>;
     }
 
-    return <Component.ContactRequestsForm handleSubmit={handleSubmit} initialValues={contactRequest} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={contactRequest} formCrud={Crud?.contactRequests?.edit} />;
 };

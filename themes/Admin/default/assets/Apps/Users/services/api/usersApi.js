@@ -1,39 +1,17 @@
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'email', sortName: 'filters[email]' },
-    { name: 'firstName', sortName: 'filters[firstName]' },
-    { name: 'lastName', sortName: 'filters[lastName]' },
-    { name: 'role', sortName: 'filters[role]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const usersApi = {
     getUsers: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.users?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -68,40 +46,20 @@ const usersApi = {
         }
     },
 
-    createUser: async (data) => {
+    createUser: async (values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('email', data.email);
-            formData.append('firstName', data.firstName);
-            formData.append('lastName', data.lastName);
-            formData.append('plainPassword', data.password);
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('roles', data.roles);
-
-            const result = await axios.post('/users', formData);
+            const result = await axios.post('/users', constructFormData({ values, dataFields: Crud?.users?.add?.api?.dataFields }));
 
             return { result: true, user: result.data };
         } catch (error) {
+            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },
 
-    editUser: async (id, data) => {
+    editUser: async (id, values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('email', data.email);
-            formData.append('firstName', data.firstName);
-            formData.append('lastName', data.lastName);
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('roles', data.roles);
-
-            if (data.password) {
-                formData.append('plainPassword', data.password);
-            }
-
-            const result = await axios.post(`/users/${id}`, formData);
+            const result = await axios.post(`/users/${id}`, constructFormData({ values, dataFields: Crud?.users?.edit?.api?.dataFields }));
 
             return { result: true, user: result.data };
         } catch (error) {

@@ -1,6 +1,6 @@
 import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
-import { CreatePageBlock } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
-import { EditPageBlock } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
+import { CreatePageBlock, pageBlocksCreateCrud } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
+import { EditPageBlock, pageBlocksEditCrud } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
 import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
 import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
 import { PageBlocksList, pageBlocksListCrud } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
@@ -47,8 +47,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: pageBlocksListCrud,
-        add: {},
-        edit: {},
+        add: pageBlocksCreateCrud,
+        edit: pageBlocksEditCrud,
     };
 
     setCrud('pageBlocks', crud);

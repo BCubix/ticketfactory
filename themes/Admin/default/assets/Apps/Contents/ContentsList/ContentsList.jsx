@@ -58,7 +58,7 @@ export const contentsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getContentsAction(),
-    changeFiltersActions: (props) => changeContentsFilters(props),
+    changeFiltersActions: (props, page) => changeContentsFilters(props, page),
     dataSelector: contentsSelector,
     dataList: (selector) => selector.contents,
     duplicate: (props) => Api.contentsApi.duplicateContent(props),

@@ -38,7 +38,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PROGRAMMER', 'Salles', Constant.ROOMS_BASE_PATH, <BusinessIcon />);
+    insertSubMenu(3, 'PROGRAMMER', 'Salles', Constant.ROOMS_BASE_PATH, <BusinessIcon />);
 };
 
 export const initReducer = () => {

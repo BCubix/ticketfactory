@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { getRedirectionsAction } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
+import { redirectionsInitialSchema, redirectionsValidationSchema, redirectionsForm } from '../RedirectionsForm/RedirectionsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const redirectionsEditCrud = {
+    form: {
+        title: "Modification d'une redirection",
+        initialSchema: redirectionsInitialSchema,
+        validationSchema: redirectionsValidationSchema,
+    },
+    ...redirectionsForm,
+};
 
 export const EditRedirection = () => {
     const dispatch = useDispatch();
@@ -71,5 +82,5 @@ export const EditRedirection = () => {
         return <></>;
     }
 
-    return <Component.RedirectionsForm handleSubmit={handleSubmit} initialValues={redirection} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={redirection} formCrud={Crud?.redirections?.edit} />;
 };

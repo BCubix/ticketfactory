@@ -40,7 +40,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'VENDRE', 'Réductions', Constant.VOUCHERS_BASE_PATH, <MoneyOffIcon />);
+    insertSubMenu(4, 'VENDRE', 'Réductions', Constant.VOUCHERS_BASE_PATH, <MoneyOffIcon />);
 };
 
 export const initReducer = () => {

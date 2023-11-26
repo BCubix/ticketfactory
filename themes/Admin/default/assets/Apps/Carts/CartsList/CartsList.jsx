@@ -66,7 +66,7 @@ export const cartsListCrud = {
         },
     ],
     loadDataAction: () => getCartsAction(),
-    changeFiltersActions: (props) => changeCartsFilters(props),
+    changeFiltersActions: (props, page) => changeCartsFilters(props, page),
     dataSelector: cartsSelector,
     dataList: (selector) => selector.carts,
     links: {

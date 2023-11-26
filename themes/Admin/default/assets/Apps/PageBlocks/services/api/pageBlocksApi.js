@@ -4,6 +4,7 @@ import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { Crud } from '@/AdminService/Crud';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 var controller = null;
 
@@ -61,26 +62,9 @@ const pageBlocksApi = {
         }
     },
 
-    createPageBlock: async (data) => {
+    createPageBlock: async (values) => {
         try {
-            const formData = new FormData();
-
-            formData.append('name', data?.name);
-            formData.append('saveAsModel', 1);
-            formData.append('lang', data.lang);
-            formData.append('blockType', data?.blockType || 0);
-            formData.append('languageGroup', data.languageGroup);
-
-            data.columns.forEach((column, index) => {
-                formData.append(`columns[${index}][content]`, column.content);
-                formData.append(`columns[${index}][xs]`, column.xs);
-                formData.append(`columns[${index}][s]`, column.s);
-                formData.append(`columns[${index}][m]`, column.m);
-                formData.append(`columns[${index}][l]`, column.l);
-                formData.append(`columns[${index}][xl]`, column.xl);
-            });
-
-            const result = await axios.post('/page-blocks', formData);
+            const result = await axios.post('/page-blocks', constructFormData({ values, dataFields: Crud?.pageBlocks?.add?.api?.dataFields }));
 
             return { result: true, pageBlock: result.data };
         } catch (error) {
@@ -88,26 +72,9 @@ const pageBlocksApi = {
         }
     },
 
-    editPageBlock: async (id, data) => {
+    editPageBlock: async (id, values) => {
         try {
-            const formData = new FormData();
-
-            formData.append('name', data?.name);
-            formData.append('saveAsModel', 1);
-            formData.append('lang', data.lang);
-            formData.append('blockType', data?.blockType || 0);
-            formData.append('languageGroup', data.languageGroup);
-
-            data.columns.forEach((column, index) => {
-                formData.append(`columns[${index}][content]`, column.content);
-                formData.append(`columns[${index}][xs]`, column.xs);
-                formData.append(`columns[${index}][s]`, column.s);
-                formData.append(`columns[${index}][m]`, column.m);
-                formData.append(`columns[${index}][l]`, column.l);
-                formData.append(`columns[${index}][xl]`, column.xl);
-            });
-
-            const result = await axios.post(`/page-blocks/${id}`, formData);
+            const result = await axios.post(`/page-blocks/${id}`, constructFormData({ values, dataFields: Crud?.pageBlocks?.edit?.api?.dataFields }));
 
             return { result: true, pageBlock: result.data };
         } catch (error) {

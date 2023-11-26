@@ -1,6 +1,7 @@
 import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
 
@@ -56,7 +57,7 @@ const mediasApi = {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.medias?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

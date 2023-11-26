@@ -33,7 +33,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Thèmes', Constant.THEMES_BASE_PATH, <TvIcon />);
+    insertSubMenu(6, 'PERSONNALISER', 'Thèmes', Constant.THEMES_BASE_PATH, <TvIcon />);
 };
 
 export const initReducer = () => {

@@ -43,7 +43,7 @@ export const customersListCrud = {
         { name: 'email', label: 'Adresse Email', width: '20%', sortable: true },
     ],
     loadDataAction: () => getCustomersAction(),
-    changeFiltersActions: (props) => changeCustomersFilters(props),
+    changeFiltersActions: (props, page) => changeCustomersFilters(props, page),
     dataSelector: customersSelector,
     dataList: (selector) => selector.customers,
     delete: (props) => Api.customersApi.deleteCustomer(props),

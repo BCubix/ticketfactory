@@ -42,7 +42,7 @@ export const roomsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getRoomsAction(),
-    changeFiltersActions: (props) => changeRoomsFilters(props),
+    changeFiltersActions: (props, page) => changeRoomsFilters(props, page),
     dataSelector: roomsSelector,
     dataList: (selector) => selector.rooms,
     duplicate: (props) => Api.roomsApi.duplicateRoom(props),

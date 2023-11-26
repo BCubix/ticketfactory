@@ -1,18 +1,8 @@
 import axios from '@Services/api/config';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
-
-const serializeMenuData = (element, name, formData, datas) => {
-    formData.append(`${name}[name]`, element.name);
-    formData.append(`${name}[menuType]`, element.menuType);
-    formData.append(`${name}[value]`, element.value);
-    formData.append(`${name}[lang]`, element.lang || datas.lang || '');
-    formData.append(`${name}[languageGroup]`, element.languageGroup || '');
-
-    element?.children?.forEach((el, index) => {
-        serializeMenuData(el, `${name}[children][${index}]`, formData, datas);
-    });
-};
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
 
 const menusApi = {
     getMenus: async () => {
@@ -27,16 +17,9 @@ const menusApi = {
         }
     },
 
-    createMenu: async (data) => {
+    createMenu: async (values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('name', data.name);
-            formData.append('menuType', 'none');
-            formData.append('lang', data.lang || '');
-            formData.append('languageGroup', data.languageGroup || '');
-
-            const result = await axios.post('/menus', formData);
+            const result = await axios.post('/menus', constructFormData({ values, dataFields: Crud?.menus?.add?.api?.dataFields }));
 
             return { result: true, menu: result.data };
         } catch (error) {
@@ -44,24 +27,13 @@ const menusApi = {
         }
     },
 
-    updateMenu: async (id, data) => {
+    updateMenu: async (id, values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('name', data.name);
-            formData.append('menuType', data.menuType || 'none');
-            formData.append('value', data.value || '');
-            formData.append('lang', data.lang || '');
-            formData.append('languageGroup', data.languageGroup || '');
-
-            data?.children?.forEach((el, index) => {
-                serializeMenuData(el, `children[${index}]`, formData, data);
-            });
-
-            const result = await axios.post(`/menus/${id}`, formData);
+            const result = await axios.post(`/menus/${id}`, constructFormData({ values, dataFields: Crud?.menus?.edit?.api?.dataFields }));
 
             return { result: true, menu: result.data };
         } catch (error) {
+            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

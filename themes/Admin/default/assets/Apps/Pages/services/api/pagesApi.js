@@ -1,53 +1,20 @@
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-import { changeSlug } from '@Services/utils/changeSlug';
 
 import { Constant } from '@/AdminService/Constant';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { Crud } from '@/AdminService/Crud';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 var controller = null;
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('title', data.title);
-    formData.append('parent', data.parent);
-    formData.append('subtitle', data.subtitle);
-    formData.append('slug', changeSlug(data.slug));
-    formData.append('lang', data.lang);
-    formData.append('languageGroup', data.languageGroup);
-
-    data.pageBlocks.forEach((block, index) => {
-        formData.append(`pageBlocks[${index}][name]`, block.name);
-        formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
-        formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
-        formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
-        formData.append(`pageBlocks[${index}][blockType]`, block.blockType || 0);
-
-        block.columns.forEach((column, columnIndex) => {
-            formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, block?.blockType === 1 ? column?.content?.id || '' : column.content || '');
-            formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
-            formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
-            formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);
-            formData.append(`pageBlocks[${index}][columns][${columnIndex}][l]`, column.l);
-            formData.append(`pageBlocks[${index}][columns][${columnIndex}][xl]`, column.xl);
-        });
-    });
-
-    getSeoFormData(formData, data);
-
-    return formData;
-};
 
 const pagesApi = {
     getPages: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, Crud?.redirections?.list?.filtersData, params);
+            createFilterParams(filters, Crud?.pages?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -78,7 +45,7 @@ const pagesApi = {
         try {
             let params = { 'filters[page]': 0 };
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.redirections?.list?.filtersData, params);
             if (filters?.lang) {
                 params['filters[lang]'] = filters?.lang;
             }
@@ -101,19 +68,20 @@ const pagesApi = {
         }
     },
 
-    createPage: async (data) => {
+    createPage: async (values) => {
         try {
-            const result = await axios.post('/pages', getFormData(data));
+            const result = await axios.post('/pages', constructFormData({ values, dataFields: Crud?.pages?.add?.api?.dataFields }));
 
             return { result: true, page: result.data };
         } catch (error) {
+            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },
 
-    editPage: async (id, data) => {
+    editPage: async (id, values) => {
         try {
-            const result = await axios.post(`/pages/${id}`, getFormData(data));
+            const result = await axios.post(`/pages/${id}`, constructFormData({ values, dataFields: Crud?.pages?.edit?.api?.dataFields }));
 
             return { result: true, page: result.data };
         } catch (error) {

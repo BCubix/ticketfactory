@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
-import { Box, Button } from '@mui/material';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -13,6 +9,67 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getMenusAction } from '@Apps/Menus/redux/menus/menusSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
+import * as Yup from 'yup';
+import { Crud } from '@/AdminService/Crud';
+
+export const menusCreateInitialSchema = {
+    name: (initValues) => initValues?.name || '',
+    lang: (initValues) => initValues?.lang?.id || '',
+    menuType: 'none',
+    languageGroup: (initValues) => initValues?.languageGroup || '',
+};
+
+export const menusCreateValidationSchema = {
+    name: Yup.string().required('Veuillez renseigner le nom du menu.'),
+};
+
+export const menusCreateForm = {
+    form: {
+        title: "Création d'un menu",
+        initialSchema: menusCreateInitialSchema,
+        validationSchema: menusCreateValidationSchema,
+    },
+    submitLine: {
+        activeInput: false,
+    },
+    api: {
+        dataFields: {
+            name: { type: 'string' },
+            menuType: { type: 'string' },
+            lang: { type: 'string' },
+            languageGroup: { type: 'string' },
+        },
+    },
+    fields: [
+        {
+            type: 'tabs',
+            keyId: 'season',
+            label: 'Saison',
+            fields: [
+                {
+                    type: 'block',
+                    title: 'Informations générales',
+                    keyId: 'block-general-info',
+                    fields: [
+                        {
+                            keyId: 'input-name',
+                            style: { xs: 12 },
+                            input: {
+                                name: 'name',
+                                label: 'Nom du menu',
+                                inputType: 'textField',
+                                required: true,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    ...DEFAULT_CRUD_FORM_COMPONENTS,
+};
 
 export const CreateMenu = () => {
     const dispatch = useDispatch();
@@ -59,37 +116,5 @@ export const CreateMenu = () => {
         return <></>;
     }
 
-    return (
-        <Formik
-            initialValues={{ name: initialValues?.name || '', lang: languageId || '', languageGroup: initialValues?.languageGroup || '' }}
-            validationSchema={menusSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-                await createMenu(values);
-
-                setSubmitting(false);
-            }}
-        >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title="Création d'un menu">
-                    <Component.CmtFormBlock title="Informations générales">
-                        <Component.CmtTextField
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            label="Nom du menu"
-                            name="name"
-                            error={touched.name && errors.name}
-                            required
-                        />
-                    </Component.CmtFormBlock>
-
-                    <Box display="flex" justifyContent="flex-end">
-                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
-                            Créer
-                        </Button>
-                    </Box>
-                </Component.CmtPageWrapper>
-            )}
-        </Formik>
-    );
+    return <Component.CmtCrudForm handleSubmit={createMenu} translateInitialValues={initialValues} formCrud={Crud?.menus?.add} />;
 };

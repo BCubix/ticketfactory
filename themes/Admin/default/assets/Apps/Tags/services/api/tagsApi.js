@@ -1,7 +1,6 @@
 import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';

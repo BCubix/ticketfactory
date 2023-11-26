@@ -12,7 +12,7 @@ import { MediaParentFormatPartForm } from '@Apps/Medias/MediasForm/MediaParentFo
 import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
 import { MediasSorters } from '@Apps/Medias/MediasList/MediasFilters/MediasSorters';
 import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
-import { MediasList } from '@Apps/Medias/MediasList/MediasList';
+import { MediasList, mediasListCrud } from '@Apps/Medias/MediasList/MediasList';
 import { MediasMenu } from '@Apps/Medias/MediasMenu/MediasMenu';
 
 import { setReducer } from '@/AdminService/Reducer';
@@ -21,6 +21,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import mediasReducer from './redux/medias/mediasSlice';
 import mediasApi from './services/api/mediasApi';
@@ -57,11 +58,19 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Bibliothèque médias', Constant.MEDIAS_BASE_PATH, <PermMediaIcon />, {
+    insertSubMenu(4, 'PERSONNALISER', 'Bibliothèque médias', Constant.MEDIAS_BASE_PATH, <PermMediaIcon />, {
         relatedLinks: [Constant.MEDIA_CATEGORIES_BASE_PATH, Constant.IMAGE_FORMATS_BASE_PATH],
     });
 };
 
 export const initReducer = () => {
     setReducer('medias', mediasReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: mediasListCrud,
+    };
+
+    setCrud('medias', crud);
 };

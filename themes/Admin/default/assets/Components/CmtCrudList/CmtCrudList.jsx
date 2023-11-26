@@ -69,18 +69,24 @@ export const DEFAULT_CRUD_LIST_COMPONENTS = {
             ),
         },
         {
-            component: ({ objectData, listCrud, dispatch }) => (
-                <Component.CmtPagination
-                    page={objectData?.filters.page}
-                    total={objectData?.total}
-                    limit={objectData?.filters.limit}
-                    setPage={(newValue) => dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters }, newValue))}
-                    setLimit={(newValue) => {
-                        dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters, limit: newValue }));
-                    }}
-                    length={listCrud?.dataList(objectData)?.length}
-                />
-            ),
+            component: ({ objectData, listCrud, dispatch }) => {
+                if (!listCrud?.pagination) {
+                    return <></>;
+                }
+
+                return (
+                    <Component.CmtPagination
+                        page={objectData?.filters?.page}
+                        total={objectData?.total}
+                        limit={objectData?.filters.limit}
+                        setPage={(newValue) => dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters }, newValue))}
+                        setLimit={(newValue) => {
+                            dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters, limit: newValue }));
+                        }}
+                        length={listCrud?.dataList(objectData)?.length}
+                    />
+                );
+            },
         },
     ],
 };
@@ -119,16 +125,39 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     return (
         <>
             <Component.CmtPageWrapper title={listCrud?.title || ''}>
+                {listCrud?.headerComponents?.map((item, index) => {
+                    const { component: ItemComponent } = item;
+
+                    if (!ItemComponent) {
+                        return <></>;
+                    }
+
+                    return (
+                        <ItemComponent
+                            key={index}
+                            objectData={objectData}
+                            listCrud={listCrud}
+                            navigate={navigate}
+                            dispatch={dispatch}
+                            handleDuplicate={handleDuplicate}
+                            setDeleteDialog={setDeleteDialog}
+                            {...props}
+                        />
+                    );
+                })}
+
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
                             <Box display="flex" justifyContent="space-between" alignItems="center">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     {listCrud?.listTitle}{' '}
-                                    {listCrud?.dataList(objectData) &&
-                                        `(${(objectData?.filters.page - 1) * objectData?.filters.limit + 1} - ${
-                                            (objectData?.filters.page - 1) * objectData?.filters.limit + listCrud?.dataList(objectData)?.length
+                                    {listCrud?.pagination &&
+                                        listCrud?.dataList(objectData) &&
+                                        `(${((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + 1} - ${
+                                            ((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + listCrud?.dataList(objectData)?.length
                                         } sur ${objectData?.total})`}
+                                    {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
                                 </Typography>
                                 {(listCrud?.new || listCrud?.links?.new) && (
                                     <Component.CreateButton
@@ -151,6 +180,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
 
                             return (
                                 <ItemComponent
+                                    key={index}
                                     objectData={objectData}
                                     listCrud={listCrud}
                                     navigate={navigate}
@@ -163,14 +193,39 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                         })}
                     </CardContent>
                 </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">{listCrud?.messages?.confirmationDelete}</Typography>
 
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
+                {listCrud?.bottomComponents?.map((item, index) => {
+                    const { component: ItemComponent } = item;
+
+                    if (!ItemComponent) {
+                        return <></>;
+                    }
+
+                    return (
+                        <ItemComponent
+                            key={index}
+                            objectData={objectData}
+                            listCrud={listCrud}
+                            navigate={navigate}
+                            dispatch={dispatch}
+                            handleDuplicate={handleDuplicate}
+                            setDeleteDialog={setDeleteDialog}
+                            {...props}
+                        />
+                    );
+                })}
+            </Component.CmtPageWrapper>
+            {listCrud?.deleteComponent ? (
+                <listCrud.deleteComponent {...props} />
+            ) : (
+                <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+                    <Box textAlign="center" py={3}>
+                        <Typography component="p">{listCrud?.messages?.confirmationDelete}</Typography>
+
+                        <Typography component="p">Cette action est irréversible.</Typography>
+                    </Box>
+                </Component.DeleteDialog>
+            )}
         </>
     );
 };

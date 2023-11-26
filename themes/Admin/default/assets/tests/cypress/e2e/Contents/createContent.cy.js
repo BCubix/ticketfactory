@@ -6,7 +6,7 @@ describe('Create Content Spec', () => {
         cy.login(USER_EMAIL, USER_PASSWORD);
 
         cy.intercept('POST', ADMIN_API_BASE_PATH + CONTENTS_API_PATH + '/1/create').as('createContent');
-        cy.visit(Constant.CONTENT_BASE_PATH);
+        cy.visit(Constant.CONTENTS_BASE_PATH);
 
         cy.get('#createContentButton').click();
         cy.get('#selectContentType').click();

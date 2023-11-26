@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CreateMenu } from '@Apps/Menus/CreateMenu/CreateMenu';
+import { CreateMenu, menusCreateForm } from '@Apps/Menus/CreateMenu/CreateMenu';
 import { DisplayMenuElement, RenderElement } from '@Apps/Menus/MenusList/MenuStructure/DisplayMenuElement';
 import { MenuStructure } from '@Apps/Menus/MenusList/MenuStructure/MenuStructure';
 import { DraggableBox } from '@Apps/Menus/MenusList/MenuStructure/sc.DraggableBox';
@@ -20,8 +20,10 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import menusReducer from './redux/menus/menusSlice';
 import menusListDataReducer from './redux/menus/menusListDataSlice';
 import menusApi from './services/api/menusApi';
+import { setCrud } from '@/AdminService/Crud';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import { menusEditCrud } from './MenusList/MenusList';
 
 export const initConstant = () => {
     setConstant('MENUS_BASE_PATH', '/admin/menus');
@@ -50,10 +52,19 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Menus', Constant.MENUS_BASE_PATH, <MenuIcon />);
+    insertSubMenu(1, 'PERSONNALISER', 'Menus', Constant.MENUS_BASE_PATH, <MenuIcon />);
 };
 
 export const initReducer = () => {
     setReducer('menus', menusReducer);
     setReducer('menusListData', menusListDataReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        add: menusCreateForm,
+        edit: menusEditCrud,
+    };
+
+    setCrud('menus', crud);
 };

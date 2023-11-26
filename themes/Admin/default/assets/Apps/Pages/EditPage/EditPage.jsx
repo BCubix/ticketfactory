@@ -8,7 +8,18 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
+import { pagesInitialSchema, pagesValidationSchema, pagesForm } from '../PagesForm/PagesForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+
+export const pagesEditCrud = {
+    form: {
+        title: "Modification d'une page",
+        initialSchema: pagesInitialSchema,
+        validationSchema: pagesValidationSchema,
+    },
+    ...pagesForm,
+};
 
 export const EditPage = () => {
     const dispatch = useDispatch();
@@ -87,5 +98,5 @@ export const EditPage = () => {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} contentType={page?.contentType} pagesList={pagesList} />;
+    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} contentType={page?.contentType} pagesList={pagesList} formCrud={Crud?.pages?.edit} />;
 };

@@ -81,7 +81,7 @@ export const eventsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '10%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getEventsAction(),
-    changeFiltersActions: (props) => changeEventsFilters(props),
+    changeFiltersActions: (props, page) => changeEventsFilters(props, page),
     dataSelector: eventsSelector,
     dataList: (selector) => selector.events,
     duplicate: (props) => Api.eventsApi.duplicateEvent(props),

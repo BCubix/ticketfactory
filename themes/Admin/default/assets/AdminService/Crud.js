@@ -29,3 +29,22 @@ export function setCrud(name, crud) {
 
     CrudObj[name] = crud;
 }
+
+export function addNewCrud(name, crud) {
+    checkString(name);
+    checkComponent(crud);
+
+    CrudObj[name] = crud;
+}
+
+export function addCrudAction(name, action, crud) {
+    checkString(name);
+    checkComponent(crud);
+
+    if (!CrudObj[name]) {
+        CrudObj[name] = { [action]: crud };
+        return;
+    }
+
+    CrudObj[name][action] = crud;
+}

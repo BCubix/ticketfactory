@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Box, CardContent, Typography } from '@mui/material';
+import React from 'react';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -39,15 +35,15 @@ export const pageBlocksListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getPageBlocksAction(),
-    changeFiltersActions: (props) => changePageBlocksFilters(props),
+    changeFiltersActions: (props, page) => changePageBlocksFilters(props, page),
     dataSelector: pageBlocksSelector,
     dataList: (selector) => selector.pageBlocks,
     duplicate: (props) => Api.pageBlocksApi.duplicatePageBlock(props),
     delete: (props) => Api.pageBlocksApi.deletePageBlock(props),
     links: {
-        new: () => `${Constant.PAGEBLOCKS_BASE_PATH}${Constant.CREATE_PATH}`,
-        edit: (id) => `${Constant.PAGEBLOCKS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
-        translate: (id, languageId) => `${Constant.PAGEBLOCKS_BASE_PATH}${Constant.CREATE_PATH}?pageBlockId=${id}&languageId=${languageId}`,
+        new: () => `${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.PAGE_BLOCKS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}?pageBlockId=${id}&languageId=${languageId}`,
     },
     messages: {
         duplicateValidation: 'La saison a bien été dupliquée',

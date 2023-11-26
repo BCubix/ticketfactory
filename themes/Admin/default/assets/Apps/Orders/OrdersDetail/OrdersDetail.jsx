@@ -9,6 +9,15 @@ import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Grid } from '@mui/material';
 
+export const ordersDetailCrud = {
+    title: 'Afficher',
+    components: [
+        { component: ({ cart, ...props }) => <Component.CustomerOrderPart customer={cart?.customer} cart={cart} {...props} /> },
+        { component: ({ cart, ...props }) => <Component.OrderPart order={cart?.order} cart={cart} {...props} /> },
+        { component: ({ cart, ...props }) => <Component.CartOrderPart cart={cart} {...props} /> },
+    ],
+};
+
 export const OrdersDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();

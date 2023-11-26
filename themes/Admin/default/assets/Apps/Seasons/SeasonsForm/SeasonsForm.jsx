@@ -22,7 +22,7 @@ export const seasonsValidationSchema = {
 export const seasonsForm = {
     submitLine: {
         activeInput: true,
-        activeLabel: 'Saison activée ?',
+        activeLabel: 'Saison active ?',
     },
     api: {
         dataFields: {
@@ -57,10 +57,10 @@ export const seasonsForm = {
                                     required: true,
                                     custom: {
                                         handleChange:
-                                            ({ values, editMode, setFieldValue }) =>
+                                            ({ values, initValues, setFieldValue }) =>
                                             (e) => {
                                                 setFieldValue('name', e.target.value);
-                                                if (!values.editSlug && !editMode) {
+                                                if (!values.editSlug && !initValues) {
                                                     setFieldValue('slug', changeSlug(e.target.value));
                                                 }
                                             },

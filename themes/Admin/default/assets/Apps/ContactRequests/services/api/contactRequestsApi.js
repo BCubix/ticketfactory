@@ -1,40 +1,17 @@
 import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'firstName', sortName: 'filters[firstName]' },
-    { name: 'lastName', sortName: 'filters[lastName]' },
-    { name: 'email', sortName: 'filters[email]' },
-    { name: 'phone', sortName: 'filters[phone]' },
-    { name: 'subject', sortName: 'filters[subject]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
 
 const contactRequestsApi = {
     getContactRequests: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.contactRequests?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -73,19 +50,9 @@ const contactRequestsApi = {
         }
     },
 
-    createContactRequest: async (data) => {
+    createContactRequest: async (values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('firstName', data.firstName);
-            formData.append('lastName', data.lastName);
-            formData.append('email', data.email);
-            formData.append('phone', data.phone);
-            formData.append('subject', data.subject);
-            formData.append('message', data.message);
-
-            const result = await axios.post('/contact-requests', formData);
+            const result = await axios.post('/contact-requests', constructFormData({ values, dataFields: Crud?.contactRequests?.add?.api?.dataFields }));
 
             return { result: true, contactRequest: result.data };
         } catch (error) {
@@ -93,19 +60,9 @@ const contactRequestsApi = {
         }
     },
 
-    editContactRequest: async (id, data) => {
+    editContactRequest: async (id, values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('firstName', data.firstName);
-            formData.append('lastName', data.lastName);
-            formData.append('email', data.email);
-            formData.append('phone', data.phone);
-            formData.append('subject', data.subject);
-            formData.append('message', data.message);
-
-            const result = await axios.post(`/contact-requests/${id}`, formData);
+            const result = await axios.post(`/contact-requests/${id}`, constructFormData({ values, dataFields: Crud?.contactRequests?.edit?.api?.dataFields }));
 
             return { result: true, contactRequest: result.data };
         } catch (error) {

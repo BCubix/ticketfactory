@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { CreatePage } from '@Apps/Pages/CreatePage/CreatePage';
-import { EditPage } from '@Apps/Pages/EditPage/EditPage';
+import { CreatePage, pagesCreateCrud } from '@Apps/Pages/CreatePage/CreatePage';
+import { EditPage, pagesEditCrud } from '@Apps/Pages/EditPage/EditPage';
 import { PagesBlocksPart } from '@Apps/Pages/PagesForm/PagesBlocksPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 import { PagesBlocksSliderPart } from '@Apps/Pages/PagesForm/PagesBlocksSliderPart';
@@ -67,8 +67,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: pagesListCrud,
-        add: {},
-        edit: {},
+        add: pagesCreateCrud,
+        edit: pagesEditCrud,
     };
 
     setCrud('pages', crud);

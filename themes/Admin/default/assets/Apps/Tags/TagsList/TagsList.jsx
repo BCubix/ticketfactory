@@ -40,7 +40,7 @@ export const tagsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getTagsAction(),
-    changeFiltersActions: (props) => changeTagsFilters(props),
+    changeFiltersActions: (props, page) => changeTagsFilters(props, page),
     dataSelector: tagsSelector,
     dataList: (selector) => selector.tags,
     duplicate: (props) => Api.tagsApi.duplicateTag(props),

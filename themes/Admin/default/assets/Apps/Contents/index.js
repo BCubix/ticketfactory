@@ -5,8 +5,8 @@ import { DisplayContentField } from '@Apps/Contents/ContentsForm/DisplayContentF
 import { DisplayContentForm } from '@Apps/Contents/ContentsForm/DisplayContentForm';
 import { ContentsFilters } from '@Apps/Contents/ContentsList/ContentsFilters/ContentsFilters';
 import { ContentsList, contentsListCrud } from '@Apps/Contents/ContentsList/ContentsList';
-import { CreateContent } from '@Apps/Contents/CreateContent/CreateContent';
-import { EditContent } from '@Apps/Contents/EditContent/EditContent';
+import { CreateContent, contentsCreateCrud } from '@Apps/Contents/CreateContent/CreateContent';
+import { EditContent, contentsEditCrud } from '@Apps/Contents/EditContent/EditContent';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -46,7 +46,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Contenus', Constant.CONTENTS_BASE_PATH, <SourceIcon />);
+    insertSubMenu(3, 'PERSONNALISER', 'Contenus', Constant.CONTENTS_BASE_PATH, <SourceIcon />);
 };
 
 export const initReducer = () => {
@@ -56,8 +56,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: contentsListCrud,
-        add: {},
-        edit: {},
+        add: contentsCreateCrud,
+        edit: contentsEditCrud,
     };
 
     setCrud('contents', crud);

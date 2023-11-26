@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from '@/AdminService/Component';
-import { FormControlLabel, Grid, Switch } from '@mui/material';
+import { Checkbox, FormControlLabel, Grid, Switch } from '@mui/material';
 import { FieldArray } from 'formik';
 import { getPropByString } from '@Services/utils/getPropByString';
 
@@ -72,6 +72,25 @@ const TypeObj = {
         <FormControlLabel
             control={
                 <Switch
+                    checked={Boolean(values[name])}
+                    onChange={
+                        handleChange
+                            ? handleChange
+                            : (e) => {
+                                  setFieldValue(`${props.baseName || ''}${getName(name)}`, e.target.checked);
+                              }
+                    }
+                    name={name}
+                />
+            }
+            label={label}
+            labelPlacement={labelPlacement ? labelPlacement : 'start'}
+        />
+    ),
+    checkbox: ({ name, values, handleChange, label, labelPlacement, setFieldValue }) => (
+        <FormControlLabel
+            control={
+                <Checkbox
                     checked={Boolean(values[name])}
                     onChange={
                         handleChange

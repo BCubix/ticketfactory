@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { CreateUser } from '@Apps/Users/CreateUser/CreateUser';
-import { EditUser } from '@Apps/Users/EditUser/EditUser';
+import { CreateUser, usersCreateCrud } from '@Apps/Users/CreateUser/CreateUser';
+import { EditUser, usersEditCrud } from '@Apps/Users/EditUser/EditUser';
 import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
-import { CreateUserForm } from '@Apps/Users/UserForm/CreateUserForm';
-import { EditUserForm } from '@Apps/Users/UserForm/EditUserForm';
 import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
 import { UserFilters } from '@Apps/Users/UserList/UserFilters/UserFilters';
-import { UserList } from '@Apps/Users/UserList/UserList';
+import { UserList, usersListCrud } from '@Apps/Users/UserList/UserList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -15,11 +13,11 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import usersReducer from '@Apps/Users/redux/users/usersSlice';
 import profileApi from '@Apps/Users/services/api/profileApi';
 import usersApi from '@Apps/Users/services/api/usersApi';
-
 import PersonIcon from '@mui/icons-material/Person';
 
 export const initConstant = () => {
@@ -31,8 +29,6 @@ export const initComponent = () => {
     setComponent('CreateUser', CreateUser);
     setComponent('EditUser', EditUser);
     setComponent('EditProfile', EditProfile);
-    setComponent('CreateUserForm', CreateUserForm);
-    setComponent('EditUserForm', EditUserForm);
     setComponent('EditProfileForm', EditProfileForm);
     setComponent('UserFilters', UserFilters);
     setComponent('UserList', UserList);
@@ -52,9 +48,19 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'ADMINISTRER', 'Utilisateurs', Constant.USER_BASE_PATH, <PersonIcon />);
+    insertSubMenu(5, 'ADMINISTRER', 'Utilisateurs', Constant.USER_BASE_PATH, <PersonIcon />);
 };
 
 export const initReducer = () => {
     setReducer('users', usersReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: usersListCrud,
+        add: usersCreateCrud,
+        edit: usersEditCrud,
+    };
+
+    setCrud('users', crud);
 };

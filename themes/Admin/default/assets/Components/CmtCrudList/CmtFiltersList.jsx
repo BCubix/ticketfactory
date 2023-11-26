@@ -11,11 +11,14 @@ import BusinessIcon from '@mui/icons-material/Business';
 import TagIcon from '@mui/icons-material/Tag';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useDispatch } from 'react-redux';
 
-const CategoriesFilterWrapper = ({ getList, dispatch, ...props }) => {
+const CategoriesFilterWrapper = ({ list, getList, dispatch, ...props }) => {
     const handleGetList = async (props) => {
+        if (list) {
+            return list;
+        }
+
         const categories = await Api.categoriesApi.getCategories(props);
         if (categories.result) {
             return categories?.categories;
@@ -155,7 +158,7 @@ const FILTERS_TYPE = {
     multipleList: (props) => <Component.CmtMultipleSelectFilters {...props} />,
 };
 
-export const CmtFiltersList = ({ filters, filtersList, changeFilters }) => {
+export const CmtFiltersList = ({ filters, filtersList, changeFilters, ...inheritedProps }) => {
     const dispatch = useDispatch();
 
     return (
@@ -166,9 +169,12 @@ export const CmtFiltersList = ({ filters, filtersList, changeFilters }) => {
                 if (FilterComponent) {
                     return (
                         <FilterComponent
+                            {...inheritedProps}
                             key={index}
                             value={getValue ? getValue(filters) : filters[key]}
                             setValue={(newValue) => changeFilters({ ...filters, [key]: newValue })}
+                            filters={filters}
+                            changeFilters={changeFilters}
                             id={`${key}Filter`}
                             {...props}
                         />
@@ -182,6 +188,7 @@ export const CmtFiltersList = ({ filters, filtersList, changeFilters }) => {
 
                 return (
                     <Filter
+                        {...inheritedProps}
                         key={index}
                         value={getValue ? getValue(filters) : filters[key]}
                         setValue={(newValue) => changeFilters({ ...filters, [key]: newValue })}

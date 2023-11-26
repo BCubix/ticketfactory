@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { OrdersList, ordersListCrud } from '@Apps/Orders/OrdersList/OrdersList';
-import { OrdersFilters } from '@Apps/Orders/OrdersList/OrdersFilters/OrdersFIlters';
-import { OrdersDetail } from '@Apps/Orders/OrdersDetail/OrdersDetail';
+import { OrdersDetail, ordersDetailCrud } from '@Apps/Orders/OrdersDetail/OrdersDetail';
 import { CartOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CartOrderPart';
 import { CustomerOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CustomerOrderPart';
 import { OrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/OrderPart';
@@ -26,7 +25,6 @@ export const initConstant = () => {
 
 export const initComponent = () => {
     setComponent('OrdersList', OrdersList);
-    setComponent('OrdersFilters', OrdersFilters);
     setComponent('OrdersDetail', OrdersDetail);
     setComponent('CartOrderPart', CartOrderPart);
     setComponent('CustomerOrderPart', CustomerOrderPart);
@@ -53,8 +51,7 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: ordersListCrud,
-        add: {},
-        edit: {},
+        detail: ordersDetailCrud,
     };
 
     setCrud('orders', crud);

@@ -9,6 +9,18 @@ import { Constant } from '@/AdminService/Constant';
 import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
+import { Crud } from '@/AdminService/Crud';
+import { editUsersInitialSchema, editUsersValidationSchema, editUsersForm } from '../UserForm/EditUserForm';
+
+export const usersEditCrud = {
+    form: {
+        title: "Modification d'un utilisateur",
+        initialSchema: editUsersInitialSchema,
+        validationSchema: editUsersValidationSchema,
+    },
+    ...editUsersForm,
+};
+
 export const EditUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,5 +64,5 @@ export const EditUser = () => {
         return <></>;
     }
 
-    return <Component.EditUserForm handleSubmit={handleSubmit} initialValues={user} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={user} formCrud={Crud?.users?.edit} />;
 };

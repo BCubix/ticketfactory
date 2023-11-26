@@ -1,57 +1,18 @@
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 import axios from '@Services/api/config';
 import { copyData } from '@Services/utils/copyData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'name', sortName: 'filters[name]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'pageType',
-        transformFilter: (params, sort) => {
-            params['filters[pageType]'] = sort ? '1' : '0';
-        },
-    },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
-
-const serializeData = (element, name, formData) => {
-    Object.entries(element).map(([key, value]) => {
-        if (null !== value && typeof value === 'object') {
-            serializeData(value, `${name}[${key}]`, formData);
-        } else if (null !== value && Array.isArray(value)) {
-            value.forEach((el, index) => {
-                serializeData(el, `${name}[${key}][${index}]`, formData);
-            });
-        } else {
-            formData.append(`${name}[${key}]`, value);
-        }
-    });
-};
 
 const contentTypesApi = {
     getContentTypes: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.contentTypes?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -81,7 +42,7 @@ const contentTypesApi = {
             let params = {};
 
             filters.page = 0;
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.contentTypes?.list?.filtersData, params);
 
             const result = await axios.get('/content-types', { params: params });
 
@@ -103,47 +64,20 @@ const contentTypesApi = {
         }
     },
 
-    createContentType: async (data) => {
+    createContentType: async (values) => {
         try {
-            const formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('pageType', data.pageType ? 1 : 0);
-            formData.append('displayBlocks', data.displayBlocks ? 1 : 0);
-            formData.append('maxObjectNb', data.maxObjectNb);
-            formData.append('keyword', data.keyword || '');
-            formData.append('pageParent', data.pageParent || '');
-
-            data.fields?.forEach((el, index) => {
-                serializeData(el, `fields[${index}]`, formData);
-            });
-
-            const result = await axios.post(`/content-types`, formData);
+            const result = await axios.post(`/content-types`, constructFormData({ values, dataFields: Crud?.contentTypes?.add?.api?.dataFields }));
 
             return { result: true, contentType: result.data };
         } catch (error) {
+            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },
 
-    editContentType: async (id, data) => {
+    editContentType: async (id, values) => {
         try {
-            const formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('pageType', data.pageType ? 1 : 0);
-            formData.append('displayBlocks', data.displayBlocks ? 1 : 0);
-            formData.append('maxObjectNb', data.maxObjectNb);
-            formData.append('keyword', data.keyword || '');
-            formData.append('pageParent', data.pageParent || '');
-
-            data.fields?.forEach((el, index) => {
-                serializeData(el, `fields[${index}]`, formData);
-            });
-
-            const result = await axios.post(`/content-types/${id}`, formData);
+            const result = await axios.post(`/content-types/${id}`, constructFormData({ values, dataFields: Crud?.contentTypes?.edit?.api?.dataFields }));
 
             return { result: true, contentType: result.data };
         } catch (error) {

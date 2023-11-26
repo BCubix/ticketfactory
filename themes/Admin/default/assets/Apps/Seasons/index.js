@@ -2,9 +2,7 @@ import React from 'react';
 
 import { CreateSeason, seasonsCreateCrud } from '@Apps/Seasons/CreateSeason/CreateSeason';
 import { EditSeason, seasonsEditCrud } from '@Apps/Seasons/EditSeason/EditSeason';
-import { SeasonsList } from '@Apps/Seasons/SeasonsList/SeasonsList';
-
-import { seasonsListCrud } from '@Apps/Seasons/SeasonsList/SeasonsList';
+import { SeasonsList, seasonsListCrud } from '@Apps/Seasons/SeasonsList/SeasonsList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -40,7 +38,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(3, 'PROGRAMMER', 'Saisons', Constant.SEASONS_BASE_PATH, <CalendarMonthIcon />);
+    insertSubMenu(4, 'PROGRAMMER', 'Saisons', Constant.SEASONS_BASE_PATH, <CalendarMonthIcon />);
 };
 
 export const initReducer = () => {

@@ -38,7 +38,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'VENDRE', 'Clients', Constant.CUSTOMERS_BASE_PATH, <PeopleIcon />);
+    insertSubMenu(1, 'VENDRE', 'Clients', Constant.CUSTOMERS_BASE_PATH, <PeopleIcon />);
 };
 
 export const initReducer = () => {

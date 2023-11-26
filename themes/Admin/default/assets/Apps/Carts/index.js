@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { CartsList, cartsListCrud } from '@Apps/Carts/CartsList/CartsList';
-import { CartsFilters } from '@Apps/Carts/CartsList/CartsFilters/CartsFilters';
-import { CartsDetail } from '@Apps/Carts/CartsDetail/CartsDetail';
+import { CartsDetail, cartsDetailCrud } from '@Apps/Carts/CartsDetail/CartsDetail';
 import { CustomerCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CustomerCartPart';
 import { CartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartPart';
 import { OrderCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/OrderCartPart';
@@ -26,7 +25,6 @@ export const initConstant = () => {
 
 export const initComponent = () => {
     setComponent('CartsList', CartsList);
-    setComponent('CartsFilters', CartsFilters);
     setComponent('CartsDetail', CartsDetail);
     setComponent('CustomerCartPart', CustomerCartPart);
     setComponent('CartPart', CartPart);
@@ -43,7 +41,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'VENDRE', 'Panier', Constant.CARTS_BASE_PATH, <ShoppingBasketIcon />);
+    insertSubMenu(3, 'VENDRE', 'Panier', Constant.CARTS_BASE_PATH, <ShoppingBasketIcon />);
 };
 
 export const initReducer = () => {
@@ -53,8 +51,7 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: cartsListCrud,
-        add: {},
-        edit: {},
+        detail: cartsDetailCrud,
     };
 
     setCrud('carts', crud);

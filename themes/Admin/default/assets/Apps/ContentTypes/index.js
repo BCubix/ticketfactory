@@ -3,17 +3,14 @@ import React from 'react';
 import { ContentTypeFieldArrayForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/ContentTypeFieldArrayForm';
 import { FieldArrayElem } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/FieldArrayElem';
 import { MainPartFieldForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/MainPartFieldForm';
-import { ContentTypesForm } from '@Apps/ContentTypes/ContentTypesForm/ContentTypesForm';
-import { PageTypesForm } from '@Apps/ContentTypes/ContentTypesForm/PageTypesForm';
 import { FieldElemWrapper, FieldFormControl } from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
-import { ContentTypesFilters } from '@Apps/ContentTypes/ContentTypesList/ContentTypesFilters/ContentTypesFilters';
-import { ContentTypesList } from '@Apps/ContentTypes/ContentTypesList/ContentTypesList';
-import { PageTypesList } from '@Apps/ContentTypes/ContentTypesList/PageTypesList';
+import { ContentTypesList, contentTypesListCrud } from '@Apps/ContentTypes/ContentTypesList/ContentTypesList';
+import { PageTypesList, pageTypesListCrud } from '@Apps/ContentTypes/ContentTypesList/PageTypesList';
 import { ContentTypesMenu } from '@Apps/ContentTypes/ContentTypesMenu/ContentTypesMenu';
-import { CreateContentType } from '@Apps/ContentTypes/CreateContentType/CreateContentType';
-import { CreatePageType } from '@Apps/ContentTypes/CreateContentType/CreatePageType';
-import { EditContentType } from '@Apps/ContentTypes/EditContentType/EditContentType';
-import { EditPageType } from '@Apps/ContentTypes/EditContentType/EditPageType';
+import { CreateContentType, contentTypesCreateCrud } from '@Apps/ContentTypes/CreateContentType/CreateContentType';
+import { CreatePageType, pageTypesCreateCrud } from '@Apps/ContentTypes/CreateContentType/CreatePageType';
+import { EditContentType, contentTypesEditCrud } from '@Apps/ContentTypes/EditContentType/EditContentType';
+import { EditPageType, pageTypesEditCrud } from '@Apps/ContentTypes/EditContentType/EditPageType';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -25,6 +22,7 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import contentTypesReducer from './redux/contentTypes/contentTypesSlice';
 import pageTypesReducer from './redux/pageTypes/pageTypesSlice';
 import contentTypesApi from './services/api/contentTypesApi';
+import { setCrud } from '@/AdminService/Crud';
 
 import WidgetsIcon from '@mui/icons-material/Widgets';
 
@@ -37,11 +35,8 @@ export const initComponent = () => {
     setComponent('ContentTypeFieldArrayForm', ContentTypeFieldArrayForm);
     setComponent('FieldArrayElem', FieldArrayElem);
     setComponent('MainPartFieldForm', MainPartFieldForm);
-    setComponent('ContentTypesForm', ContentTypesForm);
-    setComponent('PageTypesForm', PageTypesForm);
     setComponent('FieldElemWrapper', FieldElemWrapper);
     setComponent('FieldFormControl', FieldFormControl);
-    setComponent('ContentTypesFilters', ContentTypesFilters);
     setComponent('ContentTypesList', ContentTypesList);
     setComponent('PageTypesList', PageTypesList);
     setComponent('ContentTypesMenu', ContentTypesMenu);
@@ -66,10 +61,28 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'ADMINISTRER', 'Types de contenus', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
+    insertSubMenu(1, 'ADMINISTRER', 'Types de contenus', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
 };
 
 export const initReducer = () => {
     setReducer('contentTypes', contentTypesReducer);
     setReducer('pageTypes', pageTypesReducer);
+};
+
+export const initCrud = () => {
+    const contentTypesCrud = {
+        list: contentTypesListCrud,
+        add: contentTypesCreateCrud,
+        edit: contentTypesEditCrud,
+    };
+
+    setCrud('contentTypes', contentTypesCrud);
+
+    const pageTypesCrud = {
+        list: pageTypesListCrud,
+        add: pageTypesCreateCrud,
+        edit: pageTypesEditCrud,
+    };
+
+    setCrud('pageTypes', pageTypesCrud);
 };

@@ -51,7 +51,7 @@ const displayCategoriesOptions = (list, values, setValue, id) => {
     );
 };
 
-export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon, getList, id }) => {
+export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon, getList, id, ...props }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const parsedValue = value ? value?.split(',') : [];
@@ -74,7 +74,8 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
         setLoading(true);
 
         apiMiddleware(dispatch, async () => {
-            const result = await getList();
+            console.log(props);
+            const result = await getList({ id, ...props });
 
             if (result) {
                 setDisplayList(result);

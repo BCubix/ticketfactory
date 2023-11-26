@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { CreateRedirection } from '@Apps/Redirections/CreateRedirection/CreateRedirection';
-import { EditRedirection } from '@Apps/Redirections/EditRedirection/EditRedirection';
-import { RedirectionsForm } from '@Apps/Redirections/RedirectionsForm/RedirectionsForm';
-import { RedirectionsFilters } from '@Apps/Redirections/RedirectionsList/RedirectionsFilters/RedirectionsFilters';
+import { CreateRedirection, redirectionsCreateCrud } from '@Apps/Redirections/CreateRedirection/CreateRedirection';
+import { EditRedirection, redirectionsEditCrud } from '@Apps/Redirections/EditRedirection/EditRedirection';
 import { RedirectionsList, redirectionsListCrud } from '@Apps/Redirections/RedirectionsList/RedirectionsList';
 
 import { setReducer } from '@/AdminService/Reducer';
@@ -26,8 +24,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('CreateRedirection', CreateRedirection);
     setComponent('EditRedirection', EditRedirection);
-    setComponent('RedirectionsForm', RedirectionsForm);
-    setComponent('RedirectionsFilters', RedirectionsFilters);
     setComponent('RedirectionsList', RedirectionsList);
 };
 
@@ -42,7 +38,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Redirections', Constant.REDIRECTIONS_BASE_PATH, <CallMissedOutgoingIcon />);
+    insertSubMenu(5, 'PERSONNALISER', 'Redirections', Constant.REDIRECTIONS_BASE_PATH, <CallMissedOutgoingIcon />);
 };
 
 export const initReducer = () => {
@@ -52,8 +48,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: redirectionsListCrud,
-        add: {},
-        edit: {},
+        add: redirectionsCreateCrud,
+        edit: redirectionsEditCrud,
     };
 
     setCrud('redirections', crud);

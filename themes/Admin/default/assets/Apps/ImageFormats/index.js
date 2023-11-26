@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { CreateImageFormat } from '@Apps/ImageFormats/CreateImageFormat/CreateImageFormat';
-import { EditImageFormat } from '@Apps/ImageFormats/EditImageFormat/EditImageFormat';
-import { ImageFormatsForm } from '@Apps/ImageFormats/ImageFormatsForm/ImageFormatsForm';
+import { CreateImageFormat, imageFormatsCreateCrud } from '@Apps/ImageFormats/CreateImageFormat/CreateImageFormat';
+import { EditImageFormat, imageFormatsEditCrud } from '@Apps/ImageFormats/EditImageFormat/EditImageFormat';
 import { ImageFormatsGenerateForm } from '@Apps/ImageFormats/ImageFormatsForm/ImageFormatsGenerateForm';
 import { ImageFormatsParametersForm } from '@Apps/ImageFormats/ImageFormatsForm/ImageFormatsParametersForm';
 import { ImageFormatsFilters } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
 import { ImageFormatGenerate } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatGenerate';
 import { ImageFormatParameters } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatParameters';
-import { ImageFormatsList } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatsList';
+import { ImageFormatsList, imageFormatsListCrud } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatsList';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
@@ -18,6 +17,7 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 
 import imageFormatsReducer from './redux/imageFormats/imageFormatSlice';
 import imageFormatsApi from './services/api/imageFormatsApi';
+import { setCrud } from '@/AdminService/Crud';
 
 export const initConstant = () => {
     setConstant('IMAGE_FORMATS_BASE_PATH', '/admin/image-formats');
@@ -26,7 +26,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('CreateImageFormat', CreateImageFormat);
     setComponent('EditImageFormat', EditImageFormat);
-    setComponent('ImageFormatsForm', ImageFormatsForm);
     setComponent('ImageFormatsGenerateForm', ImageFormatsGenerateForm);
     setComponent('ImageFormatsParametersForm', ImageFormatsParametersForm);
     setComponent('ImageFormatsFilters', ImageFormatsFilters);
@@ -47,4 +46,14 @@ export const initAuthenticatedRoutes = () => {
 
 export const initReducer = () => {
     setReducer('imageFormats', imageFormatsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: imageFormatsListCrud,
+        add: imageFormatsCreateCrud,
+        edit: imageFormatsEditCrud,
+    };
+
+    setCrud('imageFormats', crud);
 };

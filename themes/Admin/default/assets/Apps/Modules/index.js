@@ -35,7 +35,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'PERSONNALISER', 'Modules', Constant.MODULES_BASE_PATH, <ViewModuleIcon />, { relatedLinks: [Constant.HOOKS_BASE_PATH] });
+    insertSubMenu(7, 'PERSONNALISER', 'Modules', Constant.MODULES_BASE_PATH, <ViewModuleIcon />, { relatedLinks: [Constant.HOOKS_BASE_PATH] });
 };
 
 export const initReducer = () => {

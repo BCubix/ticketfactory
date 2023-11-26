@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { ContactRequestsForm } from '@Apps/ContactRequests/ContactRequestsForm/ContactRequestsForm';
 import { ContactRequestsFilters } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsFilters/ContactRequestsFilters';
-import { ContactRequestsList } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsList';
-import { CreateContactRequests } from '@Apps/ContactRequests/CreateContactRequest/CreateContactRequest';
-import { EditContactRequest } from '@Apps/ContactRequests/EditContactRequest/EditContactRequest';
+import { ContactRequestsList, contactRequestsListCrud } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsList';
+import { CreateContactRequests, contactRequestsCreateCrud } from '@Apps/ContactRequests/CreateContactRequest/CreateContactRequest';
+import { EditContactRequest, contactRequestsEditCrud } from '@Apps/ContactRequests/EditContactRequest/EditContactRequest';
 
 import contactRequestsApi from './services/api/contactRequestsApi';
 import contactRequestsReducer from '@Apps/ContactRequests/redux/contactRequests/contactRequestsSlice';
@@ -15,6 +14,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
 
 import EmailIcon from '@mui/icons-material/Email';
 
@@ -23,7 +23,6 @@ export const initConstant = () => {
 };
 
 export const initComponent = () => {
-    setComponent('ContactRequestsForm', ContactRequestsForm);
     setComponent('ContactRequestsFilters', ContactRequestsFilters);
     setComponent('ContactRequestsList', ContactRequestsList);
     setComponent('CreateContactRequests', CreateContactRequests);
@@ -41,9 +40,19 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'ADMINISTRER', 'Contacts', Constant.CONTACT_REQUEST_BASE_PATH, <EmailIcon />);
+    insertSubMenu(4, 'ADMINISTRER', 'Contacts', Constant.CONTACT_REQUEST_BASE_PATH, <EmailIcon />);
 };
 
 export const initReducer = () => {
     setReducer('contactRequests', contactRequestsReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        list: contactRequestsListCrud,
+        add: contactRequestsCreateCrud,
+        edit: contactRequestsEditCrud,
+    };
+
+    setCrud('contactRequests', crud);
 };

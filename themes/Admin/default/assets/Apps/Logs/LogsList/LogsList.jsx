@@ -10,8 +10,29 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+
+export const logsListCrud = {
+    title: 'Logs',
+    listTitle: 'Liste des logs',
+    tableList: [
+        { label: 'Sévérité', renderFunction: (props) => <LogTags {...props} /> },
+        { name: 'errorCode', label: "Code d'erreur" },
+        { name: 'message', label: 'Message', width: '40%' },
+        { name: 'objectName', label: 'Objet' },
+        { name: 'objectId', label: "Id de l'objet" },
+        { label: 'Utilisateur', renderFunction: (props) => <LogUserName {...props} /> },
+    ],
+    components: [
+        {
+            component: ({ listCrud, dataList, ...props }) => (
+                <Component.ListTable contextualMenu={Boolean(listCrud?.tableContextualMenu)} table={listCrud?.tableList} list={dataList} {...props} />
+            ),
+        },
+    ],
+};
 
 export const LogUserName = (item) => {
     return (
@@ -72,15 +93,6 @@ export const LogTags = (item) => {
     );
 };
 
-const TABLE_COLUMN = [
-    { label: 'Sévérité', renderFunction: LogTags },
-    { name: 'errorCode', label: "Code d'erreur" },
-    { name: 'message', label: 'Message', width: '40%' },
-    { name: 'objectName', label: 'Objet' },
-    { name: 'objectId', label: "Id de l'objet" },
-    { label: 'Utilisateur', renderFunction: LogUserName },
-];
-
 export const LogsList = () => {
     const dispatch = useDispatch();
     const [logs, setLogs] = useState(null);
@@ -122,7 +134,15 @@ export const LogsList = () => {
                     }
                 />
                 <CardContent>
-                    <Component.ListTable table={TABLE_COLUMN} list={logs} />
+                    {Crud?.logs?.list?.components?.map((item, index) => {
+                        const { component: ItemComponent } = item;
+
+                        if (!ItemComponent) {
+                            return <></>;
+                        }
+
+                        return <ItemComponent key={index} listCrud={Crud?.logs?.list} dataList={logs} />;
+                    })}
                 </CardContent>
             </Component.CmtCard>
         </Component.CmtPageWrapper>

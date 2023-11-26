@@ -35,7 +35,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(2, 'ADMINISTRER', 'Paramètres', Constant.PARAMETERS_BASE_PATH, <SettingsIcon />);
+    insertSubMenu(1, 'ADMINISTRER', 'Paramètres', Constant.PARAMETERS_BASE_PATH, <SettingsIcon />);
 };
 
 export const initReducer = () => {

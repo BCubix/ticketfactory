@@ -39,7 +39,7 @@ export const seasonsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getSeasonsAction(),
-    changeFiltersActions: (props) => changeSeasonsFilters(props),
+    changeFiltersActions: (props, page) => changeSeasonsFilters(props, page),
     dataSelector: seasonsSelector,
     dataList: (selector) => selector.seasons,
     duplicate: (props) => Api.seasonsApi.duplicateSeason(props),

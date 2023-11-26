@@ -60,7 +60,7 @@ export const ordersListCrud = {
         },
     ],
     loadDataAction: () => getOrdersAction(),
-    changeFiltersActions: (props) => changeOrdersFilters(props),
+    changeFiltersActions: (props, page) => changeOrdersFilters(props, page),
     dataSelector: ordersSelector,
     dataList: (selector) => selector.orders,
     links: {

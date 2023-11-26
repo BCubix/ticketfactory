@@ -2,6 +2,7 @@ import { Constant } from '@/AdminService/Constant';
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { Crud } from '@/AdminService/Crud';
+import { constructFormData } from '@Services/utils/constructFormData';
 
 var controller = null;
 
@@ -49,16 +50,9 @@ const redirectionsApi = {
         }
     },
 
-    createRedirection: async (data) => {
+    createRedirection: async (values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('redirectType', data.redirectType);
-            formData.append('redirectFrom', data.redirectFrom);
-            formData.append('redirectTo', data.redirectTo);
-
-            const result = await axios.post('/redirections', formData);
+            const result = await axios.post('/redirections', constructFormData({ values, dataFields: Crud?.redirections?.add?.api?.dataFields }));
 
             return { result: true, redirection: result.data };
         } catch (error) {
@@ -66,16 +60,9 @@ const redirectionsApi = {
         }
     },
 
-    editRedirection: async (id, data) => {
+    editRedirection: async (id, values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('redirectType', data.redirectType);
-            formData.append('redirectFrom', data.redirectFrom);
-            formData.append('redirectTo', data.redirectTo);
-
-            const result = await axios.post(`/redirections/${id}`, formData);
+            const result = await axios.post(`/redirections/${id}`, constructFormData({ values, dataFields: Crud?.redirections?.edit?.api?.dataFields }));
 
             return { result: true, redirection: result.data };
         } catch (error) {

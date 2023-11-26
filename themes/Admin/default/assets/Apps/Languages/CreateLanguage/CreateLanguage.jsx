@@ -10,6 +10,17 @@ import { Constant } from '@/AdminService/Constant';
 import { Api } from '@/AdminService/Api';
 
 import { getLanguagesAction } from '@Apps/Languages/redux/languages/languagesSlice';
+import { Crud } from '@/AdminService/Crud';
+import { languagesInitialSchema, languagesValidationSchema, languagesForm } from '../LanguagesForm/LanguagesForm';
+
+export const languagesCreateCrud = {
+    form: {
+        title: "Création d'une langue",
+        initialSchema: languagesInitialSchema,
+        validationSchema: languagesValidationSchema,
+    },
+    ...languagesForm,
+};
 
 export const CreateLanguage = () => {
     const dispatch = useDispatch();
@@ -26,5 +37,5 @@ export const CreateLanguage = () => {
         });
     };
 
-    return <Component.LanguagesForm handleSubmit={handleSubmit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.languages?.add} />;
 };

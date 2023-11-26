@@ -59,7 +59,7 @@ export const vouchersListCrud = {
         },
     ],
     loadDataAction: () => getVouchersAction(),
-    changeFiltersActions: (props) => changeVouchersFilters(props),
+    changeFiltersActions: (props, page) => changeVouchersFilters(props, page),
     dataSelector: vouchersSelector,
     dataList: (selector) => selector.vouchers,
     delete: (props) => Api.vouchersApi.deleteVoucher(props),

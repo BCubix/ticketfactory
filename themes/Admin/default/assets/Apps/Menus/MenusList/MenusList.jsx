@@ -13,25 +13,154 @@ import { Constant } from '@/AdminService/Constant';
 import { getMenusAction, menusSelector } from '@Apps/Menus/redux/menus/menusSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
+import { Crud } from '@/AdminService/Crud';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
+import { DisplayFormTabs } from '../../../Components/CmtCrudForm/CmtCrudForm';
 
-const LIST = {
-    form: {
-        initialSchema: {
-            name: (translationInitialValues) => translationInitialValues?.name || '',
-            type: (translationInitialValues) => translationInitialValues?.menuType || null,
-            value: (translationInitialValues) => translationInitialValues?.value || null,
-            children: (translationInitialValues) => (translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : []),
-            maxLevel: (translationInitialValues) => translationInitialValues?.maxLevel || 3,
-            lang: (translationInitialValues) => translationInitialValues?.lang?.id || '',
-            languageGroup: (translationInitialValues) => translationInitialValues?.languageGroup || '',
+const serializeMenuData = (element, name, formData, datas) => {
+    formData.append(`${name}[name]`, element.name);
+    formData.append(`${name}[menuType]`, element.menuType);
+    formData.append(`${name}[value]`, element.value);
+    formData.append(`${name}[lang]`, element.lang || datas.lang || '');
+    formData.append(`${name}[languageGroup]`, element.languageGroup || '');
+
+    element?.children?.forEach((el, index) => {
+        serializeMenuData(el, `${name}[children][${index}]`, formData, datas);
+    });
+};
+
+export const menusInitialSchema = {
+    name: (translationInitialValues) => translationInitialValues?.name || '',
+    type: (translationInitialValues) => translationInitialValues?.menuType || null,
+    value: (translationInitialValues) => translationInitialValues?.value || null,
+    children: (translationInitialValues, { deserializeChildrenData }) => (translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : []),
+    maxLevel: (translationInitialValues) => translationInitialValues?.maxLevel || 3,
+    lang: (translationInitialValues) => translationInitialValues?.lang?.id || '',
+    languageGroup: (translationInitialValues) => translationInitialValues?.languageGroup || '',
+};
+
+export const menusEditCrud = {
+    api: {
+        dataFields: {
+            name: { type: 'string' },
+            menuType: {
+                function: ({ values, formData }) => {
+                    formData.append('menuType', values.menuType || 'none');
+                },
+            },
+            value: { type: 'string' },
+            lang: { type: 'string' },
+            languageGroup: { type: 'string' },
+            children: {
+                function: ({ values, formData }) => {
+                    values?.children?.forEach((el, index) => {
+                        serializeMenuData(el, `children[${index}]`, formData, values);
+                    });
+                },
+            },
         },
     },
-    components: [
+    headerComponents: [
         {
-            keyId: 'form',
-            component: (props) => <InitForm {...props} />,
+            component: ({ setFieldValue, setTranslationInitialValues, changeFormikInitialValues, initialValues, setInitialValues, menus }) => (
+                <Component.MenuHeaderLine
+                    selectedMenu={initialValues}
+                    list={menus}
+                    handleChange={(val) => {
+                        setInitialValues(val);
+                        setTranslationInitialValues(val);
+                        changeFormikInitialValues(setFieldValue, val);
+                    }}
+                />
+            ),
+        },
+    ],
+    fields: [
+        {
+            type: 'tabs',
+            keyId: 'menu',
+            label: 'Saison',
+            fields: [
+                {
+                    component: ({ translationInitialValues, values, setFieldValue }) => (
+                        <Grid item xs={12} md={6} lg={3}>
+                            <Component.AddMenuElement
+                                language={translationInitialValues?.lang}
+                                addElementToMenu={(newElements) => {
+                                    let menu = [...values.children];
+
+                                    newElements.forEach((el) => {
+                                        if (!el?.lang) {
+                                            menu.push({ ...el, lang: values?.lang });
+                                        } else {
+                                            menu.push(el);
+                                        }
+                                    });
+
+                                    setFieldValue('children', menu);
+                                }}
+                            />
+                        </Grid>
+                    ),
+                },
+                {
+                    component: ({
+                        translationInitialValues,
+                        values,
+                        setFieldValue,
+                        handleChange,
+                        handleBlur,
+                        touched,
+                        errors,
+                        languageList,
+                        setTranslateDialog,
+                        setTranslationInitialValues,
+                        changeFormikInitialValues,
+                        initialValues,
+                        isSubmitting,
+                        setDeleteDialog,
+                        deleteDialog,
+                    }) => (
+                        <Grid item xs={12} md={6} lg={9}>
+                            <Component.MenuStructure
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                touched={touched}
+                                errors={errors}
+                                languageList={languageList}
+                                openTranslateDialog={() => setTranslateDialog(true)}
+                                language={translationInitialValues?.lang}
+                                translationSelectedMenu={translationInitialValues}
+                                changeLanguage={(val) => {
+                                    setTranslationInitialValues(val);
+                                    changeFormikInitialValues(setFieldValue, val);
+                                }}
+                                selectedMenu={initialValues}
+                            />
+
+                            <Box className="flex row-between">
+                                <Button
+                                    variant="outlined"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    disabled={isSubmitting}
+                                    color="error"
+                                    onClick={() => setDeleteDialog(!deleteDialog)}
+                                    id="deleteMenuButton"
+                                >
+                                    Supprimer
+                                </Button>
+
+                                <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
+                                    Modifier
+                                </Button>
+                            </Box>
+                        </Grid>
+                    ),
+                },
+            ],
         },
     ],
 };
@@ -152,30 +281,18 @@ export const MenusList = () => {
     }
 
     return (
-        <>
-            {LIST.components.map((item, index) => {
-                let { component: Component, ...props } = item;
-
-                if (!Component) {
-                    return <React.Fragment key={index} />;
-                }
-
-                return (
-                    <Component
-                        key={index}
-                        changeFormikInitialValues={changeFormikInitialValues}
-                        menus={menus}
-                        languageList={languageList}
-                        deserializeChildrenData={deserializeChildrenData}
-                        handleDelete={handleDelete}
-                        updateMenu={updateMenu}
-                        translationInitialValues={translationInitialValues}
-                        initialValues={initialValues}
-                        {...props}
-                    />
-                );
-            })}
-        </>
+        <InitForm
+            changeFormikInitialValues={changeFormikInitialValues}
+            menus={menus}
+            languageList={languageList}
+            deserializeChildrenData={deserializeChildrenData}
+            handleDelete={handleDelete}
+            updateMenu={updateMenu}
+            translationInitialValues={translationInitialValues}
+            initialValues={initialValues}
+            setInitialValues={setInitialValues}
+            formCrud={Crud?.menus?.edit}
+        />
     );
 };
 
@@ -189,6 +306,7 @@ const InitForm = ({
     initialValues,
     setInitialValues,
     deserializeChildrenData,
+    formCrud,
 }) => {
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [translateDialog, setTranslateDialog] = useState(false);
@@ -207,78 +325,50 @@ const InitForm = ({
             }}
             onSubmit={async (values, { setSubmitting }) => {
                 updateMenu(values);
-
                 setSubmitting(false);
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
                 <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
-                    <Component.MenuHeaderLine
-                        selectedMenu={initialValues}
-                        list={menus}
-                        handleChange={(val) => {
-                            setInitialValues(val);
-                            setTranslationInitialValues(val);
-                            changeFormikInitialValues(setFieldValue, val);
+                    <Component.CmtDisplayComponents
+                        list={formCrud?.headerComponents}
+                        {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }}
+                        {...{
+                            languageList,
+                            changeFormikInitialValues,
+                            translationInitialValues,
+                            handleDelete,
+                            updateMenu,
+                            menus,
+                            initialValues,
+                            setInitialValues,
+                            deserializeChildrenData,
+                            formCrud,
+                            translateDialog,
+                            setTranslateDialog,
                         }}
                     />
 
                     {Object.keys(initialValues).length > 0 && (
                         <Grid container spacing={5} sx={{ marginTop: 5 }}>
-                            <Grid item xs={12} md={6} lg={3}>
-                                <Component.AddMenuElement
-                                    language={translationInitialValues?.lang}
-                                    addElementToMenu={(newElements) => {
-                                        let menu = [...values.children];
-
-                                        newElements.forEach((el) => {
-                                            if (!el?.lang) {
-                                                menu.push({ ...el, lang: values?.lang });
-                                            } else {
-                                                menu.push(el);
-                                            }
-                                        });
-
-                                        setFieldValue('children', menu);
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6} lg={9}>
-                                <Component.MenuStructure
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                    handleChange={handleChange}
-                                    handleBlur={handleBlur}
-                                    touched={touched}
-                                    errors={errors}
-                                    languageList={languageList}
-                                    openTranslateDialog={() => setTranslateDialog(true)}
-                                    language={translationInitialValues?.lang}
-                                    translationSelectedMenu={translationInitialValues}
-                                    changeLanguage={(val) => {
-                                        setTranslationInitialValues(val);
-                                        changeFormikInitialValues(setFieldValue, val);
-                                    }}
-                                    selectedMenu={initialValues}
-                                />
-
-                                <Box className="flex row-between">
-                                    <Button
-                                        variant="outlined"
-                                        sx={{ mt: 3, mb: 2 }}
-                                        disabled={isSubmitting}
-                                        color="error"
-                                        onClick={() => setDeleteDialog(!deleteDialog)}
-                                        id="deleteMenuButton"
-                                    >
-                                        Supprimer
-                                    </Button>
-
-                                    <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
-                                        Modifier
-                                    </Button>
-                                </Box>
-                            </Grid>
+                            <DisplayFormTabs
+                                tabs={formCrud?.fields}
+                                {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }}
+                                {...{
+                                    languageList,
+                                    changeFormikInitialValues,
+                                    translationInitialValues,
+                                    handleDelete,
+                                    updateMenu,
+                                    menus,
+                                    initialValues,
+                                    setInitialValues,
+                                    deserializeChildrenData,
+                                    formCrud,
+                                    translateDialog,
+                                    setTranslateDialog,
+                                }}
+                            />
                         </Grid>
                     )}
 
