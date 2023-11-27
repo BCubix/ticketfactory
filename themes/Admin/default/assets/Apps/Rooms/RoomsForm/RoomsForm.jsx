@@ -70,7 +70,6 @@ export const roomsForm = {
                                     label: 'Nom',
                                     inputType: 'textField',
                                     required: true,
-                                    sx: { marginBottom: 6 },
                                     custom: {
                                         handleChange:
                                             ({ values, editMode, setFieldValue }) =>

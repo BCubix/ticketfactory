@@ -48,3 +48,17 @@ export function addCrudAction(name, action, crud) {
 
     CrudObj[name][action] = crud;
 }
+
+/*
+- getApiFields(name, action)
+- setApiFields(name, action, fields)
+
+- getFormFields(name, action)
+- setFormFields(name, action)
+
+- getListFilters(name)
+- setListFilters(name, filters)
+
+- addCreateAction(name, crud = defaultTemplate)
+- addEditAction(name, crud = defaultTemplate)
+*/

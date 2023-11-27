@@ -28,7 +28,7 @@ export const roomsListCrud = {
         },
     ],
     filterList: [
-        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'active', title: 'Chercher par status', label: 'Actif ?', type: 'boolean' },
         { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
     ],
     pagination: true,
