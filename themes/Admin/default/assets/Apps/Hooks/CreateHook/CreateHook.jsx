@@ -51,9 +51,5 @@ export const CreateHook = () => {
         return <></>;
     }
 
-<<<<<<< HEAD
-    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} displayHookList={displayHookList} />;
-=======
     return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} />;
->>>>>>> refacto-react
 };
