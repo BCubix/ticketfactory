@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getMediaCategoriesAction } from '@Redux/mediaCategories/mediaCategoriesSlice';
+import { getMediaCategoriesAction } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditMediaCategory = () => {

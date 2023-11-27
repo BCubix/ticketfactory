@@ -31,7 +31,6 @@ const getComponent = ({ paramName, paramKey, paramValue, paramAvailableValue, pa
         });
     }, []);
 
-    //console.log(list, paramValue);
     return (
         <Grid container item key={indexParam} {...paramBreakpoints} spacing={2}>
             <Component.CmtSelectField

@@ -15,19 +15,19 @@ use Doctrine\ORM\Mapping as ORM;
 class Order extends Datable
 {
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one'])]
     #[ORM\Column(length: 32)]
     private ?string $reference = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one'])]
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?OrderStatus $status = null;

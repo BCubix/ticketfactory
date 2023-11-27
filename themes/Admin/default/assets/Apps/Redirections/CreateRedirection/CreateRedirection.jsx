@@ -3,12 +3,23 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { getRedirectionsAction } from '@Redux/redirections/redirectionsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getRedirectionsAction } from '@Apps/Redirections/redux/redirections/redirectionsSlice';
+import { redirectionsInitialSchema, redirectionsValidationSchema, redirectionsForm } from '../RedirectionsForm/RedirectionsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const redirectionsCreateCrud = {
+    form: {
+        title: "Création d'une redirection",
+        initialSchema: redirectionsInitialSchema,
+        validationSchema: redirectionsValidationSchema,
+    },
+    ...redirectionsForm,
+};
 
 export const CreateRedirection = () => {
     const dispatch = useDispatch();
@@ -26,11 +37,7 @@ export const CreateRedirection = () => {
         const result = await Api.redirectionsApi.createRedirection(values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La redirection a bien été créée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La redirection a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getRedirectionsAction());
 
@@ -38,5 +45,5 @@ export const CreateRedirection = () => {
         }
     };
 
-    return <Component.RedirectionsForm handleSubmit={handleSubmit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.redirections?.add} />;
 };

@@ -12,7 +12,7 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { logoutAction, profileSelector } from '@Redux/profile/profileSlice';
+import { logoutAction, profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
 import { ProfileButton } from './sc.ProfileButton';
 import { useSelector } from 'react-redux';
 import useAppContext from '@/Config/useAppContext';

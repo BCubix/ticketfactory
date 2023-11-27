@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { languagesSelector } from '@Redux/languages/languagesSlice';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import ListParameterType from './ListParameterType';
 

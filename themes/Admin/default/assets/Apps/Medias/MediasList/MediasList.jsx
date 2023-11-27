@@ -8,10 +8,112 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { changeMediasFilters, getMediasAction, mediasSelector } from '@Redux/medias/mediasSlice';
+import { changeMediasFilters, getMediasAction, mediasSelector } from '@Apps/Medias/redux/medias/mediasSlice';
+import CategoryIcon from '@mui/icons-material/Category';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
 
-export const MediasList = () => {
+const LIST_TYPE = [
+    { label: 'Image', value: 'Image' },
+    { label: 'Audio', value: 'Audio' },
+    { label: 'Vidéo', value: 'Vidéo' },
+    { label: 'Word', value: 'Word' },
+    { label: 'Excel', value: 'Excel' },
+    { label: 'Powerpoint', value: 'Powerpoint' },
+    { label: 'Pdf', value: 'PDF' },
+    { label: 'Text', value: 'Text' },
+];
+
+const SORT_LIST = [
+    { label: 'ID', value: 'id' },
+    { label: 'Activé', value: 'active' },
+    { label: 'Titre', value: 'title' },
+    { label: 'Type', value: 'documentType' },
+    { label: 'Poids', value: 'documentSize' },
+];
+
+export const mediasListCrud = {
+    title: 'Médias',
+    listTitle: 'Liste des médias',
+    filtersData: [
+        { key: 'active', type: 'boolean' },
+        { key: 'iframe', type: 'boolean' },
+        'title',
+        {
+            key: 'category',
+            transformFilter: (params, values) => {
+                values?.split(',').forEach((el, index) => {
+                    params[`filters[category][${index}]`] = el;
+                });
+            },
+        },
+        {
+            key: 'type',
+            transformFilter: (params, sort) => {
+                if (typeof sort === 'string') {
+                    sort = sort.split(',');
+                }
+
+                sort?.forEach((el, index) => {
+                    params[`filters[type][${index}]`] = el;
+                });
+            },
+        },
+        'page',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif ?', type: 'boolean' },
+        { key: 'iframe', title: 'Chercher les iframes', label: 'Iframes ?', type: 'boolean' },
+        { key: 'title', title: 'Chercher par titre', label: 'Titre', type: 'search' },
+        {
+            key: 'type',
+            title: 'Chercher par type',
+            label: 'Type',
+            type: 'multipleList',
+            icon: <CategoryIcon />,
+            parameters: {
+                nameValue: 'value',
+                nameLabel: 'label',
+            },
+            list: LIST_TYPE,
+        },
+        {
+            key: 'category',
+            title: 'Chercher par catégorie',
+            label: 'Catégorie',
+            type: 'categories',
+            icon: <CategoryIcon />,
+            parameters: {
+                nameValue: 'value',
+                nameLabel: 'label',
+            },
+            getList: ({ categoriesList }) => categoriesList,
+        },
+        {
+            component: ({ filters, changeFilters }) => (
+                <Component.MediasSorters
+                    value={filters.sort}
+                    setValue={(newValue) => {
+                        changeFilters({ ...filters, sort: newValue });
+                    }}
+                    list={SORT_LIST}
+                />
+            ),
+        },
+    ],
+};
+
+export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
     const { loading, medias, filters, total, error } = useSelector(mediasSelector);
     const dispatch = useDispatch();
     const [createDialog, setCreateDialog] = useState(false);
@@ -119,7 +221,8 @@ export const MediasList = () => {
                     title={
                         <Box display="flex" justifyContent={'space-between'} alignItems="center">
                             <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                Liste des médias {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
+                                {listCrud?.title}
+                                {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
                             </Typography>
                             <Box sx={{ display: 'flex' }}>
                                 <Component.CreateButton variant="contained" onClick={() => setAddIframeDialog(true)} id="addIframeMediaButton" sx={{ marginRight: 3 }}>
@@ -133,7 +236,12 @@ export const MediasList = () => {
                     }
                 />
                 <CardContent sx={{ height: '100%' }}>
-                    <Component.MediasFilters filters={filters} changeFilters={(values) => dispatch(changeMediasFilters(values))} categoriesList={mediaCategoriesList} />
+                    <Component.CmtFiltersList
+                        filters={filters}
+                        filtersList={listCrud?.filterList}
+                        changeFilters={(values) => dispatch(changeMediasFilters(values))}
+                        categoriesList={mediaCategoriesList}
+                    />
 
                     <Box sx={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
                         {medias?.map((item, index) => (

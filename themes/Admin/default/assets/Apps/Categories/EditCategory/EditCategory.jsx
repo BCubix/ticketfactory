@@ -7,8 +7,19 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
+import { getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { categoriesInitialSchema, categoriesValidationSchema, categoriesForm } from '../CategoriesForm/CategoriesForm';
+
+export const categoriesEditCrud = {
+    form: {
+        title: "Modification d'une catégorie",
+        initialSchema: categoriesInitialSchema,
+        validationSchema: categoriesValidationSchema,
+    },
+    ...categoriesForm,
+};
 
 export const EditCategory = () => {
     const dispatch = useDispatch();
@@ -67,5 +78,5 @@ export const EditCategory = () => {
         return <></>;
     }
 
-    return <Component.CategoriesForm handleSubmit={handleSubmit} initialValues={category} categoriesList={categoriesData?.categories} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={category} categoriesList={categoriesData?.categories} formCrud={Crud?.categories?.edit} />;
 };

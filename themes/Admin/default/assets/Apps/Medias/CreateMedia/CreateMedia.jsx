@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
-import { intitializeDropzone } from '@Apps/Medias/utils/dropzone';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { intitializeDropzone } from '@Apps/Medias/services/utils/dropzone';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 export const CreateMedia = ({ handleSubmit }) => {
     const dispatch = useDispatch();

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Table, TableContainer } from '@mui/material';
 
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
-import { languagesSelector } from '@Redux/languages/languagesSlice';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { Component } from '@/AdminService/Component';
 
 /**

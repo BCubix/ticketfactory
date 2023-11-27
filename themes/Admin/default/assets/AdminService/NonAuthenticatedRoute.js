@@ -1,12 +1,6 @@
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
-import { checkComponent, checkObject, checkString } from "@Services/utils/check";
+import { checkComponent, checkObject, checkString } from '@Services/utils/check';
 
-const NonAuthenticatedRouteObj = [
-    () => ({ path: Constant.LOGIN_PATH,           component: Component.Login }),
-    () => ({ path: Constant.FORGOT_PASSWORD_PATH, component: Component.ForgotPassword }),
-    () => ({ path: Constant.MODIFY_PASSWORD_PATH, component: Component.ChangePassword }),
-];
+const NonAuthenticatedRouteObj = [];
 
 /**
  * NonAuthenticatedRoute's getter.
@@ -18,8 +12,8 @@ export const NonAuthenticatedRoute = new Proxy(NonAuthenticatedRouteObj, {
         }
 
         const result = Reflect.get(target, key, receiver);
-        return typeof result === "function" && result.name === "" ? result() : result;
-    }
+        return typeof result === 'function' && result.name === '' ? result() : result;
+    },
 });
 
 /**
@@ -31,12 +25,12 @@ export const NonAuthenticatedRoute = new Proxy(NonAuthenticatedRouteObj, {
  *
  * @throws {Error} Parameters are not corresponded of type script.
  */
-export function setAuthenticatedRoute(path, component, option = {}) {
+export function setNonAuthenticatedRoute(path, component, option = {}) {
     checkString(path);
     checkComponent(component);
     checkObject(option);
 
-    const index = NonAuthenticatedRouteObj.findIndex(route => route().path === path);
+    const index = NonAuthenticatedRouteObj.findIndex((route) => route().path === path);
     if (index === -1) {
         NonAuthenticatedRouteObj.push(() => ({
             path: path,

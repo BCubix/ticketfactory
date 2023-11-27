@@ -1,96 +1,93 @@
-import React from 'react';
-import { Formik } from 'formik';
+import { changeSlug } from '@Services/utils/changeSlug';
+import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import * as Yup from 'yup';
 
-import { Button, Grid, Box } from '@mui/material';
+export const seasonsInitialSchema = {
+    name: (initValues) => initValues?.name || '',
+    active: (initValues) => initValues?.active || false,
+    beginYear: (initValues) => initValues?.beginYear || '',
+    slug: (initValues) => initValues?.slug || '',
+    lang: (initValues) => initValues?.lang?.id || '',
+    languageGroup: (initValues) => initValues?.languageGroup || '',
+    editSlug: false,
+    seo: SeoInitialValues,
+};
 
-import { Component } from '@/AdminService/Component';
-import { changeSlug } from '@Services/utils/changeSlug';
+export const seasonsValidationSchema = {
+    name: Yup.string().required('Veuillez renseigner le nom de la saison.').max(250, 'Le nom renseigné est trop long.'),
+    beginYear: Yup.number().required("Veuillez renseigner l'année de début.").min(1970, 'Veuillez renseigner une année valide.').max(2100, 'Veuillez renseigner une année valide.'),
+};
 
-export const SeasonsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null }) => {
-    const initValues = translateInitialValues || initialValues;
-
-    const seasonsSchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom de la saison.').max(250, 'Le nom renseigné est trop long.'),
-        beginYear: Yup.number()
-            .required("Veuillez renseigner l'année de début.")
-            .min(1970, 'Veuillez renseigner une année valide.')
-            .max(2100, 'Veuillez renseigner une année valide.'),
-    });
-
-    return (
-        <Formik
-            initialValues={{
-                name: initValues?.name || '',
-                active: initValues?.active || false,
-                beginYear: initValues?.beginYear || '',
-                slug: initValues?.slug || '',
-                lang: initValues?.lang?.id || '',
-                languageGroup: initValues?.languageGroup || '',
-                editSlug: false,
-                seo: {
-                    metaTitle: initValues?.metaTitle || '',
-                    metaDescription: initValues?.metaDescription || '',
-                    socialImage: initValues?.socialImage || null,
-                    fbTitle: initValues?.fbTitle || '',
-                    fbDescription: initValues?.fbDescription || '',
-                    twTitle: initValues?.twTitle || '',
-                    twDescription: initValues?.twDescription || '',
+export const seasonsForm = {
+    submitLine: {
+        activeInput: true,
+        activeLabel: 'Saison active ?',
+    },
+    api: {
+        dataFields: {
+            active: { type: 'boolean' },
+            name: { type: 'string' },
+            beginYear: { type: 'string' },
+            slug: { type: 'slug' },
+            lang: { type: 'string' },
+            languageGroup: { type: 'string' },
+            seo: SeoApiDataFields,
+        },
+    },
+    fields: [
+        {
+            type: 'tabs',
+            keyId: 'season',
+            label: 'Saison',
+            fields: [
+                {
+                    type: 'block',
+                    title: 'Informations générales',
+                    keyId: 'block-general-info',
+                    fields: [
+                        {
+                            keyId: 'input-name',
+                            style: { xs: 12, sm: 6 },
+                            inputs: [
+                                {
+                                    name: 'name',
+                                    label: 'Nom',
+                                    inputType: 'textField',
+                                    required: true,
+                                    custom: {
+                                        handleChange:
+                                            ({ values, initialValues, setFieldValue }) =>
+                                            (e) => {
+                                                setFieldValue('name', e.target.value);
+                                                if (!values.editSlug && !initialValues) {
+                                                    setFieldValue('slug', changeSlug(e.target.value));
+                                                }
+                                            },
+                                    },
+                                },
+                                {
+                                    name: 'slug',
+                                    inputType: 'slugInput',
+                                },
+                            ],
+                        },
+                        {
+                            keyId: 'input-beginYear',
+                            style: { xs: 12, sm: 6 },
+                            input: {
+                                name: 'beginYear',
+                                label: 'Année de début',
+                                inputType: 'textField',
+                                type: 'number',
+                                required: true,
+                            },
+                        },
+                    ],
                 },
-            }}
-            validationSchema={seasonsSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-                handleSubmit(values);
-                setSubmitting(false);
-            }}
-        >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une saison`}>
-                    <Component.CmtFormBlock title={'Informations générales'}>
-                        <Grid container spacing={4}>
-                            <Grid item xs={12} md={6}>
-                                <Component.CmtTextField
-                                    value={values.name}
-                                    onChange={(e) => {
-                                        setFieldValue('name', e.target.value);
-                                        if (!values.editSlug && !initialValues) {
-                                            setFieldValue('slug', changeSlug(e.target.value));
-                                        }
-                                    }}
-                                    onBlur={handleBlur}
-                                    label="Nom"
-                                    name="name"
-                                    error={touched.name && errors.name}
-                                    required
-                                />
-                                <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Component.CmtTextField
-                                    type="number"
-                                    value={values.beginYear}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    label="Année de début"
-                                    name="beginYear"
-                                    error={touched.beginYear && errors.beginYear}
-                                    required
-                                />
-                            </Grid>
-                        </Grid>
-                    </Component.CmtFormBlock>
-
-                    <Component.SEOForm values={values} setFieldValue={setFieldValue} handleChange={handleChange} handleBlur={handleBlur} touched={touched} errors={errors} />
-
-                    <Box display="flex" justifyContent={'flex-end'} sx={{ pt: 3, pb: 2 }}>
-                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Saison active ?" />
-
-                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
-                            {initialValues ? 'Modifier' : 'Créer'}
-                        </Button>
-                    </Box>
-                </Component.CmtPageWrapper>
-            )}
-        </Formik>
-    );
+                SeoInitialFormInputs,
+            ],
+        },
+    ],
+    ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

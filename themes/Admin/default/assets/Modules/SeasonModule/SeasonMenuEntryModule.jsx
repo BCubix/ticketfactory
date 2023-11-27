@@ -12,7 +12,7 @@ import { Component } from '@/AdminService/Component';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
-import { menusListDataSelector, setMenusListData } from '@Redux/menus/menusListDataSlice';
+import { menusListDataSelector, setMenusListData } from '@Apps/Menus/redux/menus/menusListDataSlice';
 
 const MENU_TYPE = 'season';
 const MENU_TYPE_LABEL = 'Saisons';

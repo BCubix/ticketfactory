@@ -9,10 +9,21 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getPageBlocksAction } from '@Redux/pageBlocks/pageBlocksSlice';
+import { getPageBlocksAction } from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 import { GetPageBlockColumn } from './CreatePageBlockFormat';
+import { pageBlocksInitialSchema, pageBlocksValidationSchema, pageBlocksForm } from '../PageBlocksForm/PageBlocksForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const pageBlocksCreateCrud = {
+    form: {
+        title: "Creation d'un bloc de page",
+        initialSchema: pageBlocksInitialSchema,
+        validationSchema: pageBlocksValidationSchema,
+    },
+    ...pageBlocksForm,
+};
 
 export const CreatePageBlock = () => {
     const dispatch = useDispatch();
@@ -84,7 +95,7 @@ export const CreatePageBlock = () => {
 
     return (
         <>
-            {submitModel && <Component.PageBlocksForm handleSubmit={handleSubmit} modelValues={model} translateInitialValues={initialValues} />}
+            {submitModel && <Component.PageBlocksForm handleSubmit={handleSubmit} modelValues={model} translateInitialValues={initialValues} formCrud={Crud?.pageBlocks?.add} />}
             <Dialog
                 open={dialog}
                 maxWidth="md"

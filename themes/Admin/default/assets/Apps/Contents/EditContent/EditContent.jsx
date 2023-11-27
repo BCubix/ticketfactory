@@ -3,13 +3,24 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getContentsAction } from '@Redux/contents/contentsSlice';
-import { contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
+import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { Crud } from '@/AdminService/Crud';
+import { contentsInitialSchema, contentsValidationSchema, contentsForm } from '../ContentsForm/ContentsForm';
+
+export const contentsEditCrud = {
+    form: {
+        title: "Creation d'un contenu",
+        initialSchema: contentsInitialSchema,
+        validationSchema: contentsValidationSchema,
+    },
+    ...contentsForm,
+};
 
 export const EditContent = () => {
     const dispatch = useDispatch();
@@ -30,15 +41,11 @@ export const EditContent = () => {
         const result = await Api.contentsApi.editContent(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'Le contenu a bien été modifié.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('Le contenu a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getContentsAction());
 
-            navigate(Constant.CONTENT_BASE_PATH);
+            navigate(Constant.CONTENTS_BASE_PATH);
         }
     };
 
@@ -62,7 +69,7 @@ export const EditContent = () => {
         if (!result.result) {
             NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
 
-            navigate(Constant.CONTENT_BASE_PATH);
+            navigate(Constant.CONTENTS_BASE_PATH);
 
             return;
         }
@@ -72,7 +79,7 @@ export const EditContent = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate(Constant.CONTENT_BASE_PATH);
+            navigate(Constant.CONTENTS_BASE_PATH);
             return;
         }
 
@@ -83,11 +90,5 @@ export const EditContent = () => {
         return <></>;
     }
 
-    return (
-        <Component.ContentsForm
-            handleSubmit={handleSubmit}
-            initialValues={content}
-            selectedContentType={content?.contentType}
-        />
-    );
+    return <Component.ContentsForm handleSubmit={handleSubmit} initialValues={content} selectedContentType={content?.contentType} formCrud={Crud?.contents?.edit} />;
 };

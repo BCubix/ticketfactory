@@ -45,6 +45,8 @@ class Cart extends Datable
     #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'carts')]
     private Collection $vouchers;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one'])]
     #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
     private ?Order $linkedOrder = null;
 

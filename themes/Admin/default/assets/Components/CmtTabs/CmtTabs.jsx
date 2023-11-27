@@ -17,6 +17,11 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
     const [value, setValue] = useState(tabValue);
     const navigate = useNavigate();
 
+    if (list.length === 1) {
+        const TabComponent = list[0];
+        return TabComponent.component;
+    }
+
     return (
         <Box sx={containerStyle}>
             <Box sx={{ borderBottom: 1, borderBottom: 'none', backgroundColor: (theme) => theme.palette.secondary.light }}>

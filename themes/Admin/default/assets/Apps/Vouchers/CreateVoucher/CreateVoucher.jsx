@@ -6,8 +6,19 @@ import { useNavigate } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { getVouchersAction } from '@Redux/vouchers/vouchersSlice';
+import { getVouchersAction } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { vouchersInitialSchema, vouchersValidationSchema, vouchersForm } from '@Apps/Vouchers/VouchersForm/VouchersForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const vouchersCreateCrud = {
+    form: {
+        title: "Création d'un coupon de réduction",
+        initialSchema: vouchersInitialSchema,
+        validationSchema: vouchersValidationSchema,
+    },
+    ...vouchersForm,
+};
 
 export const CreateVoucher = () => {
     const dispatch = useDispatch();
@@ -38,5 +49,5 @@ export const CreateVoucher = () => {
         return <></>;
     }
 
-    return <Component.VouchersForm handleSubmit={handleSubmit} eventCategoriesList={categories} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} eventCategoriesList={categories} formCrud={Crud?.vouchers?.add} />;
 };

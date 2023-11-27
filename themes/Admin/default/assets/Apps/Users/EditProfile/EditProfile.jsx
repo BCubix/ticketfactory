@@ -7,9 +7,9 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getUsersAction } from '@Redux/users/usersSlice';
+import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { useSelector } from 'react-redux';
-import { profileSelector } from '../../../redux/profile/profileSlice';
+import { profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
 import { apiMiddleware } from '../../../services/utils/apiMiddleware';
 
 export const EditProfile = () => {

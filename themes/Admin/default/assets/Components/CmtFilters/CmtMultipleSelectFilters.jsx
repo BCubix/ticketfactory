@@ -4,7 +4,7 @@ import { Box, Checkbox, CircularProgress, FormControl, InputLabel, ListItemText,
 import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
-import { languagesSelector } from '@Redux/languages/languagesSlice';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, icon, parameters, getList, id }) => {
     const dispatch = useDispatch();
@@ -64,7 +64,7 @@ export const CmtMultipleSelectFilters = ({ list, value, setValue, title, label, 
 
         apiMiddleware(dispatch, async () => {
             const defaultLanguage = languagesData.languages.find((el) => el.isDefault);
-            const result = await getList(defaultLanguage?.id);
+            const result = await getList({ lang: defaultLanguage?.id });
 
             if (result) {
                 setDisplayList(result);

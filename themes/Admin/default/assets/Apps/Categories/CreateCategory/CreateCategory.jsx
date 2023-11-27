@@ -7,9 +7,20 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getCategoriesAction } from '@Redux/categories/categoriesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { categoriesInitialSchema, categoriesValidationSchema, categoriesForm } from '../CategoriesForm/CategoriesForm';
+
+export const categoriesCreateCrud = {
+    form: {
+        title: "Creation d'une catégorie",
+        initialSchema: categoriesInitialSchema,
+        validationSchema: categoriesValidationSchema,
+    },
+    ...categoriesForm,
+};
 
 export const CreateCategory = () => {
     const dispatch = useDispatch();
@@ -73,11 +84,12 @@ export const CreateCategory = () => {
     }
 
     return (
-        <Component.CategoriesForm
+        <Component.CmtCrudForm
             handleSubmit={handleSubmit}
             categoriesList={categoriesData?.categories}
             translateInitialValues={initialValues}
             parentId={parseInt(parentId) || null}
+            formCrud={Crud?.categories?.add}
         />
     );
 };

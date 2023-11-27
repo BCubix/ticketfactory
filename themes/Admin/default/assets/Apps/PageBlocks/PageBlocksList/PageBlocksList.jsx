@@ -1,108 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Box, CardContent, Typography } from '@mui/material';
+import React from 'react';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
+import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-import { changePageBlocksFilters, getPageBlocksAction, pageBlocksSelector } from '@Redux/pageBlocks/pageBlocksSlice';
+import { changePageBlocksFilters, getPageBlocksAction, pageBlocksSelector } from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
 
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
+export const pageBlocksListCrud = {
+    title: 'Blocs',
+    listTitle: 'Liste des blocs',
+    filtersData: [
+        'name',
+        'page',
+        'lang',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [{ key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' }],
+    pagination: true,
+    tableContextualMenu: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '60%', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+    ],
+    loadDataAction: () => getPageBlocksAction(),
+    changeFiltersActions: (props, page) => changePageBlocksFilters(props, page),
+    dataSelector: pageBlocksSelector,
+    dataList: (selector) => selector.pageBlocks,
+    duplicate: (props) => Api.pageBlocksApi.duplicatePageBlock(props),
+    delete: (props) => Api.pageBlocksApi.deletePageBlock(props),
+    links: {
+        new: () => `${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.PAGE_BLOCKS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}?pageBlockId=${id}&languageId=${languageId}`,
+    },
+    messages: {
+        duplicateValidation: 'La saison a bien été dupliquée',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette salle ?',
+    },
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
+};
 
 export const PageBlocksList = () => {
-    const { loading, pageBlocks, filters, total, error } = useSelector(pageBlocksSelector);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [deleteDialog, setDeleteDialog] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !pageBlocks && !error) {
-            dispatch(getPageBlocksAction());
-        }
-    }, []);
-
-    const handleDelete = async (id) => {
-        apiMiddleware(dispatch, async () => {
-            await Api.pageBlocksApi.deletePageBlock(id);
-            dispatch(getPageBlocksAction());
-            setDeleteDialog(null);
-        });
-    };
-
-    const handleDuplicate = (id) => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.pageBlocksApi.duplicatePageBlock(id);
-            if (result?.result) {
-                NotificationManager.success('Le bloc a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getPageBlocksAction());
-            } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-            }
-        });
-    };
-
-    return (
-        <>
-            <Component.CmtPageWrapper title="Blocs">
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <Component.CmtCardHeader
-                        title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des blocs{' '}
-                                    {pageBlocks && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + pageBlocks.length} sur ${total})`}
-                                </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH)}>
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
-                        }
-                    />
-                    <CardContent>
-                        <Component.PageBlocksFilters filters={filters} changeFilters={(values) => dispatch(changePageBlocksFilters(values))} />
-
-                        <Component.ListTable
-                            contextualMenu
-                            table={TableColumn.PageBlocksList}
-                            list={pageBlocks}
-                            onDuplicate={(id) => {
-                                handleDuplicate(id);
-                            }}
-                            onEdit={(id) => {
-                                navigate(`${Constant.PAGE_BLOCKS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onTranslate={(id, languageId) => {
-                                navigate(`${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}?pageBlockId=${id}&languageId=${languageId}`);
-                            }}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changePageBlocksFilters(newFilters))}
-                            onDelete={(id) => setDeleteDialog(id)}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) => dispatch(changePageBlocksFilters({ ...filters }, newValue))}
-                            setLimit={(newValue) => {
-                                dispatch(changePageBlocksFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={pageBlocks?.length}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">Êtes-vous sûr de vouloir supprimer ce bloc ?</Typography>
-
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
-        </>
-    );
+    return <Component.CmtCrudList listCrud={Crud?.pageBlocks?.list} />;
 };

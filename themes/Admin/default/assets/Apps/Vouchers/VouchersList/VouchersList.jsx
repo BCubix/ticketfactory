@@ -1,88 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
-import { CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Typography } from '@mui/material';
 
 import { Api } from '@/AdminService/Api';
+import { Crud } from '@/AdminService/Crud';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-import { changeVouchersFilters, getVouchersAction, vouchersSelector } from '@Redux/vouchers/vouchersSlice';
+import { changeVouchersFilters, getVouchersAction, vouchersSelector } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
+import moment from 'moment';
+
+export const vouchersListCrud = {
+    title: 'Réductions',
+    listTitle: 'Liste des réductions',
+    filtersData: [
+        { key: 'active', type: 'boolean' },
+        'page',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [{ key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' }],
+    pagination: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '15%' },
+        { name: 'code', label: 'Code', width: '10%' },
+        {
+            name: 'discount',
+            label: 'Réduction',
+            width: '10%',
+            renderFunction: (item) => (
+                <Typography>
+                    {item?.discount} {item.unit}
+                </Typography>
+            ),
+        },
+        {
+            name: 'beginDate',
+            label: 'Date de début',
+            width: '15%',
+            renderFunction: (item) => <Typography>{item.beginDate ? moment(item.beginDate).format('DD/MM/YYYY') : '-'}</Typography>,
+        },
+        {
+            name: 'endDate',
+            label: 'Date de fin',
+            width: '15%',
+            renderFunction: (item) => <Typography>{item.endDate ? moment(item.endDate).format('DD/MM/YYYY') : '-'}</Typography>,
+        },
+    ],
+    loadDataAction: () => getVouchersAction(),
+    changeFiltersActions: (props, page) => changeVouchersFilters(props, page),
+    dataSelector: vouchersSelector,
+    dataList: (selector) => selector.vouchers,
+    delete: (props) => Api.vouchersApi.deleteVoucher(props),
+    links: {
+        new: () => `${Constant.VOUCHERS_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.VOUCHERS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+    },
+    messages: {
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette réduction ?',
+    },
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
+};
 
 export const VouchersList = () => {
-    const { loading, vouchers, filters, total, error } = useSelector(vouchersSelector);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [deleteDialog, setDeleteDialog] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !vouchers && !error) {
-            dispatch(getVouchersAction());
-        }
-    }, []);
-
-    const handleDelete = async (id) => {
-        await Api.vouchersApi.deleteVoucher(id);
-
-        dispatch(getVouchersAction());
-
-        setDeleteDialog(null);
-    };
-
-    return (
-        <>
-            <Component.CmtPageWrapper title={'Réductions'}>
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <Component.CmtCardHeader
-                        title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des réductions{' '}
-                                    {vouchers && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + vouchers.length} sur ${total})`}
-                                </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH)}>
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
-                        }
-                    />
-                    <CardContent>
-                        <Component.VouchersFilters filters={filters} changeFilters={(values) => dispatch(changeVouchersFilters(values))} />
-
-                        <Component.ListTable
-                            table={TableColumn.VouchersList}
-                            list={vouchers}
-                            onEdit={(id) => {
-                                navigate(`${Constant.VOUCHERS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onDelete={(id) => setDeleteDialog(id)}
-                            filters={filters}
-                            changeFilters={(newFilters) => dispatch(changeVouchersFilters(newFilters))}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) => dispatch(changeVouchersFilters({ ...filters }, newValue))}
-                            setLimit={(newValue) => {
-                                dispatch(changeVouchersFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={vouchers?.length}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">Êtes-vous sûr de vouloir supprimer cet utilisateur ?</Typography>
-
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
-        </>
-    );
+    return <Component.CmtCrudList listCrud={Crud?.vouchers?.list} />;
 };

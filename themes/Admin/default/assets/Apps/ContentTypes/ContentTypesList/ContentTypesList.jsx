@@ -1,97 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import { CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import React from 'react';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
 
-import { changeContentTypesFilters, contentTypesSelector, getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { changeContentTypesFilters, contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
+import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+
+export const contentTypesListCrud = {
+    title: 'Types de contenus',
+    listTitle: 'Liste des types de contenus',
+    filtersData: [
+        { key: 'active', type: 'boolean' },
+        { key: 'pageType', type: 'boolean' },
+        'name',
+        'page',
+        'limit',
+        {
+            key: 'sort',
+            transformFilter: (params, sort) => {
+                const splitSort = sort?.split(' ');
+
+                params['filters[sortField]'] = splitSort[0];
+                params['filters[sortOrder]'] = splitSort[1];
+            },
+        },
+    ],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
+    pagination: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '70%', sortable: true },
+    ],
+    loadDataAction: () => getContentTypesAction(),
+    changeFiltersActions: (props, page) => changeContentTypesFilters(props, page),
+    dataSelector: contentTypesSelector,
+    dataList: (selector) => selector.contentTypes,
+    delete: (props) => Api.contentTypesApi.deleteSeason(props),
+    links: {
+        new: () => `${Constant.CONTENT_TYPES_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.CONTENT_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+    },
+    messages: {
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer ce type de contenus ?',
+    },
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
+};
 
 export const ContentTypesList = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { loading, contentTypes, filters, total, error } = useSelector(contentTypesSelector);
-    const [deleteDialog, setDeleteDialog] = useState(null);
-
-    useEffect(() => {
-        if (!loading && !contentTypes && !error) {
-            dispatch(getContentTypesAction());
-        }
-    }, []);
-
-    const handleDelete = async (id) => {
-        const check = await Api.authApi.checkIsAuth();
-
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        await Api.contentTypesApi.deleteContentType(id);
-
-        dispatch(getContentTypesAction());
-
-        setDeleteDialog(null);
-    };
-
-    return (
-        <>
-            <Component.CmtPageWrapper title="Types de contenus">
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
-                    <Component.CmtCardHeader
-                        title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    Liste des types de contenus{' '}
-                                    {contentTypes && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + contentTypes.length} sur ${total})`}
-                                </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => navigate(Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH)}>
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
-                        }
-                    />
-                    <CardContent>
-                        <Component.ContentTypesFilters filters={filters} changeFilters={(values) => dispatch(changeContentTypesFilters(values))} />
-
-                        <Component.ListTable
-                            filters={filters}
-                            table={TableColumn.ContentTypesList}
-                            list={contentTypes}
-                            onEdit={(id) => {
-                                navigate(`${Constant.CONTENT_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            changeFilters={(newFilters) => dispatch(changeContentTypesFilters(newFilters))}
-                            onDelete={(id) => setDeleteDialog(id)}
-                        />
-
-                        <Component.CmtPagination
-                            page={filters.page}
-                            total={total}
-                            limit={filters.limit}
-                            setPage={(newValue) => dispatch(changeContentTypesFilters({ ...filters }, newValue))}
-                            setLimit={(newValue) => {
-                                dispatch(changeContentTypesFilters({ ...filters, limit: newValue }));
-                            }}
-                            length={contentTypes?.length}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
-            </Component.CmtPageWrapper>
-            <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">Êtes-vous sûr de vouloir supprimer ce type de contenus ?</Typography>
-
-                    <Typography component="p">Cette action est irréversible.</Typography>
-                </Box>
-            </Component.DeleteDialog>
-        </>
-    );
+    return <Component.CmtCrudList listCrud={Crud?.contentTypes?.list} />;
 };

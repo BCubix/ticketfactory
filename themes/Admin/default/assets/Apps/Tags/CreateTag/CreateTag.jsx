@@ -7,8 +7,19 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getTagsAction } from '@Redux/tags/tagsSlice';
+import { getTagsAction } from '@Apps/Tags/redux/tags/tagsSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { tagsInitialSchema, tagsValidationSchema, tagsForm } from '@Apps/Tags/TagsForm/TagsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const tagsCreateCrud = {
+    form: {
+        title: "Création d'un tag",
+        initialSchema: tagsInitialSchema,
+        validationSchema: tagsValidationSchema,
+    },
+    ...tagsForm,
+};
 
 export const CreateTag = () => {
     const dispatch = useDispatch();
@@ -51,5 +62,5 @@ export const CreateTag = () => {
         return <></>;
     }
 
-    return <Component.TagsForm handleSubmit={handleSubmit} translateInitialValues={initialValues} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} translateInitialValues={initialValues} formCrud={Crud?.tags?.add} />;
 };

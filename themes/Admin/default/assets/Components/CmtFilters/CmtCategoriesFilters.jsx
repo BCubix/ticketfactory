@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeItem, TreeView } from '@mui/lab';
-import { Box, Checkbox, Chip, Typography } from '@mui/material';
+import { Box, Checkbox, Chip, CircularProgress, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -51,7 +51,7 @@ const displayCategoriesOptions = (list, values, setValue, id) => {
     );
 };
 
-export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon, getList, id }) => {
+export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon, getList, id, ...props }) => {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const parsedValue = value ? value?.split(',') : [];
@@ -74,7 +74,8 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
         setLoading(true);
 
         apiMiddleware(dispatch, async () => {
-            const result = await getList();
+            console.log(props);
+            const result = await getList({ id, ...props });
 
             if (result) {
                 setDisplayList(result);
@@ -111,17 +112,24 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
                     <Typography id={`choice-${title}-label`} size="small" my={3}>
                         {label}
                     </Typography>
-                    <TreeView
-                        size="small"
-                        id={id ? id + 'Tree' : null}
-                        value={parsedValue}
-                        defaultCollapseIcon={<ExpandMoreIcon />}
-                        defaultExpanded={[list.id?.toString()]}
-                        defaultExpandIcon={<ChevronRightIcon />}
-                        sx={{ flexGrow: 1, overflowY: 'auto' }}
-                    >
-                        {displayCategoriesOptions(list, parsedValue, setValue, id)}
-                    </TreeView>
+                    {loading && (
+                        <Box margin={5} display="flex" justifyContent={'center'}>
+                            <CircularProgress color="inherit" />
+                        </Box>
+                    )}
+                    {displayList && (
+                        <TreeView
+                            size="small"
+                            id={id ? id + 'Tree' : null}
+                            value={parsedValue}
+                            defaultCollapseIcon={<ExpandMoreIcon />}
+                            defaultExpanded={[displayList?.id?.toString()]}
+                            defaultExpandIcon={<ChevronRightIcon />}
+                            sx={{ flexGrow: 1, overflowY: 'auto' }}
+                        >
+                            {displayCategoriesOptions(displayList, parsedValue, setValue, id)}
+                        </TreeView>
+                    )}
                 </Box>
             </Component.CmtPopover>
         </Box>

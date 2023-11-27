@@ -11,7 +11,7 @@ describe('Update Content Spec', () => {
         sessionStorage.removeItem('contentsSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + CONTENTS_API_PATH + '*').as('getList');
-        cy.visit(Constant.CONTENT_BASE_PATH);
+        cy.visit(Constant.CONTENTS_BASE_PATH);
         cy.wait(500);
 
         cy.wait('@getList').then(({ response }) => {

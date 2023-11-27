@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardContent, CardHeader } from '@mui/material';
+import { CardContent } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
 export const CmtFormBlock = ({ title, children, paddingContent = null, marginBlock = 3, ...rest }) => {

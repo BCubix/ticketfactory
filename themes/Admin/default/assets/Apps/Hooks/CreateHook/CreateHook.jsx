@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getHooksAction, hooksSelector } from '@Redux/hooks/hooksSlice';
+import { getHooksAction, hooksSelector } from '@Apps/Hooks/redux/hooks/hooksSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const CreateHook = () => {
@@ -51,5 +51,9 @@ export const CreateHook = () => {
         return <></>;
     }
 
+<<<<<<< HEAD
     return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} displayHookList={displayHookList} />;
+=======
+    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} />;
+>>>>>>> refacto-react
 };

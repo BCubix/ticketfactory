@@ -9,15 +9,119 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { TableColumn } from '@/AdminService/TableColumn';
 
-import { mediaCategoriesSelector } from '@Redux/mediaCategories/mediaCategoriesSlice';
-import { getMediaCategoriesAction } from '@Redux/mediaCategories/mediaCategoriesSlice';
+import { mediaCategoriesSelector } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
+import { getMediaCategoriesAction } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
+import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-export const MediaCategoriesList = () => {
+export const mediaCategoriesListCrud = {
+    title: 'Catégories',
+    listTitle: 'Liste des catégories',
+    tableContextualMenu: true,
+    tableList: [
+        { name: 'id', label: 'ID', width: '10%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '50%', sortable: true },
+        { name: 'shortDescription', label: 'Description courte', width: '25%' },
+        { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+    ],
+    links: {
+        new: () => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}`,
+    },
+    messages: {
+        duplicateValidation: 'La catégorie a bien été dupliquée',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette catégories ?',
+    },
+    wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS.wrapperComponent,
+    components: [
+        {
+            component: ({ listCrud, mediaCategory, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => (
+                <Component.ListTable
+                    contextualMenu
+                    table={listCrud?.tableList}
+                    list={mediaCategory?.children}
+                    onEdit={(id) => {
+                        navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                    }}
+                    onDelete={(id) => setDeleteDialog(id)}
+                    onClick={(elemId) => {
+                        navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/${elemId}`);
+                    }}
+                    onDuplicate={(id) => {
+                        handleDuplicate(id);
+                    }}
+                    onTranslate={(id, languageId) => {
+                        navigate(
+                            `${Constant.MEDIA_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?mediaCategoryId=${id}&languageId=${languageId}${
+                                path ? `&parentId=${path.at(-1)?.id}` : ''
+                            }`
+                        );
+                    }}
+                    onDragEnd={handleDragEnd}
+                />
+            ),
+        },
+    ],
+    headerComponents: [
+        {
+            component: ({ listCrud, mediaCategories, path, navigate }) => (
+                <Box display="flex" alignItems="center" pt={5}>
+                    <Component.CmtBreadCrumb list={path} />
+                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(mediaCategories.id))}>
+                        <Component.EditCategoryLink component="span" variant="body1">
+                            Modifier
+                        </Component.EditCategoryLink>
+                    </Box>
+                </Box>
+            ),
+        },
+    ],
+    deleteComponent: ({ deleteDialog, setDeleteDialog, setDeleteEvent, deleteEvents, handleDelete }) => (
+        <Component.DeleteDialog
+            open={deleteDialog ? true : false}
+            onCancel={() => {
+                setDeleteDialog(null);
+                setDeleteEvent(false);
+            }}
+            deleteText={'Valider'}
+            onDelete={() => handleDelete(deleteDialog, deleteEvents)}
+        >
+            <Box textAlign="center" py={3}>
+                <Typography component="p">
+                    Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie de média ou souhaitez-vous les rattacher à la catégorie de média parente ?
+                </Typography>
+
+                <Box className="flex row-center" mt={5}>
+                    <RadioGroup
+                        defaultValue={false}
+                        name="delete-event-radio-choice"
+                        value={deleteEvents}
+                        onChange={(e) => {
+                            setDeleteEvent(e.target.value);
+                        }}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            width: '100%',
+                        }}
+                    >
+                        <FormControlLabel value={true} control={<Radio />} label={'Suprimer'} />
+                        <FormControlLabel value={false} control={<Radio />} label={'Rattacher à la catégorie de média parente'} />
+                    </RadioGroup>
+                </Box>
+            </Box>
+        </Component.DeleteDialog>
+    ),
+};
+
+export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ...props }) => {
     const { loading, mediaCategories, error } = useSelector(mediaCategoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -135,14 +239,27 @@ export const MediaCategoriesList = () => {
     return (
         <>
             <Component.CmtPageWrapper title="Catégories de média">
-                <Box display="flex" alignItems="center" pt={5}>
-                    <Component.CmtBreadCrumb list={path} />
-                    <Box pl={3} onClick={() => navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/${id || mediaCategories.id}${Constant.EDIT_PATH}`)}>
-                        <Component.EditCategoryLink component="span" variant="body1">
-                            Modifier
-                        </Component.EditCategoryLink>
-                    </Box>
-                </Box>
+                {listCrud?.headerComponents?.map((item, index) => {
+                    const { component: ItemComponent } = item;
+
+                    if (!ItemComponent) {
+                        return <></>;
+                    }
+
+                    return (
+                        <ItemComponent
+                            key={index}
+                            objectData={useSelector(mediaCategoriesSelector)}
+                            listCrud={listCrud}
+                            navigate={navigate}
+                            dispatch={dispatch}
+                            handleDuplicate={handleDuplicate}
+                            setDeleteDialog={setDeleteDialog}
+                            path={path}
+                            {...props}
+                        />
+                    );
+                })}
 
                 <Component.CmtCard sx={{ width: '100%', mt: 2 }}>
                     <Component.CmtCardHeader
@@ -161,68 +278,44 @@ export const MediaCategoriesList = () => {
                         }
                     />
                     <CardContent>
-                        <Component.ListTable
-                            contextualMenu
-                            table={TableColumn.MediaCategoriesList}
-                            list={mediaCategory?.children}
-                            onEdit={(id) => {
-                                navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                            }}
-                            onDelete={(id) => setDeleteDialog(id)}
-                            onClick={(elemId) => {
-                                navigate(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/${elemId}`);
-                            }}
-                            onDuplicate={(id) => {
-                                handleDuplicate(id);
-                            }}
-                            onTranslate={(id, languageId) => {
-                                navigate(
-                                    `${Constant.MEDIA_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?mediaCategoryId=${id}&languageId=${languageId}${
-                                        path ? `&parentId=${path.at(-1)?.id}` : ''
-                                    }`
-                                );
-                            }}
-                            onDragEnd={handleDragEnd}
-                        />
+                        {listCrud?.components?.map((item, index) => {
+                            const { component: ItemComponent } = item;
+
+                            if (!ItemComponent) {
+                                return <></>;
+                            }
+
+                            return (
+                                <ItemComponent
+                                    key={index}
+                                    mediaCategories={mediaCategories}
+                                    mediaCategory={mediaCategory}
+                                    handleDragEnd={handleDragEnd}
+                                    listCrud={listCrud}
+                                    path={path}
+                                    objectData={useSelector(mediaCategoriesSelector)}
+                                    navigate={navigate}
+                                    dispatch={dispatch}
+                                    handleDuplicate={handleDuplicate}
+                                    setDeleteDialog={setDeleteDialog}
+                                    {...props}
+                                />
+                            );
+                        })}
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
+            {listCrud?.deleteComponent ? (
+                <listCrud.deleteComponent {...props} {...{ deleteDialog, setDeleteDialog, setDeleteEvent, deleteEvents, handleDelete }} />
+            ) : (
+                <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+                    <Box textAlign="center" py={3}>
+                        <Typography component="p">{listCrud?.messages?.confirmationDelete}</Typography>
 
-            <Component.DeleteDialog
-                open={deleteDialog ? true : false}
-                onCancel={() => {
-                    setDeleteDialog(null);
-                    setDeleteEvent(false);
-                }}
-                deleteText={'Valider'}
-                onDelete={() => handleDelete(deleteDialog, deleteEvents)}
-            >
-                <Box textAlign="center" py={3}>
-                    <Typography component="p">
-                        Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie de média ou souhaitez-vous les rattacher à la catégorie de média parente ?
-                    </Typography>
-
-                    <Box className="flex row-center" mt={5}>
-                        <RadioGroup
-                            defaultValue={false}
-                            name="delete-event-radio-choice"
-                            value={deleteEvents}
-                            onChange={(e) => {
-                                setDeleteEvent(e.target.value);
-                            }}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                                width: '100%',
-                            }}
-                        >
-                            <FormControlLabel value={true} control={<Radio />} label={'Suprimer'} />
-                            <FormControlLabel value={false} control={<Radio />} label={'Rattacher à la catégorie de média parente'} />
-                        </RadioGroup>
+                        <Typography component="p">Cette action est irréversible.</Typography>
                     </Box>
-                </Box>
-            </Component.DeleteDialog>
+                </Component.DeleteDialog>
+            )}
         </>
     );
 };

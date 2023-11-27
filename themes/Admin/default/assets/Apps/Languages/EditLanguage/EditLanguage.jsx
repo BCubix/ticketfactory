@@ -6,10 +6,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getLanguagesAction } from '@Redux/languages/languagesSlice';
-
+import { getLanguagesAction } from '@Apps/Languages/redux/languages/languagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { languagesInitialSchema, languagesValidationSchema, languagesForm } from '../LanguagesForm/LanguagesForm';
+
+export const languagesEditCrud = {
+    form: {
+        title: "Modification d'une langue",
+        initialSchema: languagesInitialSchema,
+        validationSchema: languagesValidationSchema,
+    },
+    ...languagesForm,
+};
 
 export const EditLanguage = () => {
     const dispatch = useDispatch();
@@ -54,5 +63,5 @@ export const EditLanguage = () => {
         return <></>;
     }
 
-    return <Component.LanguagesForm handleSubmit={handleSubmit} initialValues={language} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={language} formCrud={Crud?.languages?.add} />;
 };

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
-import { Component } from "@/AdminService/Component";
-import { dashboardSelector, getDashboardAction } from '@Redux/dashboard/dashboardSlice';
+import { Component } from '@/AdminService/Component';
+import { dashboardSelector, getDashboardAction } from '@Apps/Home/redux/dashboard/dashboardSlice';
 
 export const MainDashboard = () => {
     const { loading, dashboard, error } = useSelector(dashboardSelector);

@@ -8,8 +8,18 @@ import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
 
-export const CartsDetail = () => {
+export const cartsDetailCrud = {
+    title: 'Afficher',
+    components: [
+        { component: ({ cart, ...props }) => <Component.CustomerCartPart customer={cart?.customer} cart={cart} {...props} /> },
+        { component: ({ cart, ...props }) => <Component.OrderCartPart order={cart?.linkedOrder} cart={cart} {...props} /> },
+        { component: ({ cart, ...props }) => <Component.CartPart cart={cart} {...props} /> },
+    ],
+};
+
+export const CartsDetail = ({ ...props }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -42,11 +52,9 @@ export const CartsDetail = () => {
     }
 
     return (
-        <Component.CmtPageWrapper title={'Afficher'}>
+        <Component.CmtPageWrapper title={Crud?.carts?.detail?.title}>
             <Grid container spacing={4}>
-                <Component.CustomerCartPart customer={cart?.customer} />
-                <Component.OrderCartPart order={cart?.order} />
-                <Component.CartPart cart={cart} />
+                <Component.CmtDisplayComponents list={Crud?.carts?.detail?.components} detailCrud={Crud?.carts?.detail} cart={cart} {...props} />
             </Grid>
         </Component.CmtPageWrapper>
     );

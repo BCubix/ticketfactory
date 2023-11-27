@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +7,24 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getContentTypesAction } from '@Redux/contentTypes/contentTypesSlice';
+import { getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { contentTypesInitialSchema, contentTypesValidationSchema, contentTypesForm } from '../ContentTypesForm/ContentTypesForm';
+import ContentTypesModules from '../ContentTypesForm/ContentTypeModules';
+
+export const contentTypesCreateCrud = {
+    form: {
+        title: "Création d'un type de contenus",
+        initialSchema: contentTypesInitialSchema,
+        validationSchema: contentTypesValidationSchema,
+        formProps: {
+            validateOnChange: false,
+            validateOnBlur: true,
+        },
+    },
+    ...contentTypesForm,
+};
 
 export const CreateContentType = () => {
     const dispatch = useDispatch();
@@ -42,9 +58,13 @@ export const CreateContentType = () => {
         });
     }, []);
 
+    const getContentTypesModules = useMemo(() => {
+        return ContentTypesModules();
+    }, []);
+
     if (!pagesList) {
         return <></>;
     }
 
-    return <Component.ContentTypesForm submitForm={handleSubmit} pagesList={pagesList} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} pagesList={pagesList} getContentTypesModules={getContentTypesModules} formCrud={Crud?.contentTypes?.add} />;
 };

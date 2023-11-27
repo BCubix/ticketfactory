@@ -3,12 +3,24 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getContactRequestsAction } from '@Apps/ContactRequests/redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+
+import { Crud } from '@/AdminService/Crud';
+import { contactRequestsInitialSchema, contactRequestsValidationSchema, contactRequestsForm } from '@Apps/ContactRequests/ContactRequestsForm/ContactRequestsForm.jsx';
+
+export const contactRequestsCreateCrud = {
+    form: {
+        title: "Creation d'une demande de contact",
+        initialSchema: contactRequestsInitialSchema,
+        validationSchema: contactRequestsValidationSchema,
+    },
+    ...contactRequestsForm,
+};
 
 export const CreateContactRequests = () => {
     const dispatch = useDispatch();
@@ -26,11 +38,7 @@ export const CreateContactRequests = () => {
         const result = await Api.contactRequestsApi.createContactRequest(values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La demande de contact a bien été créée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La demande de contact a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getContactRequestsAction());
 
@@ -38,5 +46,5 @@ export const CreateContactRequests = () => {
         }
     };
 
-    return <Component.ContactRequestsForm handleSubmit={handleSubmit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.contactRequests?.add} />;
 };

@@ -3,12 +3,23 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { getContactRequestsAction } from '@Redux/contactRequests/contactRequestsSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getContactRequestsAction } from '@Apps/ContactRequests/redux/contactRequests/contactRequestsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { Crud } from '@/AdminService/Crud';
+import { contactRequestsInitialSchema, contactRequestsValidationSchema, contactRequestsForm } from '@Apps/ContactRequests/ContactRequestsForm/ContactRequestsForm.jsx';
+
+export const contactRequestsEditCrud = {
+    form: {
+        title: "Modification d'une demande de contact",
+        initialSchema: contactRequestsInitialSchema,
+        validationSchema: contactRequestsValidationSchema,
+    },
+    ...contactRequestsForm,
+};
 
 export const EditContactRequest = () => {
     const dispatch = useDispatch();
@@ -59,11 +70,7 @@ export const EditContactRequest = () => {
         const result = await Api.contactRequestsApi.editContactRequest(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La demande de contact a bien été modifiée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La demande de contact a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getContactRequestsAction());
 
@@ -75,5 +82,5 @@ export const EditContactRequest = () => {
         return <></>;
     }
 
-    return <Component.ContactRequestsForm handleSubmit={handleSubmit} initialValues={contactRequest} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={contactRequest} formCrud={Crud?.contactRequests?.edit} />;
 };

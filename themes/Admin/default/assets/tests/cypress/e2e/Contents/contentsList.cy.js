@@ -1,10 +1,5 @@
 import { Constant } from '../../../../AdminService/Constant';
-import {
-    ADMIN_API_BASE_PATH,
-    CONTENTS_API_PATH,
-    USER_EMAIL,
-    USER_PASSWORD,
-} from '../../../cypress.constant';
+import { ADMIN_API_BASE_PATH, CONTENTS_API_PATH, USER_EMAIL, USER_PASSWORD } from '../../../cypress.constant';
 
 describe('Redirections List Spec', () => {
     beforeEach(() => {
@@ -16,7 +11,7 @@ describe('Redirections List Spec', () => {
         sessionStorage.removeItem('contentsSort');
 
         cy.intercept('GET', ADMIN_API_BASE_PATH + CONTENTS_API_PATH + '*').as('getContents');
-        cy.visit(Constant.CONTENT_BASE_PATH);
+        cy.visit(Constant.CONTENTS_BASE_PATH);
     });
 
     it('get List', () => {

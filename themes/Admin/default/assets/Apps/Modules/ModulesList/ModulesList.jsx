@@ -24,8 +24,8 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
-import { getModulesAction, modulesSelector } from '@Redux/modules/modulesSlice';
-import { loginFailure } from '@Redux/profile/profileSlice';
+import { getModulesAction, modulesSelector } from '@Apps/Modules/redux/modules/modulesSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 const ACTION_DISABLE = 'Désactiver';
 const ACTION_UNINSTALL = 'Désinstaller';

@@ -3,6 +3,131 @@ import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
+export const SeoInitialValues = {
+    metaTitle: (initValues) => initValues?.metaTitle || '',
+    metaDescription: (initValues) => initValues?.metaDescription || '',
+    socialImage: (initValues) => initValues?.socialImage || null,
+    fbTitle: (initValues) => initValues?.fbTitle || '',
+    fbDescription: (initValues) => initValues?.fbDescription || '',
+    twTitle: (initValues) => initValues?.twTitle || '',
+    twDescription: (initValues) => initValues?.twDescription || '',
+};
+
+export const SeoApiDataFields = {
+    type: 'object',
+    subFields: {
+        socialImage: { type: 'id' },
+        metaTitle: { type: 'string' },
+        metaDescription: { type: 'string' },
+        fbTitle: { type: 'string' },
+        fbDescription: { type: 'string' },
+        twTitle: { type: 'string' },
+        twDescription: { type: 'string' },
+    },
+};
+
+export const SeoInitialFormInputs = {
+    type: 'block',
+    title: 'SEO & Social Media',
+    keyId: 'block-seo',
+    fields: [
+        {
+            component: () => (
+                <Box sx={{ marginBlock: 3 }}>
+                    <Typography>
+                        Si les champs suivants sont laissés vides, ils seront automatiquement générés à l'enregistrement à partir des champs titre et description.
+                    </Typography>
+                    <Typography>
+                        Le texte saisi dans le champ URL sera transformé au bon format (retrait des accents, mise en minuscules, remplacement des espaces par des tirets...)
+                    </Typography>
+                </Box>
+            ),
+        },
+        {
+            keyId: 'input-seo-socialImage',
+            style: { xs: 12 },
+            input: {
+                name: 'seo.socialImage',
+                label: 'Social Image',
+                inputType: 'cmtImage',
+                width: '25%',
+            },
+        },
+        {
+            keyId: 'input-seo-metaTitle',
+            style: { xs: 12, sm: 6 },
+            input: {
+                name: 'seo.metaTitle',
+                label: 'Meta titre',
+                inputType: 'textField',
+                inputProps: {
+                    maxLength: 86,
+                },
+            },
+        },
+        {
+            keyId: 'input-seo-metaDescription',
+            style: { xs: 12, sm: 6 },
+            input: {
+                name: 'seo.metaDescription',
+                label: 'Meta description',
+                inputType: 'textField',
+                inputProps: {
+                    maxLength: 86,
+                },
+            },
+        },
+        {
+            keyId: 'input-seo-fbTitle',
+            style: { xs: 12, sm: 6 },
+            input: {
+                name: 'seo.fbTitle',
+                label: 'Titre Facebook',
+                inputType: 'textField',
+                inputProps: {
+                    maxLength: 86,
+                },
+            },
+        },
+        {
+            keyId: 'input-seo-fbDescription',
+            style: { xs: 12, sm: 6 },
+            input: {
+                name: 'seo.fbDescription',
+                label: 'Description Facebook',
+                inputType: 'textField',
+                inputProps: {
+                    maxLength: 86,
+                },
+            },
+        },
+        {
+            keyId: 'input-seo-twTitle',
+            style: { xs: 12, sm: 6 },
+            input: {
+                name: 'seo.twTitle',
+                label: 'Titre Twitter',
+                inputType: 'textField',
+                inputProps: {
+                    maxLength: 86,
+                },
+            },
+        },
+        {
+            keyId: 'input-seo-twDescription',
+            style: { xs: 12, sm: 6 },
+            input: {
+                name: 'seo.twDescription',
+                label: 'Description Twitter',
+                inputType: 'textField',
+                inputProps: {
+                    maxLength: 86,
+                },
+            },
+        },
+    ],
+};
+
 export const SEOForm = ({ values, setFieldValue, handleChange, handleBlur, touched, errors }) => {
     return (
         <Component.CmtFormBlock title="SEO & Social Media">

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { TreeView, TreeItem } from '@mui/lab';
+import { TreeView, TreeItem } from '@mui/x-tree-view';
 import { Typography, Radio, Checkbox, Box } from '@mui/material';
 
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';

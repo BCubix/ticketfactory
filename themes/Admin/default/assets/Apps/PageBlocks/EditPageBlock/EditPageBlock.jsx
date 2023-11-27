@@ -7,8 +7,20 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { getPageBlocksAction } from '@Redux/pageBlocks/pageBlocksSlice';
+import { getPageBlocksAction } from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+
+import { pageBlocksInitialSchema, pageBlocksValidationSchema, pageBlocksForm } from '../PageBlocksForm/PageBlocksForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const pageBlocksEditCrud = {
+    form: {
+        title: "Creation d'un bloc de page",
+        initialSchema: pageBlocksInitialSchema,
+        validationSchema: pageBlocksValidationSchema,
+    },
+    ...pageBlocksForm,
+};
 
 export const EditPageBlock = () => {
     const dispatch = useDispatch();
@@ -59,5 +71,5 @@ export const EditPageBlock = () => {
         return <></>;
     }
 
-    return <Component.PageBlocksForm handleSubmit={handleSubmit} initialValues={pageBlock} />;
+    return <Component.PageBlocksForm handleSubmit={handleSubmit} initialValues={pageBlock} formCrud={Crud?.pageBlocks?.edit} />;
 };

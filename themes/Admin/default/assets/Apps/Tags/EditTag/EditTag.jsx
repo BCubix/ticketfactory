@@ -3,12 +3,24 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Api } from "@/AdminService/Api";
-import { Component } from "@/AdminService/Component";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Redux/profile/profileSlice';
-import { getTagsAction } from '@Redux/tags/tagsSlice';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getTagsAction } from '@Apps/Tags/redux/tags/tagsSlice';
+
+import { tagsInitialSchema, tagsValidationSchema, tagsForm } from '@Apps/Tags/TagsForm/TagsForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const tagsEditCrud = {
+    form: {
+        title: "Modification d'un tag",
+        initialSchema: tagsInitialSchema,
+        validationSchema: tagsValidationSchema,
+    },
+    ...tagsForm,
+};
 
 export const EditTag = () => {
     const dispatch = useDispatch();
@@ -51,11 +63,7 @@ export const EditTag = () => {
         const result = await Api.tagsApi.editTag(id, values);
 
         if (result.result) {
-            NotificationManager.success(
-                'La catégorie a bien été modifiée.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('La catégorie a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getTagsAction());
 
@@ -67,5 +75,5 @@ export const EditTag = () => {
         return <></>;
     }
 
-    return <Component.TagsForm handleSubmit={handleSubmit} initialValues={tag} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={tag} formCrud={Crud?.tags?.edit} />;
 };
