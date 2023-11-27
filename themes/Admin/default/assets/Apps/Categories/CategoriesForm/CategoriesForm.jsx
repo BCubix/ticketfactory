@@ -71,10 +71,10 @@ export const categoriesForm = {
                                     required: true,
                                     custom: {
                                         handleChange:
-                                            ({ values, editMode, setFieldValue }) =>
+                                            ({ values, initialValues, setFieldValue }) =>
                                             (e) => {
                                                 setFieldValue('name', e.target.value);
-                                                if (!values.editSlug && !editMode) {
+                                                if (!values.editSlug && !initialValues) {
                                                     setFieldValue('slug', changeSlug(e.target.value));
                                                 }
                                             },

@@ -57,10 +57,10 @@ export const seasonsForm = {
                                     required: true,
                                     custom: {
                                         handleChange:
-                                            ({ values, initValues, setFieldValue }) =>
+                                            ({ values, initialValues, setFieldValue }) =>
                                             (e) => {
                                                 setFieldValue('name', e.target.value);
-                                                if (!values.editSlug && !initValues) {
+                                                if (!values.editSlug && !initialValues) {
                                                     setFieldValue('slug', changeSlug(e.target.value));
                                                 }
                                             },
