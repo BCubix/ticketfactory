@@ -40,7 +40,7 @@ export const HooksForm = ({ handleSubmit, modulesActive, hooksList, displayHookL
             initialValues={{
                 moduleName: '',
                 hookName: '',
-                displayHookList: '',
+                displayHookList: [],
             }}
             validationSchema={moduleSchema}
             onSubmit={(values, { setSubmitting }) => {

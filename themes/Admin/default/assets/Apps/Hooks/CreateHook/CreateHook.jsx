@@ -51,5 +51,5 @@ export const CreateHook = () => {
         return <></>;
     }
 
-    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} />;
+    return <Component.HooksForm handleSubmit={handleSubmit} modulesActive={modulesActive} hooksList={hooks} displayHookList={displayHookList} />;
 };
