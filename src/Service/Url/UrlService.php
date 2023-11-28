@@ -9,10 +9,12 @@ use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Page\Page;
 use App\Manager\EventManager;
+use App\Manager\ManagerFactory;
 use App\Manager\PageManager;
 use App\Manager\ParameterManager;
 
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class UrlService
@@ -20,13 +22,16 @@ class UrlService
     public const SERVICE_NAME = 'urlService';
 
     protected $em;
+    protected $mf;
     protected $pam;
     protected $prm;
     protected $router;
+    protected $rs;
 
-    public function __construct(EventManager $em, PageManager $pam, ParameterManager $prm, RouterInterface $router)
+    public function __construct(EventManager $em, PageManager $pam, ParameterManager $prm, RouterInterface $router, ManagerFactory $mf)
     {
         $this->em = $em;
+        $this->mf = $mf;
         $this->pam = $pam;
         $this->prm = $prm;
         $this->router = $router;
@@ -75,7 +80,7 @@ class UrlService
         }
     }
 
-    public function eventRelativePath(Object $object, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
+    public function eventRelativePath(object $object, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
         $slugs = [];
         $slugs[] = $object->getSlug();
@@ -143,5 +148,26 @@ class UrlService
         $slugs = array_merge($slugs, $parameters);
 
         return $this->router->generate('tf_website_global', $slugs, $absolute);
+    }
+
+    public function getPageBySlugArray(array $slugs)
+    {
+
+        $mainPage = null;
+
+        foreach ($slugs as $slug) {
+            $page = $this->mf->get('page')->getBySlug($slug);
+            if (null === $page) {
+                break;
+            }
+            if (
+                (null === $mainPage && null == $page->getParent()) ||
+                ($mainPage->getId() == $page->getParent()->getId())
+            ) {
+                $mainPage = $page;
+                array_shift($slugs);
+            }
+        }
+        return ($mainPage);
     }
 }

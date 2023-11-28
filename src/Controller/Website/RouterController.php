@@ -4,11 +4,40 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 
+use App\Manager\ManagerFactory;
+use App\Manager\ModuleManager;
+use App\Service\ServiceFactory;
+use App\Service\Url\UrlService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\PageContext\PageContext;
+
+use App\Service\Addon\Hook;
+use Twig\Environment;
 
 class RouterController extends WebsiteController
 {
+    protected $us;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        ManagerFactory $mf,
+        ServiceFactory $sf,
+        ModuleManager $mm,
+        Environment $tg,
+        UrlService $us,
+    ) {
+        $this->em = $em;
+        $this->rs = $rs;
+        $this->mf = $mf;
+        $this->sf = $sf;
+        $this->mm = $mm;
+        $this->tg = $tg;
+        $this->us = $us;
+    }
     #[Route('/{slugs}', name: 'tf_website_global', requirements: ['slugs' => '^(?!/en).*$'], priority: -100)]
     public function orchestrator(string $slugs): Response
     {
@@ -28,27 +57,15 @@ class RouterController extends WebsiteController
         }
 
         // We continue to go down slugs hierarchy as long as they match pages
-        $mainPage = null;
-        foreach ($slugs as $slug) {
-            $page = $this->mf->get('page')->getBySlug($slug);
-            if (null === $page) {
-                break;
-            }
+        $mainPage = $this->us->getPageBySlugArray($slugs);
 
-            if (
-                (null === $mainPage && null == $page->getParent()) ||   // Page is at root hierarchy
-                ($mainPage->getId() == $page->getParent()->getId())     // Page is another page's child
-            ) {
-                $mainPage = $page;
-                array_shift($slugs);
-            }
-        }
 
         // We check for event relative content mapping
         $content = $this->forwardEventContents($mainPage, $slugs);
         if (null !== $content) {
             return $content;
-        };
+        }
+        ;
 
         // We check for other content mapping
         $content = $this->forwardOtherContents($mainPage, $slugs);
@@ -76,7 +93,8 @@ class RouterController extends WebsiteController
             $content = $this->forwardEventRelation($keyword, $page, $slugs);
             if (null !== $content) {
                 return $content;
-            };
+            }
+            ;
         }
 
         return $this->forwardEvent($page, $slugs);
@@ -101,13 +119,13 @@ class RouterController extends WebsiteController
 
         if (null !== $page->getController()) {
             return $this->forward($page->getController(), [
-                'page'  => $page,
+                'page' => $page,
                 'slugs' => $slugs
             ]);
         }
 
         return $this->forward('App\Controller\Website\PageController::index', [
-            'page'  => $page,
+            'page' => $page,
             'slugs' => $slugs
         ]);
     }
@@ -129,9 +147,9 @@ class RouterController extends WebsiteController
 
         $controllerName = 'App\Controller\Website\\' . ucfirst($keyword) . 'Controller::index';
         return $this->forward($controllerName, [
-            'page'   => $page,
+            'page' => $page,
             $keyword => $content,
-            'slugs'  => $slugs
+            'slugs' => $slugs
         ]);
     }
 
@@ -148,7 +166,7 @@ class RouterController extends WebsiteController
         }
 
         return $this->forward('App\Controller\Website\EventController::index', [
-            'page'  => $page,
+            'page' => $page,
             'event' => $event,
             'slugs' => $slugs
         ]);

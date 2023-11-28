@@ -302,30 +302,11 @@ class HookManager extends AbstractManager
     public function exec(string $hookName, array $hookArgs = []): HookEvent
     {
         $request = $this->rs->getMainRequest();
-        $currentPageSlug = preg_replace('/^\//', '', $request->getRequestUri(), 1);
-
-        $slugSegments = explode('/', $currentPageSlug);
-        array_filter($slugSegments, function ($value) {
-            return !empty($value);
-        });
 
         $locale = $request->getLocale();
         $language = $this->em->getRepository(Language::class)->findByLocaleForWebsite($locale);
-        $customer = $this->sc->getUser();
 
-        $page = null;
-
-        foreach ($slugSegments as $slugSegment) {
-            $tempPage = $this->em->getRepository(Page::class)->findBySlugForWebsite($language->getId(), $slugSegment);
-
-            if ($tempPage !== null) {
-                $page = $tempPage;
-            } else {
-                break;
-            }
-        }
-
-        $hookArgs = array_merge(['languageId' => $language->getId(), 'customer' => $customer, 'currentPage' => $page], $hookArgs);
+        $hookArgs = array_merge(['languageId' => $language->getId()], $hookArgs);
         $event = new HookEvent($hookArgs);
 
         return $this->ed->dispatch($event, $hookName);
