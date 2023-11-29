@@ -4,7 +4,6 @@ import { CreateImageFormat, imageFormatsCreateCrud } from '@Apps/ImageFormats/Cr
 import { EditImageFormat, imageFormatsEditCrud } from '@Apps/ImageFormats/EditImageFormat/EditImageFormat';
 import { ImageFormatsGenerateForm } from '@Apps/ImageFormats/ImageFormatsForm/ImageFormatsGenerateForm';
 import { ImageFormatsParametersForm } from '@Apps/ImageFormats/ImageFormatsForm/ImageFormatsParametersForm';
-import { ImageFormatsFilters } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatsFilters/ImageFormatsFilters';
 import { ImageFormatGenerate } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatGenerate';
 import { ImageFormatParameters } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatParameters';
 import { ImageFormatsList, imageFormatsListCrud } from '@Apps/ImageFormats/ImageFormatsList/ImageFormatsList';
@@ -28,7 +27,6 @@ export const initComponent = () => {
     setComponent('EditImageFormat', EditImageFormat);
     setComponent('ImageFormatsGenerateForm', ImageFormatsGenerateForm);
     setComponent('ImageFormatsParametersForm', ImageFormatsParametersForm);
-    setComponent('ImageFormatsFilters', ImageFormatsFilters);
     setComponent('ImageFormatGenerate', ImageFormatGenerate);
     setComponent('ImageFormatParameters', ImageFormatParameters);
     setComponent('ImageFormatsList', ImageFormatsList);

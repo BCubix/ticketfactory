@@ -33,6 +33,8 @@ export const CreateLanguage = () => {
                 NotificationManager.success('La langue a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getLanguagesAction());
                 navigate(Constant.LANGUAGES_BASE_PATH);
+            } else {
+                NotificationManager.error(result?.error?.message || 'Une erreur est survenue.', 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };

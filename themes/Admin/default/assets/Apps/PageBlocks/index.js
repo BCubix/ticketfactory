@@ -2,7 +2,6 @@ import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockCo
 import { CreatePageBlock, pageBlocksCreateCrud } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
 import { EditPageBlock, pageBlocksEditCrud } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
 import { PageBlocksForm } from '@Apps/PageBlocks/PageBlocksForm/PageBlocksForm';
-import { PageBlocksFilters } from '@Apps/PageBlocks/PageBlocksList/PageBlocksFilters/PageBlocksFilters';
 import { PageBlocksList, pageBlocksListCrud } from '@Apps/PageBlocks/PageBlocksList/PageBlocksList';
 import { CreatePageBlockFormat } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlockFormat';
 
@@ -25,7 +24,6 @@ export const initComponent = () => {
     setComponent('CreatePageBlock', CreatePageBlock);
     setComponent('EditPageBlock', EditPageBlock);
     setComponent('PageBlocksForm', PageBlocksForm);
-    setComponent('PageBlocksFilters', PageBlocksFilters);
     setComponent('PageBlocksList', PageBlocksList);
     setComponent('CreatePageBlockFormat', CreatePageBlockFormat);
 };

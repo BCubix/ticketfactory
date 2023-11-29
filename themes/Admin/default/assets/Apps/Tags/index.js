@@ -1,6 +1,5 @@
 import { CreateTag, tagsCreateCrud } from '@Apps/Tags/CreateTag/CreateTag';
 import { EditTag, tagsEditCrud } from '@Apps/Tags/EditTag/EditTag';
-import { TagsFilters } from '@Apps/Tags/TagsList/TagsFilters/TagsFilters';
 import { TagsList, tagsListCrud } from '@Apps/Tags/TagsList/TagsList';
 
 import { setReducer } from '@/AdminService/Reducer';
@@ -20,7 +19,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('CreateTag', CreateTag);
     setComponent('EditTag', EditTag);
-    setComponent('TagsFilters', TagsFilters);
     setComponent('TagsList', TagsList);
 };
 

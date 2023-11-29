@@ -9,7 +9,6 @@ import { IframeMediaForm } from '@Apps/Medias/MediasForm/IframeMediaForm';
 import { MediaImageForm } from '@Apps/Medias/MediasForm/MediaImageForm';
 import { MediaParentCategoryPartForm } from '@Apps/Medias/MediasForm/MediaParentCategoryPartForm';
 import { MediaParentFormatPartForm } from '@Apps/Medias/MediasForm/MediaParentFormatPartForm';
-import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilters';
 import { MediasSorters } from '@Apps/Medias/MediasList/MediasFilters/MediasSorters';
 import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
 import { MediasList, mediasListCrud } from '@Apps/Medias/MediasList/MediasList';
@@ -42,7 +41,6 @@ export const initComponent = () => {
     setComponent('MediaImageForm', MediaImageForm);
     setComponent('MediaParentCategoryPartForm', MediaParentCategoryPartForm);
     setComponent('MediaParentFormatPartForm', MediaParentFormatPartForm);
-    setComponent('MediasFilters', MediasFilters);
     setComponent('MediasSorters', MediasSorters);
     setComponent('RotatingIcons', RotatingIcons);
     setComponent('MediasList', MediasList);

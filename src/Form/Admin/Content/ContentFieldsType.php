@@ -4,7 +4,7 @@ namespace App\Form\Admin\Content;
 
 use App\Form\Admin\AdminBaseFormType;
 use App\Manager\ContentTypeManager;
-
+use App\Manager\FormManager;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -14,8 +14,10 @@ class ContentFieldsType extends AdminBaseFormType
 {
     protected $ctm;
 
-    public function __construct(ContentTypeManager $ctm)
+    public function __construct(ContentTypeManager $ctm, FormManager $fm)
     {
+        parent::__construct($fm);
+
         $this->ctm = $ctm;
     }
 

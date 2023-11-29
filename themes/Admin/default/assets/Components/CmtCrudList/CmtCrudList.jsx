@@ -22,7 +22,7 @@ export const DEFAULT_CRUD_LIST_COMPONENTS = {
             ),
         },
         {
-            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog }) => (
+            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog, ...props }) => (
                 <Component.ListTable
                     contextualMenu={Boolean(listCrud?.tableContextualMenu)}
                     table={listCrud?.tableList}
@@ -62,9 +62,11 @@ export const DEFAULT_CRUD_LIST_COMPONENTS = {
                               }
                             : null
                     }
+                    disableDeleteFunction={listCrud?.disableDeleteFunction}
                     onDelete={listCrud?.delete ? (id) => setDeleteDialog(id) : null}
                     filters={objectData?.filters}
                     changeFilters={(newFilters) => dispatch(listCrud?.changeFiltersActions(newFilters))}
+                    {...props}
                 />
             ),
         },

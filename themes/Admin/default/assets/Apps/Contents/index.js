@@ -3,7 +3,6 @@ import React from 'react';
 import { ContentsForm } from '@Apps/Contents/ContentsForm/ContentsForm';
 import { DisplayContentField } from '@Apps/Contents/ContentsForm/DisplayContentField';
 import { DisplayContentForm } from '@Apps/Contents/ContentsForm/DisplayContentForm';
-import { ContentsFilters } from '@Apps/Contents/ContentsList/ContentsFilters/ContentsFilters';
 import { ContentsList, contentsListCrud } from '@Apps/Contents/ContentsList/ContentsList';
 import { CreateContent, contentsCreateCrud } from '@Apps/Contents/CreateContent/CreateContent';
 import { EditContent, contentsEditCrud } from '@Apps/Contents/EditContent/EditContent';
@@ -29,7 +28,6 @@ export const initComponent = () => {
     setComponent('ContentsForm', ContentsForm);
     setComponent('DisplayContentField', DisplayContentField);
     setComponent('DisplayContentForm', DisplayContentForm);
-    setComponent('ContentsFilters', ContentsFilters);
     setComponent('ContentsList', ContentsList);
     setComponent('CreateContent', CreateContent);
     setComponent('EditContent', EditContent);

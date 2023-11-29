@@ -8,6 +8,10 @@ import { changeUsersFilters, getUsersAction, usersSelector } from '@Apps/Users/r
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+
 export const usersListCrud = {
     title: 'Utilisateurs',
     listTitle: 'Liste des utilisateurs',
@@ -31,10 +35,10 @@ export const usersListCrud = {
     ],
     filterList: [
         { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
-        { key: 'email', title: 'Chercher par email', label: 'Email', type: 'search' },
-        { key: 'firstName', title: 'Chercher par nom', label: 'Prénom', type: 'search' },
-        { key: 'lastName', title: 'Chercher par nom', label: 'Nom', type: 'search' },
-        { key: 'role', title: 'Chercher par role', label: 'Rôle', type: 'search' },
+        { key: 'email', title: 'Chercher par email', label: 'Email', type: 'search', icon: <PersonIcon /> },
+        { key: 'firstName', title: 'Chercher par nom', label: 'Prénom', type: 'search', icon: <PersonIcon /> },
+        { key: 'lastName', title: 'Chercher par nom', label: 'Nom', type: 'search', icon: <EmailIcon /> },
+        { key: 'role', title: 'Chercher par role', label: 'Rôle', type: 'search', icon: <AssignmentIndIcon /> },
     ],
     pagination: true,
     tableList: [

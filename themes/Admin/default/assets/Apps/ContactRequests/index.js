@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { ContactRequestsFilters } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsFilters/ContactRequestsFilters';
 import { ContactRequestsList, contactRequestsListCrud } from '@Apps/ContactRequests/ContactRequestsList/ContactRequestsList';
 import { CreateContactRequests, contactRequestsCreateCrud } from '@Apps/ContactRequests/CreateContactRequest/CreateContactRequest';
 import { EditContactRequest, contactRequestsEditCrud } from '@Apps/ContactRequests/EditContactRequest/EditContactRequest';
@@ -23,7 +22,6 @@ export const initConstant = () => {
 };
 
 export const initComponent = () => {
-    setComponent('ContactRequestsFilters', ContactRequestsFilters);
     setComponent('ContactRequestsList', ContactRequestsList);
     setComponent('CreateContactRequests', CreateContactRequests);
     setComponent('EditContactRequest', EditContactRequest);
