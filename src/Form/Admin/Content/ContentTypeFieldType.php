@@ -2,18 +2,22 @@
 
 namespace App\Form\Admin\Content;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Content\ContentTypeField;
 use App\Manager\ContentTypeManager;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentTypeFieldType extends AbstractType
+class ContentTypeFieldType extends AdminBaseFormType
 {
+    protected const ENTITY_CLASS = ContentTypeField::class;
+
     protected $ctm;
 
     public function __construct(ContentTypeManager $ctm)
@@ -32,8 +36,14 @@ class ContentTypeFieldType extends AbstractType
             ])
             ->add('options',              ContentTypeOptionsType::class,     [])
             ->add('validations',          ContentTypeValidationsType::class, [])
-            ->add('parameters',           ContentTypeParametersType::class,  [])
-        ;
+            ->add('parameters',           ContentTypeParametersType::class,  []);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

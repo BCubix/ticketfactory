@@ -8,7 +8,6 @@ use App\Entity\Event\EventDate;
 use App\Entity\Event\EventMedia;
 use App\Entity\Event\EventPrice;
 use App\Entity\Media\ImageFormat;
-use App\Entity\Media\Media;
 
 use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;

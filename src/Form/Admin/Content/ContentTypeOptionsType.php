@@ -2,15 +2,15 @@
 
 namespace App\Form\Admin\Content;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Manager\ContentTypeManager;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentTypeOptionsType extends AbstractType
+class ContentTypeOptionsType extends AdminBaseFormType
 {
     protected $ctm;
 
@@ -21,6 +21,11 @@ class ContentTypeOptionsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            [$this, 'onPreSetData']
+        );
+
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
             [$this, 'onPreSubmit']

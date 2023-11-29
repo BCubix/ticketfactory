@@ -2,21 +2,23 @@
 
 namespace App\Form\Admin\Event;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Event\Season;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 use App\Form\Admin\SEOAble\SEOAbleType;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SeasonType extends AbstractType
+class SeasonType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -39,6 +41,13 @@ class SeasonType extends AbstractType
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => Season::class,
             ]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -2,17 +2,19 @@
 
 namespace App\Form\Admin\Event;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Event\EventMedia;
 use App\Entity\Media\Media;
 use App\Repository\MediaRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventMediaType extends AbstractType
+class EventMediaType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -28,6 +30,13 @@ class EventMediaType extends AbstractType
                 }
             ])
             ->add('position',               NumberType::class,          []);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -2,11 +2,11 @@
 
 namespace App\Form\Admin\Menu;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Menu\MenuEntry;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MenuEntryType extends AbstractType
+class MenuEntryType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -42,6 +42,13 @@ class MenuEntryType extends AbstractType
         );
 
         $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
+
+        $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
             [$this, 'onPreSubmit']
         );
@@ -49,6 +56,7 @@ class MenuEntryType extends AbstractType
 
     public function onPreSetData(FormEvent $event): void
     {
+
         $object = $event->getData();
         $form = $event->getForm();
 
