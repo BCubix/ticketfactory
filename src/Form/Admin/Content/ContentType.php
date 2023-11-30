@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin\Content;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Content\Content;
 use App\Entity\Language\Language;
 use App\Entity\Page\Page;
@@ -9,7 +10,6 @@ use App\Repository\LanguageRepository;
 use App\Repository\PageRepository;
 use App\Form\Admin\SEOAble\SEOAbleType;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -19,8 +19,10 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContentType extends AbstractType
+class ContentType extends AdminBaseFormType
 {
+    protected const ENTITY_CLASS = Content::class;
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -55,6 +57,13 @@ class ContentType extends AbstractType
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             [$this, 'onPreSetData']
+        );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin\Event;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Form\Admin\SEOAble\SEOAbleType;
 
 use App\Entity\Event\Event;
@@ -17,7 +18,6 @@ use App\Repository\TagRepository;
 use App\Repository\LanguageRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -26,9 +26,11 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventType extends AbstractType
+class EventType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -129,6 +131,13 @@ class EventType extends AbstractType
             ->add('seo',                         SEOAbleType::class,         [
                 'data_class' => Event::class,
             ]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -2,15 +2,17 @@
 
 namespace App\Form\Admin\Language;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Language\Language;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LanguageType extends AbstractType
+class LanguageType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -23,6 +25,13 @@ class LanguageType extends AbstractType
             ->add('datetimeFormat',       TextType::class,            [])
             ->add('dateFormat',           TextType::class,            [])
             ->add('timeFormat',           TextType::class,            []);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

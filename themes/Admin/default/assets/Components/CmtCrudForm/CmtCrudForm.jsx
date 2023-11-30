@@ -48,7 +48,7 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
 
     return (
         <Formik
-            initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { props })}
+            initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { ...props })}
             validationSchema={Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }))}
             translateInitialValues={translateInitialValues}
             onSubmit={(values, { setSubmitting }) => {

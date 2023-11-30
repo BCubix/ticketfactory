@@ -2,19 +2,21 @@
 
 namespace App\Form\Admin\Event;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Event\EventPrice;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventPriceType extends AbstractType
+class EventPriceType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -35,6 +37,13 @@ class EventPriceType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            []);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

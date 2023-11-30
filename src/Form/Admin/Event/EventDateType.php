@@ -2,21 +2,25 @@
 
 namespace App\Form\Admin\Event;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Event\EventDate;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventDateType extends AbstractType
+class EventDateType extends AdminBaseFormType
 {
+    protected const ENTITY_CLASS = EventDate::class;
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -49,6 +53,13 @@ class EventDateType extends AbstractType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            []);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

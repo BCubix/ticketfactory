@@ -10,7 +10,8 @@ class Form
 
     private $ff;
 
-    public function __construct(FormFactoryInterface $ff) {
+    public function __construct(FormFactoryInterface $ff)
+    {
         $this->ff = $ff;
     }
 

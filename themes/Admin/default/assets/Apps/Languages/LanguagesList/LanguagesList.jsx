@@ -21,6 +21,7 @@ export const languagesListCrud = {
     dataSelector: languagesSelector,
     dataList: (selector) => selector.languages,
     delete: (props) => Api.languagesApi.deleteLanguage(props),
+    disableDeleteFunction: (item) => item.isDefault,
     links: {
         new: () => `${Constant.LANGUAGES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.LANGUAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

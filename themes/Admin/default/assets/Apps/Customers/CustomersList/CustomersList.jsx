@@ -7,6 +7,9 @@ import { customersSelector, getCustomersAction, changeCustomersFilters } from '@
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+
 export const customersListCrud = {
     title: 'Clients',
     listTitle: 'Liste des clients',
@@ -29,9 +32,9 @@ export const customersListCrud = {
     ],
     filterList: [
         { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
-        { key: 'firstName', title: 'Chercher par prénom', label: 'Prénom', type: 'search' },
-        { key: 'lastName', title: 'Chercher par nom', label: 'Nom', type: 'search' },
-        { key: 'email', title: 'Chercher par email', label: 'Email', type: 'search' },
+        { key: 'firstName', title: 'Chercher par prénom', label: 'Prénom', type: 'search', icon: <PersonIcon /> },
+        { key: 'lastName', title: 'Chercher par nom', label: 'Nom', type: 'search', icon: <PersonIcon /> },
+        { key: 'email', title: 'Chercher par email', label: 'Email', type: 'search', icon: <EmailIcon /> },
     ],
     pagination: true,
     tableList: [

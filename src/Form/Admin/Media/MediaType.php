@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin\Media;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Entity\Media\MediaCategory;
@@ -11,14 +12,15 @@ use App\Repository\MediaCategoryRepository;
 use App\Service\File\MimeTypeMapping;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MediaType extends AbstractType
+class MediaType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -72,6 +74,13 @@ class MediaType extends AbstractType
             ->add('documentType',           ChoiceType::class,          [
                 'choices'  => MimeTypeMapping::getAllMimes(),
             ]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

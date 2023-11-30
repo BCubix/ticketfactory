@@ -7,7 +7,7 @@ const DATA_TYPE = {
     id: ({ values, formData, baseName, key, field }) => formData.append(getApiFieldName({ baseName, key, field }), values[key]?.id || ''),
     array: ({ values, key, field, baseName, ...props }) =>
         values[key]?.map((item, index) => {
-            constructFormData({ ...props, values: item, dataFields: field?.subFields, baseName: `${getApiFieldName({ baseName, key, field })}[${index}]` });
+            constructFormData({ ...props, values: item, index, dataFields: field?.subFields, baseName: `${getApiFieldName({ baseName, key, field })}[${index}]` });
         }),
     object: ({ values, key, field, baseName, ...props }) =>
         constructFormData({ ...props, values: values[key], dataFields: field?.subFields, baseName: getApiFieldName({ baseName, key, field }) }),

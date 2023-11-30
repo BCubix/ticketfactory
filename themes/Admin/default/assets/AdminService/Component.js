@@ -76,6 +76,11 @@ import { CmtDisplayComponents } from '@Components/CmtDisplayComponents/CmtDispla
 import { CmtDisplayBlocks } from '@Components/CmtDisplayBlocks/CmtDisplayBlocks';
 import { CmtDisplayFields } from '@Components/CmtDisplayFields/CmtDisplayFields';
 import { CmtActiveBlock } from '@Components/CmtActiveBlock/CmtActiveBlock';
+import { CmtDeleteMedias } from '../Components/CmtMediaPart/CmtDeleteMedias';
+import { CmtDisplayMediaElement } from '../Components/CmtMediaPart/CmtDisplayMediaElement';
+import { CmtEditMediaModal } from '../Components/CmtMediaPart/CmtEditMediaModal';
+import { CmtMediaPartForm } from '../Components/CmtMediaPart/CmtMediaPartForm';
+import { CmtMoveMedias } from '../Components/CmtMediaPart/CmtMoveMedias';
 
 const ComponentObj = {
     App: App,
@@ -165,6 +170,12 @@ const ComponentObj = {
     CmtDisplayBlocks: CmtDisplayBlocks,
     CmtDisplayFields: CmtDisplayFields,
     CmtActiveBlock: CmtActiveBlock,
+
+    CmtDeleteMedias: CmtDeleteMedias,
+    CmtDisplayMediaElement: CmtDisplayMediaElement,
+    CmtEditMediaModal: CmtEditMediaModal,
+    CmtMediaPartForm: CmtMediaPartForm,
+    CmtMoveMedias: CmtMoveMedias,
 };
 
 /**

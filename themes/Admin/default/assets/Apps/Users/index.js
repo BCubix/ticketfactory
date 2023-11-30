@@ -4,7 +4,6 @@ import { CreateUser, usersCreateCrud } from '@Apps/Users/CreateUser/CreateUser';
 import { EditUser, usersEditCrud } from '@Apps/Users/EditUser/EditUser';
 import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
 import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
-import { UserFilters } from '@Apps/Users/UserList/UserFilters/UserFilters';
 import { UserList, usersListCrud } from '@Apps/Users/UserList/UserList';
 
 import { setReducer } from '@/AdminService/Reducer';
@@ -30,7 +29,6 @@ export const initComponent = () => {
     setComponent('EditUser', EditUser);
     setComponent('EditProfile', EditProfile);
     setComponent('EditProfileForm', EditProfileForm);
-    setComponent('UserFilters', UserFilters);
     setComponent('UserList', UserList);
 };
 

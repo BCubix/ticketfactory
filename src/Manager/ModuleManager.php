@@ -83,10 +83,12 @@ class ModuleManager extends AddonManager
                 $active = $dbModules[$diskModule['name']]->isActive();
             }
 
-            $results[] = [
-                ...$diskModule,
-                'active' => $active
-            ];
+            if (null === $filters['active'] || $filters['active'] === $active) {
+                $results[] = [
+                    ...$diskModule,
+                    'active' => $active
+                ];
+            }
         }
 
         return ['results' => $results, 'total' => count($results)];

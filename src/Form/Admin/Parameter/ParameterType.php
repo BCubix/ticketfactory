@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin\Parameter;
 
+use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Parameter\Parameter;
 
 use Symfony\Component\Form\AbstractType;
@@ -12,7 +13,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ParameterType extends AbstractType
+class ParameterType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -45,6 +46,13 @@ class ParameterType extends AbstractType
                         ]);
                         break;
                 }
+            }
+        );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
             }
         );
     }

@@ -29,7 +29,6 @@ export const categoriesListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getCategoriesAction(),
-    changeFiltersActions: (props, page) => changeCategoriesFilters(props, page),
     dataSelector: categoriesSelector,
     dataList: (selector) => selector.categories?.children,
     duplicate: (props) => Api.categoriesApi.duplicateCategory(props),
