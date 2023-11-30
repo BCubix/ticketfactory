@@ -104,7 +104,6 @@ export const contentsForm = {
             languageGroup: { type: 'string' },
             fields: {
                 function: ({ values, formData }) => {
-                    console.log(values);
                     Object.entries(values.fields)?.map(([key, value]) => {
                         serializeData(value, `fields[${key}]`, formData);
                     });
@@ -206,7 +205,6 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             fields[el.name] = formModules[el.type]?.getInitialValue(el) || '';
         });
 
-        console.log(selectedContentType);
         setInitValue(constructInitialValues(formCrud.form.initialSchema, { fields }, { contentType: selectedContentType, ...props }));
     }, []);
 

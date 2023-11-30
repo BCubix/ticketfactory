@@ -1,10 +1,7 @@
-import React from 'react';
-
 import { ProductCategoriesList } from '@Apps/ProductCategories/ProductCategoriesList/ProductCategoriesList';
-import { ProductCategoriesForm } from '@Apps/ProductCategories/ProductCategoriesForm/ProductCategoriesForm';
 import { ParentProductCategoryPartForm } from '@Apps/ProductCategories/ProductCategoriesForm/ParentProductCategoryPartForm';
-import { EditProductCategory } from '@Apps/ProductCategories/EditProductCategory/EditProductCategory';
-import { CreateProductCategory } from '@Apps/ProductCategories/CreateProductCategory/CreateProductCategory';
+import { EditProductCategory, productCategoriesEditCrud } from '@Apps/ProductCategories/EditProductCategory/EditProductCategory';
+import { CreateProductCategory, productCategoriesCreateCrud } from '@Apps/ProductCategories/CreateProductCategory/CreateProductCategory';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
@@ -23,7 +20,6 @@ export const initConstant = () => {
 
 export const initComponent = () => {
     setComponent('ProductCategoriesList', ProductCategoriesList);
-    setComponent('ProductCategoriesForm', ProductCategoriesForm);
     setComponent('ParentProductCategoryPartForm', ParentProductCategoryPartForm);
     setComponent('CreateProductCategory', CreateProductCategory);
     setComponent('EditProductCategory', EditProductCategory);
@@ -47,6 +43,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: productCategoriesListCrud,
+        add: productCategoriesCreateCrud,
+        edit: productCategoriesEditCrud,
     };
 
     setCrud('productCategories', crud);

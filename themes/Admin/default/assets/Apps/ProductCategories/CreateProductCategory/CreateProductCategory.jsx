@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getProductCategoriesAction } from '@Apps/ProductCategories/redux/productCategories/productCategoriesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { productCategoriesInitialSchema, productCategoriesValidationSchema, productCategoriesForm } from '../ProductCategoriesForm/ProductCategoriesForm';
+
+export const productCategoriesCreateCrud = {
+    form: {
+        title: "Creation d'une catégorie de produit",
+        initialSchema: productCategoriesInitialSchema,
+        validationSchema: productCategoriesValidationSchema,
+    },
+    ...productCategoriesForm,
+};
 
 export const CreateProductCategory = () => {
     const dispatch = useDispatch();
@@ -66,11 +77,12 @@ export const CreateProductCategory = () => {
     }
 
     return (
-        <Component.ProductCategoriesForm
+        <Component.CmtCrudForm
             handleSubmit={handleSubmit}
             productCategoriesList={productCategoriesData?.productCategories}
             translateInitialValues={initialValues}
             parentId={parseInt(parentId) || null}
+            formCrud={Crud?.productCategories?.add}
         />
     );
 };

@@ -3,11 +3,10 @@ import React from 'react';
 import { ProductsList } from '@Apps/Products/ProductsList/ProductsList';
 import { ProductsFilters } from '@Apps/Products/ProductsList/ProductsFilters/ProductsFilters';
 import { ProductsForm } from '@Apps/Products/ProductsForm/ProductsForm';
-import { EditProduct } from '@Apps/Products/EditProduct/EditProduct';
+import { EditProduct, productsEditCrud } from '@Apps/Products/EditProduct/EditProduct';
 import { CreateProduct, productsCreateCrud } from '@Apps/Products/CreateProduct/CreateProduct';
 import { ProductsMenu } from '@Apps/Products/ProductsMenu/ProductsMenu';
 import { ProductMainPartForm } from '@Apps/Products/ProductsForm/ProductMainPartForm';
-import { ProductMediaPartForm } from '@Apps/Products/ProductsForm/ProductMediaPartForm';
 import { ProductParentCategoryPartForm } from '@Apps/Products/ProductsForm/ProductParentCategoryPartForm';
 
 import { setReducer } from '@/AdminService/Reducer';
@@ -37,7 +36,6 @@ export const initComponent = () => {
     setComponent('CreateProduct', CreateProduct);
     setComponent('ProductsMenu', ProductsMenu);
     setComponent('ProductMainPartForm', ProductMainPartForm);
-    setComponent('ProductMediaPartForm', ProductMediaPartForm);
     setComponent('ProductParentCategoryPartForm', ProductParentCategoryPartForm);
 };
 
@@ -64,25 +62,13 @@ export const initTab = () => {
         { label: 'Produits', component: <Component.ProductsList />, path: Constant.PRODUCTS_BASE_PATH },
         { label: 'Catégories de produits', component: <Component.ProductCategoriesList />, path: Constant.PRODUCT_CATEGORIES_BASE_PATH },
     ]);
-
-    setTab('ProductsFormTabList', (props) => [
-        {
-            label: 'Produit',
-            id: 'productPartButton',
-            component: <Component.ProductMainPartForm {...props} />,
-        },
-        {
-            label: 'Médias',
-            id: 'mediasPartButton',
-            component: <Component.CmtMediaPartForm {...props} name="productMedias" />,
-        },
-    ]);
 };
 
 export const initCrud = () => {
     const crud = {
         list: productsListCrud,
         add: productsCreateCrud,
+        edit: productsEditCrud,
     };
 
     setCrud('products', crud);

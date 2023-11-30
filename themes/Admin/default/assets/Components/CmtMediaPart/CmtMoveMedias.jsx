@@ -38,8 +38,6 @@ export const CmtMoveMedias = ({ medias, setFieldValue, name }) => {
                                                 key={index}
                                                 sx={{
                                                     position: 'relative',
-                                                    outline: (theme) => item.mainImg && `3px solid ${theme.palette.crud.action.textColor}`,
-                                                    outlineOffset: item.mainImg && '-3px',
                                                 }}
                                                 className="eventMediaElement"
                                                 ref={provided2.innerRef}

@@ -18,7 +18,6 @@ export const ActiveModule = () => {
         if (check.result) {
             const result = await Api.modulesApi.getModulesActive();
             if (result.result) {
-                console.log(result.modules);
                 ActiveModuleContext(result.modules);
                 dispatch(setModulesLoaded({ modulesLoaded: true }));
             }

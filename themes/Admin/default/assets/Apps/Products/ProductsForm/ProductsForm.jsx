@@ -6,6 +6,7 @@ import { Component } from '@/AdminService/Component';
 import { Tab } from '@/AdminService/Tab';
 import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
+import { changeSlug } from '@Services/utils/changeSlug';
 
 export const productsInitialSchema = {
     active: (initValues) => initValues?.active || false,
@@ -59,11 +60,11 @@ export const productsForm = {
                     });
                 },
             },
-            productCategories: {
+            productMedias: {
                 type: 'array',
                 subFields: {
                     media: { function: ({ values, formData, baseName }) => formData.append(`${baseName}[media]`, values.id) },
-                    position: { function: ({ values, formData, baseName, index }) => formData.append(`${baseName}[media]`, values.position || index + 1) },
+                    position: { function: ({ values, formData, baseName, index }) => formData.append(`${baseName}[position]`, values.position || index + 1) },
                 },
             },
             slug: { type: 'slug' },
@@ -129,6 +130,7 @@ export const productsForm = {
                                 inputType: 'textField',
                                 multiline: true,
                                 rows: 4,
+                                required: true,
                             },
                         },
                         {
@@ -138,7 +140,7 @@ export const productsForm = {
                                 name: 'description',
                                 label: 'Description',
                                 inputType: 'editorField',
-                                requried: true,
+                                required: true,
                                 id: 'description',
                             },
                         },
@@ -165,7 +167,8 @@ export const productsForm = {
             label: 'Médias',
             fields: [
                 {
-                    component: (props) => <Component.ProductMediaPartForm {...props} />,
+                    keyId: 'product-productMedias',
+                    component: (props) => <Component.CmtMediaPartForm {...props} name="productMedias" />,
                 },
             ],
         },

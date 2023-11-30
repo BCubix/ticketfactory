@@ -1,83 +1,22 @@
-import moment from 'moment';
-
 import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
 
 const DEFAULT_PATH = '/products';
 
 var controller = null;
-
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'name', sortName: 'filters[name]' },
-    {
-        name: 'category',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[category][${index}]`] = el;
-            });
-        },
-    },
-    { name: 'lang', sortName: 'filters[lang]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-];
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('name', data.name);
-    formData.append('slug', data.slug);
-    formData.append('chapo', data.chapo);
-    formData.append('description', data.description);
-    formData.append('price', data.price);
-    formData.append('mainCategory', data.mainCategory);
-
-    data?.productCategories?.forEach((category, index) => {
-        formData.append(`productCategories[${index}]`, category);
-    });
-
-    data.productMedias?.forEach((productMedia, index) => {
-        formData.append(`productMedias[${index}][media]`, productMedia.id);
-        formData.append(`productMedias[${index}][mainImg]`, productMedia.mainImg ? 1 : 0);
-        formData.append(`productMedias[${index}][position]`, productMedia.position || index + 1);
-    });
-
-    formData.append('lang', data.lang || '');
-    formData.append('languageGroup', data.languageGroup || '');
-
-    getSeoFormData(formData, data);
-
-    return formData;
-};
 
 const productsApi = {
     getProducts: async (filters) => {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud.products?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -115,9 +54,9 @@ const productsApi = {
         }
     },
 
-    createProduct: async (data) => {
+    createProduct: async (values) => {
         try {
-            const result = await axios.post('/products', getFormData(data));
+            const result = await axios.post('/products', constructFormData({ values, dataFields: Crud?.products?.add?.api?.dataFields }));
 
             return { result: true, product: result.data };
         } catch (error) {
@@ -125,9 +64,9 @@ const productsApi = {
         }
     },
 
-    editProduct: async (id, data) => {
+    editProduct: async (id, values) => {
         try {
-            const result = await axios.post(`${DEFAULT_PATH}/${id}`, getFormData(data));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.products?.edit?.api?.dataFields }));
 
             return { result: true, product: result.data };
         } catch (error) {
