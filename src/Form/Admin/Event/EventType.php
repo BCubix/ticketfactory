@@ -2,15 +2,15 @@
 
 namespace App\Form\Admin\Event;
 
-use App\Form\Admin\AdminBaseFormType;
-use App\Form\Admin\SEOAble\SEOAbleType;
-
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
 use App\Entity\Language\Language;
+use App\Form\Admin\AdminBaseFormType;
+use App\Form\Admin\Feature\FeatureLinkType;
+use App\Form\Admin\SEOAble\SEOAbleType;
 use App\Repository\EventCategoryRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SeasonRepository;
@@ -46,6 +46,13 @@ class EventType extends AdminBaseFormType
                 'default_protocol' => 'https',
             ])
             ->add('eventLength',                 TextType::class,            [])
+            ->add('featureLinks',                CollectionType::class,      [
+                'entry_type'   => FeatureLinkType::class,
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false
+            ])
             ->add('eventDateBlocks',             CollectionType::class,      [
                 'entry_type'   => EventDateBlockType::class,
                 'allow_add'    => true,

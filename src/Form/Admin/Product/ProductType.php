@@ -2,11 +2,11 @@
 
 namespace App\Form\Admin\Product;
 
-use App\Form\Admin\SEOAble\SEOAbleType;
-
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
+use App\Form\Admin\Feature\FeatureLinkType;
+use App\Form\Admin\SEOAble\SEOAbleType;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\LanguageRepository;
 
@@ -26,13 +26,13 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
-            ->add('name',                 TextType::class,            [])
-            ->add('slug',                 TextType::class,            [])
-            ->add('chapo',                TextareaType::class,        [])
-            ->add('description',          TextareaType::class,        [])
-            ->add('price',                MoneyType::class,           [])
-            ->add('mainCategory',         EntityType::class,          [
+            ->add('active',                 CheckboxType::class,        ['false_values' => ['0']])
+            ->add('name',                   TextType::class,            [])
+            ->add('slug',                   TextType::class,            [])
+            ->add('chapo',                  TextareaType::class,        [])
+            ->add('description',            TextareaType::class,        [])
+            ->add('price',                  MoneyType::class,           [])
+            ->add('mainCategory',           EntityType::class,          [
                 'class'         => ProductCategory::class,
                 'choice_label'  => 'name',
                 'multiple'      => false,
@@ -51,6 +51,13 @@ class ProductType extends AbstractType
                         ->createQueryBuilder('ec')
                         ->orderBy('ec.name', 'ASC');
                 }
+            ])
+            ->add('featureLinks',           CollectionType::class,      [
+                'entry_type'   => FeatureLinkType::class,
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false
             ])
             ->add('productMedias',          CollectionType::class,      [
                 'entry_type'    => ProductMediaType::class,

@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 class EventRepository extends CrudRepository
 {
     /*** > Trait ***/
+    /*** > Module: HomeEvent ***/
+    use \TicketFactory\Module\HomeEvent\Repository\Override\EventRepository;
+    /*** < Module: HomeEvent ***/
     /*** < Trait ***/
 
     protected const SELECTS = [

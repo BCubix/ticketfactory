@@ -3,6 +3,7 @@
 namespace App\Entity\Product;
 
 use App\Entity\Datable;
+use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\ProductRepository;
@@ -93,10 +94,14 @@ class Product extends Datable
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
     public $frontUrl;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: FeatureLink::class)]
+    private Collection $featureLinks;
+
     public function __construct()
     {
         $this->productCategories = new ArrayCollection();
         $this->productMedias = new ArrayCollection();
+        $this->featureLinks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -285,5 +290,35 @@ class Product extends Datable
     public function completeSeo()
     {
         $this->completeFields($this->getName());
+    }
+
+    /**
+     * @return Collection<int, FeatureLink>
+     */
+    public function getFeatureLinks(): Collection
+    {
+        return $this->featureLinks;
+    }
+
+    public function addFeatureLink(FeatureLink $featureLink): self
+    {
+        if (!$this->featureLinks->contains($featureLink)) {
+            $this->featureLinks->add($featureLink);
+            $featureLink->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeatureLink(FeatureLink $featureLink): self
+    {
+        if ($this->featureLinks->removeElement($featureLink)) {
+            // set the owning side to null (unless already changed)
+            if ($featureLink->getProduct() === $this) {
+                $featureLink->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

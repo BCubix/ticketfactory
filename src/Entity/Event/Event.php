@@ -3,6 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Datable;
+use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\EventRepository;
@@ -138,6 +139,9 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: FeatureLink::class)]
+    private Collection $featureLinks;
+
     public function __construct()
     {
         $this->eventCategories  = new ArrayCollection();
@@ -145,6 +149,7 @@ class Event extends Datable
         $this->eventPriceBlocks = new ArrayCollection();
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
+        $this->featureLinks = new ArrayCollection();
     }
 
 
@@ -484,5 +489,35 @@ class Event extends Datable
     public function completeSeo()
     {
         $this->completeFields($this->getName());
+    }
+
+    /**
+     * @return Collection<int, FeatureLink>
+     */
+    public function getFeatureLinks(): Collection
+    {
+        return $this->featureLinks;
+    }
+
+    public function addFeatureLink(FeatureLink $featureLink): self
+    {
+        if (!$this->featureLinks->contains($featureLink)) {
+            $this->featureLinks->add($featureLink);
+            $featureLink->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeatureLink(FeatureLink $featureLink): self
+    {
+        if ($this->featureLinks->removeElement($featureLink)) {
+            // set the owning side to null (unless already changed)
+            if ($featureLink->getEvent() === $this) {
+                $featureLink->setEvent(null);
+            }
+        }
+
+        return $this;
     }
 }
