@@ -1,23 +1,20 @@
+import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { useSelector } from 'react-redux';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
+import { Crud } from '@/AdminService/Crud';
+import { getProductCategoriesAction, productCategoriesSelector } from '@Apps/ProductCategories/redux/productCategories/productCategoriesSlice';
+import { getProductsAction } from '@Apps/Products/redux/products/productsSlice';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
-import { getProductCategoriesAction, productCategoriesSelector } from '@Apps/ProductCategories/redux/productCategories/productCategoriesSlice';
-import { useSelector } from 'react-redux';
-import { getProductsAction } from '@Apps/Products/redux/products/productsSlice';
-import { Crud } from '@/AdminService/Crud';
-
-import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 export const productCategoriesListCrud = {
     title: 'Catégories de produits',
@@ -47,7 +44,6 @@ export const productCategoriesListCrud = {
     components: [
         {
             component: ({ listCrud, productCategory, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => {
-                console.log(productCategory);
                 return (
                     <Component.ListTable
                         contextualMenu
@@ -265,6 +261,8 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
                             path={path}
+                            productCategories={productCategories}
+                            productCategory={productCategory}
                             {...props}
                         />
                     );

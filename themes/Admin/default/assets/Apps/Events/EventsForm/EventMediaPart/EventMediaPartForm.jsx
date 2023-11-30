@@ -51,17 +51,20 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
             }
             setMedias(result?.medias);
             setMediasTotal(result.total);
+        });
+    };
 
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
             Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
                 if (result.result) {
                     setImageFormatList(result.imageFormats);
                 } else {
                     NotificationManager.error("Une erreur s'est produite", 'Erreur');
-                    onCancel();
                 }
             });
         });
-    };
+    }, []);
 
     useEffect(() => {
         getMedias();

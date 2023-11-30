@@ -28,7 +28,6 @@ class ProductMediaType extends AbstractType
                         ->orderBy('m.title', 'ASC');
                 }
             ])
-            ->add('mainImg',                CheckboxType::class,        ['false_values' => ['0']])
             ->add('position',               NumberType::class,          []);
     }
 

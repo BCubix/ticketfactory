@@ -40,6 +40,7 @@ export const CmtMediaPartForm = ({ values, handleChange, touched, errors, setFie
     const [medias, setMedias] = useState(null);
     const [mediasTotal, setMediasTotal] = useState(null);
     const [mediasFilters, setMediasFilters] = useState(filterInit);
+    const [imageFormatList, setImageFormatList] = useState([]);
 
     const getMedias = () => {
         apiMiddleware(dispatch, async () => {
@@ -52,6 +53,18 @@ export const CmtMediaPartForm = ({ values, handleChange, touched, errors, setFie
             setMediasTotal(result.total);
         });
     };
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                }
+            });
+        });
+    }, []);
 
     useEffect(() => {
         getMedias();
@@ -177,7 +190,7 @@ export const CmtMediaPartForm = ({ values, handleChange, touched, errors, setFie
                     if (newValue.map((el) => el.id).includes(selectedMedia?.id)) {
                         newValue = newValue.filter((el) => el.id !== selectedMedia?.id);
                     } else {
-                        newValue.push({ id: selectedMedia?.id, mainImg: false, position: newValue?.length + 1, media: selectedMedia });
+                        newValue.push({ id: selectedMedia?.id, position: newValue?.length + 1, media: selectedMedia });
                     }
 
                     setFieldValue(name, newValue);
@@ -189,6 +202,7 @@ export const CmtMediaPartForm = ({ values, handleChange, touched, errors, setFie
                 total={mediasTotal}
                 categoriesList={mediaCategoriesList}
                 updatedMedia={updatedMedia}
+                imageFormatList={imageFormatList}
             />
 
             <Component.CmtEditMediaModal
@@ -202,6 +216,7 @@ export const CmtMediaPartForm = ({ values, handleChange, touched, errors, setFie
                 name={name}
                 setFieldValue={setFieldValue}
                 updatedMedia={updatedMedia}
+                imageFormatList={imageFormatList}
             />
         </>
     );

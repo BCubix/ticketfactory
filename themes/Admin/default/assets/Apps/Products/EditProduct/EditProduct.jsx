@@ -10,6 +10,17 @@ import { Constant } from '@/AdminService/Constant';
 import { getProductsAction } from '@Apps/Products/redux/products/productsSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+import { productsInitialSchema, productsValidationSchema, productsForm } from '../ProductsForm/ProductsForm';
+
+export const productsEditCrud = {
+    form: {
+        title: "Modification d'un produit",
+        initialSchema: productsInitialSchema,
+        validationSchema: productsValidationSchema,
+    },
+    ...productsForm,
+};
 
 export const EditProduct = () => {
     const dispatch = useDispatch();
@@ -67,5 +78,12 @@ export const EditProduct = () => {
         return <></>;
     }
 
-    return <Component.ProductsForm handleSubmit={handleSubmit} initialValues={product} productCategoriesList={productCategoriesData?.productCategories} />;
+    return (
+        <Component.CmtCrudForm
+            handleSubmit={handleSubmit}
+            initialValues={product}
+            productCategoriesList={productCategoriesData?.productCategories}
+            formCrud={Crud.products?.edit}
+        />
+    );
 };

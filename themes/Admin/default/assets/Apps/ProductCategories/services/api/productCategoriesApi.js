@@ -1,26 +1,10 @@
 import axios from '@Services/api/config';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '@Services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
 
 const DEFAULT_PATH = '/product-categories';
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('name', data.name);
-    formData.append('slug', changeSlug(data.slug));
-    formData.append('keyword', changeSlug(data.keyword));
-    formData.append('parent', data.parent);
-    formData.append('lang', data.lang);
-    formData.append('languageGroup', data.languageGroup);
-
-    getSeoFormData(formData, data);
-
-    return formData;
-};
 
 const productCategoriesApi = {
     getProductCategories: async (filters) => {
@@ -53,9 +37,9 @@ const productCategoriesApi = {
         }
     },
 
-    createProductCategory: async (data) => {
+    createProductCategory: async (values) => {
         try {
-            const result = await axios.post(DEFAULT_PATH, getFormData(data));
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.productCategories?.add?.api?.dataFields }));
 
             return { result: true, productCategory: result.data };
         } catch (error) {
@@ -63,9 +47,9 @@ const productCategoriesApi = {
         }
     },
 
-    editProductCategory: async (id, data) => {
+    editProductCategory: async (id, values) => {
         try {
-            const result = await axios.post(`${DEFAULT_PATH}/${id}`, getFormData(data));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.productCategories?.edit?.api?.dataFields }));
 
             return { result: true, productCategory: result.data };
         } catch (error) {

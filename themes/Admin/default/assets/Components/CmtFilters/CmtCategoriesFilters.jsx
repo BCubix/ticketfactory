@@ -74,7 +74,6 @@ export const CmtCategoriesFilters = ({ list, value, setValue, title, label, icon
         setLoading(true);
 
         apiMiddleware(dispatch, async () => {
-            console.log(props);
             const result = await getList({ id, ...props });
 
             if (result) {

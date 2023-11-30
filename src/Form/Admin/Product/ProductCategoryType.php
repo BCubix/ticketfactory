@@ -55,6 +55,7 @@ class ProductCategoryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ProductCategory::class,
+            'csrf_protection' => false
         ]);
     }
 }
