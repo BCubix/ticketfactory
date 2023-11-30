@@ -161,9 +161,13 @@ export const productsForm = {
         },
         {
             type: 'tabs',
-            keyId: 'product',
-            label: 'Produit',
-            component: (props) => <Component.ProductMediaPartForm {...props} />,
+            keyId: 'productMedias',
+            label: 'Médias',
+            fields: [
+                {
+                    component: (props) => <Component.ProductMediaPartForm {...props} />,
+                },
+            ],
         },
     ],
     ...DEFAULT_CRUD_FORM_COMPONENTS,
