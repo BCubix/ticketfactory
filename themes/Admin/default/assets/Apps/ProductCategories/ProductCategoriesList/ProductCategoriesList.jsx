@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
@@ -10,17 +10,18 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { categoriesSelector, getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
-
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
+import { getProductCategoriesAction, productCategoriesSelector } from '@Apps/ProductCategories/redux/productCategories/productCategoriesSlice';
+import { useSelector } from 'react-redux';
+import { getProductsAction } from '@Apps/Products/redux/products/productsSlice';
 import { Crud } from '@/AdminService/Crud';
+
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
-export const categoriesListCrud = {
-    title: 'Catégories',
-    listTitle: 'Liste des catégories',
+export const productCategoriesListCrud = {
+    title: 'Catégories de produits',
+    listTitle: 'Liste des catégories de produits',
     tableContextualMenu: true,
     tableList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
@@ -28,15 +29,15 @@ export const categoriesListCrud = {
         { name: 'name', label: 'Nom', width: '50%', sortable: true },
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
-    loadDataAction: () => getCategoriesAction(),
-    dataSelector: categoriesSelector,
-    dataList: (selector) => selector.categories?.children,
-    duplicate: (props) => Api.categoriesApi.duplicateCategory(props),
-    delete: (props) => Api.categoriesApi.deleteCategory(props),
+    loadDataAction: () => getProductCategoriesAction(),
+    dataSelector: productCategoriesSelector,
+    dataList: (selector) => selector.productCategories?.children,
+    duplicate: (props) => Api.productCategories.duplicateProductCategory(props),
+    delete: (props) => Api.productCategories.deleteProductCategory(props),
     links: {
-        new: () => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
-        edit: (id) => `${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
-        translate: (id, languageId) => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}`,
+        new: () => `${Constant.PRODUCT_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.PRODUCT_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        translate: (id, languageId) => `${Constant.PRODUCT_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?productCategoryId=${id}&languageId=${languageId}`,
     },
     messages: {
         duplicateValidation: 'La catégorie a bien été dupliquée',
@@ -45,35 +46,42 @@ export const categoriesListCrud = {
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS.wrapperComponent,
     components: [
         {
-            component: ({ listCrud, category, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => (
-                <Component.ListTable
-                    contextualMenu
-                    table={listCrud?.tableList}
-                    list={category?.children}
-                    onEdit={(id) => {
-                        navigate(`${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
-                    }}
-                    onDelete={(id) => setDeleteDialog(id)}
-                    onClick={(elemId) => {
-                        navigate(`${Constant.CATEGORIES_BASE_PATH}/${elemId}`);
-                    }}
-                    onDuplicate={(id) => {
-                        handleDuplicate(id);
-                    }}
-                    onTranslate={(id, languageId) => {
-                        navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}${path ? `?parentId=${path.at(-1)?.id}` : ''}`);
-                    }}
-                    onDragEnd={handleDragEnd}
-                />
-            ),
+            component: ({ listCrud, productCategory, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => {
+                console.log(productCategory);
+                return (
+                    <Component.ListTable
+                        contextualMenu
+                        table={listCrud?.tableList}
+                        list={productCategory?.children}
+                        onEdit={(id) => {
+                            navigate(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                        }}
+                        onDelete={(id) => setDeleteDialog(id)}
+                        onClick={(elemId) => {
+                            navigate(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/${elemId}`);
+                        }}
+                        onDuplicate={(id) => {
+                            handleDuplicate(id);
+                        }}
+                        onTranslate={(id, languageId) => {
+                            navigate(
+                                `${Constant.PRODUCT_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?productCategoryId=${id}&languageId=${languageId}${
+                                    path ? `?parentId=${path.at(-1)?.id}` : ''
+                                }`
+                            );
+                        }}
+                        onDragEnd={handleDragEnd}
+                    />
+                );
+            },
         },
     ],
     headerComponents: [
         {
-            component: ({ listCrud, category, path, navigate }) => (
+            component: ({ listCrud, productCategory, path, navigate }) => (
                 <Box display="flex" alignItems="center" pt={5}>
                     <Component.CmtBreadCrumb list={path} />
-                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(category.id))}>
+                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(productCategory.id))}>
                         <Component.EditCategoryLink component="span" variant="body1">
                             Modifier
                         </Component.EditCategoryLink>
@@ -82,28 +90,28 @@ export const categoriesListCrud = {
             ),
         },
     ],
-    deleteComponent: ({ deleteDialog, setDeleteDialog, setDeleteEvent, deleteEvents, handleDelete }) => (
+    deleteComponent: ({ deleteDialog, setDeleteDialog, setDeleteProducts, deleteProducts, handleDelete }) => (
         <Component.DeleteDialog
             open={deleteDialog ? true : false}
             onCancel={() => {
                 setDeleteDialog(null);
-                setDeleteEvent(false);
+                setDeleteProducts(false);
             }}
             deleteText={'Valider'}
-            onDelete={() => handleDelete(deleteDialog, deleteEvents)}
+            onDelete={() => handleDelete(deleteDialog, deleteProducts)}
         >
             <Box textAlign="center" py={3}>
                 <Typography component="p">
-                    Voulez-vous supprimer les évènements qui sont rattachés à cette catégorie ou souhaitez-vous les rattacher à la catégorie parente ?
+                    Voulez-vous supprimer les produits qui sont rattachés à cette catégorie ou souhaitez-vous les rattacher à la catégorie parente ?
                 </Typography>
 
                 <Box className="flex row-center" mt={5}>
                     <RadioGroup
                         defaultValue={false}
                         name="delete-event-radio-choice"
-                        value={deleteEvents}
+                        value={deleteProducts}
                         onChange={(e) => {
-                            setDeleteEvent(e.target.value);
+                            setDeleteProducts(e.target.value);
                         }}
                         sx={{
                             display: 'flex',
@@ -121,87 +129,82 @@ export const categoriesListCrud = {
     ),
 };
 
-export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) => {
-    const { loading, categories, error } = useSelector(categoriesSelector);
+export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list, ...props }) => {
+    const { loading, productCategories, error } = useSelector(productCategoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
     const [deleteDialog, setDeleteDialog] = useState(null);
-    const [deleteEvents, setDeleteEvent] = useState(false);
-    const [category, setCategory] = useState(null);
+    const [deleteProducts, setDeleteProducts] = useState(false);
+    const [productCategory, setProductCategory] = useState(null);
     const [path, setPath] = useState(null);
 
-    const getCategory = async () => {
+    const getProductCategory = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.categoriesApi.getOneCategory(id);
+            const result = await Api.productCategoriesApi.getOneProductCategory(id);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.CATEGORIES_BASE_PATH);
+                navigate(Constant.PRODUCT_CATEGORIES_BASE_PATH);
                 return;
             }
 
-            setCategory(result.category);
+            setProductCategory(result.productCategory);
         });
     };
 
     useEffect(() => {
-        if (!id && !loading && !categories && !error) {
-            dispatch(getCategoriesAction());
+        if (!id && !loading && !productCategories && !error) {
+            dispatch(getProductCategoriesAction());
             return;
         } else if (id) {
-            getCategory();
+            getProductCategory();
             return;
         }
 
-        if (!id && categories && !loading && !error) {
-            setCategory(categories);
+        if (!id && productCategories && !loading && !error) {
+            setProductCategory(productCategories);
         }
-    }, [id, loading, categories, error]);
+    }, [id, loading, productCategories, error]);
 
     useEffect(() => {
-        if (!category) {
+        if (!productCategory) {
             setPath(null);
         }
 
         let pathArray = [];
-        let categoryCopy = { ...category };
+        let productCategoryCopy = { ...productCategory };
 
-        while (categoryCopy !== null) {
+        while (productCategoryCopy !== null) {
             pathArray.push({
-                label: categoryCopy.name,
-                path: `${Constant.CATEGORIES_BASE_PATH}/${categoryCopy.id}`,
-                id: categoryCopy.id,
+                label: productCategoryCopy.name,
+                path: `${Constant.PRODUCT_CATEGORIES_BASE_PATH}/${productCategoryCopy.id}`,
+                id: productCategoryCopy.id,
             });
 
-            categoryCopy = categoryCopy.parent ? { ...categoryCopy.parent } : null;
+            productCategoryCopy = productCategoryCopy.parent ? { ...productCategoryCopy.parent } : null;
         }
         setPath(pathArray.reverse());
-    }, [category]);
+    }, [productCategory]);
 
-    const handleDelete = async (deleteId, deleteEvents) => {
-        const check = await Api.authApi.checkIsAuth();
+    const handleDelete = async (deleteId, deleteProduct) => {
+        apiMiddleware(dispatch, async () => {
+            await Api.productCategoriesApi.deleteProductCategory(deleteId, deleteProduct);
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+            dispatch(getProductCategoriesAction());
+            dispatch(getProductsAction());
 
-            return;
-        }
-
-        await Api.categoriesApi.deleteCategory(deleteId, deleteEvents);
-
-        dispatch(getCategoriesAction());
-
-        setDeleteDialog(null);
-        setDeleteEvent(false);
+            setDeleteDialog(null);
+            setDeleteProducts(false);
+        });
     };
 
     const handleDuplicate = (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.categoriesApi.duplicateCategory(id);
+            const result = await Api.productCategoriesApi.duplicateProductCategory(id);
 
             if (result?.result) {
-                NotificationManager.success('La catégorie a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getCategoriesAction());
+                NotificationManager.success('La catégorie de produit a bien été dupliquée.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(getProductCategoriesAction());
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }
@@ -220,21 +223,21 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
             return;
         }
 
-        let svCategories = Object.values(copyData(category?.children));
+        let svProductCategories = Object.values(copyData(productCategory?.children));
 
-        const removedElement = svCategories.splice(indexSrc, 1)[0];
-        svCategories.splice(indexDest, 0, removedElement);
+        const removedElement = svProductCategories.splice(indexSrc, 1)[0];
+        svProductCategories.splice(indexDest, 0, removedElement);
 
-        setCategory({ ...category, children: svCategories });
+        setProductCategory({ ...productCategory, children: svProductCategories });
 
         apiMiddleware(dispatch, async () => {
-            const result = await Api.categoriesApi.orderCategories(removedElement.id, indexSrc, indexDest);
+            const result = await Api.productCategoriesApi.orderProductCategories(removedElement.id, indexSrc, indexDest);
             if (result?.result) {
-                NotificationManager.success('La catégorie a bien changé de position.', 'Succès', Constant.REDIRECTION_TIME);
+                NotificationManager.success('La catégorie de produit a bien changé de position.', 'Succès', Constant.REDIRECTION_TIME);
                 if (!id) {
-                    dispatch(getCategoriesAction());
+                    dispatch(getProductCategoriesAction());
                 } else {
-                    getCategory();
+                    getProductCategory();
                 }
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
@@ -255,7 +258,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                     return (
                         <ItemComponent
                             key={index}
-                            objectData={useSelector(categoriesSelector)}
+                            objectData={useSelector(productCategoriesSelector)}
                             listCrud={listCrud}
                             navigate={navigate}
                             dispatch={dispatch}
@@ -296,12 +299,12 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                             return (
                                 <ItemComponent
                                     key={index}
-                                    categories={categories}
-                                    category={category}
+                                    productCategories={productCategories}
+                                    productCategory={productCategory}
                                     handleDragEnd={handleDragEnd}
                                     listCrud={listCrud}
                                     path={path}
-                                    objectData={useSelector(categoriesSelector)}
+                                    objectData={useSelector(productCategoriesSelector)}
                                     navigate={navigate}
                                     dispatch={dispatch}
                                     handleDuplicate={handleDuplicate}
@@ -314,7 +317,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
             {listCrud?.deleteComponent ? (
-                <listCrud.deleteComponent {...props} {...{ deleteDialog, setDeleteDialog, setDeleteEvent, deleteEvents, handleDelete }} />
+                <listCrud.deleteComponent {...props} {...{ deleteDialog, setDeleteDialog, setDeleteProducts, deleteProducts, handleDelete }} />
             ) : (
                 <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                     <Box textAlign="center" py={3}>

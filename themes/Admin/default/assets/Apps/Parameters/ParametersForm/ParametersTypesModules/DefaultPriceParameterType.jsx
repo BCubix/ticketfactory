@@ -28,7 +28,7 @@ const getComponent = ({ paramName, paramValue, paramBreakpoints, handleChange, i
                                                 <Grid container spacing={4}>
                                                     <Grid item xs={12} md={6}>
                                                         <Component.CmtTextField
-                                                            value={item.name}
+                                                            value={item.name || ''}
                                                             onChange={handleChange}
                                                             label="Nom"
                                                             name={`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue.${index}.name`}
@@ -40,7 +40,7 @@ const getComponent = ({ paramName, paramValue, paramBreakpoints, handleChange, i
                                                     <Grid item xs={12} md={6}>
                                                         <Component.CmtTextField
                                                             type="number"
-                                                            value={item.price}
+                                                            value={item.price || ''}
                                                             onChange={handleChange}
                                                             required
                                                             label="Prix"
@@ -51,7 +51,7 @@ const getComponent = ({ paramName, paramValue, paramBreakpoints, handleChange, i
 
                                                     <Grid item xs={12}>
                                                         <Component.CmtTextField
-                                                            value={item.annotation}
+                                                            value={item.annotation || ''}
                                                             onChange={handleChange}
                                                             label="Annotation"
                                                             name={`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue.${index}.annotation`}

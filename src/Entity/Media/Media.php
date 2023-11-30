@@ -4,6 +4,7 @@ namespace App\Entity\Media;
 
 use App\Entity\Datable;
 use App\Entity\Event\EventMedia;
+use App\Entity\Product\ProductMedia;
 use App\Repository\MediaRepository;
 use App\Service\File\MimeTypeMapping;
 
@@ -78,6 +79,9 @@ class Media extends Datable
     #[ORM\OneToMany(mappedBy: 'media', targetEntity: EventMedia::class, orphanRemoval: true)]
     private Collection $eventMedias;
 
+    #[ORM\OneToMany(mappedBy: 'media', targetEntity: ProductMedia::class, orphanRemoval: true)]
+    private Collection $productMedias;
+
     #[ORM\OneToMany(mappedBy: 'thumbnail', targetEntity: self::class)]
     private Collection $mediaThumbnail;
 
@@ -107,6 +111,7 @@ class Media extends Datable
     public function __construct()
     {
         $this->eventMedias = new ArrayCollection();
+        $this->productMedias = new ArrayCollection();
         $this->mediaCategories = new ArrayCollection();
         $this->imageFormats = new ArrayCollection();
         $this->mediaThumbnail = new ArrayCollection();
@@ -251,6 +256,36 @@ class Media extends Datable
             // set the owning side to null (unless already changed)
             if ($eventMedia->getMedia() === $this) {
                 $eventMedia->setMedia(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductMedia>
+     */
+    public function getProductMedias(): Collection
+    {
+        return $this->productMedias;
+    }
+
+    public function addProductMedia(ProductMedia $productMedia): self
+    {
+        if (!$this->productMedias->contains($productMedia)) {
+            $this->productMedias->add($productMedia);
+            $productMedia->setMedia($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductMedia(ProductMedia $productMedia): self
+    {
+        if ($this->productMedias->removeElement($productMedia)) {
+            // set the owning side to null (unless already changed)
+            if ($productMedia->getMedia() === $this) {
+                $productMedia->setMedia(null);
             }
         }
 

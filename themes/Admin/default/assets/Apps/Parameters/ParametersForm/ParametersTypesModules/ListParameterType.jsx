@@ -33,7 +33,7 @@ const getComponent = ({
                     variant="standard"
                     id={paramKey}
                     label={paramName}
-                    value={paramValue}
+                    value={paramValue || ''}
                     onChange={(e) => {
                         setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.target.value);
                     }}

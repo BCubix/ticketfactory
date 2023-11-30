@@ -151,7 +151,7 @@ export const EventsForm = ({ handleSubmit, initialValues = null, translateInitia
     }
     return (
         <Formik
-            initialValues={constructInitialValues(LIST.form.initialSchema, initValues, { props })}
+            initialValues={constructInitialValues(LIST.form.initialSchema, initValues, { ...props })}
             validationSchema={Yup.object().shape(LIST.form.validationSchema)}
             translateInitialValues={translateInitialValues}
             onSubmit={(values, { setSubmitting }) => {
