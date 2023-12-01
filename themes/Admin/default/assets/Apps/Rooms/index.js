@@ -1,8 +1,11 @@
 import React from 'react';
+import BusinessIcon from '@mui/icons-material/Business';
 
 import { CreateRoom, roomsCreateCrud } from '@Apps/Rooms/CreateRoom/CreateRoom';
 import { EditRoom, roomsEditCrud } from '@Apps/Rooms/EditRoom/EditRoom';
 import { RoomsList, roomsListCrud } from '@Apps/Rooms/RoomsList/RoomsList';
+import roomsReducer from '@Apps/Rooms/redux/rooms/roomsSlice';
+import roomsApi from '@Apps/Rooms/services/api/roomsApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -11,11 +14,6 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
-
-import roomsReducer from '@Apps/Rooms/redux/rooms/roomsSlice';
-import roomsApi from '@Apps/Rooms/services/api/roomsApi';
-
-import BusinessIcon from '@mui/icons-material/Business';
 
 export const initConstant = () => {
     setConstant('ROOMS_BASE_PATH', '/admin/salles');

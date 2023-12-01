@@ -3,11 +3,16 @@
 namespace App\Entity\Feature;
 
 use App\Entity\Datable;
-use App\Repository\Feature\FeatureCategoryRepository;
+use App\Entity\Language\Language;
+use App\Repository\FeatureCategoryRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FeatureCategoryRepository::class)]
 class FeatureCategory extends Datable
@@ -15,22 +20,45 @@ class FeatureCategory extends Datable
     /*** > Trait ***/
     /*** < Trait ***/
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de la catégorie doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de la catégorie doit être renseigné.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 123)]
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
+    #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $keyword = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
     #[ORM\OneToMany(mappedBy: 'featureCategory', targetEntity: Feature::class, orphanRemoval: true)]
     private Collection $features;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
+
 
     public function __construct()
     {
@@ -78,6 +106,18 @@ class FeatureCategory extends Datable
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Feature>
      */
@@ -104,6 +144,18 @@ class FeatureCategory extends Datable
                 $feature->setFeatureCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

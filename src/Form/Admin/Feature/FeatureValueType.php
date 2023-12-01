@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Feature;
+namespace App\Form\Admin\Feature;
 
 use App\Entity\Feature\FeatureValue;
 

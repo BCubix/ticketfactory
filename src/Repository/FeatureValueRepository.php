@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Feature;
+namespace App\Repository;
 
 use App\Entity\Feature\FeatureValue;
 

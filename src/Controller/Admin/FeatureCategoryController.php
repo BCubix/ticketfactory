@@ -20,35 +20,35 @@ class FeatureCategoryController extends CrudController
 
     #[Rest\Get('/features-categories')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_all'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function getOne(Request $request, int $categoryId): View
     {
         return parent::getOne($request, $categoryId);
     }
 
     #[Rest\Post('/features-categories')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function edit(Request $request, int $categoryId): View
     {
         return parent::edit($request, $categoryId);
     }
 
     #[Rest\Delete('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function delete(Request $request, int $categoryId): View
     {
         return parent::delete($request, $categoryId);
