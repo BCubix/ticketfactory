@@ -11,6 +11,7 @@ const initialState = {
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('featureCategoriesActiveFilter')),
         name: sessionStorage.getItem('featureCategoriesNameFilter') || '',
+        keyword: sessionStorage.getItem('featureCategoriesKeywordFilter') || '',
         sort: sessionStorage.getItem('featureCategoriesSort') || 'id ASC',
         page: 1,
         limit: 20,
@@ -75,6 +76,7 @@ export function changeFeatureCategoriesFilters(filters, page = 1) {
     return async (dispatch) => {
         sessionStorage.setItem('featureCategoriesActiveFilter', filters?.active);
         sessionStorage.setItem('featureCategoriesNameFilter', filters?.name);
+        sessionStorage.setItem('featureCategoriesKeywordFilter', filters?.keyword);
         sessionStorage.setItem('featureCategoriesSort', filters?.sort);
 
         filters.page = page;

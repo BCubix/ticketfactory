@@ -68,7 +68,7 @@ const TypeObj = {
             />
         </>
     ),
-    switch: ({ name, values, handleChange, label, labelPlacement, setFieldValue }) => (
+    switch: ({ name, values, handleChange, label, labelPlacement, setFieldValue, sx }) => (
         <FormControlLabel
             control={
                 <Switch
@@ -85,6 +85,7 @@ const TypeObj = {
             }
             label={label}
             labelPlacement={labelPlacement ? labelPlacement : 'start'}
+            sx={sx}
         />
     ),
     checkbox: ({ name, values, handleChange, label, labelPlacement, setFieldValue }) => (
@@ -158,13 +159,13 @@ export const CmtDisplayFields = ({ fields, ...inheritedProps }) => {
     return (
         <>
             {fields.map((field, index) => {
-                const { style, input, inputs, component: Cmt } = field;
+                const { style, input, inputs, component: Cmt, ...fieldProps } = field;
                 const items = input ? [typeof input === 'function' ? input(inheritedProps) : input] : inputs;
 
                 return (
                     <Grid item key={index} {...style}>
                         {Cmt ? (
-                            <Cmt {...inheritedProps} />
+                            <Cmt {...fieldProps} {...inheritedProps} />
                         ) : (
                             items?.map((item, index) => {
                                 const { inputType, custom, ...inputProps } = item;

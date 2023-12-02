@@ -117,7 +117,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
             const result = await listCrud?.duplicate(id);
             if (result?.result) {
                 NotificationManager.success(listCrud?.messages?.duplicateValidation || "L'objet à bien été dupliqué.", 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(listCrud?.loadDataActions());
+                dispatch(listCrud?.loadDataAction());
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }

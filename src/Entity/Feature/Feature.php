@@ -3,13 +3,16 @@
 namespace App\Entity\Feature;
 
 use App\Entity\Datable;
-use App\Entity\Event\Event;
-use App\Entity\Product\Product;
+use App\Entity\Language\Language;
 use App\Repository\FeatureRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FeatureRepository::class)]
 class Feature extends Datable
@@ -17,41 +20,77 @@ class Feature extends Datable
     /*** > Trait ***/
     /*** < Trait ***/
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'attribut doit être inférieur à {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'Le nom de l\'attribut doit être renseigné.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 123)]
+    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
+    #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $keyword = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column]
     private ?int $position = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column]
     private ?bool $filter = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 255)]
     private ?string $filterType = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $languageGroup = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\OneToMany(mappedBy: 'feature', targetEntity: FeatureValue::class, orphanRemoval: true)]
     private Collection $featureValues;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\ManyToOne(inversedBy: 'features')]
     #[ORM\JoinColumn(nullable: false)]
     private ?FeatureCategory $featureCategory = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
     #[ORM\OneToMany(mappedBy: 'feature', targetEntity: FeatureLink::class, orphanRemoval: true)]
     private Collection $featureLinks;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Language $lang = null;
 
     public function __construct()
     {
@@ -148,6 +187,18 @@ class Feature extends Datable
         return $this;
     }
 
+    public function getLanguageGroup(): ?Uuid
+    {
+        return $this->languageGroup;
+    }
+
+    public function setLanguageGroup(?Uuid $languageGroup): self
+    {
+        $this->languageGroup = $languageGroup;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, FeatureValue>
      */
@@ -216,6 +267,18 @@ class Feature extends Datable
                 $featureLink->setFeature(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

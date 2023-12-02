@@ -47,10 +47,24 @@ class FeatureCategoryController extends CrudController
         return parent::edit($request, $categoryId);
     }
 
+    #[Rest\Post('/features-categories/{categoryId}/duplicate', requirements: ['categoryId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
+    public function duplicate(Request $request, int $categoryId): View
+    {
+        return parent::duplicate($request, $categoryId);
+    }
+
     #[Rest\Delete('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function delete(Request $request, int $categoryId): View
     {
         return parent::delete($request, $categoryId);
+    }
+
+    #[Rest\Get('/features-categories/{categoryId}/translated/{languageId}', requirements: ['categoryId' => '\d+', 'languageId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
+    public function getTranslated(Request $request, int $categoryId, int $languageId): View
+    {
+        return parent::getTranslated($request, $categoryId, $languageId);
     }
 }
