@@ -4,8 +4,8 @@ namespace App\Entity\Feature;
 
 use App\Entity\Event\Event;
 use App\Entity\Product\Product;
-
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 #[ORM\Entity]
 class FeatureLink
@@ -21,10 +21,14 @@ class FeatureLink
     #[ORM\ManyToOne(inversedBy: 'feature')]
     private ?Product $product = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne(inversedBy: 'featureLinks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Feature $feature = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne(inversedBy: 'featureLinks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?FeatureValue $featureValue = null;

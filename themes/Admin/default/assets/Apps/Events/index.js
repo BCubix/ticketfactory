@@ -16,6 +16,7 @@ import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
 import { EventsForm } from '@Apps/Events/EventsForm/EventsForm';
 import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
 import { EventsList, eventsListCrud } from '@Apps/Events/EventsList/EventsList';
+import { EventFeaturesPartForm } from '@Apps/Events/EventsForm/EventFeaturesPartForm';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -51,6 +52,7 @@ export const initComponent = () => {
     setComponent('EventsForm', EventsForm);
     setComponent('EventsPriceForm', EventsPriceForm);
     setComponent('EventsList', EventsList);
+    setComponent('EventFeaturesPartForm', EventFeaturesPartForm);
 };
 
 export const initApi = () => {

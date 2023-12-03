@@ -19,6 +19,7 @@ export const EditEvent = () => {
     const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
+    const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
 
     useEffect(() => {
@@ -45,6 +46,7 @@ export const EditEvent = () => {
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
+            Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
         });
     };
 
@@ -88,6 +90,7 @@ export const EditEvent = () => {
             categoriesList={categoriesData?.categories}
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
+            featuresList={featuresData?.features}
             tagsList={tagsData.tags}
         />
     );

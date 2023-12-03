@@ -8,10 +8,14 @@ import { changeSlug } from '@Services/utils/changeSlug';
 export const featuresInitialSchema = {
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
-    seatsNb: (initValues) => initValues?.seatsNb || '',
-    area: (initValues) => initValues?.area || '',
-    seatingPlans: (initValues) => (initValues?.seatingPlans ? initValues?.seatingPlans?.map((el) => ({ ...el, lang: el?.lang?.id || '' })) : []),
     slug: (initValues) => initValues?.slug || '',
+    keyword: (initValues) => initValues?.keyword || '',
+    type: (initValues) => initValues?.type || 'text',
+    position: (initValues) => initValues?.position || '',
+    filter: (initValues) => initValues?.filter || false,
+    filterType: (initValues) => initValues?.filterType || "",
+    featureCategory: (initValues) => initValues?.featureCategory?.id || "",
+    featureValues: (initValues) => (initValues?.featureValues ? initValues?.featureValues?.map((el) => ({ ...el })) : []),
     editSlug: false,
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
@@ -19,6 +23,17 @@ export const featuresInitialSchema = {
 
 export const featuresValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'attribut.").max(250, 'Le nom renseigné est trop long.'),
+    type: Yup.string().required("Veuillez renseigner le type de l'attribut."),
+    position: Yup.number().required("Veuillez renseigner la position de l'attribut.").min(1, 'Veuillez renseigner une position valide'),
+    featureCategory: Yup.string().required("Veuillez renseigner la catégorie de l'attribut."),
+    filterType: Yup.string().when('filter', (filter) => {
+        if (filter) {
+            return Yup.string().required('Veuillez renseigner le type de filtre.')
+        }
+    }),
+    featureValues: Yup.array().of(Yup.object().shape({
+        value: Yup.string().required('Veuillez renseigner la valeur.')
+    }))
 };
 
 export const featuresForm = {
@@ -32,8 +47,8 @@ export const featuresForm = {
             name: { type: 'string' },
             slug: { type: 'string' },
             keyword: { type: 'string' },
-            type: { type: 'slug' },
-            position: { type: 'slug' },
+            type: { type: 'string' },
+            position: { type: 'string' },
             filter: { type: 'boolean' },
             filterType: {
                 function: ({ values, formData }) => {
@@ -45,6 +60,7 @@ export const featuresForm = {
                 type: 'array',
                 subFields: {
                     value: { type: 'string' },
+                    custom: { type: 'boolean' }
                 },
             },
             lang: { type: 'string' },
@@ -110,6 +126,21 @@ export const featuresForm = {
                                 listName: 'listType',
                                 getValue: (item) => item.value,
                                 getName: (item) => item.label,
+                                custom: {
+                                    setFieldValue:
+                                        ({ setFieldValue, values }) =>
+                                        (name, newValue) => {
+                                            setFieldValue(name, newValue);
+
+                                            if (values?.featureValues?.length === 0) {
+                                                return;
+                                            }
+
+                                            for (let i = 0; i < values?.featureValues?.length; i++) {
+                                                setFieldValue(`featureValues.${i}.value`, '');
+                                            }
+                                        },
+                                },
                             },
                         },
                         {
@@ -121,6 +152,21 @@ export const featuresForm = {
                                 inputType: 'textField',
                                 type: 'number',
                                 required: true,
+                            },
+                        },
+                        {
+                            keyId: 'input-featureCategory',
+                            style: {
+                                xs: 12,
+                            },
+                            input: {
+                                name: 'featureCategory',
+                                label: 'Catégorie',
+                                inputType: 'selectField',
+                                listName: 'featureCategoriesList',
+                                getName: (item) => item.name,
+                                getValue: (item) => item.id,
+                                required: true
                             },
                         },
                         {
@@ -191,22 +237,22 @@ export const featuresForm = {
                         },
                     ],
                 },
-                /* {
+                {
                     type: 'block',
-                    title: 'Plans',
-                    keyId: 'block-seating-plans',
+                    title: 'Valeurs',
+                    keyId: 'block-featureValues',
                     fields: [
                         {
-                            keyId: 'input-seating-plans',
+                            keyId: 'input-featureValues',
                             style: { xs: 12 },
                             input: {
-                                name: 'seatingPlans',
-                                label: 'Plans',
+                                name: 'featureValues',
+                                label: 'Valeurs',
                                 inputType: 'fieldArray',
-                                newObject: { name: '' },
+                                newObject: { value: '', custom: false },
                                 fields: [
                                     {
-                                        keyId: 'input-name',
+                                        keyId: 'input-value',
                                         style: {
                                             xs: 12,
                                         },
@@ -217,12 +263,13 @@ export const featuresForm = {
                                             required: true,
                                             sx: { marginBottom: 6 },
                                         },
+                                        component: (props) => <Component.CmtFeaturesTypeValues {...props} />
                                     },
                                 ],
                             },
                         },
                     ],
-                }, */
+                },
             ],
         },
     ],

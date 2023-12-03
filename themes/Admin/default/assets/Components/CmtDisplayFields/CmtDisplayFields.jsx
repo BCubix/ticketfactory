@@ -11,16 +11,14 @@ import moment from 'moment/moment';
 
 const TypeObj = {
     textField: ({ values, touched, errors, handleBlur, handleChange, ...props }) => (
-        <>
-            <Component.CmtTextField
-                {...props}
-                value={getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
-                error={getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                name={`${props.baseName || ''}${getName(props)}`}
-            />
-        </>
+        <Component.CmtTextField
+            {...props}
+            value={getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
+            error={getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            name={`${props.baseName || ''}${getName(props)}`}
+        />
     ),
     slugInput: (props) => <Component.CmtSlugInput {...props} name={`${props.baseName || ''}${getName(props)}`} />,
     date: ({ values, touched, errors, setFieldValue, setFieldTouched, ...props }) => (
@@ -49,7 +47,7 @@ const TypeObj = {
     selectField: ({ listName, values, touched, errors, setFieldValue, ...props }) => (
         <Component.CmtSelectField
             {...props}
-            value={values[getName(props)]}
+            value={props[listName] && props[listName].length > 0 ? values[getName(props)] : ''}
             errors={touched[getName(props)] && errors[getName(props)]}
             list={props[listName] ? props[listName] : []}
             name={`${props.baseName || ''}${getName(props)}`}
@@ -107,14 +105,14 @@ const TypeObj = {
             labelPlacement={labelPlacement ? labelPlacement : 'start'}
         />
     ),
-    fieldArray: ({ values, label, ...props }) => (
+    fieldArray: ({ values, label, displayTitle, ...props }) => (
         <FieldArray name={`${props.baseName || ''}${getName(props)}`}>
             {({ remove, push }) => (
                 <>
                     {values &&
                         getPropByString(values, `${props.baseName || ''}${getName(props)}`)?.map((item, index) => (
-                            <Component.CmtFormBlock title={`${label} N° ${index + 1}`}>
-                                <Box position="relative" key={index}>
+                            <Component.CmtFormBlock key={index} title={displayTitle ? `${label} N° ${index + 1}` : null}>
+                                <Box key={index}>
                                     <Component.DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {

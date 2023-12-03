@@ -19,6 +19,7 @@ export const CreateEvent = () => {
     const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
+    const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
     const [initialValues, setInitialValues] = useState(null);
 
@@ -38,6 +39,7 @@ export const CreateEvent = () => {
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
+            Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
 
             if (!eventId || !languageId) {
                 return;
@@ -85,6 +87,7 @@ export const CreateEvent = () => {
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
             tagsList={tagsData.tags}
+            featuresList={featuresData?.features}
             translateInitialValues={initialValues}
         />
     );

@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
-import { Tab } from '@/AdminService/Tab';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
 const validationSchema = {
@@ -87,6 +86,17 @@ const initialSchema = {
     useThirdPartyTicketing: (initValues) => initValues?.useThirdPartyTicketing || false,
     thirdPartyTicketingUrl: (initValues) => initValues?.thirdPartyTicketingUrl || '',
     eventLength: (initValues) => initValues?.eventLength || '',
+    featureLinks: (initValues) =>
+        initValues?.featureLinks
+            ? initValues?.featureLinks?.map((el) => ({
+                  ...el,
+                  event: el?.event?.id,
+                  product: el?.product?.id,
+                  feature: el?.feature?.id,
+                  featureValue: el?.featureValue?.id,
+                  featureValueRaw: '',
+              }))
+            : [],
     seo: {
         metaTitle: (initValues) => initValues?.metaTitle || '',
         metaDescription: (initValues) => initValues?.metaDescription || '',
@@ -123,6 +133,11 @@ export const LIST = {
                     keyId: 'prices-tab',
                     label: 'Tarifs',
                     component: (props) => <Component.EventsPriceBlockForm {...props} />,
+                },
+                {
+                    keyId: 'features-tab',
+                    label: 'Attributs',
+                    component: (props) => <Component.EventFeaturesPartForm {...props} />,
                 },
                 {
                     keyId: 'medias-tab',

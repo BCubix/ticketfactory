@@ -16,7 +16,7 @@ export const featuresListCrud = {
         'name',
         'keyword',
         'type',
-        'filter',
+        { key: 'filter', type: 'boolean' },
         'page',
         'lang',
         'limit',

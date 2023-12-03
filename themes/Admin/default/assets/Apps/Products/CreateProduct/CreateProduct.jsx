@@ -28,6 +28,7 @@ export const CreateProduct = () => {
     const navigate = useNavigate();
     const languagesData = useSelector(languagesSelector);
     const [productCategoriesData, setProductCategoriesData] = useState(null);
+    const [featuresData, setFeaturesData] = useState(null);
     const [initialValues, setInitialValues] = useState(null);
 
     const [queryParameters] = useSearchParams();
@@ -43,6 +44,7 @@ export const CreateProduct = () => {
             const defaultLanguageId = languageId || languagesData?.languages?.find((el) => el.isDefault)?.id;
 
             Api.productCategoriesApi.getProductCategories({ lang: defaultLanguageId }).then((results) => setProductCategoriesData(results));
+            Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
 
             if (!productId || !languageId) {
                 return;
@@ -87,6 +89,7 @@ export const CreateProduct = () => {
         <Component.CmtCrudForm
             handleSubmit={handlesubmit}
             productCategoriesList={productCategoriesData?.productCategories}
+            featuresList={featuresData?.features}
             translateInitialValues={initialValues}
             formCrud={Crud?.products?.add}
         />

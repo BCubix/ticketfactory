@@ -11,6 +11,8 @@ import { getFeaturesAction } from '@Apps/Features/redux/features/featuresSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
 import { featuresInitialSchema, featuresValidationSchema, featuresForm } from '@Apps/Features/FeaturesForm/FeaturesForm.jsx';
+import { useSelector } from 'react-redux';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 export const featuresCreateCrud = {
     form: {
@@ -24,13 +26,19 @@ export const featuresCreateCrud = {
 export const CreateFeature = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const languagesData = useSelector(languagesSelector);
     const [initialValues, setInitialValues] = useState(null);
+    const [featureCategoriesData, setFeatureCategoriesData] = useState(null);
 
     const [queryParameters] = useSearchParams();
     const featureId = queryParameters.get('featureId');
     const languageId = queryParameters.get('languageId');
 
     useEffect(() => {
+        const defaultLanguageId = languageId || languagesData?.languages?.find((el) => el.isDefault)?.id;
+
+        Api.featureCategoriesApi.getFeatureCategories({ lang: defaultLanguageId }).then((results) => setFeatureCategoriesData(results));
+
         if (!featureId || !languageId) {
             return;
         }
@@ -62,5 +70,5 @@ export const CreateFeature = () => {
         return <></>;
     }
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} translateInitialValues={initialValues} formCrud={Crud?.features?.add} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} featureCategoriesList={featureCategoriesData?.featureCategories} translateInitialValues={initialValues} formCrud={Crud?.features?.add} />;
 };

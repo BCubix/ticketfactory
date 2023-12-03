@@ -81,6 +81,8 @@ import { CmtDisplayMediaElement } from '../Components/CmtMediaPart/CmtDisplayMed
 import { CmtEditMediaModal } from '../Components/CmtMediaPart/CmtEditMediaModal';
 import { CmtMediaPartForm } from '../Components/CmtMediaPart/CmtMediaPartForm';
 import { CmtMoveMedias } from '../Components/CmtMediaPart/CmtMoveMedias';
+import { CmtFeaturesTypeValues } from '@Components/CmtFeaturesTypeValues/CmtFeaturesTypeValues';
+import { CmtFeaturesInputField } from '@Components/CmtFeaturesInputField/CmtFeaturesInputField';
 
 const ComponentObj = {
     App: App,
@@ -115,6 +117,8 @@ const ComponentObj = {
     CmtEditorField: CmtEditorField,
     CmtEndPositionWrapper: CmtEndPositionWrapper,
     CmtSelect: CmtSelect,
+    CmtFeaturesTypeValues: CmtFeaturesTypeValues,
+    CmtFeaturesInputField: CmtFeaturesInputField,
 
     CmtBooleanFilters: CmtBooleanFilters,
     CmtCategoriesFilters: CmtCategoriesFilters,

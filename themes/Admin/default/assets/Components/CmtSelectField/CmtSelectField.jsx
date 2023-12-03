@@ -15,7 +15,9 @@ export const CmtSelectField = ({
     errors,
     handleBlur = null,
     getMenuItem = null,
+    disabled = false,
 }) => {
+    console.log(value, name);
     return (
         <FormControl variant="standard" fullWidth sx={{ mt: 4 }} size="small" className="Mui-Select-FormControl">
             <InputLabel id={`${id}-label`} required={required} size="small">
@@ -28,6 +30,7 @@ export const CmtSelectField = ({
                 value={value}
                 label={label}
                 name={name}
+                disabled={disabled}
                 onChange={(e) => {
                     setFieldValue(name, e.target.value);
                 }}

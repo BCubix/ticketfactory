@@ -139,7 +139,9 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: FeatureLink::class)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureLinks;
 
     public function __construct()

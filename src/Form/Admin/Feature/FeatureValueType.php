@@ -15,7 +15,8 @@ class FeatureValueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('value',                        TextType::class,            []);
+            ->add('value',                        TextType::class,            [])
+            ->add('custom',                       CheckboxType::class,        ['false_values' => ['0', 'null', 'false']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -26,6 +26,17 @@ export const productsInitialSchema = {
         })) || [],
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
+    featureLinks: (initValues) =>
+        initValues?.featureLinks
+            ? initValues?.featureLinks?.map((el) => ({
+                  ...el,
+                  event: el?.event?.id,
+                  product: el?.product?.id,
+                  feature: el?.feature?.id,
+                  featureValue: el?.featureValue?.id,
+                  featureValueRaw: '',
+              }))
+            : [],
     seo: SeoInitialValues,
     editSlug: false,
 };
@@ -65,6 +76,14 @@ export const productsForm = {
                 subFields: {
                     media: { function: ({ values, formData, baseName }) => formData.append(`${baseName}[media]`, values.id) },
                     position: { function: ({ values, formData, baseName, index }) => formData.append(`${baseName}[position]`, values.position || index + 1) },
+                },
+            },
+            featureLinks: {
+                type: 'array',
+                subFields: {
+                    feature: { type: 'string' },
+                    featureValue: { type: 'string' },
+                    featureValueRaw: { type: 'string' },
                 },
             },
             slug: { type: 'slug' },
@@ -159,6 +178,25 @@ export const productsForm = {
                     ],
                 },
                 SeoInitialFormInputs,
+            ],
+        },
+        {
+            type: 'tabs',
+            keyId: 'features',
+            label: 'Attributs',
+            fields: [
+                {
+                    keyId: 'block-features',
+                    title: 'Attributs',
+
+                    fields: [
+                        {
+                            style: { xs: 12 },
+                            keyId: 'product-features',
+                            component: (props) => <Component.CmtFeaturesInputField {...props} />,
+                        },
+                    ],
+                },
             ],
         },
         {

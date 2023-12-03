@@ -83,6 +83,7 @@ class FeatureType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Feature::class,
+            'csrf_protection' => false,
         ]);
     }
 }

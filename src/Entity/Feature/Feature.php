@@ -62,7 +62,7 @@ class Feature extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $filterType = null;
 
     #[JMS\Expose()]
@@ -72,7 +72,7 @@ class Feature extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
-    #[ORM\OneToMany(mappedBy: 'feature', targetEntity: FeatureValue::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'feature', targetEntity: FeatureValue::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureValues;
 
     #[JMS\Expose()]

@@ -4,9 +4,12 @@ namespace App\Form\Admin\Feature;
 
 use App\Entity\Feature\Feature;
 use App\Entity\Feature\FeatureLink;
+use App\Entity\Feature\FeatureValue;
 use App\Repository\FeatureRepository;
 use App\Repository\FeatureValueRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;

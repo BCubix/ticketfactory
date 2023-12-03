@@ -119,6 +119,12 @@ const eventsApi = {
                 formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
 
+            data?.featureLinks?.forEach((featureLink, index) => {
+                formData.append(`featureLinks[${index}][feature]`, featureLink.feature || '');
+                formData.append(`featureLinks[${index}][featureValue]`, featureLink.featureValue || '');
+                formData.append(`featureLinks[${index}][featureValueRaw]`, featureLink.featureValueRaw || '');
+            })
+
             getSeoFormData(formData, data);
 
             const result = await axios.post('/events', formData);
@@ -184,6 +190,12 @@ const eventsApi = {
                 formData.append(`eventMedias[${index}][media]`, eventMedia.id);
                 formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
             });
+
+            data?.featureLinks?.forEach((featureLink, index) => {
+                formData.append(`featureLinks[${index}][feature]`, featureLink.feature || '');
+                formData.append(`featureLinks[${index}][featureValue]`, featureLink.featureValue || '');
+                formData.append(`featureLinks[${index}][featureValueRaw]`, featureLink.featureValueRaw || '');
+            })
 
             getSeoFormData(formData, data);
 

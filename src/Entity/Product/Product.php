@@ -94,7 +94,9 @@ class Product extends Datable
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
     public $frontUrl;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: FeatureLink::class)]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureLinks;
 
     public function __construct()
@@ -249,28 +251,6 @@ class Product extends Datable
         }
 
         return $this;
-    }
-
-    /**
-     * Renvoie le media principal associé au produit
-     *
-     * @return Media
-     */
-    public function getMainMedia()
-    {
-        foreach ($this->getProductMedias() as $productMedia) {
-            if ($productMedia->isMainImg()) {
-                return $productMedia->getMedia();
-            }
-        }
-
-        foreach ($this->getProductMedias() as $productMedia) {
-            if ($productMedia->getRealType() == 'image') {
-                return $productMedia->getMedia();
-            }
-        }
-
-        return null;
     }
 
     public function getLang(): ?Language
