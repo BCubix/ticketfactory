@@ -61,21 +61,18 @@ class HookManager extends AbstractManager
         $finder->in($path);
         $result = [];
 
-        $motif = "/({{| )hook\([\'\"]display[a-zA-Z]+[\'\"](,.+)?\)/";
+        $motif = "/hook\([\'\"](display[a-zA-Z]+)[\'\"]\)/";
 
         foreach ($finder->files()->name('*') as $file) {
             $contenu = file($file->getRealPath());
             foreach ($contenu as $ligne) {
-                if (preg_match($motif, $ligne)) {
-                    $ligne = trim($ligne, "\t, '', \n, hook, {, }, (\', (\",\"),");
-                    $ligne = str_replace('", {', '', $ligne);
-                    $ligne = explode('\'', $ligne);
-                    if ($ligne[0]) {
-                        $result[] = $ligne[0];
-                    }
+                if (preg_match($motif, $ligne, $matches)) {
+                    $result[] = $matches[1];
                 }
             }
         }
+
+
         $resultat = array_unique($result);
         sort($resultat);
         return $resultat;
