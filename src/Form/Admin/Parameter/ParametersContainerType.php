@@ -3,7 +3,6 @@
 namespace App\Form\Admin\Parameter;
 
 use App\Form\Admin\AdminBaseFormType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;

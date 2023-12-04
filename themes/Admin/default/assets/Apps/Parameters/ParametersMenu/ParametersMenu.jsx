@@ -37,6 +37,8 @@ export const ParametersMenu = () => {
             dispatch(getParametersAction());
 
             navigate(Constant.PARAMETERS_BASE_PATH);
+        } else {
+            NotificationManager.error(result?.error?.message || 'Une erreur est survenue.', 'Erreur', Constant.REDIRECTION_TIME);
         }
     }
 

@@ -9,6 +9,7 @@ use App\Form\Admin\Parameter\ParametersContainerType;
 use App\Form\Admin\Parameter\ParameterType;
 
 use App\Manager\ParameterManager;
+use App\Service\Object\CloneObject;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,8 +44,11 @@ class ParameterController extends AdminController
     {
         $parameters = $request->request->all();
         if (!isset($parameters['parameters'])) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
-                self::FORM_ERROR_MESSAGE);
+            throw new ApiException(
+                Response::HTTP_BAD_REQUEST,
+                1000,
+                self::FORM_ERROR_MESSAGE
+            );
         }
 
         $parametersContainer = new ParametersContainer();
@@ -54,21 +58,35 @@ class ParameterController extends AdminController
             $parameter = $pm->getParameter($parameterRequest['paramKey']);
             $parametersContainer->addParameter($parameter);
 
-            $parameters['parameters'][$i] = [ 'paramValue' => $parameterRequest['paramValue'] ];
+            $parameters['parameters'][$i] = ['paramValue' => $parameterRequest['paramValue']];
         }
 
-        $form = $this->createForm(ParametersContainerType::class,
-            $parametersContainer);
+        $iObject = CloneObject::cloneObject($parametersContainer);
+
+        $form = $this->createForm(
+            ParametersContainerType::class,
+            $parametersContainer
+        );
         $fields = array_replace_recursive($parameters, $request->files->all());
         $form->submit($fields);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
             $errors = $this->fec->getErrorsFromForm($form);
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1000,
-                self::FORM_ERROR_MESSAGE, $errors);
+            throw new ApiException(
+                Response::HTTP_BAD_REQUEST,
+                1000,
+                self::FORM_ERROR_MESSAGE,
+                $errors
+            );
         }
 
         $parameters = $parametersContainer->getParameters();
+
+        $this->hm->exec('ParameterValidated', [
+            'iObject' => $iObject,
+            'vObject' => $parameters,
+            'state'   => 'edit'
+        ]);
 
         foreach ($parameters as $parameter) {
             $this->em->persist($parameter);

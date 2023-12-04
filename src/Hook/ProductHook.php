@@ -2,6 +2,7 @@
 
 namespace App\Hook;
 
+use App\Entity\Feature\FeatureValue;
 use App\Event\HookEvent;
 use App\Service\Addon\Hook;
 
