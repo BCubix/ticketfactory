@@ -33,16 +33,6 @@ export const initApi = () => {
     setApi('vouchersApi', vouchersApi);
 };
 
-export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.VOUCHERS_BASE_PATH, Component.VouchersList);
-    setAuthenticatedRoute(Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateVoucher);
-    setAuthenticatedRoute(`${Constant.VOUCHERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditVoucher);
-};
-
-export const initMenu = () => {
-    insertSubMenu(4, 'VENDRE', 'Réductions', Constant.VOUCHERS_BASE_PATH, <MoneyOffIcon />);
-};
-
 export const initReducer = () => {
     setReducer('vouchers', vouchersReducer);
 };
@@ -56,3 +46,15 @@ export const initCrud = () => {
 
     setCrud('vouchers', crud);
 };
+
+export default async function ({ parameters }) {
+    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_purchase');
+
+    if (useProducts?.paramValue) {
+        setAuthenticatedRoute(Constant.VOUCHERS_BASE_PATH, Component.VouchersList);
+        setAuthenticatedRoute(Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateVoucher);
+        setAuthenticatedRoute(`${Constant.VOUCHERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditVoucher);
+
+        insertSubMenu(4, 'VENDRE', 'Réductions', Constant.VOUCHERS_BASE_PATH, <MoneyOffIcon />);
+    }
+}

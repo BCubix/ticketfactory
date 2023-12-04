@@ -8,6 +8,7 @@ use App\Form\Admin\Event\EventCategoryType;
 use App\Manager\EventCategoryManager;
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 
@@ -36,15 +37,16 @@ class EventCategoryController extends CrudController
         Logger $log,
         LanguageManager $lm,
         HookManager $hm,
-        EventCategoryManager $ecm
+        EventCategoryManager $ecm,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->ecm = $ecm;
     }
 
     #[Rest\Get('/event-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_category_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, int $categoryId = null): View
     {
@@ -110,7 +112,7 @@ class EventCategoryController extends CrudController
         $allTranslatedElements = $this->ecm->getTranslatedCategories($object);
 
         $deleteEvents = $request->get('deleteEvents');
-        foreach($allTranslatedElements as $element) {
+        foreach ($allTranslatedElements as $element) {
             if ($deleteEvents) {
                 $this->ecm->deleteEventsFromCategory($element);
             } else {

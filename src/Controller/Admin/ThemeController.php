@@ -7,6 +7,7 @@ use App\Exception\ApiException;
 use App\Manager\HookManager;
 use App\Manager\ThemeManager;
 use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 
@@ -31,9 +32,10 @@ class ThemeController extends AdminController
         Logger $log,
         LanguageManager $lm,
         HookManager $hm,
-        ThemeManager $tm
+        ThemeManager $tm,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->tm = $tm;
     }
@@ -81,7 +83,7 @@ class ThemeController extends AdminController
     public function delete(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
-        
+
         try {
             $this->tm->delete($themeName, true);
         } finally {

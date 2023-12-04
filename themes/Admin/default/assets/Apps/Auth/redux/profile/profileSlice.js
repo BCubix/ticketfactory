@@ -7,6 +7,8 @@ import { Constant } from '@/AdminService/Constant';
 const initialState = {
     connected: null,
     modulesLoaded: null,
+    appMenus: [],
+    appAuthenticatedRoutes: [],
     loading: false,
     error: null,
     user: null,
@@ -43,6 +45,14 @@ const profileSlice = createSlice({
 
         setModulesLoaded: (state, action) => {
             state.modulesLoaded = action.payload.modulesLoaded;
+        },
+
+        setAppMenus: (state, action) => {
+            state.appMenus = action.payload.appMenus;
+        },
+
+        setAppAuthenticatedRoutes: (state, action) => {
+            state.appAuthenticatedRoutes = action.payload.appAuthenticatedRoutes;
         },
     },
 });
@@ -117,6 +127,6 @@ export function logoutAction() {
     };
 }
 
-export const { login, loginSuccess, loginFailure, logout, setModulesLoaded } = profileSlice.actions;
+export const { login, loginSuccess, loginFailure, logout, setModulesLoaded, setAppMenus, setAppAuthenticatedRoutes } = profileSlice.actions;
 export const profileSelector = (state) => state.profile;
 export default profileSlice.reducer;

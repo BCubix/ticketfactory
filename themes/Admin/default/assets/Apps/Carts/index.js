@@ -35,15 +35,6 @@ export const initApi = () => {
     setApi('cartsApi', cartsApi);
 };
 
-export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.CARTS_BASE_PATH, Component.CartsList);
-    setAuthenticatedRoute(`${Constant.CARTS_BASE_PATH}/:id`, Component.CartsDetail);
-};
-
-export const initMenu = () => {
-    insertSubMenu(3, 'VENDRE', 'Panier', Constant.CARTS_BASE_PATH, <ShoppingBasketIcon />);
-};
-
 export const initReducer = () => {
     setReducer('carts', cartsReducer);
 };
@@ -56,3 +47,14 @@ export const initCrud = () => {
 
     setCrud('carts', crud);
 };
+
+export default async function ({ parameters }) {
+    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_purchase');
+
+    if (useProducts?.paramValue) {
+        setAuthenticatedRoute(Constant.CARTS_BASE_PATH, Component.CartsList);
+        setAuthenticatedRoute(`${Constant.CARTS_BASE_PATH}/:id`, Component.CartsDetail);
+
+        insertSubMenu(3, 'VENDRE', 'Panier', Constant.CARTS_BASE_PATH, <ShoppingBasketIcon />);
+    }
+}

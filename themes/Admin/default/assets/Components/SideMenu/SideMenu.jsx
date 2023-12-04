@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { Drawer, Link, List, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
@@ -47,7 +47,7 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
         >
             <Box sx={{ overflow: 'auto', height: '100%' }}>
                 <List disablePadding sx={{ mr: 2, pb: 2 }}>
-                    {Menu.map((menu, index) => (
+                    {Menu.filter((el) => el.menu.length > 0).map((menu, index) => (
                         <Box key={index}>
                             <Component.MenuTitle component="li" disableSticky>
                                 <Typography variant="h2" fontSize={12}>

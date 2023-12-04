@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Exception\ApiException;
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
@@ -22,6 +23,7 @@ abstract class CrudController extends AdminController
     protected const TYPE_CLASS = null;
 
     protected const NOT_FOUND_MESSAGE = "Cet élément n'existe pas.";
+    protected const NOT_FOUND_PAGE = "Cette page n'existe pas.";
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
 
     protected $entityClass;
@@ -34,9 +36,10 @@ abstract class CrudController extends AdminController
         FormErrorsCollector $fec,
         Logger $log,
         LanguageManager $lm,
-        HookManager $hm
+        HookManager $hm,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->entityClass = static::ENTITY_CLASS;
         $this->typeClass = static::TYPE_CLASS;

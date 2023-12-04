@@ -31,15 +31,7 @@ export const initApi = () => {
     setApi('customersApi', customersApi);
 };
 
-export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH, Component.CustomersList);
-    setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateCustomer);
-    setAuthenticatedRoute(`${Constant.CUSTOMERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditCustomer);
-};
-
-export const initMenu = () => {
-    insertSubMenu(1, 'VENDRE', 'Clients', Constant.CUSTOMERS_BASE_PATH, <PeopleIcon />);
-};
+export const initMenu = () => {};
 
 export const initReducer = () => {
     setReducer('customers', customersReducer);
@@ -54,3 +46,15 @@ export const initCrud = () => {
 
     setCrud('customers', crud);
 };
+
+export default async function ({ parameters }) {
+    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_customers');
+
+    if (useProducts?.paramValue) {
+        setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH, Component.CustomersList);
+        setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateCustomer);
+        setAuthenticatedRoute(`${Constant.CUSTOMERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditCustomer);
+
+        insertSubMenu(1, 'VENDRE', 'Clients', Constant.CUSTOMERS_BASE_PATH, <PeopleIcon />);
+    }
+}

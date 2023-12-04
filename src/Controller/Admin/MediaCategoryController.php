@@ -7,6 +7,7 @@ use App\Exception\ApiException;
 use App\Form\Admin\Media\MediaCategoryType;
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Manager\MediaCategoryManager;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
@@ -36,15 +37,16 @@ class MediaCategoryController extends CrudController
         Logger $log,
         LanguageManager $lm,
         HookManager $hm,
-        MediaCategoryManager $mcm
+        MediaCategoryManager $mcm,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->mcm = $mcm;
     }
 
     #[Rest\Get('/media-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_category_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, int $categoryId = null): View
     {
@@ -111,7 +113,7 @@ class MediaCategoryController extends CrudController
         $allTranslatedElements = $this->mcm->getTranslatedCategories($object);
 
         $deleteMedias = $request->get('deleteMedias');
-        foreach($allTranslatedElements as $element) {
+        foreach ($allTranslatedElements as $element) {
             if ($deleteMedias) {
                 $this->mcm->deleteMediasFromCategory($element);
             } else {
@@ -142,7 +144,7 @@ class MediaCategoryController extends CrudController
         return $this->view($result, Response::HTTP_OK);
     }
 
-    
+
     #[Rest\Post('/media-categories/{categoryId}/order', requirements: ['categoryId' => '\d+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_category_one'])]
     public function order(Request $request, int $categoryId): View

@@ -8,6 +8,7 @@ use App\Exception\ApiException;
 
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Manager\ModuleManager;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
@@ -30,8 +31,9 @@ class HookController extends AdminController
         LanguageManager $lm,
         HookManager $hm,
         ModuleManager $mm,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->mm = $mm;
     }

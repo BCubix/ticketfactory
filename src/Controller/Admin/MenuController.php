@@ -8,6 +8,7 @@ use App\Manager\HookManager;
 use App\Manager\LanguageManager;
 use App\Manager\MenuEntryManager;
 use App\Form\Admin\Menu\MenuEntryType;
+use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 
@@ -36,15 +37,16 @@ class MenuController extends CrudController
         Logger $log,
         LanguageManager $lm,
         HookManager $hm,
-        MenuEntryManager $mem
+        MenuEntryManager $mem,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->mem = $mem;
     }
 
     #[Rest\Get('/menus')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
@@ -55,7 +57,7 @@ class MenuController extends CrudController
         $menus = ($menus ?? []);
 
         if (count($menus) > 0) {
-           $menus = $this->lm->getAllTranslations($menus, $this->entityClass, $filters);
+            $menus = $this->lm->getAllTranslations($menus, $this->entityClass, $filters);
         }
 
         return $this->view($menus, Response::HTTP_OK);

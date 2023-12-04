@@ -3,12 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Product\Product;
+use App\Exception\ApiException;
 use App\Form\Admin\Product\ProductType;
-
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class ProductController extends CrudController
@@ -23,6 +24,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::getAll($request, $paramFetcher);
     }
 
@@ -30,6 +35,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function getOne(Request $request, int $productId): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::getOne($request, $productId);
     }
 
@@ -37,6 +46,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function add(Request $request): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::add($request);
     }
 
@@ -44,6 +57,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function edit(Request $request, int $productId): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::edit($request, $productId);
     }
 
@@ -51,6 +68,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function duplicate(Request $request, int $productId): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::duplicate($request, $productId);
     }
 
@@ -58,6 +79,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function delete(Request $request, int $productId): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::delete($request, $productId);
     }
 
@@ -65,6 +90,10 @@ class ProductController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function getTranslated(Request $request, int $productId, int $languageId): View
     {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_products')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
         return parent::getTranslated($request, $productId, $languageId);
     }
 }

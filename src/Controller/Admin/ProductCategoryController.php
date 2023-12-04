@@ -8,6 +8,7 @@ use App\Form\Admin\Product\ProductCategoryType;
 use App\Manager\ProductCategoryManager;
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 
@@ -36,9 +37,10 @@ class ProductCategoryController extends CrudController
         Logger $log,
         LanguageManager $lm,
         HookManager $hm,
-        ProductCategoryManager $pcm
+        ProductCategoryManager $pcm,
+        ManagerFactory $mf,
     ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm);
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->pcm = $pcm;
     }

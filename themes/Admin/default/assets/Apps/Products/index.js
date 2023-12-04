@@ -1,6 +1,7 @@
 import React from 'react';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
 
-import { ProductsList } from '@Apps/Products/ProductsList/ProductsList';
+import { ProductsList, productsListCrud } from '@Apps/Products/ProductsList/ProductsList';
 import { ProductsFilters } from '@Apps/Products/ProductsList/ProductsFilters/ProductsFilters';
 import { ProductsForm } from '@Apps/Products/ProductsForm/ProductsForm';
 import { EditProduct, productsEditCrud } from '@Apps/Products/EditProduct/EditProduct';
@@ -8,6 +9,8 @@ import { CreateProduct, productsCreateCrud } from '@Apps/Products/CreateProduct/
 import { ProductsMenu } from '@Apps/Products/ProductsMenu/ProductsMenu';
 import { ProductMainPartForm } from '@Apps/Products/ProductsForm/ProductMainPartForm';
 import { ProductParentCategoryPartForm } from '@Apps/Products/ProductsForm/ProductParentCategoryPartForm';
+import productsReducer from '@Apps/Products/redux/products/productsSlice';
+import productsApi from '@Apps/Products/services/api/productsApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -17,12 +20,6 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { setTab } from '@/AdminService/Tab';
-
-import productsReducer from '@Apps/Products/redux/products/productsSlice';
-import productsApi from '@Apps/Products/services/api/productsApi';
-
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import { productsListCrud } from './ProductsList/ProductsList';
 
 export const initConstant = () => {
     setConstant('PRODUCTS_BASE_PATH', '/admin/produits');
@@ -41,16 +38,6 @@ export const initComponent = () => {
 
 export const initApi = () => {
     setApi('productsApi', productsApi);
-};
-
-export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH, Component.ProductsMenu, { tabValue: 0 });
-    setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateProduct);
-    setAuthenticatedRoute(`${Constant.PRODUCTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProduct);
-};
-
-export const initMenu = () => {
-    insertSubMenu(1, 'VENDRE', 'Produits', Constant.PRODUCTS_BASE_PATH, <FastfoodIcon />, { relatedLinks: [Constant.PRODUCT_CATEGORIES_BASE_PATH] });
 };
 
 export const initReducer = () => {
@@ -73,3 +60,15 @@ export const initCrud = () => {
 
     setCrud('products', crud);
 };
+
+export default async function ({ parameters }) {
+    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_products');
+
+    if (useProducts?.paramValue) {
+        setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH, Component.ProductsMenu, { tabValue: 0 });
+        setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateProduct);
+        setAuthenticatedRoute(`${Constant.PRODUCTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProduct);
+
+        insertSubMenu(1, 'VENDRE', 'Produits', Constant.PRODUCTS_BASE_PATH, <FastfoodIcon />, { relatedLinks: [Constant.PRODUCT_CATEGORIES_BASE_PATH] });
+    }
+}

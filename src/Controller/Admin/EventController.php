@@ -3,13 +3,14 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Event\Event;
+use App\Exception\ApiException;
 use App\Form\Admin\Event\EventType;
-use App\Form\Admin\Filters\FilterEventType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class EventController extends CrudController
@@ -20,7 +21,7 @@ class EventController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Cet événement n'existe pas.";
 
     #[Rest\Get('/events')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
