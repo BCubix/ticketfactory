@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Entity\Order\Cart;
 use App\Exception\ApiException;
 use App\Form\Admin\Order\CartType;
-use App\Form\Admin\Filters\FilterCartType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
