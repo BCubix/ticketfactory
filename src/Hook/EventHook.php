@@ -2,6 +2,7 @@
 
 namespace App\Hook;
 
+use App\Entity\Feature\FeatureValue;
 use App\Event\HookEvent;
 use App\Service\Addon\Hook;
 
@@ -28,7 +29,7 @@ class EventHook extends Hook
                 $featureValue->setFeature($featureLink->getFeature());
 
                 $featureLink->setFeatureValue($featureValue);
-                $featureLink->setFeatureValueRaw(null);
+                $featureLink->setFeatureValueRaw("");
 
                 $this->em->persist($featureValue);
                 $this->em->persist($featureLink);

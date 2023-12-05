@@ -21,7 +21,7 @@ class ProductHook extends Hook
                 $featureValue->setFeature($featureLink->getFeature());
 
                 $featureLink->setFeatureValue($featureValue);
-                $featureLink->setFeatureValueRaw(null);
+                $featureLink->setFeatureValueRaw("");
 
                 $this->em->persist($featureValue);
                 $this->em->persist($featureLink);
