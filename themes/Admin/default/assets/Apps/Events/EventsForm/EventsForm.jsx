@@ -46,6 +46,16 @@ const validationSchema = {
                 .min(1, 'Veuillez renseigner au moins un prix.'),
         })
     ),
+    featureLinks: Yup.array().of(
+        Yup.object().shape({
+            feature: Yup.string().required('Veuillez renseigner un attribut.'),
+            featureValue: Yup.string().when('featureValueRaw', (featureValueRaw) => {
+                if (!featureValueRaw) {
+                    return Yup.string().required('Veuillez choisir une valeur ou renseigner une valeur personnalisée.');
+                }
+            }),
+        })
+    ),
 };
 
 const initialSchema = {
@@ -93,8 +103,9 @@ const initialSchema = {
                   event: el?.event?.id,
                   product: el?.product?.id,
                   feature: el?.feature?.id,
-                  featureValue: el?.featureValue?.id,
-                  featureValueRaw: '',
+                  featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
+                  featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
+                  featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
               }))
             : [],
     seo: {

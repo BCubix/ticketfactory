@@ -13,8 +13,8 @@ export const featuresInitialSchema = {
     type: (initValues) => initValues?.type || 'text',
     position: (initValues) => initValues?.position || '',
     filter: (initValues) => initValues?.filter || false,
-    filterType: (initValues) => initValues?.filterType || "",
-    featureCategory: (initValues) => initValues?.featureCategory?.id || "",
+    filterType: (initValues) => initValues?.filterType || '',
+    featureCategory: (initValues) => initValues?.featureCategory?.id || '',
     featureValues: (initValues) => (initValues?.featureValues ? initValues?.featureValues?.map((el) => ({ ...el })) : []),
     editSlug: false,
     lang: (initValues) => initValues?.lang?.id || '',
@@ -28,12 +28,14 @@ export const featuresValidationSchema = {
     featureCategory: Yup.string().required("Veuillez renseigner la catégorie de l'attribut."),
     filterType: Yup.string().when('filter', (filter) => {
         if (filter) {
-            return Yup.string().required('Veuillez renseigner le type de filtre.')
+            return Yup.string().required('Veuillez renseigner le type de filtre.');
         }
     }),
-    featureValues: Yup.array().of(Yup.object().shape({
-        value: Yup.string().required('Veuillez renseigner la valeur.')
-    }))
+    featureValues: Yup.array().of(
+        Yup.object().shape({
+            value: Yup.string().required('Veuillez renseigner la valeur.'),
+        })
+    ),
 };
 
 export const featuresForm = {
@@ -60,7 +62,7 @@ export const featuresForm = {
                 type: 'array',
                 subFields: {
                     value: { type: 'string' },
-                    custom: { type: 'boolean' }
+                    custom: { type: 'boolean' },
                 },
             },
             lang: { type: 'string' },
@@ -166,7 +168,7 @@ export const featuresForm = {
                                 listName: 'featureCategoriesList',
                                 getName: (item) => item.name,
                                 getValue: (item) => item.id,
-                                required: true
+                                required: true,
                             },
                         },
                         {
@@ -256,14 +258,8 @@ export const featuresForm = {
                                         style: {
                                             xs: 12,
                                         },
-                                        input: {
-                                            name: 'name',
-                                            label: 'Nom',
-                                            inputType: 'textField',
-                                            required: true,
-                                            sx: { marginBottom: 6 },
-                                        },
-                                        component: (props) => <Component.CmtFeaturesTypeValues {...props} />
+
+                                        component: (props) => <Component.CmtFeaturesTypeValues {...props} label="Valeur" name="value" />,
                                     },
                                 ],
                             },

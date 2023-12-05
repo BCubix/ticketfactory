@@ -7,82 +7,84 @@ import { InputLabel } from '@mui/material';
 import { CirclePicker } from 'react-color';
 
 const TYPE_INPUT_LIST = {
-    text: ({ values, touched, errors, handleBlur, handleChange, ...props }) => (
-        <Component.CmtTextField
-            {...props}
-            value={getPropByString(values, `${props.baseName || ''}value`)}
-            error={getPropByString(touched, `${props.baseName || ''}value`) && getPropByString(errors, `${props.baseName || ''}value`)}
-            label="Valeur"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            name={`${props.baseName || ''}value`}
-            required
-        />
+    text: ({ values, touched, errors, handleBlur, handleChange, required, label = 'Valeur', ...props }) => (
+        <>
+            <Component.CmtTextField
+                {...props}
+                value={getPropByString(values, `${props.baseName || ''}${props.name}`)}
+                error={getPropByString(touched, `${props.baseName || ''}${props.name}`) && getPropByString(errors, `${props.baseName || ''}${props.name}`)}
+                label={label}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                name={`${props.baseName || ''}${props.name}`}
+                required={required}
+            />
+        </>
     ),
 
-    number: ({ values, touched, errors, handleBlur, handleChange, ...props }) => (
+    number: ({ values, touched, errors, handleBlur, handleChange, required, label = 'Valeur', ...props }) => (
         <Component.CmtTextField
             {...props}
-            value={getPropByString(values, `${props.baseName || ''}value`)}
-            error={getPropByString(touched, `${props.baseName || ''}value`) && getPropByString(errors, `${props.baseName || ''}value`)}
-            label="Valeur"
+            value={getPropByString(values, `${props.baseName || ''}${props.name}`)}
+            error={getPropByString(touched, `${props.baseName || ''}${props.name}`) && getPropByString(errors, `${props.baseName || ''}${props.name}`)}
+            label={label}
             type="number"
             onBlur={handleBlur}
             onChange={handleChange}
-            name={`${props.baseName || ''}value`}
-            required
+            name={`${props.baseName || ''}${props.name}`}
+            required={required}
         />
     ),
 
-    date: ({ values, touched, errors, handleBlur, handleChange, setFieldValue, setFieldTouched, ...props }) => (
+    date: ({ values, touched, errors, handleBlur, handleChange, setFieldValue, setFieldTouched, required, label = 'Valeur', ...props }) => (
         <Component.CmtDatePicker
             fullWidth
-            value={getPropByString(values, `${props.baseName || ''}value`)}
-            label={'Valeur'}
+            value={getPropByString(values, `${props.baseName || ''}${props.name}`)}
+            label={label}
             setValue={(newValue) => {
                 if (!newValue) {
-                    setFieldValue(`${props.baseName || ''}value`, '');
+                    setFieldValue(`${props.baseName || ''}${props.name}`, '');
                     return;
                 }
-                setFieldValue(`${props.baseName || ''}value`, moment(newValue).format('YYYY-MM-DD'));
+                setFieldValue(`${props.baseName || ''}${props.name}`, moment(newValue).format('YYYY-MM-DD'));
             }}
             onTouched={setFieldTouched}
-            name={`${props.baseName || ''}value`}
-            error={getPropByString(touched, `${props.baseName || ''}value`) && getPropByString(errors, `${props.baseName || ''}value`)}
-            required
+            name={`${props.baseName || ''}${props.name}`}
+            error={getPropByString(touched, `${props.baseName || ''}${props.name}`) && getPropByString(errors, `${props.baseName || ''}${props.name}`)}
+            required={required}
             inputSize="small"
         />
     ),
 
-    color: ({ values, touched, errors, handleBlur, handleChange, setFieldValue, setFieldTouched, disabled, ...props }) => (
+    color: ({ values, touched, errors, handleBlur, handleChange, setFieldValue, setFieldTouched, disabled, required, label = 'Valeur', ...props }) => (
         <Box sx={{ marginBlock: 3 }}>
             <InputLabel>Valeur</InputLabel>
             <CirclePicker
                 width="100%"
-                value={getPropByString(values, `${props.baseName || ''}value`)}
+                value={getPropByString(values, `${props.baseName || ''}${props.name}`)}
                 onChange={(newValue) => {
                     if (disabled) {
                         return;
                     }
-                    setFieldValue(`${props.baseName || ''}value`, newValue.hex);
+                    setFieldValue(`${props.baseName || ''}${props.name}`, newValue.hex);
                 }}
-                error={getPropByString(touched, `${props.baseName || ''}value`) && getPropByString(errors, `${props.baseName || ''}value`)}
-                label={'Valeur'}
+                error={getPropByString(touched, `${props.baseName || ''}${props.name}`) && getPropByString(errors, `${props.baseName || ''}${props.name}`)}
+                label={label}
                 onBlur={handleBlur}
-                name={`${props.baseName || ''}value`}
+                name={`${props.baseName || ''}${props.name}`}
                 circleSpacing={8}
-                required
+                required={required}
                 disabled={disabled}
             />
             <Component.CmtTextField
                 {...props}
-                value={getPropByString(values, `${props.baseName || ''}value`)}
-                error={getPropByString(touched, `${props.baseName || ''}value`) && getPropByString(errors, `${props.baseName || ''}value`)}
-                label="Valeur"
+                value={getPropByString(values, `${props.baseName || ''}${props.name}`)}
+                error={getPropByString(touched, `${props.baseName || ''}${props.name}`) && getPropByString(errors, `${props.baseName || ''}${props.name}`)}
+                label={label}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                name={`${props.baseName || ''}value`}
-                required
+                name={`${props.baseName || ''}${props.name}`}
+                required={required}
                 disabled={disabled}
             />
         </Box>
@@ -91,7 +93,6 @@ const TYPE_INPUT_LIST = {
 export const CmtFeaturesTypeValues = ({ values, type, ...props }) => {
     let Cmt = null;
 
-    console.log(type);
     if (!type && !values?.type) {
         Cmt = TYPE_INPUT_LIST['text'];
     } else {

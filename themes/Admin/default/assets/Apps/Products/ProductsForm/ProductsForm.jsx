@@ -33,8 +33,9 @@ export const productsInitialSchema = {
                   event: el?.event?.id,
                   product: el?.product?.id,
                   feature: el?.feature?.id,
-                  featureValue: el?.featureValue?.id,
-                  featureValueRaw: '',
+                  featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
+                  featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
+                  featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
               }))
             : [],
     seo: SeoInitialValues,
@@ -48,6 +49,16 @@ export const productsValidationSchema = {
     mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
     description: Yup.string().required('Veuillez renseigner une description.'),
     price: Yup.number().required('Veuillez renseigner un prix').min(0, 'Le prix renseigné est invalide'),
+    featureLinks: Yup.array().of(
+        Yup.object().shape({
+            feature: Yup.string().required('Veuillez renseigner un attribut.'),
+            featureValue: Yup.string().when('featureValueRaw', (featureValueRaw) => {
+                if (!featureValueRaw) {
+                    return Yup.string().required('Veuillez choisir une valeur ou renseigner une valeur personnalisée.');
+                }
+            }),
+        })
+    ),
 };
 
 export const productsForm = {
@@ -82,7 +93,11 @@ export const productsForm = {
                 type: 'array',
                 subFields: {
                     feature: { type: 'string' },
-                    featureValue: { type: 'string' },
+                    featureValue: {
+                        function: ({ values, formData, baseName }) => {
+                            formData.append(`${baseName}[featureValue]`, values?.featureValue || values?.featureValueRawId || '');
+                        },
+                    },
                     featureValueRaw: { type: 'string' },
                 },
             },

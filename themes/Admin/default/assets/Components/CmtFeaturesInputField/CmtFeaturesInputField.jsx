@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { FieldArray } from 'formik';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,9 +9,7 @@ import { getPropByString } from '@Services/utils/getPropByString';
 import { Box } from '@mui/system';
 import { Grid, IconButton } from '@mui/material';
 
-export const CmtFeaturesInputField = ({ featuresList, values, setFieldValue, touched, errors, ...props }) => {
-    console.log(featuresList);
-
+export const CmtFeaturesInputField = ({ featuresList, values, setFieldValue, setFieldTouched, touched, errors, ...props }) => {
     const valuesList = useCallback(
         (item) => {
             if (!item?.feature || featuresList?.length === 0) {
@@ -87,10 +85,12 @@ export const CmtFeaturesInputField = ({ featuresList, values, setFieldValue, tou
                                                 list={valuesList(item) || []}
                                                 name={`featureLinks.${index}.featureValue`}
                                                 setFieldValue={setFieldValue}
+                                                setFieldTouched={setFieldTouched}
                                                 getName={(item) => item.value}
                                                 getValue={(item) => item.id}
-                                                disabled={!item?.feature || item?.featureValueRaw}
+                                                disabled={Boolean(!item?.feature || item?.featureValueRaw)}
                                                 clearable
+                                                required={!item?.featureValueRaw}
                                             />
                                             {item?.featureValue && (
                                                 <IconButton sx={{ padding: 0, marginTop: 6 }} color="error" onClick={() => setFieldValue(`featureLinks.${index}.featureValue`, '')}>
@@ -102,6 +102,7 @@ export const CmtFeaturesInputField = ({ featuresList, values, setFieldValue, tou
                                             <Component.CmtFeaturesTypeValues
                                                 baseName={`featureLinks.${index}.`}
                                                 name={'featureValueRaw'}
+                                                label={'Valeur personnalisée'}
                                                 values={values}
                                                 setFieldValue={setFieldValue}
                                                 {...props}
@@ -109,7 +110,8 @@ export const CmtFeaturesInputField = ({ featuresList, values, setFieldValue, tou
                                                 featuresList={featuresList}
                                                 touched={touched}
                                                 errors={errors}
-                                                disabled={!item?.feature || item?.featureValue}
+                                                disabled={Boolean(!item?.feature || item?.featureValue)}
+                                                required={!item?.featureValue}
                                             />
                                         </Grid>
                                     </Grid>

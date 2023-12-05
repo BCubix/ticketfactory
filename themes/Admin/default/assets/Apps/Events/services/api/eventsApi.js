@@ -121,9 +121,9 @@ const eventsApi = {
 
             data?.featureLinks?.forEach((featureLink, index) => {
                 formData.append(`featureLinks[${index}][feature]`, featureLink.feature || '');
-                formData.append(`featureLinks[${index}][featureValue]`, featureLink.featureValue || '');
+                formData.append(`featureLinks[${index}][featureValue]`, featureLink?.featureValue || featureLink?.featureValueRawId || '');
                 formData.append(`featureLinks[${index}][featureValueRaw]`, featureLink.featureValueRaw || '');
-            })
+            });
 
             getSeoFormData(formData, data);
 
@@ -193,9 +193,9 @@ const eventsApi = {
 
             data?.featureLinks?.forEach((featureLink, index) => {
                 formData.append(`featureLinks[${index}][feature]`, featureLink.feature || '');
-                formData.append(`featureLinks[${index}][featureValue]`, featureLink.featureValue || '');
+                formData.append(`featureLinks[${index}][featureValue]`, featureLink?.featureValue || featureLink?.featureValueRawId || '');
                 formData.append(`featureLinks[${index}][featureValueRaw]`, featureLink.featureValueRaw || '');
-            })
+            });
 
             getSeoFormData(formData, data);
 

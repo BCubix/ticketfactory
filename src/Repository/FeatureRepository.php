@@ -12,11 +12,13 @@ class FeatureRepository extends CrudRepository
     /*** < Trait ***/
 
     protected const SELECTS = [
-        'el' => null
+        'el' => null,
+        'fv' => null,
     ];
 
     protected const JOINS = [
-        ['leftJoin', 'o.lang', 'el']
+        ['leftJoin', 'o.lang', 'el'],
+        ['leftJoin', 'o.featureValues', 'fv', 'fv.custom = 0']
     ];
 
     protected const FILTERS = [
@@ -41,5 +43,16 @@ class FeatureRepository extends CrudRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Feature::class);
+    }
+
+    public function findOneForAdmin(int $id)
+    {
+        return $this->createQueryBuilder('o')
+            ->addSelect("fv")
+            ->leftJoin('o.featureValues', 'fv', 'WITH', "fv.custom = 0")
+            ->where('o.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }
