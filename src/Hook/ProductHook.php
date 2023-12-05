@@ -25,6 +25,13 @@ class ProductHook extends Hook
 
                 $this->em->persist($featureValue);
                 $this->em->persist($featureLink);
+            } else if (null !== $featureLink->getFeatureValueRaw() && $featureLink->getFeatureValue()->getValue() !== $featureLink->getFeatureValueRaw()) {
+                $featureValue = $featureLink->getFeatureValue();
+
+                $featureValue->setCustom(true);
+                $featureValue->setValue($featureLink->getFeatureValueRaw());
+
+                $this->em->persist($featureValue);
             }
         }
     }
