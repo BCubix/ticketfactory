@@ -25,6 +25,15 @@ abstract class CrudRepository extends AbstractRepository
 
         $results = $this->createQueryBuilder('o');
 
+        foreach (static::SELECTS as $selectKey => $selectValue) {
+            $selectString = $selectKey;
+            if (null !== $selectValue) {
+                $selectString = $selectValue . " AS " . $selectKey;
+            }
+
+            $results->addSelect($selectString);
+        }
+
         foreach (static::JOINS as $joinArray) {
             $joinType = $joinArray[0];
 

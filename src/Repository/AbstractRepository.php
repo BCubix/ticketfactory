@@ -10,7 +10,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
     /*** > Trait ***/
     /*** < Trait ***/
 
-    //protected const SELECTS = [];
+    protected const SELECTS = [];
     protected const JOINS   = [];
     protected const FILTERS = [];
     protected const SORTS   = ['id' => 'o.id'];
