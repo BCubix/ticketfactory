@@ -4,7 +4,7 @@ namespace App\Form\Admin\Content;
 
 use App\Form\Admin\AdminBaseFormType;
 use App\Manager\ContentTypeManager;
-
+use App\Manager\FormManager;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -14,23 +14,25 @@ class ContentTypeParametersType extends AdminBaseFormType
 {
     protected $ctm;
 
-    public function __construct(ContentTypeManager $ctm)
+    public function __construct(ContentTypeManager $ctm, FormManager $fm)
     {
+        parent::__construct($fm);
+
         $this->ctm = $ctm;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            [$this, 'onPreSubmit']
+        );
+
+        $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $this->fm->onPreSetData($event);
             }
-        );
-
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            [$this, 'onPreSubmit']
         );
     }
 

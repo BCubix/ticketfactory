@@ -5,7 +5,7 @@ namespace App\Form\Admin\Content;
 use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Content\ContentTypeField;
 use App\Manager\ContentTypeManager;
-
+use App\Manager\FormManager;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,8 +20,10 @@ class ContentTypeFieldType extends AdminBaseFormType
 
     protected $ctm;
 
-    public function __construct(ContentTypeManager $ctm)
+    public function __construct(ContentTypeManager $ctm, FormManager $fm)
     {
+        parent::__construct($fm);
+
         $this->ctm = $ctm;
     }
 
