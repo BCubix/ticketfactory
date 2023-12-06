@@ -289,6 +289,7 @@ export const MenusList = () => {
             handleDelete={handleDelete}
             updateMenu={updateMenu}
             translationInitialValues={translationInitialValues}
+            setTranslationInitialValues={setTranslationInitialValues}
             initialValues={initialValues}
             setInitialValues={setInitialValues}
             formCrud={Crud?.menus?.edit}
@@ -300,6 +301,7 @@ const InitForm = ({
     languageList,
     changeFormikInitialValues,
     translationInitialValues,
+    setTranslationInitialValues,
     handleDelete,
     updateMenu,
     menus,
@@ -337,6 +339,7 @@ const InitForm = ({
                             languageList,
                             changeFormikInitialValues,
                             translationInitialValues,
+                            setTranslationInitialValues,
                             handleDelete,
                             updateMenu,
                             menus,

@@ -177,6 +177,15 @@ export const pagesForm = {
                                 getValue: (item) => item.id,
                             },
                         },
+                        {
+                            keyId: 'input-subtitle',
+                            style: { xs: 12 },
+                            input: {
+                                name: 'subtitle',
+                                label: 'Introduction',
+                                inputType: 'editorField',
+                            },
+                        },
                     ],
                 },
                 {

@@ -86,7 +86,7 @@ const mediasApi = {
         try {
             let params = {};
 
-            createFilterParams(filters, FILTERS_SORT_TAB, params);
+            createFilterParams(filters, Crud?.medias?.list?.filtersData, params);
 
             const result = await axios.get('/medias', {
                 params: params,
