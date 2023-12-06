@@ -41,7 +41,7 @@ export const pageTypesListCrud = {
     changeFiltersActions: (props, page) => changePageTypesFilters(props, page),
     dataSelector: pageTypesSelector,
     dataList: (selector) => selector.pageTypes,
-    delete: (props) => Api.pageTypesApi.deleteSeason(props),
+    delete: (props) => Api.contentTypesApi.deleteContentType(props),
     links: {
         new: () => `${Constant.PAGE_TYPES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PAGE_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
