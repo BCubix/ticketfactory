@@ -25,6 +25,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class FileUploader implements EventSubscriberInterface
 {
     private const NOT_FOUND_MESSAGE = "Cet élément n'existe pas.";
@@ -65,21 +66,23 @@ class FileUploader implements EventSubscriberInterface
         ];
     }
 
-    public function onUpload(PostPersistEvent $event): ResponseInterface
+    public function onUpload(PostPersistEvent $event): ?ResponseInterface
     {
         $route = $event->getRequest()->get("_route");
-
-        if ($route === self::MEDIA_ROUTE) {
-            return $this->mediaUpload($event);
-        } else if ($route === self::PARAMETER_ROUTE) {
-            return $this->parameterUpload($event);
-        } else if ($route === self::MODULE_ROUTE) {
-            return $this->moduleUpload($event);
-        } else if ($route === self::THEME_ROUTE) {
-            return $this->themeUpload($event);
+        $response = $event->getResponse();
+        if (!isset($response['handled']) || $response['handled'] === false) {
+            if ($route === self::MEDIA_ROUTE) {
+                return $this->mediaUpload($event);
+            } else if ($route === self::PARAMETER_ROUTE) {
+                return $this->parameterUpload($event);
+            } else if ($route === self::MODULE_ROUTE) {
+                return $this->moduleUpload($event);
+            } else if ($route === self::THEME_ROUTE) {
+                return $this->themeUpload($event);
+            }
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
         }
-
-        throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, self::BAD_REQUEST_MESSAGE);
+        return ($response);
     }
 
     public function mediaUpload(PostPersistEvent $event): ResponseInterface
@@ -123,16 +126,22 @@ class FileUploader implements EventSubscriberInterface
                 $media->addImageFormat($format);
             }
         }
-
         $this->em->persist($media);
         $this->em->flush();
 
         $this->moveFile($media, $event->getRequest()->get('filePath') . "/");
-        $this->hm->exec('MediaSaved', [
-            'sObject' => $media,
-            'state' => 'add',
-            'formats' => $formats
-        ]);
+        if ($typeCheck === "Image") {
+            $this->hm->exec('MediaSaved', [
+                'sObject' => $media,
+                'state' => 'add',
+                'formats' => $formats
+            ]);
+        } else {
+            $this->hm->exec('MediaSaved', [
+                'sObject' => $media,
+                'state' => 'add'
+            ]);
+        }
 
         $context = SerializationContext::create()->setGroups(['a_edit']);
         $response["media"] = $this->se->serialize($media, 'json', $context);

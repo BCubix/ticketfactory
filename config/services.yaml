@@ -27,6 +27,13 @@ services:
         public: true
 
     # Event Subscribers / Event Listeners
+
+    TicketFactory\Module\JobOffer\EventSubscriber\Admin\ApplianceFileUploader:
+        arguments:
+            $rootPath: '%kernel.project_dir%'
+        tags:
+            - { name: kernel.event_subscriber, event: oneup_uploader.post_persist }
+
     App\EventSubscriber\Admin\ApiExceptionSubscriber:
         tags:
             - { name: kernel.event_subscriber }
