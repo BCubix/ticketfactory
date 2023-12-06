@@ -9,8 +9,18 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getEventsAction } from '@Apps/Events/redux/events/eventsSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
-
+import { eventsInitialSchema, eventsValidationSchema, eventsForm } from '../EventsForm/EventsForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+
+export const eventsCreateCrud = {
+    form: {
+        title: "Création d'un évènement",
+        initialSchema: eventsInitialSchema,
+        validationSchema: eventsValidationSchema,
+    },
+    ...eventsForm,
+};
 
 export const CreateEvent = () => {
     const dispatch = useDispatch();
@@ -81,7 +91,7 @@ export const CreateEvent = () => {
     }
 
     return (
-        <Component.EventsForm
+        <Component.CmtCrudForm
             handleSubmit={handlesubmit}
             categoriesList={categoriesData?.categories}
             roomsList={roomsData.rooms}
@@ -89,6 +99,7 @@ export const CreateEvent = () => {
             tagsList={tagsData.tags}
             featuresList={featuresData?.features}
             translateInitialValues={initialValues}
+            formCrud={Crud?.events?.add}
         />
     );
 };

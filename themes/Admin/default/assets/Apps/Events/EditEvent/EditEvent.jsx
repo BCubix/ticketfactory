@@ -8,8 +8,18 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getEventsAction } from '@Apps/Events/redux/events/eventsSlice';
-
+import { eventsInitialSchema, eventsValidationSchema, eventsForm } from '../EventsForm/EventsForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Crud } from '@/AdminService/Crud';
+
+export const eventsEditCrud = {
+    form: {
+        title: "Modification d'un évènement",
+        initialSchema: eventsInitialSchema,
+        validationSchema: eventsValidationSchema,
+    },
+    ...eventsForm,
+};
 
 export const EditEvent = () => {
     const dispatch = useDispatch();
@@ -84,7 +94,7 @@ export const EditEvent = () => {
     }
 
     return (
-        <Component.EventsForm
+        <Component.CmtCrudForm
             handleSubmit={handleSubmit}
             initialValues={event}
             categoriesList={categoriesData?.categories}
@@ -92,6 +102,7 @@ export const EditEvent = () => {
             seasonsList={seasonsData.seasons}
             featuresList={featuresData?.features}
             tagsList={tagsData.tags}
+            formCrud={Crud?.events?.edit}
         />
     );
 };
