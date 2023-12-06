@@ -218,7 +218,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                 })}
             </Component.CmtPageWrapper>
             {listCrud?.deleteComponent ? (
-                <listCrud.deleteComponent {...props} />
+                <listCrud.deleteComponent deleteDialog={deleteDialog} setDeleteDialog={setDeleteDialog} handleDelete={handleDelete} {...props} />
             ) : (
                 <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                     <Box textAlign="center" py={3}>

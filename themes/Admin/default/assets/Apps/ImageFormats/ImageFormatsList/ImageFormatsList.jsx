@@ -56,15 +56,15 @@ export const imageFormatsListCrud = {
     },
     ...DEFAULT_CRUD_LIST_COMPONENTS,
     bottomComponents: [{ component: () => <Component.ImageFormatParameters /> }, { component: () => <Component.ImageFormatGenerate /> }],
-    deleteComponent: ({ deleteDialog, setDeleteDialog, handleDelete }) => {
+    deleteComponent: ({ deleteDialog, setDeleteDialog, handleDelete }) => (
         <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
             <Box textAlign="center" py={3}>
                 <Typography component="p">Êtes-vous sûr de vouloir supprimer ce format d'image ?</Typography>
                 <Typography component="p">Les miniatures seront supprimées.</Typography>
                 <Typography component="p">Cette action est irréversible.</Typography>
             </Box>
-        </Component.DeleteDialog>;
-    },
+        </Component.DeleteDialog>
+    ),
 };
 
 export const ImageFormatsList = () => {
