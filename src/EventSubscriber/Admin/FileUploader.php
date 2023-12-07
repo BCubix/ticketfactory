@@ -25,7 +25,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class FileUploader implements EventSubscriberInterface
 {
     private const NOT_FOUND_MESSAGE = "Cet élément n'existe pas.";
@@ -126,6 +125,7 @@ class FileUploader implements EventSubscriberInterface
                 $media->addImageFormat($format);
             }
         }
+
         $this->em->persist($media);
         $this->em->flush();
 

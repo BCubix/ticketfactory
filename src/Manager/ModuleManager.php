@@ -63,7 +63,7 @@ class ModuleManager extends AddonManager
     public function getAll(array $filters = []): array
     {
         $filters['page'] = isset($filters['page']) ? $filters['page'] : 0;
-        $filters['active'] = isset($filters['active']) ? $filters['active'] : null;
+        $filters['active'] = isset($filters['active']) ? boolval($filters['active']) : null;
         $filters['sortField'] = 'name';
         $filters['sortOrder'] = 'ASC';
 
@@ -78,14 +78,13 @@ class ModuleManager extends AddonManager
         }
 
         foreach ($diskModules as $diskModule) {
-            $activeFilter = $filters['active'] === "1" ? true : false;
             $active = false;
 
             if (isset($dbModules[$diskModule['name']])) {
                 $active = $dbModules[$diskModule['name']]->isActive();
             }
 
-            if (null === $filters['active'] || $activeFilter === $active) {
+            if (null === $filters['active'] || $filters['active'] === $active) {
                 $results[] = [
                     ...$diskModule,
                     'active' => $active

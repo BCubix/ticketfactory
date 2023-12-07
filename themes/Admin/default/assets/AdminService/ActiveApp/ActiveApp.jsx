@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { ActiveModule } from '@/AdminService/ActiveModule/ActiveModule';
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Api } from '../Api';
+import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 const FUNCTIONS_LIST = ['initConstant', 'initComponent', 'initApi', 'initAuthenticatedRoutes', 'initNonAuthenticatedRoutes', 'initMenu', 'initReducer', 'initTab', 'initCrud'];
 
@@ -24,17 +24,24 @@ export const ActiveApp = () => {
             });
         });
 
-        apiMiddleware(dispatch, async () => {
-            const parametersData = await Api.parametersApi.getParameters();
-            listKeys.map(async (item) => {
-                const func = list(item)?.default;
-                if (func) {
-                    func({ parameters: parametersData?.parameters });
-                }
-            });
-
+        const check = await Api.authApi.checkIsAuth();
+        if (!check.result) {
+            dispatch(loginFailure({ error: check.error }));
             setLoaded(true);
+
+            return;
+        }
+
+        const parametersData = await Api.parametersApi.getParameters();
+
+        listKeys.map(async (item) => {
+            const func = list(item)?.default;
+            if (func) {
+                func({ parameters: parametersData?.parameters });
+            }
         });
+
+        setLoaded(true);
     };
 
     useEffect(() => {
