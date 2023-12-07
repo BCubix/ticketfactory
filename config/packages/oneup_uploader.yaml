@@ -1,10 +1,6 @@
 # Read the documentation: https://github.com/1up-lab/OneupUploaderBundle/blob/master/Resources/doc/index.md
 oneup_uploader:
     mappings:
-        applianceFile:
-            frontend: dropzone
-            storage:
-                directory: '%kernel.project_dir%/public/uploads/applianceFile'
         media:
             frontend: dropzone
             storage:
