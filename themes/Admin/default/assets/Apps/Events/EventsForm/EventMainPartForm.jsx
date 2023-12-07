@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { Component } from '@/AdminService/Component';
+import { SeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const LIST = {
+export const eventMainPartForm = {
     blocks: [
         {
+            type: 'block',
             keyId: 'block-general-info',
             title: 'Informations générales',
-
             fields: [
                 {
                     keyId: 'input-name',
@@ -100,9 +101,9 @@ export const LIST = {
             ],
         },
         {
+            type: 'block',
             keyId: 'block-annexe-info',
             title: 'Informations annexes',
-
             fields: [
                 {
                     keyId: 'input-third-party-ticketing',
@@ -156,9 +157,9 @@ export const LIST = {
             ],
         },
         {
+            type: 'block',
             keyId: 'block-categories',
             title: 'Catégories',
-
             fields: [
                 {
                     keyId: 'form-event-category',
@@ -180,8 +181,8 @@ export const LIST = {
                 },
             ],
         },
-        { keyId: 'seo-form', component: (props) => <Component.SEOForm {...props} /> },
+        SeoInitialFormInputs,
     ],
 };
 
-export const EventMainPartForm = ({ ...props }) => <Component.CmtDisplayBlocks blocks={LIST.blocks} {...props} />;
+export const EventMainPartForm = ({ ...props }) => <Component.CmtDisplayBlocks blocks={eventMainPartForm.blocks} {...props} />;

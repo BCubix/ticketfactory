@@ -1,11 +1,10 @@
 import React from 'react';
-import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
-import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 
-const validationSchema = {
+export const eventsValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
     chapo: Yup.string().required('Veuillez renseigner le chapô.'),
     eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
@@ -58,7 +57,7 @@ const validationSchema = {
     ),
 };
 
-const initialSchema = {
+export const eventsInitialSchema = {
     active: (initValues) => initValues?.active || false,
     name: (initValues) => initValues?.name || '',
     chapo: (initValues) => initValues?.chapo || '',
@@ -108,125 +107,50 @@ const initialSchema = {
                   featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
               }))
             : [],
-    seo: {
-        metaTitle: (initValues) => initValues?.metaTitle || '',
-        metaDescription: (initValues) => initValues?.metaDescription || '',
-        socialImage: (initValues) => initValues?.socialImage || null,
-        fbTitle: (initValues) => initValues?.fbTitle || '',
-        fbDescription: (initValues) => initValues?.fbDescription || '',
-        twTitle: (initValues) => initValues?.twTitle || '',
-        twDescription: (initValues) => initValues?.twDescription || '',
-    },
+    seo: SeoInitialValues,
 };
 
-export const LIST = {
-    form: {
-        initialSchema: initialSchema,
-        validationSchema: validationSchema,
+export const eventsForm = {
+    submitLine: {
+        activeInput: true,
+        activeLabel: 'Evènement actif ?',
     },
-    components: [
+    api: {
+        dataFields: {
+            seo: SeoApiDataFields,
+        },
+    },
+    fields: [
         {
-            keyId: 'tabs',
-            component: (props) => <TabsEvent {...props} />,
-
-            tabs: [
-                {
-                    keyId: 'event-tab',
-                    label: 'Evènement',
-                    component: (props) => <Component.EventMainPartForm {...props} />,
-                },
-                {
-                    keyId: 'dates-tab',
-                    label: 'Dates',
-                    component: (props) => <Component.EventsDateBlockForm {...props} />,
-                },
-                {
-                    keyId: 'prices-tab',
-                    label: 'Tarifs',
-                    component: (props) => <Component.EventsPriceBlockForm {...props} />,
-                },
-                {
-                    keyId: 'features-tab',
-                    label: 'Attributs',
-                    component: (props) => <Component.EventFeaturesPartForm {...props} />,
-                },
-                {
-                    keyId: 'medias-tab',
-                    label: 'Médias',
-                    component: (props) => <Component.EventMediaPartForm {...props} />,
-                },
-            ],
+            type: 'tabs',
+            keyId: 'events',
+            label: 'Evènement',
+            component: (props) => <Component.EventMainPartForm {...props} />,
         },
         {
-            keyId: 'box',
-            component: (props) => <BoxEvent {...props} />,
-
-            children: [
-                { keyId: 'active-field', component: (props) => <ActiveFieldEvent {...props} /> },
-                { keyId: 'button', component: (props) => <ButtonEvent {...props} /> },
-            ],
+            type: 'tabs',
+            keyId: 'dates',
+            label: 'Dates',
+            component: (props) => <Component.EventsDateBlockForm {...props} />,
+        },
+        {
+            type: 'tabs',
+            keyId: 'prices',
+            label: 'Tarifs',
+            component: (props) => <Component.EventsPriceBlockForm {...props} />,
+        },
+        {
+            type: 'tabs',
+            keyId: 'features',
+            label: 'Attributs',
+            component: (props) => <Component.EventFeaturesPartForm {...props} />,
+        },
+        {
+            type: 'tabs',
+            keyId: 'medias',
+            label: 'Médias',
+            component: (props) => <Component.EventMediaPartForm {...props} />,
         },
     ],
-};
-
-export const EventsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, ...props }) => {
-    const initValues = translateInitialValues || initialValues;
-
-    if (!props.categoriesList || !props.roomsList || !props.seasonsList || !props.tagsList) {
-        return <></>;
-    }
-    return (
-        <Formik
-            initialValues={constructInitialValues(LIST.form.initialSchema, initValues, { ...props })}
-            validationSchema={Yup.object().shape(LIST.form.validationSchema)}
-            translateInitialValues={translateInitialValues}
-            onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values);
-                setSubmitting(false);
-            }}
-        >
-            {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un évènement`}>
-                    <Component.CmtDisplayComponents
-                        list={LIST.components}
-                        initialValues={initialValues}
-                        values={values}
-                        errors={errors}
-                        touched={touched}
-                        handleChange={handleChange}
-                        handleBlur={handleBlur}
-                        handleSubmit={handleSubmit}
-                        setFieldTouched={setFieldTouched}
-                        setFieldValue={setFieldValue}
-                        isSubmitting={isSubmitting}
-                        {...props}
-                    />
-                </Component.CmtPageWrapper>
-            )}
-        </Formik>
-    );
-};
-
-const TabsEvent = ({ tabs, ...props }) => {
-    return <Component.CmtTabs containerStyle={{ mt: 3 }} list={tabs.map((elem) => ({ id: elem.keyId, label: elem.label, component: elem.component(props) }))} />;
-};
-
-const BoxEvent = ({ children, ...props }) => {
-    return (
-        <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
-            <Component.CmtDisplayComponents list={children} {...props} />
-        </Box>
-    );
-};
-
-const ActiveFieldEvent = ({ values, setFieldValue }) => {
-    return <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Evènement actif ?" />;
-};
-
-const ButtonEvent = ({ isSubmitting, initialValues }) => {
-    return (
-        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
-            {initialValues ? 'Modifier' : 'Créer'}
-        </Button>
-    );
+    ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

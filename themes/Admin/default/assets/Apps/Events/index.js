@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { CreateEvent } from '@Apps/Events/CreateEvent/CreateEvent';
-import { EditEvent } from '@Apps/Events/EditEvent/EditEvent';
+import { CreateEvent, eventsCreateCrud } from '@Apps/Events/CreateEvent/CreateEvent';
+import { EditEvent, eventsEditCrud } from '@Apps/Events/EditEvent/EditEvent';
 import { DisplayEventMediaElement } from '@Apps/Events/EventsForm/EventMediaPart/DisplayEventMediaElement';
 import { EditEventMediaModal } from '@Apps/Events/EventsForm/EventMediaPart/EditEventMediaModal';
 import { EventMediaPartForm } from '@Apps/Events/EventsForm/EventMediaPart/EventMediaPartForm';
@@ -13,7 +13,6 @@ import { EventParentCategoryPartForm } from '@Apps/Events/EventsForm/EventParent
 import { EventsPriceBlockForm } from '@Apps/Events/EventsForm/EventPriceBlockForm';
 import { EventsDateBlockForm } from '@Apps/Events/EventsForm/EventsDateBlockForm';
 import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
-import { EventsForm } from '@Apps/Events/EventsForm/EventsForm';
 import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
 import { EventsList, eventsListCrud } from '@Apps/Events/EventsList/EventsList';
 import { EventFeaturesPartForm } from '@Apps/Events/EventsForm/EventFeaturesPartForm';
@@ -49,7 +48,6 @@ export const initComponent = () => {
     setComponent('EventsPriceBlockForm', EventsPriceBlockForm);
     setComponent('EventsDateBlockForm', EventsDateBlockForm);
     setComponent('EventsDateForm', EventsDateForm);
-    setComponent('EventsForm', EventsForm);
     setComponent('EventsPriceForm', EventsPriceForm);
     setComponent('EventsList', EventsList);
     setComponent('EventFeaturesPartForm', EventFeaturesPartForm);
@@ -76,8 +74,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: eventsListCrud,
-        add: {},
-        edit: {},
+        add: eventsCreateCrud,
+        edit: eventsEditCrud,
     };
 
     setCrud('events', crud);

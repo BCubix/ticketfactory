@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Component } from '@/AdminService/Component';
 
-export const LIST = {
+export const eventFeaturesPartForm = {
     blocks: [
         {
             keyId: 'block-features',
@@ -19,4 +19,4 @@ export const LIST = {
     ],
 };
 
-export const EventFeaturesPartForm = ({ ...props }) => <Component.CmtDisplayBlocks blocks={LIST.blocks} {...props} />;
+export const EventFeaturesPartForm = ({ ...props }) => <Component.CmtDisplayBlocks blocks={eventFeaturesPartForm.blocks} {...props} />;
