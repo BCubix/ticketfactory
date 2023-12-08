@@ -4,10 +4,11 @@ namespace App\Entity\Feature;
 
 use App\Entity\Event\Event;
 use App\Entity\Product\Product;
+use App\Repository\FeatureLinkRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FeatureLinkRepository::class)]
 class FeatureLink
 {
     #[ORM\Id]

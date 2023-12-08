@@ -7,6 +7,7 @@ use App\Entity\Event\EventDate;
 use App\Entity\Event\EventMedia;
 use App\Manager\EventDateManager;
 use App\Manager\EventManager;
+use App\Manager\FeatureManager;
 use App\Manager\LanguageManager;
 use App\Service\Formatter\DateTimeFormatter;
 use Doctrine\Common\Collections\Collection;
@@ -21,13 +22,15 @@ class TwigEventExtension extends AbstractExtension
     protected $edm;
     protected $lm;
     protected $rs;
+    protected $fm;
 
-    public function __construct(EventManager $em, EventDateManager $edm, LanguageManager $lm, RequestStack $rs)
+    public function __construct(EventManager $em, EventDateManager $edm, LanguageManager $lm, RequestStack $rs, FeatureManager $fm)
     {
         $this->em  = $em;
         $this->edm = $edm;
         $this->lm = $lm;
         $this->rs = $rs;
+        $this->fm = $fm;
     }
 
     public function getFunctions(): array
@@ -40,6 +43,7 @@ class TwigEventExtension extends AbstractExtension
             new TwigFunction('groupDatesByMonth', [$this, 'groupDatesByMonth']),
             new TwigFunction('getMainImageFromEvent', [$this, 'getMainImageFromEvent']),
             new TwigFunction('getFirstFormattedMediaForEvent', [$this, 'getFirstFormattedMediaForEvent']),
+            new TwigFunction('getEventFeatures', [$this, 'getEventFeatures']),
         ];
     }
 
@@ -131,5 +135,10 @@ class TwigEventExtension extends AbstractExtension
         }
 
         return $this->em->getFirstFormattedMedia($eventMedias, $slug);
+    }
+
+    public function getEventFeatures(Event $event, string $keyword)
+    {
+        return $this->fm->getEventFeatures($event, $keyword);
     }
 }

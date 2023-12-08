@@ -43,7 +43,7 @@ class ContactRequestType extends AbstractType
             ])
             ->add('subject',              TextType::class,            [
                 'label' => 'Objet',
-                'required' => true,
+                'required' => false,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])

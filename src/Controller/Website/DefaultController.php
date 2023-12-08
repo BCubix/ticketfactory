@@ -35,13 +35,16 @@ class DefaultController extends WebsiteController
         if (null !== $element) {
             switch (ClassUtils::getClass($element)) {
                 case Event::class:
-                    if ($element->getSeason()->getId() != $currentSeason->getId()) {
+                    if (null === $element->getSeason() || $element->getSeason()->getId() != $currentSeason->getId()) {
                         $seasonBack = $currentSeason;
                     }
 
-                    $breadcrumbs[$element->getShortTitle()] = '';
+                    $breadcrumbs[$element->getName()] = '';
                     $breadcrumbs[$element->getMainCategory()->getName()] = $this->sf->get('urlService')->tfPath($element->getMainCategory(), ['season' => $season]);
-                    $breadcrumbs[$element->getSeason()->getName()] = $this->sf->get('urlService')->tfPath($element->getSeason());
+                    if (null !== $element->getSeason()) {
+                        $breadcrumbs[$element->getSeason()->getName()] = $this->sf->get('urlService')->tfPath($element->getSeason());
+                    }
+
                     break;
 
                 case EventCategory::class:

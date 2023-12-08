@@ -47,14 +47,12 @@ class ContactRequest extends Datable
     private ?string $email = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le téléphone doit être inférieur à {{ limit }} caractères.')]
-    #[Assert\NotBlank(message: 'Le téléphone doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $phone = null;
 
     #[Assert\Length(max: 1000, maxMessage: 'L\'objet doit être inférieur à {{ limit }} caractères.')]
-    #[Assert\NotBlank(message: 'L\'objet doit être renseigné.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_contact_request_all', 'a_contact_request_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

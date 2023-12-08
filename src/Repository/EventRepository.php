@@ -67,17 +67,20 @@ class EventRepository extends CrudRepository
 
         $events = $this->createQueryBuilder('e')
             ->addSelect('s')
+            ->addSelect('r')
             ->addSelect('c')
             ->addSelect('em')
             ->addSelect('m')
-            ->addSelect('r')
             ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->innerJoin('e.season', 's')
             ->innerJoin('e.eventCategories', 'c')
-            ->innerJoin('e.room', 'r')
+            ->leftJoin('e.season', 's')
+            ->leftJoin('e.room', 'r')
+            ->leftJoin('e.eventDateBlocks', 'edb')
+            ->leftJoin('edb.eventDates', 'ed')
             ->leftJoin('e.eventMedias', 'em')
             ->leftJoin('em.media', 'm')
-            ->where('e.active = 1');
+            ->where('e.active = 1')
+            ->andWhere('ed.eventDate > :now');
 
         if (!empty($filters['season'])) {
             $events
@@ -85,9 +88,9 @@ class EventRepository extends CrudRepository
                 ->setParameter('seasonId', $filters['season']);
         }
 
-        if (!empty($filters['category'])) {
+        if (!empty($filters['category']) && count($filters['category']) > 0) {
             $events
-                ->andWhere('c.id = :categoryId')
+                ->andWhere('c.id IN (:categoryId)')
                 ->setParameter('categoryId', $filters['category']);
         }
 
@@ -112,8 +115,29 @@ class EventRepository extends CrudRepository
             }
         }
 
+        if (!empty($filters['beginDate'])) {
+            try {
+                $events
+                    ->andWhere('ed.eventDate > :beginDate')
+                    ->setParameter('beginDate', $filters['beginDate']);
+            } catch (\Exception $e) {
+            }
+        }
+
+        if (!empty($filters['endDate'])) {
+            try {
+                $events
+                    ->andWhere('ed.eventDate < :endDate')
+                    ->setParameter('endDate', $filters['endDate']);
+            } catch (\Exception $e) {
+            }
+        }
+
         return $events
+            ->orderBy('r.seatsNb', 'DESC')
+            ->addOrderBy('ed.eventDate', 'ASC')
             ->setParameter('languageId', $languageId)
+            ->setParameter('now', (new \DateTime()))
             ->getQuery()
             ->getResult();
     }

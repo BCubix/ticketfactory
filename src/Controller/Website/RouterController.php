@@ -12,9 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\PageContext\PageContext;
-
-use App\Service\Addon\Hook;
 use Twig\Environment;
 
 class RouterController extends WebsiteController
@@ -64,8 +61,7 @@ class RouterController extends WebsiteController
         $content = $this->forwardEventContents($mainPage, $slugs);
         if (null !== $content) {
             return $content;
-        }
-        ;
+        };
 
         // We check for other content mapping
         $content = $this->forwardOtherContents($mainPage, $slugs);
@@ -93,8 +89,7 @@ class RouterController extends WebsiteController
             $content = $this->forwardEventRelation($keyword, $page, $slugs);
             if (null !== $content) {
                 return $content;
-            }
-            ;
+            };
         }
 
         return $this->forwardEvent($page, $slugs);

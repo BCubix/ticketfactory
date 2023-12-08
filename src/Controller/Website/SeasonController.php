@@ -2,6 +2,8 @@
 
 namespace App\Controller\Website;
 
+use App\Entity\Event\EventCategory;
+use App\Entity\Event\Room;
 use App\Entity\Page\Page;
 use App\Entity\Event\Season;
 use App\Form\Website\Event\EventFilterType;
@@ -10,14 +12,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SeasonController extends WebsiteController
 {
-    public function index(Page $page, Season $season)
+    public function index(Page $page, ?Season $season, array $slugs)
     {
         if ($this->getLanguageId() != $this->getDefaultLanguageId()) {
             $this->em->clear();
 
-            $season = $this->em->getRepository(Season::class)->findTranslationForWebsite($this->getDefaultLanguageId(), $season->getLanguageGroup());
+            if (null !== $season) {
+                $season = $this->em->getRepository(Season::class)->findTranslationForWebsite($this->getDefaultLanguageId(), $season->getLanguageGroup());
+                return new RedirectResponse($this->sf->get('urlService')->tfPath($season, ['_locale' => $this->getDefaultLocale()]), 302);
+            }
 
-            return new RedirectResponse($this->sf->get('urlService')->tfPath($season, ['_locale' => $this->getDefaultLocale()]), 302);
+            return new RedirectResponse($this->sf->get('urlService')->tfPath($page, ['_locale' => $this->getDefaultLocale()]), 302);
         }
 
         $request = $this->getRequest();
@@ -33,10 +38,12 @@ class SeasonController extends WebsiteController
         ];
 
         $filters = [
-            'month'    => $request->get('m'),
-            'category' => $request->get('c'),
-            'room'     => $request->get('r'),
-            'sort'     => $request->get('s')
+            'beginDate' => $request->get('beginDate') ?? null,
+            'endDate'   => $request->get('endDate') ?? null,
+            'category'  => $request->get('category'),
+            'room'      => $request->get('room'),
+            'month'     => $request->get('month') ?? null,
+            'sort'      => $request->get('sort') ?? null
         ];
 
         if (null !== $filters['category']) {
@@ -47,7 +54,7 @@ class SeasonController extends WebsiteController
             $filters['room'] = $this->em->getRepository(Room::class)->find($filters['room']);
         }
 
-        $filterForm = $this->createForm(EventFilterType::class, null, ['months' => $months, 'sort' => $sort]);
+        $filterForm = $this->createForm(EventFilterType::class, null);
         $filterForm->setData($filters);
         $filterForm->handleRequest($request);
 
@@ -55,17 +62,19 @@ class SeasonController extends WebsiteController
             $filters = $filterForm->getData();
         }
 
-        $seasonPage = $this->mf->get("page")->getByKeyword("seasons");
-        $seasonPageContents = [];
-        if (null !== $seasonPage) {
-            foreach ($seasonPage->getContents() as $content) {
+        $pageContent = [];
+        if (null !== $page) {
+            foreach ($page->getContents() as $content) {
                 foreach ($content->getFields() as $key => $field) {
-                    $seasonPageContents[$key] = $field;
+                    $pageContent[$key] = $field;
                 }
             }
         }
 
-        $filters['season'] = $season->getId();
+        if (null !== $season) {
+            $filters['season'] = $season->getId();
+        }
+
         $events = $this->mf->get('event')->getSortedEvents($filters);
 
         $template = 'Season/';
@@ -77,8 +86,7 @@ class SeasonController extends WebsiteController
             'season'             => $season,
             'activeEvents'       => $events['active'],
             'inactiveEvents'     => $events['inactive'],
-            'seasonPage'         => $seasonPage,
-            'seasonPageContents' => $seasonPageContents,
+            'pageContent'        => $pageContent,
             'filterForm'         => $filterForm->createView()
         ]);
     }
