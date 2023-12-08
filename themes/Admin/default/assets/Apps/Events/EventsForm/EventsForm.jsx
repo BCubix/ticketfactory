@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { Component } from '@/AdminService/Component';
 import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
+import moment from 'moment';
 
 export const eventsValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
@@ -117,6 +118,100 @@ export const eventsForm = {
     },
     api: {
         dataFields: {
+            active: { type: 'boolean' },
+            name: { type: 'string' },
+            chapo: { type: 'string' },
+            description: { type: 'string' },
+            room: { type: 'string' },
+            season: { type: 'string' },
+            mainCategory: { type: 'string' },
+            slug: { type: 'slug' },
+            lang: { type: 'string' },
+            languageGroup: { type: 'string' },
+            ticketingId: { type: 'string' },
+            useThirdPartyTicketing: { type: 'boolean' },
+            thirdPartyTicketingUrl: { type: 'string' },
+            eventLength: { type: 'string' },
+            eventDateBlocks: {
+                type: 'array',
+                subFields: {
+                    name: { type: 'string' },
+                    lang: { type: 'string' },
+                    languageGroup: { type: 'string' },
+                    eventDates: {
+                        type: 'array',
+                        subFields: {
+                            eventDate: {
+                                function: ({ values, formData, baseName }) => {
+                                    formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
+                                },
+                            },
+                            annotation: { type: 'string' },
+                            state: { type: 'string' },
+                            lang: { type: 'string' },
+                            languageGroup: { type: 'string' },
+                            reportDate: {
+                                function: ({ values, formData, baseName }) => {
+                                    if (values.reportDate) {
+                                        formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            eventPriceBlocks: {
+                type: 'array',
+                subFields: {
+                    name: { type: 'string' },
+                    lang: { type: 'string' },
+                    languageGroup: { type: 'string' },
+                    eventPrices: {
+                        type: 'array',
+                        subFields: {
+                            name: { type: 'string' },
+                            annotation: { type: 'string' },
+                            price: { type: 'string' },
+                            lang: { type: 'string' },
+                            languageGroup: { type: 'string' },
+                        },
+                    },
+                },
+            },
+            eventCategories: {
+                function: ({ values, formData }) => {
+                    values?.eventCategories?.forEach((category, index) => {
+                        formData.append(`eventCategories[${index}]`, category);
+                    });
+                },
+            },
+            tags: {
+                function: ({ values, formData }) => {
+                    values?.tags?.forEach((tag, index) => {
+                        formData.append(`tags[${index}]`, tag);
+                    });
+                },
+            },
+            eventMedias: {
+                type: 'array',
+                subFields: {
+                    media: { function: ({ values, formData, baseName }) => formData.append(`${baseName}[media]`, values.id) },
+                    position: { function: ({ values, formData, baseName, index }) => formData.append(`${baseName}[position]`, values.position || index + 1) },
+                },
+            },
+            featureLinks: {
+                type: 'array',
+                subFields: {
+                    feature: { type: 'string' },
+                    featureValue: {
+                        function: ({ values, formData, baseName }) => {
+                            formData.append(`${baseName}[featureValue]`, values?.featureValue || values?.featureValueRawId || '');
+                        },
+                    },
+                    featureValueRaw: { type: 'string' },
+                },
+            },
             seo: SeoApiDataFields,
         },
     },

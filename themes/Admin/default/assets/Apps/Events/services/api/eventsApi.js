@@ -1,14 +1,13 @@
-import moment from 'moment';
-
 import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 import { copyData } from '@Services/utils/copyData';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { sortTranslatedObject } from '@Services/utils/translationUtils';
-import { getSeoFormData } from '@Apps/SEO/services/api/seoApi';
+import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
+
+const DEFAULT_PATH = '/events';
 
 var controller = null;
 
@@ -25,7 +24,7 @@ const eventsApi = {
 
             controller = new AbortController();
 
-            const result = await axios.get('/events', {
+            const result = await axios.get(DEFAULT_PATH, {
                 params: params,
                 signal: controller.signal,
             });
@@ -44,9 +43,29 @@ const eventsApi = {
         }
     },
 
+    getAllEvents: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            createFilterParams(filters, Crud?.events?.list?.filtersData, params);
+
+            const result = await axios.get(DEFAULT_PATH, {
+                params: params,
+            });
+
+            return { result: true, events: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, events: [], total: 0 };
+            }
+
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     getOneEvent: async (id) => {
         try {
-            const result = await axios.get(`/events/${id}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}`);
             const data = copyData(result?.data);
 
             return { result: true, event: data };
@@ -55,79 +74,9 @@ const eventsApi = {
         }
     },
 
-    createEvent: async (data) => {
+    createEvent: async (values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('chapo', data.chapo);
-            formData.append('description', data.description);
-            formData.append('room', data.room);
-            formData.append('season', data.season);
-            formData.append('mainCategory', data.mainCategory);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang || '');
-            formData.append('languageGroup', data.languageGroup || '');
-            formData.append('ticketingId', data.ticketingId);
-            formData.append('useThirdPartyTicketing', data.useThirdPartyTicketing);
-            formData.append('thirdPartyTicketingUrl', data.thirdPartyTicketingUrl);
-            formData.append('eventLength', data.eventLength);
-
-            data?.eventDateBlocks?.forEach((dateBlock, index) => {
-                formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
-                formData.append(`eventDateBlocks[${index}][lang]`, dateBlock.lang || '');
-                formData.append(`eventDateBlocks[${index}][languageGroup]`, dateBlock.languageGroup || '');
-
-                dateBlock?.eventDates?.forEach((date, ind) => {
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][eventDate]`, moment(date.eventDate).format('YYYY-MM-DD HH:mm'));
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][annotation]`, date.annotation);
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][state]`, date.state);
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][lang]`, date.lang || '');
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][languageGroup]`, date.languageGroup || '');
-
-                    if (date.reportDate) {
-                        formData.append(`eventDateBlocks[${index}][eventDates][${ind}][reportDate]`, moment(date.reportDate).format('YYYY-MM-DD HH:mm'));
-                    }
-                });
-            });
-
-            data?.eventPriceBlocks?.forEach((priceBlock, index) => {
-                formData.append(`eventPriceBlocks[${index}][name]`, priceBlock.name);
-                formData.append(`eventPriceBlocks[${index}][lang]`, priceBlock.lang || '');
-                formData.append(`eventPriceBlocks[${index}][languageGroup]`, priceBlock.languageGroup || '');
-
-                priceBlock?.eventPrices.forEach((price, ind) => {
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][name]`, price.name);
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`, price.annotation);
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][price]`, price.price);
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][lang]`, price.lang || '');
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][languageGroup]`, price.languageGroup || '');
-                });
-            });
-
-            data?.eventCategories?.forEach((category, index) => {
-                formData.append(`eventCategories[${index}]`, category);
-            });
-
-            data?.tags?.forEach((tag, index) => {
-                formData.append(`tags[${index}]`, tag);
-            });
-
-            data.eventMedias?.forEach((eventMedia, index) => {
-                formData.append(`eventMedias[${index}][media]`, eventMedia.id);
-                formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
-            });
-
-            data?.featureLinks?.forEach((featureLink, index) => {
-                formData.append(`featureLinks[${index}][feature]`, featureLink.feature || '');
-                formData.append(`featureLinks[${index}][featureValue]`, featureLink?.featureValue || featureLink?.featureValueRawId || '');
-                formData.append(`featureLinks[${index}][featureValueRaw]`, featureLink.featureValueRaw || '');
-            });
-
-            getSeoFormData(formData, data);
-
-            const result = await axios.post('/events', formData);
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.events?.add?.api?.dataFields }));
 
             return { result: true, event: result.data };
         } catch (error) {
@@ -135,71 +84,9 @@ const eventsApi = {
         }
     },
 
-    editEvent: async (id, data) => {
+    editEvent: async (id, values) => {
         try {
-            let formData = new FormData();
-
-            formData.append('active', data.active ? 1 : 0);
-            formData.append('name', data.name);
-            formData.append('chapo', data.chapo);
-            formData.append('description', data.description);
-            formData.append('room', data.room);
-            formData.append('season', data.season);
-            formData.append('mainCategory', data.mainCategory);
-            formData.append('slug', changeSlug(data.slug));
-            formData.append('lang', data.lang);
-            formData.append('languageGroup', data.languageGroup);
-            formData.append('ticketingId', data.ticketingId);
-            formData.append('useThirdPartyTicketing', data.useThirdPartyTicketing);
-            formData.append('thirdPartyTicketingUrl', data.thirdPartyTicketingUrl);
-            formData.append('eventLength', data.eventLength);
-
-            data?.eventDateBlocks?.forEach((dateBlock, index) => {
-                formData.append(`eventDateBlocks[${index}][name]`, dateBlock.name);
-
-                dateBlock?.eventDates?.forEach((date, ind) => {
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][eventDate]`, moment(date.eventDate).format('YYYY-MM-DD HH:mm'));
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][annotation]`, date.annotation);
-                    formData.append(`eventDateBlocks[${index}][eventDates][${ind}][state]`, date.state);
-
-                    if (date.reportDate) {
-                        formData.append(`eventDateBlocks[${index}][eventDates][${ind}][reportDate]`, moment(date.reportDate).format('YYYY-MM-DD HH:mm'));
-                    }
-                });
-            });
-
-            data?.eventPriceBlocks?.forEach((priceBlock, index) => {
-                formData.append(`eventPriceBlocks[${index}][name]`, priceBlock.name);
-
-                priceBlock?.eventPrices.forEach((price, ind) => {
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][name]`, price.name);
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][annotation]`, price.annotation);
-                    formData.append(`eventPriceBlocks[${index}][eventPrices][${ind}][price]`, price.price);
-                });
-            });
-
-            data?.eventCategories?.forEach((category, index) => {
-                formData.append(`eventCategories[${index}]`, category);
-            });
-
-            data?.tags?.forEach((tag, index) => {
-                formData.append(`tags[${index}]`, tag);
-            });
-
-            data.eventMedias?.forEach((eventMedia, index) => {
-                formData.append(`eventMedias[${index}][media]`, eventMedia.id);
-                formData.append(`eventMedias[${index}][position]`, eventMedia.position || index + 1);
-            });
-
-            data?.featureLinks?.forEach((featureLink, index) => {
-                formData.append(`featureLinks[${index}][feature]`, featureLink.feature || '');
-                formData.append(`featureLinks[${index}][featureValue]`, featureLink?.featureValue || featureLink?.featureValueRawId || '');
-                formData.append(`featureLinks[${index}][featureValueRaw]`, featureLink.featureValueRaw || '');
-            });
-
-            getSeoFormData(formData, data);
-
-            const result = await axios.post(`/events/${id}`, formData);
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.events?.edit?.api?.dataFields }));
 
             return { result: true, event: result.data };
         } catch (error) {
@@ -209,7 +96,7 @@ const eventsApi = {
 
     deleteEvent: async (id) => {
         try {
-            await axios.delete(`/events/${id}`);
+            await axios.delete(`${DEFAULT_PATH}/${id}`);
 
             return { result: true };
         } catch (error) {
@@ -219,7 +106,7 @@ const eventsApi = {
 
     duplicateEvent: async (id) => {
         try {
-            await axios.post(`/events/${id}/duplicate`);
+            await axios.post(`${DEFAULT_PATH}/${id}/duplicate`);
 
             return { result: true };
         } catch (error) {
@@ -229,7 +116,7 @@ const eventsApi = {
 
     getTranslated: async (id, languageId) => {
         try {
-            const result = await axios.get(`/events/${id}/translated/${languageId}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}/translated/${languageId}`);
             const data = copyData(result?.data);
 
             return { result: true, event: data };

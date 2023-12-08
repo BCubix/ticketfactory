@@ -49,16 +49,55 @@ export function addCrudAction(name, action, crud) {
     CrudObj[name][action] = crud;
 }
 
+export function getFormFields(name, actionName) {
+    checkString(name);
+
+    return Crud[name][actionName]?.fields;
+}
+
+export function setFormFields(name, actionName, fields) {
+    checkString(name);
+    checkString(actionName);
+
+    let crud = Crud[name];
+    crud[actionName].fields = fields;
+
+    setCrud(name, crud);
+}
+
+export function getForm(name, actionName) {
+    checkString(name);
+
+    return Crud[name][actionName]?.form;
+}
+
+export function setForm(name, actionName, form) {
+    checkString(name);
+    checkString(actionName);
+
+    let crud = Crud[name];
+    crud[actionName].form = form;
+
+    setCrud(name, crud);
+}
+
+export function getApiFields(name, actionName) {
+    checkString(name);
+
+    return Crud[name][actionName]?.api?.dataFields;
+}
+
+export function setApiFields(name, actionName, fields) {
+    checkString(name);
+    checkString(actionName);
+
+    let crud = Crud[name];
+    crud[actionName].api.dataFields = fields;
+
+    setCrud(name, crud);
+}
+
 /*
-- getApiFields(name, action)
-- setApiFields(name, action, fields)
-
-- getFormFields(name, action)
-- setFormFields(name, action)
-
-- getListFilters(name)
-- setListFilters(name, filters)
-
 - addCreateAction(name, crud = defaultTemplate)
 - addEditAction(name, crud = defaultTemplate)
 */
