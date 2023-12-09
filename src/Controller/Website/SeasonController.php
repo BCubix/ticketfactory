@@ -8,6 +8,7 @@ use App\Entity\Page\Page;
 use App\Entity\Event\Season;
 use App\Form\Website\Event\EventFilterType;
 use App\Service\Sort\EventSorter;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SeasonController extends WebsiteController
@@ -60,6 +61,10 @@ class SeasonController extends WebsiteController
 
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $filters = $filterForm->getData();
+
+            if (null !== $filters['category'] && get_class($filters['category']) !== ArrayCollection::class) {
+                $filters['category'] = new ArrayCollection([$filters['category']]);
+            }
         }
 
         $pageContent = [];
