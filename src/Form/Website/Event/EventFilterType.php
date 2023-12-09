@@ -4,18 +4,21 @@ namespace App\Form\Website\Event;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
+use App\Form\Website\WebsiteBaseFormType;
 use App\Repository\EventCategoryRepository;
 use App\Repository\RoomRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventFilterType extends AbstractType
+class EventFilterType extends WebsiteBaseFormType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $months = $options['months'];
@@ -58,8 +61,8 @@ class EventFilterType extends AbstractType
                 'label_attr'    => ['class' => 'filters_label'],
                 'class'         => EventCategory::class,
                 'choice_label'  => 'name',
-                'multiple'      => true,
-                'expanded'      => true,
+                'multiple'      => false,
+                'expanded'      => false,
                 'placeholder'   => "Toutes les catégories",
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
@@ -89,12 +92,20 @@ class EventFilterType extends AbstractType
                 'placeholder' => "Tri",
                 'choices'     => $sort
             ]);
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event, "WebsiteEventFilter");
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'csrf_protection' => false,
             'months' => [],
             'sort' => []
         ]);

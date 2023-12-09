@@ -62,7 +62,8 @@ class ContactRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContactRequest::class
+            'data_class' => ContactRequest::class,
+            'csrf_protection' => false,
         ]);
     }
 }

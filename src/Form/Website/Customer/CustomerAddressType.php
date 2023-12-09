@@ -47,14 +47,14 @@ class CustomerAddressType extends AbstractType
                 'required' => false,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Address::class
+            'data_class' => Address::class,
+            'csrf_protection' => false,
         ]);
     }
 }

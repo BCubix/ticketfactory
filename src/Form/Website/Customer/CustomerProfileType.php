@@ -69,7 +69,8 @@ class CustomerProfileType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Customer::class
+            'data_class' => Customer::class,
+            'csrf_protection' => false,
         ]);
     }
 }

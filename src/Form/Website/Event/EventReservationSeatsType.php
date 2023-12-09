@@ -37,14 +37,14 @@ class EventReservationSeatsType extends AbstractType
             ->add('quantity',             NumberType::class,              [
                 'required'      => false,
                 'attr'          => ["class" => "form_input_hidden js-event-reservation-quantity-input"],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'csrf_protection' => false,
             'eventId' => null,
         ]);
     }

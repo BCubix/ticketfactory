@@ -40,8 +40,8 @@ class SeasonController extends WebsiteController
         $filters = [
             'beginDate' => $request->get('beginDate') ?? null,
             'endDate'   => $request->get('endDate') ?? null,
-            'category'  => $request->get('category'),
-            'room'      => $request->get('room'),
+            'category'  => $request->get('category') ?? null,
+            'room'      => $request->get('room') ?? null,
             'month'     => $request->get('month') ?? null,
             'sort'      => $request->get('sort') ?? null
         ];
@@ -54,7 +54,7 @@ class SeasonController extends WebsiteController
             $filters['room'] = $this->em->getRepository(Room::class)->find($filters['room']);
         }
 
-        $filterForm = $this->createForm(EventFilterType::class, null);
+        $filterForm = $this->createForm(EventFilterType::class, null, ['months' => $months, 'sort' => $sort]);
         $filterForm->setData($filters);
         $filterForm->handleRequest($request);
 

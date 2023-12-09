@@ -48,14 +48,14 @@ class EventReservationType extends AbstractType
                 'label_html'    => true,
                 "label"         => "<span><i class='icon icon-cart'></i> Ajouter au panier</span>",
                 "attr"          => ["class" => "submit-button"]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'csrf_protection' => false,
             'eventId' => null,
         ]);
     }
