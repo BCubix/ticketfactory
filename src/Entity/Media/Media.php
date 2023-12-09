@@ -416,7 +416,20 @@ class Media extends Datable
 
     public function isYoutube()
     {
-        return preg_match('#youtube\.com#i', $this->getDocumentUrl());
+        $matches = [];
+        if (preg_match('#youtube.com/watch\?v=([a-zA-Z0-9_\-]+)#is', $this->getDocumentUrl(), $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#youtube.com/embed/([a-zA-Z0-9_\-]+)#is', $this->getDocumentUrl(), $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#youtu\.be/([a-zA-Z0-9_\-]+)#is', $this->getDocumentUrl(), $matches)) {
+            return $matches[1];
+        }
+
+        return false;
     }
 
     #[JMS\Expose()]
