@@ -44,6 +44,7 @@ class TwigEventExtension extends AbstractExtension
             new TwigFunction('getMainImageFromEvent', [$this, 'getMainImageFromEvent']),
             new TwigFunction('getFirstFormattedMediaForEvent', [$this, 'getFirstFormattedMediaForEvent']),
             new TwigFunction('getEventFeatures', [$this, 'getEventFeatures']),
+            new TwigFunction('getAllFormattedMediasForEvent', [$this, 'getAllFormattedMediasForEvent']),
         ];
     }
 
@@ -140,5 +141,18 @@ class TwigEventExtension extends AbstractExtension
     public function getEventFeatures(Event $event, string $keyword)
     {
         return $this->fm->getEventFeatures($event, $keyword);
+    }
+
+    public function getAllFormattedMediasForEvent($eventMedias, string $slug): array
+    {
+        if (count($eventMedias) === 0) {
+            return [];
+        }
+
+        if (null === $slug) {
+            return $eventMedias;
+        }
+
+        return $this->em->getAllFormattedMedias($eventMedias, $slug);
     }
 }

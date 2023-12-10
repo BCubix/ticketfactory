@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Event\Event;
 use App\Entity\Feature\FeatureLink;
+use App\Entity\Product\Product;
 
 class FeatureManager extends AbstractManager
 {
@@ -12,5 +13,10 @@ class FeatureManager extends AbstractManager
     public function getEventFeatures(Event $event, string $keyword)
     {
         return $this->em->getRepository(FeatureLink::class)->findAllFeatureLinksByEventForWebsite($event->getId(), $keyword);
+    }
+
+    public function getProductFeatures(Product $product, string $keyword)
+    {
+        return $this->em->getRepository(FeatureLink::class)->findAllFeatureLinksByProductForWebsite($product->getId(), $keyword);
     }
 }

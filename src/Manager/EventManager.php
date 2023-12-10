@@ -323,6 +323,27 @@ class EventManager extends AbstractManager
         return null;
     }
 
+    public function getAllFormattedMedias($eventMedias, string $slug): array
+    {
+        $mediaManager = $this->mf->get('media');
+        $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($slug);
+        $formatedMedias = [];
+
+        if (null === $imageFormat) {
+            return [];
+        }
+
+        foreach ($eventMedias as $eventMedia) {
+            $mediaUrl = $mediaManager->getFormattedImageUrlFromFormat($eventMedia->getMedia(), $imageFormat);
+            if (null !== $mediaUrl) {
+                $eventMedia->getMedia()->setDocumentUrl($mediaUrl);
+                $formatedMedias[] = $eventMedia;
+            }
+        }
+
+        return $formatedMedias;
+    }
+
     private function getDefaultParameters($filters): array
     {
         [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];

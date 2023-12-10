@@ -25,7 +25,8 @@ class ContentTypeFieldTrueFalseType extends ContentTypeFieldAbstractType
         ]);
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [
             'disabled' => [
                 'class' => CheckboxType::class,

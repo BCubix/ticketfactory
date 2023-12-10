@@ -2,8 +2,8 @@
 
 namespace App\Twig;
 
+use App\Entity\Product\Product;
 use App\Entity\Product\ProductMedia;
-use App\Manager\EventDateManager;
 use App\Manager\FeatureManager;
 use App\Manager\LanguageManager;
 use App\Manager\ProductManager;
@@ -14,15 +14,13 @@ use Twig\TwigFunction;
 class TwigProductExtension extends AbstractExtension
 {
     protected $pm;
-    protected $edm;
     protected $lm;
     protected $rs;
     protected $fm;
 
-    public function __construct(ProductManager $pm, EventDateManager $edm, LanguageManager $lm, RequestStack $rs, FeatureManager $fm)
+    public function __construct(ProductManager $pm, LanguageManager $lm, RequestStack $rs, FeatureManager $fm)
     {
         $this->pm  = $pm;
-        $this->edm = $edm;
         $this->lm = $lm;
         $this->rs = $rs;
         $this->fm = $fm;
@@ -33,6 +31,7 @@ class TwigProductExtension extends AbstractExtension
         return [
             new TwigFunction('getFirstFormattedMediaForProduct', [$this, 'getFirstFormattedMediaForProduct']),
             new TwigFunction('getAllFormattedMediasForProduct', [$this, 'getAllFormattedMediasForProduct']),
+            new TwigFunction('getProductFeatures', [$this, 'getProductFeatures']),
         ];
     }
 
@@ -47,6 +46,11 @@ class TwigProductExtension extends AbstractExtension
         }
 
         return $this->pm->getFirstFormattedMedia($productMedias, $slug);
+    }
+
+    public function getProductFeatures(Product $product, string $keyword)
+    {
+        return $this->fm->getProductFeatures($product, $keyword);
     }
 
     public function getAllFormattedMediasForProduct($productMedias, string $slug): array
