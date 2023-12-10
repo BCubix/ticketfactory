@@ -66,4 +66,25 @@ class ContentRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneBySlugForWebsite(string $slug)
+    {
+        return $this->createQueryBuilder('c')
+            ->where("c.active = 1")
+            ->andWhere('c.slug = :slug')
+            ->setParameter("slug", $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findAllByTypeKeyword(string $keyword)
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.contentType', 't')
+            ->where("c.active = 1")
+            ->andWhere('t.keyword = :keyword')
+            ->setParameter("keyword", $keyword)
+            ->getQuery()
+            ->getResult();
+    }
 }

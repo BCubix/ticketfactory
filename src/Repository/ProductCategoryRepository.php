@@ -149,6 +149,18 @@ class ProductCategoryRepository extends NestedTreeRepository
             ->getResult();
     }
 
+    public function getTopCategoriesForWebsite(int $languageId): array
+    {
+        return $this->createQueryBuilder('pc')
+            ->innerJoin('pc.lang', 'pcl', 'WITH', 'pcl.id = :languageId')
+            ->where('pc.lvl = 1')
+            ->andWhere('pc.active = 1')
+            ->orderBy('pc.id', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findBySlugForWebsite(int $languageId, string $slug): ?ProductCategory
     {
         return $this->createQueryBuilder('s')

@@ -45,6 +45,10 @@ services:
         tags:
             - { name: jms_serializer.event_subscriber }
 
+    App\EventSubscriber\Admin\RequestSubscriber:
+        arguments:
+            $container: '@service_container'
+
     App\EventSubscriber\Website\RedirectionSubscriber:
         arguments:
             $websiteHost: '%env(WEBSITE_HOST)%'

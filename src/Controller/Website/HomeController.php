@@ -15,9 +15,17 @@ class HomeController extends WebsiteController
             }
         }
 
+        $contentTypeBlocks = [];
+        foreach ($page->getContentTypes() as $contentTypes) {
+            if (null !== $contentTypes->getKeyword()) {
+                $contentTypeBlocks[$contentTypes->getKeyword()] = $contentTypes->getContents();
+            }
+        }
+
         return $this->websiteRender('Home/index.html.twig', [
             'page'           => $page,
             'pageTypeBlocks' => $pageTypeBlocks,
+            'contentTypeBlocks' => $contentTypeBlocks,
         ]);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Form\Admin\Content\Types;
 
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldTextType extends ContentTypeFieldAbstractType
 {
@@ -15,7 +14,8 @@ class ContentTypeFieldTextType extends ContentTypeFieldAbstractType
         return TextType::class;
     }
 
-    public static function getValidations() {
+    public static function getValidations()
+    {
         return [
             'minLength' => ['class' => IntegerType::class],
             'maxLength' => ['class' => IntegerType::class],

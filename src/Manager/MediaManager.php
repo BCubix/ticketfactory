@@ -101,6 +101,10 @@ class MediaManager extends AbstractManager
             return null;
         }
 
+        if ($media->getDocumentType() === "image/svg+xml") {
+            return $media->getDocumentUrl();
+        }
+
         $filePath = $this->getFormattedMediaPathFromFormat($media, $imageFormat);
 
         if (!$this->checkFileFromPath($filePath)) {

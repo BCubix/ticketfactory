@@ -50,6 +50,8 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(nullable: true)]
     private ?int $maxObjectNb = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
     #[ORM\Column(length: 191, nullable: true, unique: true)]
     private ?string $keyword = null;
 

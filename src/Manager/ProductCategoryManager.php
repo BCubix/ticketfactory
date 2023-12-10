@@ -4,11 +4,9 @@ namespace App\Manager;
 
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
-use App\Manager\LanguageManager;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ProductCategoryManager extends AbstractManager
 {
