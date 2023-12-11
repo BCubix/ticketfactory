@@ -57,7 +57,6 @@ export const eventsPriceFormFields = {
                     name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.annotation`,
                     label: 'Annotation',
                     inputType: 'textField',
-                    required: true,
                     sx: { marginInline: 1 },
                     error: getNestedFormikError(props.touched?.eventPrices, props.errors?.eventPrices, props.index, 'annotation'),
                     value: props.item.annotation,

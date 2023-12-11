@@ -65,21 +65,6 @@ export const Login = () => {
                                 </Typography>
                             </Box>
                             <Box sx={{ mt: { xs: 5, md: 25 }, width: '100%' }}>
-                                <Box className="notification notification-error" sx={{ '&::before': { display: 'none' } }}>
-                                    <Typography sx={{ marginBottom: 3 }}>Identifiants de démo:</Typography>
-                                    <Typography sx={{ margin: 0 }}>
-                                        Email:{' '}
-                                        <Typography component="b" fontWeight={500}>
-                                            thomas.anderson@matrix.com
-                                        </Typography>
-                                    </Typography>
-                                    <Typography sx={{ margin: 0 }}>
-                                        Mot de passe:{' '}
-                                        <Typography component="b" fontWeight={500}>
-                                            matrix
-                                        </Typography>
-                                    </Typography>
-                                </Box>
                                 <Component.CmtTextField
                                     margin="normal"
                                     value={values.username}
