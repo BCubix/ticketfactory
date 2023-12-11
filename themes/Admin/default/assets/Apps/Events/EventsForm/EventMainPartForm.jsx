@@ -184,5 +184,3 @@ export const eventMainPartForm = {
         SeoInitialFormInputs,
     ],
 };
-
-export const EventMainPartForm = ({ ...props }) => <Component.CmtDisplayBlocks blocks={eventMainPartForm.blocks} {...props} />;

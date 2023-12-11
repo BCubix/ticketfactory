@@ -18,5 +18,3 @@ export const eventFeaturesPartForm = {
         },
     ],
 };
-
-export const EventFeaturesPartForm = ({ ...props }) => <Component.CmtDisplayBlocks blocks={eventFeaturesPartForm.blocks} {...props} />;

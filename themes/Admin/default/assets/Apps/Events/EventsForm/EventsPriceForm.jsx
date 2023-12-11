@@ -8,14 +8,66 @@ import { Box, Card, CardContent, Grid } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsPriceForm = ({
-    values,
-    touched,
-    errors,
-    handleChange,
-    handleBlur,
-    blockIndex,
-}) => {
+export const eventsPriceFormFields = {
+    fields: [
+        {
+            keyId: 'input-price-name',
+            style: {
+                xs: 12,
+                md: 6,
+            },
+            input: (props) => {
+                return {
+                    name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.name`,
+                    label: 'Nom',
+                    inputType: 'textField',
+                    required: true,
+                    sx: { marginInline: 1 },
+                    error: getNestedFormikError(props.touched?.eventPrices, props.errors?.eventPrices, props.index, 'name'),
+                    value: props.item.name,
+                };
+            },
+        },
+        {
+            keyId: 'input-price-number',
+            style: {
+                xs: 12,
+                md: 6,
+            },
+            input: (props) => {
+                return {
+                    name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.price`,
+                    label: 'Prix',
+                    inputType: 'textField',
+                    type: 'number',
+                    required: true,
+                    sx: { marginInline: 1 },
+                    error: getNestedFormikError(props.touched?.eventPrices, props.errors?.eventPrices, props.index, 'price'),
+                    value: props.item.price,
+                };
+            },
+        },
+        {
+            keyId: 'input-price-annotation',
+            style: {
+                xs: 12,
+            },
+            input: (props) => {
+                return {
+                    name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.annotation`,
+                    label: 'Annotation',
+                    inputType: 'textField',
+                    required: true,
+                    sx: { marginInline: 1 },
+                    error: getNestedFormikError(props.touched?.eventPrices, props.errors?.eventPrices, props.index, 'annotation'),
+                    value: props.item.annotation,
+                };
+            },
+        },
+    ],
+};
+
+export const EventsPriceForm = ({ values, touched, errors, handleChange, handleBlur, blockIndex, fields }) => {
     return (
         <FieldArray name={`eventPriceBlocks[${blockIndex}].eventPrices`}>
             {({ remove, push }) => (
@@ -26,59 +78,17 @@ export const EventsPriceForm = ({
                                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
                                     <CardContent sx={{ position: 'relative' }}>
                                         <Grid container spacing={4}>
-                                            <Grid item xs={12} md={6}>
-                                                <Component.CmtTextField
-                                                    value={item.name}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    required
-                                                    label="Nom"
-                                                    name={`eventPriceBlocks.${blockIndex}.eventPrices.${index}.name`}
-                                                    error={getNestedFormikError(
-                                                        touched?.eventPrices,
-                                                        errors?.eventPrices,
-                                                        index,
-                                                        'name'
-                                                    )}
-                                                    sx={{ marginInline: 1 }}
-                                                />
-                                            </Grid>
-
-                                            <Grid item xs={12} md={6}>
-                                                <Component.CmtTextField
-                                                    type="number"
-                                                    value={item.price}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    required
-                                                    label="Prix"
-                                                    name={`eventPriceBlocks.${blockIndex}.eventPrices.${index}.price`}
-                                                    error={getNestedFormikError(
-                                                        touched?.eventPrices,
-                                                        errors?.eventPrices,
-                                                        index,
-                                                        'price'
-                                                    )}
-                                                    sx={{ marginInline: 1 }}
-                                                />
-                                            </Grid>
-
-                                            <Grid item xs={12}>
-                                                <Component.CmtTextField
-                                                    value={item.annotation}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    label="Annotation"
-                                                    name={`eventPriceBlocks.${blockIndex}.eventPrices.${index}.annotation`}
-                                                    error={getNestedFormikError(
-                                                        touched?.eventPrices,
-                                                        errors?.eventPrices,
-                                                        index,
-                                                        'annotation'
-                                                    )}
-                                                    sx={{ marginInline: 1 }}
-                                                />
-                                            </Grid>
+                                            <Component.CmtDisplayFields
+                                                fields={fields}
+                                                values={values}
+                                                touched={touched}
+                                                errors={errors}
+                                                handleChange={handleChange}
+                                                handleBlur={handleBlur}
+                                                blockIndex={blockIndex}
+                                                item={item}
+                                                index={index}
+                                            />
                                         </Grid>
 
                                         <Component.DeleteBlockFabButton

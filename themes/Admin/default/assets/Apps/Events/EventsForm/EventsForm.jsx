@@ -4,6 +4,10 @@ import { Component } from '@/AdminService/Component';
 import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import moment from 'moment';
+import { eventMainPartForm } from './EventMainPartForm';
+import { eventFeaturesPartForm } from './EventFeaturesPartForm';
+import { eventsPriceFormFields } from './EventsPriceForm';
+import { eventsDateFormFields } from './EventsDateForm';
 
 export const eventsValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
@@ -220,25 +224,27 @@ export const eventsForm = {
             type: 'tabs',
             keyId: 'events',
             label: 'Evènement',
-            component: (props) => <Component.EventMainPartForm {...props} />,
+            fields: eventMainPartForm.blocks,
         },
         {
             type: 'tabs',
             keyId: 'dates',
             label: 'Dates',
             component: (props) => <Component.EventsDateBlockForm {...props} />,
+            fields: eventsDateFormFields.fields,
         },
         {
             type: 'tabs',
             keyId: 'prices',
             label: 'Tarifs',
             component: (props) => <Component.EventsPriceBlockForm {...props} />,
+            fields: eventsPriceFormFields.fields,
         },
         {
             type: 'tabs',
             keyId: 'features',
             label: 'Attributs',
-            component: (props) => <Component.EventFeaturesPartForm {...props} />,
+            fields: eventFeaturesPartForm.blocks,
         },
         {
             type: 'tabs',

@@ -12,7 +12,140 @@ import { Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, Me
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsDateForm = ({ values, setFieldValue, setFieldTouched, handleChange, handleBlur, touched, errors, blockIndex, setGenerateDate }) => {
+export const eventsDateFormFields = {
+    fields: [
+        {
+            keyId: 'input-date-datetime',
+            style: {
+                xs: 12,
+                display: 'flex',
+                alignItems: 'center',
+            },
+            components: [
+                ({ item }) => <DisplayBadge item={item} />,
+                ({ blockIndex, index, item, touched, errors, setFieldTouched, setFieldValue }) => (
+                    <Component.CmtDateTimePicker
+                        fullWidth
+                        value={item.eventDate}
+                        disablePast
+                        label="Date"
+                        id={`eventDateBlocks-${blockIndex}-eventDates-${index}-eventDate`}
+                        required
+                        setValue={(value) => {
+                            setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : '');
+                        }}
+                        onTouched={setFieldTouched}
+                        name={`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`}
+                        error={getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'eventDate')}
+                    />
+                ),
+            ],
+        },
+        {
+            keyId: 'input-date-annotation',
+            style: { xs: 12 },
+            input: ({ blockIndex, index, item }) => {
+                return {
+                    name: `eventDateBlocks.${blockIndex}.eventDates.${index}.annotation`,
+                    label: 'Annotation',
+                    inputType: 'textField',
+                    value: item.annotation,
+                };
+            },
+        },
+        {
+            keyId: 'input-date-state',
+            style: { xs: 12 },
+            component: ({ touched, errors, blockIndex, index, item, handleBlur, setFieldValue, states }) => (
+                <FormControl
+                    fullWidth
+                    error={Boolean(getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'state'))}
+                >
+                    <InputLabel id={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`} size="small">
+                        Status
+                    </InputLabel>
+                    <Select
+                        labelId={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`}
+                        id={`eventDateBlocks-${blockIndex}-eventDates-${index}-state`}
+                        size="small"
+                        value={item.state}
+                        onBlur={handleBlur}
+                        name={`eventDateBlocks.${blockIndex}.eventDates.${index}.state`}
+                        variant="standard"
+                        label="Status"
+                        onChange={(e) => {
+                            setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.state`, e.target.value);
+                        }}
+                    >
+                        {states?.map((item, index) => (
+                            <MenuItem value={item.value} key={index} id={`eventDateStateValue-${item.value}`}>
+                                <ListItemText>
+                                    <Box display={'inline'} borderRadius={4} px={2} py={1} mx={1} backgroundColor={item.color}>
+                                        {item.label}
+                                    </Box>
+                                </ListItemText>
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'state') && (
+                        <FormHelperText error id={`eventDateBlocks-${blockIndex}-eventDates-${index}-state-helper-text`}>
+                            {getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'state')}
+                        </FormHelperText>
+                    )}
+                </FormControl>
+            ),
+        },
+        {
+            keyId: 'input-date-reportDate',
+            style: { xs: 12 },
+            input: ({ blockIndex, index, item }) =>
+                item?.state === 'delayed'
+                    ? {
+                          name: `eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`,
+                          label: 'Date de report',
+                          inputType: 'dateTime',
+                          disablePast: true,
+                          value: item.reportDate,
+                          error: ({ errors, touched }) =>
+                              getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'reportDate'),
+                          setValue: (value, setFieldValue) =>
+                              setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : ''),
+                      }
+                    : null,
+        },
+    ],
+};
+
+const DAYS_WEEK = [
+    { label: 'L', color: '#4a148c', value: 'lundi' },
+    { label: 'M', color: '#0d47a1', value: 'mardi' },
+    { label: 'M', color: '#006664', value: 'mercredi' },
+    { label: 'J', color: '#33691e', value: 'jeudi' },
+    { label: 'V', color: '#f57f17', value: 'vendredi' },
+    { label: 'S', color: '#e65100', value: 'samedi' },
+    { label: 'D', color: '#b71c1c', value: 'dimanche' },
+];
+
+const DisplayBadge = ({ item }) => {
+    if (!item?.eventDate) {
+        return <></>;
+    }
+
+    const day = DAYS_WEEK.find((el) => el.value === moment(item.eventDate).format('dddd'));
+    if (!day) {
+        return <></>;
+    }
+
+    return (
+        <Box height={30} width={30} display="flex" alignItems="center" justifyContent="center" backgroundColor={day.color} borderRadius="50%" marginRight={3} flexShrink={0}>
+            <Typography component="span" color="white" variant="h4">
+                {day.label}
+            </Typography>
+        </Box>
+    );
+};
+
+export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }) => {
     const theme = useTheme();
 
     const STATES = [
@@ -21,35 +154,6 @@ export const EventsDateForm = ({ values, setFieldValue, setFieldTouched, handleC
         { label: 'Annulé', value: 'canceled', color: theme.palette.dateStatus.canceled },
         { label: 'Nouvelle date', value: 'new_date', color: theme.palette.dateStatus.newDate },
     ];
-
-    const DAYS_WEEK = [
-        { label: 'L', color: '#4a148c', value: 'lundi' },
-        { label: 'M', color: '#0d47a1', value: 'mardi' },
-        { label: 'M', color: '#006664', value: 'mercredi' },
-        { label: 'J', color: '#33691e', value: 'jeudi' },
-        { label: 'V', color: '#f57f17', value: 'vendredi' },
-        { label: 'S', color: '#e65100', value: 'samedi' },
-        { label: 'D', color: '#b71c1c', value: 'dimanche' },
-    ];
-
-    const DisplayBadge = ({ item }) => {
-        if (!item?.eventDate) {
-            return <></>;
-        }
-
-        const day = DAYS_WEEK.find((el) => el.value === moment(item.eventDate).format('dddd'));
-        if (!day) {
-            return <></>;
-        }
-
-        return (
-            <Box height={30} width={30} display="flex" alignItems="center" justifyContent="center" backgroundColor={day.color} borderRadius="50%" marginRight={3} flexShrink={0}>
-                <Typography component="span" color="white" variant="h4">
-                    {day.label}
-                </Typography>
-            </Box>
-        );
-    };
 
     return (
         <FieldArray name={`eventDateBlocks[${blockIndex}].eventDates`}>
@@ -61,121 +165,15 @@ export const EventsDateForm = ({ values, setFieldValue, setFieldTouched, handleC
                                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
                                     <CardContent sx={{ position: 'relative' }}>
                                         <Grid container spacing={4}>
-                                            <Grid item xs={12} display="flex" alignItems="center">
-                                                <DisplayBadge item={item} />
-                                                <Component.CmtDateTimePicker
-                                                    fullWidth
-                                                    value={item.eventDate}
-                                                    disablePast
-                                                    label="Date"
-                                                    id={`eventDateBlocks-${blockIndex}-eventDates-${index}-eventDate`}
-                                                    required
-                                                    setValue={(value) => {
-                                                        setFieldValue(
-                                                            `eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`,
-                                                            value ? moment(value).format('YYYY-MM-DD HH:mm') : ''
-                                                        );
-                                                    }}
-                                                    onTouched={setFieldTouched}
-                                                    name={`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`}
-                                                    error={getNestedFormikError(
-                                                        touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                        errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                        index,
-                                                        'eventDate'
-                                                    )}
-                                                />
-                                            </Grid>
-
-                                            <Grid item xs={12}>
-                                                <Component.CmtTextField
-                                                    value={item.annotation}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    label={'Annotation'}
-                                                    name={`eventDateBlocks.${blockIndex}.eventDates.${index}.annotation`}
-                                                />
-                                            </Grid>
-
-                                            <Grid item xs={12}>
-                                                <FormControl
-                                                    fullWidth
-                                                    error={Boolean(
-                                                        getNestedFormikError(
-                                                            touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                            errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                            index,
-                                                            'state'
-                                                        )
-                                                    )}
-                                                >
-                                                    <InputLabel id={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`} size="small">
-                                                        Status
-                                                    </InputLabel>
-                                                    <Select
-                                                        labelId={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`}
-                                                        id={`eventDateBlocks-${blockIndex}-eventDates-${index}-state`}
-                                                        size="small"
-                                                        value={item.state}
-                                                        onBlur={handleBlur}
-                                                        name={`eventDateBlocks.${blockIndex}.eventDates.${index}.state`}
-                                                        variant="standard"
-                                                        label="Status"
-                                                        onChange={(e) => {
-                                                            setFieldValue(`eventDateBlocks.${blockIndex}.eventDates.${index}.state`, e.target.value);
-                                                        }}
-                                                    >
-                                                        {STATES?.map((item, index) => (
-                                                            <MenuItem value={item.value} key={index} id={`eventDateStateValue-${item.value}`}>
-                                                                <ListItemText>
-                                                                    <Box display={'inline'} borderRadius={4} px={2} py={1} mx={1} backgroundColor={item.color}>
-                                                                        {item.label}
-                                                                    </Box>
-                                                                </ListItemText>
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                    {getNestedFormikError(
-                                                        touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                        errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                        index,
-                                                        'state'
-                                                    ) && (
-                                                        <FormHelperText error id={`eventDateBlocks-${blockIndex}-eventDates-${index}-state-helper-text`}>
-                                                            {getNestedFormikError(
-                                                                touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                                errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                                index,
-                                                                'state'
-                                                            )}
-                                                        </FormHelperText>
-                                                    )}
-                                                </FormControl>
-                                            </Grid>
-
-                                            {item?.state === 'delayed' && (
-                                                <Grid item xs={12}>
-                                                    <Component.CmtDateTimePicker
-                                                        fullWidth
-                                                        value={item.reportDate}
-                                                        disablePast
-                                                        setValue={(value) => {
-                                                            setFieldValue(
-                                                                `eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`,
-                                                                value ? moment(value).format('YYYY-MM-DD HH:mm') : ''
-                                                            );
-                                                        }}
-                                                        onTouched={setFieldTouched}
-                                                        name={`eventDateBlocks.${blockIndex}.eventDates.${index}.reportDate`}
-                                                        error={getNestedFormikError(
-                                                            touched?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                            errors?.eventDateBlocks?.at(blockIndex)?.eventDates,
-                                                            index,
-                                                            'reportDate'
-                                                        )}
-                                                    />
-                                                </Grid>
-                                            )}
+                                            <Component.CmtDisplayFields
+                                                values={values}
+                                                blockIndex={blockIndex}
+                                                setGenerateDate={setGenerateDate}
+                                                item={item}
+                                                index={index}
+                                                states={STATES}
+                                                {...props}
+                                            />
                                         </Grid>
 
                                         <Component.DeleteBlockFabButton

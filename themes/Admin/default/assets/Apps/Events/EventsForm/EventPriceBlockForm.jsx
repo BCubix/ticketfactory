@@ -10,7 +10,7 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsPriceBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues }) => {
+export const EventsPriceBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues, fields }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
 
     const handleDeleteMultiple = () => {
@@ -103,6 +103,7 @@ export const EventsPriceBlockForm = ({ values, setFieldValue, setFieldTouched, h
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     blockIndex={index}
+                                    fields={fields}
                                 />
 
                                 {getBlockError(index) && (

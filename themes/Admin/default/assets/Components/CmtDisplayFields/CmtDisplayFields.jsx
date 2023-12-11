@@ -10,11 +10,11 @@ import { Box } from '@mui/system';
 import moment from 'moment/moment';
 
 const TypeObj = {
-    textField: ({ values, touched, errors, handleBlur, handleChange, ...props }) => (
+    textField: ({ values, touched, errors, handleBlur, handleChange, value, error, ...props }) => (
         <Component.CmtTextField
             {...props}
-            value={getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
-            error={getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
+            value={value ? value : getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
+            error={error ? error : getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
             onBlur={handleBlur}
             onChange={handleChange}
             name={`${props.baseName || ''}${getName(props)}`}
@@ -32,6 +32,23 @@ const TypeObj = {
             onTouched={setFieldTouched}
             name={`${props.baseName || ''}${getName(props)}`}
             error={getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
+        />
+    ),
+    dateTime: ({ values, touched, errors, setFieldValue, setFieldTouched, ...props }) => (
+        <Component.CmtDateTimePicker
+            fullWidth
+            {...props}
+            value={props.value ? props.value : getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
+            setValue={(newValue) => {
+                setFieldValue(`${props.baseName || ''}${getName(props)}`, newValue ? moment(newValue).format('YYYY-MM-DD HH:mm') : '');
+            }}
+            onTouched={setFieldTouched}
+            name={`${props.baseName || ''}${getName(props)}`}
+            error={
+                props.error
+                    ? props.error
+                    : getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)
+            }
         />
     ),
     editorField: ({ values, touched, errors, setFieldValue, setFieldTouched, ...props }) => (
@@ -157,16 +174,23 @@ export const CmtDisplayFields = ({ fields, ...inheritedProps }) => {
     return (
         <>
             {fields.map((field, index) => {
-                const { style, input, inputs, component: Cmt, ...fieldProps } = field;
+                const { style, input, inputs, component: Cmt, components: Cmts, ...fieldProps } = field;
                 const items = input ? [typeof input === 'function' ? input(inheritedProps) : input] : inputs;
 
                 return (
                     <Grid item key={index} {...style}>
-                        {Cmt ? (
+                        {Cmts ? (
+                            Cmts.map((Cmt, index) => <Cmt key={index} {...fieldProps} {...inheritedProps} />)
+                        ) : Cmt ? (
                             <Cmt {...fieldProps} {...inheritedProps} />
                         ) : (
                             items?.map((item, index) => {
+                                if (!item) {
+                                    return <React.Fragment key={index} />;
+                                }
+
                                 const { inputType, custom, ...inputProps } = item;
+
                                 const CmtInput = TypeObj[inputType];
 
                                 if (!CmtInput) {

@@ -23,7 +23,7 @@ export const DisplayFormTabs = ({ tabs, ...props }) => {
             list={tabs.map((elem) => ({
                 id: elem.keyId,
                 label: elem.label,
-                component: elem?.component ? elem.component(props) : Component.CmtDisplayBlocks({ blocks: elem?.fields, ...props }),
+                component: elem?.component ? elem.component({fields: elem?.fields, ...props}) : Component.CmtDisplayBlocks({ blocks: elem?.fields, ...props }),
             }))}
         />
     );
