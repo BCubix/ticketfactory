@@ -10,7 +10,7 @@ import { Constant } from '@/AdminService/Constant';
 import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { useSelector } from 'react-redux';
 import { profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
-import { apiMiddleware } from '../../../services/utils/apiMiddleware';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditProfile = () => {
     const dispatch = useDispatch();
