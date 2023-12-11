@@ -52,8 +52,8 @@ export const categoriesForm = {
     fields: [
         {
             type: 'tabs',
-            keyId: 'voucher',
-            label: 'Réduction',
+            keyId: 'category',
+            label: 'Catégorie',
             fields: [
                 {
                     type: 'block',
@@ -92,7 +92,7 @@ export const categoriesForm = {
                             component: (props) => <Component.CmtKeywordInput {...props} name="keyword" />,
                         },
                         {
-                            keyId: 'input-unit',
+                            keyId: 'input-parent',
                             style: { xs: 12 },
                             component: ({ values, categoriesList, setFieldValue, touched, errors }) => {
                                 {
