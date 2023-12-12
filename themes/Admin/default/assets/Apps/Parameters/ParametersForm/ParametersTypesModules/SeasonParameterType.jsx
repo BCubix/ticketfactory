@@ -9,7 +9,7 @@ import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlic
 
 import ListParameterType from './ListParameterType';
 
-const TYPE = 'Page';
+const TYPE = 'Season';
 
 function getType() {
     return TYPE;
@@ -31,9 +31,9 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFi
         }
 
         apiMiddleware(dispatch, async () => {
-            Api.pagesApi.getAllPages({ lang: defaultLanguageId }).then((result) => {
+            Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((result) => {
                 if (result.result) {
-                    setList(result.pages);
+                    setList(result.seasons);
                     return;
                 }
 
@@ -53,7 +53,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFi
             indexTab={indexTab}
             indexBlock={indexBlock}
             indexParam={indexParam}
-            paramNameKey="title"
+            paramNameKey="name"
         />
     );
 };

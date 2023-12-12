@@ -26,8 +26,14 @@ const parametersApi = {
             let formData = new FormData();
 
             data.parameters.forEach((parameter, index) => {
+                let paramValue = parameter.paramValue;
+
+                if (['Page', 'Room', 'Season'].includes(parameter.type)) {
+                    paramValue = paramValue?.id || paramValue || '';
+                }
+
                 formData.append(`parameters[${index}][paramKey]`, parameter.paramKey);
-                formData.append(`parameters[${index}][paramValue]`, parameter.paramValue || '');
+                formData.append(`parameters[${index}][paramValue]`, paramValue || '');
             });
 
             const result = await axios.post('/parametres', formData);

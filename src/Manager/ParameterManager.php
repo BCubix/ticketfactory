@@ -2,6 +2,8 @@
 
 namespace App\Manager;
 
+use App\Entity\Event\Room;
+use App\Entity\Event\Season;
 use App\Entity\Page\Page;
 use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
@@ -94,6 +96,12 @@ class ParameterManager extends AbstractManager
 
             case 'Page':
                 return $this->em->getRepository(Page::class)->findOneForAdmin($value);
+
+            case 'Season':
+                return $this->em->getRepository(Season::class)->findOneForAdmin($value);
+
+            case 'Room':
+                return $this->em->getRepository(Room::class)->findOneForAdmin($value);
 
             case 'string':
             default:

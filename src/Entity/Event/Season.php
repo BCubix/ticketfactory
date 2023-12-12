@@ -26,7 +26,7 @@ class Season extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_season_all', 'a_season_one'])]
+    #[JMS\Groups(['a_all', 'a_event_all', 'a_event_one', 'a_season_all', 'a_season_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -173,7 +173,8 @@ class Season extends Datable
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function completeSeo() {
+    public function completeSeo()
+    {
         $this->completeFields($this->getName());
     }
 }
