@@ -86,6 +86,12 @@ export const eventsListCrud = {
     dataList: (selector) => selector.events,
     duplicate: (props) => Api.eventsApi.duplicateEvent(props),
     delete: (props) => Api.eventsApi.deleteEvent(props),
+    preview: (el) => {
+        if (!el?.frontUrl) {
+            return;
+        }
+        window.open(el.frontUrl, '_blank').focus();
+    },
     links: {
         new: () => `${Constant.EVENTS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.EVENTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

@@ -56,9 +56,13 @@ export const DEFAULT_CRUD_LIST_COMPONENTS = {
                             : null
                     }
                     onPreview={
-                        listCrud?.links?.preview
+                        listCrud?.preview || listCrud?.links?.preview
                             ? (item) => {
-                                  navigate(listCrud?.links?.preview(item));
+                                  if (listCrud?.preview) {
+                                      listCrud.preview(item);
+                                  } else {
+                                      navigate(listCrud?.links?.preview(item));
+                                  }
                               }
                             : null
                     }
