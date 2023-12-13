@@ -5,6 +5,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { Api } from '@/AdminService/Api';
 
 export const seasonsListCrud = {
     title: 'Saisons',

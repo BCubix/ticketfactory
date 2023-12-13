@@ -50,7 +50,7 @@ class FeatureCategory extends Datable
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
-    #[ORM\OneToMany(mappedBy: 'featureCategory', targetEntity: Feature::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'featureCategory', targetEntity: Feature::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $features;
 
     #[JMS\Expose()]

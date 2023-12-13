@@ -83,7 +83,7 @@ class Feature extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
-    #[ORM\OneToMany(mappedBy: 'feature', targetEntity: FeatureLink::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'feature', targetEntity: FeatureLink::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureLinks;
 
     #[JMS\Expose()]
