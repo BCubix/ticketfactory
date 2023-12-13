@@ -23,8 +23,8 @@ class FeatureValue
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
-    #[ORM\Column(length: 255)]
-    private ?string $value = null;
+    #[ORM\Column(type: 'text')]
+    private $value = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all', 'a_feature_all', 'a_feature_one'])]
