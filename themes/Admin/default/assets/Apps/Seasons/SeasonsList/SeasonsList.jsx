@@ -52,7 +52,7 @@ export const seasonsListCrud = {
     },
     messages: {
         duplicateValidation: 'La saison a bien été dupliquée',
-        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette salle ?',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette saison ?',
     },
     ...DEFAULT_CRUD_LIST_COMPONENTS,
 };
