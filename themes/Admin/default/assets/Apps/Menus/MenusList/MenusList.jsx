@@ -171,6 +171,9 @@ export const MenusList = () => {
     const dispatch = useDispatch();
     const [initialValues, setInitialValues] = useState(null);
     const [translationInitialValues, setTranslationInitialValues] = useState(null);
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [translateDialog, setTranslateDialog] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!loading && !menus && !error) {
@@ -293,6 +296,11 @@ export const MenusList = () => {
             initialValues={initialValues}
             setInitialValues={setInitialValues}
             formCrud={Crud?.menus?.edit}
+            deleteDialog={deleteDialog}
+            setDeleteDialog={setDeleteDialog}
+            translateDialog={translateDialog}
+            setTranslateDialog={setTranslateDialog}
+            navigate={navigate}
         />
     );
 };
@@ -309,11 +317,12 @@ const InitForm = ({
     setInitialValues,
     deserializeChildrenData,
     formCrud,
+    deleteDialog,
+    setDeleteDialog,
+    translateDialog,
+    setTranslateDialog,
+    navigate,
 }) => {
-    const [deleteDialog, setDeleteDialog] = useState(false);
-    const [translateDialog, setTranslateDialog] = useState(false);
-    const navigate = useNavigate();
-
     return (
         <Formik
             initialValues={{
@@ -349,6 +358,8 @@ const InitForm = ({
                             formCrud,
                             translateDialog,
                             setTranslateDialog,
+                            deleteDialog,
+                            setDeleteDialog,
                         }}
                     />
 
@@ -370,6 +381,8 @@ const InitForm = ({
                                     formCrud,
                                     translateDialog,
                                     setTranslateDialog,
+                                    deleteDialog,
+                                    setDeleteDialog,
                                 }}
                             />
                         </Grid>
