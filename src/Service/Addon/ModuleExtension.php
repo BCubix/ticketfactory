@@ -25,12 +25,16 @@ abstract class ModuleExtension extends Extension implements PrependExtensionInte
 
     public function load(array $configs, ContainerBuilder $container)
     {
-        $this->loadConfigs($container);
+        if (!empty($this->loadResources)) {
+            $this->loadConfigs($container);
+        }
     }
 
     public function prepend(ContainerBuilder $container)
     {
-        $this->prependExtensionConfigs($container);
+        if (!empty($this->prependConfigs)) {
+            $this->prependExtensionConfigs($container);
+        }
     }
 
     private function loadConfigs(ContainerBuilder $container)
