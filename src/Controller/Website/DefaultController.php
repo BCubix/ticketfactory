@@ -19,6 +19,7 @@ class DefaultController extends WebsiteController
         $menus = $this->mf->get('menuEntry')->getAllMenus();
 
         return $this->websiteRender('_partials/header.html.twig', [
+            'route'   => $route,
             'locale'  => $this->getLocale(),
             'menus'   => $menus,
         ]);

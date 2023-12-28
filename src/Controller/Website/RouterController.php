@@ -56,7 +56,6 @@ class RouterController extends WebsiteController
         // We continue to go down slugs hierarchy as long as they match pages
         $mainPage = $this->us->getPageBySlugArray($slugs);
 
-
         // We check for event relative content mapping
         $content = $this->forwardEventContents($mainPage, $slugs);
         if (null !== $content) {
@@ -87,6 +86,7 @@ class RouterController extends WebsiteController
         $keywords = ['season', 'room', 'eventCategory', 'tag'];
         foreach ($keywords as $keyword) {
             $content = $this->forwardEventRelation($keyword, $page, $slugs);
+
             if (null !== $content) {
                 return $content;
             };

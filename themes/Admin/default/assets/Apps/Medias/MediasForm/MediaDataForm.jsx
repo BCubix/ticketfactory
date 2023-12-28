@@ -72,8 +72,8 @@ const Formats = ({ values, setFieldValue, touched, errors, imageFormatList }) =>
                     name={`imageFormats`}
                     value={values.imageFormats}
                     list={imageFormatList}
-                    getValue={(item) => item.id}
-                    getName={(item) => item.name}
+                    getValue={(item) => item?.id}
+                    getName={(item) => item?.name}
                     setFieldValue={setFieldValue}
                     errors={touched.imageFormats && errors.imageFormats}
                 />

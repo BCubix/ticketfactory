@@ -61,6 +61,8 @@ class Tag extends Datable
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_tag_all', 'a_tag_one'])]
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'tags')]
     private $events;
 
@@ -165,7 +167,8 @@ class Tag extends Datable
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function completeSeo() {
+    public function completeSeo()
+    {
         $this->completeFields($this->getName());
     }
 }

@@ -21,9 +21,9 @@ export const eventsDateFormFields = {
                 display: 'flex',
                 alignItems: 'center',
             },
-            components: [
-                ({ item }) => <DisplayBadge item={item} />,
-                ({ blockIndex, index, item, touched, errors, setFieldTouched, setFieldValue }) => (
+            component: ({ blockIndex, index, item, touched, errors, setFieldTouched, setFieldValue }) => (
+                <>
+                    <DisplayBadge item={item} />
                     <Component.CmtDateTimePicker
                         fullWidth
                         value={item.eventDate}
@@ -38,8 +38,8 @@ export const eventsDateFormFields = {
                         name={`eventDateBlocks.${blockIndex}.eventDates.${index}.eventDate`}
                         error={getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'eventDate')}
                     />
-                ),
-            ],
+                </>
+            ),
         },
         {
             keyId: 'input-date-annotation',

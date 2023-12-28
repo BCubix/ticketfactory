@@ -104,9 +104,11 @@ class UrlService
         $slugs = $this->em->getUrlSlugs($event);
 
         $page = $this->prm->getCoreParameter('page_event');
-        while ($page !== null) {
-            $slugs[] = $page->getSlug();
-            $page = $page->getParent();
+        if (null !== $page) {
+            while ($page !== null) {
+                $slugs[] = $page->getSlug();
+                $page = $page->getParent();
+            }
         }
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
@@ -119,6 +121,8 @@ class UrlService
             $slugs[] = $page->getSlug();
             $page = $page->getParent();
         }
+
+        $slugs = array_reverse($slugs);
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
     }
@@ -139,7 +143,6 @@ class UrlService
 
     private function generateFromMainSlugs(array $slugs, array $parameters, $absolute)
     {
-        $slugs = array_reverse($slugs);
         $slugs = array_filter($slugs, function ($value) {
             return !empty($value);
         });
@@ -161,8 +164,7 @@ class UrlService
                 break;
             }
             if (
-                (null === $mainPage && null == $page->getParent()) ||
-                ($mainPage->getId() == $page->getParent()->getId())
+                (null === $mainPage && null == $page->getParent()) || (null === $mainPage && null !== $page->getParent()) || ($mainPage->getId() == $page->getParent()->getId())
             ) {
                 $mainPage = $page;
                 array_shift($slugs);

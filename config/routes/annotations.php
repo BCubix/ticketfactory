@@ -63,5 +63,10 @@ return function (RoutingConfigurator $routes) {
     }
 
     // Core - Website
-    $routes->import('../../src/Controller/Website', 'annotation');
+    $routes
+        ->import('../../src/Controller/Website', 'annotation')
+        ->prefix([
+            'en' => '/en',
+            'fr' => ''
+        ]);
 };

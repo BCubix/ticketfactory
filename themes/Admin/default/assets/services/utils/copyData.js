@@ -12,6 +12,8 @@ export const copyData = (data) => {
             newData[key] = arr;
         } else if (null !== value && typeof value === 'object') {
             newData[key] = copyData(value);
+        } else if (null !== value && typeof value === 'function') {
+            newData[key] = value;
         } else {
             newData[key] = value !== null ? value : '';
         }

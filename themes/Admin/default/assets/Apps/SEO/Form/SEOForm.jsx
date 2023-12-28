@@ -63,6 +63,17 @@ export const SeoInitialFormInputs = {
                 inputProps: {
                     maxLength: 86,
                 },
+                custom: {
+                    helperText: ({ touched, values }) => {
+                        return touched?.seo?.metaTitle ? (
+                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Typography component="span">{values?.seo?.metaTitle?.length} / 86</Typography>
+                            </Box>
+                        ) : (
+                            <></>
+                        );
+                    },
+                },
             },
         },
         {
@@ -73,7 +84,18 @@ export const SeoInitialFormInputs = {
                 label: 'Meta description',
                 inputType: 'textField',
                 inputProps: {
-                    maxLength: 86,
+                    maxLength: 220,
+                },
+                custom: {
+                    helperText: ({ touched, values }) => {
+                        return touched?.seo?.metaDescription ? (
+                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Typography component="span">{values?.seo?.metaDescription?.length} / 220</Typography>
+                            </Box>
+                        ) : (
+                            <></>
+                        );
+                    },
                 },
             },
         },
@@ -85,7 +107,18 @@ export const SeoInitialFormInputs = {
                 label: 'Titre Facebook',
                 inputType: 'textField',
                 inputProps: {
-                    maxLength: 86,
+                    maxLength: 74,
+                },
+                custom: {
+                    helperText: ({ touched, values }) => {
+                        return touched?.seo?.fbTitle ? (
+                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Typography component="span">{values?.seo?.fbTitle?.length} / 74</Typography>
+                            </Box>
+                        ) : (
+                            <></>
+                        );
+                    },
                 },
             },
         },
@@ -97,7 +130,18 @@ export const SeoInitialFormInputs = {
                 label: 'Description Facebook',
                 inputType: 'textField',
                 inputProps: {
-                    maxLength: 86,
+                    maxLength: 160,
+                },
+                custom: {
+                    helperText: ({ touched, values }) => {
+                        return touched?.seo?.fbDescription ? (
+                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Typography component="span">{values?.seo?.fbDescription?.length} / 160</Typography>
+                            </Box>
+                        ) : (
+                            <></>
+                        );
+                    },
                 },
             },
         },
@@ -109,7 +153,18 @@ export const SeoInitialFormInputs = {
                 label: 'Titre Twitter',
                 inputType: 'textField',
                 inputProps: {
-                    maxLength: 86,
+                    maxLength: 60,
+                },
+                custom: {
+                    helperText: ({ touched, values }) => {
+                        return touched?.seo?.twTitle ? (
+                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Typography component="span">{values?.seo?.twTitle?.length} / 60</Typography>
+                            </Box>
+                        ) : (
+                            <></>
+                        );
+                    },
                 },
             },
         },
@@ -121,7 +176,18 @@ export const SeoInitialFormInputs = {
                 label: 'Description Twitter',
                 inputType: 'textField',
                 inputProps: {
-                    maxLength: 86,
+                    maxLength: 142,
+                },
+                custom: {
+                    helperText: ({ touched, values }) => {
+                        return touched?.seo?.twDescription ? (
+                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Typography component="span">{values?.seo?.twDescription?.length} / 142</Typography>
+                            </Box>
+                        ) : (
+                            <></>
+                        );
+                    },
                 },
             },
         },

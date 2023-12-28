@@ -97,6 +97,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                                         />
                                     </Box>
                                 )}
+
                                 <Component.EventsDateForm
                                     values={values}
                                     setFieldValue={setFieldValue}
