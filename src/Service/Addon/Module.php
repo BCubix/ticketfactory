@@ -89,6 +89,8 @@ class Module extends Addon
 
         $this->cl->setPsr4($this->getNamespace() . '\\', $this->getPath());
         $this->cl->register();
+
+        $this->importVendorAutoload();
     }
 
     public function trait(bool $remove): void
@@ -202,5 +204,14 @@ class Module extends Addon
             }
         }
         return $str;
+    }
+
+    private function importVendorAutoload(): void
+    {
+        $vendorDir = $this->getPath() . '/../vendor';
+
+        if (is_dir($vendorDir)) {
+            require_once($vendorDir . '/autoload.php');
+        }
     }
 }
