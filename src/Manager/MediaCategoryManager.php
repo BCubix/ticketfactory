@@ -94,12 +94,12 @@ class MediaCategoryManager extends AbstractManager
         return $object;
     }
 
-    public function getHomeWebsiteCategory(): ?MediaCategory
+    public function getHomeWebsiteCategory(string $slug): ?MediaCategory
     {
         $lvl = 1;
         $repository = $this->em->getRepository(MediaCategory::class);
 
-        return $repository->findByLvlForWebsite($this->getDefaultLanguageId(), $lvl, 'home-du-site');
+        return $repository->findByLvlForWebsite($this->getDefaultLanguageId(), $lvl, $slug);
     }
 
     public function getMediasRootCategory($slug = null): array

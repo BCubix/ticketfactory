@@ -52,6 +52,10 @@ class EventManager extends AbstractManager
         $languageId = $this->getLanguageId();
         $event = null;
 
+        if (count($eventFormats) > count($slugs)) {
+            return null;
+        }
+
         foreach ($eventFormats as $key => $eventFormat) {
             switch ($eventFormat) {
                 case '%id%':
@@ -174,7 +178,9 @@ class EventManager extends AbstractManager
                     break;
 
                 case '%category%':
-                    $url[] = $event->getMainCategory();
+                    if (null !== $event->getMainCategory()) {
+                        $url[] = $event->getMainCategory()->getSlug();
+                    }
                     break;
 
                 case '%season%':

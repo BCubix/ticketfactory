@@ -23,9 +23,10 @@ class HomeController extends WebsiteController
         }
 
         return $this->websiteRender('Home/index.html.twig', [
-            'page'           => $page,
-            'pageTypeBlocks' => $pageTypeBlocks,
+            'page'              => $page,
+            'pageTypeBlocks'    => $pageTypeBlocks,
             'contentTypeBlocks' => $contentTypeBlocks,
+            'homePage'          => true,
         ]);
     }
 }

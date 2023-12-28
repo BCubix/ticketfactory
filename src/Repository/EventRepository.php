@@ -82,8 +82,7 @@ class EventRepository extends CrudRepository
             ->leftJoin('edb.eventDates', 'ed')
             ->leftJoin('e.eventMedias', 'em')
             ->leftJoin('em.media', 'm')
-            ->where('e.active = 1')
-            ->andWhere('ed.eventDate > :now');
+            ->where('e.active = 1');
 
         if (!empty($filters['season'])) {
             $events
@@ -140,7 +139,6 @@ class EventRepository extends CrudRepository
             ->orderBy('r.seatsNb', 'DESC')
             ->addOrderBy('ed.eventDate', 'ASC')
             ->setParameter('languageId', $languageId)
-            ->setParameter('now', (new \DateTime()))
             ->getQuery()
             ->getResult();
     }

@@ -372,6 +372,7 @@ const InitForm = ({
                                     languageList,
                                     changeFormikInitialValues,
                                     translationInitialValues,
+                                    setTranslationInitialValues,
                                     handleDelete,
                                     updateMenu,
                                     menus,

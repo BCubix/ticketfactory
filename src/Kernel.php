@@ -88,16 +88,14 @@ class Kernel extends BaseKernel
         // Declare active modules services
         foreach ($modulesActive as $key => $moduleActive) {
             $moduleName = $moduleActive['name'];
-            $moduleNamespace = 'TicketFactory\\Module\\' . $moduleName . '\\';
-            $modulePath = ('../modules/' . $moduleName . '/src/');
 
-            $services
-                ->load($moduleNamespace, $modulePath)
-                ->exclude($modulePath . '{DependencyInjection,Entity}')
-                ->exclude($modulePath . $moduleName . '.php')
-                ->public()
-                ->autowire()
-                ->autoconfigure();
+            $configDir = $this->getModulesDir() . '/' . $moduleName . '/config';
+            if (is_file($configDir . '/services.yaml')) {
+                $container->import($configDir . '/services.yaml');
+                $container->import($configDir . '/{services}_' . $this->environment . '.yaml');
+            } else {
+                $container->import($configDir . '/{services}.php');
+            }
         }
     }
 

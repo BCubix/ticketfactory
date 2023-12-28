@@ -17,6 +17,7 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
     const [imagesList, setImagesList] = useState(null);
     const [imageMediasTotal, setImageMediasTotal] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+    const [imageFormatList, setImageFormatList] = useState([]);
     const [mediaFilters, setMediaFilters] = useState({
         title: '',
         active: null,
@@ -63,6 +64,14 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
             }
 
             setMediaCategoriesList(result.mediaCategories);
+
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                }
+            });
         });
     }, []);
 
@@ -99,6 +108,7 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
                 total={imageMediasTotal}
                 categoriesList={mediaCategoriesList}
                 updatedMedia={updatedMedia}
+                imageFormatList={imageFormatList}
             />
         </>
     );

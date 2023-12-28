@@ -13,7 +13,7 @@ class TwigSeasonExtension extends AbstractExtension
 
     public function __construct(SeasonManager $sm)
     {
-       $this->sm = $sm;
+        $this->sm = $sm;
     }
 
     public function getFunctions()

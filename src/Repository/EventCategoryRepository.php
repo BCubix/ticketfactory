@@ -163,4 +163,41 @@ class EventCategoryRepository extends NestedTreeRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneForWebsite(int $languageId, int $pageId): ?EventCategory
+    {
+        return $this->createQueryBuilder('ec')
+            ->innerJoin('ec.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where("ec.active = 1")
+            ->andWhere('ec.id = :pageId')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('pageId', $pageId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getTopCategoriesForWebsite(int $languageId): array
+    {
+        return $this->createQueryBuilder('ec')
+            ->innerJoin('ec.lang', 'ecl', 'WITH', 'ecl.id = :languageId')
+            ->where('ec.lvl = 1')
+            ->andWhere('ec.active = 1')
+            ->andWhere('ec.calendarDisplayed = 1')
+            ->orderBy('ec.id', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findTranslationForWebsite(int $languageId, $languageGroup)
+    {
+        return $this->createQueryBuilder('e')
+            ->innerJoin('e.lang', 'l')
+            ->where('e.languageGroup = :languageGroup')
+            ->andWhere('l.id = :languageId')
+            ->setParameter('languageGroup', $languageGroup->toBinary())
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
