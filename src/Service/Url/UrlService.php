@@ -108,6 +108,8 @@ class UrlService
                 $slugs[] = $page->getSlug();
                 $page = $page->getParent();
             }
+
+            $slugs = array_reverse($slugs);
         }
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
