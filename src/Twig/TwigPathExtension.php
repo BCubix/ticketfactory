@@ -3,7 +3,7 @@
 namespace App\Twig;
 
 use App\Manager\MenuEntryManager;
-use App\Service\Url\UrlService;
+use App\Service\ServiceFactory;
 
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Extension\AbstractExtension;
@@ -11,12 +11,12 @@ use Twig\TwigFunction;
 
 class TwigPathExtension extends AbstractExtension
 {
-    protected $us;
+    protected $sf;
     protected $mm;
 
-    public function __construct(UrlService $us, MenuEntryManager $mm)
+    public function __construct(ServiceFactory $sf, MenuEntryManager $mm)
     {
-        $this->us = $us;
+        $this->sf = $sf;
         $this->mm = $mm;
     }
 
@@ -36,11 +36,11 @@ class TwigPathExtension extends AbstractExtension
 
     public function keywordPath(string $keyword, $params = [], $absolute = RouterInterface::ABSOLUTE_PATH)
     {
-        return $this->us->keywordPath($keyword, $params, $absolute);
+        return $this->sf->get('urlService')->keywordPath($keyword, $params, $absolute);
     }
 
     public function tfPath(mixed $element, $params = [], $absolute = RouterInterface::ABSOLUTE_PATH)
     {
-        return $this->us->tfPath($element, $params, $absolute);
+        return $this->sf->get('urlService')->tfPath($element, $params, $absolute);
     }
 }

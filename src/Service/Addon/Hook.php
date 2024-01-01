@@ -16,18 +16,16 @@ abstract class Hook
 {
     protected $em;
     protected $rs;
-    protected $us;
     protected $tg;
     protected $mf;
     protected $sf;
     protected $data;
 
 
-    public function __construct(EntityManagerInterface $em, Environment $tg, ManagerFactory $mf, ServiceFactory $sf, RequestStack $rs, UrlService $us)
+    public function __construct(EntityManagerInterface $em, Environment $tg, ManagerFactory $mf, ServiceFactory $sf, RequestStack $rs)
     {
         $this->em = $em;
         $this->rs = $rs;
-        $this->us = $us;
         $this->tg = $tg;
         $this->mf = $mf;
         $this->sf = $sf;
@@ -75,7 +73,7 @@ abstract class Hook
         array_filter($slugs, function ($value) {
             return !empty($value);
         });
-        $mainPage = $this->us->getPageBySlugArray($slugs);
+        $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
         return ($mainPage);
     }
 }

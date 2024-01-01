@@ -6,7 +6,6 @@ use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Kernel;
 use App\Service\ServiceFactory;
-use App\Entity\Parameter\Parameter;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -196,6 +195,9 @@ class ImageFormatManager extends AbstractManager
 
             case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
+
+            case IMAGETYPE_GIF:
+                return imagecreatefromgif($filename);
 
             case IMAGETYPE_JPEG:
             default:

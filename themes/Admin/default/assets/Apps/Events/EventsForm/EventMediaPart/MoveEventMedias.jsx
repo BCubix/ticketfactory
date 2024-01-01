@@ -1,8 +1,10 @@
 import React from 'react';
-
-import { Component } from '@/AdminService/Component';
 import { Box } from '@mui/system';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { Typography } from '@mui/material';
+
+import { Component } from '@/AdminService/Component';
+import { getMediaType } from '@Services/utils/getMediaType';
 
 export const MoveEventMedias = ({ eventMedias, setFieldValue }) => {
     const handleDragEnd = (result) => {
@@ -38,6 +40,7 @@ export const MoveEventMedias = ({ eventMedias, setFieldValue }) => {
                                                 key={index}
                                                 sx={{
                                                     position: 'relative',
+                                                    flexDirection: 'column',
                                                 }}
                                                 className="eventMediaElement"
                                                 ref={provided2.innerRef}
@@ -45,6 +48,7 @@ export const MoveEventMedias = ({ eventMedias, setFieldValue }) => {
                                                 {...provided2.dragHandleProps}
                                             >
                                                 <Component.CmtDisplayMediaType media={item.media} width={'100%'} height={'auto'} className="eventMediaType" />
+                                                <Typography className="media_type_label">{getMediaType(item.media.documentType)}</Typography>
                                             </Component.CmtMediaElement>
                                         )}
                                     </Draggable>

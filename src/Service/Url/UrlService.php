@@ -14,7 +14,6 @@ use App\Manager\PageManager;
 use App\Manager\ParameterManager;
 
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class UrlService

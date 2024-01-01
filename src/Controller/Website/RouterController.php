@@ -4,37 +4,11 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 
-use App\Manager\ManagerFactory;
-use App\Manager\ModuleManager;
-use App\Service\ServiceFactory;
-use App\Service\Url\UrlService;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig\Environment;
 
 class RouterController extends WebsiteController
 {
-    protected $us;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        RequestStack $rs,
-        ManagerFactory $mf,
-        ServiceFactory $sf,
-        ModuleManager $mm,
-        Environment $tg,
-        UrlService $us,
-    ) {
-        $this->em = $em;
-        $this->rs = $rs;
-        $this->mf = $mf;
-        $this->sf = $sf;
-        $this->mm = $mm;
-        $this->tg = $tg;
-        $this->us = $us;
-    }
     #[Route('/{slugs}', name: 'tf_website_global', requirements: ['slugs' => '^(?!/en).*$'], priority: -100)]
     public function orchestrator(string $slugs): Response
     {
@@ -54,7 +28,7 @@ class RouterController extends WebsiteController
         }
 
         // We continue to go down slugs hierarchy as long as they match pages
-        $mainPage = $this->us->getPageBySlugArray($slugs);
+        $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
 
         // We check for event relative content mapping
         $content = $this->forwardEventContents($mainPage, $slugs);

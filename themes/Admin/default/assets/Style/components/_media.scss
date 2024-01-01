@@ -1,0 +1,17 @@
+.media {
+    &_type {
+        &_label {
+            display: block;
+            width: 100%;
+            height: 20px;
+            background-color: rgb(255, 243, 229);
+            text-align: center;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            font-size: 12px;
+            font-family: "Fredoka";
+            line-height: 20px;
+            text-transform: capitalize;
+        }
+    }
+}
