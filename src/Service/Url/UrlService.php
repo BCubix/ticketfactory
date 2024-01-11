@@ -105,12 +105,13 @@ class UrlService
         $page = $this->prm->getCoreParameter('page_event');
         if (null !== $page) {
             while ($page !== null) {
-                $slugs[] = $page->getSlug();
+                $pageSlugs[] = $page->getSlug();
                 $page = $page->getParent();
-            }
 
-            $slugs = array_reverse($slugs);
+                $slugs = array_merge(array_reverse($pageSlugs), $slugs);
+            }
         }
+
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
     }

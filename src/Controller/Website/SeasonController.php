@@ -48,7 +48,7 @@ class SeasonController extends WebsiteController
         ];
 
         if (null !== $filters['category']) {
-            $filters['category'] = $this->em->getRepository(EventCategory::class)->find($filters['category']);
+            $filters['category'] = [$this->em->getRepository(EventCategory::class)->find($filters['category'])];
         }
 
         if (null !== $filters['room']) {

@@ -2,11 +2,13 @@
 
 namespace App\Service\Exec;
 
+use App\Exception\ApiException;
 use App\Kernel;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\Response;
 
 class ExecService
 {
@@ -38,7 +40,7 @@ class ExecService
 
         return static::exec([
             'command'          => 'doctrine:migrations:execute',
-            'versions'         => [ $migrationClass ],
+            'versions'         => [$migrationClass],
             '--no-interaction' => true,
             $action            => true,
         ]);
@@ -101,8 +103,11 @@ class ExecService
         exec($command, $output, $res);
 
         if (0 !== $res) {
-            throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "La commande '$command' a échoué (exit code: $res) : " . implode(PHP_EOL, $output));
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "La commande '$command' a échoué (exit code: $res) : " . implode(PHP_EOL, $output)
+            );
         }
     }
 }

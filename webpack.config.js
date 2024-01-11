@@ -4,9 +4,13 @@ const websiteThemeName = 'default';
 // >>> Variables
 
 var Encore = require('@symfony/webpack-encore');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
+const smp = new SpeedMeasurePlugin();
 
 dotenv.config();
 
@@ -75,11 +79,18 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+    .addLoader({
+        test: /\.[jt]sx?$/,
+        exclude: ['/node_modules/'],
+        loader: 'esbuild-loader',
+        options: {
+            target: 'es2020',
+            loader: 'jsx',
+        },
+    })
 
-    // enables @babel/preset-env polyfills
-    .configureBabel(() => {}, {
-        useBuiltIns: 'usage',
-        corejs: 3,
+    .configureBabel((config) => {
+        config.presets = [];
     })
 
     .configureDefinePlugin((options) => {
@@ -117,4 +128,23 @@ Encore
         to: 'icons/[path][name].[ext]',
     });
 
-module.exports = Encore.getWebpackConfig();
+const optimization = {
+    minimize: Encore.isProduction(),
+    minimizer: [
+        new CssMinimizerPlugin({
+            parallel: true,
+            minify: CssMinimizerPlugin.esbuildMinify,
+        }),
+        new TerserPlugin({
+            test: /\.js(\?.*)?$/i,
+            exclude: /\/node_modules/,
+            parallel: true,
+            minify: TerserPlugin.esbuildMinify,
+        }),
+    ],
+};
+
+module.exports = {
+    ...Encore.getWebpackConfig(),
+    optimization,
+};

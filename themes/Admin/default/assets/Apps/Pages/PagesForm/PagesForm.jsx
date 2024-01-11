@@ -291,7 +291,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                     component="form"
                     onSubmit={handleSubmit}
                     title={formCrud?.form?.title}
-                    actionButton={
+                    /* actionButton={
                         initialValues && (
                             <Component.ActionButton
                                 variant="contained"
@@ -301,7 +301,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                 Historique de la page
                             </Component.ActionButton>
                         )
-                    }
+                    } */
                 >
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}

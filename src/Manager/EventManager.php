@@ -113,7 +113,14 @@ class EventManager extends AbstractManager
                     }
                     break;
 
+                case '%id%':
+                case '%slug%':
+                    break;
+
                 default; // Static strings
+                    if ($eventFormat !== $slugs[$key]) {
+                        return null;
+                    }
                     break;
             }
         }

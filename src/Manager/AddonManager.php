@@ -5,9 +5,29 @@ namespace App\Manager;
 use App\Entity\Parameter\Parameter;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\ApiException;
+use App\Kernel;
+use App\Service\ServiceFactory;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AddonManager extends AbstractManager
 {
+    protected $fs;
+
+    public function __construct(
+        Kernel $kl,
+        ManagerFactory $mf,
+        ServiceFactory $sf,
+        EntityManagerInterface $em,
+        RequestStack $rs,
+        Filesystem $fs,
+    ) {
+        parent::__construct($kl, $mf, $sf, $em, $rs);
+
+        $this->fs = $fs;
+    }
+
     /**
      * Return the information of object from the config.
      *

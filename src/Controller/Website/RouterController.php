@@ -27,6 +27,7 @@ class RouterController extends WebsiteController
             return $this->redirectToRoute('tf_website_global', $params);
         }
 
+
         // We continue to go down slugs hierarchy as long as they match pages
         $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
 
@@ -125,7 +126,7 @@ class RouterController extends WebsiteController
     private function forwardEvent(?Page $page, array $slugs): ?Response
     {
         $refPage = $this->mf->get('parameter')->getCoreParameter('page_event');
-        if ($page != $refPage) {
+        if (null !== $refPage && $page != $refPage) {
             return null;
         }
 

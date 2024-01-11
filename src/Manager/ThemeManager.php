@@ -7,7 +7,7 @@ use App\Entity\Addon\Module;
 use App\Entity\Addon\Theme as ThemeEntity;
 use App\Exception\ApiException;
 use App\Service\Addon\Theme;
-
+use App\Service\File\FileManipulator;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -101,8 +101,8 @@ class ThemeManager extends AddonManager
             }
         }
 
-        foreach ($themes as $themeName => $themeAction) {
-            $this->applyThemeConfig($themeName, $themeAction);
+        foreach ($themes as $tName => $themeAction) {
+            $this->applyThemeConfig($tName, $themeAction);
         }
 
         // Apply new theme as enabled in parameters and commit transaction
@@ -113,6 +113,7 @@ class ThemeManager extends AddonManager
             $this->em->getConnection()->commit();
         }
 
+        $this->entry($themeName, false);
         $this->clear(true);
 
         return $theme;
@@ -245,5 +246,48 @@ class ThemeManager extends AddonManager
                 }
             }
         }
+    }
+
+    /**
+     * Inject or remove entry in webpack.
+     *
+     * @param string $name
+     * @param bool   $remove
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected function entry(string $name, bool $remove): void
+    {
+        $webpackFilePath = $this->sf->get('pathGetter')->getProjectDir() . 'webpack.config.js';
+
+        $file = new FileManipulator();
+        $content = $file->getContent($webpackFilePath);
+
+        $positionLine = "// <<< Variables";
+        $endPositionLine = "// >>> Variables";
+        $needleAppEntry = "const adminThemeName = 'default';";
+        $needleWebsiteEntry = "const websiteThemeName = '" . $name . "';" . PHP_EOL;
+
+        // Find position of the end of app entry in content
+        $position = $file->getPosition($webpackFilePath, $positionLine) + strlen($positionLine);
+        // Add content start the beginning content to the end of app entry
+        $newContent = substr($content, 0, $position);
+
+        $newContent .= PHP_EOL . $needleAppEntry;
+        if (!$remove) {
+            // Add website entry
+            $newContent .= PHP_EOL . $needleWebsiteEntry;
+        } else {
+            // Find position of the end of website entry in content
+            $newContent .= PHP_EOL . "const websiteThemeName = '';";
+        }
+
+        $position = $file->getPosition($webpackFilePath, $endPositionLine);
+
+        // Add rest of content
+        $newContent .= substr($content, $position);
+
+        $file->setContent($webpackFilePath, $newContent);
     }
 }

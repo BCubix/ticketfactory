@@ -191,11 +191,11 @@ class ModuleManager extends AddonManager
                     }
 
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
-                    if (!$clearAssets && $this->em->getConnection()->isTransactionActive()) {
+                    if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {
                         $this->em->getConnection()->commit();
                     }
 
-                    if ($action === ModuleEntity::ACTION_INSTALL) {
+                    if ($action === ModuleEntity::ACTION_UNINSTALL_DELETE) {
                         $this->delete($moduleName);
                     }
 
