@@ -223,6 +223,53 @@ class EventManager extends AbstractManager
         return $url;
     }
 
+    public function getUrlBreadCrumb(Event $event): array
+    {
+        $eventFormats = $this->mf->get('parameter')->getCoreParameter('event_url_format');
+        $eventFormats = explode('/', $eventFormats);
+
+        $breadcrumbs = [];
+
+        foreach ($eventFormats as $key => $eventFormat) {
+            switch ($eventFormat) {
+                case '%id%':
+                    $breadcrumbs[$event->getName()] = $this->sf->get('urlService')->tfPath($event);
+                    break;
+
+                case '%slug%':
+                    $breadcrumbs[$event->getName()] = $this->sf->get('urlService')->tfPath($event);
+                    break;
+
+                case '%category%':
+                    if (null !== $event->getMainCategory()) {
+                        $breadcrumbs[$event->getMainCategory()->getName()] = $this->sf->get('urlService')->tfPath($event->getMainCategory());
+                    }
+                    break;
+
+                case '%season%':
+                    if (null !== $event->getSeason()) {
+                        $breadcrumbs[$event->getSeason()->getName()] = $this->sf->get('urlService')->tfPath($event->getSeason());
+                    }
+                    break;
+
+                case '%room%':
+                    if (null !== $event->getRoom()) {
+                        $breadcrumbs[$event->getRoom()->getName()] = $this->sf->get('urlService')->tfPath($event->getRoom());
+                    }
+                    break;
+
+                default; // Static strings
+                    $breadcrumbs[$eventFormat] = null;
+                    break;
+            }
+        }
+
+        $breadcrumbs = array_reverse($breadcrumbs, true);
+
+
+        return $breadcrumbs;
+    }
+
     public function getEventDatesStr($event, $format = null): string
     {
         if ($format == null) {

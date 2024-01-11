@@ -60,6 +60,11 @@ class ModuleManager extends AddonManager
         return $this->sf->get('pathGetter')->getModulesDir();
     }
 
+    public function getType(): string
+    {
+        return 'module';
+    }
+
     public function getAll(array $filters = []): array
     {
         $filters['page'] = isset($filters['page']) ? $filters['page'] : 0;
@@ -230,6 +235,19 @@ class ModuleManager extends AddonManager
         }
 
         return null;
+    }
+
+    public function getModuleFilePath(string $moduleName, string $path): string
+    {
+        $overrideModulePath = $this->mf->get('parameter')->getCoreParameter('main_theme') . '/module/' . $moduleName . '/templates/' . $path;
+
+        if (file_exists($this->sf->get('pathGetter')->getThemesDir() . '/' .  $overrideModulePath)) {
+            $path = 'Website/' . $overrideModulePath;
+        } else {
+            $path = ('@modules/' . $moduleName . '/templates/' . $path);
+        }
+
+        return $path;
     }
 
     public function importModuleInstance($moduleName): ?Bundle

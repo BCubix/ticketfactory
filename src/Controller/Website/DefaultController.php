@@ -40,11 +40,7 @@ class DefaultController extends WebsiteController
                         $seasonBack = $currentSeason;
                     }
 
-                    $breadcrumbs[$element->getName()] = '';
-                    $breadcrumbs[$element->getMainCategory()->getName()] = $this->sf->get('urlService')->tfPath($element->getMainCategory(), ['season' => $season]);
-                    if (null !== $element->getSeason()) {
-                        $breadcrumbs[$element->getSeason()->getName()] = $this->sf->get('urlService')->tfPath($element->getSeason());
-                    }
+                    $breadcrumbs = $this->mf->get('event')->getUrlBreadCrumb($element);
 
                     break;
 

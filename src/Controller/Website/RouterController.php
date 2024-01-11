@@ -27,7 +27,6 @@ class RouterController extends WebsiteController
             return $this->redirectToRoute('tf_website_global', $params);
         }
 
-
         // We continue to go down slugs hierarchy as long as they match pages
         $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
 

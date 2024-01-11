@@ -55,6 +55,14 @@ abstract class AddonManager extends AbstractManager
     public abstract function getDir(): string;
 
     /**
+     * Return the type of addon, either theme or module.
+     *
+     * @return string
+     */
+    public abstract function getType(): string;
+
+
+    /**
      * Unzip the zip which contains addons.
      *
      * @param string $zipName
@@ -104,12 +112,13 @@ abstract class AddonManager extends AbstractManager
 
                     // Add the addon in the list to install among its type
                     $this->checkConfigFile($tree, $name);
-                    $config = $this->mf->get("module")->getConfiguration('/tmp' . basename($zipName, '.zip') . "/" . $name);
+                    $config = $this->mf->get($this->getType())->getConfiguration('/tmp' . basename($zipName, '.zip') . "/" . $name);
                     if (isset($config['type']) && in_array($config['type'], array_keys($names))) {
                         $names[$config['type']][] = $name;
                     }
                 }
             }
+
 
             foreach ($addOnPaths as $addOntype => $addOnPath) {
                 foreach ($names[$addOntype] as $name) {
@@ -134,6 +143,7 @@ abstract class AddonManager extends AbstractManager
         } finally {
             // Remove temporary folder
             $this->sf->get('file')->remove($tmpDirPath);
+            $this->sf->get('file')->remove($this->getDir() . '/' . $zipName);
         }
 
         return $names;

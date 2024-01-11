@@ -60,6 +60,11 @@ class ThemeManager extends AddonManager
         return $this->sf->get('pathGetter')->getThemesDir();
     }
 
+    public function getType(): string
+    {
+        return 'theme';
+    }
+
     public function active(string $themeName): ThemeEntity
     {
         // Ensure the theme to enable is in database
@@ -121,7 +126,7 @@ class ThemeManager extends AddonManager
 
     public function delete(string $themeName): void
     {
-        $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($themeName);
+        $theme = $this->em->getRepository(ThemeEntity::class)->findOneByNameForAdmin($themeName);
         if (null === $theme) {
             return;
         }

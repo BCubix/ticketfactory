@@ -2,18 +2,18 @@
 
 namespace App\Twig;
 
-use App\Manager\ThemeManager;
+use App\Manager\ManagerFactory;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TwigThemeExtension extends AbstractExtension
 {
-    private $tm;
+    private $mf;
 
-    public function __construct(ThemeManager $tm)
+    public function __construct(ManagerFactory $mf)
     {
-        $this->tm = $tm;
+        $this->mf = $mf;
     }
 
     public function getFunctions(): array
@@ -27,16 +27,16 @@ class TwigThemeExtension extends AbstractExtension
 
     public function adminTemplates(string $twigFilename): string
     {
-        return $this->tm->getAdminTemplatesPath() . $twigFilename;
+        return $this->mf->get('theme')->getAdminTemplatesPath() . $twigFilename;
     }
 
     public function websiteTemplates(string $twigFilename): string
     {
-        return $this->tm->getWebsiteTemplatesPath() . $twigFilename;
+        return $this->mf->get('theme')->getWebsiteTemplatesPath() . $twigFilename;
     }
 
     public function moduleTemplates(string $moduleName, string $twigFilename): string
     {
-        return ('@modules/' . $moduleName . '/templates/' . $twigFilename);
+        return $this->mf->get('module')->getModuleFilePath($moduleName, $twigFilename);
     }
 }
