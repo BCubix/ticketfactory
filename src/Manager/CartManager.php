@@ -40,7 +40,8 @@ class CartManager extends AbstractManager
         parent::__construct($kl, $mf, $sf, $em, $rs);
     }
 
-    public function createNewCart(): Cart {
+    public function createNewCart(): Cart
+    {
         $cart = new Cart();
         $cart->setActive(true);
         $cart->setTotal(0);
@@ -54,7 +55,8 @@ class CartManager extends AbstractManager
         return $cart;
     }
 
-    public function createNewCartRow(Cart $cart, Event $event, EventDate $eventDate): CartRow {
+    public function createNewCartRow(Cart $cart, Event $event, EventDate $eventDate): CartRow
+    {
         $cartRow = new CartRow();
         $cartRow->setEvent($event);
         $cartRow->setEventDate($eventDate);
@@ -70,7 +72,8 @@ class CartManager extends AbstractManager
         return $cartRow;
     }
 
-    public function addNewCartSeats(CartRow $cartRow, EventPrice $eventPrice, int $quantity): CartRow {
+    public function addNewCartSeats(CartRow $cartRow, EventPrice $eventPrice, int $quantity): CartRow
+    {
         foreach (range(1, $quantity) as $index) {
             $seat = new CartSeat();
             $seat->setEventPrice($eventPrice);
@@ -81,10 +84,11 @@ class CartManager extends AbstractManager
         return $this->calculateCartRowTotal($cartRow);
     }
 
-    public function calculateCartRowTotal(CartRow $cartRow): CartRow {
+    public function calculateCartRowTotal(CartRow $cartRow): CartRow
+    {
         $total = 0;
 
-        foreach($cartRow->getCartSeats() as $seat) {
+        foreach ($cartRow->getCartSeats() as $seat) {
             $total += $seat->getEventPrice()->getPrice();
         }
 
@@ -93,10 +97,11 @@ class CartManager extends AbstractManager
         return $cartRow;
     }
 
-    public function calculateCartTotal(Cart $cart): Cart {
+    public function calculateCartTotal(Cart $cart): Cart
+    {
         $total = 0;
 
-        foreach($cart->getCartRows() as $row) {
+        foreach ($cart->getCartRows() as $row) {
             $total += $this->calculateCartRowTotal($row)->getTotal();
         }
 
@@ -127,7 +132,7 @@ class CartManager extends AbstractManager
             $cartRow = $this->createNewCartRow($cart, $event, $eventDate);
         }
 
-        foreach($eventPrices as $eventPrice) {
+        foreach ($eventPrices as $eventPrice) {
             if ($eventPrice['quantity'] > 0) {
                 $this->addNewCartSeats($cartRow, $eventPrice["eventPrice"], $eventPrice['quantity']);
             }
@@ -157,8 +162,8 @@ class CartManager extends AbstractManager
                 if (null === $customerCart) {
                     $session->set("cartUpdatedAt", new \DateTimeImmutable("now"));
 
-                    $customer->setCart($cart);
-                    $this->em->persist();
+                    $customer->addCart($cart);
+                    $this->em->persist($customer);
                     $this->em->flush();
 
                     return $cart;
@@ -206,7 +211,7 @@ class CartManager extends AbstractManager
         $cartSeats = $this->em->getRepository(CartSeat::class)->findGroupedCartSeatsForWebsite($cartRow->getId());
         $groupedSeats = [];
 
-        foreach($cartSeats as $cartSeat) {
+        foreach ($cartSeats as $cartSeat) {
             $eventPrice = $cartSeat->getEventPrice();
             $eventPriceId = $eventPrice->getId();
             if (!isset($groupedSeats[$eventPriceId])) {
@@ -289,7 +294,7 @@ class CartManager extends AbstractManager
         $cart = $cartRow->getCart();
 
         $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($data["cartRowId"], $data["eventPriceId"]);
-        foreach($cartSeats as $seat) {
+        foreach ($cartSeats as $seat) {
             $cartRow->removeCartSeat($seat);
         }
 
@@ -351,7 +356,8 @@ class CartManager extends AbstractManager
         return true;
     }
 
-    public function checkVoucherForCart(Cart $cart) {
+    public function checkVoucherForCart(Cart $cart)
+    {
         $vouchers = $this->em->getRepository(Voucher::class)->findAllByCartForWebsite($cart->getId());
 
         if (count($vouchers) === 0) {
@@ -376,7 +382,8 @@ class CartManager extends AbstractManager
         $this->em->flush();
     }
 
-    public function addVoucher(Cart $cart, string $code): bool {
+    public function addVoucher(Cart $cart, string $code): bool
+    {
         $voucher = $this->em->getRepository(Voucher::class)->findOneByCodeForWebsite($code);
 
         if (null === $voucher) {

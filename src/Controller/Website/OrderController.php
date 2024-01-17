@@ -4,6 +4,7 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 use App\Entity\Customer\Customer;
+use App\Entity\Order\Cart;
 use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Form\Website\Customer\CustomerType;
@@ -25,7 +26,7 @@ class OrderController extends WebsiteController
     }
 
     #[Route("/commande/connexion", name: "tf_website_order_connection", priority: 1)]
-    public function orderConnexion (Request $request, AuthenticationUtils $authenticationUtils)
+    public function orderConnexion(Request $request, AuthenticationUtils $authenticationUtils)
     {
         $homeUrl = $this->sf->get('urlService')->keywordPath('home');
         $page = $this->mf->get('page')->getByKeyword('connection');
@@ -67,7 +68,7 @@ class OrderController extends WebsiteController
     }
 
     #[Route("/commande/adresse", name: "tf_website_order_address", priority: 1)]
-    public function orderAddress (Request $request)
+    public function orderAddress(Request $request)
     {
         $customer = $this->getUser();
         $page = $this->mf->get('page')->getByKeyword("order-address");
@@ -142,6 +143,7 @@ class OrderController extends WebsiteController
             $order = $this->mf->get('order')->createNewOrder($customer, $status, $cart);
         }
 
+        $this->mf->get('cart')->createNewCart();
         $this->em->flush();
 
         return $this->websiteRender("Order/validated.html.twig", [

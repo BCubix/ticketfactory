@@ -87,10 +87,10 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[Assert\Regex(pattern: '/^\S*(?=\S{10,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/', message: 'Le mot de passe ne répond pas aux exigences de sécurité.')]
     private $plainPassword;
 
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Cart::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Cart::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $carts;
 
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $orders;
 
     #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
@@ -138,7 +138,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
         return $this->phone;
     }
 
-    public function setPhone(string $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
 
@@ -150,7 +150,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
 
@@ -162,7 +162,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
 

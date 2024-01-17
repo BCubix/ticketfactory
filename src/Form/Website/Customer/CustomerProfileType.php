@@ -40,7 +40,7 @@ class CustomerProfileType extends AbstractType
             ])
             ->add('phone',                TextType::class,            [
                 'label' => 'Téléphone',
-                'required' => true,
+                'required' => false,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
@@ -59,7 +59,6 @@ class CustomerProfileType extends AbstractType
                 ],
                 'invalid_message' => 'Les mots de passe ne sont pas identiques',
             ])
-            ->add('address',              CustomerAddressType::class, [])
             ->add('send',                 SubmitType::class,          [
                 'attr' => ['class' => 'btn'],
                 'label' => 'Mettre à jour'

@@ -1,6 +1,6 @@
 // <<< Variables
 const adminThemeName = 'default';
-const websiteThemeName = 'Demo';
+const websiteThemeName = 'default';
 // >>> Variables
 
 var Encore = require('@symfony/webpack-encore');

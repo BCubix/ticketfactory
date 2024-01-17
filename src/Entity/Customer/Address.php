@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Repository\Customer\AddressRepository;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
 class Address extends Datable
@@ -15,18 +16,22 @@ class Address extends Datable
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'L\'adresse doit être renseigné.')]
     #[ORM\Column(length: 255)]
     private ?string $address1 = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address2 = null;
 
+    #[Assert\NotBlank(message: 'Le code postale doit être renseigné.')]
     #[ORM\Column(length: 255)]
     private ?string $zipcode = null;
 
+    #[Assert\NotBlank(message: 'La ville doit être renseigné.')]
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
+    #[Assert\NotBlank(message: 'Le pays doit être renseigné.')]
     #[ORM\Column(length: 255)]
     private ?string $country = null;
 

@@ -2,8 +2,10 @@
 
 namespace App\Controller\Website;
 
+use App\Entity\Customer\Address;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Voucher;
+use App\Form\Website\Customer\CustomerAddressType;
 use App\Form\Website\Customer\CustomerProfileType;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +28,7 @@ class AccountController extends WebsiteController
             $customer = $this->em->getRepository(Customer::class)->findOneByEmail($customer->getEmail());
             if (null === $customer || $customerBase->getEmail() === $customer->getEmail()) {
                 $this->mf->get("customer")->upgradePassword($customer);
+
                 $this->em->persist($customer);
                 $this->em->flush();
 
@@ -35,10 +38,30 @@ class AccountController extends WebsiteController
             }
         }
 
+        $address = $customer->getAddress();
+        if (null === $address) {
+            $address = new Address();
+            $address->setCustomer($customer);
+        }
+
+        $addressForm = $this->createForm(CustomerAddressType::class, $address);
+        $addressForm->handleRequest($request);
+        if ($addressForm->isSubmitted() && $addressForm->isValid()) {
+            try {
+                $this->em->persist($address);
+                $this->em->flush();
+
+                $this->addFlash('Succès',  "Votre profil a bien été mis à jour.");
+            } catch (\Exception $e) {
+                $this->addFlash('Erreur',  "Une erreur est survenue.");
+            }
+        }
+
         return $this->websiteRender('Account/account.html.twig', [
             'page'        => $page,
             'customer'    => $customer,
-            'profileForm' => $profileForm->createView()
+            'profileForm' => $profileForm->createView(),
+            'addressForm' => $addressForm->createView(),
         ]);
     }
 

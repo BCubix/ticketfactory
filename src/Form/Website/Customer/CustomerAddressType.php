@@ -5,12 +5,9 @@ namespace App\Form\Website\Customer;
 use App\Entity\Customer\Address;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomerAddressType extends AbstractType
@@ -20,7 +17,7 @@ class CustomerAddressType extends AbstractType
         $builder
             ->add('address1',             TextType::class,            [
                 'label' => 'Adresse',
-                'required' => false,
+                'required' => true,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
@@ -32,21 +29,25 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('zipcode',              TextType::class,            [
                 'label' => 'Code postal',
-                'required' => false,
+                'required' => true,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('city',                 TextType::class,            [
                 'label' => 'Ville',
-                'required' => false,
+                'required' => true,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
             ])
             ->add('country',              TextType::class,            [
                 'label' => 'Pays',
-                'required' => false,
+                'required' => true,
                 'label_attr' => ['class' => 'form_label'],
                 'attr' => ['class' => 'form_input', 'placeholder' => ""]
+            ])
+            ->add('send',                 SubmitType::class,          [
+                'attr' => ['class' => 'btn'],
+                'label' => 'Mettre à jour'
             ]);
     }
 
