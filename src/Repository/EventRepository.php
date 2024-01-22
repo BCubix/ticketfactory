@@ -9,12 +9,12 @@ use Doctrine\Persistence\ManagerRegistry;
 class EventRepository extends CrudRepository
 {
     /*** > Trait ***/
-    /*** > Module: Search ***/
-    use \TicketFactory\Module\Search\Repository\Override\EventRepository;
-    /*** < Module: Search ***/
     /*** > Module: HomeEvent ***/
     use \TicketFactory\Module\HomeEvent\Repository\Override\EventRepository;
     /*** < Module: HomeEvent ***/
+    /*** > Module: Search ***/
+    use \TicketFactory\Module\Search\Repository\Override\EventRepository;
+    /*** < Module: Search ***/
     /*** < Trait ***/
 
     protected const SELECTS = [

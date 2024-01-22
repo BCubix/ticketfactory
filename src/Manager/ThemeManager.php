@@ -49,7 +49,7 @@ class ThemeManager extends AddonManager
             $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $sourceFile;
             $this->sf->get('file')->copy($sourceFile, $targetFile);
 
-            $ext = ('/' . $sourceFile);
+            $ext = $sourceFile;
         }
 
         return ['previewUrl' => $ext];
