@@ -2,18 +2,12 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\Page\Page;
 use App\Entity\Customer\Customer;
-use App\Entity\Order\Cart;
-use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Form\Website\Customer\CustomerType;
-use App\Form\Website\Customer\CustomerAddressType;
 use App\Form\Website\Customer\AddressType;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 

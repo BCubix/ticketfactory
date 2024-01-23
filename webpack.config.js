@@ -6,11 +6,9 @@ const websiteThemeName = 'default';
 var Encore = require('@symfony/webpack-encore');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
-const smp = new SpeedMeasurePlugin();
 
 dotenv.config();
 

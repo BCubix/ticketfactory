@@ -19,7 +19,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
-use Oneup\UploaderBundle\Event\PostUploadEvent;
 use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Oneup\UploaderBundle\UploadEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -62,7 +61,7 @@ class FileUploader implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            UploadEvents::POST_PERSIST => [['onUpload', 0]],
+            UploadEvents::POST_PERSIST => [['onUpload', 0]]
         ];
     }
 
