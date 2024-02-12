@@ -23,10 +23,10 @@ class InstallControllerProcess extends InstallController
         return false;
     }
 
-    public function process(): void
+    public function process(): bool
     {
         if (InstallerTools::getValue('endInstall')) {
-            return;
+            return true;
         }
 
         if (!$this->session->process_validated) {
@@ -48,6 +48,7 @@ class InstallControllerProcess extends InstallController
         } catch (Exception $e) {
             $this->ajaxJsonAnswer(false, $e->getMessage());
         }
+        return false;
     }
 
     public function processGenerateEnvFile()

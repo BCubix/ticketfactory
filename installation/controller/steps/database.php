@@ -55,13 +55,14 @@ class InstallControllerDatabase extends InstallController
         return count($this->errors['db_connection']) ? false : true;
     }
 
-    public function process(): void
+    public function process(): bool
     {
         if (InstallerTools::getValue('checkDb')) {
             $this->processCheckDb();
         } elseif (InstallerTools::getValue('createDb')) {
             $this->processCreateDb();
         }
+        return false;
     }
 
     public function processCheckDb(): void

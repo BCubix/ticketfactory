@@ -1,8 +1,5 @@
 <?php
 
-use TicketFactory\Installer\Controller\InstallController\InstallController;
-
-defined('_TF_ROOT_DIR_') || define('_TF_ROOT_DIR_', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 defined('_TF_CACHE_DIR_') || define('_TF_CACHE_DIR_', _TF_ROOT_DIR_ . 'var/cache/');
 defined('_TF_PUBLIC_DIR_') || define('_TF_PUBLIC_DIR_', _TF_ROOT_DIR_ . 'public/');
 defined('_TF_INSTALL_PATH_') || define('_TF_INSTALL_PATH_', dirname(__FILE__) . DIRECTORY_SEPARATOR);
@@ -22,6 +19,3 @@ foreach (new DirectoryIterator(_TF_INSTALL_CLASSES_PATH_) as $file) {
 }
 
 require_once _TF_INSTALL_CONTROLLERS_PATH_ . 'InstallController.php';
-InstallController::execute();
-defined('_TF_DELETE_INSTALL_DIR_') || define('_TF_DELETE_INSTALL_DIR_', true);
-require _TF_PUBLIC_DIR_ . 'index.php';

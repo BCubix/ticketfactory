@@ -21,9 +21,10 @@ class InstallControllerRequirement extends InstallController
         return $this->tests['success'];
     }
 
-    public function process(): void
+    public function process(): bool
     {
         $this->tests = Requirements::checkRequirements();
+        return false;
     }
 
     public function display(): void

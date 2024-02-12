@@ -30,5 +30,5 @@
     <p>Vous pouvez utiliser les liens de la colonne de gauche pour revenir à une étape précédente, ou redémarrer le processus d'installation en <a href="index.php?restart=true">cliquant ici</a>.</p>
   </div>
 
-  <input type="submit" value="Quittez l'outil d'installation" name="endInstall" id="btnEnd" class="button" />
+  <input type="submit" value="Redirection vers TicketFactory" name="endInstall" id="btnEnd" class="button" />
 </div>

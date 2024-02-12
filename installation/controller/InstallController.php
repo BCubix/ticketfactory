@@ -105,8 +105,11 @@ class InstallController
             $session->step = self::getSteps()->current()->getName();
         }
 
-        self::getSteps()->current()->getControllerInstance()->process();
+        if (self::getSteps()->current()->getControllerInstance()->process()) {
+            return true;
+        }
         self::getSteps()->current()->getControllerInstance()->display();
+        return false;
     }
 
     public function setCurrentStep($step)
@@ -129,8 +132,9 @@ class InstallController
     {
     }
 
-    public function process(): void
+    public function process(): bool
     {
+        return false;
     }
 
     public function processNextStep(): void
