@@ -2,8 +2,16 @@
 
 use App\Kernel;
 
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+defined('_TF_ROOT_DIR_') || define('_TF_ROOT_DIR_', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
-return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-};
+require_once _TF_ROOT_DIR_ . '/vendor/autoload_runtime.php';
+
+if (file_exists(_TF_ROOT_DIR_ . '/installation')) {
+    require_once 'install/index.php';
+}
+
+if (!file_exists(_TF_ROOT_DIR_ . '/installation')) {
+    return function (array $context) {
+        return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+    };
+}
