@@ -24,4 +24,6 @@ function rrmdir($src)
 
 if (file_exists(_TF_ROOT_DIR_ . '/.env.local') && $installed) {
     rrmdir(_TF_ROOT_DIR_ . '/installation');
+    header('Location: /admin');
+    exit;
 }
