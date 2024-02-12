@@ -42,7 +42,9 @@ class InstallControllerProcess extends InstallController
                 $this->processGenerateEnvFile();
             } elseif (InstallerTools::getValue('installDatabase') && !empty($this->session->process_validated['generateEnvFile'])) {
                 $this->processInstallDatabase();
-            } elseif (InstallerTools::getValue('createAdminUser') && !empty($this->session->process_validated['installDatabase'])) {
+            } elseif (InstallerTools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
+                $this->processPopulateDatabase();
+            } elseif (InstallerTools::getValue('createAdminUser') && !empty($this->session->process_validated['populateDatabase'])) {
                 $this->processCreateAdminUser();
             }
         } catch (Exception $e) {
@@ -90,6 +92,15 @@ class InstallControllerProcess extends InstallController
         $this->ajaxJsonAnswer(true);
     }
 
+    public function processPopulateDatabase()
+    {
+        if (!$this->model_install->populateDatabase() || $this->model_install->getErrors()) {
+            $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+        }
+        $this->session->process_validated = array_merge($this->session->process_validated, ['populateDatabase' => true]);
+        $this->ajaxJsonAnswer(true);
+    }
+
     public function processCreateAdminUser()
     {
         $success = $this->model_install->createAdminUser(
@@ -109,6 +120,7 @@ class InstallControllerProcess extends InstallController
     {
         $this->process_steps[] = ['key' => 'generateEnvFile', 'step' => 'Création du fichier d\'environemment'];
         $this->process_steps[] = ['key' => 'installDatabase', 'step' => 'Création des tables de la database'];
+        $this->process_steps[] = ['key' => 'populateDatabase', 'step' => 'Ajout des valeurs dans la database'];
         $this->process_steps[] = ['key' => 'createAdminUser', 'step' => 'Création de l\'utilisateur administrateur'];
 
         if (!InstallerTools::getValue('endInstall')) {

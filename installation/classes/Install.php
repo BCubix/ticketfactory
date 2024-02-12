@@ -3,6 +3,7 @@
 namespace TicketFactory\Installer\Classes\Install;
 
 use App\Service\Db\Db;
+use TicketFactory\Installer\Classes\Uuid\UUID;
 
 class Install
 {
@@ -47,6 +48,24 @@ class Install
         return true;
     }
 
+    public function populateDatabase()
+    {
+        try {
+            foreach (new \DirectoryIterator(_TF_INSTALL_DATA_PATH_) as $file) {
+                if (preg_match('/^.+\.sql$/u', $file->getFilename())) {
+                    Db::getInstance()->query(file_get_contents(_TF_INSTALL_DATA_PATH_ . $file->getFilename()));
+                }
+            }
+            foreach (['event', 'media', 'product'] as $entity) {
+                $this->addCategoryToDatabase($entity . '_category');
+            }
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
     public function createAdminUser(string $email, string $firstname, string $lastname, string $password): bool
     {
         if (!isset($email) || !isset($firstname) || !isset($lastname) || !isset($password)) {
@@ -74,7 +93,6 @@ class Install
             $this->setError($e->getMessage());
             return false;
         }
-
         return true;
     }
 
@@ -90,5 +108,24 @@ class Install
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    private function addCategoryToDatabase(string $table)
+    {
+        $nowFormatted = (new \DateTime())->format('Y-m-d H:i:s');
+
+        $sql = sprintf(
+            "INSERT INTO
+            `%s` (
+                id, tree_root, parent_id, created_at, updated_at, active, name, slug, lft, rgt, lvl, lang_id, language_group, position
+            )
+            VALUES (1, 1, NULL, '%s', '%s', 1, 'Catégories', 'categories', 1, 14, 0, 1, '%s', 0);",
+            $table,
+            $nowFormatted,
+            $nowFormatted,
+            pack("H*", str_replace('-', '', UUID::guidv4()))
+        );
+
+        Db::getInstance()->query($sql);
     }
 }
