@@ -1,10 +1,6 @@
 INSERT INTO
     `theme` (
-        id,
-        name
+        id, name
     )
 VALUES
-    (
-        1,
-        'default'
-    );
+    (1,'default');

@@ -9,6 +9,8 @@
     <meta http-equiv="Cache" content="no store" />
     <meta http-equiv="Expires" content="-1" />
     <meta name="robots" content="noindex" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="all" href="/install/view.css" />
 </head>
 
@@ -25,11 +27,11 @@
 
             <!-- Page content -->
             <form id="mainForm" action="index.php" method="post">
+                <div class="contentTitle">
+                    <h1>Installation de TicketFactory</h1>
+                </div>
                 <div id="sheets" class="sheet shown">
                     <div id="sheet_<?php echo self::getSteps()->current()->getName(); ?>" class="sheet">
-                        <div class="contentTitle">
-                            <h1>Outil d'installation</h1>
-                        </div>
 
                         <div>
                             <?php echo $this->getContent(); ?>
@@ -39,11 +41,7 @@
 
                 <div id="buttons">
                     <?php if (!$this->isLastStep()) { ?>
-                        <?php if ($this->nextButton) { ?>
-                            <input id="btNext" class="button" type="submit" name="submitNext" value="Suivant" />
-                        <?php } else { ?>
-                            <input id="btNext" class="button disabled" type="submit" name="submitNext" value="Suivant" disabled="disabled" />
-                        <?php } ?>
+                        <input id="btNext" class="button" type="submit" name="submitNext" value="Suivant" <?php if (!$this->nextButton) { ?> disabled="disabled" <?php } ?> />
                     <?php } ?>
 
                     <?php if (!$this->isFirstStep() && $this->previousButton) { ?>

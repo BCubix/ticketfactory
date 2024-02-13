@@ -94,16 +94,18 @@ function install_error(step, errors) {
                         val = val.map(function (v) {
                             return '<li>' + v + '</li>';
                         });
+                        err.push(prop + ' <ul>' + val + '</ul>');
+                    } else {
+                        err.push(val);
                     }
-                    err.push(prop + ' <ul>' + val + '</ul>');
                 });
                 list_errors = err;
                 break;
         }
 
-        var display = '<ul class="errorBlock">';
-        $.each(list_errors, function (k, v) {
-            display += '<li>' + (k + 1) + ': ' + v.replace(/\n/g, '<br>') + '</li>';
+        var display = '<ul>';
+        $.each(list_errors, function (_, v) {
+            display += '<li>' + v.replace(/\n/g, '<br>') + '</li>';
         });
 
         display += '</ul>';

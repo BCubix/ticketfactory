@@ -1,4 +1,3 @@
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/install/js/process.js"></script>
 <script type="text/javascript">
   var install_is_done = '<?php echo addslashes('Installation terminé !'); ?>';
@@ -25,8 +24,12 @@
     <?php endforeach; ?>
   </ol>
 
-  <div id="error_process">
-    <h3>Une erreur a eu lieu durant l'installation...</h3>
+  <div id="error_process" class="block errorBlock">
+    <div class="block-header">
+      <span class="material-icons">error_outline</span>
+      <h3>Une erreur a eu lieu durant l'installation...</h3>
+    </div>
+
     <p>Vous pouvez utiliser les liens de la colonne de gauche pour revenir à une étape précédente, ou redémarrer le processus d'installation en <a href="index.php?restart=true">cliquant ici</a>.</p>
   </div>
 

@@ -5,6 +5,11 @@ use TicketFactory\Installer\Controller\InstallController\InstallController;
 
 class InstallControllerLicense extends InstallController
 {
+    public function init(): void
+    {
+        $this->nextButton = false;
+    }
+
     public function processNextStep(): void
     {
         $this->session->licence_agrement = (bool) InstallerTools::getValue('licence_agrement');
@@ -12,6 +17,7 @@ class InstallControllerLicense extends InstallController
 
     public function validate(): bool
     {
+        $this->nextButton = (bool) $this->session->licence_agrement;
         return (bool) $this->session->licence_agrement;
     }
 

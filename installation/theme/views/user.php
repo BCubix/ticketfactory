@@ -33,8 +33,8 @@
         <input autocomplete="off" type="password" data-minlength="8" data-maxlength="72" data-minscore="3" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password ?? ''); ?>" />
         <sup class="required">*</sup>
     </div>
-    <p class="userInfos">Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caratère spécial. (10 caractères minimum)</p>
     <?php echo $this->displayError('admin_password'); ?>
+    <p class="userInfos">Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caratère spécial. (10 caractères minimum)</p>
 </div>
 
 <div class="field">

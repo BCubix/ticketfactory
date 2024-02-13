@@ -1,5 +1,15 @@
 @charset "UTF-8";
 
+@font-face {
+    font-family: Anton;
+    src: url('assets/fonts/Anton-Regular.ttf');
+}
+
+@font-face {
+    font-family: Rubik;
+    src: url('assets/fonts/Rubik-Regular.ttf');
+}
+
 /* ****************************************************************************
       reset
 **************************************************************************** */
@@ -125,8 +135,8 @@ a {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    padding: 20px;
     background: #fff3e5;
+    box-shadow: rgba(0, 0, 0, 0.085) 5px 0px 10px;
 }
 
 div#body-container {
@@ -142,17 +152,24 @@ div#leftpannel {
     width: 260px;
     color: #8b95a6;
     background-color: #fff;
+    border: medium;
+    box-shadow: rgba(0, 0, 0, 0.085) 0 5px 10px;
 }
 
 form#mainForm {
     height: 100%;
     width: 100%;
+    padding: 30px;
 }
 
 div#sheets {
-    margin: 2rem;
+    margin-block: 1rem;
+    padding: 1rem;
     min-height: 360px;
+    color: rgba(0, 0, 0, 0.87);
     background-color: #fff;
+    border-radius: 12px;
+    box-shadow: rgb(235, 241, 255) 0px 0.5rem 1.25rem;
 }
 
 #sheets div.sheet {
@@ -161,16 +178,14 @@ div#sheets {
 }
 
 div#buttons {
-    clear: both;
-    margin: 0 0 0 295px;
     height: 60px;
-    width: 650px;
-}
-* html div#buttons {
-    margin-bottom: 60px;
-    margin-top: -30px;
+    width: 100%;
 }
 #btNext {
+    float: right;
+    margin-left: 10px;
+}
+#btBack {
     float: right;
 }
 
@@ -178,7 +193,10 @@ div#buttons {
       generics styles
 **************************************************************************** */
 body {
-    font: normal 13px/18px Arial, Helvetica, sans-serif;
+    font-size: 0.875rem;
+    font-family: Rubik, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
     color: #333;
     background: #f5f7fa;
     height: 100vh;
@@ -217,7 +235,7 @@ p {
 a,
 a:active,
 a:visited {
-    color: #d41958;
+    color: #41a0ff;
     text-decoration: none;
 }
 a:hover {
@@ -232,19 +250,25 @@ sup.required {
 
 /* form */
 .button {
-    padding: 0 30px;
-    height: 31px;
-    line-height: 31px;
+    height: 40px;
     color: #fff;
-    border: 1px solid transparent;
-    background-color: #00aff0;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    background-color: rgb(46, 113, 179);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    line-height: 1.75;
+    text-transform: uppercase;
+    min-width: 64px;
+    padding: 6px 16px;
+    outline: 0px;
+    border: 0px;
+    margin: 0px;
+    cursor: pointer;
 }
 
 .button:hover {
-    background-color: #008abd;
+    background-color: rgb(34, 84, 134);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
     cursor: pointer;
 }
 
@@ -259,7 +283,7 @@ sup.required {
     border: 1px solid #666;
 }
 
-input.button.disabled {
+input.button:disabled {
     color: #666;
     background-color: #e4e4e4;
     cursor: inherit;
@@ -269,12 +293,14 @@ input.button.disabled {
 input.text {
     padding: 0 6px;
     height: 22px;
-    width: 218px; /* 230 */
-    border: 1px solid #ccc;
+    width: 218px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #212121;
 }
-select {
-    width: 232px;
-    border: 1px solid #ccc;
+input.text:focus {
+    border-bottom: 2px solid #212121;
+    transition: border-bottom 100ms;
 }
 
 div.field {
@@ -291,77 +317,61 @@ div.field div.contentinput {
     vertical-align: top;
 }
 div.field .userInfos {
-    display: inline-block;
+    display: block;
     padding: 0;
-    font-size: 11px;
-    font-family: Georgia;
+    font-size: 12px;
     font-style: italic;
     color: #999;
 }
 
+.block {
+    border-radius: 4px;
+    line-height: 1.43;
+    letter-spacing: 0.01071rem;
+    padding: 16px;
+}
+
+.block .block-header {
+    display: flex;
+    flex-flow: row nowrap;
+}
+.block .block-header:not(:last-child) {
+    padding-bottom: 10px;
+}
+
+.block-header h1,
+.block-header h2,
+.block-header h3 {
+    padding: 0;
+}
+
+.block-header span.material-icons {
+    margin-right: 5px;
+}
+
 .okBlock {
-    padding: 20px 20px 20px 38px;
-    background-color: #b7e2a7;
-    border: 1px solid #85c10c;
+    background-color: #edf7ed;
+    color: #418945;
 }
 
 .errorBlock {
-    padding: 20px 20px 20px 38px;
-    background-color: #ffebe8;
-    border: 1px solid #cc0000;
-    clear: both;
-    display: block;
+    background-color: #fdeded;
+    color: #d74242;
 }
 
 .errorTxt {
-    color: #ff0000;
-    clear: both;
-    display: block;
-    padding: 3px 0 1px 217px;
-}
-
-.infosBlock {
-    padding: 14px 25px 14px 20px;
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 18px;
-    background: #f8f8f8;
-    border: 1px solid #ccc;
-}
-
-.infosBlock img {
-    vertical-align: middle;
-}
-
-.warnBlock {
-    padding: 14px 25px 14px 35px;
-    margin-bottom: 10px;
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 18px;
-    background: #feefb3;
-    border: 1px solid #9e6014;
-    color: #9e6014;
-}
-
-.okBlock h1,
-.okBlock h2,
-.okBlock h3,
-.errorBlock h1,
-.errorBlock h2,
-.errorBlock h3,
-.infosBlock h1,
-.infosBlock h2,
-.infosBlock h3 {
-    padding-bottom: 5px;
+    display: inline;
+    color: #f00;
+    padding: 3px 1px;
 }
 
 /* ****************************************************************************
       HEADER
 **************************************************************************** */
 #header #TicketFactoryLogo {
-    margin: 10px;
-    height: 50px;
+    margin: 16px 32px;
+    height: 48px;
+    max-width: 150px;
 }
 
 /* ****************************************************************************
@@ -396,18 +406,26 @@ ol#tabs li.configuring a {
 }
 
 /* ****************************************************************************
-      SHEET
+      MAINFORM
 **************************************************************************** */
-.sheet .contentTitle {
-    padding: 15px 25px 10px 38px;
+.contentTitle {
     height: 28px;
     width: 927px;
 }
 
-.sheet .contentTitle h1 {
-    text-shadow: 0 1px 0 #fff;
+.contentTitle h1 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    color: rgb(55, 55, 60);
+    font-family: Anton, Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
+/* ****************************************************************************
+      SHEET
+**************************************************************************** */
 li.title {
     margin: 0;
     font-weight: bold;
@@ -447,14 +465,24 @@ li.title {
       License
 **************************************************************************** */
 div#license-content {
-    height: 200px;
-    border: 1px solid #ccc;
-    margin-bottom: 8px;
-    padding: 5px;
-    background: #fff;
+    height: 400px;
+    border-radius: 10px;
+    margin-block: 10px;
+    padding: 20px;
+    background: #efefef;
     overflow: auto;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+div#license-content *:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+input#set_license {
+    vertical-align: middle;
+    float: left;
 }
 
 div#set_license_label {
@@ -468,6 +496,10 @@ div#set_license_label {
 **************************************************************************** */
 ul li.ok {
     display: none;
+}
+
+#btRefreshRequirement {
+    margin: 20px 0;
 }
 
 /* ****************************************************************************

@@ -2,17 +2,21 @@
 
 <p>Nous vérifions la compatibilité de votre environnement système.</p>
 
-<p><input class="button" value="Vérifier la compatibilité" type="submit" id="req_bt_refresh" /></p>
-
 <?php if ($this->tests['success']) { ?>
-    <h3 class="okBlock">
-        Votre système est compatible.
-    </h3>
+    <div class="block okBlock">
+        <div class="block-header">
+            <span class="material-icons">task_alt</span>
+            <h3>Votre système est compatible.</h3>
+        </div>
+    </div>
 <?php } else { ?>
-    <div class="errorBlock">
-        <h3>
-            Veuillez corriger les éléments suivants, et testez la compatibilité de votre système à nouveau.
-        </h3>
+    <div class="block errorBlock">
+        <div class="block-header">
+            <span class="material-icons">error_outline</span>
+            <h3>
+                Veuillez corriger les éléments suivants, et testez la compatibilité de votre système à nouveau.
+            </h3>
+        </div>
 
         <ul>
             <?php $i = 0; ?>
@@ -25,3 +29,5 @@
         </ul>
     </div>
 <?php } ?>
+
+<input class="button" value="Vérifier la compatibilité" type="submit" id="btRefreshRequirement" />
