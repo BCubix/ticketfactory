@@ -7,7 +7,6 @@ use App\Entity\Event\Room;
 use App\Entity\Page\Page;
 use App\Entity\Event\Season;
 use App\Form\Website\Event\EventFilterType;
-use App\Service\Sort\EventSorter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -30,7 +29,6 @@ class SeasonController extends WebsiteController
 
         $today = new \Datetime();
         $today->setTime(0, 0, 0);
-        $months = EventSorter::getNextMonths($today);
         $sort = [
             'Nom (Ordre alphabétique)' => 'nameAsc',
             'Nom (Ordre anti-alphabétique)' => 'nameDesc',
@@ -43,7 +41,6 @@ class SeasonController extends WebsiteController
             'endDate'   => $request->get('endDate') ?? null,
             'category'  => $request->get('category') ?? null,
             'room'      => $request->get('room') ?? null,
-            'month'     => $request->get('month') ?? null,
             'sort'      => $request->get('sort') ?? null
         ];
 
@@ -55,7 +52,8 @@ class SeasonController extends WebsiteController
             $filters['room'] = $this->em->getRepository(Room::class)->find($filters['room']);
         }
 
-        $filterForm = $this->createForm(EventFilterType::class, null, ['months' => $months, 'sort' => $sort]);
+        $filterParams = $this->mf->get("event")->getFilterParams();
+        $filterForm = $this->createForm(EventFilterType::class, null, ['filterParams' => $filterParams, 'sort' => $sort]);
         $filterForm->setData($filters);
         $filterForm->handleRequest($request);
 
@@ -92,7 +90,8 @@ class SeasonController extends WebsiteController
             'activeEvents'       => $events['active'],
             'inactiveEvents'     => $events['inactive'],
             'pageContent'        => $pageContent,
-            'filterForm'         => $filterForm->createView()
+            'filterForm'         => $filterForm->createView(),
+            'filterParams'       => $filterParams,
         ]);
     }
 }
