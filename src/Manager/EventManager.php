@@ -404,6 +404,17 @@ class EventManager extends AbstractManager
         return $formatedMedias;
     }
 
+    public function getFilterParams()
+    {
+        return [
+            'beginDateFilter'   => $this->mf->get("parameter")->getCoreParameter('event_begin_date_filter'),
+            'endDateFilter'     => $this->mf->get("parameter")->getCoreParameter('event_end_date_filter'),
+            'seasonFilter'      => $this->mf->get("parameter")->getCoreParameter('event_season_filter'),
+            'roomFilter'        => $this->mf->get("parameter")->getCoreParameter('event_room_filter'),
+            'categoryFilter'    => $this->mf->get("parameter")->getCoreParameter('event_category_filter')
+        ];
+    }
+
     private function getDefaultParameters($filters): array
     {
         [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];
