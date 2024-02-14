@@ -14,17 +14,7 @@ use JMS\Serializer\Annotation as JMS;
 class Language extends Datable
 {
     /*** > Trait ***/
-    /*** > Module: FlashInfo ***/
-    use \TicketFactory\Module\FlashInfo\Entity\Language\Override\LanguageTrait;
-    /*** < Module: FlashInfo ***/
     /*** < Trait ***/
-
-    public function __construct()
-    {
-        /*** > Module: FlashInfo ***/
-        $this->flashInfos = new ArrayCollection();
-        /*** < Module: FlashInfo ***/
-    }
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]

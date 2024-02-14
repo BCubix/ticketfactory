@@ -146,6 +146,9 @@ class Event extends Datable
 
     public function __construct()
     {
+        /*** > Module: EventArticle ***/
+        $this->eventArticles = new ArrayCollection();
+        /*** < Module: EventArticle ***/
         $this->eventCategories  = new ArrayCollection();
         $this->eventDateBlocks  = new ArrayCollection();
         $this->eventPriceBlocks = new ArrayCollection();
