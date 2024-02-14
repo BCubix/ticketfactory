@@ -31,12 +31,12 @@ class InstallController
         ],
         [
             'name' => 'user',
-            'displayName' => 'Création de l\'utilisateur admin',
+            'displayName' => 'Utilisateur admin',
             'controllerName' => 'InstallControllerUser',
         ],
         [
             'name' => 'database',
-            'displayName' => 'Configuration de la base de données',
+            'displayName' => 'Base de données',
             'controllerName' => 'InstallControllerDatabase',
         ],
         [

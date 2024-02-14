@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/install/js/user.js"></script>
+
 <h2>Création de l'utilisateur admin</h2>
 
 <div class="field">
@@ -35,6 +37,19 @@
     </div>
     <?php echo $this->displayError('admin_password'); ?>
     <p class="userInfos">Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caratère spécial. (10 caractères minimum)</p>
+    <div class="block errorBlock" style="margin-top: 10px;" hidden>
+        <div class="block-header">
+            <span class="material-icons">error_outline</span>
+            <h3>Mot de passe invalide</h3>
+        </div>
+        <ul>
+            <li class="errorPassword" id="pwLength">Le mot de passe doit contenir au moins 10 caractères.</li>
+            <li class="errorPassword" id="pwUpper">Le mot de passe doit contenir au moins une majuscule.</li>
+            <li class="errorPassword" id="pwLower">Le mot de passe doit contenir au moins une minuscule.</li>
+            <li class="errorPassword" id="pwNumber">Le mot de passe doit contenir au moins un chiffre.</li>
+            <li class="errorPassword" id="pwSpecial">Le mot de passe doit contenir au moins un caractère spécial.</li>
+        </ul>
+    </div>
 </div>
 
 <div class="field">
