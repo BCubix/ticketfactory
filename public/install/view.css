@@ -334,9 +334,11 @@ div.field .userInfos {
 .block .block-header {
     display: flex;
     flex-flow: row nowrap;
-}
-.block .block-header:not(:last-child) {
     padding-bottom: 10px;
+}
+
+.block *:last-child {
+    padding-bottom: 0;
 }
 
 .block-header h1,

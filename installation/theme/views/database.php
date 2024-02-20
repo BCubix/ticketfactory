@@ -42,8 +42,14 @@
     </div>
 
     <?php if (array_key_exists('db_connection', $this->errors) && $this->errors['db_connection']) : ?>
-        <p id="dbResultCheck" class="errorBlock"><?php echo implode('<br />', $this->errors['db_connection']); ?></p>
+        <div id="dbResultCheck" class="block errorBlock">
+            <div class="block-header">
+                <span class="material-icons">error_outline</span>
+                <h3>Une erreur est survenu lors de la connection à la base de données</h3>
+            </div>
+            <p><?php echo implode('<br />', $this->errors['db_connection']); ?></p>
+        </div>
     <?php else : ?>
-        <p id="dbResultCheck" style="display: none;"></p>
+        <div id="dbResultCheck" style="display: none;"></div>
     <?php endif; ?>
 </div>
