@@ -60,3 +60,20 @@
     </div>
     <?php echo $this->displayError('admin_password_confirm'); ?>
 </div>
+
+<div class="field">
+    <label for="infosStructure">Type de strucure</label>
+    <div class="contentinput">
+        <select class="required" id="infosStructure" name="admin_structure">
+            <option value="">--Choisissez une option--</option>
+            <option value="0">Théatre</option>
+            <option value="1">Musée</option>
+            <option value="2">Cinéma</option>
+            <option value="3">Festival</option>
+            <option value="4">Salle de concert</option>
+            <option value="5">Parc d'attraction</option>
+        </select>
+        <sup class="required">*</sup>
+    </div>
+    <?php echo $this->displayError('admin_structure'); ?>
+</div>

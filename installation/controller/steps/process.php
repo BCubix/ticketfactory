@@ -94,7 +94,10 @@ class InstallControllerProcess extends InstallController
 
     public function processPopulateDatabase()
     {
-        if (!$this->model_install->populateDatabase() || $this->model_install->getErrors()) {
+        $success = $this->model_install->populateDatabase(
+            $this->session->admin_structure
+        );
+        if (!$success || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
         $this->session->process_validated = array_merge($this->session->process_validated, ['populateDatabase' => true]);

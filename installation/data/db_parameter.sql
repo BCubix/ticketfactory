@@ -1,8 +1,10 @@
 INSERT INTO
-    `parameter`
+    `parameter` (
+        id, name, type, param_key, param_value, available_value, validations, tab_name, block_name, breakpoints_value
+    )
 VALUES
     (21,'Type d\'évènements par défaut','list','core_default_events_type','Pièces','[{\"id\": \"Pièces\", \"name\": \"Pièces de théatre\"}, {\"id\": \"Expositions\", \"name\": \"Expositions temporaires\"}, {\"id\": \"Films\", \"name\": \"Diffusions de films\"}, {\"id\": \"Concerts\", \"name\": \"Concerts\"}, {\"id\": \"Ballets\", \"name\": \"Ballets\"}]','[]','Paramètres généraux','Types par défaut','xs-12 md-6'),
-    (22,'Type de structures par défaut','list','core_default_structures_type','0','[{\"id\": 0, \"name\": \"Théatre\"}, {\"id\": 1, \"name\": \"Musée\"}, {\"id\": 2, \"name\": \"Cinéma\"}, {\"id\": 3, \"name\": \"Festival\"}]','[]','Paramètres généraux','Types par défaut','xs-12 md-6'),
+    (22,'Type de structures par défaut','list','core_default_structures_type','0','[{\"id\": 0, \"name\": \"Théatre\"}, {\"id\": 1, \"name\": \"Musée\"}, {\"id\": 2, \"name\": \"Cinéma\"}, {\"id\": 3, \"name\": \"Festival\"}, {\"id\": 4, \"name\": \"Salle de concert\"}, {\"id\": 5, \"name\": \"Parc d\'attraction\"}]','[]','Paramètres généraux','Types par défaut','xs-12 md-6'),
     (23,'Logo','upload','core_website_logo','64ecda75015c0.png',NULL,'[]','Paramètres généraux','Thème & Logo','xs-12 md-6'),
     (24,'Favicon','upload','core_favicon','650072bd71d7c.png',NULL,'[]','Paramètres généraux','Thème & Logo','xs-12 md-6'),
     (25,'Format des images','string','core_image_format','18',NULL,'[]',NULL,NULL,NULL),

@@ -294,6 +294,15 @@ input.text:focus {
     transition: border-bottom 100ms;
 }
 
+select {
+    height: 22px;
+    width: 230px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #212121;
+    background-color: transparent;
+}
+
 div.field {
     padding: 10px 0;
 }

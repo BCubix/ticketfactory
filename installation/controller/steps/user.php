@@ -11,6 +11,7 @@ class InstallControllerUser extends InstallController
         $this->session->admin_firstname = trim(InstallerTools::getValue('admin_firstname'));
         $this->session->admin_lastname = trim(InstallerTools::getValue('admin_lastname'));
         $this->session->admin_email = trim(InstallerTools::getValue('admin_email'));
+        $this->session->admin_structure = trim(InstallerTools::getValue('admin_structure'));
 
         // If password fields are empty, but are already stored in session, do not fill them again
         if (!$this->session->admin_password || trim(InstallerTools::getValue('admin_password'))) {
@@ -24,9 +25,9 @@ class InstallControllerUser extends InstallController
 
     public function validate(): bool
     {
-        $required_fields = ['admin_firstname', 'admin_lastname', 'admin_email', 'admin_password', 'admin_password_confirm'];
+        $required_fields = ['admin_firstname', 'admin_lastname', 'admin_email', 'admin_password', 'admin_password_confirm', 'admin_structure'];
         foreach ($required_fields as $field) {
-            if (!$this->session->$field) {
+            if (!is_string($this->session->$field) || strlen($this->session->$field) <= 0) {
                 $this->errors[$field] = 'Champ requis';
             }
         }
@@ -49,6 +50,10 @@ class InstallControllerUser extends InstallController
 
         if ($this->session->admin_email && !Validate::isEmail($this->session->admin_email)) {
             $this->errors['admin_email'] = 'L\'adresse e-mail est invalide';
+        }
+
+        if ($this->session->admin_structure && !Validate::isStructureType($this->session->admin_structure)) {
+            $this->errors['admin_structure'] = 'La valeur sélectionnée est invalide';
         }
 
         return count($this->errors) ? false : true;

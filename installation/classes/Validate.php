@@ -38,6 +38,11 @@ class Validate
         return (new EmailValidator())->isValid($email, new RFCValidation());
     }
 
+    public static function isStructureType(string $strctureId): bool
+    {
+        return is_string($strctureId) && strlen($strctureId) > 0;
+    }
+
     public static function isPasswordValid(string $password): bool
     {
         return preg_match('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{10,}$/u', $password);
