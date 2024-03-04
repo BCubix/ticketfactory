@@ -88,6 +88,9 @@ class ParameterManager extends AbstractManager
             case 'int':
                 return intval($value);
 
+            case 'float':
+                return floatval($value);
+
             case 'bool':
                 return boolval($value);
 
