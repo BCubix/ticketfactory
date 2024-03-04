@@ -26,6 +26,10 @@ class ContactController extends WebsiteController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->mf->get("hook")->exec("actionWebsiteContactValidated", [
+                'vObject' => $object,
+            ]);
+
             $this->em->persist($object);
             $this->em->flush();
 
