@@ -132,7 +132,7 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'events', cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $tags;
 
     #[JMS\Expose()]

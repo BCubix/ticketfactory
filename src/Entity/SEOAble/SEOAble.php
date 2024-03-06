@@ -47,6 +47,11 @@ trait SEOAble
     #[ORM\Column(type: Types::STRING, length: 511, nullable: true)]
     private $twDescription;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_all'])]
+    #[ORM\Column(type: 'boolean')]
+    private $indexed = true;
+
     public function getMetaTitle(): ?string
     {
         return $this->metaTitle;
@@ -127,6 +132,18 @@ trait SEOAble
     public function setTwDescription(?string $twDescription): self
     {
         $this->twDescription = $twDescription;
+
+        return $this;
+    }
+
+    public function isIndexed(): ?bool
+    {
+        return $this->indexed;
+    }
+
+    public function setIndexed(bool $indexed): self
+    {
+        $this->indexed = $indexed;
 
         return $this;
     }

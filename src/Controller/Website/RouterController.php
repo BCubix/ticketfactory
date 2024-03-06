@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RouterController extends WebsiteController
 {
-    #[Route('/{slugs}', name: 'tf_website_global', requirements: ['slugs' => '^(?!/en).*$'], priority: -100)]
+    #[Route('/{slugs}', name: 'tf_website_global', requirements: ['slugs' => '^(?!/en).*$'], priority: -10)]
     public function orchestrator(string $slugs): Response
     {
         // We explode url to get path as slug tokens
@@ -53,6 +53,15 @@ class RouterController extends WebsiteController
 
     private function forwardEventContents(?Page $page, array $slugs): ?Response
     {
+        $event = $this->mf->get("event")->getEventFromUrl($slugs);
+        if (null !== $event) {
+            return $this->forward('App\Controller\Website\EventController::index', [
+                'page'          => $page,
+                'event'         => $event,
+                'slugs'         => $slugs,
+            ]);
+        }
+
         if (count($slugs) == 0) {
             return null;
         }
@@ -66,7 +75,7 @@ class RouterController extends WebsiteController
             };
         }
 
-        return $this->forwardEvent($page, $slugs);
+        return null;
     }
 
     private function forwardOtherContents(?Page $page, array $slugs): ?Response
@@ -118,25 +127,6 @@ class RouterController extends WebsiteController
         return $this->forward($controllerName, [
             'page' => $page,
             $keyword => $content,
-            'slugs' => $slugs
-        ]);
-    }
-
-    private function forwardEvent(?Page $page, array $slugs): ?Response
-    {
-        $refPage = $this->mf->get('parameter')->getCoreParameter('page_event');
-        if (null !== $refPage && $page != $refPage) {
-            return null;
-        }
-
-        $event = $this->mf->get('event')->getFromUrl($slugs);
-        if (null === $event) {
-            return null;
-        }
-
-        return $this->forward('App\Controller\Website\EventController::index', [
-            'page' => $page,
-            'event' => $event,
             'slugs' => $slugs
         ]);
     }

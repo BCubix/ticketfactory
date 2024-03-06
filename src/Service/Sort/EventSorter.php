@@ -88,38 +88,14 @@ class EventSorter
         return ($objectString == self::OBJECT_DATE ? $referenceDate : $referenceDateVal);
     }
 
-    public static function sortEvents($events, $withActiveSort = false, $sortField = 'beginDate', $sortOrder = 'DESC'): array
+    public static function sortEvents($events, $withActiveSort = false, $sortField = 'beginDate', $sortOrder = 'ASC'): array
     {
         if (null === $events) {
             return null;
         }
 
-        $sortDirection = $sortField == "beginDate" ? 1 : -1;
-        if ($sortOrder === "ASC") {
-            $sortDirection = $sortField == "beginDate" ? -1 : 1;
-        }
-
-        usort($events, function ($a, $b) use ($sortField, $sortDirection) {
-            $compareA = null;
-            $compareB = null;
-
-            if ($sortField === 'name') {
-                $compareA = $a->getName();
-                $compareB = $b->getName();
-            } else {
-                $compareA = $a->getBeginDate();
-                $compareB = $b->getBeginDate();
-            }
-
-            if ($compareA == $compareB) {
-                return 0;
-            }
-
-            if ($compareA > $compareB) {
-                return $sortDirection;
-            }
-
-            return $sortDirection * -1;
+        usort($events, function ($a, $b) use ($sortField, $sortOrder) {
+            return self::compareEvents($a, $b, $sortField, $sortOrder);
         });
 
         if ($withActiveSort) {
@@ -146,5 +122,36 @@ class EventSorter
         }
 
         return $sortedEvents;
+    }
+
+    private static function getSortList(): array
+    {
+        return [
+            'name' => [fn ($element) => $element->getName()],
+            'beginDate' => [fn ($element) => $element->getBeginDate()]
+        ];
+    }
+
+    private static function compareEvents($a, $b, $sortField, $sortOrder)
+    {
+        $sortDirection = $sortOrder === "ASC" ? 1 : -1;
+        $sortList = self::getSortList();
+
+        $compareA = $sortList[$sortField][0]($a);
+        $compareB = $sortList[$sortField][0]($b);
+
+        if (isset($sortList[$sortField][1])) {
+            return $sortList[$sortField][1]($a, $b) * $sortDirection;
+        }
+
+        if ($compareA == $compareB) {
+            return 0;
+        }
+        
+        if ($compareA > $compareB) {
+            return $sortDirection;
+        }
+        
+        return $sortDirection * -1;
     }
 }

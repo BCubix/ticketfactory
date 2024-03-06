@@ -5,18 +5,30 @@ namespace App\Controller\Website;
 use App\Entity\Page\Page;
 use App\Entity\User\User;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-
 class PageController extends WebsiteController
 {
     public function index(Page $page)
     {
         $this->checkAccessPage($page);
 
+        $pageTypeBlocks = [];
+        foreach ($page->getContents() as $content) {
+            foreach ($content->getFields() as $key => $field) {
+                $pageTypeBlocks[$key] = $field;
+            }
+        }
+
+        $contentTypeBlocks = [];
+        foreach ($page->getContentTypes() as $contentTypes) {
+            if (null !== $contentTypes->getKeyword()) {
+                $contentTypeBlocks[$contentTypes->getKeyword()] = $contentTypes->getContents();
+            }
+        }
+
         return $this->websiteRender('Page/index.html.twig', [
-            'page' => $page
+            'page' => $page,
+            'pageTypeBlocks' => $pageTypeBlocks,
+            'contentTypeBlocks' => $contentTypeBlocks
         ]);
     }
 

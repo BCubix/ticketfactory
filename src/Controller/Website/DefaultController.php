@@ -94,7 +94,7 @@ class DefaultController extends WebsiteController
 
         $this->em->clear();
 
-        if (!method_exists($element, 'getLanguageGroup')) {
+        if (null === $element || !method_exists($element, 'getLanguageGroup')) {
             return new Response('');
         }
 

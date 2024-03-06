@@ -54,4 +54,13 @@ class MediaRepository extends CrudRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAllForSitemap(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.active = 1')
+            ->orderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -40,4 +40,16 @@ class FeatureCategoryRepository extends CrudRepository
     {
         parent::__construct($registry, FeatureCategory::class);
     }
+
+    public function findOneByKeywordForWebsite(string $keyword)
+    {
+        return $this->createQueryBuilder('fc')
+            ->leftJoin('fc.features', 'f', 'WITH', 'f.active = 1')
+            ->where('fc.active = 1')
+            ->andWhere('fc.keyword = :keyword')
+            ->setParameter('keyword', $keyword)
+            ->orderBy('f.position', 'DESC')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

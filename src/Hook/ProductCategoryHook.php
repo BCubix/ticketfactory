@@ -8,9 +8,9 @@ use App\Exception\ApiException;
 use App\Service\Addon\Hook;
 use Symfony\Component\HttpFoundation\Response;
 
-class MediaCategoryHook extends Hook
+class ProductCategoryHook extends Hook
 {
-    public function hookMediaCategorySaved(HookEvent $event)
+    public function hookProductCategorySaved(HookEvent $event)
     {
         $state = $event->getParam('state');
         if ($state !== 'add') {
@@ -36,7 +36,7 @@ class MediaCategoryHook extends Hook
         $this->em->flush();
     }
 
-    public function hookMediaCategoryValidated(HookEvent $event)
+    public function hookProductCategoryValidated(HookEvent $event)
     {
         $eventCategory = $event->getParam('vObject');
         $eventCategoryId = $eventCategory->getId();

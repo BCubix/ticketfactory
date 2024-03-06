@@ -7,6 +7,7 @@ use App\Exception\ApiException;
 use App\Service\Addon\Module;
 
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Yaml\Yaml;
@@ -30,6 +31,14 @@ class ModuleManager extends AddonManager
         $module = new Module();
 
         return $processor->processConfiguration($module, ['module' => $config]);
+    }
+
+    public function getModuleImage(string $objectName, bool $activeFilter): ?BinaryFileResponse
+    {
+        if (file_exists($this->sf->get('pathGetter')->getModulesDir() . '/' . $objectName . "/logo.png")) {
+            return new BinaryFileResponse($this->sf->get('pathGetter')->getModulesDir() . '/' . $objectName . "/logo.png");
+        }
+        return null;
     }
 
     public function getImage(string $objectName): array

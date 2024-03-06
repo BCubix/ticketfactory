@@ -20,6 +20,20 @@ class PageManager extends AbstractManager
         return $pages[0];
     }
 
+    public function getTranslationByKeyword(?int $languageId, string $keyword): Page
+    {
+        if (null === $languageId) {
+            $languageId = $this->getLanguageId();
+        }
+
+        $pages = $this->em->getRepository(Page::class)->findByKeywordForWebsite($languageId, $keyword);
+        if (count($pages) == 0) {
+            throw new \Exception('This page does not exist.');
+        }
+
+        return $pages[0];
+    }
+
     public function getBySlug(string $slug): ?Page
     {
         $languageId = $this->getLanguageId();

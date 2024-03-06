@@ -8,6 +8,8 @@ use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
@@ -24,6 +26,11 @@ class MenuEntryType extends AdminBaseFormType
             ->add('name',                 TextType::class,            [])
             ->add('menuType',             TextType::class,            [])
             ->add('value',                TextType::class,            [])
+            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
+            ->add('noFollow',             CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
+            ->add('target',               ChoiceType::class,          [
+                'choices'  => array_flip(MenuEntry::TARGET_MAPPING),
+            ])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,
                 'choice_label'  => 'name',

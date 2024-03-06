@@ -18,8 +18,11 @@ class MimeTypeMapping
         "audio/ogg"                                                                                   => 'Audio',
         "audio/wav"                                                                                   => 'Audio',
         "video/mp4"                                                                                   => 'Vidéo',
+        "video/avi"                                                                                   => 'Vidéo',
         "video/webm"                                                                                  => 'Vidéo',
         "video/ogg"                                                                                   => 'Vidéo',
+        "video/quicktime"                                                                             => 'Vidéo',
+        "video/x-matroska"                                                                            => 'Vidéo',
         "video/mpeg"                                                                                  => 'Vidéo',
         "application/msword"                                                                          => 'Word',
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"                     => 'Word',
@@ -50,7 +53,8 @@ class MimeTypeMapping
         return null;
     }
 
-    public static function getMimesFromType($type) {
+    public static function getMimesFromType($type)
+    {
         if (is_null($type)) {
             return null;
         }
@@ -58,11 +62,13 @@ class MimeTypeMapping
         return array_keys(self::MIMES, $type);
     }
 
-    public static function getAllCategories() {
+    public static function getAllCategories()
+    {
         return array_values(array_unique(self::MIMES));
     }
 
-    public static function getAllMimes() {
+    public static function getAllMimes()
+    {
         return array_keys(self::MIMES);
     }
 }

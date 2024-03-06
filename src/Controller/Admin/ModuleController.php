@@ -16,8 +16,10 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 #[Rest\Route('/api')]
 class ModuleController extends AdminController
@@ -84,5 +86,23 @@ class ModuleController extends AdminController
         }
 
         return $this->view($module, Response::HTTP_OK);
+    }
+
+    #[Rest\Get('/modules/moduleImage/{moduleName}', requirements: ['moduleName' => '.+'])]
+    public function getModuleImage(Request $request, string $moduleName)
+    {
+        $result = $this->mf->get("module")->getModuleImage($moduleName, true);
+
+        if (null !== $result) {
+            $result->headers->set('Content-Type', 'image/png');
+            $result->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE,
+                'module' . $moduleName . 'image.png'
+            );
+
+            return $result;
+        }
+
+        return new JsonResponse(null, 200);
     }
 }

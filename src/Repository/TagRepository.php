@@ -50,4 +50,15 @@ class TagRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForWebsite(int $languageId): array
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('t.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where("t.active = 1")
+            ->orderBy('t.id', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getResult();
+    }
 }

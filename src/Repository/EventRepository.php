@@ -182,4 +182,14 @@ class EventRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForSitemap(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.active = 1')
+            ->andWhere('e.indexed = 1')
+            ->orderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

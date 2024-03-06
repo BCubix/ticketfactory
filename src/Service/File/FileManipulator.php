@@ -18,6 +18,22 @@ class FileManipulator
         $this->fs = new FileSystem();
     }
 
+    public function createFile(string $filePath, string $content): void
+    {
+        if (!$this->fs->exists($filePath)) {
+            $this->fs->touch($filePath);
+        }
+
+        $result = file_put_contents($filePath, $content);
+        if (false === $result) {
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "L'écriture dans le fichier $filePath a échoué."
+            );
+        }
+    }
+
     /**
      * @return string
      */

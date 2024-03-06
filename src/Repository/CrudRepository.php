@@ -95,7 +95,16 @@ abstract class CrudRepository extends AbstractRepository
 
     public function findTranslatedElementsForAdmin(array $languageGroupList, $filters)
     {
-        $results = $this->createQueryBuilder('o')->addSelect('el');
+        $results = $this->createQueryBuilder('o');
+
+        foreach (static::SELECTS as $selectKey => $selectValue) {
+            $selectString = $selectKey;
+            if (null !== $selectValue) {
+                $selectString = $selectValue . " AS " . $selectKey;
+            }
+
+            $results->addSelect($selectString);
+        }
 
         foreach (static::JOINS as $joinArray) {
             $joinType = $joinArray[0];
@@ -122,7 +131,16 @@ abstract class CrudRepository extends AbstractRepository
 
     public function findOneByLanguageForAdmin(int $languageId, string $languageGroup)
     {
-        $results = $this->createQueryBuilder('o')->addSelect('el');
+        $results = $this->createQueryBuilder('o');
+
+        foreach (static::SELECTS as $selectKey => $selectValue) {
+            $selectString = $selectKey;
+            if (null !== $selectValue) {
+                $selectString = $selectValue . " AS " . $selectKey;
+            }
+
+            $results->addSelect($selectString);
+        }
 
         foreach (static::JOINS as $joinArray) {
             $joinType = $joinArray[0];
@@ -137,7 +155,7 @@ abstract class CrudRepository extends AbstractRepository
         return $results
             ->where('o.languageGroup = :languageGroup')
             ->setParameter('languageGroup', $languageGroup)
-            ->andWhere('el.id = :languageId')
+            ->andWhere('o.id = :languageId')
             ->setParameter('languageId', $languageId)
             ->getQuery()
             ->getOneOrNullResult();

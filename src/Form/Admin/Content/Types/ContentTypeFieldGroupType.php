@@ -37,6 +37,10 @@ class ContentTypeFieldGroupType extends ContentTypeFieldAbstractType
 
         $fields = [];
 
+        if (null === $cf) {
+            return $fields;
+        }
+
         foreach ($cf as $childrenCfName => $childrenCf) {
             foreach ($childrenContentType['fields'] as $childrenCt) {
 

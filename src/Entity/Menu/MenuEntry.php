@@ -39,6 +39,11 @@ class MenuEntry
         'none'     => ''
     ];
 
+    public const TARGET_MAPPING = [
+        '_self' => 'Self',
+        '_blank' => 'Blank'
+    ];
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
     #[ORM\Id]
@@ -76,9 +81,19 @@ class MenuEntry
     private ?string $value = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['tf_admin'])]
-    #[ORM\Column(type: 'boolean')]
-    private $blank = false;
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $target = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
+    #[ORM\Column]
+    private ?bool $active = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_menu_all', 'a_menu_one'])]
+    #[ORM\Column]
+    private ?bool $noFollow = null;
 
     #[Gedmo\TreeLeft]
     #[ORM\Column(type: 'integer')]
@@ -115,7 +130,6 @@ class MenuEntry
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private $children;
-
 
     public function __construct()
     {
@@ -188,14 +202,38 @@ class MenuEntry
         return $this;
     }
 
-    public function isBlank(): ?bool
+    public function getTarget(): ?string
     {
-        return $this->blank;
+        return $this->target;
     }
 
-    public function setBlank(bool $blank): self
+    public function setTarget(?string $target): static
     {
-        $this->blank = $blank;
+        $this->target = $target;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function isNoFollow(): ?bool
+    {
+        return $this->noFollow;
+    }
+
+    public function setNoFollow(bool $noFollow): static
+    {
+        $this->noFollow = $noFollow;
 
         return $this;
     }
@@ -266,7 +304,8 @@ class MenuEntry
         return $this;
     }
 
-    public function getTypesKeys() {
+    public function getTypesKeys()
+    {
         return array_keys(self::TYPES_MAPPING);
     }
 }

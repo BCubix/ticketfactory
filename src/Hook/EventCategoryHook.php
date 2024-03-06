@@ -33,7 +33,7 @@ class EventCategoryHook extends Hook
 
         $eventCategory = $event->getParam('sObject');
         $parentId = $eventCategory->getParent()->getId();
-        
+
         if ($eventCategory->getPosition() > 0) {
             return;
         }
@@ -48,5 +48,19 @@ class EventCategoryHook extends Hook
 
         $this->em->persist($eventCategory);
         $this->em->flush();
+    }
+
+    public function hookEventCategoryValidated(HookEvent $event)
+    {
+        $eventCategory = $event->getParam('vObject');
+        $eventCategoryId = $eventCategory->getId();
+
+        $eventCategory = $eventCategory->getParent();
+        while (null !== $eventCategory) {
+            if ($eventCategory->getId() === $eventCategoryId) {
+                throw  new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'La catégorie courante ne peut être située à plusieurs endroits dans l\'arborescence.');
+            }
+            $eventCategory = $eventCategory->getParent();
+        }
     }
 }

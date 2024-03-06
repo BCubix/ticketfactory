@@ -55,4 +55,25 @@ class FeatureRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneByKeywordForWebsite(string $keyword, ?int $categoryId)
+    {
+        $result = $this->createQueryBuilder('f')
+            ->addSelect('fc')
+            ->innerJoin('f.featureCategory', 'fc')
+            ->where("fc.active = 1")
+            ->andWhere('f.active = 1')
+            ->andWhere('f.keyword = :keyword')
+            ->setParameter('keyword', $keyword);
+
+        if (null !== $categoryId) {
+            $result = $result
+                ->andWhere('fc.id = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+        }
+
+        return $result
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

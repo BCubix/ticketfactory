@@ -22,7 +22,9 @@ class Kernel extends BaseKernel
         $configDir = $this->getConfigDir();
 
         $container->import($configDir . '/{packages}/*.yaml');
+        $container->import($configDir . '/{packages}/*.php');
         $container->import($configDir . '/{packages}/' . $this->environment . '/*.yaml');
+        $container->import($configDir . '/{packages}/' . $this->environment . '/*.php');
 
         if (is_file($configDir . '/services.yaml')) {
             $container->import($configDir . '/services.yaml');
@@ -77,7 +79,7 @@ class Kernel extends BaseKernel
     {
         $configDir = $this->getConfigDir();
         $routes->import($configDir . '/{routes}/annotations.php');
-        $routes->import($configDir . '/{routes}/framework.yaml');
+        $routes->import($configDir . '/{routes}/*.yaml');
     }
 
     private function configureModulesServices(ContainerConfigurator &$container): void

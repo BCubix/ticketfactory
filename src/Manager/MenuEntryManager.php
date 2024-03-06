@@ -32,10 +32,24 @@ class MenuEntryManager extends AbstractManager
 
         $menuEntries = $repository->findAllForWebsite($this->getLanguageId());
         $menus = $repository->buildTree($menuEntries);
+        $menus = $this->constructMenus($menus);
 
         foreach ($menus as $key => $menu) {
             $menus[$menu['keyword']] = $menu;
             unset($menus[$key]);
+        }
+
+        return $menus;
+    }
+
+    public function constructMenus(array $menus): array
+    {
+        foreach ($menus as $key => $menu) {
+            if (!$menu['active']) {
+                unset($menus[$key]);
+            } else if (count($menu['__children']) > 0) {
+                $menus[$key]['__children'] = $this->constructMenus($menu['__children']);
+            }
         }
 
         return $menus;

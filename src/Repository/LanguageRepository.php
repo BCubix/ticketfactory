@@ -42,4 +42,14 @@ class LanguageRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForWebsite(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.active = 1')
+            ->orderBy('l.isDefault', 'DESC')
+            ->addOrderBy('l.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

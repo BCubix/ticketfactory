@@ -41,7 +41,7 @@ class Mailer
 
     public function sendResetUserPasswordEmail($user, $path)
     {
-        $emailTemplate = $this->mf->get("theme")->getWebsiteTemplatesPath() . "Email/reset-password.html.twig";
+        $emailTemplate = $this->mf->get("theme")->getAdminTemplatesPath() . "Email/reset-password.html.twig";
         $sender = $this->mf->get("parameter")->getCoreParameter("email_sender");
 
         $message = (new TemplatedEmail())

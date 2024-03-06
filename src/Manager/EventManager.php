@@ -21,9 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class EventManager extends AbstractManager
 {
     public const SERVICE_NAME = 'event';
-
-    protected $tr;
-
+    private const UNIQ_EVENT_IDENTIFIER = ['id', 'slug'];
     private const WEBSITE_SORTS = [
         'nameAsc' => ['name', 'ASC'],
         'nameDesc' => ['name', 'DESC'],
@@ -31,6 +29,8 @@ class EventManager extends AbstractManager
         'chronoDesc' => ['beginDate', 'DESC'],
     ];
 
+    protected $tr;
+    
     public function __construct(
         Kernel $kl,
         ManagerFactory $mf,
@@ -44,88 +44,101 @@ class EventManager extends AbstractManager
         $this->tr = $tr;
     }
 
-    public function getFromUrl(array $slugs): ?Event
+    public function getEventFromUrl(array $slugs): ?Event
     {
-        $eventFormat = $this->mf->get('parameter')->getCoreParameter('event_url_format');
-        $eventFormats = explode('/', $eventFormat);
+        $urlFormat = $this->mf->get('parameter')->getCoreParameter('event_url_format');
 
-        $languageId = $this->getLanguageId();
-        $event = null;
+        $regexPattern = preg_replace('/%([^%]+)%/', '(?P<$1>[^/]+)', $urlFormat);
+        $regexPattern = '#^' . $regexPattern . '$#';
+        $url = implode('/', $slugs);
 
-        if (count($eventFormats) > count($slugs)) {
+        if (!preg_match($regexPattern, $url, $matches)) {
             return null;
         }
 
-        foreach ($eventFormats as $key => $eventFormat) {
-            switch ($eventFormat) {
-                case '%id%':
-                    $event = $this->em->getRepository(Event::class)->findByIdForWebsite($languageId, $slugs[$key]);
+        $index = null;
+        $formatValue = null;
+        foreach (self::UNIQ_EVENT_IDENTIFIER as $eventIdentifier) {
+            if (isset($matches[$eventIdentifier])) {
+                $index = $eventIdentifier;
+                $formatValue = $matches[$eventIdentifier];
+                break;
+            }
+        }
+
+        if (null === $index) {
+            return null;
+        }
+
+        $event = $this->getEventFromFormat($formatValue, $eventIdentifier);
+        if (null === $event) {
+            return null;
+        }
+
+        foreach ($matches as $key => $value) {
+            switch ($key) {
+                case 'category':
+                    if (null == $event->getMainCategory() || $event->getMainCategory()->getSlug() !== $value) {
+                        return null;
+                    }
                     break;
 
-                case '%slug%':
-                    $event = $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $slugs[$key]);
+                case 'season':
+                    if (null == $event->getSeason() || $event->getSeason()->getSlug() !== $value) {
+                        return null;
+                    }
                     break;
 
+                case 'room':
+                    if (null == $event->getRoom() || $event->getRoom()->getSlug() !== $value) {
+                        return null;
+                    }
+                    break;
+
+                case 'year':
+                    if ($event->getBeginDate()->format('Y') !== $value) {
+                        return null;
+                    }
+                    break;
+
+                case 'month':
+                    if ($event->getBeginDate()->format('m') !== $value) {
+                        return null;
+                    }
+                    break;
+
+                case 'day':
+                    if ($event->getBeginDate()->format('d') !== $value) {
+                        return null;
+                    }
+                    break;
+
+                case 'id':
+                case 'slug':
                 default:
                     break;
             }
         }
 
-        if (null == $event) {
-            return null;
-        }
-
-        foreach ($eventFormats as $key => $eventFormat) {
-            switch ($eventFormat) {
-                case '%category%':
-                    if (null == $event->getMainCategory() || $event->getMainCategory()->getSlug() !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-
-                case '%season%':
-                    if (null == $event->getSeason() || $event->getSeason()->getSlug() !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-
-                case '%room%':
-                    if (null == $event->getRoom() || $event->getRoom()->getSlug() !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-
-                case '%year%':
-                    if ($event->getBeginDate()->format('Y') !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-
-                case '%month%':
-                    if ($event->getBeginDate()->format('m') !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-
-                case '%day%':
-                    if ($event->getBeginDate()->format('d') !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-
-                case '%id%':
-                case '%slug%':
-                    break;
-
-                default; // Static strings
-                    if ($eventFormat !== $slugs[$key]) {
-                        return null;
-                    }
-                    break;
-            }
-        }
-
         return $event;
+    }
+
+    public function getEventFromFormat($formatValue, $format): ?Event
+    {
+        $languageId = $this->getLanguageId();
+
+        switch ($format) {
+            case 'id':
+                return $this->em->getRepository(Event::class)->findByIdForWebsite($languageId, $formatValue);
+                break;
+            case 'slug':
+                return $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $formatValue);
+                break;
+            default:
+                break;
+        }
+
+        return null;
     }
 
     public function getEventPricesReservationDefault(Event $event): array
@@ -168,57 +181,22 @@ class EventManager extends AbstractManager
 
     public function getUrlSlugs(Event $event): array
     {
-        $eventFormats = $this->mf->get('parameter')->getCoreParameter('event_url_format');
-        $eventFormats = explode('/', $eventFormats);
-
-        $languageId = $this->getLanguageId();
-        $url = [];
-
-        foreach ($eventFormats as $key => $eventFormat) {
-            switch ($eventFormat) {
-                case '%id%':
-                    $url[] = $event->getId();
-                    break;
-
-                case '%slug%':
-                    $url[] = $event->getSlug();
-                    break;
-
-                case '%category%':
-                    if (null !== $event->getMainCategory()) {
-                        $url[] = $event->getMainCategory()->getSlug();
-                    }
-                    break;
-
-                case '%season%':
-                    if (null !== $event->getSeason()) {
-                        $url[] = $event->getSeason()->getSlug();
-                    }
-                    break;
-
-                case '%room%':
-                    if (null !== $event->getRoom()) {
-                        $url[] = $event->getRoom()->getSlug();
-                    }
-                    break;
-
-                case '%year%':
-                    $url[] = $event->getBeginDate()->format('Y');
-                    break;
-
-                case '%month%':
-                    $url[] = $event->getBeginDate()->format('m');
-                    break;
-
-                case '%day%':
-                    $url[] = $event->getBeginDate()->format('d');
-                    break;
-
-                default; // Static strings
-                    $url[] = $eventFormat;
-                    break;
-            }
+        $url = $this->mf->get('parameter')->getCoreParameter('event_url_format');
+        $eventUrlConstruct = [
+            '%id%' => fn ($event) => $event->getId(),
+            '%slug%' => fn ($event) => $event->getSlug(),
+            '%category%' => fn ($event) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() : '',
+            '%season%' => fn ($event) => $event->getSeason() ? $event->getSeason()->getSlug() : '',
+            '%room%' => fn ($event) => $event->getRoom() ? $event->getRoom()->getSlug() : '',
+            '%year%' => fn ($event) => $event->getBeginDate()->format('Y'),
+            '%month%' => fn ($event) => $event->getBeginDate()->format('m'),
+            '%day%' => fn ($event) => $event->getBeginDate()->format('d'),
+        ];
+    
+        foreach ($eventUrlConstruct as $key => $fn) {
+            $url = str_replace($key, $fn($event), $url);
         }
+        $url = explode('/', $url);
 
         return $url;
     }

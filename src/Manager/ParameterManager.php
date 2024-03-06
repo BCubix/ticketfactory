@@ -2,17 +2,33 @@
 
 namespace App\Manager;
 
+use App\Entity\Event\Event;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
+use App\Entity\Media\Media;
 use App\Entity\Page\Page;
 use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
-
+use App\Kernel;
+use App\Service\ServiceFactory;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class ParameterManager extends AbstractManager
 {
     public const SERVICE_NAME = 'parameter';
+    private const ENV_FILES_NAME = ['.env.local', '.env'];
+
+    protected $twig;
+
+    public function __construct(Kernel $kl, ManagerFactory $mf, ServiceFactory $sf, EntityManagerInterface $em, RequestStack $rs, Environment $twig)
+    {
+        parent::__construct($kl, $mf, $sf, $em, $rs);
+
+        $this->twig = $twig;
+    }
 
     public function getAll()
     {
@@ -110,5 +126,67 @@ class ParameterManager extends AbstractManager
             default:
                 return $value;
         }
+    }
+
+    public function changeEnvFileVariable(string $variableName, string $newValue): void
+    {
+        $projectDir = $this->sf->get('pathGetter')->getProjectDir();
+        $fileName = null;
+
+        foreach (self::ENV_FILES_NAME as $envFileName) {
+            if (file_exists($projectDir . '/' . $envFileName)) {
+                $fileName = $projectDir . '/' . $envFileName;
+                break;
+            }
+        }
+
+        if (null === $fileName) {
+            throw new ApiException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                1500,
+                "Aucun fichier d'environnement n'a été trouvé."
+            );
+        }
+
+        $fileManipulator = $this->sf->get('file');
+        $content = $fileManipulator->getContent($fileName);
+        $newContent = "";
+
+        $position = $fileManipulator->getPosition($fileName, $variableName) + strlen($variableName);
+        $newContent = substr($content, 0, $position) . $newValue;
+
+        $content = substr($content, $position);
+        $position = strpos($content, PHP_EOL);
+
+        if ($position !== false) {
+            $newContent .= substr($content, $position);
+        }
+
+        $fileManipulator->setContent($fileName, $newContent);
+    }
+
+    public function createRobotFile($host): void
+    {
+        $content = $this->twig->render($this->mf->get('theme')->getWebsiteTemplatesPath() . 'Seo/robot.html.twig', [
+            'host' => $host,
+        ]);
+
+        $this->sf->get('file')->createFile($this->sf->get('pathGetter')->getPublicDir() . "/robot.txt", $content);
+    }
+
+    public function createSitemapFile($host): void
+    {
+        $events = $this->em->getRepository(Event::class)->findAllForSitemap();
+        $pages = $this->em->getRepository(Page::class)->findAllForSitemap();
+        $medias = $this->em->getRepository(Media::class)->findAllForSitemap();
+
+        $content = $this->twig->render($this->mf->get('theme')->getWebsiteTemplatesPath() . 'Seo/sitemap.html.twig', [
+            'host'   => $host,
+            'events' => $events,
+            'pages'  => $pages,
+            'medias' => $medias
+        ]);
+
+        $this->sf->get('file')->createFile($this->sf->get('pathGetter')->getPublicDir() . "/sitemap.xml", $content);
     }
 }

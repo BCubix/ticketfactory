@@ -60,7 +60,7 @@ class ImageFormat extends Datable
     private ?bool $themeUse = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
+    #[JMS\Groups(['a_image_format_one'])]
     #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'imageFormats')]
     private Collection $medias;
 

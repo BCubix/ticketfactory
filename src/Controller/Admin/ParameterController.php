@@ -99,4 +99,13 @@ class ParameterController extends AdminController
 
         return $this->view($parametersContainer, Response::HTTP_OK);
     }
+
+    #[Rest\Post('/parametres/generer/seo')]
+    public function generateRobotFile(Request $request): View
+    {
+        $this->mf->get('parameter')->createRobotFile($request->getScheme() . "://" . $request->getHost());
+        $this->mf->get('parameter')->createSitemapFile($request->getScheme() . "://" . $request->getHost());
+
+        return $this->view([], Response::HTTP_OK);
+    }
 }

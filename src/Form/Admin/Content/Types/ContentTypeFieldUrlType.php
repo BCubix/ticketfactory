@@ -19,7 +19,7 @@ class ContentTypeFieldUrlType extends ContentTypeFieldAbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'default_protocol' => 'https'
+            'default_protocol' => ''
         ]);
     }
 }

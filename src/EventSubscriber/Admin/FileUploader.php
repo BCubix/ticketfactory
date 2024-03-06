@@ -121,9 +121,10 @@ class FileUploader implements EventSubscriberInterface
                 $tmpStringImageForm = str_replace(' ', '', $imageFormParameters);
                 $imageFormatIdArray = explode(",", $tmpStringImageForm);
                 $formats = $this->em->getRepository(ImageFormat::class)->findImageFormatById($imageFormatIdArray);
-            }
-            foreach ($formats["results"] as $format) {
-                $media->addImageFormat($format);
+
+                foreach ($formats["results"] as $format) {
+                    $media->addImageFormat($format);
+                }
             }
         }
 

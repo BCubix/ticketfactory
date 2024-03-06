@@ -77,4 +77,14 @@ class PageRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForSitemap(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.active = 1')
+            ->andWhere('p.indexed = 1')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

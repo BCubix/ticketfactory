@@ -7,6 +7,7 @@ use App\Entity\Media\Media;
 use App\Repository\MediaRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -21,7 +22,7 @@ class SEOAbleType extends AdminBaseFormType
         $builder
             ->add('metaTitle',                 TextType::class,                 [])
             ->add('metaDescription',           TextareaType::class,             [])
-            ->add('socialImage',               EntityType::class,          [
+            ->add('socialImage',               EntityType::class,               [
                 'class'         => Media::class,
                 'choice_label'  => 'media',
                 'multiple'      => false,
@@ -34,7 +35,8 @@ class SEOAbleType extends AdminBaseFormType
             ->add('fbTitle',                   TextType::class,                 [])
             ->add('fbDescription',             TextareaType::class,             [])
             ->add('twTitle',                   TextType::class,                 [])
-            ->add('twDescription',             TextareaType::class,             []);
+            ->add('twDescription',             TextareaType::class,             [])
+            ->add('indexed',                   CheckboxType::class,             ['false_values' => ['0', 'null', null, 'false']]);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

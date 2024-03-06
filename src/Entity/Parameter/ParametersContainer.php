@@ -34,4 +34,16 @@ class ParametersContainer
         $this->parameters->removeElement($parameter);
         return $this;
     }
+
+    public function __clone()
+    {
+        $parameters = $this->parameters;
+        $this->parameters = new ArrayCollection();
+
+        foreach ($parameters as $parameter) {
+            $parameterClone = clone $parameter;
+
+            $this->addParameter($parameterClone);
+        }
+    }
 }

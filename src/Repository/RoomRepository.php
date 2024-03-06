@@ -52,4 +52,15 @@ class RoomRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForWebsite(int $languageId): array
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where("r.active = 1")
+            ->orderBy('r.id', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -81,6 +81,7 @@ class UrlService
 
     public function eventRelativePath(object $object, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
+        $parameters["_locale"] = $object->getLang()->getLocale();
         $slugs = [];
         $slugs[] = $object->getSlug();
 
@@ -100,25 +101,17 @@ class UrlService
 
     public function eventPath(Event $event, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
+        $parameters["_locale"] = $event->getLang()->getLocale();
         $slugs = $this->em->getUrlSlugs($event);
-
-        $page = $this->prm->getCoreParameter('page_event');
-        if (null !== $page) {
-            while ($page !== null) {
-                $pageSlugs[] = $page->getSlug();
-                $page = $page->getParent();
-
-                $slugs = array_merge(array_reverse($pageSlugs), $slugs);
-            }
-        }
-
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
     }
 
     public function pagePath(Page $page, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
+        $parameters["_locale"] = $page->getLang()->getLocale();
         $slugs = [];
+
         while ($page !== null) {
             $slugs[] = $page->getSlug();
             $page = $page->getParent();
@@ -131,6 +124,8 @@ class UrlService
 
     public function contentPath(Content $content, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
     {
+        $parameters["_locale"] = $content->getLang()->getLocale();
+
         $contentType = $content->getContentType();
         $page = $contentType->isPageType() ? $content->getPage() : $contentType->getPageParent();
 

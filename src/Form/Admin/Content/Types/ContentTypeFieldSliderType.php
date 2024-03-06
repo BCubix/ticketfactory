@@ -3,10 +3,11 @@
 namespace App\Form\Admin\Content\Types;
 
 use App\Entity\Content\ContentTypeField;
-use App\Form\Admin\Content\ContentFieldsType;
+use App\Entity\Media\Media;
 use App\Manager\ContentTypeManager;
-
+use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,34 +27,60 @@ class ContentTypeFieldSliderType extends ContentTypeFieldAbstractType
 
     public function getParent(): string
     {
-        return ContentFieldsType::class;
+        return EntityType::class;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'class'         => Media::class,
+            'choice_label'  => 'title',
+            'multiple'      => true,
+            'query_builder' => function (MediaRepository $mr) {
+                return $mr
+                    ->createQueryBuilder('m')
+                    ->orderBy('m.title', 'ASC');
+            }
+        ]);
     }
 
     public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
     {
-        $fields = [];
+        $result = "";
+        foreach ($cf as $media) {
+            if (!empty($result)) {
+                $result .= ",";
+            }
 
-        foreach ($cf as $childrenCfName => $childrenCf) {
-            $component = $this->ctm->getContentTypeInstanceFromType('image');
-            $fields[$childrenCfName] = $component->jsonContentSerialize($childrenCf, null);
+            $result .= $media->getId();
         }
 
-        return $fields;
+        return $result;
     }
 
     public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
     {
-        $fields = [];
-
-        foreach ($cf as $childrenCfName => $childrenCf) {
-            $component = $this->ctm->getContentTypeInstanceFromType($childrenCt->getType());
-            $fields[$childrenCfName] = $component->jsonContentDeserialize($childrenCf, null);
+        if (empty($cf)) {
+            return [];
         }
 
-        return $fields;
+        $results = [];
+        $listId = explode(",", $cf);
+
+        foreach ($listId as $id) {
+            $media = $this->em->getRepository(Media::class)->find($id);
+            if (null !== $media) {
+                $results[] = $media;
+            }
+        }
+
+        return $results;
     }
 
-    public static function getOptions() {
+    public static function getOptions()
+    {
         return [
             'disabled' => [
                 'class' => CheckboxType::class,
@@ -70,7 +97,8 @@ class ContentTypeFieldSliderType extends ContentTypeFieldAbstractType
         ];
     }
 
-    public static function getValidations() {
+    public static function getValidations()
+    {
         return [
             'minLength' => ['class' => NumberType::class],
             'maxLength' => ['class' => NumberType::class],

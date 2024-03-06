@@ -94,4 +94,34 @@ class SeasonController extends WebsiteController
             'filterParams'       => $filterParams,
         ]);
     }
+
+    public function list(Page $page) {
+        $request = $this->getRequest();
+
+        $displaySeasons = $this->mf->get("parameter")->getCoreParameter("display_seasons");
+        if (!$displaySeasons) {
+            throw $this->createNotFoundException('This page does not exist.');
+        }
+
+        $seasons = $this->em->getRepository(Season::class)->findAllForWebsite($this->getLanguageId());
+        
+        $pageContent = [];
+        if (null !== $page) {
+            foreach ($page->getContents() as $content) {
+                foreach ($content->getFields() as $key => $field) {
+                    $pageContent[$key] = $field;
+                }
+            }
+        }
+
+        $template = 'Season/';
+        $template .= ($request->isXmlHttpRequest() ? '_' : '');
+        $template .= 'list.html.twig';
+
+        return $this->websiteRender($template, [
+            'page'               => $page,
+            'seasons'            => $seasons,
+            'pageContent'        => $pageContent,
+        ]);
+    }
 }
