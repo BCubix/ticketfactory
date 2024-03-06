@@ -7,7 +7,7 @@ return static function (TwigConfig $twig) {
     $twig->path('%kernel.project_dir%/themes/Admin/default/templates', 'admin');
 
     try {
-        $result = Db::getInstance()->query("SELECT * FROM parameter WHERE param_key = 'main_theme'");
+        $result = Db::getInstance()->query("SELECT * FROM parameter WHERE param_key = 'core_main_theme'");
         if (count($result) !== 1) {
             return;
         }

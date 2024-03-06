@@ -1,0 +1,7 @@
+artgris_file_manager:
+    conf:
+        tiny:
+            dir: '%kernel.project_dir%/public/uploads/wysiwyg'
+            upload:
+                max_file_size: 20971520
+                image_library: 1

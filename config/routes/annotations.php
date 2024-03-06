@@ -24,10 +24,14 @@ return function (RoutingConfigurator $routes) {
             ->prefix('/_error');
     }
 
+    // Artgris/FileManager
+    $routes
+        ->import('@ArtgrisFileManagerBundle/Controller', 'annotation')
+        ->prefix('/_manager');
+
     // Core - Admin security
     $routes->add('admin_api_login_check', '/admin/api/login_check');
-    $routes->add('gesdinet_jwt_refresh_token', '/admin/api/token/refresh')
-        ->controller(["gesdinet.jwtrefreshtoken", 'refresh']);
+    $routes->add('admin_api_refresh_token', '/admin/api/token/refresh');
 
     // Core - Admin
     $routes
