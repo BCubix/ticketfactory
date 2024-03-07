@@ -44,7 +44,7 @@ class ParameterHook extends Hook
         }
 
         if (isset($params["core_debug_mode"]) && $oldParams['core_debug_mode'] !== $params['core_debug_mode']) {
-            $debugMode = null === $params['core_debug_mode'] ? false : true;
+            $debugMode = !$params['core_debug_mode'] ? false : true;
             $newValue = ($debugMode ? 'dev' : 'prod');
 
             $this->mf->get('parameter')->changeEnvFileVariable('APP_ENV=', $newValue);
