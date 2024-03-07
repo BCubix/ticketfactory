@@ -6,12 +6,12 @@ defined('_TF_ROOT_DIR_') || define('_TF_ROOT_DIR_', dirname(__DIR__) . DIRECTORY
 
 require_once _TF_ROOT_DIR_ . '/vendor/autoload_runtime.php';
 
-if (file_exists(_TF_ROOT_DIR_ . '/installation')) {
-    require_once 'install/index.php';
-}
-
-if (!file_exists(_TF_ROOT_DIR_ . '/installation')) {
-    return function (array $context) {
+return function (array $context) {
+    if (file_exists(_TF_ROOT_DIR_ . '/installation') && $context['INSTALLATION_STATUS'] !== "installed") {
+        require_once 'install/index.php';
+    }
+    
+    if (!file_exists(_TF_ROOT_DIR_ . '/installation') || $context['INSTALLATION_STATUS'] === "installed") {
         return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-    };
-}
+    }
+};
