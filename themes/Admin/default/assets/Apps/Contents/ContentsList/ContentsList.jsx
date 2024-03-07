@@ -92,30 +92,20 @@ const CreateNewContentDialog = ({
         <Dialog open={createDialog} onClose={() => setCreateDialog(false)} fullWidth maxWidth="sm">
             <DialogTitle sx={{ fontSize: 20 }}>Créer un contenu</DialogTitle>
             <DialogContent dividers>
-                <FormControl fullWidth sx={{ marginTop: 3 }}>
-                    <InputLabel id={`contentType-label`} size="small">
-                        Type de contenus
-                    </InputLabel>
-                    <Select
-                        labelId={`contentType-label`}
-                        variant="standard"
-                        size="small"
-                        id={`selectContentType`}
-                        value={formContentType}
-                        onChange={(e) => {
-                            setAvailableCreateContent({ ...availableCreateContent, loading: true });
-                            setFormContentType(e.target.value);
-                            handleGetAvailable(e.target.value);
-                        }}
-                        label="Type de contenus"
-                    >
-                        {contentTypes?.map((typeList, typeIndex) => (
-                            <MenuItem key={typeIndex} value={typeList?.id} id={`selectContentTypeValue-${typeList.id}`}>
-                                {typeList?.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <Component.CmtSelect
+                    label="Type de contenus"
+                    required
+                    id={`selectContentType`}
+                    value={formContentType}
+                    list={contentTypes}
+                    getValue={(item) => item?.id}
+                    getName={(item) => item?.name}
+                    onChange={(e) => {
+                        setAvailableCreateContent({ ...availableCreateContent, loading: true });
+                        setFormContentType(e.target.value);
+                        handleGetAvailable(e.target.value);
+                    }}
+                />
 
                 {!availableCreateContent.loading && availableCreateContent.loaded && availableCreateContent.number <= 0 && (
                     <Box sx={{ mt: 3, width: '100%', borderRadius: 2, padding: 3, backgroundColor: (theme) => theme.palette.warning.light }}>

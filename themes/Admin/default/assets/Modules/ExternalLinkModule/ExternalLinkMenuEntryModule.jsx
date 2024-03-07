@@ -22,6 +22,9 @@ export const MenuEntryModule = ({ addElementToMenu, editMode, setValue, element,
                 value: initialValue,
                 menuType: MENU_TYPE,
                 children: [],
+                active: true,
+                noFollow: false,
+                target: '_self',
             },
         ]);
 

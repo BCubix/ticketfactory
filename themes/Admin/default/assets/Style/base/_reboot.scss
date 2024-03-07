@@ -66,4 +66,10 @@ table {
     .MuiListItemText-root {
         margin: 0;
     }
+
+    &.displayEmpty {
+        label.MuiFormLabel-root {
+            transform: translate(14px, -9px) scale(0.75);
+        }
+    }
 }

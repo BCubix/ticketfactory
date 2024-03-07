@@ -67,18 +67,18 @@ export const eventsInitialSchema = {
     name: (initValues) => initValues?.name || '',
     chapo: (initValues) => initValues?.chapo || '',
     description: (initValues) => initValues?.description || '',
-    eventDateBlocks: (initValues) =>
+    eventDateBlocks: (initValues, { defaultDateBlockName }) =>
         initValues?.eventDateBlocks?.map((el) => ({
             ...el,
             lang: el?.lang?.id || '',
             eventDates: el.eventDates?.map((date) => ({ ...date, lang: date.lang.id || '' })),
-        })) || [{ name: 'Dates', eventDates: [], lang: initValues?.lang?.id || '' }],
-    eventPriceBlocks: (initValues) =>
+        })) || [{ name: defaultDateBlockName || 'Dates', eventDates: [], lang: initValues?.lang?.id || '' }],
+    eventPriceBlocks: (initValues, { defaultPriceBlockName, defaultPrices }) =>
         initValues?.eventPriceBlocks?.map((el) => ({
             ...el,
             lang: el?.lang?.id || '',
             eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
-        })) || [{ name: 'Tarifs', eventPrices: [], lang: initValues?.lang?.id || '' }],
+        })) || [{ name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices ? JSON.parse(defaultPrices) : [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues) => initValues?.room?.id || '',
     season: (initValues) => initValues?.season?.id || '',
@@ -119,6 +119,9 @@ export const eventsForm = {
     submitLine: {
         activeInput: true,
         activeLabel: 'Evènement actif ?',
+    },
+    infos: {
+        seoIndexedLabel: 'Indexer cet évènement ?',
     },
     api: {
         dataFields: {

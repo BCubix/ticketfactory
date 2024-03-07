@@ -1,4 +1,5 @@
 import axios from '@Services/api/config';
+import { getSerializationApiValue } from '../config/serializationApi';
 
 const parametersApi = {
     getParameters: async () => {
@@ -26,14 +27,8 @@ const parametersApi = {
             let formData = new FormData();
 
             data.parameters.forEach((parameter, index) => {
-                let paramValue = parameter.paramValue;
-
-                if (['Page', 'Room', 'Season'].includes(parameter.type)) {
-                    paramValue = paramValue?.id || paramValue || '';
-                }
-
                 formData.append(`parameters[${index}][paramKey]`, parameter.paramKey);
-                formData.append(`parameters[${index}][paramValue]`, paramValue || '');
+                formData.append(`parameters[${index}][paramValue]`, getSerializationApiValue(parameter.type, parameter.paramValue));
             });
 
             const result = await axios.post('/parametres', formData);
@@ -41,6 +36,16 @@ const parametersApi = {
             return { result: true, parameters: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
+        }
+    },
+
+    executeRequestButton: async (url) => {
+        try {
+            const result = await axios.post(url);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false };
         }
     },
 };

@@ -33,6 +33,7 @@ export const FieldArrayElem = ({ values, index, errors, touched, handleChange, h
 
     return (
         <Component.CmtTabs
+            mountComponents
             list={[
                 {
                     label: 'Informations générale',

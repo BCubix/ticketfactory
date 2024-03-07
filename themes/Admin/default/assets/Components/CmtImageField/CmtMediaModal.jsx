@@ -102,7 +102,7 @@ export const CmtMediaModal = ({
                                     {(Array.isArray(media) ? media.includes(item.id) : media?.id === item.id) && (
                                         <CheckIcon sx={{ color: (theme) => theme.palette.crud.create.textColor, position: 'absolute', top: 5, right: 5 }} />
                                     )}
-                                    <Component.CmtDisplayMediaType media={item} width={'100%'} />
+                                    <Component.CmtDisplayMediaType media={item} displayThumbnail width={'100%'} />
                                 </Component.CmtMediaElement>
                             ))}
                         </Box>

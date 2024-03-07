@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeItem, TreeView } from '@mui/lab';
-import { Box, Checkbox, Chip, CircularProgress, Typography } from '@mui/material';
+import { TreeItem, TreeView } from '@mui/x-tree-view';
+import { Box, Checkbox, CircularProgress, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 

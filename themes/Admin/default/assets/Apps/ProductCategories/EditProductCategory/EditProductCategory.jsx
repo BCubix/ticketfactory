@@ -71,6 +71,8 @@ export const EditProductCategory = () => {
                 NotificationManager.success('La catégorie de produit a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getProductCategoriesAction());
                 navigate(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
+            } else if (result?.error?.httpcode >= 400 && result?.error?.httpcode <= 500) {
+                NotificationManager.error(result?.error?.message, 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };

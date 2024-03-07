@@ -17,7 +17,6 @@ export const CmtDateTimePicker = ({
     inputSize = 'normal',
     id = name?.replaceAll('.', '-'),
     required = false,
-    ...rest
 }) => {
     const [open, setOpen] = useState(false);
 
@@ -27,6 +26,8 @@ export const CmtDateTimePicker = ({
                 <DateTimePicker
                     allowKeyboardControl
                     disableCloseOnSelect={false}
+                    openTo={openToYear ? 'year' : 'day'}
+                    disablePast={disablePast}
                     inputFormat="DD/MM/YYYY HH:mm"
                     clearable
                     allowSameDateSelection
@@ -80,7 +81,6 @@ export const CmtDateTimePicker = ({
                             />
                         );
                     }}
-                    {...rest}
                 />
             </Box>
         </LocalizationProvider>

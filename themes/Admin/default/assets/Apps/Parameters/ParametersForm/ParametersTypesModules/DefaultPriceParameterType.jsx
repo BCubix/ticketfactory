@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Component } from '@/AdminService/Component';
 
-const TYPE = 'array<Price>';
+const TYPE = 'prices';
 
 function getType() {
     return TYPE;

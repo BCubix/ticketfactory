@@ -9,6 +9,17 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getMediaCategoriesAction } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { mediaCategoriesInitialSchema, mediaCategoriesValidationSchema, mediaCategoriesForm } from '../MediaCategoriesForm/MediaCategoriesForm';
+import { Crud } from '@/AdminService/Crud';
+
+export const mediaCategoriesCreateCrud = {
+    form: {
+        title: "Création d'une catégorie",
+        initialSchema: mediaCategoriesInitialSchema,
+        validationSchema: mediaCategoriesValidationSchema,
+    },
+    ...mediaCategoriesForm,
+};
 
 export const CreateMediaCategory = () => {
     const dispatch = useDispatch();
@@ -57,8 +68,8 @@ export const CreateMediaCategory = () => {
                 NotificationManager.success('La catégorie de média a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getMediaCategoriesAction());
                 navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
-            } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            } else if (result?.error?.httpcode >= 400 && result?.error?.httpcode <= 500) {
+                NotificationManager.error(result?.error?.message, 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };
@@ -68,11 +79,12 @@ export const CreateMediaCategory = () => {
     }
 
     return (
-        <Component.MediaCategoriesForm
+        <Component.CmtCrudForm
             handleSubmit={handleSubmit}
             mediaCategoriesList={mediaCategoriesData?.mediaCategories}
             translateInitialValues={initialValues}
             parentId={parseInt(parentId) || null}
+            formCrud={Crud?.mediaCategories?.add}
         />
     );
 };

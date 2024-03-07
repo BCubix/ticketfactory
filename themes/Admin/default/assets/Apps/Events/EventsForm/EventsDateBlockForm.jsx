@@ -11,7 +11,7 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues, fields }) => {
+export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues, fields, defaultDateBlockName }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
     const [generateDate, setGenerateDate] = useState(null);
 
@@ -19,10 +19,10 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
         let block = values.eventDateBlocks;
 
         if (!block || block.length === 0) {
-            block = { name: 'Dates', eventDates: [], lang: initialValues?.lang?.id || '' };
+            block = { name: defaultDateBlockName || 'Dates', eventDates: [], lang: initialValues?.lang?.id || '' };
         } else {
             block = block[0];
-            block.name = 'Dates';
+            block.name = defaultDateBlockName || 'Dates';
         }
 
         setFieldValue('eventDateBlocks', [block]);

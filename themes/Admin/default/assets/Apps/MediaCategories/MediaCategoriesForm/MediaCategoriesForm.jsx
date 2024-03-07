@@ -1,113 +1,128 @@
 import React from 'react';
-import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { Button, Grid } from '@mui/material';
-import { Box } from '@mui/system';
-
 import { Component } from '@/AdminService/Component';
-
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 
-export const MediaCategoriesForm = ({ handleSubmit, parentId = null, initialValues = null, mediaCategoriesList = null, translateInitialValues = null }) => {
-    const initValues = translateInitialValues || initialValues;
+export const mediaCategoriesInitialSchema = {
+    id: (initValues) => initValues?.id || undefined,
+    name: (initValues) => initValues?.name || '',
+    active: (initValues) => initValues?.active || false,
+    shortDescription: (initValues) => initValues?.shortDescription || '',
+    parent: (initValues, { parentId }) => initValues?.parent?.id || parentId || '',
+    mustHaveParent: (initValues) => !initValues || Boolean(initValues?.parent),
+    slug: (initValues) => initValues?.slug || '',
+    lang: (initValues) => initValues?.lang?.id || '',
+    languageGroup: (initValues) => initValues?.languageGroup || '',
+    keyword: (initValues) => initValues?.keyword || '',
+    editSlug: false,
+    editKeyword: false,
+};
 
-    const mediaCategorySchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom de la catégorie.'),
-        parent: Yup.string().when('mustHaveParent', (mustHaveParent) => {
-            if (mustHaveParent) {
-                return Yup.string().required('Veuillez renseigner une catégorie parente.');
-            }
-        }),
-    });
+export const mediaCategoriesValidationSchema = {
+    name: Yup.string().required('Veuillez renseigner le nom de la categorie.'),
+    parent: Yup.string().when('mustHaveParent', (mustHaveParent) => {
+        if (mustHaveParent) {
+            return Yup.string().required('Veuillez renseigner une catégorie parente.');
+        }
+    }),
+};
 
-    if (!mediaCategoriesList) {
-        return <></>;
-    }
+export const mediaCategoriesForm = {
+    submitLine: {
+        activeInput: true,
+        activeLabel: 'Catégorie active ?',
+    },
+    api: {
+        dataFields: {
+            active: { type: 'boolean' },
+            name: { type: 'string' },
+            shortDescription: { type: 'string' },
+            parent: { type: 'string' },
+            slug: { type: 'string' },
+            keyword: { type: 'string' },
+            lang: { type: 'string' },
+            languageGroup: { type: 'string' },
+        },
+    },
+    fields: [
+        {
+            type: 'tabs',
+            keyId: 'category',
+            label: 'Catégorie',
+            fields: [
+                {
+                    type: 'block',
+                    title: 'Informations générales',
+                    keyId: 'block-general-info',
+                    fields: [
+                        {
+                            keyId: 'input-name',
+                            style: { xs: 12, sm: 6, md: 8 },
+                            inputs: [
+                                {
+                                    name: 'name',
+                                    label: 'Nom',
+                                    inputType: 'textField',
+                                    required: true,
+                                    custom: {
+                                        handleChange:
+                                            ({ values, initialValues, setFieldValue }) =>
+                                            (e) => {
+                                                setFieldValue('name', e.target.value);
+                                                if (!values.editSlug && !initialValues) {
+                                                    setFieldValue('slug', changeSlug(e.target.value));
+                                                }
+                                            },
+                                    },
+                                },
+                                {
+                                    name: 'slug',
+                                    inputType: 'slugInput',
+                                },
+                            ],
+                        },
+                        {
+                            keyId: 'input-keyword',
+                            style: { xs: 12, sm: 6, md: 4 },
+                            component: (props) => <Component.CmtKeywordInput {...props} name="keyword" />,
+                        },
+                        {
+                            keyId: 'input-shortDescription',
+                            style: { xs: 12 },
+                            input: {
+                                name: 'shortDescription',
+                                label: 'Description courte',
+                                inputType: 'textField',
+                                required: false,
+                            },
+                        },
+                        {
+                            keyId: 'input-parent',
+                            style: { xs: 12 },
+                            component: ({ values, mediaCategoriesList, setFieldValue, touched, errors }) => {
+                                {
+                                    if (!values?.mustHaveParent) {
+                                        return <></>;
+                                    }
 
-    return (
-        <Formik
-            initialValues={{
-                id: initValues?.id || undefined,
-                name: initValues?.name || '',
-                shortDescription: initValues?.shortDescription || '',
-                active: initValues?.active || false,
-                parent: initValues?.parent?.id || parentId || '',
-                mustHaveParent: !initValues || Boolean(initValues?.parent),
-                slug: initValues?.slug || '',
-                keyword: initValues?.keyword || '',
-                lang: initValues?.lang?.id || '',
-                languageGroup: initValues?.languageGroup || '',
-                editSlug: false,
-                editKeyword: false,
-            }}
-            validationSchema={mediaCategorySchema}
-            onSubmit={async (values, { setSubmitting }) => {
-                handleSubmit(values);
-                setSubmitting(false);
-            }}
-        >
-            {({ values, errors, touched, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'une catégorie`}>
-                    <Component.CmtFormBlock title="Informations générales">
-                        <Grid container spacing={4}>
-                            <Grid item xs={12} sm={6} md={8}>
-                                <Component.CmtTextField
-                                    value={values.name}
-                                    onChange={(e) => {
-                                        setFieldValue('name', e.target.value);
-                                        if (!values.editSlug && !initialValues) {
-                                            setFieldValue('slug', changeSlug(e.target.value));
-                                        }
-                                    }}
-                                    onBlur={handleBlur}
-                                    label="Nom"
-                                    name="name"
-                                    error={touched.name && errors.name}
-                                    required
-                                />
-                                <Component.CmtSlugInput values={values} setFieldValue={setFieldValue} name="slug" />
-                            </Grid>
-
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Component.CmtKeywordInput values={values} setFieldValue={setFieldValue} name="keyword" />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Component.CmtTextField
-                                    value={values.shortDescription}
-                                    onChange={(e) => {
-                                        setFieldValue('shortDescription', e.target.value);
-                                    }}
-                                    onBlur={handleBlur}
-                                    label="Description courte"
-                                    name="name"
-                                    error={touched.shortDescription && errors.shortDescription}
-                                />
-                            </Grid>
-
-                            {values?.mustHaveParent && (
-                                <Grid item xs={12}>
-                                    <Component.ParentMediaCategoryPartForm
-                                        values={values}
-                                        mediaCategoriesList={mediaCategoriesList}
-                                        setFieldValue={setFieldValue}
-                                        touched={touched}
-                                        errors={errors}
-                                    />
-                                </Grid>
-                            )}
-                        </Grid>
-                    </Component.CmtFormBlock>
-
-                    <Box display="flex" justifyContent={'flex-end'} alignItems="center" sx={{ pt: 3, pb: 2 }}>
-                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Catégorie active ?" />
-                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
-                            {initialValues ? 'Modifier' : 'Créer'}
-                        </Button>
-                    </Box>
-                </Component.CmtPageWrapper>
-            )}
-        </Formik>
-    );
+                                    return (
+                                        <Component.ParentMediaCategoryPartForm
+                                            values={values}
+                                            mediaCategoriesList={mediaCategoriesList}
+                                            setFieldValue={setFieldValue}
+                                            touched={touched}
+                                            errors={errors}
+                                        />
+                                    );
+                                }
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

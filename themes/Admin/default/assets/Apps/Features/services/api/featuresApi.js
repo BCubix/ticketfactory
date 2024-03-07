@@ -7,6 +7,8 @@ import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
 
+const DEFAULT_PATH = '/features';
+
 var controller = null;
 
 const featuresApi = {
@@ -46,7 +48,7 @@ const featuresApi = {
                 params['filters[lang]'] = filters?.lang;
             }
 
-            const result = await axios.get('/features', { params: params });
+            const result = await axios.get(DEFAULT_PATH, { params: params });
 
             return { result: true, features: result.data?.results, total: result?.data?.total };
         } catch (error) {
@@ -56,7 +58,7 @@ const featuresApi = {
 
     getOneFeature: async (id) => {
         try {
-            const result = await axios.get(`/features/${id}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}`);
 
             return { result: true, feature: result.data };
         } catch (error) {
@@ -66,7 +68,7 @@ const featuresApi = {
 
     createFeature: async (values) => {
         try {
-            const result = await axios.post('/features', constructFormData({ values, dataFields: Crud?.features?.add?.api?.dataFields }));
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.features?.add?.api?.dataFields }));
 
             return { result: true, feature: result.data };
         } catch (error) {
@@ -77,7 +79,7 @@ const featuresApi = {
 
     editFeature: async (id, values) => {
         try {
-            const result = await axios.post(`/features/${id}`, constructFormData({ values, dataFields: Crud?.features?.edit?.api?.dataFields }));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.features?.edit?.api?.dataFields }));
 
             return { result: true, feature: result.data };
         } catch (error) {
@@ -87,7 +89,7 @@ const featuresApi = {
 
     deleteFeature: async (id) => {
         try {
-            await axios.delete(`/features/${id}`);
+            await axios.delete(`${DEFAULT_PATH}/${id}`);
 
             return { result: true };
         } catch (error) {
@@ -97,7 +99,7 @@ const featuresApi = {
 
     duplicateFeature: async (id) => {
         try {
-            await axios.post(`/features/${id}/duplicate`);
+            await axios.post(`${DEFAULT_PATH}/${id}/duplicate`);
 
             return { result: true };
         } catch (error) {
@@ -107,7 +109,7 @@ const featuresApi = {
 
     getTranslated: async (id, languageId) => {
         try {
-            const result = await axios.get(`/features/${id}/translated/${languageId}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}/translated/${languageId}`);
             const data = copyData(result?.data);
 
             return { result: true, feature: data };

@@ -25,15 +25,12 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
 
     const getLinks = async () => {
         const check = await Api.authApi.checkIsAuth();
-
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
-
             return;
         }
 
         const result = await Api.tagsApi.getTags();
-
         if (!result?.result) {
             NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
         }
@@ -55,31 +52,19 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
 
     return (
         <>
-            <FormControl fullWidth>
-                <InputLabel id={`tagLink-${label}-label`} size="small">
-                    {label}
-                </InputLabel>
-                <Select
-                    labelId={`tagLink-${label}-label`}
-                    id={`tagLink-${label}`}
-                    size="small"
-                    variant="standard"
-                    value={values[field.name]}
-                    label={label}
-                    onChange={(e) => {
-                        setFieldValue(name, e.target.value);
-                    }}
-                    name={name}
-                    onBlur={handleBlur}
-                >
-                    {list?.map((item, index) => (
-                        <MenuItem key={index} value={item.id}>
-                            <ListItemText>{item.name}</ListItemText>
-                        </MenuItem>
-                    ))}
-                </Select>
-                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
-            </FormControl>
+            <Component.CmtSelect
+                {...{ label, setFieldValue, name }}
+                required={field?.options?.required}
+                multiple={field?.options?.multiple}
+                disabled={field?.options?.disabled}
+                id={`tagLink-${name}`}
+                value={values[field.name]}
+                list={list}
+                touched={touched && touched[field.name]}
+                errors={errors && errors[field.name]}
+                getValue={(item) => item?.id}
+                getName={(item) => item?.name}
+            />
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
                     {field.helper}

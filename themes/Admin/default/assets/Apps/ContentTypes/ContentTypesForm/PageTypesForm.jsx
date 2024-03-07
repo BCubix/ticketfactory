@@ -1,11 +1,10 @@
-import React, { useMemo } from 'react';
-import { Formik } from 'formik';
+import React from 'react';
 import * as Yup from 'yup';
-import { Button, Checkbox, FormControlLabel, FormHelperText, Grid } from '@mui/material';
-import { Box } from '@mui/system';
+import { FormHelperText } from '@mui/material';
+
 import { Component } from '@/AdminService/Component';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
-import ContentTypesModules from '@Apps/ContentTypes/ContentTypesForm/ContentTypeModules';
+import { CONTENT_TYPE_FIELDS } from '@Apps/ContentTypes/services/config/getContentTypeFields';
 
 const serializeData = (element, name, formData) => {
     Object.entries(element).map(([key, value]) => {
@@ -81,6 +80,7 @@ export const pageTypesForm = {
             },
         },
     },
+    contentTypeFields: CONTENT_TYPE_FIELDS,
     fields: [
         {
             type: 'tabs',

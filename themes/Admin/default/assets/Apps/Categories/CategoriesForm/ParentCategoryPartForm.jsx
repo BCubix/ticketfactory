@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { TreeItem, TreeView } from '@mui/lab';
+import { TreeItem, TreeView } from '@mui/x-tree-view';
 import { InputLabel, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
@@ -65,7 +65,7 @@ export const ParentCategoryPartForm = ({ values, categoriesList, setFieldValue, 
                 {displayCategoriesOptions(categoriesList, values, setFieldValue)}
             </TreeView>
             {touched?.parent && errors?.parent && (
-                <Typography sx={{ fontSize: 12 }} color="error" id="parent-helper-text">
+                <Typography sx={{ fontSize: 12 }} color="error" id="parent-helper-text" className="Mui-error">
                     {errors?.parent}
                 </Typography>
             )}

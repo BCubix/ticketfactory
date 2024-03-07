@@ -29,7 +29,7 @@ const ConstantObj = {
 
     IMAGE_FILE_SUPPORTED: 'image/jpeg, image/png, image/gif, image/webp, image/svg+xml, image/vnd.microsoft.icon',
     AUDIO_FILE_SUPPORTED: 'audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav',
-    VIDEO_FILE_SUPPORTED: 'video/mp4, video/webm, video/ogg, video/mpeg',
+    VIDEO_FILE_SUPPORTED: 'video/mp4, video/webm, video/ogg, video/mpeg, video/avi, video/quicktime, video/x-matroska',
     WORD_FILE_SUPPORTED: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     EXCEL_FILE_SUPPORTED: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     POWERPOINT_FILE_SUPPORTED: 'application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation',

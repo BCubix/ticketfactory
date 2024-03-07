@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,6 +11,8 @@ import { getEventsAction } from '@Apps/Events/redux/events/eventsSlice';
 import { eventsInitialSchema, eventsValidationSchema, eventsForm } from '../EventsForm/EventsForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
+import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
+import { useSelector } from 'react-redux';
 
 export const eventsEditCrud = {
     form: {
@@ -26,11 +28,24 @@ export const EditEvent = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [event, setEvent] = useState(null);
+    const { parameters } = useSelector(parametersSelector);
     const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
     const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
+
+    const defaultDateBlockName = useMemo(() => {
+        return parameters?.find((it) => it.paramKey === 'core_default_event_date_block_name')?.paramValue || null;
+    }, [parameters]);
+
+    const defaultPriceBlockName = useMemo(() => {
+        return parameters?.find((it) => it.paramKey === 'core_default_event_price_block_name')?.paramValue || null;
+    }, [parameters]);
+
+    const defaultPrices = useMemo(() => {
+        return parameters?.find((it) => it.paramKey === 'core_default_event_price')?.paramValue || null;
+    }, [parameters]);
 
     useEffect(() => {
         if (categoriesData?.error || roomsData?.error || seasonsData?.error || tagsData?.error) {
@@ -103,6 +118,9 @@ export const EditEvent = () => {
             featuresList={featuresData?.features}
             tagsList={tagsData.tags}
             formCrud={Crud?.events?.edit}
+            defaultPriceBlockName={defaultPriceBlockName}
+            defaultDateBlockName={defaultDateBlockName}
+            defaultPrices={defaultPrices}
         />
     );
 };

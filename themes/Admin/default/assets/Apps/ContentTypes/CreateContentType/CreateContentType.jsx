@@ -6,12 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
+import { Crud } from '@/AdminService/Crud';
 import { getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Crud } from '@/AdminService/Crud';
 import { contentTypesInitialSchema, contentTypesValidationSchema, contentTypesForm } from '../ContentTypesForm/ContentTypesForm';
-import ContentTypesModules from '../ContentTypesForm/ContentTypeModules';
 
 export const contentTypesCreateCrud = {
     form: {
@@ -59,7 +57,7 @@ export const CreateContentType = () => {
     }, []);
 
     const getContentTypesModules = useMemo(() => {
-        return ContentTypesModules();
+        return Crud.contentTypes.add.contentTypeFields;
     }, []);
 
     if (!pagesList) {

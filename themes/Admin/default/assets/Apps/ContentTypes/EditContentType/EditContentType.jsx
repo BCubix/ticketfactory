@@ -6,12 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
+import { Crud } from '@/AdminService/Crud';
 import { getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Crud } from '@/AdminService/Crud';
 import { contentTypesInitialSchema, contentTypesValidationSchema, contentTypesForm } from '../ContentTypesForm/ContentTypesForm';
-import ContentTypesModules from '../ContentTypesForm/ContentTypeModules';
 
 export const contentTypesEditCrud = {
     form: {
@@ -69,7 +67,7 @@ export const EditContentType = () => {
     }, []);
 
     const getContentTypesModules = useMemo(() => {
-        return ContentTypesModules();
+        return Crud.contentTypes.edit.contentTypeFields;
     }, []);
 
     const handleSubmit = async (values) => {

@@ -7,6 +7,7 @@ import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Component } from '@/AdminService/Component';
 
 const TYPE = 'content';
 
@@ -50,31 +51,19 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
 
     return (
         <>
-            <FormControl fullWidth>
-                <InputLabel id={`contentLink-${label}-label`} size="small">
-                    {label}
-                </InputLabel>
-                <Select
-                    labelId={`contentLink-${label}-label`}
-                    id={`contentLink-${label}`}
-                    size="small"
-                    variant="standard"
-                    value={values[field.name]}
-                    label={label}
-                    onChange={(e) => {
-                        setFieldValue(name, e.target.value);
-                    }}
-                    name={name}
-                    onBlur={handleBlur}
-                >
-                    {list?.map((item, index) => (
-                        <MenuItem key={index} value={item.id}>
-                            <ListItemText>{item.title}</ListItemText>
-                        </MenuItem>
-                    ))}
-                </Select>
-                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
-            </FormControl>
+            <Component.CmtSelect
+                {...{ label, setFieldValue, name }}
+                required={field?.options?.required}
+                multiple={field?.options?.multiple}
+                disabled={field?.options?.disabled}
+                id={`choice-${name}`}
+                value={values[field.name]}
+                list={list}
+                touched={touched && touched[field.name]}
+                errors={errors && errors[field.name]}
+                getValue={(item) => item?.id}
+                getName={(item) => item?.title}
+            />
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
                     {field.helper}

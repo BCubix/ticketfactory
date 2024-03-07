@@ -10,7 +10,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { mediaCategoriesSelector } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
+import { changeMediaCategoriesFilters, mediaCategoriesSelector, updateMediaCategoriesFilters } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 import { getMediaCategoriesAction } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -22,6 +22,12 @@ export const mediaCategoriesListCrud = {
     title: 'Catégories',
     listTitle: 'Liste des catégories',
     tableContextualMenu: true,
+    changeFiltersActions: (props) => changeMediaCategoriesFilters(props),
+    filtersData: [{ key: 'active', type: 'boolean' }, 'name'],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
     tableList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
@@ -40,6 +46,15 @@ export const mediaCategoriesListCrud = {
     },
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS.wrapperComponent,
     components: [
+        {
+            component: ({ objectData, listCrud, dispatch }) => (
+                <Component.CmtFiltersList
+                    filters={objectData?.filters}
+                    filtersList={listCrud?.filterList}
+                    changeFilters={(values) => dispatch(listCrud?.changeFiltersActions(values))}
+                />
+            ),
+        },
         {
             component: ({ listCrud, mediaCategory, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => (
                 <Component.ListTable
@@ -70,10 +85,10 @@ export const mediaCategoriesListCrud = {
     ],
     headerComponents: [
         {
-            component: ({ listCrud, mediaCategories, path, navigate }) => (
+            component: ({ listCrud, mediaCategory, path, navigate, handleResetFilters }) => (
                 <Box display="flex" alignItems="center" pt={5}>
-                    <Component.CmtBreadCrumb list={path} />
-                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(mediaCategories.id))}>
+                    <Component.CmtBreadCrumb list={path} additionalClick={handleResetFilters} />
+                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(mediaCategory?.id))}>
                         <Component.EditCategoryLink component="span" variant="body1">
                             Modifier
                         </Component.EditCategoryLink>
@@ -122,7 +137,7 @@ export const mediaCategoriesListCrud = {
 };
 
 export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ...props }) => {
-    const { loading, mediaCategories, error } = useSelector(mediaCategoriesSelector);
+    const { loading, mediaCategories, filters, error } = useSelector(mediaCategoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -133,7 +148,7 @@ export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ..
 
     const getMediaCategory = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.mediaCategoriesApi.getOneMediaCategory(id);
+            const result = await Api.mediaCategoriesApi.getOneMediaCategory(id, filters);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
@@ -236,6 +251,10 @@ export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ..
         });
     };
 
+    const handleResetFilters = () => {
+        dispatch(updateMediaCategoriesFilters({ filters: { active: null, name: '' } }));
+    };
+
     return (
         <>
             <Component.CmtPageWrapper title="Catégories de média">
@@ -250,12 +269,14 @@ export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ..
                         <ItemComponent
                             key={index}
                             objectData={useSelector(mediaCategoriesSelector)}
+                            mediaCategory={mediaCategory}
                             listCrud={listCrud}
                             navigate={navigate}
                             dispatch={dispatch}
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
                             path={path}
+                            handleResetFilters={handleResetFilters}
                             {...props}
                         />
                     );
@@ -298,6 +319,7 @@ export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ..
                                     dispatch={dispatch}
                                     handleDuplicate={handleDuplicate}
                                     setDeleteDialog={setDeleteDialog}
+                                    handleResetFilters={handleResetFilters}
                                     {...props}
                                 />
                             );

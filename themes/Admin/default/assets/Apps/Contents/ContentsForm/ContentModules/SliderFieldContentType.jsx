@@ -279,7 +279,7 @@ const DisplayMediaInformation = ({ onClose, selectedMedia, values, field, setFie
                 onClick={() => {
                     const value = values[field.name];
 
-                    let newValue = value;
+                    let newValue = value || [];
 
                     if (newValue.includes(selectedMedia?.id)) {
                         newValue = newValue.filter((el) => el !== selectedMedia?.id);

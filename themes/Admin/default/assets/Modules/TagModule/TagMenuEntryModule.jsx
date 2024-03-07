@@ -112,6 +112,9 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                                         value: listElement.id,
                                         menuType: MENU_TYPE,
                                         children: [],
+                                        active: true,
+                                        noFollow: false,
+                                        target: '_self',
                                     });
                                 }
                             });

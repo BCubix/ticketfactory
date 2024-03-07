@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlic
 import { eventsInitialSchema, eventsValidationSchema, eventsForm } from '../EventsForm/EventsForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
+import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 
 export const eventsCreateCrud = {
     form: {
@@ -26,6 +27,7 @@ export const CreateEvent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const languagesData = useSelector(languagesSelector);
+    const { parameters } = useSelector(parametersSelector);
     const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
@@ -36,6 +38,18 @@ export const CreateEvent = () => {
     const [queryParameters] = useSearchParams();
     const eventId = queryParameters.get('eventId');
     const languageId = queryParameters.get('languageId');
+
+    const defaultDateBlockName = useMemo(() => {
+        return parameters?.find((it) => it.paramKey === 'core_default_event_date_block_name')?.paramValue || null;
+    }, [parameters]);
+
+    const defaultPriceBlockName = useMemo(() => {
+        return parameters?.find((it) => it.paramKey === 'core_default_event_price_block_name')?.paramValue || null;
+    }, [parameters]);
+
+    const defaultPrices = useMemo(() => {
+        return parameters?.find((it) => it.paramKey === 'core_default_event_price')?.paramValue || null;
+    }, [parameters]);
 
     useEffect(() => {
         if (!languageId && !languagesData?.languages) {
@@ -86,7 +100,7 @@ export const CreateEvent = () => {
         });
     };
 
-    if (!categoriesData || !roomsData || !seasonsData || !tagsData || (eventId && !initialValues)) {
+    if (parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || (eventId && !initialValues)) {
         return <></>;
     }
 
@@ -100,6 +114,9 @@ export const CreateEvent = () => {
             featuresList={featuresData?.features}
             translateInitialValues={initialValues}
             formCrud={Crud?.events?.add}
+            defaultPriceBlockName={defaultPriceBlockName}
+            defaultDateBlockName={defaultDateBlockName}
+            defaultPrices={defaultPrices}
         />
     );
 };

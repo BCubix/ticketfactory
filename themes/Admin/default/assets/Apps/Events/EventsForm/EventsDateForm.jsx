@@ -61,7 +61,7 @@ export const eventsDateFormFields = {
                     fullWidth
                     error={Boolean(getNestedFormikError(touched?.eventDateBlocks?.at(blockIndex)?.eventDates, errors?.eventDateBlocks?.at(blockIndex)?.eventDates, index, 'state'))}
                 >
-                    <InputLabel id={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`} size="small">
+                    <InputLabel id={`eventDateBlocks-${blockIndex}-eventDates-${index}-stateLabel`} required size="small">
                         Status
                     </InputLabel>
                     <Select
@@ -199,7 +199,7 @@ export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }
                                 push({
                                     eventDate: '',
                                     annotation: '',
-                                    state: '',
+                                    state: 'valid',
                                     reportDate: '',
                                 });
                             }}

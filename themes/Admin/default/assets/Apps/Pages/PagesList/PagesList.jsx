@@ -53,6 +53,12 @@ export const pagesListCrud = {
     duplicate: (props) => Api.pagesApi.duplicatePage(props),
     delete: (props) => Api.pagesApi.deletePage(props),
     new: ({ setCreateDialog }) => setCreateDialog(true),
+    preview: (el) => {
+        if (!el?.frontUrl) {
+            return;
+        }
+        window.open(el.frontUrl, '_blank').focus();
+    },
     links: {
         new: () => `${Constant.PAGES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

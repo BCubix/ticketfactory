@@ -1,20 +1,20 @@
 import React from 'react';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
-import { ParametersForm } from '@Apps/Parameters/ParametersForm/ParametersForm';
+import { parametersFormCrud, ParametersForm } from '@Apps/Parameters/ParametersForm/ParametersForm';
 import { ParametersMenu } from '@Apps/Parameters/ParametersMenu/ParametersMenu';
 
-import { setReducer } from '@/AdminService/Reducer';
-import { insertSubMenu } from '@/AdminService/Menu';
+import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
-import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
+import { insertSubMenu } from '@/AdminService/Menu';
+import { setReducer } from '@/AdminService/Reducer';
 
 import parametersReducer from '@Apps/Parameters/redux/parameters/parametersSlice';
 import parametersApi from '@Apps/Parameters/services/api/parametersApi';
-
-import SettingsIcon from '@mui/icons-material/Settings';
 
 export const initConstant = () => {
     setConstant('PARAMETERS_BASE_PATH', '/admin/parametres');
@@ -40,4 +40,12 @@ export const initMenu = () => {
 
 export const initReducer = () => {
     setReducer('parameters', parametersReducer);
+};
+
+export const initCrud = () => {
+    const crud = {
+        edit: parametersFormCrud,
+    };
+
+    setCrud('parameters', crud);
 };

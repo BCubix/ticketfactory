@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { categoriesSelector, getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
+import { categoriesSelector, changeCategoriesFilters, getCategoriesAction, updateCategoriesFilters } from '@Apps/Categories/redux/categories/categoriesSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -22,6 +22,11 @@ export const categoriesListCrud = {
     title: 'Catégories',
     listTitle: 'Liste des catégories',
     tableContextualMenu: true,
+    filtersData: [{ key: 'active', type: 'boolean' }, 'name'],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
     tableList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
@@ -30,6 +35,7 @@ export const categoriesListCrud = {
     ],
     loadDataAction: () => getCategoriesAction(),
     dataSelector: categoriesSelector,
+    changeFiltersActions: (props) => changeCategoriesFilters(props),
     dataList: (selector) => selector.categories?.children,
     duplicate: (props) => Api.categoriesApi.duplicateCategory(props),
     delete: (props) => Api.categoriesApi.deleteCategory(props),
@@ -45,7 +51,16 @@ export const categoriesListCrud = {
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS.wrapperComponent,
     components: [
         {
-            component: ({ listCrud, category, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => (
+            component: ({ objectData, listCrud, dispatch }) => (
+                <Component.CmtFiltersList
+                    filters={objectData?.filters}
+                    filtersList={listCrud?.filterList}
+                    changeFilters={(values) => dispatch(listCrud?.changeFiltersActions(values))}
+                />
+            ),
+        },
+        {
+            component: ({ listCrud, category, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd, handleResetFilters }) => (
                 <Component.ListTable
                     contextualMenu
                     table={listCrud?.tableList}
@@ -55,6 +70,7 @@ export const categoriesListCrud = {
                     }}
                     onDelete={(id) => setDeleteDialog(id)}
                     onClick={(elemId) => {
+                        handleResetFilters();
                         navigate(`${Constant.CATEGORIES_BASE_PATH}/${elemId}`);
                     }}
                     onDuplicate={(id) => {
@@ -70,10 +86,15 @@ export const categoriesListCrud = {
     ],
     headerComponents: [
         {
-            component: ({ listCrud, category, path, navigate }) => (
+            component: ({ listCrud, category, path, navigate, handleResetFilters }) => (
                 <Box display="flex" alignItems="center" pt={5}>
-                    <Component.CmtBreadCrumb list={path} />
-                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(category.id))}>
+                    <Component.CmtBreadCrumb list={path} additionalClick={handleResetFilters} />
+                    <Box
+                        pl={3}
+                        onClick={() => {
+                            navigate(listCrud?.links?.edit(category.id));
+                        }}
+                    >
                         <Component.EditCategoryLink component="span" variant="body1">
                             Modifier
                         </Component.EditCategoryLink>
@@ -122,7 +143,7 @@ export const categoriesListCrud = {
 };
 
 export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) => {
-    const { loading, categories, error } = useSelector(categoriesSelector);
+    const { loading, categories, filters, error } = useSelector(categoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -133,7 +154,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
 
     const getCategory = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.categoriesApi.getOneCategory(id);
+            const result = await Api.categoriesApi.getOneCategory(id, filters);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.CATEGORIES_BASE_PATH);
@@ -177,6 +198,18 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
         }
         setPath(pathArray.reverse());
     }, [category]);
+
+    const isFiltered = useMemo(() => {
+        let filtered = false;
+
+        Object.keys(filters).forEach((key) => {
+            if (filters[key]) {
+                filtered = true;
+            }
+        });
+
+        return filtered;
+    }, [filters]);
 
     const handleDelete = async (deleteId, deleteEvents) => {
         const check = await Api.authApi.checkIsAuth();
@@ -242,6 +275,10 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
         });
     };
 
+    const handleResetFilters = () => {
+        dispatch(updateCategoriesFilters({ filters: { active: null, name: '' } }));
+    };
+
     return (
         <>
             <Component.CmtPageWrapper title={listCrud?.title || ''}>
@@ -262,6 +299,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
                             path={path}
+                            handleResetFilters={handleResetFilters}
                             {...props}
                         />
                     );
@@ -298,7 +336,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                                     key={index}
                                     categories={categories}
                                     category={category}
-                                    handleDragEnd={handleDragEnd}
+                                    handleDragEnd={isFiltered ? null : handleDragEnd}
                                     listCrud={listCrud}
                                     path={path}
                                     objectData={useSelector(categoriesSelector)}
@@ -306,6 +344,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                                     dispatch={dispatch}
                                     handleDuplicate={handleDuplicate}
                                     setDeleteDialog={setDeleteDialog}
+                                    handleResetFilters={handleResetFilters}
                                     {...props}
                                 />
                             );

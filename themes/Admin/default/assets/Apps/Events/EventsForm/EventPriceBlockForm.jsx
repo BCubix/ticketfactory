@@ -10,17 +10,29 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsPriceBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues, fields }) => {
+export const EventsPriceBlockForm = ({
+    values,
+    setFieldValue,
+    setFieldTouched,
+    handleBlur,
+    handleChange,
+    touched,
+    errors,
+    initialValues,
+    fields,
+    defaultPriceBlockName,
+    defaultPrices,
+}) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
 
     const handleDeleteMultiple = () => {
         let block = values.eventPriceBlocks;
 
         if (!block || block.length === 0) {
-            block = { name: 'Tarifs', eventPrices: [], lang: initialValues?.lang?.id || '' };
+            block = { name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices ? JSON.parse(defaultPrices) : [], lang: initialValues?.lang?.id || '' };
         } else {
             block = block[0];
-            block.name = 'Tarifs';
+            block.name = defaultPriceBlockName || 'Tarifs';
         }
 
         setFieldValue('eventPriceBlocks', [block]);

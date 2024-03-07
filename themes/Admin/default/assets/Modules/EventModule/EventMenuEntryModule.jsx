@@ -112,6 +112,9 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
                                         value: listElement.id,
                                         menuType: MENU_TYPE,
                                         children: [],
+                                        active: true,
+                                        noFollow: false,
+                                        target: '_self',
                                     });
                                 }
                             });

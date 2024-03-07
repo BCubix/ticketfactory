@@ -17,6 +17,7 @@ import { Crud } from '@/AdminService/Crud';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
 import { DisplayFormTabs } from '../../../Components/CmtCrudForm/CmtCrudForm';
+import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
 const serializeMenuData = (element, name, formData, datas) => {
     formData.append(`${name}[name]`, element.name);
@@ -24,6 +25,9 @@ const serializeMenuData = (element, name, formData, datas) => {
     formData.append(`${name}[value]`, element.value);
     formData.append(`${name}[lang]`, element.lang || datas.lang || '');
     formData.append(`${name}[languageGroup]`, element.languageGroup || '');
+    formData.append(`${name}[active]`, element.active ? 1 : 0);
+    formData.append(`${name}[target]`, element.target);
+    formData.append(`${name}[noFollow]`, element.noFollow ? 1 : 0);
 
     element?.children?.forEach((el, index) => {
         serializeMenuData(el, `${name}[children][${index}]`, formData, datas);
@@ -34,6 +38,9 @@ export const menusInitialSchema = {
     name: (translationInitialValues) => translationInitialValues?.name || '',
     type: (translationInitialValues) => translationInitialValues?.menuType || null,
     value: (translationInitialValues) => translationInitialValues?.value || null,
+    active: (translationInitialValues) => translationInitialValues?.active || false,
+    target: (translationInitialValues) => translationInitialValues?.target || '',
+    noFollow: (translationInitialValues) => translationInitialValues?.noFollow || false,
     children: (translationInitialValues, { deserializeChildrenData }) => (translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : []),
     maxLevel: (translationInitialValues) => translationInitialValues?.maxLevel || 3,
     lang: (translationInitialValues) => translationInitialValues?.lang?.id || '',
@@ -41,6 +48,9 @@ export const menusInitialSchema = {
 };
 
 export const menusEditCrud = {
+    form: {
+        initialSchema: menusInitialSchema,
+    },
     api: {
         dataFields: {
             name: { type: 'string' },
@@ -50,6 +60,9 @@ export const menusEditCrud = {
                 },
             },
             value: { type: 'string' },
+            active: { type: 'boolean' },
+            noFollow: { type: 'boolean' },
+            target: { type: 'string' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
             children: {
@@ -76,6 +89,7 @@ export const menusEditCrud = {
             ),
         },
     ],
+    newMenuData: {},
     fields: [
         {
             type: 'tabs',
@@ -141,21 +155,17 @@ export const menusEditCrud = {
                                 selectedMenu={initialValues}
                             />
 
-                            <Box className="flex row-between">
-                                <Button
-                                    variant="outlined"
-                                    sx={{ mt: 3, mb: 2 }}
-                                    disabled={isSubmitting}
-                                    color="error"
-                                    onClick={() => setDeleteDialog(!deleteDialog)}
-                                    id="deleteMenuButton"
-                                >
+                            <Box className="flex row-between" sx={{ mt: 3, mb: 2 }}>
+                                <Button variant="outlined" disabled={isSubmitting} color="error" onClick={() => setDeleteDialog(!deleteDialog)} id="deleteMenuButton">
                                     Supprimer
                                 </Button>
 
-                                <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting} id="submitForm">
-                                    Modifier
-                                </Button>
+                                <Box className="flex">
+                                    <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text={'Menu actif ?'} />
+                                    <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
+                                        Modifier
+                                    </Button>
+                                </Box>
                             </Box>
                         </Grid>
                     ),
@@ -275,6 +285,10 @@ export const MenusList = () => {
         setFieldValue('type', values.type);
         setFieldValue('value', values.value);
         setFieldValue('lang', values.lang?.id);
+        setFieldValue('active', values.active ? 1 : 0);
+        setFieldValue('noIndex', values.noIndex ? 1 : 0);
+        setFieldValue('noFollow', values.noFollow ? 1 : 0);
+        setFieldValue('target', values.target || '_self');
         setFieldValue('languageGroup', values.languageGroup);
         setFieldValue('children', deserializeChildrenData(values.children));
     };
@@ -325,25 +339,17 @@ const InitForm = ({
 }) => {
     return (
         <Formik
-            initialValues={{
-                name: translationInitialValues?.name || '',
-                type: translationInitialValues?.menuType || null,
-                value: translationInitialValues?.value || null,
-                children: translationInitialValues?.children ? deserializeChildrenData(translationInitialValues?.children) : [],
-                maxLevel: translationInitialValues?.maxLevel || 3,
-                lang: translationInitialValues?.lang?.id || '',
-                languageGroup: translationInitialValues?.languageGroup || '',
-            }}
+            initialValues={constructInitialValues(formCrud.form.initialSchema, translationInitialValues, { deserializeChildrenData })}
             onSubmit={async (values, { setSubmitting }) => {
                 updateMenu(values);
                 setSubmitting(false);
             }}
         >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }) => (
                 <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
                     <Component.CmtDisplayComponents
                         list={formCrud?.headerComponents}
-                        {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }}
+                        {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }}
                         {...{
                             languageList,
                             changeFormikInitialValues,

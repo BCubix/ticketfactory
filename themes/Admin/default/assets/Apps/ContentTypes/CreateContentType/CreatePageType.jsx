@@ -6,11 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
+import { Crud } from '@/AdminService/Crud';
 import { getPageTypesAction } from '@Apps/ContentTypes/redux/pageTypes/pageTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Crud } from '@/AdminService/Crud';
-import ContentTypesModules from '../ContentTypesForm/ContentTypeModules';
 import { pageTypesInitialSchema, pageTypesValidationSchema, pageTypesForm } from '../ContentTypesForm/PageTypesForm';
 
 export const pageTypesCreateCrud = {
@@ -59,7 +57,7 @@ export const CreatePageType = () => {
     }, []);
 
     const getContentTypesModules = useMemo(() => {
-        return ContentTypesModules();
+        return Crud.pageTypes.add.contentTypeFields;
     }, []);
 
     if (!pagesList) {

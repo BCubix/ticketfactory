@@ -1,11 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Api } from '@/AdminService/Api';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
 
 const initialState = {
     loading: false,
     error: null,
     mediaCategories: null,
+    filters: {
+        active: getBooleanFromString(sessionStorage.getItem('mediaCategoriesActiveFilter')),
+        name: sessionStorage.getItem('mediaCategoriesNameFilter') || '',
+    },
 };
 
 const mediaCategoriesSlice = createSlice({
@@ -30,6 +35,10 @@ const mediaCategoriesSlice = createSlice({
 
         resetMediaCategories: (state) => {
             state = { ...initialState };
+        },
+
+        updateMediaCategoriesFilters: (state, action) => {
+            state.filters = action.payload.filters;
         },
     },
 });
@@ -62,6 +71,16 @@ export function getMediaCategoriesAction(data) {
     };
 }
 
-export const { getMediaCategories, getMediaCategoriesSuccess, getMediaCategoriesFailure, resetMediaCategories } = mediaCategoriesSlice.actions;
+export function changeMediaCategoriesFilters(filters) {
+    return async (dispatch) => {
+        sessionStorage.setItem('mediaCategoriesActiveFilter', filters?.active);
+        sessionStorage.setItem('mediaCategoriesNameFilter', filters?.name);
+
+        dispatch(updateMediaCategoriesFilters({ filters: filters }));
+        dispatch(getMediaCategoriesAction(filters));
+    };
+}
+
+export const { getMediaCategories, getMediaCategoriesSuccess, getMediaCategoriesFailure, resetMediaCategories, updateMediaCategoriesFilters } = mediaCategoriesSlice.actions;
 export const mediaCategoriesSelector = (state) => state.mediaCategories;
 export default mediaCategoriesSlice.reducer;

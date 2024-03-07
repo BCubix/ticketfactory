@@ -105,28 +105,16 @@ export const HooksForm = ({ handleSubmit, modulesActive, hooksList, displayHookL
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <FormControl fullWidth sx={{ marginBlock: 3 }}>
-                                    <InputLabel id={`displayHookList-label`} size="small">
-                                        Display Hook
-                                    </InputLabel>
-                                    <Select
-                                        labelId={`displayHookList-label`}
-                                        size="small"
-                                        variant="standard"
-                                        id={'displayHookList'}
-                                        label={'DisplayHookList'}
-                                        value={values.displayHookList}
-                                        onChange={(e) => {
-                                            setFieldValue('displayHookList', e.target.value);
-                                        }}
-                                    >
-                                        {displayHookList.map((hook, index) => (
-                                            <MenuItem value={hook} key={index}>
-                                                <ListItemText>{hook}</ListItemText>
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                <Component.CmtSelect
+                                    label="Display Hook"
+                                    id={`displayHookList`}
+                                    value={values.displayHookList}
+                                    list={displayHookList}
+                                    getValue={(item) => item}
+                                    getName={(item) => item}
+                                    name="displayHookList"
+                                    setFieldValue={setFieldValue}
+                                />
                             </Grid>
                         </Grid>
                     </Component.CmtFormBlock>

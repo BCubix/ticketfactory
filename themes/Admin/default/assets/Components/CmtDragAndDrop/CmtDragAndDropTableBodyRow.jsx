@@ -3,6 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { TableCell, TableRow } from '@mui/material';
 import { Box } from '@mui/system';
+import { Component } from '@/AdminService/Component';
 
 export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, setExpendElementTranslation, tableRowProps, children }) => {
     if (!onDragEnd) {
@@ -21,7 +22,7 @@ export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, setExpendElementT
     return (
         <Draggable key={index} draggableId={index.toString()} index={index} isCombineEnabled ignoreContainerClipping>
             {(provided, snapshot) => (
-                <TableRow
+                <Component.TRow
                     {...tableRowProps}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -49,7 +50,7 @@ export const CmtDragAndDropTableBodyRow = ({ onDragEnd, index, setExpendElementT
                         </Box>
                     </TableCell>
                     {children}
-                </TableRow>
+                </Component.TRow>
             )}
         </Draggable>
     );

@@ -8,6 +8,7 @@ import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudFor
 import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
 
 export const productCategoriesInitialSchema = {
+    id: (initValues) => initValues?.id || undefined,
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     parent: (initValues, { parentId }) => initValues?.parent?.id || parentId || '',

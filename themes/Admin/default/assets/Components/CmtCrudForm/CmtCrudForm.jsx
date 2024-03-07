@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Component } from '@/AdminService/Component';
 import { Formik } from 'formik';
@@ -16,14 +16,17 @@ export const DEFAULT_CRUD_FORM_COMPONENTS = {
     ],
 };
 
-export const DisplayFormTabs = ({ tabs, ...props }) => {
+export const DisplayFormTabs = ({ tabs, tabValue, setTabValue, ...props }) => {
     return (
         <Component.CmtTabs
             containerStyle={{ mt: 3 }}
+            tabValue={tabValue}
+            setTabValue={setTabValue}
+            mountComponents
             list={tabs.map((elem) => ({
                 id: elem.keyId,
                 label: elem.label,
-                component: elem?.component ? elem.component({fields: elem?.fields, ...props}) : Component.CmtDisplayBlocks({ blocks: elem?.fields, ...props }),
+                component: elem?.component ? elem.component({ fields: elem?.fields, ...props }) : Component.CmtDisplayBlocks({ blocks: elem?.fields, ...props }),
             }))}
         />
     );
@@ -45,11 +48,23 @@ export const initYup = (list, props) => {
 
 export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, handleSubmit, ...props }) => {
     const initValues = translateInitialValues || initialValues;
+    const validationSchema = Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }));
+    const [tabValue, setTabValue] = useState(0);
+
+    const checkFormErrors = () => {
+        const result = document.getElementsByClassName('js-tab-content');
+        for (let i = 0; result?.length > i; i++) {
+            if (result[i].getElementsByClassName('Mui-error')?.length > 0) {
+                setTabValue(i);
+                return;
+            }
+        }
+    };
 
     return (
         <Formik
             initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { ...props })}
-            validationSchema={Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }))}
+            validationSchema={validationSchema}
             translateInitialValues={translateInitialValues}
             onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
@@ -57,8 +72,8 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
             }}
             {...(formCrud?.form?.formProps || {})}
         >
-            {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={formCrud?.form?.title}>
+            {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting, validateForm, submitForm }) => (
+                <Component.CmtPageWrapper component="form" noValidate onSubmit={handleSubmit} title={formCrud?.form?.title}>
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}
                         list={formCrud.components}
@@ -72,6 +87,12 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
                         setFieldTouched={setFieldTouched}
                         setFieldValue={setFieldValue}
                         isSubmitting={isSubmitting}
+                        validationSchema={validationSchema}
+                        checkFormErrors={checkFormErrors}
+                        tabValue={tabValue}
+                        setTabValue={setTabValue}
+                        validateForm={validateForm}
+                        submitForm={submitForm}
                         {...props}
                     />
                 </Component.CmtPageWrapper>

@@ -10,6 +10,8 @@ import { Constant } from '@/AdminService/Constant';
 import { getParametersAction, parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
+const CHECK_RELOAD_PARAMETERS = ['core_debug_mode'];
+
 export const ParametersMenu = () => {
     const { loading, parameters, error } = useSelector(parametersSelector);
     const dispatch = useDispatch();
@@ -33,6 +35,17 @@ export const ParametersMenu = () => {
         const result = await Api.parametersApi.editParameters(values);
         if (result.result) {
             NotificationManager.success('Les paramètres ont bien été modifiés.', 'Succès', Constant.REDIRECTION_TIME);
+
+            CHECK_RELOAD_PARAMETERS.forEach((el) => {
+                let oldValue = parameters?.find((it) => it.paramKey === el);
+                let newValue = values?.parameters?.find((it) => it.paramKey === el);
+
+                if (oldValue && newValue && oldValue.paramValue != newValue.paramValue) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            });
 
             dispatch(getParametersAction());
 

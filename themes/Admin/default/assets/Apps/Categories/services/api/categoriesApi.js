@@ -3,6 +3,7 @@ import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '../../../../services/utils/translationUtils';
 import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
+import { createFilterParams } from '@Services/utils/createFilterParams';
 
 const categoriesApi = {
     getCategories: async (filters) => {
@@ -13,8 +14,9 @@ const categoriesApi = {
                 params['filters[lang]'] = filters?.lang;
             }
 
-            const result = await axios.get('/event-categories', { params: params });
+            createFilterParams(filters, Crud?.categories?.list?.filtersData, params);
 
+            const result = await axios.get('/event-categories', { params: params });
             let data = sortTranslatedCategory(result.data);
 
             return { result: true, categories: data };
@@ -23,9 +25,17 @@ const categoriesApi = {
         }
     },
 
-    getOneCategory: async (id) => {
+    getOneCategory: async (id, filters) => {
         try {
-            const result = await axios.get(`/event-categories/${id}`);
+            let params = {};
+
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            createFilterParams(filters, Crud?.categories?.list?.filtersData, params);
+
+            const result = await axios.get(`/event-categories/${id}`, { params: params });
 
             let data = sortTranslatedCategory(result.data);
 

@@ -4,8 +4,6 @@ import { Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
-import ContentModules from '@Apps/Contents/ContentsForm/ContentModules/index';
-
 const TYPE = 'group';
 
 const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules }) => {
@@ -35,13 +33,11 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
     );
 };
 
-const getInitialValue = (field) => {
-    const contentModules = ContentModules();
-
+const getInitialValue = (field, contentModules) => {
     let fields = {};
 
     field?.parameters?.fields?.forEach((el) => {
-        fields[el.name] = contentModules[el.type]?.getInitialValue(el) || '';
+        fields[el.name] = contentModules[el.type]?.getInitialValue(el, contentModules) || '';
     });
 
     return { ...fields };
@@ -65,12 +61,11 @@ const getSubValidation = (contentType, contentModule) => {
     return validation;
 };
 
-const getValidation = (contentType) => {
+const getValidation = (contentType, contentModules) => {
     let validation = {};
-    const contentModules = ContentModules();
 
     contentType?.parameters?.fields?.forEach((el) => {
-        validation[el.name] = contentModules[el.type]?.getValidation ? contentModules[el.type].getValidation(el) : getSubValidation(el, contentModules[el.type]);
+        validation[el.name] = contentModules[el.type]?.getValidation ? contentModules[el.type].getValidation(el, contentModules) : getSubValidation(el, contentModules[el.type]);
     });
 
     return Yup.object()

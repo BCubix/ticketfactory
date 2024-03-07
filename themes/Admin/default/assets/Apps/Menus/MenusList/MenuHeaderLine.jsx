@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import ReactCountryFlag from 'react-country-flag';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { CardContent, FormControl, MenuItem, Select, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getLanguagesFromTranslatedElement } from '@Services/utils/translationUtils';
 
 const SelectMenu = ({ selectedMenu, list, handleChange }) => {
     return (

@@ -71,6 +71,10 @@ export const ProductParentCategoryPartForm = ({ values, productCategoriesList, s
     const defaultExpend = useMemo(() => {
         let list = [];
 
+        if (!productCategoriesList) {
+            return list;
+        }
+
         values?.productCategories?.forEach((el) => {
             list.push(...getDefaultParentPath(productCategoriesList, el));
         });
@@ -94,11 +98,11 @@ export const ProductParentCategoryPartForm = ({ values, productCategoriesList, s
                 id="categoriesParent"
                 label="Catégories"
                 defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpanded={[productCategoriesList.id?.toString(), ...defaultExpend]}
+                defaultExpanded={[productCategoriesList?.id?.toString(), ...defaultExpend]}
                 defaultExpandIcon={<ChevronRightIcon />}
                 sx={{ flexGrow: 1, overflowY: 'auto' }}
             >
-                {displayCategoriesOptions(productCategoriesList, values, setFieldValue)}
+                {productCategoriesList && displayCategoriesOptions(productCategoriesList, values, setFieldValue)}
             </TreeView>
             {touched?.productCategories && errors?.productCategories && (
                 <Typography sx={{ fontSize: 12 }} color="error" id="productCategories-helper-text">

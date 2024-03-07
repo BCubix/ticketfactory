@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { FormControl, InputLabel, ListSubheader, MenuItem, Select } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import { changeSlug } from '@Services/utils/changeSlug';
 
 export const MainPartFieldForm = ({
     values,
@@ -19,6 +20,14 @@ export const MainPartFieldForm = ({
     prefixId = prefixName.replaceAll('.', '-'),
     contentTypesModules,
 }) => {
+    const [editSlug, setEditSlug] = useState(false);
+
+    useEffect(() => {
+        if (!values.title && !values.name) {
+            setEditSlug(true);
+        }
+    }, []);
+
     const handleChangeFieldType = (value) => {
         contentTypesModules[value]?.setInitialValues(`${prefixName}fields.${index}`, setFieldValue, contentTypesModules);
     };
@@ -64,7 +73,12 @@ export const MainPartFieldForm = ({
         <>
             <Component.CmtTextField
                 value={values.title}
-                onChange={handleChange}
+                onChange={(e) => {
+                    setFieldValue(`${prefixName}fields.${index}.title`, e.target.value);
+                    if (editSlug) {
+                        setFieldValue(`${prefixName}fields.${index}.name`, changeSlug(e.target.value));
+                    }
+                }}
                 onBlur={handleBlur}
                 label="Titre du champ"
                 required
@@ -75,15 +89,18 @@ export const MainPartFieldForm = ({
             <Component.CmtTextField
                 value={values.name}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={() => {
+                    setEditSlug(false);
+                    setFieldTouched(`${prefixName}fields.${index}.name`, true, false);
+                }}
                 label="Nom du type de champ"
                 required
                 name={`${prefixName}fields.${index}.name`}
                 error={getNestedFormikError(touched?.fields, errors?.fields, index, 'name')}
             />
 
-            <FormControl fullWidth sx={{ marginTop: 3 }}>
-                <InputLabel id={`${prefixId}fields-${index}-typeLabel`} size="small" className="required-input">
+            <FormControl fullWidth sx={{ marginTop: 5 }}>
+                <InputLabel id={`${prefixId}fields-${index}-typeLabel`} size="small" required>
                     Type de champs
                 </InputLabel>
                 <Select

@@ -6,9 +6,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
+import { Crud } from '@/AdminService/Crud';
 import { getMediaCategoriesAction } from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { mediaCategoriesInitialSchema, mediaCategoriesValidationSchema, mediaCategoriesForm } from '../MediaCategoriesForm/MediaCategoriesForm';
+
+export const mediaCategoriesEditCrud = {
+    form: {
+        title: "Modification d'une catégorie",
+        initialSchema: mediaCategoriesInitialSchema,
+        validationSchema: mediaCategoriesValidationSchema,
+    },
+    ...mediaCategoriesForm,
+};
 
 export const EditMediaCategory = () => {
     const dispatch = useDispatch();
@@ -58,8 +68,8 @@ export const EditMediaCategory = () => {
                 NotificationManager.success('La catégorie de média a bien été modifiée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getMediaCategoriesAction());
                 navigate(Constant.MEDIA_CATEGORIES_BASE_PATH);
-            } else {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            } else if (result?.error?.httpcode >= 400 && result?.error?.httpcode <= 500) {
+                NotificationManager.error(result?.error?.message, 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };
@@ -68,5 +78,12 @@ export const EditMediaCategory = () => {
         return <></>;
     }
 
-    return <Component.MediaCategoriesForm handleSubmit={handleSubmit} initialValues={mediaCategory} mediaCategoriesList={mediaCategoriesData?.mediaCategories} />;
+    return (
+        <Component.CmtCrudForm
+            handleSubmit={handleSubmit}
+            initialValues={mediaCategory}
+            mediaCategoriesList={mediaCategoriesData?.mediaCategories}
+            formCrud={Crud?.mediaCategories?.edit}
+        />
+    );
 };

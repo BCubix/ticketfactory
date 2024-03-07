@@ -1,11 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Api } from '@/AdminService/Api';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { getBooleanFromString } from '@Services/utils/getBooleanFromString';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const initialState = {
     loading: false,
     error: null,
     categories: null,
+    filters: {
+        active: getBooleanFromString(sessionStorage.getItem('categoriesActiveFilter')),
+        name: sessionStorage.getItem('categoriesNameFilter') || '',
+    },
 };
 
 const categoriesSlice = createSlice({
@@ -31,37 +36,45 @@ const categoriesSlice = createSlice({
         resetCategories: (state) => {
             state = { ...initialState };
         },
+
+        updateCategoriesFilters: (state, action) => {
+            state.filters = action.payload.filters;
+        },
     },
 });
 
-export function getCategoriesAction(data) {
-    return async (dispatch) => {
+export function getCategoriesAction(filters) {
+    return async (dispatch, getState) => {
         try {
             dispatch(getCategories());
 
-            const response = await Api.authApi.checkIsAuth();
+            apiMiddleware(dispatch, async () => {
+                const state = filters || getState().categories?.filters;
 
-            if (!response.result) {
-                dispatch(loginFailure({ error: response.error }));
+                const categories = await Api.categoriesApi.getCategories(state);
+                if (!categories.result) {
+                    dispatch(getCategoriesFailure({ error: categories.error }));
+                    return;
+                }
 
-                return;
-            }
-
-            const categories = await Api.categoriesApi.getCategories(data);
-
-            if (!categories.result) {
-                dispatch(getCategoriesFailure({ error: categories.error }));
-
-                return;
-            }
-
-            dispatch(getCategoriesSuccess({ categories: categories.categories }));
+                dispatch(getCategoriesSuccess({ categories: categories.categories }));
+            });
         } catch (error) {
             dispatch(getCategoriesFailure({ error: error.message || error }));
         }
     };
 }
 
-export const { getCategories, getCategoriesSuccess, getCategoriesFailure, resetCategories } = categoriesSlice.actions;
+export function changeCategoriesFilters(filters) {
+    return async (dispatch) => {
+        sessionStorage.setItem('categoriesActiveFilter', filters?.active);
+        sessionStorage.setItem('categoriesNameFilter', filters?.name);
+
+        dispatch(updateCategoriesFilters({ filters: filters }));
+        dispatch(getCategoriesAction(filters));
+    };
+}
+
+export const { getCategories, getCategoriesSuccess, getCategoriesFailure, resetCategories, updateCategoriesFilters } = categoriesSlice.actions;
 export const categoriesSelector = (state) => state.categories;
 export default categoriesSlice.reducer;

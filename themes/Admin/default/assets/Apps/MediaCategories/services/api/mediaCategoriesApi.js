@@ -1,22 +1,9 @@
 import axios from '@Services/api/config';
-import { changeSlug } from '@Services/utils/changeSlug';
 import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '../../../../services/utils/translationUtils';
-
-const getFormData = (data) => {
-    let formData = new FormData();
-
-    formData.append('active', data.active ? 1 : 0);
-    formData.append('name', data.name);
-    formData.append('shortDescription', data.shortDescription || '');
-    formData.append('parent', data.parent);
-    formData.append('slug', changeSlug(data.slug));
-    formData.append('keyword', changeSlug(data.keyword));
-    formData.append('lang', data.lang);
-    formData.append('languageGroup', data.languageGroup);
-
-    return formData;
-};
+import { constructFormData } from '@Services/utils/constructFormData';
+import { Crud } from '@/AdminService/Crud';
+import { createFilterParams } from '@Services/utils/createFilterParams';
 
 const mediaCategoriesApi = {
     getMediaCategories: async (filters) => {
@@ -26,9 +13,9 @@ const mediaCategoriesApi = {
             if (filters?.lang) {
                 params['filters[lang]'] = filters?.lang;
             }
+            createFilterParams(filters, Crud?.mediaCategories?.list?.filtersData, params);
 
             const result = await axios.get('/media-categories', { params: params });
-
             let data = sortTranslatedCategory(result.data);
 
             return { result: true, mediaCategories: data };
@@ -44,6 +31,7 @@ const mediaCategoriesApi = {
             if (filters?.lang) {
                 params['filters[lang]'] = filters?.lang;
             }
+            createFilterParams(filters, Crud?.mediaCategories?.list?.filtersData, params);
 
             const result = await axios.get('/media-categories', { params: params });
 
@@ -55,9 +43,27 @@ const mediaCategoriesApi = {
         }
     },
 
-    getOneMediaCategory: async (id) => {
+    getOneMediaCategory: async (id, filters) => {
         try {
-            const result = await axios.get(`/media-categories/${id}`);
+            let params = {};
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            createFilterParams(filters, Crud?.mediaCategories?.list?.filtersData, params);
+
+            const result = await axios.get(`/media-categories/${id}`, { params: params });
+            let data = sortTranslatedCategory(result.data);
+
+            return { result: true, mediaCategory: data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    createMediaCategory: async (values) => {
+        try {
+            const result = await axios.post('/media-categories', constructFormData({ values, dataFields: Crud?.mediaCategories?.add?.api?.dataFields }));
 
             return { result: true, mediaCategory: result.data };
         } catch (error) {
@@ -65,19 +71,9 @@ const mediaCategoriesApi = {
         }
     },
 
-    createMediaCategory: async (data) => {
+    editMediaCategory: async (id, values) => {
         try {
-            const result = await axios.post('/media-categories', getFormData(data));
-
-            return { result: true, mediaCategory: result.data };
-        } catch (error) {
-            return { result: false, error: error?.response?.data };
-        }
-    },
-
-    editMediaCategory: async (id, data) => {
-        try {
-            const result = await axios.post(`/media-categories/${id}`, getFormData(data));
+            const result = await axios.post(`/media-categories/${id}`, constructFormData({ values, dataFields: Crud?.mediaCategories?.edit?.api?.dataFields }));
 
             return { result: true, mediaCategory: result.data };
         } catch (error) {

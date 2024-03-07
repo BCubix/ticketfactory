@@ -43,6 +43,22 @@ const featureCategoriesApi = {
         }
     },
 
+    getAllFeatureCategories: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            const result = await axios.get(DEFAULT_PATH, { params: params });
+
+            return { result: true, featureCategories: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     getOneFeatureCategory: async (id) => {
         try {
             const result = await axios.get(`${DEFAULT_PATH}/${id}`);

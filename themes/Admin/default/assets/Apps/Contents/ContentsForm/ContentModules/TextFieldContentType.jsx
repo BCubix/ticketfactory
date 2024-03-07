@@ -32,7 +32,7 @@ const FormComponent = ({ values, handleChange, handleBlur, name, errors, field, 
     return (
         <>
             <Component.CmtTextField
-                value={values[field.name]}
+                value={values[field.name] || ''}
                 label={label}
                 onChange={handleChange}
                 onBlur={handleBlur}

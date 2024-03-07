@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { TreeItem, TreeView } from '@mui/lab';
+import { TreeItem, TreeView } from '@mui/x-tree-view';
 import { FormControl, FormHelperText, Radio, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 

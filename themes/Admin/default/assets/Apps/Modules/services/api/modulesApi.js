@@ -108,6 +108,28 @@ const modulesApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    getModuleImage: async (id) => {
+        try {
+            const result = await axios.get(`/modules/moduleImage/${id}`, { responseType: 'arraybuffer' });
+
+            if (!result.data) {
+                return { result: true, image: '' };
+            }
+
+            const base64Image = btoa(
+                new Uint8Array(result.data).reduce((data, byte) => data + String.fromCharCode(byte)),
+                ''
+            );
+            const formattedBase64 = base64Image.replace(/(.{64})/g, '$1\n');
+            const imageDataUrl = `data:${result.headers['content-type']};base64,${formattedBase64}`;
+
+            return { result: true, image: imageDataUrl };
+        } catch (error) {
+            console.log(error);
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default modulesApi;

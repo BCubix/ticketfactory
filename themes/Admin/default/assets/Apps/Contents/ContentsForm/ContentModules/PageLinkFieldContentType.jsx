@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Typography } from '@mui/material';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
-import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
-
 import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const TYPE = 'page';
@@ -21,7 +20,7 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field, label, touched }) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
@@ -50,31 +49,19 @@ const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field,
 
     return (
         <>
-            <FormControl fullWidth>
-                <InputLabel id={`eventLink-${label}-label`} size="small">
-                    {label}
-                </InputLabel>
-                <Select
-                    labelId={`eventLink-${label}-label`}
-                    variant="standard"
-                    id={`eventLink-${label}`}
-                    size="small"
-                    value={values[field.name]}
-                    label={label}
-                    onChange={(e) => {
-                        setFieldValue(name, e.target.value);
-                    }}
-                    name={name}
-                    onBlur={handleBlur}
-                >
-                    {list?.map((item, index) => (
-                        <MenuItem key={index} value={item.id}>
-                            <ListItemText>{item.title}</ListItemText>
-                        </MenuItem>
-                    ))}
-                </Select>
-                {touched && touched[field.name] && errors && errors[field.name] && <FormHelperText error>{errors[field.name]}</FormHelperText>}
-            </FormControl>
+            <Component.CmtSelect
+                {...{ label, setFieldValue, name }}
+                required={field?.options?.required}
+                multiple={field?.options?.multiple}
+                disabled={field?.options?.disabled}
+                id={`pageLink-${name}`}
+                value={values[field.name]}
+                list={list}
+                touched={touched && touched[field.name]}
+                errors={errors && errors[field.name]}
+                getValue={(item) => item?.id}
+                getName={(item) => item?.title}
+            />
             {field.helper && (
                 <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
                     {field.helper}

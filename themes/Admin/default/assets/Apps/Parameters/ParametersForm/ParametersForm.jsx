@@ -5,8 +5,18 @@ import { Box } from '@mui/system';
 import { Button } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
+import { parameterTypes } from '../services/config/parameterTypes';
+import { Crud } from '@/AdminService/Crud';
+import { serializationApi } from '../services/config/serializationApi';
+import { deserializationApi, getDeserializationApiValue } from '../services/config/deserializationApi';
 
-export const ParametersForm = ({ handleSubmit, parameters }) => {
+export const parametersFormCrud = {
+    parametersTypesModules: parameterTypes,
+    serializationApi: serializationApi,
+    deserializationApi: deserializationApi,
+};
+
+export const ParametersForm = ({ handleSubmit, parameters, formCrud = Crud.parameters.edit }) => {
     const tabs = useMemo(() => {
         const tabs = [];
 
@@ -16,6 +26,8 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
             }
 
             const indexTab = tabs.findIndex((tab) => tab.tabName === parameter.tabName);
+            parameter = { ...parameter, paramValue: getDeserializationApiValue(parameter.type, parameter.paramValue) };
+
             if (indexTab === -1) {
                 tabs.push({
                     tabName: parameter.tabName,
@@ -77,6 +89,7 @@ export const ParametersForm = ({ handleSubmit, parameters }) => {
                                         errors={errors}
                                         setFieldTouched={setFieldTouched}
                                         setFieldValue={setFieldValue}
+                                        parametersTypesModules={formCrud.parametersTypesModules}
                                     />
                                 ),
                             };

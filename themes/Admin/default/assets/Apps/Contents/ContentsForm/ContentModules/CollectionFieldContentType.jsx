@@ -1,18 +1,29 @@
 import React from 'react';
-import * as Yup from 'yup';
-import { Typography } from '@mui/material';
-
-import { Component } from '@/AdminService/Component';
-
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ContentModules from '@Apps/Contents/ContentsForm/ContentModules/index';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Box } from '@mui/system';
+import { Typography } from '@mui/material';
 import { FieldArray } from 'formik';
+import * as Yup from 'yup';
+
+import { Component } from '@/AdminService/Component';
+import { getPropByString } from '@Services/utils/getPropByString';
 
 const TYPE = 'collection';
 
 const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules }) => {
+    const handleMoveMenuElement = (index, move) => {
+        let newList = values[field.name];
+        let elem = values[field.name][index];
+
+        newList.splice(index, 1);
+        newList.splice(index + move, 0, elem);
+
+        setFieldValue(name, newList);
+    };
+
     return (
         <>
             <Component.CmtFormBlock title={label}>
@@ -22,6 +33,20 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
                             {values &&
                                 values[field.name]?.map((item, index) => (
                                     <Component.CmtFormBlock title={`${label} N° ${index + 1}`}>
+                                        <Box sx={{ position: 'absolute', right: 20, top: 3 }}>
+                                            {index < values[field.name]?.length - 1 && (
+                                                <Component.MoveElementButton onClick={() => handleMoveMenuElement(index, 1)} title="Descendre d'un cran">
+                                                    <ArrowDownwardIcon fontSize="inherit" />
+                                                </Component.MoveElementButton>
+                                            )}
+
+                                            {index > 0 && (
+                                                <Component.MoveElementButton onClick={() => handleMoveMenuElement(index, -1)} title="Monter d'un cran">
+                                                    <ArrowUpwardIcon fontSize="inherit" />
+                                                </Component.MoveElementButton>
+                                            )}
+                                        </Box>
+
                                         <Box position="relative" key={index}>
                                             <Component.DeleteBlockFabButton
                                                 size="small"
@@ -34,7 +59,7 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
 
                                             <Component.DisplayContentForm
                                                 values={item}
-                                                errors={(errors && errors?.at(field.name)?.at(index)?.parameters) || {}}
+                                                errors={(errors && getPropByString(errors, `${field.name}.${index}.parameters`)) || {}}
                                                 touched={(touched && touched[field.name]?.at(index)?.parameters) || {}}
                                                 handleBlur={handleBlur}
                                                 handleChange={handleChange}
@@ -74,13 +99,11 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
     );
 };
 
-const getInitialValue = (field) => {
-    const contentModules = ContentModules();
-
+const getInitialValue = (field, contentModules) => {
     let fields = {};
 
     field?.parameters?.fields?.forEach((el) => {
-        fields[el.name] = contentModules[el.type]?.getInitialValue(el) || '';
+        fields[el.name] = contentModules[el.type]?.getInitialValue(el, contentModules) || '';
     });
 
     return [{ ...fields }];
@@ -90,7 +113,7 @@ const getNewLineInitialValues = (field, contentModules) => {
     let fields = {};
 
     field?.parameters?.fields?.forEach((el) => {
-        fields[el.name] = contentModules[el.type]?.getInitialValue(el) || '';
+        fields[el.name] = contentModules[el.type]?.getInitialValue(el, contentModules) || '';
     });
 
     return { ...fields };
@@ -114,12 +137,11 @@ const getSubValidation = (contentType, contentModule) => {
     return validation;
 };
 
-const getValidation = (contentType) => {
+const getValidation = (contentType, contentModules) => {
     let validation = {};
-    const contentModules = ContentModules();
 
     contentType?.parameters?.fields?.forEach((el) => {
-        validation[el.name] = contentModules[el.type]?.getValidation ? contentModules[el.type].getValidation(el) : getSubValidation(el, contentModules[el.type]);
+        validation[el.name] = contentModules[el.type]?.getValidation ? contentModules[el.type].getValidation(el, contentModules) : getSubValidation(el, contentModules[el.type]);
     });
 
     return Yup.object()

@@ -10,7 +10,12 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
-import { getProductCategoriesAction, productCategoriesSelector } from '@Apps/ProductCategories/redux/productCategories/productCategoriesSlice';
+import {
+    changeProductCategoriesFilters,
+    getProductCategoriesAction,
+    productCategoriesSelector,
+    updateProductCategoriesFilters,
+} from '@Apps/ProductCategories/redux/productCategories/productCategoriesSlice';
 import { getProductsAction } from '@Apps/Products/redux/products/productsSlice';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -20,6 +25,11 @@ export const productCategoriesListCrud = {
     title: 'Catégories de produits',
     listTitle: 'Liste des catégories de produits',
     tableContextualMenu: true,
+    filtersData: [{ key: 'active', type: 'boolean' }, 'name'],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
     tableList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
@@ -29,6 +39,7 @@ export const productCategoriesListCrud = {
     loadDataAction: () => getProductCategoriesAction(),
     dataSelector: productCategoriesSelector,
     dataList: (selector) => selector.productCategories?.children,
+    changeFiltersActions: (props) => changeProductCategoriesFilters(props),
     duplicate: (props) => Api.productCategories.duplicateProductCategory(props),
     delete: (props) => Api.productCategories.deleteProductCategory(props),
     links: {
@@ -43,7 +54,16 @@ export const productCategoriesListCrud = {
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS.wrapperComponent,
     components: [
         {
-            component: ({ listCrud, productCategory, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd }) => {
+            component: ({ objectData, listCrud, dispatch }) => (
+                <Component.CmtFiltersList
+                    filters={objectData?.filters}
+                    filtersList={listCrud?.filterList}
+                    changeFilters={(values) => dispatch(listCrud?.changeFiltersActions(values))}
+                />
+            ),
+        },
+        {
+            component: ({ listCrud, productCategory, navigate, setDeleteDialog, handleDuplicate, path, handleDragEnd, handleResetFilters }) => {
                 return (
                     <Component.ListTable
                         contextualMenu
@@ -54,6 +74,7 @@ export const productCategoriesListCrud = {
                         }}
                         onDelete={(id) => setDeleteDialog(id)}
                         onClick={(elemId) => {
+                            handleResetFilters();
                             navigate(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/${elemId}`);
                         }}
                         onDuplicate={(id) => {
@@ -74,9 +95,9 @@ export const productCategoriesListCrud = {
     ],
     headerComponents: [
         {
-            component: ({ listCrud, productCategory, path, navigate }) => (
+            component: ({ listCrud, productCategory, path, navigate, handleResetFilters }) => (
                 <Box display="flex" alignItems="center" pt={5}>
-                    <Component.CmtBreadCrumb list={path} />
+                    <Component.CmtBreadCrumb list={path} additionalClick={handleResetFilters} />
                     <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(productCategory.id))}>
                         <Component.EditCategoryLink component="span" variant="body1">
                             Modifier
@@ -126,7 +147,7 @@ export const productCategoriesListCrud = {
 };
 
 export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list, ...props }) => {
-    const { loading, productCategories, error } = useSelector(productCategoriesSelector);
+    const { loading, productCategories, filters, error } = useSelector(productCategoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -137,7 +158,7 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
 
     const getProductCategory = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.productCategoriesApi.getOneProductCategory(id);
+            const result = await Api.productCategoriesApi.getOneProductCategory(id, filters);
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.PRODUCT_CATEGORIES_BASE_PATH);
@@ -241,6 +262,10 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
         });
     };
 
+    const handleResetFilters = () => {
+        dispatch(updateProductCategoriesFilters({ filters: { active: null, name: '' } }));
+    };
+
     return (
         <>
             <Component.CmtPageWrapper title={listCrud?.title || ''}>
@@ -263,6 +288,7 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
                             path={path}
                             productCategories={productCategories}
                             productCategory={productCategory}
+                            handleResetFilters={handleResetFilters}
                             {...props}
                         />
                     );
@@ -307,6 +333,7 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
                                     dispatch={dispatch}
                                     handleDuplicate={handleDuplicate}
                                     setDeleteDialog={setDeleteDialog}
+                                    handleResetFilters={handleResetFilters}
                                     {...props}
                                 />
                             );

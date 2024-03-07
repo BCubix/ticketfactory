@@ -1,19 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
 import { FormHelperText } from '@mui/material';
+import { Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
+import { CONTENT_FIELDS } from '@Apps/Contents/services/config/getContentFields';
+import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
+import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
-import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
-import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
-import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
-import { initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 
 const getValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
@@ -42,7 +39,9 @@ const getFieldsValidation = (contentType, getContentModules) => {
     }
 
     contentType.fields?.forEach((el) => {
-        validation[el.name] = getContentModules[el.type]?.getValidation ? getContentModules[el.type].getValidation(el) : getValidation(el, getContentModules[el.type]);
+        validation[el.name] = getContentModules[el.type]?.getValidation
+            ? getContentModules[el.type].getValidation(el, getContentModules)
+            : getValidation(el, getContentModules[el.type]);
     });
 
     return Yup.object().shape({ ...validation });
@@ -93,6 +92,9 @@ export const pagesForm = {
         activeInput: true,
         activeLabel: 'Page active ?',
     },
+    infos: {
+        seoIndexedLabel: 'Indexer cette page ?',
+    },
     api: {
         dataFields: {
             active: { type: 'boolean' },
@@ -125,6 +127,7 @@ export const pagesForm = {
             seo: SeoApiDataFields,
         },
     },
+    contentFields: CONTENT_FIELDS,
     fields: [
         {
             type: 'tabs',
@@ -238,7 +241,7 @@ export const pagesForm = {
                         );
                     },
                 },
-                SeoInitialFormInputs,
+                IndexSeoInitialFormInputs,
             ],
         },
     ],
@@ -250,7 +253,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
     const navigate = useNavigate();
 
     const getContentModules = useMemo(() => {
-        return ContentModules();
+        return formCrud.contentFields;
     }, []);
 
     useEffect(() => {
@@ -267,7 +270,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         let fields = {};
 
         contentType?.fields?.forEach((el) => {
-            fields[el.name] = formModules[el.type]?.getInitialValue(el) || '';
+            fields[el.name] = formModules[el.type]?.getInitialValue(el, getContentModules) || '';
         });
 
         setInitValue(constructInitialValues(formCrud.form.initialSchema, { fields }, { pagesList, contentType, ...props }));
@@ -286,12 +289,12 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                 setSubmitting(false);
             }}
         >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, submitForm, isSubmitting }) => (
                 <Component.CmtPageWrapper
                     component="form"
                     onSubmit={handleSubmit}
                     title={formCrud?.form?.title}
-                    /* actionButton={
+                    /*actionButton={
                         initialValues && (
                             <Component.ActionButton
                                 variant="contained"
@@ -301,7 +304,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                 Historique de la page
                             </Component.ActionButton>
                         )
-                    } */
+                    }*/
                 >
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}
@@ -319,6 +322,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                         pagesList={pagesList}
                         contentType={contentType}
                         getContentModules={getContentModules}
+                        submitForm={submitForm}
                         {...props}
                     />
                 </Component.CmtPageWrapper>

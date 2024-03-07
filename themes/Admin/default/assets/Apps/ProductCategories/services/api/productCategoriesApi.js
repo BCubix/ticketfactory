@@ -3,6 +3,7 @@ import { copyData } from '@Services/utils/copyData';
 import { sortTranslatedCategory } from '@Services/utils/translationUtils';
 import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
+import { createFilterParams } from '@Services/utils/createFilterParams';
 
 const DEFAULT_PATH = '/product-categories';
 
@@ -14,9 +15,9 @@ const productCategoriesApi = {
             if (filters?.lang) {
                 params['filters[lang]'] = filters?.lang;
             }
+            createFilterParams(filters, Crud?.categories?.list?.filtersData, params);
 
             const result = await axios.get(DEFAULT_PATH, { params: params });
-
             let data = sortTranslatedCategory(result.data);
 
             return { result: true, productCategories: data };
@@ -25,9 +26,17 @@ const productCategoriesApi = {
         }
     },
 
-    getOneProductCategory: async (id) => {
+    getOneProductCategory: async (id, filters) => {
         try {
-            const result = await axios.get(`${DEFAULT_PATH}/${id}`);
+            let params = {};
+
+            if (filters?.lang) {
+                params['filters[lang]'] = filters?.lang;
+            }
+
+            createFilterParams(filters, Crud?.productCategories?.list?.filtersData, params);
+
+            const result = await axios.get(`${DEFAULT_PATH}/${id}`, { params: params });
 
             let data = sortTranslatedCategory(result.data);
 

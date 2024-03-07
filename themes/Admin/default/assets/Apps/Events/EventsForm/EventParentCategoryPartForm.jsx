@@ -101,12 +101,12 @@ export const EventParentCategoryPartForm = ({ values, categoriesList, setFieldVa
                 {displayCategoriesOptions(categoriesList, values, setFieldValue)}
             </TreeView>
             {touched?.eventCategories && errors?.eventCategories && (
-                <Typography sx={{ fontSize: 12 }} color="error" id="eventCategories-helper-text">
+                <Typography sx={{ fontSize: 12 }} color="error" id="eventCategories-helper-text" className="Mui-error">
                     {touched?.eventCategories && errors?.eventCategories}
                 </Typography>
             )}
             {touched?.mainCategory && errors?.mainCategory && (
-                <Typography sx={{ fontSize: 12 }} color="error" id="mainCategory-helper-text">
+                <Typography sx={{ fontSize: 12 }} color="error" id="mainCategory-helper-text" className="Mui-error">
                     {touched?.mainCategory && errors?.mainCategory}
                 </Typography>
             )}

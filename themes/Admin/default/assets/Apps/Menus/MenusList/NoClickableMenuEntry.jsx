@@ -20,6 +20,9 @@ export const NoClickableMenuEntry = ({ addElementToMenu }) => {
                 value: null,
                 menuType: MENU_TYPE,
                 children: [],
+                active: true,
+                noFollow: false,
+                target: '_self',
             },
         ]);
 

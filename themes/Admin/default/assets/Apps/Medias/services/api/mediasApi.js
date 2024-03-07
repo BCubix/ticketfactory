@@ -5,53 +5,6 @@ import { Crud } from '@/AdminService/Crud';
 
 var controller = null;
 
-const FILTERS_SORT_TAB = [
-    {
-        name: 'active',
-        transformFilter: (params, sort) => {
-            params['filters[active]'] = sort ? '1' : '0';
-        },
-    },
-    {
-        name: 'iframe',
-        transformFilter: (params, sort) => {
-            params['filters[iframe]'] = sort ? '1' : '0';
-        },
-    },
-    { name: 'title', sortName: 'filters[title]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
-    {
-        name: 'sort',
-        transformFilter: (params, sort) => {
-            const splitSort = sort?.split(' ');
-
-            params['filters[sortField]'] = splitSort[0];
-            params['filters[sortOrder]'] = splitSort[1];
-        },
-    },
-    {
-        name: 'category',
-        transformFilter: (params, values) => {
-            values?.split(',').forEach((el, index) => {
-                params[`filters[category][${index}]`] = el;
-            });
-        },
-    },
-    {
-        name: 'type',
-        transformFilter: (params, sort) => {
-            if (typeof sort === 'string') {
-                sort = sort.split(',');
-            }
-
-            sort?.forEach((el, index) => {
-                params[`filters[type][${index}]`] = el;
-            });
-        },
-    },
-];
-
 const mediasApi = {
     getMedias: async (filters) => {
         try {
@@ -91,6 +44,7 @@ const mediasApi = {
             const result = await axios.get('/medias', {
                 params: params,
             });
+
             return { result: true, medias: result.data?.results, total: result?.data?.total };
         } catch (error) {
             return { result: false, error: error?.response?.data };

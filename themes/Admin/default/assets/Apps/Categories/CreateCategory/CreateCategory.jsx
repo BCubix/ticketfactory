@@ -76,6 +76,8 @@ export const CreateCategory = () => {
             NotificationManager.success('La catégorie a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
             dispatch(getCategoriesAction());
             navigate(`${Constant.CATEGORIES_BASE_PATH}${parentId ? `/${parentId}` : ''}`);
+        } else if (result?.error?.httpcode >= 400 && result?.error?.httpcode <= 500) {
+            NotificationManager.error(result?.error?.message, 'Erreur', Constant.REDIRECTION_TIME);
         }
     };
 

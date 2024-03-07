@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, FormControl, FormControlLabel, Grid, IconButton, Popover, Switch, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
@@ -29,7 +29,16 @@ export const DisplayMenuElement = ({
     language,
     errors,
 }) => {
+    const [anchorEl, setAnchorEl] = useState(null);
     const displayMove = index > 0 || index < list?.length - 1 || isSubMenu;
+
+    const handleClickParams = (e) => {
+        setAnchorEl(e.currentTarget);
+    };
+
+    const handleCloseParams = () => {
+        setAnchorEl(null);
+    };
 
     const handleMoveMenuElement = (move) => {
         let newList = list;
@@ -99,6 +108,92 @@ export const DisplayMenuElement = ({
                             editMode
                         />
                     )}
+
+                    {Boolean(anchorEl) && (
+                        <Popover
+                            open={Boolean(anchorEl)}
+                            anchorEl={anchorEl}
+                            onClose={handleCloseParams}
+                            anchorOrigin={{
+                                vertical: 'center',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'center',
+                                horizontal: 'left',
+                            }}
+                            sx={{ ml: 3 }}
+                        >
+                            <Box minWidth={300} width={500} maxWidth={'90vw'} p={5}>
+                                <Typography> {element.name} </Typography>
+
+                                <Grid container spacing={4}>
+                                    <Grid item xs={12}>
+                                        <Component.CmtSelect
+                                            label="Ouvrir dans"
+                                            id={`menu-${index}-target`}
+                                            name={`${name}.${index}.target`}
+                                            value={element.target}
+                                            list={[
+                                                { label: 'Ouvrir dans le même onglet', value: '_self' },
+                                                { label: 'Ouvrir dans un nouvel onglet', value: '_blank' },
+                                            ]}
+                                            getValue={(item) => item.value}
+                                            getName={(item) => item.label}
+                                            setFieldValue={setFieldValue}
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Component.CmtSelect
+                                            label="Attribut follow"
+                                            id={`menu-${index}-noFollow`}
+                                            name={`${name}.${index}.noFollow`}
+                                            value={element.noFollow}
+                                            list={[
+                                                { label: 'Follow', value: false },
+                                                { label: 'No Follow', value: true },
+                                            ]}
+                                            getValue={(item) => item.value}
+                                            getName={(item) => item.label}
+                                            setFieldValue={setFieldValue}
+                                            required
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FormControl fullWidth sx={{ mt: 10 }}>
+                                            <FormControlLabel
+                                                size="small"
+                                                id={`menu-${index}-active`}
+                                                value={Boolean(element.active)}
+                                                onChange={(e) => {
+                                                    setFieldValue(`${name}.${index}.active`, e.target.checked);
+                                                }}
+                                                label={'Entrée de menu activée ?'}
+                                                labelPlacement="start"
+                                                control={<Switch checked={Boolean(element.active)} />}
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'flex-start',
+                                                    marginLeft: 0,
+                                                    marginBlock: 0,
+                                                }}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Popover>
+                    )}
+
+                    <Box display="flex" justifyContent="flex-end">
+                        <Button size="small" variant="text" color="primary" onClick={(e) => handleClickParams(e)}>
+                            <Typography fontSize={10} textTransform={'none'}>
+                                Paramètres avancés {'>'}
+                            </Typography>
+                        </Button>
+                    </Box>
 
                     <Box display="flex">
                         {displayMove && (

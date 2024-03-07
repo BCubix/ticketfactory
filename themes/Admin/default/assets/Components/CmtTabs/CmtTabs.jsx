@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tab, Tabs } from '@mui/material';
 import { Box } from '@mui/system';
 
 function TabPanel(props) {
-    const { children, value, index, label, ...other } = props;
+    const { children, value, index, label, mountComponents, ...other } = props;
 
     return (
         <Box hidden={value !== index} id={`tab-${label}`} aria-labelledby={`${label}`} {...other}>
-            {value === index && children}
+            {mountComponents ? children : value === index && children}
         </Box>
     );
 }
 
-export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
+export const CmtTabs = ({ list, mountComponents, tabValue = 0, setTabValue = null, containerStyle = {} }) => {
     const [value, setValue] = useState(tabValue);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (tabValue !== value) {
+            setValue(tabValue);
+        }
+    }, [tabValue]);
 
     if (list.length === 1) {
         const TabComponent = list[0];
@@ -29,6 +35,9 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
                     value={value}
                     onChange={(_, newValue) => {
                         setValue(newValue);
+                        if (setTabValue) {
+                            setTabValue(newValue);
+                        }
                     }}
                     aria-label="Panel"
                 >
@@ -38,6 +47,7 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
                             <Tab
                                 label={item.label}
                                 id={item.id || item.label}
+                                className="js-tab-button"
                                 key={index}
                                 onClick={() => {
                                     if (item.path) {
@@ -57,7 +67,7 @@ export const CmtTabs = ({ list, tabValue = 0, containerStyle = {} }) => {
             {list
                 ?.filter((el) => !el.hidden)
                 ?.map((item, index) => (
-                    <TabPanel value={value} index={index} key={index} label={item.label}>
+                    <TabPanel mountComponents={mountComponents} value={value} index={index} key={index} label={item.label} className={`js-tab-content`}>
                         {item.component}
                     </TabPanel>
                 ))}

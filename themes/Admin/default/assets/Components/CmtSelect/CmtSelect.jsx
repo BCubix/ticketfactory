@@ -1,9 +1,33 @@
 import { Checkbox, FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
 import React from 'react';
 
-export const CmtSelect = ({ label, required = false, multiple = false, id, name, value, list, getValue, getName, setFieldValue, touched, errors, getMenuItem = null }) => {
+export const CmtSelect = ({
+    label,
+    required = false,
+    multiple = false,
+    id,
+    name,
+    value,
+    list,
+    getValue,
+    getName,
+    setFieldValue,
+    handleBlur,
+    touched,
+    errors,
+    onChange = null,
+    getMenuItem = null,
+    emptyLabel = '',
+    disabled = false,
+}) => {
     return (
-        <FormControl fullWidth sx={{ mt: 4 }} className="Mui-Select-FormControl" size="small">
+        <FormControl
+            fullWidth
+            sx={{ mt: 4 }}
+            required={required}
+            className={`Mui-Select-FormControl ${!Boolean(required) && !Boolean(multiple) ? 'displayEmpty' : ''}`}
+            size="small"
+        >
             <InputLabel id={`${id}-label`} required={required} size="small">
                 {label}
             </InputLabel>
@@ -14,7 +38,11 @@ export const CmtSelect = ({ label, required = false, multiple = false, id, name,
                 value={value}
                 label={label}
                 onChange={(e) => {
-                    setFieldValue(name, e.target.value);
+                    if (onChange) {
+                        onChange(e);
+                    } else {
+                        setFieldValue(name, e.target.value);
+                    }
                 }}
                 {...(multiple && {
                     multiple: true,
@@ -31,7 +59,18 @@ export const CmtSelect = ({ label, required = false, multiple = false, id, name,
                         return renderName.join(', ');
                     },
                 })}
+                {...(handleBlur && {
+                    onBlur: handleBlur,
+                })}
+                displayEmpty={!Boolean(required) && !Boolean(multiple)}
+                disabled={Boolean(disabled)}
             >
+                {!Boolean(required) && !Boolean(multiple) && (
+                    <MenuItem value={''}>
+                        <ListItemText>{emptyLabel || `Pas de ${label.charAt(0).toLowerCase() + label.slice(1)} `}</ListItemText>
+                    </MenuItem>
+                )}
+
                 {null !== getMenuItem
                     ? getMenuItem((newList) =>
                           newList?.map((item, index) => (

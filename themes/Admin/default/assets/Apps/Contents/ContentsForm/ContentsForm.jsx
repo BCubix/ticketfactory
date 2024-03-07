@@ -3,13 +3,11 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Component } from '@/AdminService/Component';
-
-import ContentModules from '@Apps/Contents/ContentsForm/ContentModules';
-import { constructInitialValues } from '@Services/utils/constructInitialValues';
-import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
+import { CONTENT_FIELDS } from '@Apps/Contents/services/config/getContentFields';
+import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
+import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
-import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
-import { initYup } from '@Components/CmtCrudForm/CmtCrudForm';
+import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
 const getValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
@@ -34,7 +32,9 @@ const getFieldsValidation = (contentType, getContentModules) => {
     let validation = {};
 
     contentType.fields?.forEach((el) => {
-        validation[el.name] = getContentModules[el.type]?.getValidation ? getContentModules[el.type].getValidation(el) : getValidation(el, getContentModules[el.type]);
+        validation[el.name] = getContentModules[el.type]?.getValidation
+            ? getContentModules[el.type].getValidation(el, getContentModules)
+            : getValidation(el, getContentModules[el.type]);
     });
 
     return Yup.object().shape({ ...validation });
@@ -88,6 +88,9 @@ export const contentsForm = {
         activeInput: true,
         activeLabel: 'Page active ?',
     },
+    infos: {
+        seoIndexedLabel: 'Indexer ce contenu ?',
+    },
     api: {
         dataFields: {
             active: { type: 'boolean' },
@@ -112,6 +115,7 @@ export const contentsForm = {
             seo: SeoApiDataFields,
         },
     },
+    contentFields: CONTENT_FIELDS,
     fields: [
         {
             type: 'tabs',
@@ -174,7 +178,7 @@ export const contentsForm = {
                         );
                     },
                 },
-                SeoInitialFormInputs,
+                IndexSeoInitialFormInputs,
             ],
         },
     ],
@@ -185,7 +189,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
     const [initValue, setInitValue] = useState(null);
 
     const getContentModules = useMemo(() => {
-        return ContentModules();
+        return formCrud.contentFields;
     }, []);
 
     useEffect(() => {
@@ -202,7 +206,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
         let fields = {};
 
         selectedContentType?.fields?.forEach((el) => {
-            fields[el.name] = formModules[el.type]?.getInitialValue(el) || '';
+            fields[el.name] = formModules[el.type]?.getInitialValue(el, getContentModules) || '';
         });
 
         setInitValue(constructInitialValues(formCrud.form.initialSchema, { fields }, { contentType: selectedContentType, ...props }));
@@ -231,7 +235,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                 })
             )}
         >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, submitForm, isSubmitting }) => (
                 <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}>
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}
@@ -248,6 +252,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
                         isSubmitting={isSubmitting}
                         selectedContentType={selectedContentType}
                         getContentModules={getContentModules}
+                        submitForm={submitForm}
                         {...props}
                     />
                 </Component.CmtPageWrapper>

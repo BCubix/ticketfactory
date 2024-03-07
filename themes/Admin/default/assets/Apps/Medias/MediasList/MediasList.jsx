@@ -252,7 +252,7 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                                     item.iframe ? setEditIframeDialog(item.id) : setEditDialog(item.id);
                                 }}
                             >
-                                <Component.CmtDisplayMediaType media={item} width={'100%'} height={'auto'} />
+                                <Component.CmtDisplayMediaType media={item} displayThumbnail width={'100%'} height={'auto'} />
                             </Component.CmtMediaElement>
                         ))}
                     </Box>

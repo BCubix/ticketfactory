@@ -33,6 +33,7 @@ const authApi = {
 
             formData.append('refresh_token', refresh_token);
 
+            axios.defaults.headers.common['Authorization'] = '';
             const result = await axios.post('/token/refresh', formData);
 
             localStorage.setItem('token', result.data.token);

@@ -21,7 +21,7 @@ export const ImageFormatsGenerateForm = ({ imageFormats, handleSubmit }) => {
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
                 <Component.CmtFormBlock title="Génération des miniatures" sx={{ mt: 5 }}>
                     <FormControl fullWidth sx={{ mt: 3 }}>
-                        <InputLabel id="imageFormat-label" size="small" className="required-input">
+                        <InputLabel id="imageFormat-label" size="small" required>
                             Format d'image
                         </InputLabel>
                         <Select

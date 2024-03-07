@@ -14,7 +14,7 @@ export const CmtTranslateDialog = ({ item, isOpen, onClose, languageList, onTran
             <DialogTitle sx={{ fontSize: 20 }}>Traduction</DialogTitle>
             <DialogContent dividers>
                 <FormControl fullWidth sx={{ marginTop: 3 }}>
-                    <InputLabel id={`translate-label`} size="small">
+                    <InputLabel id={`translate-label`} required size="small">
                         Langue
                     </InputLabel>
                     <Select

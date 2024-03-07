@@ -9,6 +9,7 @@ import { Component } from '@/AdminService/Component';
 import { changeSlug } from '@Services/utils/changeSlug';
 
 export const categoriesInitialSchema = {
+    id: (initValues) => initValues?.id || undefined,
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     parent: (initValues, { parentId }) => initValues?.parent?.id || parentId || '',

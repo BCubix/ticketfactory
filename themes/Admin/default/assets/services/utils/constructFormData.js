@@ -1,7 +1,7 @@
 import { changeSlug } from '@Services/utils/changeSlug';
 
 const DATA_TYPE = {
-    string: ({ values, key, field, formData, baseName }) => formData.append(getApiFieldName({ baseName, key, field }), values[key] || ''),
+    string: ({ values, key, field, formData, baseName }) => formData.append(getApiFieldName({ baseName, key, field }), values[key] || values[key] === 0 ? values[key] : ''),
     boolean: ({ values, key, field, formData, baseName }) => formData.append(getApiFieldName({ baseName, key, field }), values[key] ? 1 : 0),
     slug: ({ values, key, field, formData, baseName }) => formData.append(getApiFieldName({ baseName, key, field }), changeSlug(values[key] || '')),
     id: ({ values, formData, baseName, key, field }) => formData.append(getApiFieldName({ baseName, key, field }), values[key]?.id || ''),

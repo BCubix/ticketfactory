@@ -12,7 +12,7 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
     return (
         <Draggable key={index} draggableId={index.toString()} index={index} isCombineEnabled ignoreContainerClipping>
             {(provided, snapshot) => (
-                <TableRow ref={provided.innerRef} {...provided.draggableProps} isDragging={snapshot.isDragging}>
+                <TableRow ref={provided.innerRef} {...provided.draggableProps}>
                     <TableCell sx={{ width: '5%' }}>
                         <Box
                             height="100%"

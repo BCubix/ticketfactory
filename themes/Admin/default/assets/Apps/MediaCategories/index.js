@@ -1,6 +1,5 @@
-import { CreateMediaCategory } from '@Apps/MediaCategories/CreateMediaCategory/CreateMediaCategory';
-import { EditMediaCategory } from '@Apps/MediaCategories/EditMediaCategory/EditMediaCategory';
-import { MediaCategoriesForm } from '@Apps/MediaCategories/MediaCategoriesForm/MediaCategoriesForm';
+import { CreateMediaCategory, mediaCategoriesCreateCrud } from '@Apps/MediaCategories/CreateMediaCategory/CreateMediaCategory';
+import { EditMediaCategory, mediaCategoriesEditCrud } from '@Apps/MediaCategories/EditMediaCategory/EditMediaCategory';
 import { ParentMediaCategoryPartForm } from '@Apps/MediaCategories/MediaCategoriesForm/ParentMediaCategoryPartForm';
 import { MediaCategoriesList, mediaCategoriesListCrud } from '@Apps/MediaCategories/MediaCategoriesList/MediaCategoriesList';
 
@@ -21,7 +20,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('CreateMediaCategory', CreateMediaCategory);
     setComponent('EditMediaCategory', EditMediaCategory);
-    setComponent('MediaCategoriesForm', MediaCategoriesForm);
     setComponent('ParentMediaCategoryPartForm', ParentMediaCategoryPartForm);
     setComponent('MediaCategoriesList', MediaCategoriesList);
 };
@@ -44,6 +42,8 @@ export const initReducer = () => {
 export const initCrud = () => {
     const crud = {
         list: mediaCategoriesListCrud,
+        add: mediaCategoriesCreateCrud,
+        edit: mediaCategoriesEditCrud,
     };
 
     setCrud('mediaCategories', crud);

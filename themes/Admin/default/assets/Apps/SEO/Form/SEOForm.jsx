@@ -11,6 +11,7 @@ export const SeoInitialValues = {
     fbDescription: (initValues) => initValues?.fbDescription || '',
     twTitle: (initValues) => initValues?.twTitle || '',
     twDescription: (initValues) => initValues?.twDescription || '',
+    indexed: (initValues) => (initValues?.indexed || initValues?.indexed === false ? initValues?.indexed : true),
 };
 
 export const SeoApiDataFields = {
@@ -23,6 +24,7 @@ export const SeoApiDataFields = {
         fbDescription: { type: 'string' },
         twTitle: { type: 'string' },
         twDescription: { type: 'string' },
+        indexed: { type: 'boolean' },
     },
 };
 
@@ -189,6 +191,25 @@ export const SeoInitialFormInputs = {
                         );
                     },
                 },
+            },
+        },
+    ],
+};
+
+export const IndexSeoInitialFormInputs = {
+    ...SeoInitialFormInputs,
+    fields: [
+        ...SeoInitialFormInputs.fields,
+        {
+            keyId: 'input-indexed',
+            style: { xs: 12, sm: 4, md: 2, sx: { display: 'flex', alignItems: 'center' } },
+            input: ({ formCrud }) => {
+                return {
+                    name: 'seo.indexed',
+                    label: formCrud?.infos?.seoIndexedLabel || 'Indexer sur le site ?',
+                    inputType: 'switch',
+                    sx: { marginTop: 11 },
+                };
             },
         },
     ],

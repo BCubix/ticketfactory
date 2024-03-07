@@ -18,7 +18,6 @@ export const CmtDatePicker = ({
     disablePast = false,
     required = false,
     maxWidth = '100%',
-    ...rest
 }) => {
     const [open, setOpen] = useState(false);
 
@@ -82,7 +81,6 @@ export const CmtDatePicker = ({
                             />
                         );
                     }}
-                    {...rest}
                 />
             </Box>
         </LocalizationProvider>

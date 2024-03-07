@@ -13,7 +13,7 @@ import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
 import { menusListDataSelector, setMenusListData } from '@Apps/Menus/redux/menus/menusListDataSlice';
-import { TreeItem, TreeView } from '@mui/lab';
+import { TreeItem, TreeView } from '@mui/x-tree-view';
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
 const MENU_TYPE = 'category';
@@ -156,6 +156,9 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                                     value: el.id,
                                     menuType: MENU_TYPE,
                                     children: [],
+                                    active: true,
+                                    noFollow: false,
+                                    target: '_self',
                                 });
                             });
 

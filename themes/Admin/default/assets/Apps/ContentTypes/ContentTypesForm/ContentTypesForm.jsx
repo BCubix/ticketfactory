@@ -1,10 +1,9 @@
 import React from 'react';
 import * as Yup from 'yup';
-
 import { FormHelperText } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
-
+import { CONTENT_TYPE_FIELDS } from '@Apps/ContentTypes/services/config/getContentTypeFields';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 
 const serializeData = (element, name, formData) => {
@@ -83,6 +82,7 @@ export const contentTypesForm = {
             },
         },
     },
+    contentTypeFields: CONTENT_TYPE_FIELDS,
     fields: [
         {
             type: 'tabs',

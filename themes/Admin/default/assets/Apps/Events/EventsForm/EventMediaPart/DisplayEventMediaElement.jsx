@@ -26,7 +26,7 @@ export const DisplayEventMediaElement = ({ title, mediasList, mediaType, openEdi
                             }}
                             className="eventMediaElement"
                         >
-                            <Component.CmtDisplayMediaType media={item.media} width={'100%'} height={'auto'} className="eventMediaType" />
+                            <Component.CmtDisplayMediaType media={item.media} displayThumbnail width={'100%'} height={'auto'} className="eventMediaType" />
                         </Component.CmtMediaElement>
                     );
                 })}

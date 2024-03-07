@@ -11,7 +11,7 @@ export const CmtDragAndDropTableBody = ({ droppableId, onDragEnd, children }) =>
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
             <Droppable droppableId={droppableId} isCombineEnabled ignoreContainerClipping>
                 {(provided, snapshot) => (
-                    <TableBody {...provided.droppableProps} ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver}>
+                    <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                         {children}
                         {provided.placeholder}
                     </TableBody>

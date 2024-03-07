@@ -181,8 +181,8 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
                                 name={`imageFormats`}
                                 value={values?.imageFormats}
                                 list={imageFormatList || []}
-                                getValue={(item) => item.id}
-                                getName={(item) => item.name}
+                                getValue={(item) => item?.id}
+                                getName={(item) => item?.name}
                                 setFieldValue={setFieldValue}
                                 errors={touched.imageFormats && errors.imageFormats}
                             />

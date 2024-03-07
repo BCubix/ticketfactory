@@ -16,9 +16,17 @@ export const CmtSelectField = ({
     handleBlur = null,
     getMenuItem = null,
     disabled = false,
+    emptyLabel = '',
 }) => {
     return (
-        <FormControl variant="standard" fullWidth sx={{ mt: 4 }} size="small" className="Mui-Select-FormControl">
+        <FormControl
+            variant="standard"
+            fullWidth
+            sx={{ mt: 4 }}
+            size="small"
+            required={required}
+            className={`Mui-Select-FormControl ${!Boolean(required) && !Boolean(multiple) ? 'displayEmpty' : ''}`}
+        >
             <InputLabel id={`${id}-label`} required={required} size="small">
                 {label}
             </InputLabel>
@@ -40,7 +48,7 @@ export const CmtSelectField = ({
                         let renderName = [];
 
                         selected?.forEach((elem) => {
-                            const name = getName(list.find((el) => getValue(el) === elem));
+                            const name = getName(list?.find((el) => getValue(el) === elem));
 
                             if (name) {
                                 renderName.push(name);
@@ -50,7 +58,14 @@ export const CmtSelectField = ({
                         return renderName.join(', ');
                     },
                 })}
+                displayEmpty={!Boolean(required) && !Boolean(multiple)}
             >
+                {!Boolean(required) && !Boolean(multiple) && (
+                    <MenuItem value={''}>
+                        <ListItemText>{emptyLabel || `Pas de ${label.charAt(0).toLowerCase() + label.slice(1)} `}</ListItemText>
+                    </MenuItem>
+                )}
+
                 {null !== getMenuItem
                     ? getMenuItem((newList) =>
                           newList.map((item, index) => (
@@ -60,7 +75,7 @@ export const CmtSelectField = ({
                               </MenuItem>
                           ))
                       )
-                    : list.map((item, index) => (
+                    : list?.map((item, index) => (
                           <MenuItem value={getValue(item)} key={index} id={`${id}-value-${getValue(item)}`}>
                               {multiple && <Checkbox checked={value.indexOf(getValue(item)) > -1} />}
                               <ListItemText>{getName(item)}</ListItemText>

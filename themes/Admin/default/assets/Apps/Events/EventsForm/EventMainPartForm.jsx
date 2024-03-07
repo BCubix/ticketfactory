@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Component } from '@/AdminService/Component';
-import { SeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
+import { IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 
 export const eventMainPartForm = {
@@ -181,6 +181,6 @@ export const eventMainPartForm = {
                 },
             ],
         },
-        SeoInitialFormInputs,
+        IndexSeoInitialFormInputs,
     ],
 };

@@ -83,26 +83,28 @@ const TypeObj = {
             />
         </>
     ),
-    switch: ({ name, values, handleChange, label, labelPlacement, setFieldValue, sx }) => (
-        <FormControlLabel
-            control={
-                <Switch
-                    checked={Boolean(values[name])}
-                    onChange={
-                        handleChange
-                            ? handleChange
-                            : (e) => {
-                                  setFieldValue(`${props.baseName || ''}${getName(name)}`, e.target.checked);
-                              }
-                    }
-                    name={name}
-                />
-            }
-            label={label}
-            labelPlacement={labelPlacement ? labelPlacement : 'start'}
-            sx={sx}
-        />
-    ),
+    switch: ({ name, values, value, handleChange, label, labelPlacement, setFieldValue, sx, ...props }) => {
+        return (
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={value || value === 0 ? Boolean(value) : Boolean(getPropByString(values, `${props.baseName || ''}${getName({ name })}`))}
+                        onChange={
+                            handleChange
+                                ? handleChange
+                                : (e) => {
+                                      setFieldValue(`${props.baseName || ''}${getName({ name, props })}`, e.target.checked);
+                                  }
+                        }
+                        name={`${props.baseName || ''}${getName({ name, props })}`}
+                    />
+                }
+                label={label}
+                labelPlacement={labelPlacement ? labelPlacement : 'start'}
+                sx={sx}
+            />
+        );
+    },
     checkbox: ({ name, values, handleChange, label, labelPlacement, setFieldValue }) => (
         <FormControlLabel
             control={

@@ -1,17 +1,20 @@
 import Dropzone from 'dropzone';
 import $ from 'jquery';
+import { NotificationManager } from 'react-notifications';
+
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { getMediaType } from '@Services/utils/getMediaType';
 
 var countChunk = 0;
 
-export function intitializeDropzone({ logFail, onSuccess, id = null, setImageCounter, createUploadImageArray }) {
+export function intitializeDropzone({ logFail, onSuccess, id = null, setImageCounter, createUploadImageArray, maxFileSize, maxImageSize }) {
     $('.js-dropzone').each(function (_, element) {
-        initDropzoneElement({ element, logFail, onSuccess, id, setImageCounter, createUploadImageArray });
+        initDropzoneElement({ element, logFail, onSuccess, id, setImageCounter, createUploadImageArray, maxFileSize, maxImageSize });
     });
 }
 
-export const initDropzoneElement = ({ element, logFail, onSuccess, id, setImageCounter, createUploadImageArray }) => {
+export const initDropzoneElement = ({ element, logFail, onSuccess, id, setImageCounter, createUploadImageArray, maxFileSize, maxImageSize }) => {
     if (!element) {
         return;
     }
@@ -28,6 +31,17 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id, setImageC
     });
 
     dZone.on('addedfile', async (file) => {
+        let type = getMediaType(file.type);
+
+        if (
+            (type === 'image' && (maxImageSize || maxImageSize === 0) && file.size > maxImageSize * 1000000) ||
+            (type !== 'image' && (maxFileSize || maxFileSize === 0) && file.size > maxFileSize * 1000000)
+        ) {
+            dZone.removeAllFiles();
+            NotificationManager.error(type === 'image' ? 'Votre image est trop lourde' : 'Votre fichier est trop lourd', 'Erreur', Constant.REDIRECTION_TIME);
+            return;
+        }
+
         setImageCounter((prevCount) => prevCount + 1);
         const check = await checkAuth();
 

@@ -1,10 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { Grid, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
-
-import ParametersTypesModules from '@Apps/Parameters/ParametersForm/ParametersTypesModules';
 
 const parseBreakpointsValue = (breakpointsValueStr) => {
     const breakpoints = {};
@@ -22,11 +20,7 @@ const parseBreakpointsValue = (breakpointsValueStr) => {
     return breakpoints;
 };
 
-export const ParametersBlockForm = ({ indexTab, blocks, handleChange, handleBlur, touched, errors, setFieldTouched, setFieldValue }) => {
-    const parametersTypesModules = useMemo(() => {
-        return ParametersTypesModules();
-    }, []);
-
+export const ParametersBlockForm = ({ indexTab, blocks, handleChange, setFieldValue, parametersTypesModules }) => {
     return blocks?.map(({ blockName, parameters }, indexBlock) => (
         <Component.CmtFormBlock title={blockName} key={indexBlock}>
             <Grid container spacing={4}>

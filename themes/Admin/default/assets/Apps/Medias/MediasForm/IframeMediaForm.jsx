@@ -56,38 +56,20 @@ const GeneralInformation = ({ values, handleChange, setFieldValue, errors, touch
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                    <FormControl fullWidth error={touched.documentType && errors.documentType} size="small">
-                        <InputLabel id={`documentType-label`} size="small" required sx={{ marginLeft: -3 }}>
-                            Type de média
-                        </InputLabel>
-                        <Select
-                            labelId={`documentType-label`}
-                            id={`documentType`}
-                            size="small"
-                            value={values.documentType}
-                            onBlur={handleBlur}
-                            name={'documentType'}
-                            variant="standard"
-                            label="Status"
-                            onChange={(e) => {
-                                setFieldValue('alt', '');
-                                setFieldValue('documentType', e.target.value);
-                            }}
-                        >
-                            {IFRAME_TYPE?.map((item, index) => (
-                                <MenuItem value={item.value} key={index} id={`documentType-${index}`}>
-                                    <ListItemText>
-                                        <Box px={2} py={1} mx={1}>
-                                            {item.label}
-                                        </Box>
-                                    </ListItemText>
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <FormHelperText error id={'documentType-error'}>
-                            {touched.documentType && errors.documentType}
-                        </FormHelperText>
-                    </FormControl>
+                    <Component.CmtSelect
+                        {...{ setFieldValue, name }}
+                        label={'Type de média'}
+                        required
+                        id={`choice-documentType`}
+                        value={values?.documentType || ''}
+                        handleBlur={handleBlur}
+                        name={'documentType'}
+                        list={IFRAME_TYPE}
+                        touched={touched?.documentType}
+                        errors={errors?.documentType}
+                        getValue={(item) => item?.value}
+                        getName={(item) => item?.label}
+                    />
                 </Grid>
 
                 <Grid item xs={12}>

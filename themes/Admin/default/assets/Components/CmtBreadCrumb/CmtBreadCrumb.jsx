@@ -7,7 +7,7 @@ import { Breadcrumbs, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
-export const CmtBreadCrumb = ({ list }) => {
+export const CmtBreadCrumb = ({ list, additionalClick = null }) => {
     const navigate = useNavigate();
 
     return (
@@ -15,7 +15,13 @@ export const CmtBreadCrumb = ({ list }) => {
             {list?.map((item, index) => (
                 <Component.StyledBreadCrumb
                     sx={{ py: 4, px: 2 }}
-                    onClick={() => navigate(item.path)}
+                    onClick={() => {
+                        if (additionalClick) {
+                            additionalClick(item);
+                        }
+
+                        navigate(item.path);
+                    }}
                     label={
                         <Typography variant="body1" sx={{ mt: '2px' }}>
                             {item?.label}

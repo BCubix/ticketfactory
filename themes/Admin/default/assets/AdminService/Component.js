@@ -83,6 +83,8 @@ import { CmtMediaPartForm } from '../Components/CmtMediaPart/CmtMediaPartForm';
 import { CmtMoveMedias } from '../Components/CmtMediaPart/CmtMoveMedias';
 import { CmtFeaturesTypeValues } from '@Components/CmtFeaturesTypeValues/CmtFeaturesTypeValues';
 import { CmtFeaturesInputField } from '@Components/CmtFeaturesInputField/CmtFeaturesInputField';
+import { TRow } from '@Components/CmtDragAndDrop/sc.TRow';
+import { TBody } from '@Components/CmtDragAndDrop/sc.TBody';
 
 const ComponentObj = {
     App: App,
@@ -169,6 +171,8 @@ const ComponentObj = {
     MenuTitle: MenuTitle,
     MenuItemButton: MenuItemButton,
     SideMenu: SideMenu,
+    TRow: TRow,
+    TBody: TBody,
 
     CmtDisplayComponents: CmtDisplayComponents,
     CmtDisplayBlocks: CmtDisplayBlocks,

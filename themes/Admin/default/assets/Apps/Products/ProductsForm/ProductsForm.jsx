@@ -16,7 +16,7 @@ export const productsInitialSchema = {
     description: (initValues) => initValues?.description || '',
     price: (initValues) => initValues?.price || '',
     mainCategory: (initValues, { productCategoriesList }) => initValues?.mainCategory?.id || productCategoriesList?.id || '',
-    productCategories: (initValues, { productCategoriesList }) => (initValues?.productCategories ? initValues?.productCategories?.map((el) => el.id) : [productCategoriesList.id]),
+    productCategories: (initValues, { productCategoriesList }) => (initValues?.productCategories ? initValues?.productCategories?.map((el) => el.id) : [productCategoriesList?.id]),
     productMedias: (initValues) =>
         initValues?.productMedias?.map((el) => ({
             mainImg: el.mainImg,

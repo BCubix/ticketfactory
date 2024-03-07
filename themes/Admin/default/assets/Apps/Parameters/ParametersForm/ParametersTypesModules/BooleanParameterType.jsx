@@ -14,7 +14,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFi
                 <FormControlLabel
                     size="small"
                     id={paramKey}
-                    value={paramValue}
+                    value={Boolean(paramValue)}
                     onChange={(e) => {
                         setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.target.checked);
                     }}

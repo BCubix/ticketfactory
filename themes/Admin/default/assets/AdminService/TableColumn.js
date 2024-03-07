@@ -11,11 +11,10 @@ const TableColumnObj = {
             label: 'Logo',
             width: '7%',
             renderFunction: (item) => {
-                if (item.logoUrl) {
-                    try {
-                        return <Avatar src={item.logoUrl} />;
-                    } catch (e) {}
-                }
+                try {
+                    return <Avatar src={`/admin/api/modules/moduleImage/${item.name}`} />;
+                } catch (e) {}
+
                 return (
                     <Avatar>
                         <ExtensionIcon />

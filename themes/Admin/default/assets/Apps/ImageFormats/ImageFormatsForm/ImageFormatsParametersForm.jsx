@@ -81,7 +81,7 @@ export const ImageFormatsParametersForm = ({ initialValues = null, handleSubmit 
                     </Grid>
 
                     <FormControl fullWidth sx={{ mt: 3 }}>
-                        <InputLabel id="imageFormat-label" size="small" className="required-input">
+                        <InputLabel id="imageFormat-label" size="small" required>
                             Préférence de compression
                         </InputLabel>
                         <Select
