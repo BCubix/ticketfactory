@@ -12,6 +12,7 @@ import UrlParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesMod
 import DefaultPriceParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/DefaultPriceParameterType';
 import PasswordParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/PasswordParameterType';
 import RequestButtonParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/RequestButtonParameterType';
+import FloatParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/FloatParameterType';
 
 export const parameterTypes = {
     bool: BooleanParameterType,
@@ -28,4 +29,5 @@ export const parameterTypes = {
     prices: DefaultPriceParameterType,
     password: PasswordParameterType,
     requestButton: RequestButtonParameterType,
+    float: FloatParameterType,
 };

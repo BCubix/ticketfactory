@@ -15,6 +15,7 @@ export const deserializationApi = {
     prices: (value) => (value ? JSON.parse(value) : {}),
     password: (value) => value || '',
     requestButton: (value) => value || '',
+    float: (value) => value || '',
 };
 
 export const getDeserializationApiValue = (type, value) => {

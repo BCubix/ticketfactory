@@ -15,6 +15,7 @@ export const serializationApi = {
     prices: (value) => (value ? JSON.stringify(value) : ''),
     password: (value) => value || '',
     requestButton: (value) => value || '',
+    float: (value) => value || '',
 };
 
 export const getSerializationApiValue = (type, value) => {
