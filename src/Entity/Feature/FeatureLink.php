@@ -19,7 +19,7 @@ class FeatureLink
     #[ORM\ManyToOne(inversedBy: 'featureLinks')]
     private ?Event $event = null;
 
-    #[ORM\ManyToOne(inversedBy: 'feature')]
+    #[ORM\ManyToOne(inversedBy: 'featureLinks')]
     private ?Product $product = null;
 
     #[JMS\Expose()]

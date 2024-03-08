@@ -16,36 +16,72 @@ class FeatureLinkRepository extends AbstractRepository
         parent::__construct($registry, FeatureLink::class);
     }
 
-    public function findAllFeatureLinksByEventForWebsite(int $id, string $keyword): array
+    public function findAllFeatureLinksByEventForWebsite(int $id, string $categoryKeyword = null, string $featureKeyword = null): array
     {
-        return $this->createQueryBuilder('fl')
+        $results = $this->createQueryBuilder('fl')
             ->addSelect('e')
             ->addSelect('f')
             ->addSelect('fc')
             ->innerJoin('fl.event', 'e', 'WITH', 'e.id = :eventId')
-            ->innerJoin('fl.feature', 'f')
-            ->innerJoin('f.featureCategory', 'fc', 'WITH', 'fc.keyword = :keyword')
+        ;
+
+        if (null == $featureKeyword) {
+            $results->innerJoin('fl.feature', 'f');
+        } else {
+            $results
+                ->innerJoin('fl.feature', 'f', 'WITH', 'f.keyword = :featureKeyword')
+                ->setParameter('featureKeyword', $featureKeyword)
+            ;
+        }
+
+        if (null == $categoryKeyword) {
+            $results->innerJoin('f.featureCategory', 'fc');
+        } else {
+            $results
+                ->innerJoin('f.featureCategory', 'fc', 'WITH', 'fc.keyword = :categoryKeyword')
+                ->setParameter('categoryKeyword', $categoryKeyword)
+            ;
+        }
+
+        return $results
             ->where("e.active = 1")
             ->andWhere('f.active = 1')
             ->setParameter('eventId', $id)
-            ->setParameter('keyword', $keyword)
             ->getQuery()
             ->getResult();
     }
 
-    public function findAllFeatureLinksByProductForWebsite(int $id, string $keyword): array
+    public function findAllFeatureLinksByProductForWebsite(int $id, string $categoryKeyword = null, string $featureKeyword = null): array
     {
-        return $this->createQueryBuilder('fl')
+        $results = $this->createQueryBuilder('fl')
             ->addSelect('p')
             ->addSelect('f')
             ->addSelect('fc')
-            ->innerJoin('fl.product', 'p', 'WITH', 'e.id = :productId')
-            ->innerJoin('fl.feature', 'f')
-            ->innerJoin('f.featureCategory', 'fc', 'WITH', 'fc.keyword = :keyword')
+            ->innerJoin('fl.product', 'p', 'WITH', 'p.id = :productId')
+        ;
+
+        if (null == $featureKeyword) {
+            $results->innerJoin('fl.feature', 'f');
+        } else {
+            $results
+                ->innerJoin('fl.feature', 'f', 'WITH', 'f.keyword = :featureKeyword')
+                ->setParameter('featureKeyword', $featureKeyword)
+            ;
+        }
+
+        if (null == $categoryKeyword) {
+            $results->innerJoin('f.featureCategory', 'fc');
+        } else {
+            $results
+                ->innerJoin('f.featureCategory', 'fc', 'WITH', 'fc.keyword = :categoryKeyword')
+                ->setParameter('categoryKeyword', $categoryKeyword)
+            ;
+        }
+
+        return $results
             ->where("p.active = 1")
             ->andWhere('f.active = 1')
             ->setParameter('productId', $id)
-            ->setParameter('keyword', $keyword)
             ->getQuery()
             ->getResult();
     }

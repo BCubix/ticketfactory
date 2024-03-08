@@ -10,13 +10,13 @@ class FeatureManager extends AbstractManager
 {
     public const SERVICE_NAME = 'feature';
 
-    public function getEventFeatures(Event $event, string $keyword)
+    public function getEventFeatures(Event $event, string $categoryKeyword = null, string $featureKeyword = null)
     {
-        return $this->em->getRepository(FeatureLink::class)->findAllFeatureLinksByEventForWebsite($event->getId(), $keyword);
+        return $this->em->getRepository(FeatureLink::class)->findAllFeatureLinksByEventForWebsite($event->getId(), $categoryKeyword, $featureKeyword);
     }
 
-    public function getProductFeatures(Product $product, string $keyword)
+    public function getProductFeatures(Product $product, string $categoryKeyword = null, string $featureKeyword = null): array
     {
-        return $this->em->getRepository(FeatureLink::class)->findAllFeatureLinksByProductForWebsite($product->getId(), $keyword);
+        return $this->em->getRepository(FeatureLink::class)->findAllFeatureLinksByProductForWebsite($product->getId(), $categoryKeyword, $featureKeyword);
     }
 }
