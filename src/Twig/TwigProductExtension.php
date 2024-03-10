@@ -53,14 +53,10 @@ class TwigProductExtension extends AbstractExtension
         return $this->fm->getProductFeatures($product, $categoryKeyword, $featureKeyword);
     }
 
-    public function getAllFormattedMediasForProduct($productMedias, string $slug): array
+    public function getAllFormattedMediasForProduct($productMedias, ?string $slug): array
     {
         if (count($productMedias) === 0) {
             return [];
-        }
-
-        if (null === $slug) {
-            return $productMedias;
         }
 
         return $this->pm->getAllFormattedMedias($productMedias, $slug);

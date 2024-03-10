@@ -50,8 +50,20 @@ class ProductManager extends AbstractManager
         return null;
     }
 
-    public function getAllFormattedMedias($productMedias, string $slug): array
+    public function getAllFormattedMedias($productMedias, ?string $slug): array
     {
+        if (null === $slug) {
+            $formatedMedias = [];
+
+            foreach ($productMedias as $productMedia) {
+                if (count($productMedia->getMedia()->getImageFormats()) === 0) {
+                    $formatedMedias[] = $productMedia;
+                }
+            }
+
+            return $formatedMedias;
+        }
+
         $mediaManager = $this->mf->get('media');
         $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($slug);
         $formatedMedias = [];

@@ -143,14 +143,10 @@ class TwigEventExtension extends AbstractExtension
         return $this->fm->getEventFeatures($event, $categoryKeyword, $featureKeyword);
     }
 
-    public function getAllFormattedMediasForEvent($eventMedias, string $slug): array
+    public function getAllFormattedMediasForEvent($eventMedias, ?string $slug): array
     {
         if (count($eventMedias) === 0) {
             return [];
-        }
-
-        if (null === $slug) {
-            return $eventMedias;
         }
 
         return $this->em->getAllFormattedMedias($eventMedias, $slug);

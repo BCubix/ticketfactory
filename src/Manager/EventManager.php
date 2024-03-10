@@ -361,8 +361,20 @@ class EventManager extends AbstractManager
         return null;
     }
 
-    public function getAllFormattedMedias($eventMedias, string $slug): array
+    public function getAllFormattedMedias($eventMedias, ?string $slug): array
     {
+        if (null === $slug) {
+            $formatedMedias = [];
+
+            foreach ($eventMedias as $eventMedia) {
+                if (count($eventMedia->getMedia()->getImageFormats()) === 0) {
+                    $formatedMedias[] = $eventMedia;
+                }
+            }
+
+            return $formatedMedias;
+        }
+
         $mediaManager = $this->mf->get('media');
         $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($slug);
         $formatedMedias = [];

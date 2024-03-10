@@ -91,9 +91,13 @@ class UrlService
         $keyword = lcfirst($keyword);
 
         $page = $this->prm->getCoreParameter('page_' . $keyword);
-        while ($page !== null) {
-            $slugs[] = $page->getSlug();
-            $page = $page->getParent();
+        if (null !== $page) {
+            while ($page !== null) {
+                $slugs[] = $page->getSlug();
+                $page = $page->getParent();
+            }
+
+            $slugs = array_reverse($slugs);
         }
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);

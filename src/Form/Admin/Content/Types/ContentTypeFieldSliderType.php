@@ -4,6 +4,7 @@ namespace App\Form\Admin\Content\Types;
 
 use App\Entity\Content\ContentTypeField;
 use App\Entity\Media\Media;
+use App\Form\Admin\Content\ContentFieldsType;
 use App\Manager\ContentTypeManager;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
