@@ -15,6 +15,12 @@ class Ticketing extends Datable
     /*** > Trait ***/
     /*** < Trait ***/
 
+    public const TYPE_MAPPING = [
+        'api' => "Api",
+        'iframe' => "Iframe",
+        'external' => "Lien externe",
+    ];
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]
     #[ORM\Id]
@@ -28,14 +34,19 @@ class Ticketing extends Datable
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
-    #[ORM\ManyToOne]
-    private ?Module $module = null;
-
-    #[JMS\Expose()]
     #[JMS\Groups(['a_ticketing_one'])]
     #[ORM\Column]
     private array $data = [];
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\Column(length: 16)]
+    private ?string $type = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\ManyToOne]
+    private ?Module $module = null;
 
     public function getId(): ?int
     {
@@ -54,6 +65,30 @@ class Ticketing extends Datable
         return $this;
     }
 
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): static
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function getModule(): ?Module
     {
         return $this->module;
@@ -66,15 +101,4 @@ class Ticketing extends Datable
         return $this;
     }
 
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    public function setData(array $data): static
-    {
-        $this->data = $data;
-
-        return $this;
-    }
 }
