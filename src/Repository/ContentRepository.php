@@ -12,11 +12,12 @@ class ContentRepository extends CrudRepository
     /*** < Trait ***/
 
     protected const SELECTS = [
-        'el' => null
+        'el' => null,
     ];
 
     protected const JOINS = [
-        ['leftJoin', 'o.lang', 'el']
+        ['leftJoin', 'o.lang', 'el'],
+        ['leftJoin', 'o.contentType', 'ct']
     ];
 
     protected const IS_TRANSLATABLE = true;
@@ -24,7 +25,7 @@ class ContentRepository extends CrudRepository
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['title', 'o.title', 'search'],
-        ['contentType', 'o.contentType', 'in'],
+        ['contentType', 'ct.id', 'in'],
         ['lang', 'el.id', 'in'],
         ['languageGroup', 'o.languageGroup', 'equals']
     ];
@@ -33,7 +34,7 @@ class ContentRepository extends CrudRepository
         'id' => 'o.id',
         'active' => 'o.active',
         'title' => 'o.title',
-        'contentType' => 'o.contentType'
+        'contentType' => 'ct.name'
     ];
 
     public function __construct(ManagerRegistry $registry)

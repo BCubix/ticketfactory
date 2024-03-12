@@ -42,7 +42,6 @@ class LanguageHook extends Hook
         $iObject = $event->getParam('iObject');
         $vObject = $event->getParam('vObject');
 
-
         if (!$vObject->isIsDefault() && (null === $defaultLanguage || $iObject->isIsDefault())) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, 'Vous devez obligatoirement avoir une langue active.');
         }
@@ -51,7 +50,7 @@ class LanguageHook extends Hook
             return;
         }
 
-        if (null !== $defaultLanguage) {
+        if (null !== $defaultLanguage && $vObject->isIsDefault()) {
             $defaultLanguage->setIsDefault(false);
 
             $this->em->persist($defaultLanguage);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const DisplayContentField = ({ values, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched, field, contentModules, prefixName }) => {
+export const DisplayContentField = ({ errors, touched, field, contentModules, prefixName, ...props }) => {
     const FormComponent = (contentModules && contentModules[field.type] && contentModules[field.type].FormComponent) || null;
 
     if (!FormComponent) {
@@ -9,14 +9,10 @@ export const DisplayContentField = ({ values, errors, touched, handleChange, han
 
     return (
         <FormComponent
-            values={values}
-            handleChange={handleChange}
-            handleBlur={handleBlur}
+            {...props}
             name={`${prefixName}${field.name}`}
             errors={errors.fields}
             touched={touched.fields}
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
             label={field.title}
             field={field}
             contentModules={contentModules}

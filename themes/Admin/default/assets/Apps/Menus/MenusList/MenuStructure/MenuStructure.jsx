@@ -7,7 +7,6 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
 import { formatMenusData } from '@Services/utils/formatMenusData';
-import getMenuEntryModules from '../getMenuEntryModules';
 import ReactCountryFlag from 'react-country-flag';
 import { getLanguagesFromTranslatedElement } from '@Services/utils/translationUtils';
 
@@ -24,6 +23,7 @@ export const MenuStructure = ({
     translationSelectedMenu,
     changeLanguage,
     selectedMenu,
+    formCrud,
 }) => {
     const [selectedLanguage, setSelectedLanguage] = useState(translationSelectedMenu?.lang);
 
@@ -36,7 +36,7 @@ export const MenuStructure = ({
     }, [translationSelectedMenu]);
 
     const menuEntryModule = useMemo(() => {
-        const modules = getMenuEntryModules();
+        const modules = formCrud.menuEntries;
         return modules;
     }, []);
 

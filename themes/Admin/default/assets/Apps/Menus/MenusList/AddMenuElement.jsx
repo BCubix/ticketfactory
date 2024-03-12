@@ -2,12 +2,10 @@ import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { NoClickableMenuEntry } from './NoClickableMenuEntry';
-import getMenuEntryModules from './getMenuEntryModules';
 
-export const AddMenuElement = ({ addElementToMenu, language }) => {
+export const AddMenuElement = ({ addElementToMenu, language, formCrud }) => {
     const menuEntryModule = useMemo(() => {
-        const modules = getMenuEntryModules();
-        return modules;
+        return formCrud.menuEntries;
     }, []);
 
     return (
@@ -20,7 +18,7 @@ export const AddMenuElement = ({ addElementToMenu, language }) => {
                 <NoClickableMenuEntry addElementToMenu={addElementToMenu} />
                 {menuEntryModule &&
                     Object.entries(menuEntryModule)?.map(([_, Item], index) => {
-                        return <Item.MenuEntryModule key={index} addElementToMenu={addElementToMenu} language={language} />;
+                        return <Item.MenuEntry key={index} addElementToMenu={addElementToMenu} language={language} />;
                     })}
             </Box>
         </>

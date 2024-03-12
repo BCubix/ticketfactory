@@ -8,34 +8,35 @@ import { Box } from '@mui/system';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
-import { Component } from '@/AdminService/Component';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
 import { menusListDataSelector, setMenusListData } from '@Apps/Menus/redux/menus/menusListDataSlice';
+import { Component } from '@/AdminService/Component';
 
-const MENU_TYPE = 'event';
-const MENU_TYPE_LABEL = 'Evènements';
+const MENU_TYPE = 'rooms';
+const MENU_TYPE_LABEL = 'Salle';
 
-export const MenuEntryModule = ({ addElementToMenu, language, element, errors, editMode, setValue }) => {
+export const MenuEntry = ({ addElementToMenu, language, editMode, setValue, element, errors }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
     const { menusListData } = useSelector(menusListDataSelector);
 
-    const getList = async () => {
+    const getRooms = () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.eventsApi.getEvents({ lang: language?.id });
+            const result = await Api.roomsApi.getRooms({ lang: language?.id, sort: 'name ASC' });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
-            dispatch(setMenusListData({ events: result.events }));
+
+            dispatch(setMenusListData({ rooms: result.rooms }));
         });
     };
 
     useEffect(() => {
-        if (menusListData?.events && !list) {
-            setList(menusListData.events);
+        if (menusListData?.rooms && !list) {
+            setList(menusListData.rooms);
             return;
         }
 
@@ -43,21 +44,21 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
             return;
         }
 
-        getList();
+        getRooms();
     }, [language]);
 
     useEffect(() => {
-        setList(menusListData.events);
-    }, [menusListData?.events]);
+        setList(menusListData.rooms);
+    }, [menusListData?.rooms]);
 
     if (editMode) {
         return list ? (
             <Component.CmtSelect
-                label="Evènement"
+                label="Salle"
                 required
-                name={`event`}
+                name={`room`}
                 value={parseInt(element.value)}
-                list={list}
+                list={list || []}
                 getValue={(item) => item.id}
                 getName={(item) => `${item.name}`}
                 setFieldValue={(_, newValue) => setValue(newValue)}
@@ -70,8 +71,8 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
 
     return (
         <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="events-menus-elements-header">
-                <Typography>Evènements</Typography>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
+                <Typography>Salles</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 {list?.map((item, index) => (
@@ -89,7 +90,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
                             setSelectedAdd([...newValue]);
                         }}
                     >
-                        <Typography component="span" id={`eventsMenuEntryValue-${item.id}`}>
+                        <Typography component="span" id={`roomsMenuEntryValue-${item.id}`}>
                             <Checkbox checked={selectedAdd?.includes(item.id)} />
                             {item?.name}
                         </Typography>
@@ -122,7 +123,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
                             addElementToMenu(submitList);
                             setSelectedAdd([]);
                         }}
-                        id="eventsMenuEntrySubmit"
+                        id="roomsMenuEntrySubmit"
                     >
                         Ajouter
                     </Button>
@@ -133,6 +134,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
 };
 
 export default {
-    MenuEntryModule,
+    MenuEntry,
     MENU_TYPE,
 };

@@ -11,6 +11,7 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const TYPE = 'category';
 
@@ -51,26 +52,20 @@ const displayCategoriesOptions = (list, values, setFieldValue, name, field) => {
     );
 };
 
-const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched }) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched, languageId }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
     const getLinks = async () => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.categoriesApi.getCategories({ lang: languageId });
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
 
-            return;
-        }
-
-        const result = await Api.categoriesApi.getCategories();
-
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.categories);
+            setList(result.categories);
+        });
     };
 
     useEffect(() => {

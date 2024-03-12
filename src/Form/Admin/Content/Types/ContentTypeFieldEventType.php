@@ -7,6 +7,7 @@ use App\Entity\Event\Event;
 use App\Repository\EventRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldEventType extends ContentTypeFieldAbstractType
@@ -32,6 +33,24 @@ class ContentTypeFieldEventType extends ContentTypeFieldAbstractType
                     ->orderBy('e.name', 'ASC');
             }
         ]);
+    }
+
+    public static function getOptions()
+    {
+        return [
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ],
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ]
+        ];
     }
 
     public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed

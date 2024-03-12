@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 
-import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { Component } from '@/AdminService/Component';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const TYPE = 'tag';
 
@@ -19,23 +21,19 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field, label, touched }) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched, languageId }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
     const getLinks = async () => {
-        const check = await Api.authApi.checkIsAuth();
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-            return;
-        }
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.tagsApi.getAllTags({ lang: languageId, sort: 'name ASC' });
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
 
-        const result = await Api.tagsApi.getTags();
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.tags);
+            setList(result.tags);
+        });
     };
 
     useEffect(() => {

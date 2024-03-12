@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-
-import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
@@ -21,13 +20,13 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field, label, touched }) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched, languageId }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
     const getContents = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.contentsApi.getContents({ page: 0 });
+            const result = await Api.contentsApi.getAllContents({ lang: languageId, sort: 'title ASC' });
 
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);

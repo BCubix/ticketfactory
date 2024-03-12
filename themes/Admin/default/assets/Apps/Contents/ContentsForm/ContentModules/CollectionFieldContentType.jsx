@@ -13,7 +13,7 @@ import { getPropByString } from '@Services/utils/getPropByString';
 
 const TYPE = 'collection';
 
-const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules }) => {
+const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules, ...props }) => {
     const handleMoveMenuElement = (index, move) => {
         let newList = values[field.name];
         let elem = values[field.name][index];
@@ -58,6 +58,7 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
                                             </Component.DeleteBlockFabButton>
 
                                             <Component.DisplayContentForm
+                                                {...props}
                                                 values={item}
                                                 errors={(errors && getPropByString(errors, `${field.name}.${index}.parameters`)) || {}}
                                                 touched={(touched && touched[field.name]?.at(index)?.parameters) || {}}

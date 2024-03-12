@@ -20,13 +20,13 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched }) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched, languageId }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
     const getLinks = async () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.pagesApi.getAllPages();
+            const result = await Api.pagesApi.getAllPages({ lang: languageId, sort: 'title ASC' });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }

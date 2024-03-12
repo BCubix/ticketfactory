@@ -14,7 +14,7 @@ const tagsApi = {
         try {
             let params = {};
 
-            createFilterParams(filters, Crud?.rooms?.list?.filtersData, params);
+            createFilterParams(filters, Crud?.tags?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();
@@ -42,9 +42,7 @@ const tagsApi = {
         try {
             let params = { 'filters[page]': 0 };
 
-            if (filters?.lang) {
-                params['filters[lang]'] = filters?.lang;
-            }
+            createFilterParams(filters, Crud?.tags?.list?.filtersData, params);
 
             const result = await axios.get('/tags', { params: params });
 

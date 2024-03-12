@@ -41,6 +41,26 @@ const contentsApi = {
         }
     },
 
+    getAllContents: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            createFilterParams(filters, Crud?.contents?.list?.filtersData, params);
+
+            const result = await axios.get('/contents', {
+                params: params,
+            });
+
+            return { result: true, contents: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, contents: [], total: 0 };
+            }
+
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     getOneContent: async (id) => {
         try {
             const result = await axios.get(`/contents/${id}`);
