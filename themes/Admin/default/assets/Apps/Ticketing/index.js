@@ -3,8 +3,8 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
 import ticketingApi from '@Apps/Ticketing/services/api/ticketingApi';
 import ticketingReducer from '@Apps/Ticketing/redux/ticketing/ticketingSlice';
-import { TicketingList } from '@Apps/Ticketing/TicketingList/TicketingList';
-import { ticketingListCrud } from '@Apps/Ticketing/TicketingList/TicketingList';
+import { TicketingList, ticketingListCrud } from '@Apps/Ticketing/TicketingList/TicketingList';
+import { CreateTicketing } from '@Apps/Ticketing/CreateTicketing/CreateTicketing';
 
 import { setApi } from '@/AdminService/Api';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
@@ -20,6 +20,7 @@ export const initConstant = () => {
 
 export const initComponent = () => {
     setComponent('TicketingList', TicketingList);
+    setComponent('CreateTicketing', CreateTicketing);
 };
 
 export const initApi = () => {
@@ -36,11 +37,13 @@ export const initMenu = () => {
 
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.TICKETING_BASE_PATH, Component.TicketingList);
+    setAuthenticatedRoute(Constant.TICKETING_BASE_PATH + Constant.CREATE_PATH, Component.CreateTicketing);
 };
 
 export const initCrud = () => {
     const crud = {
         list: ticketingListCrud,
+        add: ticketingCreateCrud,
     };
 
     setCrud('ticketing', crud);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Type;
+namespace App\Form\Admin\Ticketing;
 
 use App\Form\Admin\Ticketing\JsonTransformer;
 use Symfony\Component\Form\AbstractType;

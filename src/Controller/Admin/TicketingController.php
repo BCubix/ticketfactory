@@ -3,8 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Ticketing\Ticketing;
-use App\Form\Admin\Feature\FeatureType;
-
+use App\Form\Admin\Ticketing\TicketingType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
@@ -14,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TicketingController extends CrudController
 {
     protected const ENTITY_CLASS = Ticketing::class;
-    protected const TYPE_CLASS = FeatureType::class;
+    protected const TYPE_CLASS = TicketingType::class;
 
     protected const NOT_FOUND_MESSAGE = "Cette billetterie n'existe pas.";
 

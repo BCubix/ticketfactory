@@ -36,7 +36,7 @@ class Ticketing extends Datable
     #[JMS\Expose()]
     #[JMS\Groups(['a_ticketing_one'])]
     #[ORM\Column]
-    private array $data = [];
+    private ?array $ticketingdata = [];
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
@@ -65,14 +65,14 @@ class Ticketing extends Datable
         return $this;
     }
 
-    public function getData(): array
+    public function getTicketingData(): array
     {
-        return $this->data;
+        return $this->ticketingdata;
     }
 
-    public function setData(array $data): static
+    public function setTicketingData(array $ticketingdata): static
     {
-        $this->data = $data;
+        $this->ticketingdata = $ticketingdata;
 
         return $this;
     }
