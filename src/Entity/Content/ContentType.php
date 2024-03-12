@@ -60,7 +60,7 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     #[ORM\Column(type: 'json')]
     private array $fields = [];
 
-    #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: Content::class)]
+    #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: Content::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $contents;
 
     #[JMS\Expose()]

@@ -6,11 +6,12 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 
 import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
 import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Crud } from '@/AdminService/Crud';
 import { contentsInitialSchema, contentsValidationSchema, contentsForm } from '../ContentsForm/ContentsForm';
 
 export const contentsCreateCrud = {
@@ -25,6 +26,7 @@ export const contentsCreateCrud = {
 export const CreateContent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const languagesData = useSelector(languagesSelector);
     const { loading, contentTypes, error } = useSelector(contentTypesSelector);
     const [selectedContentType, setSelectedContentType] = useState(null);
     const { search } = useLocation();
@@ -115,6 +117,7 @@ export const CreateContent = () => {
             selectedContentType={selectedContentType || initialValues?.contentType?.id}
             translateInitialValues={initialValues}
             formCrud={Crud?.contents?.add}
+            languageId={languageId || languagesData?.languages?.find((el) => el.isDefault)?.id}
         />
     );
 };

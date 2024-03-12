@@ -6,11 +6,12 @@ import { Component } from '@/AdminService/Component';
 
 const TYPE = 'group';
 
-const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules }) => {
+const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules, ...props }) => {
     return (
         <>
             <Component.CmtFormBlock title={label}>
                 <Component.DisplayContentForm
+                    {...props}
                     values={(values && values[field.name]) || {}}
                     errors={(errors && errors[field.name]?.parameters) || {}}
                     touched={(touched && touched[field.name]?.parameters) || {}}

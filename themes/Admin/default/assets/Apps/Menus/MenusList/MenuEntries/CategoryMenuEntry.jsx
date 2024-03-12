@@ -70,7 +70,7 @@ const displayCategories = (list, selectedAdd, setSelectedAdd, editMode, setValue
     );
 };
 
-export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue, element }) => {
+export const MenuEntry = ({ addElementToMenu, language, editMode, setValue, element }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
@@ -176,6 +176,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
 };
 
 export default {
-    MenuEntryModule,
+    MenuEntry,
     MENU_TYPE,
 };

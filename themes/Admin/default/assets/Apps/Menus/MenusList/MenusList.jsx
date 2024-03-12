@@ -3,20 +3,19 @@ import { NotificationManager } from 'react-notifications';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
-
 import { Box, Button, Grid, Typography } from '@mui/material';
-
-import { Api } from '@/AdminService/Api';
-import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 import { getMenusAction, menusSelector } from '@Apps/Menus/redux/menus/menusSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
+import { MENU_TYPES } from '@Apps/Menus/services/config/getMenuTypes';
+import { DisplayFormTabs } from '@Components/CmtCrudForm/CmtCrudForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
-import { DisplayFormTabs } from '../../../Components/CmtCrudForm/CmtCrudForm';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
 const serializeMenuData = (element, name, formData, datas) => {
@@ -89,6 +88,7 @@ export const menusEditCrud = {
             ),
         },
     ],
+    menuEntries: MENU_TYPES,
     newMenuData: {},
     fields: [
         {
@@ -101,6 +101,7 @@ export const menusEditCrud = {
                         <Grid item xs={12} md={6} lg={3}>
                             <Component.AddMenuElement
                                 language={translationInitialValues?.lang}
+                                formCrud={Crud.menus.edit}
                                 addElementToMenu={(newElements) => {
                                     let menu = [...values.children];
 
@@ -153,6 +154,7 @@ export const menusEditCrud = {
                                     changeFormikInitialValues(setFieldValue, val);
                                 }}
                                 selectedMenu={initialValues}
+                                formCrud={Crud.menus.edit}
                             />
 
                             <Box className="flex row-between" sx={{ mt: 3, mb: 2 }}>

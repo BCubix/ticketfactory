@@ -159,10 +159,11 @@ export const contentsForm = {
                     type: 'block',
                     title: 'Formulaire',
                     keyId: 'block-fields',
-                    component: ({ values, errors, touched, handleBlur, handleChange, setFieldTouched, setFieldValue, selectedContentType, getContentModules }) => {
+                    component: ({ values, errors, touched, handleBlur, handleChange, setFieldTouched, setFieldValue, selectedContentType, getContentModules, ...props }) => {
                         return (
                             <Component.CmtFormBlock title="Formulaire">
                                 <Component.DisplayContentForm
+                                    {...props}
                                     values={values.fields}
                                     errors={errors}
                                     touched={touched}

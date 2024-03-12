@@ -7,7 +7,7 @@ import { Component } from '@/AdminService/Component';
 const MENU_TYPE = 'external';
 const MENU_TYPE_LABEL = 'Liens externe';
 
-export const MenuEntryModule = ({ addElementToMenu, editMode, setValue, element, errors }) => {
+export const MenuEntry = ({ addElementToMenu, editMode, setValue, element, errors }) => {
     const [name, setName] = useState('');
     const [initialValue, setInitialValue] = useState('');
 
@@ -64,6 +64,6 @@ export const MenuEntryModule = ({ addElementToMenu, editMode, setValue, element,
 };
 
 export default {
-    MenuEntryModule,
+    MenuEntry,
     MENU_TYPE,
 };

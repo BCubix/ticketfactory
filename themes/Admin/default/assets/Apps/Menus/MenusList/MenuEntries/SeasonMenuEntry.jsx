@@ -14,10 +14,10 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
 import { menusListDataSelector, setMenusListData } from '@Apps/Menus/redux/menus/menusListDataSlice';
 
-const MENU_TYPE = 'page';
-const MENU_TYPE_LABEL = 'Pages';
+const MENU_TYPE = 'season';
+const MENU_TYPE_LABEL = 'Saisons';
 
-export const MenuEntryModule = ({ addElementToMenu, language, element, errors, editMode, setValue }) => {
+export const MenuEntry = ({ addElementToMenu, language, editMode, setValue, element, errors }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
@@ -25,18 +25,18 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
 
     const getList = () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.pagesApi.getAllPages({ lang: language?.id });
+            const result = await Api.seasonsApi.getSeasons({ lang: language?.id, sort: 'name ASC' });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
-            dispatch(setMenusListData({ pages: result.pages }));
+            dispatch(setMenusListData({ seasons: result.seasons }));
         });
     };
 
     useEffect(() => {
-        if (menusListData?.pages && !list) {
-            setList(menusListData.pages);
+        if (menusListData?.seasons && !list) {
+            setList(menusListData.seasons);
             return;
         }
 
@@ -48,19 +48,19 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
     }, [language]);
 
     useEffect(() => {
-        setList(menusListData.pages);
-    }, [menusListData?.pages]);
+        setList(menusListData.seasons);
+    }, [menusListData?.seasons]);
 
     if (editMode) {
         return list ? (
             <Component.CmtSelect
-                label="Page"
+                label="Saison"
                 required
-                name={`page`}
+                name={`season`}
                 value={parseInt(element.value)}
                 list={list || []}
                 getValue={(item) => item.id}
-                getName={(item) => `${item.title}`}
+                getName={(item) => `${item.name}`}
                 setFieldValue={(_, newValue) => setValue(newValue)}
                 errors={errors?.value}
             />
@@ -71,8 +71,8 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
 
     return (
         <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="pages-menus-elements-header">
-                <Typography>Pages</Typography>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="seasons-menus-elements-header">
+                <Typography>Saisons</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 {list?.map((item, index) => (
@@ -90,9 +90,9 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
                             setSelectedAdd([...newValue]);
                         }}
                     >
-                        <Typography component="span" id={`pagesMenuEntryValue-${item.id}`}>
+                        <Typography component="span" id={`seasonsMenuEntryValue-${item.id}`}>
                             <Checkbox checked={selectedAdd?.includes(item.id)} />
-                            {item?.title}
+                            {item?.name}
                         </Typography>
                     </Box>
                 ))}
@@ -109,7 +109,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
 
                                 if (listElement) {
                                     submitList.push({
-                                        name: listElement.title,
+                                        name: listElement.name,
                                         value: listElement.id,
                                         menuType: MENU_TYPE,
                                         children: [],
@@ -123,7 +123,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
                             addElementToMenu(submitList);
                             setSelectedAdd([]);
                         }}
-                        id="pagesMenuEntrySubmit"
+                        id="seasonsMenuEntrySubmit"
                     >
                         Ajouter
                     </Button>
@@ -134,6 +134,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, element, errors, e
 };
 
 export default {
-    MenuEntryModule,
+    MenuEntry,
     MENU_TYPE,
 };

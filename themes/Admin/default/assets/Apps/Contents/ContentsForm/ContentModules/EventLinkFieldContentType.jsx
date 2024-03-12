@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-
-import { FormControl, FormHelperText, InputLabel, ListItemText, MenuItem, Select, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
+import { Component } from '@/AdminService/Component';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const TYPE = 'event';
 
@@ -21,26 +21,19 @@ const VALIDATION_LIST = [
     },
 ];
 
-const FormComponent = ({ values, handleBlur, setFieldValue, name, errors, field, label, touched }) => {
+const FormComponent = ({ values, setFieldValue, name, errors, field, label, touched, languageId }) => {
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
 
     const getLinks = async () => {
-        const check = await Api.authApi.checkIsAuth();
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.eventsApi.getAllEvents({ lang: languageId, sort: 'name ASC' });
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
 
-        if (!check.result) {
-            dispatch(loginFailure({ error: check.error }));
-
-            return;
-        }
-
-        const result = await Api.eventsApi.getEvents();
-
-        if (!result?.result) {
-            NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-        }
-
-        setList(result.events);
+            setList(result.events);
+        });
     };
 
     useEffect(() => {

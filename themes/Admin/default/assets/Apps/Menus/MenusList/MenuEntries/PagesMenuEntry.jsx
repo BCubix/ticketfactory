@@ -9,33 +9,34 @@ import { Box } from '@mui/system';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
+
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useSelector } from 'react-redux';
 import { menusListDataSelector, setMenusListData } from '@Apps/Menus/redux/menus/menusListDataSlice';
 
-const MENU_TYPE = 'tag';
-const MENU_TYPE_LABEL = 'Tags';
+const MENU_TYPE = 'page';
+const MENU_TYPE_LABEL = 'Pages';
 
-export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue, element, errors }) => {
+export const MenuEntry = ({ addElementToMenu, language, element, errors, editMode, setValue }) => {
     const dispatch = useDispatch();
     const [selectedAdd, setSelectedAdd] = useState([]);
     const [list, setList] = useState(null);
     const { menusListData } = useSelector(menusListDataSelector);
 
-    const getList = async () => {
+    const getList = () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.tagsApi.getTags({ lang: language?.id });
+            const result = await Api.pagesApi.getAllPages({ lang: language?.id, sort: 'title ASC' });
             if (!result?.result) {
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
             }
 
-            dispatch(setMenusListData({ tags: result.tags }));
+            dispatch(setMenusListData({ pages: result.pages }));
         });
     };
 
     useEffect(() => {
-        if (menusListData?.tags && !list) {
-            setList(menusListData.tags);
+        if (menusListData?.pages && !list) {
+            setList(menusListData.pages);
             return;
         }
 
@@ -47,19 +48,19 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
     }, [language]);
 
     useEffect(() => {
-        setList(menusListData.tags);
-    }, [menusListData?.tags]);
+        setList(menusListData.pages);
+    }, [menusListData?.pages]);
 
     if (editMode) {
         return list ? (
             <Component.CmtSelect
-                label="Tag"
+                label="Page"
                 required
-                name={`tag`}
+                name={`page`}
                 value={parseInt(element.value)}
                 list={list || []}
                 getValue={(item) => item.id}
-                getName={(item) => `${item.name}`}
+                getName={(item) => `${item.title}`}
                 setFieldValue={(_, newValue) => setValue(newValue)}
                 errors={errors?.value}
             />
@@ -70,8 +71,8 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
 
     return (
         <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="tags-menus-elements-header">
-                <Typography>Tags</Typography>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} id="pages-menus-elements-header">
+                <Typography>Pages</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 {list?.map((item, index) => (
@@ -89,9 +90,9 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                             setSelectedAdd([...newValue]);
                         }}
                     >
-                        <Typography component="span" id={`tagsMenuEntryValue-${item.id}`}>
+                        <Typography component="span" id={`pagesMenuEntryValue-${item.id}`}>
                             <Checkbox checked={selectedAdd?.includes(item.id)} />
-                            {item?.name}
+                            {item?.title}
                         </Typography>
                     </Box>
                 ))}
@@ -108,7 +109,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
 
                                 if (listElement) {
                                     submitList.push({
-                                        name: listElement.name,
+                                        name: listElement.title,
                                         value: listElement.id,
                                         menuType: MENU_TYPE,
                                         children: [],
@@ -122,7 +123,7 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
                             addElementToMenu(submitList);
                             setSelectedAdd([]);
                         }}
-                        id="tagsMenuEntrySubmit"
+                        id="pagesMenuEntrySubmit"
                     >
                         Ajouter
                     </Button>
@@ -133,6 +134,6 @@ export const MenuEntryModule = ({ addElementToMenu, language, editMode, setValue
 };
 
 export default {
-    MenuEntryModule,
+    MenuEntry,
     MENU_TYPE,
 };

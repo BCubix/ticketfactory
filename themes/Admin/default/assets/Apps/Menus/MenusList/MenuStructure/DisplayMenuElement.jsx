@@ -88,7 +88,7 @@ export const DisplayMenuElement = ({
         setFieldValue(name, newList);
     };
 
-    const EditValueComponent = menuEntryModule[element.menuType]?.MenuEntryModule || null;
+    const EditValueComponent = menuEntryModule[element.menuType]?.MenuEntry || null;
 
     return (
         <Box sx={{ marginTop: 3 }}>

@@ -7,6 +7,7 @@ use App\Entity\Event\Tag;
 use App\Repository\TagRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentTypeFieldTagType extends ContentTypeFieldAbstractType
@@ -32,6 +33,24 @@ class ContentTypeFieldTagType extends ContentTypeFieldAbstractType
                     ->orderBy('t.name', 'ASC');
             }
         ]);
+    }
+
+    public static function getOptions()
+    {
+        return [
+            'disabled' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ],
+            'required' => [
+                'class' => CheckboxType::class,
+                'options' => [
+                    'false_values' => ['0', 'null', 'false']
+                ]
+            ]
+        ];
     }
 
     public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
