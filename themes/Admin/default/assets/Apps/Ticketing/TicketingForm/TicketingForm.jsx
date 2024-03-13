@@ -4,8 +4,9 @@ import * as Yup from 'yup';
 export const ticketingInitialSchema = {
     active: (initValues) => initValues?.active || false,
     name: (initValues) => initValues?.name || '',
-    module: (initialValues) => initialValues?.module?.id || initialValues?.module || '',
-    data: (initialValues) => (initialValues ? JSON.parse(initialValues?.data) : []),
+    type: (initValues) => initValues?.type || 'api',
+    module: (initialValues) => initialValues?.module?.id || initialValues?.module || 27,
+    data: (initialValues) => initialValues?.data || {},
 };
 
 export const ticketingValidationSchema = {
@@ -22,10 +23,34 @@ export const ticketingForm = {
             active: { type: 'boolean' },
             name: { type: 'string' },
             module: { type: 'string' },
+            type: { type: 'string' },
             data: {
                 function: ({ values, formData }) => {
-                    formData.append('data', JSON.stringify(values.data));
+                    formData.append('data[login]', 'test');
                 },
+            },
+        },
+    },
+    ticketingList: {
+        default: {
+            use: {
+                api: false,
+                iframe: false,
+                external: true,
+            },
+            formFields: {
+                external: [
+                    {
+                        keyId: 'input-link',
+                        style: { xs: 12, sm: 6, md: 4 },
+                        input: {
+                            name: 'name',
+                            label: 'Nom',
+                            inputType: 'textField',
+                            required: true,
+                        },
+                    },
+                ],
             },
         },
     },

@@ -31,7 +31,7 @@ export const CreateTicketing = () => {
             if (result.result) {
                 NotificationManager.success('La billetterie a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getTicketingAction());
-                navigate(Constant.ROOMS_BASE_PATH);
+                navigate(Constant.TICKETING_BASE_PATH);
             }
         });
     };

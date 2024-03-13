@@ -4,7 +4,7 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import ticketingApi from '@Apps/Ticketing/services/api/ticketingApi';
 import ticketingReducer from '@Apps/Ticketing/redux/ticketing/ticketingSlice';
 import { TicketingList, ticketingListCrud } from '@Apps/Ticketing/TicketingList/TicketingList';
-import { CreateTicketing } from '@Apps/Ticketing/CreateTicketing/CreateTicketing';
+import { CreateTicketing, ticketingCreateCrud } from '@Apps/Ticketing/CreateTicketing/CreateTicketing';
 
 import { setApi } from '@/AdminService/Api';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';

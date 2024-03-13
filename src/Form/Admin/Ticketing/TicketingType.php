@@ -24,13 +24,7 @@ class TicketingType extends AbstractType
             ->add('type',                 ChoiceType::class,            [
                 'choices'  => array_flip(Ticketing::TYPE_MAPPING)
             ])
-            ->add('ticketingData',            CollectionType::class,      [
-                'entry_type'   => TextType::class,
-                'allow_add'    => false,
-                'allow_delete' => false,
-                'delete_empty' => true,
-                'by_reference' => false
-            ])
+            ->add('data',            TicketingDataType::class,      [])
             ->add('module',               EntityType::class,            [
                 'class'         => Module::class,
                 'choice_label'  => 'name',
