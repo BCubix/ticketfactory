@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
+use App\Entity\Ticketing\Ticketing;
 use App\Repository\EventRepository;
 use App\Service\Sort\EventSorter;
 
@@ -143,6 +144,11 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureLinks;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[ORM\ManyToOne]
+    private ?Ticketing $ticketing = null;
 
     public function __construct()
     {
@@ -522,6 +528,18 @@ class Event extends Datable
                 $featureLink->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTicketing(): ?Ticketing
+    {
+        return $this->ticketing;
+    }
+
+    public function setTicketing(?Ticketing $ticketing): static
+    {
+        $this->ticketing = $ticketing;
 
         return $this;
     }

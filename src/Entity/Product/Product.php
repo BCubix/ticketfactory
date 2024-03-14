@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
+use App\Entity\Ticketing\Ticketing;
 use App\Repository\ProductRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -98,6 +99,11 @@ class Product extends Datable
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureLinks;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[ORM\ManyToOne]
+    private ?Ticketing $ticketing = null;
 
     public function __construct()
     {
@@ -298,6 +304,18 @@ class Product extends Datable
                 $featureLink->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTicketing(): ?Ticketing
+    {
+        return $this->ticketing;
+    }
+
+    public function setTicketing(?Ticketing $ticketing): static
+    {
+        $this->ticketing = $ticketing;
 
         return $this;
     }
