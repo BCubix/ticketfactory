@@ -12,7 +12,7 @@ class ModuleRepository extends CrudRepository
 
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
-        ['name', 'o.name', 'search']
+        ['name', 'o.name', 'search'],
     ];
 
     protected const SORTS = [

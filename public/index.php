@@ -7,7 +7,7 @@ defined('_TF_ROOT_DIR_') || define('_TF_ROOT_DIR_', dirname(__DIR__) . DIRECTORY
 require_once _TF_ROOT_DIR_ . '/vendor/autoload_runtime.php';
 
 return function (array $context) {
-    if (file_exists(_TF_ROOT_DIR_ . '/installation') && $context['INSTALLATION_STATUS'] !== "installed") {
+    if (file_exists(_TF_ROOT_DIR_ . '/installation') && ((isset($context['INSTALLATION_STATUS']) && $context['INSTALLATION_STATUS'] !== "installed") || !isset($context['INSTALLATION_STATUS']))) {
         require_once 'install/index.php';
     }
     

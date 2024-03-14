@@ -93,15 +93,18 @@ class ModuleManager extends AddonManager
 
         foreach ($diskModules as $diskModule) {
             $active = false;
+            $id = null;
 
             if (isset($dbModules[$diskModule['name']])) {
                 $active = $dbModules[$diskModule['name']]->isActive();
+                $id = $dbModules[$diskModule['name']]->getId();
             }
 
             if (null === $filters['active'] || $filters['active'] === $active) {
                 $results[] = [
                     ...$diskModule,
-                    'active' => $active
+                    'active' => $active,
+                    'id' => $id
                 ];
             }
         }

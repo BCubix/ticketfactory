@@ -45,6 +45,21 @@ class Ticketing extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\Column]
+    private ?bool $catalogSynchronization = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\Column]
+    private ?bool $customerProfile = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\Column]
+    private ?bool $orderTunnel = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
     #[ORM\ManyToOne]
     private ?Module $module = null;
 
@@ -89,6 +104,42 @@ class Ticketing extends Datable
         return $this;
     }
 
+    public function isCatalogSynchronization(): ?bool
+    {
+        return $this->catalogSynchronization;
+    }
+
+    public function setCatalogSynchronization(bool $catalogSynchronization): static
+    {
+        $this->catalogSynchronization = $catalogSynchronization;
+
+        return $this;
+    }
+
+    public function isCustomerProfile(): ?bool
+    {
+        return $this->customerProfile;
+    }
+
+    public function setCustomerProfile(bool $customerProfile): static
+    {
+        $this->customerProfile = $customerProfile;
+
+        return $this;
+    }
+
+    public function isOrderTunnel(): ?bool
+    {
+        return $this->orderTunnel;
+    }
+
+    public function setOrderTunnel(bool $orderTunnel): static
+    {
+        $this->orderTunnel = $orderTunnel;
+
+        return $this;
+    }
+
     public function getModule(): ?Module
     {
         return $this->module;
@@ -100,5 +151,4 @@ class Ticketing extends Datable
 
         return $this;
     }
-
 }

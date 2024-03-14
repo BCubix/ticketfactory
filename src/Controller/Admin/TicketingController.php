@@ -19,35 +19,35 @@ class TicketingController extends CrudController
 
     #[Rest\Get('/ticketing')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_all'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
         return parent::getAll($request, $paramFetcher);
     }
 
     #[Rest\Get('/ticketing/{ticketingId}', requirements: ['ticketingId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function getOne(Request $request, int $ticketingId): View
     {
         return parent::getOne($request, $ticketingId);
     }
 
     #[Rest\Post('/ticketing')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function add(Request $request): View
     {
         return parent::add($request);
     }
 
     #[Rest\Post('/ticketing/{ticketingId}', requirements: ['ticketingId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function edit(Request $request, int $ticketingId): View
     {
         return parent::edit($request, $ticketingId);
     }
 
     #[Rest\Delete('/ticketing/{ticketingId}', requirements: ['ticketingId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function delete(Request $request, int $ticketingId): View
     {
         return parent::delete($request, $ticketingId);

@@ -25,9 +25,7 @@ const ticketingApi = {
 
             controller = null;
 
-            const translatedList = sortTranslatedObject(result.data?.results);
-
-            return { result: true, ticketing: translatedList, total: result?.data?.total };
+            return { result: true, ticketing: result.data?.results, total: result?.data?.total };
         } catch (error) {
             if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
                 return { result: true, ticketing: [], total: 0 };
@@ -63,9 +61,9 @@ const ticketingApi = {
         }
     },
 
-    createTicketing: async (values) => {
+    createTicketing: async (values, apiSchema) => {
         try {
-            const result = await axios.post('/ticketing', constructFormData({ values, dataFields: Crud?.ticketing?.add?.api?.dataFields }));
+            const result = await axios.post('/ticketing', constructFormData({ values, dataFields: apiSchema || Crud?.ticketing?.add?.api?.dataFields }));
 
             return { result: true, ticketing: result.data };
         } catch (error) {
@@ -74,9 +72,9 @@ const ticketingApi = {
         }
     },
 
-    editTicketing: async (id, values) => {
+    editTicketing: async (id, values, apiSchema) => {
         try {
-            const result = await axios.post(`/ticketing/${id}`, constructFormData({ values, dataFields: Crud?.ticketing?.edit?.api?.dataFields }));
+            const result = await axios.post(`/ticketing/${id}`, constructFormData({ values, dataFields: apiSchema || Crud?.ticketing?.edit?.api?.dataFields }));
 
             return { result: true, ticketing: result.data };
         } catch (error) {

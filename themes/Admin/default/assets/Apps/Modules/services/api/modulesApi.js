@@ -6,16 +6,16 @@ var controller = null;
 
 const FILTERS_SORT_TAB = [
     {
-        name: 'active',
+        key: 'active',
         transformFilter: (params, sort) => {
             params['filters[active]'] = sort ? '1' : '0';
         },
     },
-    { name: 'name', sortName: 'filters[name]' },
-    { name: 'page', sortName: 'filters[page]' },
-    { name: 'limit', sortName: 'filters[limit]' },
+    { key: 'name', sortName: 'filters[name]' },
+    { key: 'page', sortName: 'filters[page]' },
+    { key: 'limit', sortName: 'filters[limit]' },
     {
-        name: 'sort',
+        key: 'sort',
         transformFilter: (params, sort) => {
             const splitSort = sort?.split(' ');
 
@@ -44,6 +44,26 @@ const modulesApi = {
             });
 
             controller = null;
+
+            return { result: true, modules: result?.data?.results, total: result?.data?.total };
+        } catch (error) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, modules: [], total: 0 };
+            }
+
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getAllModules: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            createFilterParams(filters, FILTERS_SORT_TAB, params);
+
+            const result = await axios.get('/modules', {
+                params: params,
+            });
 
             return { result: true, modules: result?.data?.results, total: result?.data?.total };
         } catch (error) {

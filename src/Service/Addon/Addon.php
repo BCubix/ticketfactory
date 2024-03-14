@@ -60,6 +60,14 @@ abstract class Addon extends Bundle implements ConfigurationInterface
             ->enumNode('type')->isRequired()->cannotBeEmpty()
             ->values(['module', 'theme'])
             ->end()
+            ->scalarNode('category')->cannotBeEmpty()
+            ->validate()
+            ->ifTrue(function ($v) {
+                return !is_string($v);
+            })
+            ->thenInvalid('required string')
+            ->end()
+            ->end()
             ->scalarNode('version')->isRequired()->cannotBeEmpty()
             ->validate()
             ->ifTrue(function ($v) {
