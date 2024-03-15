@@ -96,7 +96,8 @@ export const eventsInitialSchema = {
     editSlug: false,
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
-    ticketing: (initValues) => initValues?.ticketing?.id || initValues?.ticketing || '',
+    ticketing: (initValues, { ticketingList }) =>
+        initValues?.ticketing?.id || initValues?.ticketing || (!initValues && ticketingList?.find((item) => item?.defaultTicketing)?.id) || '',
     ticketingReference: (initValues) => initValues?.ticketingReference || '',
     displayBookingButton: (initValues) => (initValues?.displayBookingButton || initValues?.displayBookingButton === false ? initValues?.displayBookingButton : true),
     featureLinks: (initValues) =>

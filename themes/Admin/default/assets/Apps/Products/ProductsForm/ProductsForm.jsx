@@ -26,7 +26,10 @@ export const productsInitialSchema = {
         })) || [],
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
-    ticketing: (initValues) => initValues?.ticketing?.id || initValues?.ticketing || '',
+    ticketing: (initValues, { ticketingList }) =>
+        initValues?.ticketing?.id || initValues?.ticketing || (!initValues && ticketingList?.find((item) => item?.defaultTicketing)?.id) || '',
+    ticketingReference: (initValues) => initValues?.ticketingReference || '',
+    displayBuyingButton: (initValues) => (initValues?.displayBuyingButton || initValues?.displayBuyingButton === false ? initValues?.displayBuyingButton : true),
     featureLinks: (initValues) =>
         initValues?.featureLinks
             ? initValues?.featureLinks?.map((el) => ({
@@ -77,6 +80,8 @@ export const productsForm = {
             price: { type: 'string' },
             mainCategory: { type: 'string' },
             ticketing: { type: 'string' },
+            ticketingReference: { type: 'string' },
+            displayBuyingButton: { type: 'boolean' },
             productCategories: {
                 function: ({ values, formData }) => {
                     values?.productCategories?.forEach((category, index) => {
@@ -178,6 +183,54 @@ export const productsForm = {
                                 inputType: 'editorField',
                                 required: true,
                                 id: 'description',
+                            },
+                        },
+                    ],
+                },
+                {
+                    type: 'block',
+                    keyId: 'block-annexe-info',
+                    title: 'Informations annexes',
+                    fields: [
+                        {
+                            keyId: 'input-ticketing',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: {
+                                name: 'ticketing',
+                                label: 'Billetterie',
+                                inputType: 'selectField',
+                                listName: 'ticketingList',
+                                getName: (item) => item.name,
+                                getValue: (item) => item.id,
+                            },
+                        },
+                        {
+                            keyId: 'input-ticketing',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: (props) => ({
+                                name: 'ticketingReference',
+                                label: props?.ticketingList?.find((it) => it?.id === props.values?.ticketing)?.module ? 'Identifiant billetterie' : 'Lien externe',
+                                inputType: 'textField',
+                                disabled: !Boolean(props.values?.ticketing),
+                            }),
+                        },
+                        {
+                            keyId: 'input-display-buying-button',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: {
+                                name: 'displayBuyingButton',
+                                label: "Afficher le bouton d'achat ?",
+                                inputType: 'switch',
+                                sx: { marginTop: 5 },
                             },
                         },
                     ],

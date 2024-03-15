@@ -15,6 +15,7 @@ export const ticketingInitialSchema = {
     catalogSynchronization: (initialValues) => initialValues?.catalogSynchronization || false,
     customerProfile: (initialValues) => initialValues?.customerProfile || false,
     orderTunnel: (initialValues) => initialValues?.orderTunnel || false,
+    defaultTicketing: (initialValues) => initialValues?.defaultTicketing || false,
 };
 
 export const ticketingValidationSchema = {
@@ -35,6 +36,7 @@ export const ticketingForm = {
             catalogSynchronization: { type: 'boolean' },
             customerProfile: { type: 'boolean' },
             orderTunnel: { type: 'boolean' },
+            defaultTicketing: { type: 'boolean' },
         },
     },
     ticketingList: {

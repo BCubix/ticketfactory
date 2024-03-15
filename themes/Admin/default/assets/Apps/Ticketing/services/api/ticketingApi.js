@@ -88,11 +88,21 @@ const ticketingApi = {
         }
     },
 
-    duplicateTicketing: async (id) => {
+    setDefaultTicketing: async (id) => {
         try {
-            await axios.post(`/ticketing/${id}/duplicate`);
+            await axios.post(`/ticketing/${id}/set-default-ticketing`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    getEventLength: async (id) => {
+        try {
+            const result = await axios.post(`/ticketing/${id}/get-event-length`);
+
+            return { result: true, length: result?.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

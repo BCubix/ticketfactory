@@ -78,7 +78,7 @@ export const EditProduct = () => {
         }
     };
 
-    if (!product || !productCategoriesData) {
+    if (!product || !ticketingData || !productCategoriesData) {
         return <></>;
     }
 

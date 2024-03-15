@@ -26,4 +26,12 @@ class TicketingRepository extends CrudRepository
     {
         parent::__construct($registry, Ticketing::class);
     }
+
+    public function findDefaultForAdmin(): ?Ticketing
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.defaultTicketing = 1')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

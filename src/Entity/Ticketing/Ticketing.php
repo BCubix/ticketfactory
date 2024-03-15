@@ -60,6 +60,11 @@ class Ticketing extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\Column]
+    private ?bool $defaultTicketing = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
     #[ORM\ManyToOne]
     private ?Module $module = null;
 
@@ -136,6 +141,18 @@ class Ticketing extends Datable
     public function setOrderTunnel(bool $orderTunnel): static
     {
         $this->orderTunnel = $orderTunnel;
+
+        return $this;
+    }
+
+    public function isDefaultTicketing(): ?bool
+    {
+        return $this->defaultTicketing;
+    }
+
+    public function setDefaultTicketing(bool $defaultTicketing): static
+    {
+        $this->defaultTicketing = $defaultTicketing;
 
         return $this;
     }

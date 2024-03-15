@@ -66,6 +66,16 @@ class Product extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $ticketingReference = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[ORM\Column]
+    private ?bool $displayBuyingButton = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
 
@@ -173,6 +183,30 @@ class Product extends Datable
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTicketingReference(): ?string
+    {
+        return $this->ticketingReference;
+    }
+
+    public function setTicketingReference(?string $ticketingReference): static
+    {
+        $this->ticketingReference = $ticketingReference;
+
+        return $this;
+    }
+
+    public function isDisplayBuyingButton(): ?bool
+    {
+        return $this->displayBuyingButton;
+    }
+
+    public function setDisplayBuyingButton(bool $displayBuyingButton): static
+    {
+        $this->displayBuyingButton = $displayBuyingButton;
 
         return $this;
     }

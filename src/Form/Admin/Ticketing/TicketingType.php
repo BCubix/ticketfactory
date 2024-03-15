@@ -36,6 +36,7 @@ class TicketingType extends AdminBaseFormType
             ->add('catalogSynchronization',                CheckboxType::class,          ['false_values' => ['0', 'null', 'false']])
             ->add('customerProfile',                       CheckboxType::class,          ['false_values' => ['0', 'null', 'false']])
             ->add('orderTunnel',                           CheckboxType::class,          ['false_values' => ['0', 'null', 'false']])
+            ->add('defaultTicketing',                      CheckboxType::class,          ['false_values' => ['0', 'null', 'false']])
             ->add('type',                                  ChoiceType::class,            [
                 'choices'  => array_flip(Ticketing::TYPE_MAPPING)
             ])

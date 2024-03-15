@@ -32,6 +32,8 @@ class ProductType extends AbstractType
             ->add('slug',                   TextType::class,            [])
             ->add('chapo',                  TextareaType::class,        [])
             ->add('description',            TextareaType::class,        [])
+            ->add('ticketingReference',     TextType::class,            [])
+            ->add('displayBuyingButton',    CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('price',                  MoneyType::class,           [])
             ->add('mainCategory',           EntityType::class,          [
                 'class'         => ProductCategory::class,

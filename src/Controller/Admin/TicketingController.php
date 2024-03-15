@@ -2,12 +2,15 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Event\Event;
 use App\Entity\Ticketing\Ticketing;
+use App\Exception\ApiException;
 use App\Form\Admin\Ticketing\TicketingType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class TicketingController extends CrudController
@@ -51,5 +54,38 @@ class TicketingController extends CrudController
     public function delete(Request $request, int $ticketingId): View
     {
         return parent::delete($request, $ticketingId);
+    }
+
+    #[Rest\Post('/ticketing/{ticketingId}/set-default-ticketing', requirements: ['ticketingId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
+    public function setDefaultTicketing(Request $request, int $ticketingId): View
+    {
+        $defaultTicketing = $this->em->getRepository($this->entityClass)->findDefaultForAdmin();
+        if (null !== $defaultTicketing && $defaultTicketing->getId() === $ticketingId) {
+            return $this->view(null, Response::HTTP_NO_CONTENT);
+        } else if (null !== $defaultTicketing) {
+            $defaultTicketing->setDefaultTicketing(false);
+            $this->em->persist($defaultTicketing);
+        }
+
+        $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($ticketingId);
+        if (null === $object) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, static::NOT_FOUND_MESSAGE);
+        }
+
+        $object->setDefaultTicketing(true);
+
+        $this->em->persist($object);
+        $this->em->flush();
+
+        return $this->view(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Rest\Post('/ticketing/{ticketingId}/get-event-length', requirements: ['ticketingId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
+    public function getEventLength(Request $request, int $ticketingId): View
+    {
+        $result = $this->em->getRepository(Event::class)->findEventLenghtForAdmin($ticketingId);
+        return $this->view($result, Response::HTTP_OK);
     }
 }

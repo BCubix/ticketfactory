@@ -141,7 +141,7 @@ export const eventMainPartForm = {
                     },
                     input: {
                         name: 'displayBookingButton',
-                        label: 'Afficher le bouton de réservation',
+                        label: 'Afficher le bouton de réservation ?',
                         inputType: 'switch',
                         sx: { marginTop: 5 },
                     },

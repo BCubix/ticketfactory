@@ -102,7 +102,7 @@ export const CreateEvent = () => {
         });
     };
 
-    if (parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || (eventId && !initialValues)) {
+    if (parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData || (eventId && !initialValues)) {
         return <></>;
     }
 

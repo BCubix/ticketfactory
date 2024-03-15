@@ -106,7 +106,7 @@ export const EditEvent = () => {
         }
     };
 
-    if (!event || !categoriesData || !roomsData || !seasonsData || !tagsData) {
+    if (!event || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData) {
         return <></>;
     }
 

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { NotificationManager } from 'react-notifications';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Avatar, Typography, IconButton } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Avatar, Typography, IconButton, FormControlLabel, Radio, Tooltip } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
 
 import { changeTicketingFilters, getTicketingAction, ticketingSelector } from '@Apps/Ticketing/redux/ticketing/ticketingSlice';
 import { Api } from '@/AdminService/Api';
@@ -58,6 +60,45 @@ export const ticketingListCrud = {
     },
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS?.wrapperComponent,
     components: [{ component: (props) => <DisplayTicketingList {...props} /> }, { component: (props) => <CreateNewTicketingDialog {...props} /> }],
+    deleteComponent: (props) => <DeleteTicketingDialog {...props} />,
+};
+
+const DeleteTicketingDialog = ({ deleteDialog, setDeleteDialog, handleDelete, dispatch }) => {
+    const [deleteAdvert, setDeleteAdvert] = useState(0);
+
+    useEffect(() => {
+        if (!deleteDialog) {
+            setDeleteDialog(0);
+            return;
+        }
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.ticketingApi.getEventLength(deleteDialog);
+            if (result?.length) {
+                setDeleteAdvert(result?.length);
+            } else if (result?.result) {
+                setDeleteAdvert(0);
+            }
+        });
+    }, [deleteDialog]);
+
+    return (
+        <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+            <Box textAlign="center" py={3}>
+                <Typography component="p">Êtes-vous sûr de vouloir supprimer cette billetterie ?</Typography>
+
+                <Typography component="p">Cette action est irréversible.</Typography>
+
+                {deleteAdvert > 0 && (
+                    <Typography component="p" color="error" sx={{ marginTop: 10 }}>
+                        <WarningIcon color="warning" size="large" sx={{ marginBottom: -1, marginRight: 2 }} />
+                        Cette billetterie est utilisé pour {deleteAdvert} {deleteAdvert > 1 ? 'spectacles' : 'spectacle'}. La supprimer revient à désactiver la réservation pour{' '}
+                        {deleteAdvert > 1 ? 'ces spectacles' : 'ce spectacle'}.
+                    </Typography>
+                )}
+            </Box>
+        </Component.DeleteDialog>
+    );
 };
 
 const CreateNewTicketingDialog = ({ createDialog, setCreateDialog, modules, ticketingValue, setTicketingValue, navigate }) => {
@@ -112,7 +153,7 @@ const CreateNewTicketingDialog = ({ createDialog, setCreateDialog, modules, tick
     );
 };
 
-const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog }) => {
+const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog, setDefaultTicketing }) => {
     const theme = useTheme();
 
     return (
@@ -120,12 +161,16 @@ const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog 
             {listCrud?.dataList(objectData)?.map((item, index) => (
                 <Grid item xs={12} md={6} lg={4} key={index}>
                     <Component.CmtCard sx={{ border: '1px solid #dadada' }}>
-                        <Box sx={{ display: 'flex', padding: 3 }}>
+                        <Box sx={{ position: 'relative', display: 'flex', padding: 3 }}>
                             <Avatar src={`/admin/api/modules/moduleImage/${item?.module?.name}`} />
                             <Box pl={4}>
                                 <Typography variant="h3">{item?.name}</Typography>
                                 <Typography variant="h4">{item?.module?.name ? `Module ${item?.module?.name}` : 'Aucun module'}</Typography>
                             </Box>
+
+                            <Tooltip title="Billetterie par défaut">
+                                <Radio checked={Boolean(item?.defaultTicketing)} sx={{ position: 'absolute', right: 3, top: 3 }} onClick={() => setDefaultTicketing(item?.id)} />
+                            </Tooltip>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 3 }}>
                             <IconButton
@@ -137,7 +182,14 @@ const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog 
                                 <EditIcon fontSize="inherit" />
                             </IconButton>
 
-                            <IconButton aria-label="delete" color="error" size="small" sx={{ marginLeft: 3 }} onClick={() => (listCrud?.delete ? setDeleteDialog(item?.id) : null)}>
+                            <IconButton
+                                aria-label="delete"
+                                color="error"
+                                size="small"
+                                sx={{ marginLeft: 3 }}
+                                onClick={() => (listCrud?.delete ? setDeleteDialog(item?.id) : null)}
+                                disabled={Boolean(item?.defaultTicketing)}
+                            >
                                 <DeleteIcon fontSize="inherit" />
                             </IconButton>
                         </Box>
@@ -163,6 +215,16 @@ export const TicketingList = () => {
         });
     }, []);
 
+    const setDefaultTicketing = (id) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.ticketingApi.setDefaultTicketing(id);
+            if (result?.result) {
+                NotificationManager.success('La billetterie a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(Crud?.ticketing?.list?.loadDataAction());
+            }
+        });
+    };
+
     return (
         <Component.CmtCrudList
             listCrud={Crud?.ticketing?.list}
@@ -171,6 +233,7 @@ export const TicketingList = () => {
             setCreateDialog={setCreateDialog}
             ticketingValue={ticketingValue}
             setTicketingValue={setTicketingValue}
+            setDefaultTicketing={setDefaultTicketing}
         />
     );
 };

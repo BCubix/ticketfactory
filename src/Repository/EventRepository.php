@@ -192,4 +192,15 @@ class EventRepository extends CrudRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findEventLenghtForAdmin(int $ticketingId)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->leftJoin('e.ticketing', 't')
+            ->where('t.id = :id')
+            ->setParameter('id', $ticketingId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

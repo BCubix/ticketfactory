@@ -83,7 +83,7 @@ export const CreateProduct = () => {
         });
     };
 
-    if (!productCategoriesData || (productId && !initialValues)) {
+    if (!productCategoriesData || !ticketingData || (productId && !initialValues)) {
         return <></>;
     }
 
