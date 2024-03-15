@@ -109,7 +109,7 @@ export const eventMainPartForm = {
                     keyId: 'input-ticketing',
                     style: {
                         xs: 12,
-                        sm: 6,
+                        sm: 4,
                     },
                     input: {
                         name: 'ticketing',
@@ -124,20 +124,33 @@ export const eventMainPartForm = {
                     keyId: 'input-ticketing',
                     style: {
                         xs: 12,
-                        sm: 6,
+                        sm: 4,
                     },
                     input: (props) => ({
-                        name: 'ticketingId',
-                        label: 'Identifiant billetterie',
+                        name: 'ticketingReference',
+                        label: props?.ticketingList?.find((it) => it?.id === props.values?.ticketing)?.module ? 'Identifiant billetterie' : 'Lien externe',
                         inputType: 'textField',
                         disabled: !Boolean(props.values?.ticketing),
                     }),
                 },
                 {
+                    keyId: 'input-display-booking-button',
+                    style: {
+                        xs: 12,
+                        sm: 4,
+                    },
+                    input: {
+                        name: 'displayBookingButton',
+                        label: 'Afficher le bouton de réservation',
+                        inputType: 'switch',
+                        sx: { marginTop: 5 },
+                    },
+                },
+                {
                     keyId: 'input-event-length',
                     style: {
                         xs: 12,
-                        sm: 6,
+                        sm: 4,
                     },
                     input: {
                         name: 'eventLength',

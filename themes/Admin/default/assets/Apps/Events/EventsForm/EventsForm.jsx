@@ -97,10 +97,8 @@ export const eventsInitialSchema = {
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
     ticketing: (initValues) => initValues?.ticketing?.id || initValues?.ticketing || '',
-    ticketingId: (initValues) => initValues?.ticketingId || '',
-    useThirdPartyTicketing: (initValues) => initValues?.useThirdPartyTicketing || false,
-    thirdPartyTicketingUrl: (initValues) => initValues?.thirdPartyTicketingUrl || '',
-    eventLength: (initValues) => initValues?.eventLength || '',
+    ticketingReference: (initValues) => initValues?.ticketingReference || '',
+    displayBookingButton: (initValues) => (initValues?.displayBookingButton || initValues?.displayBookingButton === false ? initValues?.displayBookingButton : true),
     featureLinks: (initValues) =>
         initValues?.featureLinks
             ? initValues?.featureLinks?.map((el) => ({
@@ -137,9 +135,8 @@ export const eventsForm = {
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
             ticketing: { type: 'string' },
-            ticketingId: { type: 'string' },
-            useThirdPartyTicketing: { type: 'boolean' },
-            thirdPartyTicketingUrl: { type: 'string' },
+            ticketingReference: { type: 'string' },
+            displayBookingButton: { type: 'boolean' },
             eventLength: { type: 'string' },
             eventDateBlocks: {
                 type: 'array',

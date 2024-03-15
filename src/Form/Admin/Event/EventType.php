@@ -21,9 +21,7 @@ use App\Repository\TicketingRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,11 +39,8 @@ class EventType extends AdminBaseFormType
             ->add('slug',                        TextType::class,            [])
             ->add('chapo',                       TextareaType::class,        [])
             ->add('description',                 TextareaType::class,        [])
-            ->add('ticketingId',                 NumberType::class,          [])
-            ->add('useThirdPartyTicketing',      CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
-            ->add('thirdPartyTicketingUrl',      UrlType::class,             [
-                'default_protocol' => 'https',
-            ])
+            ->add('ticketingReference',          TextType::class,            [])
+            ->add('displayBookingButton',        CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('eventLength',                 TextType::class,            [])
             ->add('featureLinks',                CollectionType::class,      [
                 'entry_type'   => FeatureLinkType::class,

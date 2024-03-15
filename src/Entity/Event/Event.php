@@ -67,18 +67,13 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\Column(nullable: true)]
-    private ?int $ticketingId = null;
+    #[ORM\Column(nullable: true, type: Types::TEXT)]
+    private ?string $ticketingReference = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
     #[ORM\Column]
-    private ?bool $useThirdPartyTicketing = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one'])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $thirdPartyTicketingUrl = null;
+    private ?bool $displayBookingButton = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
@@ -229,38 +224,26 @@ class Event extends Datable
         return $this;
     }
 
-    public function getTicketingId(): ?int
+    public function getTicketingReference(): ?string
     {
-        return $this->ticketingId;
+        return $this->ticketingReference;
     }
 
-    public function setTicketingId(?int $ticketingId): self
+    public function setTicketingReference(?string $ticketingReference): self
     {
-        $this->ticketingId = $ticketingId;
+        $this->ticketingReference = $ticketingReference;
 
         return $this;
     }
 
-    public function isUseThirdPartyTicketing(): ?bool
+    public function isDisplayBookingButton(): ?bool
     {
-        return $this->useThirdPartyTicketing;
+        return $this->displayBookingButton;
     }
 
-    public function setUseThirdPartyTicketing(bool $useThirdPartyTicketing): self
+    public function setDisplayBookingButton(bool $displayBookingButton): static
     {
-        $this->useThirdPartyTicketing = $useThirdPartyTicketing;
-
-        return $this;
-    }
-
-    public function getThirdPartyTicketingUrl(): ?string
-    {
-        return $this->thirdPartyTicketingUrl;
-    }
-
-    public function setThirdPartyTicketingUrl(?string $thirdPartyTicketingUrl): self
-    {
-        $this->thirdPartyTicketingUrl = $thirdPartyTicketingUrl;
+        $this->displayBookingButton = $displayBookingButton;
 
         return $this;
     }
