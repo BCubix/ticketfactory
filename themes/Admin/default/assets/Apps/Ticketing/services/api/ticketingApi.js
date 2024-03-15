@@ -39,10 +39,6 @@ const ticketingApi = {
         try {
             let params = { 'filters[page]': 0 };
 
-            if (filters?.lang) {
-                params['filters[lang]'] = filters?.lang;
-            }
-
             const result = await axios.get('/ticketing', { params: params });
 
             return { result: true, ticketing: result.data?.results, total: result?.data?.total };

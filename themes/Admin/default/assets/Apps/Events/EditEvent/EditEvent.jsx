@@ -34,6 +34,7 @@ export const EditEvent = () => {
     const [seasonsData, setSeasonsData] = useState(null);
     const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
+    const [ticketingData, setTicketingData] = useState(null);
 
     const defaultDateBlockName = useMemo(() => {
         return parameters?.find((it) => it.paramKey === 'core_default_event_date_block_name')?.paramValue || null;
@@ -70,6 +71,7 @@ export const EditEvent = () => {
             Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
+            Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
             Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
         });
@@ -117,6 +119,7 @@ export const EditEvent = () => {
             seasonsList={seasonsData.seasons}
             featuresList={featuresData?.features}
             tagsList={tagsData.tags}
+            ticketingList={ticketingData?.ticketing || []}
             formCrud={Crud?.events?.edit}
             defaultPriceBlockName={defaultPriceBlockName}
             defaultDateBlockName={defaultDateBlockName}

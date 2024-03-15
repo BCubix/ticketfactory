@@ -26,6 +26,7 @@ export const productsInitialSchema = {
         })) || [],
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
+    ticketing: (initValues) => initValues?.ticketing?.id || initValues?.ticketing || '',
     featureLinks: (initValues) =>
         initValues?.featureLinks
             ? initValues?.featureLinks?.map((el) => ({
@@ -75,6 +76,7 @@ export const productsForm = {
             description: { type: 'string' },
             price: { type: 'string' },
             mainCategory: { type: 'string' },
+            ticketing: { type: 'string' },
             productCategories: {
                 function: ({ values, formData }) => {
                     values?.productCategories?.forEach((category, index) => {

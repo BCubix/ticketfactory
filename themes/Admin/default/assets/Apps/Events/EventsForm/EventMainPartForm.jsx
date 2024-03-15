@@ -106,19 +106,18 @@ export const eventMainPartForm = {
             title: 'Informations annexes',
             fields: [
                 {
-                    keyId: 'input-third-party-ticketing',
+                    keyId: 'input-ticketing',
                     style: {
                         xs: 12,
                         sm: 6,
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
                     },
                     input: {
-                        name: 'useThirdPartyTicketing',
-                        label: 'Utiliser une billetterie externe ?',
-                        inputType: 'switch',
-                        labelPlacement: 'start',
+                        name: 'ticketing',
+                        label: 'Billetterie',
+                        inputType: 'selectField',
+                        listName: 'ticketingList',
+                        getName: (item) => item.name,
+                        getValue: (item) => item.id,
                     },
                 },
                 {
@@ -127,20 +126,12 @@ export const eventMainPartForm = {
                         xs: 12,
                         sm: 6,
                     },
-                    input: (props) =>
-                        props.values.useThirdPartyTicketing
-                            ? {
-                                  name: 'thirdPartyTicketingUrl',
-                                  label: 'Url de billetterie externe',
-                                  inputType: 'textField',
-                                  type: 'url',
-                              }
-                            : {
-                                  name: 'ticketingId',
-                                  label: 'Identifiant billetterie',
-                                  inputType: 'textField',
-                                  type: 'number',
-                              },
+                    input: (props) => ({
+                        name: 'ticketingId',
+                        label: 'Identifiant billetterie',
+                        inputType: 'textField',
+                        disabled: !Boolean(props.values?.ticketing),
+                    }),
                 },
                 {
                     keyId: 'input-event-length',

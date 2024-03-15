@@ -29,6 +29,7 @@ export const CreateProduct = () => {
     const languagesData = useSelector(languagesSelector);
     const [productCategoriesData, setProductCategoriesData] = useState(null);
     const [featuresData, setFeaturesData] = useState(null);
+    const [ticketingData, setTicketingData] = useState(null);
     const [initialValues, setInitialValues] = useState(null);
 
     const [queryParameters] = useSearchParams();
@@ -45,6 +46,7 @@ export const CreateProduct = () => {
 
             Api.productCategoriesApi.getProductCategories({ lang: defaultLanguageId }).then((results) => setProductCategoriesData(results));
             Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
+            Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
 
             if (!productId || !languageId) {
                 return;
@@ -89,6 +91,7 @@ export const CreateProduct = () => {
         <Component.CmtCrudForm
             handleSubmit={handlesubmit}
             productCategoriesList={productCategoriesData?.productCategories}
+            ticketingList={ticketingData?.ticketing || []}
             featuresList={featuresData?.features}
             translateInitialValues={initialValues}
             formCrud={Crud?.products?.add}

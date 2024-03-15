@@ -33,6 +33,7 @@ export const CreateEvent = () => {
     const [seasonsData, setSeasonsData] = useState(null);
     const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
+    const [ticketingData, setTicketingData] = useState(null);
     const [initialValues, setInitialValues] = useState(null);
 
     const [queryParameters] = useSearchParams();
@@ -62,6 +63,7 @@ export const CreateEvent = () => {
             Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
             Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
+            Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
             Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
 
@@ -111,6 +113,7 @@ export const CreateEvent = () => {
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
             tagsList={tagsData.tags}
+            ticketingList={ticketingData?.ticketing || []}
             featuresList={featuresData?.features}
             translateInitialValues={initialValues}
             formCrud={Crud?.events?.add}

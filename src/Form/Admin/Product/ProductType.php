@@ -5,11 +5,12 @@ namespace App\Form\Admin\Product;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
+use App\Entity\Ticketing\Ticketing;
 use App\Form\Admin\Feature\FeatureLinkType;
 use App\Form\Admin\SEOAble\SEOAbleType;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\LanguageRepository;
-
+use App\Repository\TicketingRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -65,6 +66,16 @@ class ProductType extends AbstractType
                 'allow_delete'  => true,
                 'delete_empty'  => true,
                 'by_reference'  => false
+            ])
+            ->add('ticketing',                   EntityType::class,          [
+                'class'         => Ticketing::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (TicketingRepository $tr) {
+                    return $tr
+                        ->createQueryBuilder('t')
+                        ->orderBy('t.name', 'ASC');
+                }
             ])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,

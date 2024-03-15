@@ -88,7 +88,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
                                             disabled={!Boolean(apiOptions?.catalogSynchronization)}
                                         />
                                     }
-                                    label="Syncronisation catalogue"
+                                    label="Synchronisation catalogue"
                                 />
                                 <FormControlLabel
                                     control={
@@ -99,7 +99,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
                                             disabled={!Boolean(apiOptions?.customerProfile)}
                                         />
                                     }
-                                    label="Profile client"
+                                    label="Profil client"
                                 />
                                 <FormControlLabel
                                     control={

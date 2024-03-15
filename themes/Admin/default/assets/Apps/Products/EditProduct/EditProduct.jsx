@@ -28,6 +28,7 @@ export const EditProduct = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [featuresData, setFeaturesData] = useState(null);
+    const [ticketingData, setTicketingData] = useState(null);
     const [productCategoriesData, setProductCategoriesData] = useState(null);
 
     useEffect(() => {
@@ -52,6 +53,7 @@ export const EditProduct = () => {
             const defaultLanguageId = result?.product?.lang?.id;
             Api.productCategoriesApi.getProductCategories({ lang: defaultLanguageId }).then((results) => setProductCategoriesData(results));
             Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
+            Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
         });
     };
 
@@ -84,6 +86,7 @@ export const EditProduct = () => {
         <Component.CmtCrudForm
             handleSubmit={handleSubmit}
             initialValues={product}
+            ticketingList={ticketingData?.ticketing || []}
             featuresList={featuresData?.features}
             productCategoriesList={productCategoriesData?.productCategories}
             formCrud={Crud.products?.edit}
