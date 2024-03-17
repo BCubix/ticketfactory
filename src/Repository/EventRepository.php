@@ -203,4 +203,15 @@ class EventRepository extends CrudRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function findEventByTicketingForAdmin(int $ticketingId)
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.ticketing', 't')
+            ->where('t.id = :ticketingId')
+            ->setParameter('ticketingId', $ticketingId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

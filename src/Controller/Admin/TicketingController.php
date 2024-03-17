@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Event\Event;
+use App\Entity\Product\Product;
 use App\Entity\Ticketing\Ticketing;
 use App\Exception\ApiException;
 use App\Form\Admin\Ticketing\TicketingType;
@@ -85,7 +86,9 @@ class TicketingController extends CrudController
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function getEventLength(Request $request, int $ticketingId): View
     {
-        $result = $this->em->getRepository(Event::class)->findEventLenghtForAdmin($ticketingId);
-        return $this->view($result, Response::HTTP_OK);
+        $eventLength = $this->em->getRepository(Event::class)->findEventLenghtForAdmin($ticketingId);
+        $productLength = $this->em->getRepository(Product::class)->findProductLenghtForAdmin($ticketingId);
+
+        return $this->view(['events' => $eventLength, 'products' => $productLength], Response::HTTP_OK);
     }
 }

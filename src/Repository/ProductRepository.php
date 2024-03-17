@@ -112,4 +112,26 @@ class ProductRepository extends CrudRepository
 
         return array_values($data);
     }
+
+    public function findProductLenghtForAdmin(int $ticketingId)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p)')
+            ->leftJoin('p.ticketing', 't')
+            ->where('t.id = :id')
+            ->setParameter('id', $ticketingId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findProductByTicketingForAdmin(int $ticketingId)
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.ticketing', 't')
+            ->where('t.id = :ticketingId')
+            ->setParameter('ticketingId', $ticketingId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

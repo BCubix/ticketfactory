@@ -2,7 +2,6 @@ import { Constant } from '@/AdminService/Constant';
 
 import axios from '@Services/api/config';
 import { createFilterParams } from '@Services/utils/createFilterParams';
-import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
 
@@ -102,7 +101,7 @@ const ticketingApi = {
         try {
             const result = await axios.post(`/ticketing/${id}/get-event-length`);
 
-            return { result: true, length: result?.data };
+            return { result: true, data: result?.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

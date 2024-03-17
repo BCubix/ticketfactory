@@ -64,20 +64,20 @@ export const ticketingListCrud = {
 };
 
 const DeleteTicketingDialog = ({ deleteDialog, setDeleteDialog, handleDelete, dispatch }) => {
-    const [deleteAdvert, setDeleteAdvert] = useState(0);
+    const [deleteAdvert, setDeleteAdvert] = useState(null);
 
     useEffect(() => {
         if (!deleteDialog) {
-            setDeleteDialog(0);
+            setDeleteDialog(null);
             return;
         }
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.ticketingApi.getEventLength(deleteDialog);
-            if (result?.length) {
-                setDeleteAdvert(result?.length);
+            if (result?.result && result?.data) {
+                setDeleteAdvert(result?.data);
             } else if (result?.result) {
-                setDeleteAdvert(0);
+                setDeleteAdvert(null);
             }
         });
     }, [deleteDialog]);
@@ -89,11 +89,19 @@ const DeleteTicketingDialog = ({ deleteDialog, setDeleteDialog, handleDelete, di
 
                 <Typography component="p">Cette action est irréversible.</Typography>
 
-                {deleteAdvert > 0 && (
+                {deleteAdvert?.events > 0 && (
                     <Typography component="p" color="error" sx={{ marginTop: 10 }}>
                         <WarningIcon color="warning" size="large" sx={{ marginBottom: -1, marginRight: 2 }} />
-                        Cette billetterie est utilisé pour {deleteAdvert} {deleteAdvert > 1 ? 'spectacles' : 'spectacle'}. La supprimer revient à désactiver la réservation pour{' '}
-                        {deleteAdvert > 1 ? 'ces spectacles' : 'ce spectacle'}.
+                        Cette billetterie est utilisé pour {deleteAdvert?.events} {`spectacle${deleteAdvert?.events > 1 ? 's' : ''}`}. La supprimer revient à désactiver la
+                        réservation pour {deleteAdvert?.events > 1 ? 'ces spectacles' : 'ce spectacle'}.
+                    </Typography>
+                )}
+
+                {deleteAdvert?.products > 0 && (
+                    <Typography component="p" color="error" sx={{ marginTop: 10 }}>
+                        <WarningIcon color="warning" size="large" sx={{ marginBottom: -1, marginRight: 2 }} />
+                        Cette billetterie est utilisé pour {deleteAdvert?.products} {`produit${deleteAdvert?.products > 1 ? 's' : ''}`}. La supprimer revient à désactiver l'achat
+                        pour {deleteAdvert?.products > 1 ? 'ces produits' : 'ce produit'}.
                     </Typography>
                 )}
             </Box>
