@@ -133,10 +133,6 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
-    public $frontUrl;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private Collection $featureLinks;
 
@@ -144,6 +140,14 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     #[ORM\ManyToOne]
     private ?Ticketing $ticketing = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    public $frontUrl;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    public $frontBookingButton = true;
 
     public function __construct()
     {

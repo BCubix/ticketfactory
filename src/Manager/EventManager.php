@@ -30,7 +30,7 @@ class EventManager extends AbstractManager
     ];
 
     protected $tr;
-    
+
     public function __construct(
         Kernel $kl,
         ManagerFactory $mf,
@@ -120,7 +120,7 @@ class EventManager extends AbstractManager
             }
         }
 
-        return $event;
+        return $this->formatEvent($event);
     }
 
     public function getEventFromFormat($formatValue, $format): ?Event
@@ -165,6 +165,8 @@ class EventManager extends AbstractManager
             foreach ($eventDateBlocks as $eventDateBlock) {
                 $event->addEventDateBlock($eventDateBlock);
             }
+
+            $event->frontBookingButton = $this->getDisplayBookingButton($event);
         }
 
         return $events;
@@ -192,7 +194,7 @@ class EventManager extends AbstractManager
             '%month%' => fn ($event) => $event->getBeginDate()->format('m'),
             '%day%' => fn ($event) => $event->getBeginDate()->format('d'),
         ];
-    
+
         foreach ($eventUrlConstruct as $key => $fn) {
             $url = str_replace($key, $fn($event), $url);
         }
@@ -405,6 +407,35 @@ class EventManager extends AbstractManager
         ];
     }
 
+    public function formatEvent(Event $event): Event
+    {
+        $event->frontBookingButton = $this->getDisplayBookingButton($event);
+
+        return $event;
+    }
+
+    public function getDisplayBookingButton(Event $event): bool
+    {
+        if (!$event->isDisplayBookingButton()) {
+            return false;
+        }
+
+        if (null === $event->getTicketingReference()) {
+            return false;
+        }
+
+        if (null === $event->getTicketing() || !$event->getTicketing()->isActive()) {
+            return false;
+        }
+
+        $now = new \Datetime();
+        if ($now > $event->getEndDate()) {
+            return false;
+        }
+
+        return true;
+    }
+
     private function getDefaultParameters($filters): array
     {
         [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];
@@ -417,4 +448,5 @@ class EventManager extends AbstractManager
             "sortOrder" => $sortOrder
         ]);
     }
+
 }

@@ -45,6 +45,7 @@ class TwigEventExtension extends AbstractExtension
             new TwigFunction('getFirstFormattedMediaForEvent', [$this, 'getFirstFormattedMediaForEvent']),
             new TwigFunction('getEventFeatures', [$this, 'getEventFeatures']),
             new TwigFunction('getAllFormattedMediasForEvent', [$this, 'getAllFormattedMediasForEvent']),
+            new TwigFunction('getDisplayBookingButton', [$this, 'getDisplayBookingButton']),
         ];
     }
 
@@ -150,5 +151,10 @@ class TwigEventExtension extends AbstractExtension
         }
 
         return $this->em->getAllFormattedMedias($eventMedias, $slug);
+    }
+
+    public function getDisplayBookingButton(Event $event): bool
+    {
+        return $this->em->getDisplayBookingButton($event);
     }
 }
