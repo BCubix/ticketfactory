@@ -6,6 +6,9 @@ use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Entity\Order\Cart;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class OrderManager extends AbstractManager
 {
@@ -21,10 +24,108 @@ class OrderManager extends AbstractManager
         $order->setCustomer($customer);
         $order->setCart($cart);
         $order->setReference($this->generateReference());
+        $order->setOrderData($this->getOrderData($order));
 
         $this->em->persist($order);
 
         return $order;
+    }
+
+    public function getOrderData(Order $order) {
+        $orderData = [];
+
+        $customer = $order->getCustomer();
+        $orderData['customer'] = [
+            'id' => $customer->getId(),
+            'email' => $customer->getEmail(),
+            'phone' => $customer->getPhone(),
+            'firstName' => $customer->getFirstName(),
+            'lastName' => $customer->getLastName(),
+            'civility' => $customer->getCivility(),
+        ];
+
+        $cart = $order->getCart();
+        $orderData['cart'] = [
+            'id' => $cart->getId(),
+            'total' => $cart->getTotal(),
+        ];
+
+        $orderData['cart']['cartRows'] = [];
+        foreach ($cart->getCartRows() as $cartRow) {
+            $newCartRow = [
+                'id' => $cartRow->getId(),
+                'total' => $cartRow->getTotal(),
+            ];
+
+            $event = $cartRow->getEvent();
+            $newCartRow['event'] = [
+                'id' => $event->getId(),
+                'name' => $event->getName(),
+                'slug' => $event->getSlug(),
+                'chapo' => $event->getChapo(),
+                'description' => $event->getDescription(),
+                'eventLength' => $event->getEventLength(),
+                'ticketingReference' => $event->getTicketingReference(),
+                'ticketing' => null !== $event->getTicketing() ? [
+                    'id' => $event->getTicketing()->getId(),
+                    'name' => $event->getTicketing()->getName(),
+                    'type' => $event->getTicketing()->getType(),
+                    'module' => null !== $event->getTicketing()->getModule() ? [
+                        'id' => $event->getTicketing()->getModule()->getId(),
+                        'name' => $event->getTicketing()->getModule()->getName(),
+                    ] : null
+                ] : null
+            ];
+
+            $newCartRow['eventDate'] = [
+                'eventDate' => $cartRow->getEventDate()->getEventDate(),
+                'state' => $cartRow->getEventDate()->getState(),
+                'reportDate' => $cartRow->getEventDate()->getReportDate(),
+            ];
+
+            $newCartRow['seatingPlan'] = null !== $cartRow->getSeatingPlan() ? [
+                'name' => $cartRow->getSeatingPlan()->getName(),
+            ] : null;
+
+            $newCartRow['cartSeats'] = [];
+            foreach($cartRow->getCartSeats() as $cartSeat) {
+                $newCartRow['cartSeats'][] = [
+                    'id' => $cartSeat->getId(),
+                    'name' => $cartSeat->getName(),
+                    'eventPrice' => [
+                        'name' => $cartSeat->getEventPrice()->getName(),
+                        'price' => $cartSeat->getEventPrice()->getPrice(),
+                        'annotation' => $cartSeat->getEventPrice()->getAnnotation(),
+                    ]
+                ];
+            }
+
+            $newCartRow['voucher'] = [];
+            foreach ($cartRow->getVouchers() as $voucher) {
+                $newCartRow['voucher'][] = [
+                    'id' => $voucher->getId(),
+                    'name' => $voucher->getName(),
+                    'code' => $voucher->getCode(),
+                    'discount' => $voucher->getDiscount(),
+                    'unit' => $voucher->getUnit(),
+                ];
+            }
+
+            $orderData['cart']['cartRows'][] = $newCartRow;
+        }
+
+        $orderData['voucher'] = [];
+            foreach ($cart->getVouchers() as $voucher) {
+                $cart['voucher'][] = [
+                    'id' => $voucher->getId(),
+                    'name' => $voucher->getName(),
+                    'code' => $voucher->getCode(),
+                    'discount' => $voucher->getDiscount(),
+                    'unit' => $voucher->getUnit(),
+                ];
+            }
+
+        return $orderData;
     }
 
     private function generateReference(): string
@@ -39,5 +140,5 @@ class OrderManager extends AbstractManager
         }
     
         return $reference;
-    } 
+    }
 }

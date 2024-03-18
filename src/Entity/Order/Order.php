@@ -44,6 +44,11 @@ class Order extends Datable
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[ORM\Column(nullable: true)]
+    private ?array $orderData = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +98,18 @@ class Order extends Datable
     public function setCart(Cart $cart): self
     {
         $this->cart = $cart;
+
+        return $this;
+    }
+
+    public function getOrderData(): ?array
+    {
+        return $this->orderData;
+    }
+
+    public function setOrderData(?array $orderData): static
+    {
+        $this->orderData = $orderData;
 
         return $this;
     }
