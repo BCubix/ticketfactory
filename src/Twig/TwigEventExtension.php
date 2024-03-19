@@ -46,6 +46,9 @@ class TwigEventExtension extends AbstractExtension
             new TwigFunction('getEventFeatures', [$this, 'getEventFeatures']),
             new TwigFunction('getAllFormattedMediasForEvent', [$this, 'getAllFormattedMediasForEvent']),
             new TwigFunction('getDisplayBookingButton', [$this, 'getDisplayBookingButton']),
+            new TwigFunction('getEventTicketingType', [$this, 'getEventTicketingType']),
+            new TwigFunction('getEventIframeLink', [$this, 'getEventIframeLink']),
+            new TwigFunction('getEventExternalLink', [$this, 'getEventExternalLink']),
         ];
     }
 
@@ -156,5 +159,25 @@ class TwigEventExtension extends AbstractExtension
     public function getDisplayBookingButton(Event $event): bool
     {
         return $this->em->getDisplayBookingButton($event);
+    }
+
+    public function getEventTicketingType(Event $event): ?string
+    {
+        if (null === $event->getTicketing()) {
+            return null;
+        }
+
+        return $event->getTicketing()->getType();
+    }
+
+    public function getEventIframeLink(Event $event): ?string
+    {
+        return $this->em->getEventIframeLink($event);
+    }
+
+
+    public function getEventExternalLink(Event $event): ?string
+    {
+        return $this->em->getEventExternalLink($event);
     }
 }

@@ -436,6 +436,32 @@ class EventManager extends AbstractManager
         return true;
     }
 
+    public function getEventIframeLink(Event $event): ?string
+    {
+        return "";
+    }
+
+    public function getEventExternalLink(Event $event): ?string
+    {
+        if (!$this->getDisplayBookingButton($event)) {
+            return "";
+        }
+
+        $ticketing = $event->getTicketing();
+        $module = $ticketing->getModule();
+
+        if (null !== $module) {
+            $className = 'TicketFactory\Module\\' . $module->getName() . '\Manager\TicketingManager';
+            if (class_exists($className) && method_exists($className, "getEventExternalLink")) {
+                $class = new $className();
+                dd($class->getEventExternalLink($event));
+                return "";
+            }
+        }
+
+        dd($module);
+    }
+
     private function getDefaultParameters($filters): array
     {
         [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];
