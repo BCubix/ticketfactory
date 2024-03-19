@@ -105,6 +105,23 @@ export const CreatePage = () => {
                 return;
             }
 
+            const contentResult = await Api.contentsApi.getContentByPageId(pageId);
+            if (contentResult?.result) {
+                const translatedContent = await Api.contentsApi.getTranslated(contentResult?.content?.id, languageId);
+                if (translatedContent) {
+                    setInitialValues({
+                        ...page?.page,
+                        contentId: translatedContent?.content?.id,
+                        fields: translatedContent?.content?.fields,
+                        contentType: translatedContent?.content?.contentType,
+                    });
+
+                    setSelectedContentType(translatedContent?.content?.contentType);
+
+                    return;
+                }
+            }
+
             setInitialValues(page.page);
         });
     }, []);

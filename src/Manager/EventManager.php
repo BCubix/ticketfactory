@@ -438,28 +438,40 @@ class EventManager extends AbstractManager
 
     public function getEventIframeLink(Event $event): ?string
     {
-        return "";
-    }
-
-    public function getEventExternalLink(Event $event): ?string
-    {
         if (!$this->getDisplayBookingButton($event)) {
-            return "";
+            return null;
         }
 
         $ticketing = $event->getTicketing();
         $module = $ticketing->getModule();
 
         if (null !== $module) {
-            $className = 'TicketFactory\Module\\' . $module->getName() . '\Manager\TicketingManager';
-            if (class_exists($className) && method_exists($className, "getEventExternalLink")) {
-                $class = new $className();
-                dd($class->getEventExternalLink($event));
-                return "";
+            $class = $this->sf->get('ticketing')->getTicketingClass($module) ?? $this->mf->get('ticketing');
+            if (method_exists($class, "getEventIframeLink")) {
+                return $class->getEventIframeLink($event);
             }
         }
 
-        dd($module);
+        return null;
+    }
+
+    public function getEventExternalLink(Event $event): ?string
+    {
+        if (!$this->getDisplayBookingButton($event)) {
+            return null;
+        }
+
+        $ticketing = $event->getTicketing();
+        $module = $ticketing->getModule();
+
+        if (null !== $module) {
+            $class = $this->sf->get('ticketing')->getTicketingClass($module) ?? $this->mf->get('ticketing');
+            if (method_exists($class, "getEventExternalLink")) {
+                return $class->getEventExternalLink($event);
+            }
+        }
+
+        return null;
     }
 
     private function getDefaultParameters($filters): array

@@ -65,7 +65,7 @@ class Ticketing extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
-    #[ORM\ManyToOne(cascade: ['persist', 'remove', 'detach', 'merge'])]
+    #[ORM\ManyToOne]
     private ?Module $module = null;
 
     public function getId(): ?int

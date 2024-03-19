@@ -3,9 +3,7 @@
 namespace App\Form\Website\Event;
 
 use App\Entity\Event\EventDate;
-use App\Entity\Event\EventPrice;
 use App\Repository\EventDateRepository;
-use App\Repository\EventPriceRepository;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

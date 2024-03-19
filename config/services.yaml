@@ -56,6 +56,10 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    App\Service\Ticketing\TicketingService:
+        arguments:
+            - '@service_container'
+
     # Server Side Rendering
     limenius_react.react_renderer:
         class: App\Service\Rendering\CustomPhpExecJsReactRenderer
