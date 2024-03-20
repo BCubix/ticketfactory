@@ -33,35 +33,12 @@ class ModuleManager extends AddonManager
         return $processor->processConfiguration($module, ['module' => $config]);
     }
 
-    public function getModuleImage(string $objectName, bool $activeFilter): ?BinaryFileResponse
+    public function getImage(string $objectName): ?BinaryFileResponse
     {
         if (file_exists($this->sf->get('pathGetter')->getModulesDir() . '/' . $objectName . "/logo.png")) {
             return new BinaryFileResponse($this->sf->get('pathGetter')->getModulesDir() . '/' . $objectName . "/logo.png");
         }
         return null;
-    }
-
-    public function getImage(string $objectName): array
-    {
-        $imagePathWithoutExt = $this->getDir() . '/' . $objectName . '/logo';
-
-        $ext = null;
-        if (is_file($imagePathWithoutExt . '.png')) {
-            $ext = 'png';
-        } else if (is_file($imagePathWithoutExt . '.jpg')) {
-            $ext = 'jpg';
-        }
-
-        if (null !== $ext) {
-            $sourceFile = $imagePathWithoutExt . '.' . $ext;
-            $targetName = 'logo-' . $objectName . '.' . $ext;
-            $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $targetName;
-
-            $this->sf->get('file')->copy($sourceFile, $targetFile);
-            $ext = ('/' . $targetName);
-        }
-
-        return ['logoUrl' => $ext];
     }
 
     public function getDir(): string

@@ -9,6 +9,7 @@ use App\Exception\ApiException;
 use App\Service\Addon\Theme;
 use App\Service\File\FileManipulator;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 
@@ -33,28 +34,6 @@ class ThemeManager extends AddonManager
         return $processor->processConfiguration($theme, ['theme' => $config]);
     }
 
-    public function getImage(string $objectName): array
-    {
-        $imagePathWithoutExt = $this->getDir() . '/' . $objectName . '/preview';
-
-        $ext = null;
-        if (is_file($imagePathWithoutExt . '.png')) {
-            $ext = 'png';
-        } else if (is_file($imagePathWithoutExt . '.jpg')) {
-            $ext = 'jpg';
-        }
-
-        if (null !== $ext) {
-            $sourceFile = $imagePathWithoutExt . '.' . $ext;
-            $targetFile = $this->sf->get('pathGetter')->getPublicDir() . '/' . $sourceFile;
-            $this->sf->get('file')->copy($sourceFile, $targetFile);
-
-            $ext = $sourceFile;
-        }
-
-        return ['previewUrl' => $ext];
-    }
-
     public function getDir(): string
     {
         return $this->sf->get('pathGetter')->getThemesDir();
@@ -63,6 +42,14 @@ class ThemeManager extends AddonManager
     public function getType(): string
     {
         return 'theme';
+    }
+
+    public function getImage(string $objectName): ?BinaryFileResponse
+    {
+        if (file_exists($this->sf->get('pathGetter')->getThemesDir() . '/' . $objectName . "/preview.jpg")) {
+            return new BinaryFileResponse($this->sf->get('pathGetter')->getThemesDir() . '/' . $objectName . "/preview.jpg");
+        }
+        return null;
     }
 
     public function active(string $themeName): ThemeEntity

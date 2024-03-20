@@ -88,10 +88,10 @@ class ModuleController extends AdminController
         return $this->view($module, Response::HTTP_OK);
     }
 
-    #[Rest\Get('/modules/moduleImage/{moduleName}', requirements: ['moduleName' => '.+'])]
+    #[Rest\Get('/modules/module-image/{moduleName}', requirements: ['moduleName' => '.+'])]
     public function getModuleImage(Request $request, string $moduleName)
     {
-        $result = $this->mf->get("module")->getModuleImage($moduleName, true);
+        $result = $this->mf->get("module")->getImage($moduleName);
 
         if (null !== $result) {
             $result->headers->set('Content-Type', 'image/png');

@@ -15,8 +15,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 #[Rest\Route('/api')]
 class ThemeController extends AdminController
@@ -93,5 +95,23 @@ class ThemeController extends AdminController
         }
 
         return $this->view(null, Response::HTTP_OK);
+    }
+
+    #[Rest\Get('/themes/theme-image/{themeName}', requirements: ['themeName' => '.+'])]
+    public function getModuleImage(Request $request, string $themeName)
+    {
+        $result = $this->mf->get("theme")->getImage($themeName);
+
+        if (null !== $result) {
+            $result->headers->set('Content-Type', 'image/png');
+            $result->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE,
+                'module' . $themeName . 'image.png'
+            );
+
+            return $result;
+        }
+
+        return new JsonResponse(null, 200);
     }
 }

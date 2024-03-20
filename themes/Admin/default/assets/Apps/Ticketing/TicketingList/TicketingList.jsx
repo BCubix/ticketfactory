@@ -168,7 +168,7 @@ const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog,
         <Grid container spacing={4}>
             {listCrud?.dataList(objectData)?.map((item, index) => (
                 <Grid item xs={12} md={6} lg={4} key={index}>
-                    <Component.CmtCard sx={{ border: '1px solid #dadada' }}>
+                    <Component.CmtCard sx={{ backgroundColor: `${theme.palette.secondary.light} !important` }}>
                         <Box sx={{ position: 'relative', display: 'flex', padding: 3 }}>
                             <Avatar src={`/admin/api/modules/moduleImage/${item?.module?.name}`} />
                             <Box pl={4}>

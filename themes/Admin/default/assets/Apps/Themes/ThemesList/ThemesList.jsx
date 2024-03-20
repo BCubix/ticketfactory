@@ -110,7 +110,13 @@ export const ThemesList = () => {
                                     overflow="hidden"
                                     key={index}
                                 >
-                                    <CardMedia component="img" alt="preview" height={250} image={theme.previewUrl} sx={{ objectFit: 'cover', objectPosition: 'top' }} />
+                                    <CardMedia
+                                        component="img"
+                                        alt="preview"
+                                        height={250}
+                                        image={`/admin/api/themes/theme-image/${theme.name}`}
+                                        sx={{ objectFit: 'cover', objectPosition: 'top' }}
+                                    />
                                     <CardContent>
                                         <Typography variant="h5" fontSize={15} align={'center'}>
                                             {theme.name}

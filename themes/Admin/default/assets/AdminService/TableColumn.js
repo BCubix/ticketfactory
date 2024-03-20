@@ -12,7 +12,7 @@ const TableColumnObj = {
             width: '7%',
             renderFunction: (item) => {
                 try {
-                    return <Avatar src={`/admin/api/modules/moduleImage/${item.name}`} />;
+                    return <Avatar src={`/admin/api/modules/module-image/${item.name}`} />;
                 } catch (e) {}
 
                 return (

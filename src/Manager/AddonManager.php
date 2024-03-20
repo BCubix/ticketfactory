@@ -9,6 +9,7 @@ use App\Kernel;
 use App\Service\ServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AddonManager extends AbstractManager
@@ -39,13 +40,13 @@ abstract class AddonManager extends AbstractManager
     public abstract function getConfiguration(string $objectName): array;
 
     /**
-     * Get image and copy it in public directory.
+     * Get image.
      *
      * @param string $objectName
      *
      * @return array
      */
-    public abstract function getImage(string $objectName): array;
+    public abstract function getImage(string $objectName): ?BinaryFileResponse;
 
     /**
      * Return the path to the main directory where modules / themes are stored.
@@ -164,7 +165,7 @@ abstract class AddonManager extends AbstractManager
         $paths = glob($this->getDir() . '/*', GLOB_ONLYDIR);
         foreach ($paths as $path) {
             $objectName = basename($path);
-            $object = array_merge($this->getConfiguration($objectName), $this->getImage($objectName));
+            $object = $this->getConfiguration($objectName);
 
             if (isset($object['display_name'])) {
                 $object['displayName'] = $object['display_name'];
@@ -216,7 +217,7 @@ abstract class AddonManager extends AbstractManager
      * Clear cache and refresh project.
      *
      * @param bool $clearAssets
-     * 
+     *
      * @return void
      * @throws \Exception
      */
