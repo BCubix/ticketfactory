@@ -32,12 +32,15 @@ export const menusCreateForm = {
         validationSchema: menusCreateValidationSchema,
     },
     submitLine: {
-        activeInput: false,
+        activeInput: true,
+        activeLabel: 'Menu actif ?',
     },
     api: {
         dataFields: {
             name: { type: 'string' },
             menuType: { type: 'string' },
+            active: { type: 'boolean' },
+            noFollow: { type: 'boolean' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
         },

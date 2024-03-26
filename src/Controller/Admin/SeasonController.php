@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Event\Season;
 use App\Form\Admin\Event\SeasonType;
-use App\Form\Admin\Filters\FilterSeasonType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
