@@ -8,6 +8,7 @@ export const deserializationApi = {
     multipleList: (value) => value || '',
     Page: (value) => value?.id || value || '',
     Room: (value) => value?.id || value || '',
+    Category: (value) => value?.id || value || '',
     Season: (value) => value?.id || value || '',
     string: (value) => value || '',
     upload: (value) => value || '',
