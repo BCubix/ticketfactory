@@ -7,21 +7,29 @@ use App\Entity\Event\EventCategory;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
 use App\Entity\Language\Language;
-
+use App\Entity\Page\Page;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends WebsiteController
 {
-    public function generateHeader(): Response
+    public function generateHeader(?Page $page): Response
     {
-        $route = $this->rs->getMainRequest()->get('_route');
         $menus = $this->mf->get('menuEntry')->getAllMenus();
+        $route = $this->rs->getMainRequest()->get('_route');
+        $slugs    = $this->rs->getMainRequest()->get('slugs');
+        $homePage = ($slugs == "");
+
+        if (null !== $page && $slugs == $page->getSlug()) {
+            $homePage = ($page->getKeyword() == 'home');
+        }
 
         return $this->websiteRender('_partials/header.html.twig', [
             'route'   => $route,
             'locale'  => $this->getLocale(),
             'menus'   => $menus,
+            'page'    => $page,
+            'homePage' => $homePage,
         ]);
     }
 

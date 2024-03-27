@@ -66,15 +66,15 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, prefixNa
                 <FormControlLabel
                     control={
                         <Component.CmtTextField
-                            value={values.validations.min}
+                            value={values.validations.lessThan}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            name={`${prefixName}fields.${index}.validations.min`}
-                            error={errors?.validations?.min}
+                            name={`${prefixName}fields.${index}.validations.lessThan`}
+                            error={errors?.validations?.lessThan}
                             type="number"
                         />
                     }
-                    label={'Valeur minimum'}
+                    label={'Plus petit que'}
                     labelPlacement="start"
                 />
             </Component.FieldFormControl>
@@ -83,15 +83,49 @@ const Validations = ({ values, errors, index, handleChange, handleBlur, prefixNa
                 <FormControlLabel
                     control={
                         <Component.CmtTextField
-                            value={values.validations.max}
+                            value={values.validations.lessThanOrEqual}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            name={`${prefixName}fields.${index}.validations.max`}
-                            error={errors?.validations?.max}
+                            name={`${prefixName}fields.${index}.validations.lessThanOrEqual`}
+                            error={errors?.validations?.lessThanOrEqual}
                             type="number"
                         />
                     }
-                    label={'Valeur maximum'}
+                    label={'Plus petit ou égal à'}
+                    labelPlacement="start"
+                />
+            </Component.FieldFormControl>
+
+            <Component.FieldFormControl fullWidth>
+                <FormControlLabel
+                    control={
+                        <Component.CmtTextField
+                            value={values.validations.greaterThan}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name={`${prefixName}fields.${index}.validations.greaterThan`}
+                            error={errors?.validations?.greaterThan}
+                            type="number"
+                        />
+                    }
+                    label={'Plus grand que'}
+                    labelPlacement="start"
+                />
+            </Component.FieldFormControl>
+
+            <Component.FieldFormControl fullWidth>
+                <FormControlLabel
+                    control={
+                        <Component.CmtTextField
+                            value={values.validations.greaterThanOrEqual}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name={`${prefixName}fields.${index}.validations.greaterThanOrEqual`}
+                            error={errors?.validations?.greaterThanOrEqual}
+                            type="number"
+                        />
+                    }
+                    label={'Plus grand ou égale à'}
                     labelPlacement="start"
                 />
             </Component.FieldFormControl>
@@ -113,7 +147,7 @@ const setInitialValues = (prefixName, setFieldValue) => {
 
 const getInitialValues = () => ({
     options: { required: false, disabled: false, scale: '' },
-    validations: { min: '', max: '' },
+    validations: { lessThan: '', lessThanOrEqual: '', greaterThan: '', greaterThanOrEqual: '' },
 });
 
 export default {
