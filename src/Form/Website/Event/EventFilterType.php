@@ -59,7 +59,7 @@ class EventFilterType extends WebsiteBaseFormType
                 'class'         => EventCategory::class,
                 'choice_label'  => 'name',
                 'multiple'      => true,
-                'expanded'      => false,
+                'expanded'      => true,
                 'placeholder'   => "Toutes les catégories",
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
