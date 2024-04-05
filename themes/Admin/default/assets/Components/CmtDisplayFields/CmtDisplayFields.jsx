@@ -64,8 +64,8 @@ const TypeObj = {
     selectField: ({ listName, values, touched, errors, setFieldValue, ...props }) => (
         <Component.CmtSelectField
             {...props}
-            value={props[listName] && props[listName].length > 0 ? values[getName(props)] : ''}
-            errors={touched[getName(props)] && errors[getName(props)]}
+            value={props[listName] && props[listName].length > 0 ? getPropByString(values, `${props.baseName || ''}${getName(props)}`) : ''}
+            errors={getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
             list={props[listName] ? props[listName] : []}
             name={`${props.baseName || ''}${getName(props)}`}
             setFieldValue={setFieldValue}
