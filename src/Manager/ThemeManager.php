@@ -78,7 +78,7 @@ class ThemeManager extends AddonManager
 
         $settings = $this->getConfiguration($themeName)['settings'];
         if (isset($settings["parameters"])) {
-            $this->addParameters($themeName, $settings["parameters"]);
+            $this->addParameters('theme', $themeName, $settings["parameters"]);
         }
 
         // Apply configs : disable old theme config and enable new theme config
@@ -89,7 +89,7 @@ class ThemeManager extends AddonManager
 
             $settings = $this->getConfiguration($mainThemeName)['settings'];
             if (isset($settings["parameters"])) {
-                $this->removeParameters($mainThemeName, $settings["parameters"]);
+                $this->removeParameters('theme', $mainThemeName, $settings["parameters"]);
             }
         }
 

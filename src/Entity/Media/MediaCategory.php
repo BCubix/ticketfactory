@@ -24,7 +24,7 @@ class MediaCategory extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_one', 'a_media_category_all', 'a_media_category_one'])]
+    #[JMS\Groups(['a_all', 'a_media_one', 'a_media_category_all', 'a_media_category_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]

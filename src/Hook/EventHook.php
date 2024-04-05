@@ -43,4 +43,17 @@ class EventHook extends Hook
             }
         }
     }
+
+    public function hookDisplayEventMediaCategory(HookEvent $event)
+    {
+        $params = $event->getParams();
+        $category = $params['category'] ?? null;
+        $event = $params['event'] ?? null;
+
+        if (null === $category || null === $event) {
+            return;
+        }
+
+        /* TODO */
+    }
 }

@@ -8,7 +8,8 @@ export const serializationApi = {
     multipleList: (value) => value || '',
     Page: (value) => value?.id || value || '',
     Room: (value) => value?.id || value || '',
-    Category: (value) => value?.id || value || '',
+    EventCategory: (value) => value?.id || value || '',
+    MediaCategory: (value) => value?.id || value || '',
     Season: (value) => value?.id || value || '',
     string: (value) => value || '',
     upload: (value) => value || '',
@@ -24,5 +25,6 @@ export const getSerializationApiValue = (type, value) => {
         return value || '';
     }
 
+    console.log(type, value);
     return Crud?.parameters?.edit?.serializationApi[type](value);
 };

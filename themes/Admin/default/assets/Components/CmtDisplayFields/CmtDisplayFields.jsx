@@ -141,7 +141,14 @@ const TypeObj = {
                                         <DeleteIcon />
                                     </Component.DeleteBlockFabButton>
 
-                                    <Component.CmtDisplayFields {...props} values={values} fields={props?.fields} baseName={`${props.baseName || ''}${getName(props)}.${index}.`} />
+                                    <Grid container spacing={4}>
+                                        <Component.CmtDisplayFields
+                                            {...props}
+                                            values={values}
+                                            fields={props?.fields}
+                                            baseName={`${props.baseName || ''}${getName(props)}.${index}.`}
+                                        />
+                                    </Grid>
                                 </Box>
                             </Component.CmtFormBlock>
                         ))}

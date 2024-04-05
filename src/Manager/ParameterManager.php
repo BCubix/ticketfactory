@@ -3,9 +3,11 @@
 namespace App\Manager;
 
 use App\Entity\Event\Event;
+use App\Entity\Event\EventCategory;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Media\Media;
+use App\Entity\Media\MediaCategory;
 use App\Entity\Page\Page;
 use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
@@ -50,7 +52,12 @@ class ParameterManager extends AbstractManager
 
     public function getModuleParameter(string $objectName, string $key): mixed
     {
-        return $this->getParameterValue($this->getParameter($objectName . '_' . $key));
+        return $this->getParameterValue($this->getParameter('module_' . $objectName . '_' . $key));
+    }
+
+    public function getThemeParameter(string $objectName, string $key): mixed
+    {
+        return $this->getParameterValue($this->getParameter('theme_' . $objectName . '_' . $key));
     }
 
     public function getCoreParameter(string $key): mixed
@@ -121,6 +128,12 @@ class ParameterManager extends AbstractManager
 
             case 'Room':
                 return $this->em->getRepository(Room::class)->findOneForAdmin($value);
+
+            case 'EventCategory':
+                return $this->em->getRepository(EventCategory::class)->findOneForAdmin($value);
+
+            case 'MediaCategory':
+                return $this->em->getRepository(MediaCategory::class)->findOneForAdmin($value);
 
             case 'string':
             default:

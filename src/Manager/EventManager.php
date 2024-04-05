@@ -329,6 +329,7 @@ class EventManager extends AbstractManager
 
         return $medias;
     }
+
     public function getEventDatesFromEvent(Event $event): ?array
     {
         $eventDates = $this->em->getRepository(EventDate::class)->findAllByEventForWebsite($event->getId());

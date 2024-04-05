@@ -25,6 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Event extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: Feedback ***/
+    use \TicketFactory\Module\Feedback\Entity\Traits\Event\EventTrait;
+    /*** < Module: Feedback ***/
     /*** < Trait ***/
 
     use SEOAble;
@@ -151,6 +154,8 @@ class Event extends Datable
 
     public function __construct()
     {
+        /*** > Module: Feedback ***/
+        /*** < Module: Feedback ***/
         /*** > Module: EventArticle ***/
         $this->eventArticles = new ArrayCollection();
         /*** < Module: EventArticle ***/

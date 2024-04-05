@@ -12,7 +12,7 @@ import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlic
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getDefaultParentPath } from '@Services/utils/getDefaultParentPath';
 
-const TYPE = 'Category';
+const TYPE = 'MediaCategory';
 
 function getType() {
     return TYPE;
@@ -61,9 +61,9 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFi
         }
 
         apiMiddleware(dispatch, async () => {
-            Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((result) => {
+            Api.mediaCategoriesApi.getMediaCategories({ lang: defaultLanguageId }).then((result) => {
                 if (result.result) {
-                    setList(result.categories);
+                    setList(result.mediaCategories);
                     return;
                 }
 

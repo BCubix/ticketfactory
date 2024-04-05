@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
-
+use App\Service\File\MimeTypeMapping;
 use Symfony\Component\HttpFoundation\File\File;
 
 class MediaManager extends AbstractManager
@@ -137,5 +137,37 @@ class MediaManager extends AbstractManager
         }
 
         return null;
+    }
+
+    public function getPaginatedMedias(array $filters): array
+    {
+        $filtersBase = [
+            'filters'    => [],
+            'categories' => [],
+            'page'       => 1,
+            'limit'      => 15,
+            'sort'       => 'm.beginDate DESC, m.endDate DESC, m.createdAt '
+        ];
+
+        foreach ($filtersBase as $filterName => $filterValue) {
+            if (isset($filters[$filterName])) {
+                $filtersBase[$filterName] = $filters[$filterName];
+            }
+        }
+
+        return $this->em->getRepository(Media::class)->findPaginatedForWebsite($filtersBase);
+    }
+
+    public function getMediaBySlug(string $slug)
+    {
+        return $this->em->getRepository(Media::class)->findBySlugForWebsite($slug);
+    }
+
+    public function getSearch(string $search)
+    {
+        $mimes = MimeTypeMapping::getMimesFromType('Vidéo');
+        $mimes = array_merge($mimes, MimeTypeMapping::getMimesFromType('Audio'));
+
+        return $this->em->getRepository(Media::class)->findSearchForWebsite($search, $mimes);
     }
 }

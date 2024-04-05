@@ -165,7 +165,7 @@ class ModuleManager extends AddonManager
 
                     $settings = $this->getConfiguration($moduleName)['settings'];
                     if ($action == ModuleEntity::ACTION_INSTALL && isset($settings["parameters"])) {
-                        $this->addParameters($moduleName, $settings["parameters"]);
+                        $this->addParameters('module', $moduleName, $settings["parameters"]);
                     }
 
                     break;
@@ -181,7 +181,7 @@ class ModuleManager extends AddonManager
 
                     $settings = $this->getConfiguration($moduleName)['settings'];
                     if (isset($settings["parameters"])) {
-                        $this->removeParameters($moduleName, $settings["parameters"]);
+                        $this->removeParameters('module', $moduleName, $settings["parameters"]);
                     }
 
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false

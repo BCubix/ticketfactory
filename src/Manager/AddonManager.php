@@ -255,14 +255,14 @@ abstract class AddonManager extends AbstractManager
         }
     }
 
-    protected function addParameters(string $moduleName, ?array $parameters): void
+    protected function addParameters(string $type, string $moduleName, ?array $parameters): void
     {
         if (null === $parameters || count($parameters) === 0) {
             return;
         }
 
         foreach ($parameters as $key => $parameter) {
-            $parameterKey = $moduleName . '_' . $key;
+            $parameterKey = $type . '_' . $moduleName . '_' . $key;
 
             if (null === $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($parameterKey)) {
                 $newParameter = new Parameter();
@@ -294,10 +294,10 @@ abstract class AddonManager extends AbstractManager
         $this->em->flush();
     }
 
-    protected function removeParameters(string $objectName, array $parameters): void
+    protected function removeParameters(string $type, string $objectName, array $parameters): void
     {
         foreach ($parameters as $key => $parameter) {
-            $storedParameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($objectName . '_' . $key);
+            $storedParameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($type . '_' . $objectName . '_' . $key);
 
             if (null !== $storedParameter) {
                 $this->em->remove($storedParameter);

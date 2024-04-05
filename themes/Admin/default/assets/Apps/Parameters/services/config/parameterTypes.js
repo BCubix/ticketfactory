@@ -13,7 +13,8 @@ import DefaultPriceParameterType from '@Apps/Parameters/ParametersForm/Parameter
 import PasswordParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/PasswordParameterType';
 import RequestButtonParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/RequestButtonParameterType';
 import FloatParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/FloatParameterType';
-import CategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/CategoryParameterType';
+import EventCategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/EventCategoryParameterType';
+import MediaCategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/MediaCategoryParameterType';
 
 export const parameterTypes = {
     bool: BooleanParameterType,
@@ -22,7 +23,8 @@ export const parameterTypes = {
     list: ListParameterType,
     multipleList: MultipleListParameterType,
     Page: PageParameterType,
-    Category: CategoryParameterType,
+    EventCategory: EventCategoryParameterType,
+    MediaCategory: MediaCategoryParameterType,
     Room: RoomParameterType,
     Season: SeasonParameterType,
     string: StringParameterType,

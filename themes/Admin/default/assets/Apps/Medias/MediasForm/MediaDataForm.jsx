@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Grid, InputLabel, FormControl, FormControlLabel, Checkbox } from '@mui/material';
+import { Button, Grid, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getMediaType } from '@Services/utils/getMediaType';
-import { useDispatch, useSelector } from 'react-redux';
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Api } from '@/AdminService/Api';
 
 const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors, touched, handleBlur, mediaType, setEditImage }) => (
     <Grid container spacing={4} sx={{ marginTop: 3 }}>
-        <Grid item xs={12} sm={6} container spacing={4}>
+        <Grid item xs={12} sm={6} md={4} container spacing={4}>
             <Grid item xs={12}>
                 <InputLabel sx={{ fontSize: 12 }}>Aperçu</InputLabel>
                 <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -24,10 +21,19 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Component.CmtDisplayMediaMeta selectedMedia={media} />
+                <Component.CmtImage
+                    label="Vignette"
+                    id={`thumbnail`}
+                    name={`thumbnail`}
+                    image={values.thumbnail}
+                    setFieldValue={setFieldValue}
+                    touched={touched?.thumbnail}
+                    errors={errors?.thumbnail}
+                    width={'100%'}
+                />
             </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} container spacing={4}>
+        <Grid item xs={12} sm={6} md={8} container spacing={4}>
             <Grid item xs={12}>
                 <Component.CmtTextField
                     value={values.title}
@@ -111,6 +117,7 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                 legend: media?.legend || '',
                 active: media?.active || false,
                 mainCategory: media?.mainCategory?.id || '',
+                thumbnail: media?.thumbnail || null,
                 documentType: media?.documentType || '',
                 mediaCategories: media?.mediaCategories ? media?.mediaCategories?.map((el) => el.id) : [],
                 realThumbnail: media?.realThumbnail || '',
