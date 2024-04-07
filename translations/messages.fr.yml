@@ -30,6 +30,7 @@ global.social-description: 'Découvrez la nouvelle saison 2021-22 et abonnez-vou
 global.view: Consulter
 global.accessibility: Accessibilite
 global.season: Saison
+global.see-all-season: Voir toute la saison
 
 # Menu
 menu.menu: Menu
@@ -57,7 +58,7 @@ home.last-places: Dernières places
 home.all_videos: Toutes les videos
 home.all_articles: Tous les articles
 home.follow_us: Suivez-nous
-home.subscribe-1: Inscrivez-vous
+home.subscribe-1: S'inscrire
 home.subscribe-2: à la newsletter
 home.corona.title: Le TCE chez vous
 home.corona.content: Pendant la période de confinement et en attendant d'avoir le plaisir de vous retrouver, nous vous proposons chaque semaine de (re)voir et (re)écouter quelques-uns des moments forts qui ont eu lieu sur la scène du Théâtre.
@@ -73,6 +74,7 @@ event.share-on: Partager sur
 event.dates: Dates
 event.prices: Tarifs
 event.categories: Catégories
+event.category: Catégorie
 event.free: GRATUIT
 event.subscribe: Abonnez-vous
 event.know-more: En savoir +
@@ -81,6 +83,13 @@ event.read-more: Lire la suite
 event.press: La presse en parle
 event.linked: Vous aimerez aussi
 event.back-to: Revenir a la saison
+event.history: L'histoire
+event.distribution: DISTRIBUTION ET CRÉDITS
+event.reservation: Réservation
+event.duration: Durée
+event.location: Lieu
+event.reserve-seats: Réserver mes places
+event.social-network-share: Partager sur les réseaux
 
 event.room-program: Programme de salle
 event.room-map: Plan de salle
@@ -174,3 +183,5 @@ cart.addVoucher: Ajouter
 performer.focus: Focus sur
 
 event-category.title: Évènements
+
+related-event.title: Vous aimerez aussi

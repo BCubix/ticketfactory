@@ -30,6 +30,7 @@ global.social-description: 'Discover 2021-2022 new season and subscribe online. 
 global.view: View
 global.accessibility: Accessibility
 global.season: Season
+global.see-all-season: See the season
 
 # Menu
 menu.menu: Menu
@@ -73,6 +74,7 @@ event.share-on: Share on
 event.dates: Dates
 event.prices: Prices
 event.categories: Categories
+event.category: Category
 event.free: FREE
 event.subscribe: Subscribe
 event.know-more: Learn more
@@ -80,6 +82,13 @@ event.read-more: Read more
 event.press: In the press
 event.linked: You may also like
 event.back-to: Back to season
+event.history: History
+event.distribution: DISTRIBUTION AND CREDITS
+event.reservation: Booking
+event.duration: Duration
+event.location: Location
+event.reserve-seats: Book my places
+event.social-network-share: Share on social networks
 
 event.room-program: Programme book
 event.room-map: Seating plan
@@ -172,3 +181,5 @@ cart.addVoucher: Add
 performer.focus: Focus on
 
 event-category.title: Events
+
+related-event.title: You will also like
