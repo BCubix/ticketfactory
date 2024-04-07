@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 class EventRepository extends CrudRepository
 {
     /*** > Trait ***/
+    /*** > Module: Search ***/
+    use \TicketFactory\Module\Search\Repository\Override\EventRepository;
+    /*** < Module: Search ***/
     /*** > Module: EventCategory ***/
     use \TicketFactory\Module\EventCategory\Repository\Override\EventRepository;
     /*** < Module: EventCategory ***/

@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 class ContentRepository extends CrudRepository
 {
     /*** > Trait ***/
+    /*** > Module: Search ***/
+    use \TicketFactory\Module\Search\Repository\Override\ContentRepository;
+    /*** < Module: Search ***/
     /*** < Trait ***/
 
     protected const SELECTS = [

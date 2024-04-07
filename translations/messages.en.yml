@@ -48,6 +48,7 @@ breadcrumb.calendar: Calendar
 breadcrumb.contact: Contact
 
 # Home
+home.discover: Discover
 home.new-season: New season
 home.all-season: All season
 home.whats_on: What's on
@@ -71,6 +72,7 @@ event.blog: Read
 event.share-on: Share on
 event.dates: Dates
 event.prices: Prices
+event.categories: Categories
 event.free: FREE
 event.subscribe: Subscribe
 event.know-more: Learn more
@@ -166,3 +168,7 @@ cart.subtotal: Subtotal
 cart.total: Total
 cart.haveVoucher: Do you have a voucher ?
 cart.addVoucher: Add
+
+performer.focus: Focus on
+
+event-category.title: Events

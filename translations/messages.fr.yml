@@ -48,6 +48,7 @@ breadcrumb.calendar: Calendrier
 breadcrumb.contact: Contact
 
 # Home
+home.discover: Découvrir
 home.new-season: Nouvelle saison
 home.all-season: Toute la saison
 home.whats_on: A l'affiche
@@ -71,9 +72,11 @@ event.blog: Lire
 event.share-on: Partager sur
 event.dates: Dates
 event.prices: Tarifs
+event.categories: Catégories
 event.free: GRATUIT
 event.subscribe: Abonnez-vous
-event.know-more: En savoir plus
+event.know-more: En savoir +
+event.book: Réserver
 event.read-more: Lire la suite
 event.press: La presse en parle
 event.linked: Vous aimerez aussi
@@ -167,3 +170,7 @@ cart.subtotal: Sous-total
 cart.total: Total
 cart.haveVoucher: Vous avez un code promo ?
 cart.addVoucher: Ajouter
+
+performer.focus: Focus sur
+
+event-category.title: Évènements

@@ -3,6 +3,7 @@ import { NotificationManager } from 'react-notifications';
 import { FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Switch, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, formCrud, module, title, ...props }) => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
         } else {
             NotificationManager.error("La billetterie n'a pas été trouvé.", 'Erreur', Constant.REDIRECTION_TIME);
             navigate(Constant.TICKETING_BASE_PATH);
-            return;
+            return {};
         }
 
         return available;
@@ -29,7 +30,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
         } else {
             NotificationManager.error("La billetterie n'a pas été trouvé.", 'Erreur', Constant.REDIRECTION_TIME);
             navigate(Constant.TICKETING_BASE_PATH);
-            return;
+            return {};
         }
 
         return options;
