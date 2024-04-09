@@ -4,7 +4,7 @@ namespace App\Controller\Website;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Page\Page;
-use App\Service\Sort\EventSorter;
+
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -21,7 +21,7 @@ class EventCategoryController extends WebsiteController
         }
 
         $events = $this->mf->get('event')->getEvents(['category' => [$eventCategory->getId()]]);
-        $events = EventSorter::sortEvents($events, true);
+        $events = $this->mf->get('eventSorter')->sortEvents($events, true);
 
         $pageContent = [];
         if (null !== $page) {

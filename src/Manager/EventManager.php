@@ -13,7 +13,6 @@ use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
 use App\Service\File\MimeTypeMapping;
-use App\Service\Sort\EventSorter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -96,19 +95,19 @@ class EventManager extends AbstractManager
                     break;
 
                 case 'year':
-                    if ($event->getBeginDate()->format('Y') !== $value) {
+                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('Y') !== $value) {
                         return null;
                     }
                     break;
 
                 case 'month':
-                    if ($event->getBeginDate()->format('m') !== $value) {
+                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('m') !== $value) {
                         return null;
                     }
                     break;
 
                 case 'day':
-                    if ($event->getBeginDate()->format('d') !== $value) {
+                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('d') !== $value) {
                         return null;
                     }
                     break;
@@ -178,7 +177,7 @@ class EventManager extends AbstractManager
 
         $events = $this->getEvents($filters);
 
-        return EventSorter::sortEvents($events, true, $sortField, $sortOrder);
+        return $this->mf->get('eventSorter')->sortEvents($events, true, $sortField, $sortOrder);
     }
 
     public function getUrlSlugs(Event $event): array
@@ -190,9 +189,9 @@ class EventManager extends AbstractManager
             '%category%' => fn ($event) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() : '',
             '%season%' => fn ($event) => $event->getSeason() ? $event->getSeason()->getSlug() : '',
             '%room%' => fn ($event) => $event->getRoom() ? $event->getRoom()->getSlug() : '',
-            '%year%' => fn ($event) => $event->getBeginDate()->format('Y'),
-            '%month%' => fn ($event) => $event->getBeginDate()->format('m'),
-            '%day%' => fn ($event) => $event->getBeginDate()->format('d'),
+            '%year%' => fn ($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y'),
+            '%month%' => fn ($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m'),
+            '%day%' => fn ($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d'),
         ];
 
         foreach ($eventUrlConstruct as $key => $fn) {
@@ -268,18 +267,18 @@ class EventManager extends AbstractManager
                 return '';
 
             case 1:
-                return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format));
+                return (DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getBeginDate($event), $this->getLocale(), $format));
 
             case 2:
-                return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
+                return (DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getBeginDate($event), $this->getLocale(), $format) . ' ' .
                     $this->tr->trans('global.and') . ' ' .
-                    DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
+                    DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getEndDate($event), $this->getLocale(), $format)
                 );
 
             default:
-                return (DateTimeFormatter::formatDate($event->getBeginDate(), $this->getLocale(), $format) . ' ' .
+                return (DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getBeginDate($event), $this->getLocale(), $format) . ' ' .
                     $this->tr->trans('global.to') . ' ' .
-                    DateTimeFormatter::formatDate($event->getEndDate(), $this->getLocale(), $format)
+                    DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getEndDate($event), $this->getLocale(), $format)
                 );
         }
     }
@@ -430,7 +429,7 @@ class EventManager extends AbstractManager
         }
 
         $now = new \Datetime();
-        if ($now > $event->getEndDate()) {
+        if ($now > $this->mf->get('eventSorter')->getEndDate($event)) {
             return false;
         }
 

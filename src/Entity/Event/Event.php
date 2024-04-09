@@ -8,7 +8,6 @@ use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
 use App\Entity\Ticketing\Ticketing;
 use App\Repository\EventRepository;
-use App\Service\Sort\EventSorter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -464,34 +463,6 @@ class Event extends Datable
         }
 
         return $this;
-    }
-
-    /**
-     * Renvoie la première date de représentation de l'événement
-     *
-     * @return EventDate
-     */
-    #[JMS\Expose()]
-    #[JMS\VirtualProperty()]
-    #[JMS\SerializedName("beginDate")]
-    #[JMS\Groups(['a_event_all', 'a_event_one'])]
-    public function getBeginDate($objectString = EventSorter::STRING_DATE)
-    {
-        return EventSorter::getReferenceDate($this, EventSorter::FIRST_DATE, $objectString);
-    }
-
-    /**
-     * Renvoie la dernière date de représentation du spectacle
-     *
-     * @return Datetime
-     */
-    #[JMS\Expose()]
-    #[JMS\VirtualProperty()]
-    #[JMS\SerializedName("endDate")]
-    #[JMS\Groups(['a_event_all', 'a_event_one'])]
-    public function getEndDate($objectString = EventSorter::STRING_DATE)
-    {
-        return EventSorter::getReferenceDate($this, EventSorter::LAST_DATE, $objectString);
     }
 
     #[ORM\PrePersist]

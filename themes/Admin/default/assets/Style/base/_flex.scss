@@ -4,12 +4,16 @@
     &.row-end {
         justify-content: flex-end;
     }
-    
+
     &.row-between {
         justify-content: space-between;
     }
 
     &.row-center {
         justify-content: center;
+    }
+
+    &.wrap {
+        flex-wrap: wrap;
     }
 }

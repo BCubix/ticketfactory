@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Service\Sort;
+namespace App\Manager;
 
+use App\Entity\Event\Event;
+use App\Manager\AbstractManager;
 use App\Service\Formatter\DateTimeFormatter;
+use DateInterval;
 
-class EventSorter
+class EventSorterManager extends AbstractManager
 {
     public const SERVICE_NAME = 'eventSorter';
 
@@ -17,7 +20,7 @@ class EventSorter
     public const MIN_MONTH_DATE = 3;
     public const MAX_MONTH_DATE = 12;
 
-    public static function getNextMonths(\DateTime $today): array
+    public function getNextMonths(\DateTime $today): array
     {
         $months = [];
         $currentMonth = clone $today;
@@ -36,7 +39,7 @@ class EventSorter
         return $months;
     }
 
-    public static function getReferenceDate($event, $firstLastDate = self::FIRST_DATE, $objectString = self::OBJECT_DATE): mixed
+    public function getReferenceDate($event, $firstLastDate = self::FIRST_DATE, $objectString = self::OBJECT_DATE): mixed
     {
         $dates = [];
         foreach ($event->getEventDateBlocks() as $dateBlock) {
@@ -67,7 +70,7 @@ class EventSorter
                 ($firstLastDate == self::LAST_DATE && ($referenceDateVal === null || $referenceDateVal < $currentDate))
             ) {
                 $referenceDateVal = $currentDate;
-                $referenceDate = $date;
+                $referenceDate = clone $date;
             }
         }
 
@@ -88,31 +91,52 @@ class EventSorter
         return ($objectString == self::OBJECT_DATE ? $referenceDate : $referenceDateVal);
     }
 
-    public static function sortEvents($events, $withActiveSort = false, $sortField = 'beginDate', $sortOrder = 'ASC'): array
+    public function sortEvents($events, $withActiveSort = false, $sortField = 'beginDate', $sortOrder = 'ASC'): array
     {
         if (null === $events) {
             return null;
         }
 
         usort($events, function ($a, $b) use ($sortField, $sortOrder) {
-            return self::compareEvents($a, $b, $sortField, $sortOrder);
+            return $this->compareEvents($a, $b, $sortField, $sortOrder);
         });
 
         if ($withActiveSort) {
-            return self::sortActiveEvents($events);
+            return $this->sortActiveEvents($events);
         }
 
         return $events;
     }
 
-    private static function sortActiveEvents($events): array
+    public function getBeginDate(Event $event, $objectString = self::STRING_DATE)
     {
+        return $this->getReferenceDate($event, self::FIRST_DATE, $objectString);
+    }
+
+    public function getEndDate(Event $event, $objectString = self::STRING_DATE)
+    {
+        return $this->getReferenceDate($event, self::LAST_DATE, $objectString);
+    }
+
+    public function isEventOver($event): bool
+    {
+        $additionalTime = $this->mf->get('parameter')->getCoreParameter('event_additional_time') ?? 0;
+        $endDate = clone $this->getEndDate($event);
+
+        $endDate->add(new DateInterval('PT' . $additionalTime . 'H'));
+
+        return $endDate < new \DateTime();
+    }
+
+    private function sortActiveEvents($events): array
+    {
+        $additionalTime = $this->mf->get('parameter')->getCoreParameter('event_additional_time') ?? 0;
         $sortedEvents = ['active' => [], 'inactive' => []];
 
         $now = new \Datetime();
         foreach ($events as $event) {
-            $end = clone $event->getEndDate();
-            $end->add(new \DateInterval('P1D'))->setTime(0, 0, 0);
+            $end = clone $this->getEndDate($event);
+            $end->add(new \DateInterval('PT' . $additionalTime . 'H'));
 
             if ($now < $end) {
                 array_push($sortedEvents['active'], $event);
@@ -124,18 +148,18 @@ class EventSorter
         return $sortedEvents;
     }
 
-    private static function getSortList(): array
+    private function getSortList(): array
     {
         return [
             'name' => [fn ($element) => $element->getName()],
-            'beginDate' => [fn ($element) => $element->getBeginDate()]
+            'beginDate' => [fn ($element) => $this->getBeginDate($element)]
         ];
     }
 
-    private static function compareEvents($a, $b, $sortField, $sortOrder)
+    private function compareEvents($a, $b, $sortField, $sortOrder)
     {
         $sortDirection = $sortOrder === "ASC" ? 1 : -1;
-        $sortList = self::getSortList();
+        $sortList = $this->getSortList();
 
         $compareA = $sortList[$sortField][0]($a);
         $compareB = $sortList[$sortField][0]($b);
@@ -147,11 +171,11 @@ class EventSorter
         if ($compareA == $compareB) {
             return 0;
         }
-        
+
         if ($compareA > $compareB) {
             return $sortDirection;
         }
-        
+
         return $sortDirection * -1;
     }
 }

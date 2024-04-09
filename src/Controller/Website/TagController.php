@@ -4,7 +4,6 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 use App\Entity\Event\Tag;
-use App\Service\Sort\EventSorter;
 
 class TagController extends WebsiteController
 {
@@ -23,7 +22,7 @@ class TagController extends WebsiteController
             throw $this->createNotFoundException('This tag does not exist.');
         }
 
-        $events = EventSorter::sortEvents($tag->getEvents()->toArray());
+        $events = $this->mf->get('eventSorter')->sortEvents($tag->getEvents()->toArray());
 
         return $this->websiteRender('Tag/index.html.twig', [
             'page'    => $page,
@@ -41,7 +40,7 @@ class TagController extends WebsiteController
         }
 
         $tags = $this->em->getRepository(Tag::class)->findAllForWebsite($this->getLanguageId());
-        
+
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {
