@@ -43,7 +43,17 @@ const parametersApi = {
         try {
             const result = await axios.post(url);
 
-            return { result: true };
+            return { result: true, data: result.data };
+        } catch (error) {
+            return { result: false };
+        }
+    },
+
+    executeGetRequestButton: async (url) => {
+        try {
+            const result = await axios.get(url);
+
+            return { result: true, data: result.data };
         } catch (error) {
             return { result: false };
         }

@@ -147,7 +147,7 @@ abstract class Addon extends Bundle implements ConfigurationInterface
             ->cannotBeEmpty()
             ->end()
             ->end()
-            ->scalarNode('tabName')->isRequired()->cannotBeEmpty()
+            ->scalarNode('tabName')
             ->validate()
             ->ifTrue(function ($v) {
                 return !is_string($v);
@@ -155,7 +155,7 @@ abstract class Addon extends Bundle implements ConfigurationInterface
             ->thenInvalid('required string')
             ->end()
             ->end()
-            ->scalarNode('blockName')->isRequired()->cannotBeEmpty()
+            ->scalarNode('blockName')
             ->validate()
             ->ifTrue(function ($v) {
                 return !is_string($v);

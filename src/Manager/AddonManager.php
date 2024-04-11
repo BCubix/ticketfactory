@@ -270,11 +270,11 @@ abstract class AddonManager extends AbstractManager
                 $newParameter->setType($parameter['type']);
                 $newParameter->setParamKey($parameterKey);
                 $newParameter->setParamValue($parameter['defaultValue']);
-                $newParameter->setTabName($parameter['tabName']);
-                $newParameter->setBlockName($parameter['blockName']);
+                $newParameter->setTabName($parameter['tabName'] ?? null);
+                $newParameter->setBlockName($parameter['blockName'] ?? null);
                 $newParameter->setBreakpointsValue($parameter['breakpointValue']);
 
-                if (isset($parameter['availableValue'])) {
+                if (isset($parameter['availableValue']) && count($parameter['availableValue']) > 0) {
                     $availableValue = [];
 
                     foreach ($parameter['availableValue'] as $k => $avValue) {
@@ -284,7 +284,9 @@ abstract class AddonManager extends AbstractManager
                         ];
                     }
 
-                    $newParameter->setAvailableValue($availableValue);
+                    if (count($availableValue) > 0) {
+                        $newParameter->setAvailableValue($availableValue);
+                    }
                 }
 
                 $this->em->persist($newParameter);

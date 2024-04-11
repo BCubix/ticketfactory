@@ -45,7 +45,7 @@ class Parameter
     #[JMS\Expose()]
     #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'json', nullable: true)]
-    private $availableValue = [];
+    private $availableValue = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
