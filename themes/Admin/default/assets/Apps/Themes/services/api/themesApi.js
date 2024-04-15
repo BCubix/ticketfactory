@@ -11,6 +11,16 @@ const themesApi = {
         }
     },
 
+    getOneTheme: async (id) => {
+        try {
+            const result = await axios.get(`/themes/${id}`);
+
+            return { result: true, theme: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     activeTheme: async (name) => {
         try {
             await axios.post(`/themes/${name}/active`);

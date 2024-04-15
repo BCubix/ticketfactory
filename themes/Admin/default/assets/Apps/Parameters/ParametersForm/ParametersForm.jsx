@@ -16,7 +16,7 @@ export const parametersFormCrud = {
     deserializationApi: deserializationApi,
 };
 
-export const ParametersForm = ({ handleSubmit, parameters, formCrud = Crud.parameters.edit }) => {
+export const ParametersForm = ({ moduleParameters, themeParameters, module, theme, handleSubmit, parameters, formCrud = Crud.parameters.edit }) => {
     const tabs = useMemo(() => {
         const tabs = [];
 
@@ -55,6 +55,21 @@ export const ParametersForm = ({ handleSubmit, parameters, formCrud = Crud.param
         return tabs;
     }, [parameters]);
 
+    const parametersTitle = useMemo(() => {
+        if (moduleParameters) {
+            if (!module) {
+                return 'Paramètres des modules';
+            }
+            return `Paramètres du module ${module.name}`;
+        } else if (themeParameters) {
+            if (!theme) {
+                return 'Paramètres des thèmes';
+            }
+            return `Paramètres du thème ${theme.name}`;
+        }
+        return 'Paramètres';
+    }, []);
+
     return (
         <Formik
             initialValues={{
@@ -73,7 +88,7 @@ export const ParametersForm = ({ handleSubmit, parameters, formCrud = Crud.param
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, isSubmitting }) => (
-                <Component.CmtPageWrapper title="Paramètres" component="form" onSubmit={handleSubmit}>
+                <Component.CmtPageWrapper title={parametersTitle} component="form" onSubmit={handleSubmit}>
                     <Component.CmtTabs
                         tabValue={0}
                         list={values.tabs.map(({ tabName, blocks }, indexTab) => {
