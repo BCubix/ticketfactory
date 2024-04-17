@@ -5,6 +5,8 @@ namespace App\Manager;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Addon\Module;
 use App\Entity\Addon\Theme as ThemeEntity;
+use App\Entity\Hook\Hook;
+use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
 use App\Service\Addon\Theme;
 use App\Service\File\FileManipulator;
@@ -84,12 +86,18 @@ class ThemeManager extends AddonManager
         // Apply configs : disable old theme config and enable new theme config
         $themes = [$themeName => Module::ACTION_INSTALL];
         $mainTheme = $this->em->getRepository(ThemeEntity::class)->findOneByNameForAdmin($mainThemeName);
+        $themeParameterValues = [];
         if (null !== $mainTheme) {
             $themes = [$mainThemeName => Module::ACTION_DISABLE];
 
             $settings = $this->getConfiguration($mainThemeName)['settings'];
             if (isset($settings["parameters"])) {
+                $themeParameterValues = $this->getThemeParameterValues($settings['parameters'], $mainThemeName);
                 $this->removeParameters('theme', $mainThemeName, $settings["parameters"]);
+
+                if (count($themeParameterValues) > 0) {
+                    $this->setNewThemeParameters($themeParameterValues, $themeName);
+                }
             }
         }
 
@@ -281,5 +289,30 @@ class ThemeManager extends AddonManager
         $newContent .= substr($content, $position);
 
         $file->setContent($webpackFilePath, $newContent);
+    }
+
+    private function getThemeParameterValues(array $settings, string $themeName): array
+    {
+        $values = [];
+
+        foreach($settings as $key => $setting) {
+            $storedParameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin('theme_' . $themeName . '_' . $key);
+            if (null !== $storedParameter) {
+                $values[$key] = $storedParameter->getParamValue();
+            }
+        }
+
+        return $values;
+    }
+
+    private function setNewThemeParameters (array $parameterValues, string $newThemeName): void
+    {
+        foreach($parameterValues as $key => $value) {
+            $storedParameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin('theme_' . $newThemeName . '_' . $key);
+            if (null !== $storedParameter) {
+                $storedParameter->setParamValue($value);
+                $this->em->persist($storedParameter);
+            }
+        }
     }
 }

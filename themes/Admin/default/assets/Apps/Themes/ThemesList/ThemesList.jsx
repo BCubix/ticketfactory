@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Box } from '@mui/system';
 import { CardActions, CardContent, CardMedia, CircularProgress, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 
@@ -153,6 +154,20 @@ export const ThemesList = () => {
                                                     <DeleteIcon />
                                                 </Component.DeleteFabButton>
                                             </>
+                                        )}
+
+                                        {theme.name === themeName && (
+                                            <Component.EditFabButton
+                                                sx={{ marginInline: 1 }}
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`${Constant.PARAMETERS_BASE_PATH}/themes/${theme.id}`);
+                                                }}
+                                            >
+                                                <SettingsIcon />
+                                            </Component.EditFabButton>
                                         )}
                                     </CardActions>
                                 </Component.CmtCard>

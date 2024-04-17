@@ -19,6 +19,8 @@ export const ListTableBodyLine = ({
     onDisable,
     onDragEnd,
     onPreview,
+    onParameter,
+    displayParameter,
     disableDeleteFunction,
     contextualMenu,
     themeId,
@@ -58,6 +60,8 @@ export const ListTableBodyLine = ({
                     onActive={onActive}
                     onPreview={onPreview}
                     onDisable={onDisable}
+                    onParameter={onParameter}
+                    displayParameter={displayParameter}
                     disableDeleteFunction={disableDeleteFunction}
                     contextualMenu={contextualMenu}
                     themeId={themeId}
@@ -84,6 +88,8 @@ export const ListTableBodyLine = ({
                         onDisable={onDisable}
                         onDragEnd={onDragEnd}
                         onPreview={onPreview}
+                        onParameter={onParameter}
+                        displayParameter={displayParameter}
                         disableDeleteFunction={disableDeleteFunction}
                         contextualMenu={contextualMenu}
                         themeId={themeId}

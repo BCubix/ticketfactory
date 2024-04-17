@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Addon\Theme;
 use App\Entity\Parameter\Parameter;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\ApiException;
@@ -174,6 +175,13 @@ abstract class AddonManager extends AbstractManager
 
             if (isset($object['settings'])) {
                 unset($object['settings']);
+            }
+
+            $theme = $this->em->getRepository(Theme::class)->findOneByNameForAdmin($object['name']);
+            if (null !== $theme) {
+                $object['id'] = $theme->getId();
+            } else {
+                $object['id'] = null;
             }
 
             $results[] = $object;

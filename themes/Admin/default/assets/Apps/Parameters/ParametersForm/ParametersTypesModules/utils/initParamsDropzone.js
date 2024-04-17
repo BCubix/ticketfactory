@@ -1,31 +1,17 @@
 import Dropzone from 'dropzone';
 import $ from 'jquery';
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 var countChunk = 0;
 
-export function intitializeParamsDropzone({
-    logFail,
-    onSuccess,
-    id = null,
-    dropzoneId,
-    fileType,
-    maxWeight,
-}) {
+export function intitializeParamsDropzone({ logFail, onSuccess, id = null, dropzoneId, fileType, maxWeight }) {
     $(`#${dropzoneId}`)?.each(function (_, element) {
         initParamsDropzoneElement({ element, logFail, onSuccess, id, fileType, maxWeight });
     });
 }
 
-export const initParamsDropzoneElement = ({
-    element,
-    logFail,
-    onSuccess,
-    id,
-    fileType,
-    maxWeight,
-}) => {
+export const initParamsDropzoneElement = ({ element, logFail, onSuccess, id, fileType, maxWeight }) => {
     if (!element) {
         return;
     }
@@ -35,7 +21,7 @@ export const initParamsDropzoneElement = ({
         chunking: false,
         maxFilesize: maxWeight || 1048576,
         uploadMultiple: false,
-        acceptedFiles: fileType || Constant.ALL_FILE_SUPPORTED,
+        //acceptedFiles: fileType || Constant.ALL_FILE_SUPPORTED,
         uploadprogress: function (file, progress, byteSent) {
             $(element).find('.dz-upload').width(`${progress}%`);
         },

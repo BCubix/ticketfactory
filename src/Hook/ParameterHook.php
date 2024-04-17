@@ -33,11 +33,11 @@ class ParameterHook extends Hook
 
         if (isset($params["core_event_url_format"]) && $oldParams['core_event_url_format'] !== $params['core_event_url_format']) {
             $eventFormats = explode('/', $params['core_event_url_format']);
-            
+
             if (!in_array("%id%", $eventFormats) && !in_array("%slug%", $eventFormats)) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "l'url de vos évènements doit contenir au moins un identifiant unique (%id, %slug%).");
             }
-        
+
             if (count($eventFormats) !== count(array_unique($eventFormats))) {
                 throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Vous ne pouvez pas avoir de doublons pour les valeurs renseignées.");
             }
@@ -48,6 +48,11 @@ class ParameterHook extends Hook
             $newValue = ($debugMode ? 'dev' : 'prod');
 
             $this->mf->get('parameter')->changeEnvFileVariable('APP_ENV=', $newValue);
+        }
+
+        $editedList = $this->mf->get('parameter')->getChangedParameters($vObject, $oldParams, $params);
+        foreach($editedList as $newValue) {
+            $this->mf->get('parameter')->handleEditedValue($vObject, $newValue);
         }
     }
 }

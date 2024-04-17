@@ -36,6 +36,8 @@ const ConstantObj = {
     PDF_FILE_SUPPORTED: 'application/pdf',
     TEXT_FILE_SUPPORTED: 'text/plain',
     ZIP_FILE_SUPPORTED: 'application/zip, application/x-zip-compressed',
+    FONT_FILE_SUPPORTED:
+        'application/x-font-TrueType, application/x-font-otf, application/octet-stream; application/otf, application/font, application/font-otf, font/otf, application/vnd.ms-opentype, application/x-font-opentype, font/ttf, application/x-font-ttf',
 
     REDIRECTION_TYPES: [
         { label: 'Permanente (301)', value: 301 },

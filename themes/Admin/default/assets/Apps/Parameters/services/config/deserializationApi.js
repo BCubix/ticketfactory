@@ -18,6 +18,7 @@ export const deserializationApi = {
     password: (value) => value || '',
     requestButton: (value) => value || '',
     float: (value) => value || '',
+    font: (value) => value || '',
 };
 
 export const getDeserializationApiValue = (type, value) => {

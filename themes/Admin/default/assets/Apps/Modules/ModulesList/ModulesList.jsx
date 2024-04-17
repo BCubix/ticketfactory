@@ -142,6 +142,8 @@ export const ModulesList = () => {
                             onActive={(name) => handleActive(name)}
                             onDisable={(name) => setDeleteDialog(name)}
                             onRemove={(name) => setRemoveDialog(name)}
+                            onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
+                            displayParameter={(moduleItem) => Boolean(moduleItem.id)}
                         />
                     </CardContent>
                 </Component.CmtCard>

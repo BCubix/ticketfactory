@@ -14,6 +14,8 @@ use App\Exception\ApiException;
 use App\Kernel;
 use App\Service\ServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use FontLib\BinaryStream;
+use FontLib\Font;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -55,8 +57,12 @@ class ParameterManager extends AbstractManager
         return $this->getParameterValue($this->getParameter('module_' . $objectName . '_' . $key));
     }
 
-    public function getThemeParameter(string $objectName, string $key): mixed
+    public function getThemeParameter(?string $objectName, string $key): mixed
     {
+        if (null === $objectName) {
+            $objectName = $this->getCoreParameter('main_theme');
+        }
+
         return $this->getParameterValue($this->getParameter('theme_' . $objectName . '_' . $key));
     }
 
@@ -201,5 +207,62 @@ class ParameterManager extends AbstractManager
         ]);
 
         $this->sf->get('file')->createFile($this->sf->get('pathGetter')->getPublicDir() . "/sitemap.xml", $content);
+    }
+
+    public function getChangedParameters($vObject, $oldParams, $params): array
+    {
+        $editedParameters = [];
+
+        foreach ($params as $key => $param) {
+            if ($oldParams[$key] !== $param) {
+                $editedParam = $this->searchParamByKey($vObject, $key);
+
+                if (null !== $editedParam) {
+                    $editedParameters[] = $editedParam;
+                }
+            }
+        }
+
+        return $editedParameters;
+    }
+
+    public function handleEditedValue($newParameters, $editedParameter) {
+        if ($editedParameter->getType() === 'font' && null !== $editedParameter->getParamValue()) {
+            $this->handleFont($editedParameter);
+        }
+    }
+
+    private function searchParamByKey ($params, $key): ?Parameter
+    {
+        foreach ($params as $param) {
+            if ($param->getParamKey() === $key) {
+                return $param;
+            }
+        }
+
+        return null;
+    }
+
+    private function handleFont($editedParameter): void {
+        $fileName = explode('.', $editedParameter->getParamValue())[0];
+        $fontFilePath = $this->sf->get('pathGetter')->getPublicDir() . "/uploads/parameter/" . $editedParameter->getParamValue();
+        $destFileFolder = $this->sf->get('pathGetter')->getPublicDir() . "/uploads/parameter/" . $fileName . '/';
+
+        $font = Font::load($fontFilePath);
+
+        // $font->parse();
+        // $font->setSubset("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ.:,;' (!?)+-*/== 1234567890"); // characters to include
+        // $font->reduce();
+
+        // if (!is_dir($destFileFolder)) {
+        //     mkdir($destFileFolder, 0777, true);
+        // }
+        // touch($destFileFolder . 'fontfile.subset.ttf');
+
+        // $font->open($destFileFolder . 'fontfile.subset.ttf', BinaryStream::modeReadWrite);
+        // $font->encode(array("OS/2"));
+        // $font->close();
+
+        //dd($fileName, $fontFilePath, $font);
     }
 }

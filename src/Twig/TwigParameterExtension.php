@@ -20,7 +20,9 @@ class TwigParameterExtension extends AbstractExtension
     {
         return [
             new TwigFunction('parameter', [$this, 'parameter']),
-            new TwigFunction('coreParameter', [$this, 'coreParameter'])
+            new TwigFunction('coreParameter', [$this, 'coreParameter']),
+            new TwigFunction('themeParameter', [$this, 'themeParameter']),
+            new TwigFunction('moduleParameter', [$this, 'moduleParameter'])
         ];
     }
 
@@ -32,5 +34,15 @@ class TwigParameterExtension extends AbstractExtension
     public function coreParameter(string $parameterKey)
     {
         return $this->pm->getCoreParameter($parameterKey);
+    }
+
+    public function themeParameter(string $parameterKey)
+    {
+        return $this->pm->getThemeParameter(null, $parameterKey);
+    }
+
+    public function moduleParameter(string $moduleName, string $parameterKey)
+    {
+        return $this->pm->getModuleParameter($moduleName, $parameterKey);
     }
 }

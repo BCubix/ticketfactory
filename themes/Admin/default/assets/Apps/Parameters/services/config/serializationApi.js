@@ -18,6 +18,7 @@ export const serializationApi = {
     password: (value) => value || '',
     requestButton: (value) => value || '',
     float: (value) => value || '',
+    font: (value) => value || '',
 };
 
 export const getSerializationApiValue = (type, value) => {
@@ -25,6 +26,5 @@ export const getSerializationApiValue = (type, value) => {
         return value || '';
     }
 
-    console.log(type, value);
     return Crud?.parameters?.edit?.serializationApi[type](value);
 };

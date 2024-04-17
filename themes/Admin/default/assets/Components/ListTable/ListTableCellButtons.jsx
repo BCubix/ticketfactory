@@ -8,6 +8,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Component } from '@/AdminService/Component';
 
@@ -20,6 +21,8 @@ export const ListTableCellButtons = ({
     onActive,
     onDisable,
     onPreview,
+    onParameter,
+    displayParameter,
     disableDeleteFunction,
     contextualMenu,
     themeId,
@@ -27,7 +30,14 @@ export const ListTableCellButtons = ({
     expendElementTranslation,
     setExpendElementTranslation,
 }) => {
-    if (onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null) || onPreview !== null) {
+    if (
+        onDelete !== null ||
+        onEdit !== null ||
+        (onRemove !== null && onSelect !== null) ||
+        (onActive !== null && onDisable !== null) ||
+        onPreview !== null ||
+        (onParameter !== null && displayParameter(item))
+    ) {
         return (
             <TableCell component="td" scope="row">
                 {onActive !== null && onDisable !== null && (
@@ -58,6 +68,21 @@ export const ListTableCellButtons = ({
                         <CheckCircleIcon />
                     </Component.ActionFabButton>
                 )}
+
+                {onParameter !== null && displayParameter(item) && (
+                    <Component.EditFabButton
+                        sx={{ marginInline: 1 }}
+                        size="small"
+                        aria-label="Selection"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onParameter(item);
+                        }}
+                    >
+                        <SettingsIcon />
+                    </Component.EditFabButton>
+                )}
+
                 {onRemove !== null && (item.active === undefined || onDisable === null) && (
                     <Component.DeleteFabButton
                         sx={{ marginInline: 1 }}

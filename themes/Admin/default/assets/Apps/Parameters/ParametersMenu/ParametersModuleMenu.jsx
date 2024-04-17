@@ -27,8 +27,6 @@ export const ParametersModuleMenu = () => {
                 return;
             }
 
-            console.log(result);
-
             setModule(result?.module);
         });
     }, []);

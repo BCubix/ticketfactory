@@ -15,6 +15,7 @@ import RequestButtonParameterType from '@Apps/Parameters/ParametersForm/Paramete
 import FloatParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/FloatParameterType';
 import EventCategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/EventCategoryParameterType';
 import MediaCategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/MediaCategoryParameterType';
+import FontUploadParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/FontUploadParameterType';
 
 export const parameterTypes = {
     bool: BooleanParameterType,
@@ -34,4 +35,5 @@ export const parameterTypes = {
     password: PasswordParameterType,
     requestButton: RequestButtonParameterType,
     float: FloatParameterType,
+    font: FontUploadParameterType,
 };
