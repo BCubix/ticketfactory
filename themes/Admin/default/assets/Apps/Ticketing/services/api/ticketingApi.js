@@ -106,6 +106,16 @@ const ticketingApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    syncTicketing: async (id) => {
+        try {
+            const result = await axios.get(`/ticketing/${id}/synchronize-catalog`);
+
+            return { result: true, data: result?.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default ticketingApi;
