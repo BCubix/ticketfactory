@@ -174,10 +174,12 @@ class EventManager extends AbstractManager
     public function getSortedEvents(array $filters): array
     {
         [$sortField, $sortOrder] = $this->getDefaultParameters($filters);
+        $page = $filters['page'] ?? null;
+        $limit = $filters['limit'] ?? null;
 
         $events = $this->getEvents($filters);
 
-        return $this->mf->get('eventSorter')->sortEvents($events, true, $sortField, $sortOrder);
+        return $this->mf->get('eventSorter')->sortEvents($events, true, $sortField, $sortOrder, $page, $limit);
     }
 
     public function getUrlSlugs(Event $event): array
@@ -472,6 +474,21 @@ class EventManager extends AbstractManager
         }
 
         return null;
+    }
+
+    public function getMaxPage(int $total, ?int $limit): ?int
+    {
+        if (null === $limit) {
+            return null;
+        }
+
+        $maxPage = $total / $limit;
+
+        if (($total % $limit) > 0) {
+            $maxPage += 1;
+        }
+
+        return $maxPage;
     }
 
     private function getDefaultParameters($filters): array
