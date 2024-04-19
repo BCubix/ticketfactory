@@ -162,6 +162,9 @@ class Event extends Datable
         /*** > Module: EventDocument ***/
         $this->eventDocuments = new ArrayCollection();
         /*** < Module: EventDocument ***/
+        /*** > Module: EventDocument ***/
+        $this->eventDocuments = new ArrayCollection();
+        /*** < Module: EventDocument ***/
         /*** > Module: RelatedEvent ***/
         $this->eventFroms = new ArrayCollection();
         $this->eventTos = new ArrayCollection();

@@ -38,7 +38,7 @@ class CartRow
     private ?Event $event = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'], orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?EventDate $eventDate = null;
