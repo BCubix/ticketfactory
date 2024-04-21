@@ -126,12 +126,16 @@ export const eventMainPartForm = {
                         xs: 12,
                         sm: 4,
                     },
-                    input: (props) => ({
-                        name: 'ticketingReference',
-                        label: props?.ticketingList?.find((it) => it?.id === props.values?.ticketing)?.module ? 'Identifiant billetterie' : 'Lien externe',
-                        inputType: 'textField',
-                        disabled: !Boolean(props.values?.ticketing),
-                    }),
+                    component: (props) => (
+                        <Component.CmtKeywordInput
+                            label={props?.ticketingList?.find((it) => it?.id === props.values?.ticketing)?.module ? 'Identifiant billetterie' : 'Lien externe'}
+                            {...props}
+                            name="ticketingReference"
+                            disabled={!Boolean(props.values?.ticketing)}
+                            warningMessage="Ce champ est utilisé pour identifier votre évènement auprès de votre billetterie."
+                            editName="ticketingReferenceEditMode"
+                        />
+                    ),
                 },
                 {
                     keyId: 'input-display-booking-button',
