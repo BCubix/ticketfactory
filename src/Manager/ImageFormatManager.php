@@ -74,7 +74,6 @@ class ImageFormatManager extends AbstractManager
 
     public function deleteThumbnails(array $formats = null, array $medias = null): bool
     {
-        $deleteAll = null === $formats;
         if (null === $formats) {
             $formats = $this->em->getRepository(ImageFormat::class)->findAllForAdmin(['page' => 0]);
         }
@@ -93,15 +92,9 @@ class ImageFormatManager extends AbstractManager
             }
 
             try {
-                if ($deleteAll) {
-                    // Rm the original media directory
-                    $this->fs->remove(dirname($mediaPath));
-                } else {
-                    // Rm only format request
-                    foreach ($formats['results'] as $format) {
-                        $mediaThumbnailPath = $this->mm->getFormattedMediaPathFromFormat($media, $format);
-                        $this->fs->remove($this->sf->get('pathGetter')->getPublicDir() . $mediaThumbnailPath);
-                    }
+                foreach ($formats['results'] as $format) {
+                    $mediaThumbnailPath = $this->mm->getFormattedMediaPathFromFormat($media, $format);
+                    $this->fs->remove($this->sf->get('pathGetter')->getPublicDir() . $mediaThumbnailPath);
                 }
             } catch (IOException $ioe) {
                 $success = false;
