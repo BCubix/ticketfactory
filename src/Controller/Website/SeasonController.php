@@ -114,7 +114,7 @@ class SeasonController extends WebsiteController
         }
 
         $seasons = $this->em->getRepository(Season::class)->findAllForWebsite($this->getLanguageId());
-        
+
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {

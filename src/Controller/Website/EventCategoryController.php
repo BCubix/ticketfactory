@@ -5,7 +5,6 @@ namespace App\Controller\Website;
 use App\Entity\Event\EventCategory;
 use App\Entity\Page\Page;
 
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EventCategoryController extends WebsiteController
