@@ -42,6 +42,18 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
         return options;
     }, []);
 
+    const setFormattedSyncLabel = (syncDate) => {
+        let date = new Date(Date.parse(syncDate)).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+        });
+
+        setSyncLabel(`Dernière synchronisation le ${date}`);
+    };
+
     const syncTicketing = () => {
         apiMiddleware(dispatch, async () => {
             const label = syncLabel;
@@ -52,7 +64,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
             const result = await Api.ticketingApi.syncTicketing(props?.initialValues?.id);
             if (result?.result && result?.data?.success) {
                 NotificationManager.success('La billetterie a bien été synchronisée.', 'Succès', Constant.REDIRECTION_TIME);
-                setSyncLabel(`Dernière synchronisation: ${result?.data?.lastSyncDate}`);
+                setFormattedSyncLabel(result?.data?.lastSyncDate);
             } else {
                 NotificationManager.error('La synchronisation de la billetterie a échoué.', 'Erreur', Constant.REDIRECTION_TIME);
                 setSyncLabel(label);
@@ -63,7 +75,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
 
     useEffect(() => {
         setSyncState(values?.catalogSynchronization);
-        setSyncLabel(props?.initialValues?.lastSyncAt ? `Dernière synchronisation: ${props?.initialValues?.lastSyncAt}` : 'Non synchronisé');
+        props?.initialValues?.lastSyncAt ? setFormattedSyncLabel(props?.initialValues?.lastSyncAt) : setSyncLabel('Non synchronisé');
     }, []);
 
     useEffect(() => {
@@ -116,23 +128,23 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
                             {...props}
                         />
 
-                        {values?.type === 'api' && (
-                            <>
-                                <Grid item xs={12}>
-                                    <Tooltip title={!Boolean(apiOptions?.catalogSynchronization) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
-                                        <FormControlLabel
-                                            control={
-                                                <Switch
-                                                    checked={Boolean(values?.catalogSynchronization)}
-                                                    name="catalogSynchronization"
-                                                    onChange={handleChange}
-                                                    disabled={!Boolean(apiOptions?.catalogSynchronization)}
-                                                />
-                                            }
-                                            label="Synchronisation catalogue"
+                        <Grid item xs={12}>
+                            <Tooltip title={!Boolean(apiOptions?.catalogSynchronization) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={Boolean(values?.catalogSynchronization)}
+                                            name="catalogSynchronization"
+                                            onChange={handleChange}
+                                            disabled={!Boolean(apiOptions?.catalogSynchronization)}
                                         />
-                                    </Tooltip>
+                                    }
+                                    label="Synchroniser le catalogue"
+                                />
+                            </Tooltip>
 
+                            {values?.type === 'api' && (
+                                <>
                                     <Tooltip title={!Boolean(apiOptions?.customerProfile) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
                                         <FormControlLabel
                                             control={
@@ -143,7 +155,7 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
                                                     disabled={!Boolean(apiOptions?.customerProfile)}
                                                 />
                                             }
-                                            label="Profil client"
+                                            label="Récupérer le compte client"
                                         />
                                     </Tooltip>
 
@@ -157,24 +169,24 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
                                                     disabled={!Boolean(apiOptions?.orderTunnel)}
                                                 />
                                             }
-                                            label="Tunnel de commande"
+                                            label="Activer le tunnel de commande"
                                         />
                                     </Tooltip>
-                                </Grid>
+                                </>
+                            )}
+                        </Grid>
 
-                                {Boolean(apiOptions?.catalogSynchronization) && (
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            control={
-                                                <Button variant="contained" size="medium" sx={{ marginInline: 2 }} onClick={() => syncTicketing()} disabled={!syncState}>
-                                                    Synchroniser
-                                                </Button>
-                                            }
-                                            label={syncLabel}
-                                        />
-                                    </Grid>
-                                )}
-                            </>
+                        {Boolean(apiOptions?.catalogSynchronization) && (
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Button variant="contained" size="medium" sx={{ marginInline: 2 }} onClick={() => syncTicketing()} disabled={!syncState}>
+                                            Synchroniser
+                                        </Button>
+                                    }
+                                    label={syncLabel}
+                                />
+                            </Grid>
                         )}
                     </Grid>
                 )}

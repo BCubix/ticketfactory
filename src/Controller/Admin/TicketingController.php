@@ -126,7 +126,7 @@ class TicketingController extends CrudController
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
         }
 
-        if ('api' !== $ticketing->getType() || !$ticketing->isCatalogSynchronization()) {
+        if (!$ticketing->isCatalogSynchronization()) {
             return $this->view(null, Response::HTTP_NO_CONTENT);
         }
 
