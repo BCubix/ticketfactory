@@ -68,6 +68,11 @@ class Ticketing extends Datable
     #[ORM\ManyToOne]
     private ?Module $module = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_ticketing_all', 'a_ticketing_one'])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $lastSyncAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +170,18 @@ class Ticketing extends Datable
     public function setModule(?Module $module): static
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    public function getLastSyncAt(): ?\DateTimeImmutable
+    {
+        return $this->lastSyncAt;
+    }
+
+    public function setLastSyncAt(?\DateTimeImmutable $lastSyncAt): static
+    {
+        $this->lastSyncAt = $lastSyncAt;
 
         return $this;
     }

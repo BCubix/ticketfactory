@@ -7,9 +7,17 @@ use App\Entity\Product\Product;
 use App\Entity\Ticketing\Ticketing;
 use App\Exception\ApiException;
 use App\Form\Admin\Ticketing\TicketingType;
+use App\Manager\HookManager;
+use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
+use App\Service\Error\FormErrorsCollector;
+use App\Service\Log\Logger;
+use App\Service\ServiceFactory;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +28,23 @@ class TicketingController extends CrudController
     protected const TYPE_CLASS = TicketingType::class;
 
     protected const NOT_FOUND_MESSAGE = "Cette billetterie n'existe pas.";
+
+    protected $sf;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        LanguageManager $lm,
+        HookManager $hm,
+        ManagerFactory $mf,
+        ServiceFactory $sf,
+    ) {
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
+
+        $this->sf = $sf;
+    }
 
     #[Rest\Get('/ticketing')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
@@ -90,5 +115,40 @@ class TicketingController extends CrudController
         $productLength = $this->em->getRepository(Product::class)->findProductLenghtForAdmin($ticketingId);
 
         return $this->view(['events' => $eventLength, 'products' => $productLength], Response::HTTP_OK);
+    }
+
+    #[Rest\Get('/ticketing/{ticketingId}/synchronize-catalog', requirements: ['ticketingId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
+    public function synchronizeCatalog(Request $request, int $ticketingId): View
+    {
+        $ticketing = $this->em->getRepository(self::ENTITY_CLASS)->findOneForAdmin($ticketingId);
+        if (null === $ticketing || null === $ticketing->getModule()) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
+        }
+
+        if (!$ticketing->isCatalogSynchronization()) {
+            return $this->view(null, Response::HTTP_NO_CONTENT);
+        }
+
+        $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+        if (method_exists($class, "synchronizeCatalog")) {
+            $this->log->log(0, 0, "Started catalog synchronization.", $this->entityClass, $ticketing->getId());
+
+            $syncResult = $class->synchronizeCatalog($ticketingId);
+            if ($syncResult) {
+                $ticketing->setLastSyncAt(new \DateTimeImmutable());
+                $this->em->persist($ticketing);
+                $this->em->flush();
+
+                $this->log->log(0, 0, "Catalog synchronized.", $this->entityClass, $ticketing->getId());
+            }
+
+            return $this->view([
+                'success' => $syncResult,
+                'lastSyncDate' => $this->em->getRepository(self::ENTITY_CLASS)->findOneForAdmin($ticketingId)->getLastSyncAt(),
+            ], Response::HTTP_OK);
+        }
+
+        return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 }

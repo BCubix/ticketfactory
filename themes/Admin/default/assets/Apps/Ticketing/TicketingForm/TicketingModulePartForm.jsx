@@ -1,12 +1,18 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Switch, Tooltip } from '@mui/material';
+import { Button, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Switch, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Api } from '@/AdminService/Api';
+import { useDispatch } from 'react-redux';
 
 export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, formCrud, module, title, ...props }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [syncLabel, setSyncLabel] = useState('');
+    const [syncState, setSyncState] = useState(true);
 
     const availableTypes = useMemo(() => {
         let available = { api: false, iframe: false, external: false };
@@ -34,6 +40,42 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
         }
 
         return options;
+    }, []);
+
+    const setFormattedSyncLabel = (syncDate) => {
+        let date = new Date(Date.parse(syncDate)).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+        });
+
+        setSyncLabel(`Dernière synchronisation le ${date}`);
+    };
+
+    const syncTicketing = () => {
+        apiMiddleware(dispatch, async () => {
+            const label = syncLabel;
+
+            setSyncLabel('Synchronisation en cours...');
+            setSyncState(false);
+
+            const result = await Api.ticketingApi.syncTicketing(props?.initialValues?.id);
+            if (result?.result && result?.data?.success) {
+                NotificationManager.success('La billetterie a bien été synchronisée.', 'Succès', Constant.REDIRECTION_TIME);
+                setFormattedSyncLabel(result?.data?.lastSyncDate);
+            } else {
+                NotificationManager.error('La synchronisation de la billetterie a échoué.', 'Erreur', Constant.REDIRECTION_TIME);
+                setSyncLabel(label);
+            }
+            setSyncState(true);
+        });
+    };
+
+    useEffect(() => {
+        setSyncState(values?.catalogSynchronization);
+        props?.initialValues?.lastSyncAt ? setFormattedSyncLabel(props?.initialValues?.lastSyncAt) : setSyncLabel('Non synchronisé');
     }, []);
 
     useEffect(() => {
@@ -86,49 +128,64 @@ export const TicketingModulePartForm = ({ setFieldValue, handleChange, values, f
                             {...props}
                         />
 
-                        {values?.type === 'api' && (
+                        <Grid item xs={12}>
+                            <Tooltip title={!Boolean(apiOptions?.catalogSynchronization) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={Boolean(values?.catalogSynchronization)}
+                                            name="catalogSynchronization"
+                                            onChange={handleChange}
+                                            disabled={!Boolean(apiOptions?.catalogSynchronization)}
+                                        />
+                                    }
+                                    label="Synchroniser le catalogue"
+                                />
+                            </Tooltip>
+
+                            {values?.type === 'api' && (
+                                <>
+                                    <Tooltip title={!Boolean(apiOptions?.customerProfile) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={Boolean(values?.customerProfile)}
+                                                    name="customerProfile"
+                                                    onChange={handleChange}
+                                                    disabled={!Boolean(apiOptions?.customerProfile)}
+                                                />
+                                            }
+                                            label="Récupérer le compte client"
+                                        />
+                                    </Tooltip>
+
+                                    <Tooltip title={!Boolean(apiOptions?.orderTunnel) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={Boolean(values?.orderTunnel)}
+                                                    name="orderTunnel"
+                                                    onChange={handleChange}
+                                                    disabled={!Boolean(apiOptions?.orderTunnel)}
+                                                />
+                                            }
+                                            label="Activer le tunnel de commande"
+                                        />
+                                    </Tooltip>
+                                </>
+                            )}
+                        </Grid>
+
+                        {Boolean(apiOptions?.catalogSynchronization) && (
                             <Grid item xs={12}>
-                                <Tooltip title={!Boolean(apiOptions?.catalogSynchronization) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={Boolean(values?.catalogSynchronization)}
-                                                name="catalogSynchronization"
-                                                onChange={handleChange}
-                                                disabled={!Boolean(apiOptions?.catalogSynchronization)}
-                                            />
-                                        }
-                                        label="Synchronisation catalogue"
-                                    />
-                                </Tooltip>
-
-                                <Tooltip title={!Boolean(apiOptions?.customerProfile) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={Boolean(values?.customerProfile)}
-                                                name="customerProfile"
-                                                onChange={handleChange}
-                                                disabled={!Boolean(apiOptions?.customerProfile)}
-                                            />
-                                        }
-                                        label="Profil client"
-                                    />
-                                </Tooltip>
-
-                                <Tooltip title={!Boolean(apiOptions?.orderTunnel) ? 'Fonctionnalité non prise en charge par le module.' : ''}>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={Boolean(values?.orderTunnel)}
-                                                name="orderTunnel"
-                                                onChange={handleChange}
-                                                disabled={!Boolean(apiOptions?.orderTunnel)}
-                                            />
-                                        }
-                                        label="Tunnel de commande"
-                                    />
-                                </Tooltip>
+                                <FormControlLabel
+                                    control={
+                                        <Button variant="contained" size="medium" sx={{ marginInline: 2 }} onClick={() => syncTicketing()} disabled={!syncState}>
+                                            Synchroniser
+                                        </Button>
+                                    }
+                                    label={syncLabel}
+                                />
                             </Grid>
                         )}
                     </Grid>
