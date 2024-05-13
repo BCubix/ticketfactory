@@ -74,48 +74,18 @@ class EventManager extends AbstractManager
             return null;
         }
 
+        $checkEventUrl = [
+            'category' => fn ($event, $value) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() === $value : false,
+            'season' => fn ($event, $value) => $event->getSeason() ? $event->getSeason()->getSlug() === $value: false,
+            'room' => fn ($event, $value) => $event->getRoom() ? $event->getRoom()->getSlug() === $value: false,
+            'year' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value,
+            'month' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value,
+            'day' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value,
+        ];
+
         foreach ($matches as $key => $value) {
-            switch ($key) {
-                case 'category':
-                    if (null == $event->getMainCategory() || $event->getMainCategory()->getSlug() !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'season':
-                    if (null == $event->getSeason() || $event->getSeason()->getSlug() !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'room':
-                    if (null == $event->getRoom() || $event->getRoom()->getSlug() !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'year':
-                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('Y') !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'month':
-                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('m') !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'day':
-                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('d') !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'id':
-                case 'slug':
-                default:
-                    break;
+            if (isset($checkEventUrl[$key]) && $checkEventUrl[$key]($event, $value) === false) {
+                return null;
             }
         }
 

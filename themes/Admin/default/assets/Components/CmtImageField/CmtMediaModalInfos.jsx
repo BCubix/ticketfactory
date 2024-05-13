@@ -35,7 +35,7 @@ export const CmtMediaModalInfos = ({ media, selectedMedia, setFieldValue, name, 
                         }
                     }}
                 >
-                    {isSelected ? RemoveMediaLabel : AddMediaLabel} le fichier
+                    {isSelected ? RemoveMediaLabel : AddMediaLabel} le média
                 </Button>
             </Box>
         </Box>

@@ -93,9 +93,11 @@ class ParameterController extends AdminController
         }
         $this->em->flush();
 
-        foreach ($parameters as $parameter) {
-            $this->log->log(0, 0, 'Updated object.', static::ENTITY_CLASS, $parameter->getId());
-        }
+        $this->hm->exec('ParameterSaved', [
+            'iObject' => $iObject,
+            'sObject' => $parameters,
+            'state'   => 'edit'
+        ]);
 
         return $this->view($parametersContainer, Response::HTTP_OK);
     }

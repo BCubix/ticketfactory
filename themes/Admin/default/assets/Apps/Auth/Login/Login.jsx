@@ -34,8 +34,8 @@ export const Login = () => {
                 <Formik
                     initialValues={{ username: '', password: '' }}
                     validationSchema={loginSchema}
-                    onSubmit={async (values, { setSubmitting }) => {
-                        await dispatch(loginAction(values));
+                    onSubmit={(values, { setSubmitting }) => {
+                        dispatch(loginAction(values));
                         setSubmitting(false);
                     }}
                 >

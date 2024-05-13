@@ -101,6 +101,8 @@ class HookController extends AdminController
         $this->em->persist($hook);
         $this->em->flush();
 
+        $this->log->log(0, 0, 'Created object.', Hook::class, $hook->getId());
+
         return $this->view($hook, Response::HTTP_OK);
     }
 
@@ -121,6 +123,8 @@ class HookController extends AdminController
 
         $this->hm->disableHook($removeHook);
         $this->em->flush();
+
+        $this->log->log(0, 0, 'Deleted object.', Hook::class, $removeHook->getId());
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
@@ -143,6 +147,8 @@ class HookController extends AdminController
 
         $this->hm->updateHook($hooks, $srcPosition, $destPosition);
         $this->em->flush();
+
+        $this->log->log(0, 0, 'Updated object from position ' . $srcPosition . ' to ' . $destPosition . '.', Hook::class, $hooks[$srcPosition]->getId());
 
         return $this->view($this->hm->getAllModulesByHook(), Response::HTTP_OK);
     }

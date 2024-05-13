@@ -90,6 +90,15 @@ class ImageFormatController extends CrudController
 
         $ifm->generateThumbnails($formats, $medias);
 
+        $message = "Generated medias thumbnails for ";
+        if (null !== $formatId) {
+            $message .= $formats['results'][0]->getName() . ' format.';
+        } else {
+            $message .= 'all formats';
+        }
+
+        $this->log->log(0, 0, $message, $this->entityClass, $formatId);
+
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 }

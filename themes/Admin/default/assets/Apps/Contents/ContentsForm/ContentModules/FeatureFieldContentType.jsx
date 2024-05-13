@@ -41,7 +41,6 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
                     let val = values[field.name]?.id || values[field.name];
                     let feature = result?.features?.find((feature) => feature?.featureValues?.find((featureValue) => featureValue?.id?.toString() === val?.toString()));
 
-                    console.log(val, feature);
                     if (feature) {
                         setSelectedFeature(feature?.id);
                         setSelectedFeatureCategory(feature.featureCategory?.id);

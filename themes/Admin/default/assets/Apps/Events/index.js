@@ -59,20 +59,20 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.EVENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEvent);
 };
 
-export const initMenu = () => {
-    insertSubMenu(1, 'PROGRAMMER', 'Evènements', Constant.EVENTS_BASE_PATH, <ConfirmationNumberIcon />);
-};
-
 export const initReducer = () => {
     setReducer('events', eventsReducer);
 };
 
-export const initCrud = () => {
+export default async function ({ parameters }) {
+    const eventName = parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
+
+    insertSubMenu(1, 'PROGRAMMER', eventName, Constant.EVENTS_BASE_PATH, <ConfirmationNumberIcon />);
+
     const crud = {
-        list: eventsListCrud,
-        add: eventsCreateCrud,
-        edit: eventsEditCrud,
+        list: eventsListCrud({ eventName }),
+        add: eventsCreateCrud({ eventName }),
+        edit: eventsEditCrud({ eventName }),
     };
 
     setCrud('events', crud);
-};
+}

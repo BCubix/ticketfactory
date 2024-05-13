@@ -116,6 +116,8 @@ class ThemeManager extends AddonManager
         $this->entry($themeName, false);
         $this->clear(true);
 
+        $this->sf->get('logger')->log(0, 0, 'Activated theme.', Theme::class, $theme->getId());
+
         return $theme;
     }
 
@@ -131,8 +133,11 @@ class ThemeManager extends AddonManager
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Vous ne pouvez pas supprimer le thème actuellement utilisé.');
         }
 
+        $objectId = $theme->getId();
         $this->em->remove($theme);
         $this->em->flush();
+
+        $this->sf->get('logger')->log(0, 0, 'Deleted theme.', Theme::class, $objectId);
 
         parent::delete($themeName);
     }

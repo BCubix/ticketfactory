@@ -2,13 +2,12 @@
 
 namespace App\Manager;
 
+use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
-use App\Manager\LanguageManager;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 
 class EventCategoryManager extends AbstractManager
 {
@@ -16,15 +15,22 @@ class EventCategoryManager extends AbstractManager
 
     public function deleteEventsFromCategory(EventCategory $mainCategory): void
     {
-        $rootCategory = $this->em->getRepository(EventCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(EventCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
+        $objectsId = [];
         foreach ($childrenCategories as $category) {
             $events = $category->getEvents();
 
             foreach ($events as $event) {
+                $objectsId[] = $event->getId();
                 $this->em->remove($event);
             }
+        }
+
+        $this->em->flush();
+
+        foreach($objectsId as $id) {
+            $this->sf->get('logger')->log(0, 0, 'Deleted object.', Event::class, $id);
         }
     }
 
@@ -33,13 +39,21 @@ class EventCategoryManager extends AbstractManager
         $rootCategory = $this->em->getRepository(EventCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(EventCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
+        $objectsId = [];
         foreach ($childrenCategories as $category) {
             $events = $category->getEvents();
 
             foreach ($events as $event) {
+                $objectsId[] = $event->getId();
                 $event->setMainCategory($rootCategory);
                 $this->em->persist($event);
             }
+        }
+
+        $this->em->flush();
+
+        foreach($objectsId as $id) {
+            $this->sf->get('logger')->log(0, 0, 'Updated object.', Event::class, $id);
         }
     }
 
@@ -108,7 +122,7 @@ class EventCategoryManager extends AbstractManager
     public function getBySlug($slug): ?EventCategory
     {
         $languageId = $this->getLanguageId();
-        
+
         return $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug);
     }
 
@@ -120,7 +134,7 @@ class EventCategoryManager extends AbstractManager
             return;
         }
 
-        
+
         foreach($translatedObjects as $object) {
             $object->setPosition($position);
             $this->em->persist($object);

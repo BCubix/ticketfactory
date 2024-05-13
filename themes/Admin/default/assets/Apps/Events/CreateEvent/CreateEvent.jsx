@@ -14,14 +14,14 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 
-export const eventsCreateCrud = {
+export const eventsCreateCrud = ({ eventName }) => ({
     form: {
         title: "Création d'un évènement",
         initialSchema: eventsInitialSchema,
         validationSchema: eventsValidationSchema,
     },
     ...eventsForm,
-};
+});
 
 export const CreateEvent = () => {
     const dispatch = useDispatch();

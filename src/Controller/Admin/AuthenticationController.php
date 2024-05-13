@@ -39,6 +39,8 @@ class AuthenticationController extends AdminController
         $path = '/admin/modifier-mon-mot-de-passe?email=' . urlencode($user->getEmail()) . '&token=' . urlencode($user->getEmailToken());
         $mailer->sendResetUserPasswordEmail($user, $path);
 
+        $this->log->log(0, 0, 'forget password requested.', User::class, $user->getId());
+
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 
@@ -74,6 +76,8 @@ class AuthenticationController extends AdminController
         $um->upgradePassword($user);
 
         $this->em->flush();
+
+        $this->log->log(0, 0, 'Reset password.', User::class, $user->getId());
 
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }

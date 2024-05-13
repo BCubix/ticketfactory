@@ -14,14 +14,14 @@ import { Crud } from '@/AdminService/Crud';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { useSelector } from 'react-redux';
 
-export const eventsEditCrud = {
+export const eventsEditCrud = ({ eventName }) => ({
     form: {
         title: "Modification d'un évènement",
         initialSchema: eventsInitialSchema,
         validationSchema: eventsValidationSchema,
     },
     ...eventsForm,
-};
+});
 
 export const EditEvent = () => {
     const dispatch = useDispatch();

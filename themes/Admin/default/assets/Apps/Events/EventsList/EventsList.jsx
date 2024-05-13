@@ -9,9 +9,9 @@ import { getEventsAction, changeEventsFilters, eventsSelector } from '@Apps/Even
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Crud } from '@/AdminService/Crud';
 
-export const eventsListCrud = {
-    title: 'Evènements',
-    listTitle: 'Liste des évènements',
+export const eventsListCrud = ({ eventName }) => ({
+    title: eventName,
+    listTitle: 'Liste des ' + eventName,
     filtersData: [
         { key: 'active', type: 'boolean' },
         'name',
@@ -102,7 +102,7 @@ export const eventsListCrud = {
         confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cet évènement ?',
     },
     ...DEFAULT_CRUD_LIST_COMPONENTS,
-};
+});
 
 export const EventsList = () => {
     return <Component.CmtCrudList listCrud={Crud?.events?.list} />;

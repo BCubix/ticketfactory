@@ -167,6 +167,8 @@ class MediaCategoryController extends CrudController
 
         $this->em->flush();
 
+        $this->log->log(0, 0, 'Updated object from position ' . $srcPosition . ' to ' . $destPosition . '.', $this->entityClass, $object->getId());
+
         return $this->view($object, Response::HTTP_OK);
     }
 }

@@ -53,7 +53,6 @@ export const ParametersMenu = ({ moduleParameters = false, themeParameters = fal
         return <></>;
     }
 
-    console.log(parameters.filter((item) => item?.paramKey?.startsWith(filter)));
     return (
         <Component.ParametersForm
             handleSubmit={handleSubmit}

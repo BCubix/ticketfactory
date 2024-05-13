@@ -9,11 +9,16 @@ import { Component } from '@/AdminService/Component';
 import { loginFailure, profileSelector, setModulesLoaded } from '@Apps/Auth/redux/profile/profileSlice';
 import { useSelector } from 'react-redux';
 
-export const ActiveModule = () => {
+export const ActiveModule = ({ loaded }) => {
     const dispatch = useDispatch();
     const { connected, modulesLoaded } = useSelector(profileSelector);
 
     const getActiveModules = async () => {
+        if (!loaded) {
+            dispatch(setModulesLoaded({ modulesLoaded: false }));
+            return;
+        }
+
         const check = await Api.authApi.checkIsAuth();
         if (check.result) {
             const result = await Api.modulesApi.getModulesActive();
@@ -33,7 +38,7 @@ export const ActiveModule = () => {
         }
 
         getActiveModules();
-    }, [connected]);
+    }, [connected, loaded]);
 
     if (null === modulesLoaded) {
         return <></>;

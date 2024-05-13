@@ -44,14 +44,14 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le prénom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_user_all', 'a_user_one'])]
+    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstName;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_user_all', 'a_user_one'])]
+    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastName;
 

@@ -2,6 +2,7 @@
 
 namespace App\Hook;
 
+use App\Entity\Parameter\Parameter;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
 use App\Service\Addon\Hook;
@@ -53,6 +54,28 @@ class ParameterHook extends Hook
         $editedList = $this->mf->get('parameter')->getChangedParameters($vObject, $oldParams, $params);
         foreach($editedList as $newValue) {
             $this->mf->get('parameter')->handleEditedValue($vObject, $newValue);
+        }
+    }
+
+    public function hookParameterSaved(HookEvent $event) {
+        $iObject = $event->getParam('iObject');
+        $sObject = $event->getParam('sObject');
+
+        $oldParams = [];
+        $params = [];
+
+        foreach ($iObject->getParameters() as $param) {
+            $oldParams[$param->getParamKey()] = $param->getParamValue();
+        }
+
+        foreach ($sObject as $param) {
+            $params[$param->getParamKey()] = $param->getParamValue();
+        }
+
+        $editedList = $this->mf->get('parameter')->getChangedParameters($sObject, $oldParams, $params);
+
+        foreach($editedList as $newValue) {
+            $this->sf->get('logger')->log(0, 0, 'Updated object.', Parameter::class, $newValue->getId());
         }
     }
 }

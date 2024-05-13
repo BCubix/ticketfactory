@@ -3,7 +3,12 @@ import axios from '@Services/api/config';
 const logsApi = {
     getLogs: async () => {
         try {
-            const result = await axios.get('/logs');
+            let params = {
+                'filters[sortField]': 'id',
+                'filters[sortOrder]': 'DESC',
+            };
+
+            const result = await axios.get('/logs', { params });
 
             return { result: true, logs: result.data?.results };
         } catch (error) {

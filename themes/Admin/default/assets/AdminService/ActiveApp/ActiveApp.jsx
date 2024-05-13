@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ActiveModule } from '@/AdminService/ActiveModule/ActiveModule';
 import { Api } from '../Api';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { profileSelector } from '../../Apps/Auth/redux/profile/profileSlice';
 
 const FUNCTIONS_LIST = ['initConstant', 'initComponent', 'initApi', 'initAuthenticatedRoutes', 'initNonAuthenticatedRoutes', 'initMenu', 'initReducer', 'initTab', 'initCrud'];
 
 export const ActiveApp = () => {
-    const [loaded, setLoaded] = useState(false);
+    const [loaded, setLoaded] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const { connected } = useSelector(profileSelector);
     const dispatch = useDispatch();
 
+    const getList = useMemo(() => {
+        return require.context(`@Apps`, true, /^\.\/\w+\/index.js$/);
+    }, []);
+
     const initApp = async () => {
-        const list = require.context(`@Apps`, true, /^\.\/\w+\/index.js$/);
+        const list = getList;
         const listKeys = list.keys();
 
         FUNCTIONS_LIST.forEach((functionName) => {
@@ -24,15 +31,28 @@ export const ActiveApp = () => {
             });
         });
 
+        initAppDefaultFunctions();
+    };
+
+    const initAppDefaultFunctions = async () => {
+        if (loaded || loading) {
+            return;
+        }
+
+        setLoading(true);
+
         const check = await Api.authApi.checkIsAuth();
         if (!check.result) {
             dispatch(loginFailure({ error: check.error }));
-            setLoaded(true);
-
+            setLoading(false);
+            setLoaded(false);
             return;
         }
 
         const parametersData = await Api.parametersApi.getParameters();
+
+        const list = getList;
+        const listKeys = list.keys();
 
         listKeys.map(async (item) => {
             const func = list(item)?.default;
@@ -41,6 +61,7 @@ export const ActiveApp = () => {
             }
         });
 
+        setLoading(false);
         setLoaded(true);
     };
 
@@ -48,9 +69,17 @@ export const ActiveApp = () => {
         initApp();
     }, []);
 
-    if (!loaded) {
+    useEffect(() => {
+        if (loading) {
+            return;
+        }
+
+        initAppDefaultFunctions();
+    }, [connected]);
+
+    if (loaded === null) {
         return <></>;
     }
 
-    return <ActiveModule />;
+    return <ActiveModule loaded={loaded} />;
 };

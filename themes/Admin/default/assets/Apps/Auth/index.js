@@ -38,7 +38,3 @@ export const initNonAuthenticatedRoutes = () => {
     setNonAuthenticatedRoute(Constant.FORGOT_PASSWORD_PATH, Component.ForgotPassword);
     setNonAuthenticatedRoute(Constant.MODIFY_PASSWORD_PATH, Component.ChangePassword);
 };
-
-export const initReducer = () => {
-    setReducer('profile', profileReducer);
-};
