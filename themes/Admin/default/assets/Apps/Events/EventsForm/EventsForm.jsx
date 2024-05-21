@@ -67,6 +67,7 @@ export const eventsInitialSchema = {
     name: (initValues) => initValues?.name || '',
     chapo: (initValues) => initValues?.chapo || '',
     description: (initValues) => initValues?.description || '',
+    eventLength: (initValues) => initValues?.eventLength || '',
     eventDateBlocks: (initValues, { defaultDateBlockName }) =>
         initValues?.eventDateBlocks?.map((el) => ({
             ...el,
