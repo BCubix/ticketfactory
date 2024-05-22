@@ -151,6 +151,11 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[ORM\ManyToOne]
+    private ?EventType $eventType = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
     #[JMS\Expose()]
@@ -516,6 +521,18 @@ class Event extends Datable
     public function setTicketing(?Ticketing $ticketing): static
     {
         $this->ticketing = $ticketing;
+
+        return $this;
+    }
+
+    public function getEventType(): ?EventType
+    {
+        return $this->eventType;
+    }
+
+    public function setEventType(?EventType $eventType): static
+    {
+        $this->eventType = $eventType;
 
         return $this;
     }

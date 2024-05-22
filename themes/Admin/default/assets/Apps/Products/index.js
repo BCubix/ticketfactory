@@ -45,7 +45,7 @@ export const initReducer = () => {
 };
 
 export const initTab = () => {
-    setTab('ProductsTabList', () => [
+    setTab('productsTabList', () => [
         { label: 'Produits', component: <Component.ProductsList />, path: Constant.PRODUCTS_BASE_PATH },
         { label: 'Catégories de produits', component: <Component.ProductCategoriesList />, path: Constant.PRODUCT_CATEGORIES_BASE_PATH },
     ]);
@@ -65,10 +65,13 @@ export default async function ({ parameters }) {
     const useProducts = parameters?.find((el) => el.paramKey === 'core_use_products');
 
     if (useProducts?.paramValue) {
-        setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH, Component.ProductsMenu, { tabValue: 0 });
+        setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH, Component.CmtAppMenu, {
+            tabListName: 'productsTabList',
+            path: Constant.PRODUCTS_BASE_PATH,
+        });
         setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateProduct);
         setAuthenticatedRoute(`${Constant.PRODUCTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProduct);
 
-        insertSubMenu(1, 'VENDRE', 'Produits', Constant.PRODUCTS_BASE_PATH, <FastfoodIcon />, { relatedLinks: [Constant.PRODUCT_CATEGORIES_BASE_PATH] });
+        insertSubMenu(3, 'PROGRAMMATION', 'Produits', Constant.PRODUCTS_BASE_PATH, <FastfoodIcon />, { relatedLinks: [Constant.PRODUCT_CATEGORIES_BASE_PATH] });
     }
 }

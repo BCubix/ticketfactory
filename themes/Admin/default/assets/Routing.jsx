@@ -48,7 +48,11 @@ export const Routing = () => {
                     key={index}
                     path={item.path}
                     exact={item.exact ? true : false}
-                    element={<AuthenticatedLayout>{item.tabValue ? <item.component tabValue={item.tabValue} /> : <item.component />}</AuthenticatedLayout>}
+                    element={
+                        <AuthenticatedLayout>
+                            <item.component {...item} />
+                        </AuthenticatedLayout>
+                    }
                 />
             ))}
         </Routes>

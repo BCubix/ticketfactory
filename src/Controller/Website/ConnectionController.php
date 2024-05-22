@@ -2,7 +2,6 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\Page\Page;
 use App\Entity\Customer\Customer;
 use App\Form\Website\Customer\CustomerType;
 use App\Form\Website\Customer\ResetCustomerPasswordType;
@@ -130,7 +129,6 @@ class ConnectionController extends WebsiteController
         $email = $request->get('email');
         $token = $request->get('token');
 
-        $emailValid = false;
         $customer = $this->em->getRepository(Customer::class)->findOneByUidForFront($email, $token);
 
         if (null !== $customer) {

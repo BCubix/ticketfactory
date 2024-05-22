@@ -18,6 +18,7 @@ import ordersApi from './services/api/ordersApi';
 import { setCrud } from '@/AdminService/Crud';
 
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('ORDERS_BASE_PATH', '/admin/commandes');
@@ -52,9 +53,14 @@ export default async function ({ parameters }) {
     const useProducts = parameters?.find((el) => el.paramKey === 'core_use_purchase');
 
     if (useProducts?.paramValue) {
-        setAuthenticatedRoute(Constant.ORDERS_BASE_PATH, Component.OrdersList);
+        addTabElements('ordersTabList', [{ label: 'Commandes', component: <Component.OrdersList />, path: Constant.ORDERS_BASE_PATH }]);
+
+        setAuthenticatedRoute(Constant.ORDERS_BASE_PATH, Component.CmtAppMenu, {
+            tabListName: 'ordersTabList',
+            path: Constant.ORDERS_BASE_PATH,
+        });
         setAuthenticatedRoute(`${Constant.ORDERS_BASE_PATH}/:id`, Component.OrdersDetail);
 
-        insertSubMenu(2, 'VENDRE', 'Commandes', Constant.ORDERS_BASE_PATH, <ShoppingCartIcon />);
+        insertSubMenu(1, 'VENDRE', 'Commandes', Constant.ORDERS_BASE_PATH, <ShoppingCartIcon />);
     }
 }

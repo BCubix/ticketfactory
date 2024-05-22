@@ -30,8 +30,6 @@ export const ActiveApp = () => {
                 }
             });
         });
-
-        initAppDefaultFunctions();
     };
 
     const initAppDefaultFunctions = async () => {

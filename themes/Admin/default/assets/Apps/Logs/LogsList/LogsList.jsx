@@ -36,9 +36,9 @@ export const logsListCrud = {
 
 export const LogUserName = (item) => {
     return (
-        <Box component="a" href={`${Constant.USER_BASE_PATH}/${item.user.id}${Constant.EDIT_PATH}`}>
+        <Box component="a" href={`${Constant.USER_BASE_PATH}/${item?.user?.id}${Constant.EDIT_PATH}`}>
             <Typography component="p" variant="body1">
-                {item.user.lastName} {item.user.firstName}
+                {item?.user?.lastName} {item?.user?.firstName}
             </Typography>
         </Box>
     );

@@ -83,3 +83,18 @@ export function setTab(name, tabListFunction) {
 
     TabObj[name] = tabListFunction;
 }
+
+export function addTabElements(name, tabList, position = 1) {
+    /* We use try, catch and finally to handle error when key doesn't exist in Tab */
+
+    let newTabList = null;
+    try {
+        newTabList = Tab[name];
+    } catch {
+        newTabList = [];
+    } finally {
+        newTabList.splice(position - 1, 0, ...tabList);
+
+        setTab(name, () => [...newTabList]);
+    }
+}

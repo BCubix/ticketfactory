@@ -26,7 +26,10 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.FEATURE_CATEGORIES_BASE_PATH, Component.FeaturesMenu, {tabValue: 1});
+    setAuthenticatedRoute(Constant.FEATURE_CATEGORIES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'featuresTabList',
+        path: Constant.FEATURE_CATEGORIES_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.FEATURE_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateFeatureCategory);
     setAuthenticatedRoute(`${Constant.FEATURE_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditFeatureCategory);
 };

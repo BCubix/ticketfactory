@@ -5,7 +5,8 @@ namespace App\Controller\Website;
 use App\Entity\User\User;
 use App\Entity\Event\Event;
 use App\Form\Website\Event\EventReservationType;
-
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class EventController extends WebsiteController
 {
@@ -40,6 +41,7 @@ class EventController extends WebsiteController
         $medias = $this->mf->get('event')->getMediasFromEvent($event);
         $eventDates = $this->mf->get('event')->getEventDatesFromEvent($event);
         $eventPrices = $this->mf->get('event')->getEventPricesFromEvent($event);
+        [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData(null, $event, $eventDates);
 
         return $this->websiteRender('Event/detail.html.twig', [
             'event'                => $event,
@@ -47,6 +49,43 @@ class EventController extends WebsiteController
             'eventReservationForm' => $eventReservationForm->createView(),
             'eventDates'           => $eventDates,
             'eventPrices'          => $eventPrices,
+            'firstDayOfMonth'      => $firstDayOfMonth,
+            'beginDate'            => $beginDate,
+            'endDate'              => $endDate,
+            'prevLink'             => $prevLink,
+            'nextLink'             => $nextLink,
+            'dates'                => $dates,
+        ]);
+    }
+
+    #[Route('/event/calendar-dates', name: 'tf_website_event_calendar_dates', priority: 1)]
+    public function calendarDates(Request $request)
+    {
+        $period = $request->get('period');
+        $eventId = $request->get('eventId');
+
+        if (null === $eventId) {
+            throw $this->createNotFoundException('eventId not found.');
+        }
+
+        $event = $this->em->getRepository(Event::class)->findOneByIdForWebsite($eventId);
+        if (null === $event) {
+            throw $this->createNotFoundException('This event does not exist.');
+        }
+
+        $eventDates = $this->mf->get('event')->getEventDatesFromEvent($event);
+        [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData($period, $event, $eventDates);
+
+
+        return $this->websiteRender('Event/_eventCalendar.html.twig', [
+            'event'                => $event,
+            'eventDates'           => $eventDates,
+            'firstDayOfMonth'      => $firstDayOfMonth,
+            'beginDate'            => $beginDate,
+            'endDate'              => $endDate,
+            'prevLink'             => $prevLink,
+            'nextLink'             => $nextLink,
+            'dates'                => $dates,
         ]);
     }
 }

@@ -1,3 +1,4 @@
+import React from 'react';
 import { CreateTag, tagsCreateCrud } from '@Apps/Tags/CreateTag/CreateTag';
 import { EditTag, tagsEditCrud } from '@Apps/Tags/EditTag/EditTag';
 import { TagsList, tagsListCrud } from '@Apps/Tags/TagsList/TagsList';
@@ -11,6 +12,7 @@ import { setCrud } from '@/AdminService/Crud';
 
 import tagsReducer from '@Apps/Tags/redux/tags/tagsSlice';
 import tagsApi from '@Apps/Tags/services/api/tagsApi';
+import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('TAGS_BASE_PATH', '/admin/tags');
@@ -27,13 +29,20 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.TAGS_BASE_PATH, Component.CategoriesMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.TAGS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'eventTabList',
+        path: Constant.TAGS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, Component.CreateTag);
     setAuthenticatedRoute(`${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTag);
 };
 
 export const initReducer = () => {
     setReducer('tags', tagsReducer);
+};
+
+export const initTab = () => {
+    addTabElements('eventTabList', [{ label: 'Tags', component: <Component.TagsList />, path: Constant.TAGS_BASE_PATH }], 3);
 };
 
 export const initCrud = () => {

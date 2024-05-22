@@ -16,6 +16,7 @@ import seasonsApi from '@Apps/Seasons/services/api/seasonsApi';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('SEASONS_BASE_PATH', '/admin/saisons');
@@ -32,17 +33,26 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.SEASONS_BASE_PATH, Component.SeasonsList);
+    setAuthenticatedRoute(Constant.SEASONS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'seasonsTabList',
+        path: Constant.SEASONS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH, Component.CreateSeason);
     setAuthenticatedRoute(`${Constant.SEASONS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditSeason);
 };
 
 export const initMenu = () => {
-    insertSubMenu(4, 'PROGRAMMER', 'Saisons', Constant.SEASONS_BASE_PATH, <CalendarMonthIcon />);
+    insertSubMenu(1, 'PROGRAMMATION', 'Référentiels', Constant.SEASONS_BASE_PATH, <CalendarMonthIcon />, {
+        relatedLinks: [Constant.ROOMS_BASE_PATH],
+    });
 };
 
 export const initReducer = () => {
     setReducer('seasons', seasonsReducer);
+};
+
+export const initTab = () => {
+    addTabElements('seasonsTabList', [{ label: 'Saisons', component: <Component.SeasonsList />, path: Constant.SEASONS_BASE_PATH }], 2);
 };
 
 export const initCrud = () => {

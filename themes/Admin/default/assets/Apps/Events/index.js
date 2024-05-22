@@ -22,6 +22,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import eventsReducer from './redux/events/eventsSlice';
 import eventsApi from './services/api/eventsApi';
@@ -54,7 +55,10 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.EVENTS_BASE_PATH, Component.EventsList);
+    setAuthenticatedRoute(Constant.EVENTS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'eventTabList',
+        path: Constant.EVENTS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.EVENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateEvent);
     setAuthenticatedRoute(`${Constant.EVENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEvent);
 };
@@ -66,7 +70,9 @@ export const initReducer = () => {
 export default async function ({ parameters }) {
     const eventName = parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
 
-    insertSubMenu(1, 'PROGRAMMER', eventName, Constant.EVENTS_BASE_PATH, <ConfirmationNumberIcon />);
+    insertSubMenu(1, 'PROGRAMMATION', eventName, Constant.EVENTS_BASE_PATH, <ConfirmationNumberIcon />, { relatedLinks: [Constant.CATEGORIES_BASE_PATH, Constant.TAGS_BASE_PATH] });
+
+    addTabElements('eventTabList', [{ label: eventName, component: <Component.EventsList />, path: Constant.EVENTS_BASE_PATH }]);
 
     const crud = {
         list: eventsListCrud({ eventName }),

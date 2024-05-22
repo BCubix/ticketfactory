@@ -4,7 +4,7 @@ import { checkArray, checkObject, checkPosition, checkString } from '@Services/u
 
 const MenuObj = [
     () => ({
-        title: 'PROGRAMMER',
+        title: 'PROGRAMMATION',
         menu: [],
     }),
     () => ({
