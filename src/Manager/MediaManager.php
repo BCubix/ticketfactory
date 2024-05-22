@@ -5,7 +5,9 @@ namespace App\Manager;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Service\File\MimeTypeMapping;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaManager extends AbstractManager
 {
@@ -169,5 +171,58 @@ class MediaManager extends AbstractManager
         $mimes = array_merge($mimes, MimeTypeMapping::getMimesFromType('Audio'));
 
         return $this->em->getRepository(Media::class)->findSearchForWebsite($search, $mimes);
+    }
+
+    public function downloadMediaFromUrl(string $url, string $title): Media
+    {
+        $mediaPath = '/uploads/media/';
+        $mediaFolderPath = $this->sf->get('pathGetter')->getPublicDir() . $mediaPath;
+
+        $client = HttpClient::create();
+        $response = $client->request('GET', $url);
+        $content = $response->getContent();
+
+        $type = $response->getHeaders()['content-type'][0];
+        $extension = '.' . explode('+', explode('/', $type)[1])[0];
+
+        $file = tmpfile();
+        fwrite($file, $content);
+        $filePath = stream_get_meta_data($file)['uri'];
+
+        if (rename($filePath, $mediaFolderPath . basename($filePath) . $extension)) {
+            $filePath = $mediaFolderPath . basename($filePath) . $extension;
+        }
+
+        $documentFile = new UploadedFile($filePath, basename($filePath), $type, null, true);
+
+        $media = new Media();
+        $media->setTitle($title)
+            ->setDocumentFileName($documentFile->getFilename())
+            ->setDocumentType($documentFile->getMimeType())
+            ->setDocumentSize($documentFile->getSize())
+            ->setDocumentUrl($mediaPath . $documentFile->getFilename())
+            ->setActive(true);
+
+        $imageForamtIds = $this->mf->get('parameter')->getCoreParameter('default_image_formats');
+        $imageFormats = $this->em->getRepository(ImageFormat::class)->findImageFormatById(explode(', ', $imageForamtIds));
+        foreach ($imageFormats['results'] as $imageFormat) {
+            $media->addImageFormat($imageFormat);
+        }
+        $this->em->persist($media);
+        $this->em->flush();
+
+        $folderDestination = '';
+        foreach (str_split($media->getId()) as $charParsedId) {
+            $folderDestination .= $charParsedId . '/';
+        }
+        $documentFile->move($mediaFolderPath . $folderDestination);
+
+        fclose($file);
+
+        $media->setDocumentUrl($mediaPath . $folderDestination . $media->getDocumentFileName());
+        $this->em->persist($media);
+        $this->em->flush();
+
+        return $media;
     }
 }
