@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { ModulesMenu } from '@Apps/Modules/ModulesMenu/ModulesMenu';
 import { UploadModule } from '@Apps/Modules/UploadModule/UploadModule';
 import { ModulesList } from '@Apps/Modules/ModulesList/ModulesList';
 
@@ -10,6 +9,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { addTabElements } from '@/AdminService/Tab';
 
 import modulesApi from './services/api/modulesApi';
 import modulesReducer from './redux/modules/modulesSlice';
@@ -23,7 +23,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('UploadModule', UploadModule);
     setComponent('ModulesList', ModulesList);
-    setComponent('ModulesMenu', ModulesMenu);
 };
 
 export const initApi = () => {
@@ -31,11 +30,18 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.MODULES_BASE_PATH, Component.ModulesMenu, { tabValue: 0 });
+    setAuthenticatedRoute(Constant.MODULES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'modulesTabList',
+        path: Constant.MODULES_BASE_PATH,
+    });
 };
 
 export const initMenu = () => {
-    insertSubMenu(7, 'PERSONNALISER', 'Modules', Constant.MODULES_BASE_PATH, <ViewModuleIcon />, { relatedLinks: [Constant.HOOKS_BASE_PATH] });
+    insertSubMenu(5, 'PERSONNALISER', 'Modules', Constant.MODULES_BASE_PATH, <ViewModuleIcon />, { relatedLinks: [Constant.HOOKS_BASE_PATH] });
+};
+
+export const initTab = () => {
+    addTabElements('modulesTabList', [{ label: 'Modules', component: <Component.ModulesList />, path: Constant.MODULES_BASE_PATH }]);
 };
 
 export const initReducer = () => {

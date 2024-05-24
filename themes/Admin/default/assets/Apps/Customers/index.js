@@ -11,12 +11,12 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import customersReducer from '@Apps/Customers/redux/customers/customersSlice';
 import customersApi from './services/api/customersApi';
 
 import PeopleIcon from '@mui/icons-material/People';
-import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('CUSTOMERS_BASE_PATH', '/admin/clients');

@@ -42,7 +42,7 @@ export const initReducer = () => {
 };
 
 export const initTab = () => {
-    addTabElements('seasonsTabList', [{ label: 'Salles', component: <Component.RoomsList />, path: Constant.ROOMS_BASE_PATH }], 3);
+    addTabElements('seasonsTabList', [{ label: 'Salles', component: <Component.RoomsList />, path: Constant.ROOMS_BASE_PATH }], 2);
 };
 
 export const initCrud = () => {

@@ -14,6 +14,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import EmailIcon from '@mui/icons-material/Email';
 
@@ -32,17 +33,24 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.CONTACT_REQUEST_BASE_PATH, Component.ContactRequestsList);
+    setAuthenticatedRoute(Constant.CONTACT_REQUEST_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'contactsTabList',
+        path: Constant.CONTACT_REQUEST_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH, Component.CreateContactRequests);
     setAuthenticatedRoute(`${Constant.CONTACT_REQUEST_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContactRequest);
 };
 
 export const initMenu = () => {
-    insertSubMenu(4, 'ADMINISTRER', 'Contacts', Constant.CONTACT_REQUEST_BASE_PATH, <EmailIcon />);
+    insertSubMenu(1, 'ADMINISTRER', 'Contacts', Constant.CONTACT_REQUEST_BASE_PATH, <EmailIcon />);
 };
 
 export const initReducer = () => {
     setReducer('contactRequests', contactRequestsReducer);
+};
+
+export const initTab = () => {
+    addTabElements('contactsTabList', [{ label: 'Demandes de contact', component: <Component.ContactRequestsList />, path: Constant.CONTACT_REQUEST_BASE_PATH }]);
 };
 
 export const initCrud = () => {

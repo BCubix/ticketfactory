@@ -8,6 +8,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import logsApi from './services/api/logsApi';
 
@@ -28,11 +29,18 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.LOGS_BASE_PATH, Component.LogsList);
+    setAuthenticatedRoute(Constant.LOGS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'logsTabList',
+        path: Constant.LOGS_BASE_PATH,
+    });
 };
 
 export const initMenu = () => {
     insertSubMenu(6, 'ADMINISTRER', 'Logs', Constant.LOGS_BASE_PATH, <HistoryIcon />);
+};
+
+export const initTab = () => {
+    addTabElements('logsTabList', [{ label: 'Logs', component: <Component.LogsList />, path: Constant.LOGS_BASE_PATH }]);
 };
 
 export const initCrud = () => {

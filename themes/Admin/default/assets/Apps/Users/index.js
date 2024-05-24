@@ -13,6 +13,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import usersReducer from '@Apps/Users/redux/users/usersSlice';
 import profileApi from '@Apps/Users/services/api/profileApi';
@@ -38,7 +39,10 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.USER_BASE_PATH, Component.UserList);
+    setAuthenticatedRoute(Constant.USER_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'usersTabList',
+        path: Constant.USER_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.USER_BASE_PATH + Constant.CREATE_PATH, Component.CreateUser);
     setAuthenticatedRoute(`${Constant.USER_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUser);
 
@@ -46,11 +50,15 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(5, 'ADMINISTRER', 'Utilisateurs', Constant.USER_BASE_PATH, <PersonIcon />);
+    insertSubMenu(2, 'ADMINISTRER', 'Utilisateurs', Constant.USER_BASE_PATH, <PersonIcon />);
 };
 
 export const initReducer = () => {
     setReducer('users', usersReducer);
+};
+
+export const initTab = () => {
+    addTabElements('usersTabList', [{ label: 'Utilisateurs', component: <Component.UserList />, path: Constant.USER_BASE_PATH }]);
 };
 
 export const initCrud = () => {

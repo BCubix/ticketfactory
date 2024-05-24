@@ -24,6 +24,7 @@ import { setCrud } from '@/AdminService/Crud';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import { menusEditCrud } from './MenusList/MenusList';
+import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('MENUS_BASE_PATH', '/admin/menus');
@@ -47,7 +48,10 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.MENUS_BASE_PATH, Component.MenusList);
+    setAuthenticatedRoute(Constant.MENUS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'menusTabList',
+        path: Constant.MENUS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.MENUS_BASE_PATH + Constant.CREATE_PATH, Component.CreateMenu);
 };
 
@@ -58,6 +62,10 @@ export const initMenu = () => {
 export const initReducer = () => {
     setReducer('menus', menusReducer);
     setReducer('menusListData', menusListDataReducer);
+};
+
+export const initTab = () => {
+    addTabElements('menusTabList', [{ label: 'Menus', component: <Component.MenusList />, path: Constant.MENUS_BASE_PATH }]);
 };
 
 export const initCrud = () => {

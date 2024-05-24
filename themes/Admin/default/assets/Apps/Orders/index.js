@@ -1,4 +1,5 @@
 import React from 'react';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { OrdersList, ordersListCrud } from '@Apps/Orders/OrdersList/OrdersList';
 import { OrdersDetail, ordersDetailCrud } from '@Apps/Orders/OrdersDetail/OrdersDetail';
@@ -12,13 +13,11 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { addTabElements } from '@/AdminService/Tab';
+import { setCrud } from '@/AdminService/Crud';
 
 import ordersReducer from './redux/orders/ordersSlice';
 import ordersApi from './services/api/ordersApi';
-import { setCrud } from '@/AdminService/Crud';
-
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('ORDERS_BASE_PATH', '/admin/commandes');

@@ -11,6 +11,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import vouchersReducer from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import vouchersApi from '@Apps/Vouchers/services/api/vouchersApi';

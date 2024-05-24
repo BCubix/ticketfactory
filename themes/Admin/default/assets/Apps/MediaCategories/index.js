@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { CreateMediaCategory, mediaCategoriesCreateCrud } from '@Apps/MediaCategories/CreateMediaCategory/CreateMediaCategory';
 import { EditMediaCategory, mediaCategoriesEditCrud } from '@Apps/MediaCategories/EditMediaCategory/EditMediaCategory';
 import { ParentMediaCategoryPartForm } from '@Apps/MediaCategories/MediaCategoriesForm/ParentMediaCategoryPartForm';
@@ -9,6 +11,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import mediaCategoriesReducer from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
 import mediaCategoriesApi from './services/api/mediaCategoriesApi';
@@ -29,14 +32,24 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.MEDIA_CATEGORIES_BASE_PATH, Component.MediasMenu, { tabValue: 1 });
-    setAuthenticatedRoute(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id`, Component.MediasMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.MEDIA_CATEGORIES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'mediasTabList',
+        path: Constant.MEDIA_CATEGORIES_BASE_PATH,
+    });
+    setAuthenticatedRoute(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id`, Component.CmtAppMenu, {
+        tabListName: 'mediasTabList',
+        path: Constant.MEDIA_CATEGORIES_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.MEDIA_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateMediaCategory);
     setAuthenticatedRoute(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditMediaCategory);
 };
 
 export const initReducer = () => {
     setReducer('mediaCategories', mediaCategoriesReducer);
+};
+
+export const initTab = () => {
+    addTabElements('mediasTabList', [{ label: 'Catégories de média', component: <Component.MediaCategoriesList />, path: Constant.MEDIA_CATEGORIES_BASE_PATH }], 2);
 };
 
 export const initCrud = () => {

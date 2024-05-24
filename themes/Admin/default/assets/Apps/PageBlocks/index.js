@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { PageBlockColumnPart } from '@Apps/PageBlocks/PageBlocksForm/PageBlockColumnPart';
 import { CreatePageBlock, pageBlocksCreateCrud } from '@Apps/PageBlocks/CreatePageBlock/CreatePageBlock';
 import { EditPageBlock, pageBlocksEditCrud } from '@Apps/PageBlocks/EditPageBlock/EditPageBlock';
@@ -10,6 +12,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { addTabElements } from '@/AdminService/Tab';
 
 import pageBlocksApi from '@Apps/PageBlocks/services/api/pageBlocksApi';
 import pageBlocksReducer from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
@@ -33,13 +36,20 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH, Component.PagesMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'pagesTabList',
+        path: Constant.PAGE_BLOCKS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageBlock);
     setAuthenticatedRoute(`${Constant.PAGE_BLOCKS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageBlock);
 };
 
 export const initReducer = () => {
     setReducer('pageBlocks', pageBlocksReducer);
+};
+
+export const initTab = () => {
+    addTabElements('pagesTabList', [{ label: 'Blocs', component: <Component.PageBlocksList />, path: Constant.PAGE_BLOCKS_BASE_PATH }]);
 };
 
 export const initCrud = () => {

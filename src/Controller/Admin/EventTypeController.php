@@ -32,31 +32,10 @@ class EventTypeController extends CrudController
         return parent::getOne($request, $eventTypeId);
     }
 
-    #[Rest\Post('/event-types')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_event_type_one'])]
-    public function add(Request $request): View
-    {
-        return parent::add($request);
-    }
-
     #[Rest\Post('/event-types/{eventTypeId}', requirements: ['eventTypeId' => '\d+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_type_one'])]
     public function edit(Request $request, int $eventTypeId): View
     {
         return parent::edit($request, $eventTypeId);
-    }
-
-    #[Rest\Post('/event-types/{eventTypeId}/duplicate', requirements: ['eventTypeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_event_type_one'])]
-    public function duplicate(Request $request, int $eventTypeId): View
-    {
-        return parent::duplicate($request, $eventTypeId);
-    }
-
-    #[Rest\Delete('/event-types/{eventTypeId}', requirements: ['eventTypeId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_event_type_one'])]
-    public function delete(Request $request, int $eventTypeId): View
-    {
-        return parent::delete($request, $eventTypeId);
     }
 }

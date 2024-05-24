@@ -12,6 +12,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { addTabElements } from '@/AdminService/Tab';
 
 import hooksReducer from './redux/hooks/hooksSlice';
 import hooksApi from './services/api/hooksApi';
@@ -34,8 +35,15 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.HOOKS_BASE_PATH, Component.ModulesMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.HOOKS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'modulesTabList',
+        path: Constant.HOOKS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH, Component.CreateHook);
+};
+
+export const initTab = () => {
+    addTabElements('modulesTabList', [{ label: 'Hooks', component: <Component.HooksList />, path: Constant.HOOKS_BASE_PATH }]);
 };
 
 export const initReducer = () => {

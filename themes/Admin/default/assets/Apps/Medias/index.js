@@ -22,6 +22,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import mediasReducer from './redux/medias/mediasSlice';
 import mediasApi from './services/api/mediasApi';
@@ -54,17 +55,24 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.MEDIAS_BASE_PATH, Component.MediasMenu, { tabValue: 0 });
+    setAuthenticatedRoute(Constant.MEDIAS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'mediasTabList',
+        path: Constant.MEDIAS_BASE_PATH,
+    });
 };
 
 export const initMenu = () => {
-    insertSubMenu(4, 'PERSONNALISER', 'Bibliothèque médias', Constant.MEDIAS_BASE_PATH, <PermMediaIcon />, {
+    insertSubMenu(4, 'PERSONNALISER', 'Médias', Constant.MEDIAS_BASE_PATH, <PermMediaIcon />, {
         relatedLinks: [Constant.MEDIA_CATEGORIES_BASE_PATH, Constant.IMAGE_FORMATS_BASE_PATH],
     });
 };
 
 export const initReducer = () => {
     setReducer('medias', mediasReducer);
+};
+
+export const initTab = () => {
+    addTabElements('mediasTabList', [{ label: 'Médias', component: <Component.MediasList />, path: Constant.MEDIAS_BASE_PATH }]);
 };
 
 export const initCrud = () => {

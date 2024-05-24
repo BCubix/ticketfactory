@@ -1,4 +1,5 @@
 import React from 'react';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import { CreateSeason, seasonsCreateCrud } from '@Apps/Seasons/CreateSeason/CreateSeason';
 import { EditSeason, seasonsEditCrud } from '@Apps/Seasons/EditSeason/EditSeason';
@@ -10,13 +11,11 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import seasonsReducer from '@Apps/Seasons/redux/seasons/seasonsSlice';
 import seasonsApi from '@Apps/Seasons/services/api/seasonsApi';
-
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { setCrud } from '@/AdminService/Crud';
-import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('SEASONS_BASE_PATH', '/admin/saisons');
@@ -42,7 +41,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'PROGRAMMATION', 'Référentiels', Constant.SEASONS_BASE_PATH, <CalendarMonthIcon />, {
+    insertSubMenu(5, 'ADMINISTRER', 'Référentiels', Constant.SEASONS_BASE_PATH, <CalendarMonthIcon />, {
         relatedLinks: [Constant.ROOMS_BASE_PATH],
     });
 };

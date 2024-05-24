@@ -5,11 +5,11 @@ import { Tab } from '@/AdminService/Tab';
 export const CmtAppMenu = ({ tabList = null, tabListName = '', tabValue = null, path = '' }) => {
     const list = useMemo(() => {
         if (tabList) {
-            return tabList;
+            return tabList?.sort((itemA, itemB) => itemA?.position > itemB?.position);
         }
 
         if (tabListName) {
-            return Tab[tabListName];
+            return Tab[tabListName]?.sort((itemA, itemB) => itemA?.position > itemB?.position);
         }
 
         return [];

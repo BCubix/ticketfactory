@@ -19,6 +19,10 @@ const MenuObj = [
         title: 'ADMINISTRER',
         menu: [],
     }),
+    () => ({
+        title: 'PARAMETRER',
+        menu: [],
+    }),
 ];
 
 /**
@@ -48,19 +52,6 @@ export function setMenu(position, title, menu = []) {
     checkPosition(position);
     checkString(title);
     checkArray(menu);
-
-    for (const tab of menu) {
-        checkObject(tab);
-
-        if (Object.keys(tab).length !== 3) {
-            throw new Error(`The length of ${tab}'s keys must be 3.`);
-        }
-
-        const { name, link, icon } = tab;
-        checkString(name);
-        checkString(link);
-        checkObject(icon);
-    }
 
     MenuObj[position - 1] = () => ({
         title: title,
@@ -112,7 +103,7 @@ export function insertMenu(position, title, menu = []) {
  *
  * @throws {Error} Parameters are not corresponded of type script.
  */
-export function setSubMenu(position, title, name, link, icon) {
+export function setSubMenu(position, title, name, link, icon, options = {}) {
     checkPosition(position);
     checkString(title);
     checkString(name);
@@ -129,7 +120,7 @@ export function setSubMenu(position, title, name, link, icon) {
         throw new Error(`The position ${position} must be less than length of menu`);
     }
 
-    menu.menu[position - 1] = { name: name, link: link, icon: icon };
+    menu.menu[position - 1] = { name: name, link: link, icon: icon, position, ...options };
 
     MenuObj[index] = () => ({
         title: menu.title,
@@ -161,10 +152,29 @@ export function insertSubMenu(position, title, name, link, icon, options = {}) {
     }
 
     const menu = MenuObj[index]();
-    menu.menu.splice(position - 1, 0, { name: name, link: link, icon: icon, ...options });
+    menu.menu.splice(position - 1, 0, { name: name, link: link, icon: icon, position, ...options });
 
     MenuObj[index] = () => ({
         title: menu.title,
         menu: menu.menu,
     });
+}
+
+export function addRelatedLinks(link, relatedLink) {
+    const menus = MenuObj;
+    for (let a = 0; a < menus.length; a++) {
+        let menu = menus[a]();
+
+        for (let b = 0; b < menu.menu.length; b++) {
+            if (menu.menu[b].link === link) {
+                if (!menu.menu[b].relatedLinks) {
+                    menu.menu[b].relatedLinks = [];
+                }
+
+                menu.menu[b].relatedLinks.push(relatedLink);
+
+                setMenu(a + 1, menu.title, menu.menu);
+            }
+        }
+    }
 }

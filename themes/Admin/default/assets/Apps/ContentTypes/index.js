@@ -6,7 +6,6 @@ import { MainPartFieldForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArra
 import { FieldElemWrapper, FieldFormControl } from '@Apps/ContentTypes/ContentTypesForm/sc.ContentTypeFields';
 import { ContentTypesList, contentTypesListCrud } from '@Apps/ContentTypes/ContentTypesList/ContentTypesList';
 import { PageTypesList, pageTypesListCrud } from '@Apps/ContentTypes/ContentTypesList/PageTypesList';
-import { ContentTypesMenu } from '@Apps/ContentTypes/ContentTypesMenu/ContentTypesMenu';
 import { CreateContentType, contentTypesCreateCrud } from '@Apps/ContentTypes/CreateContentType/CreateContentType';
 import { CreatePageType, pageTypesCreateCrud } from '@Apps/ContentTypes/CreateContentType/CreatePageType';
 import { EditContentType, contentTypesEditCrud } from '@Apps/ContentTypes/EditContentType/EditContentType';
@@ -18,11 +17,12 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
+import { addTabElements } from '@/AdminService/Tab';
 
 import contentTypesReducer from './redux/contentTypes/contentTypesSlice';
 import pageTypesReducer from './redux/pageTypes/pageTypesSlice';
 import contentTypesApi from './services/api/contentTypesApi';
-import { setCrud } from '@/AdminService/Crud';
 
 import WidgetsIcon from '@mui/icons-material/Widgets';
 
@@ -39,7 +39,6 @@ export const initComponent = () => {
     setComponent('FieldFormControl', FieldFormControl);
     setComponent('ContentTypesList', ContentTypesList);
     setComponent('PageTypesList', PageTypesList);
-    setComponent('ContentTypesMenu', ContentTypesMenu);
     setComponent('CreateContentType', CreateContentType);
     setComponent('CreatePageType', CreatePageType);
     setComponent('EditContentType', EditContentType);
@@ -51,22 +50,35 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH, Component.ContentTypesMenu, { tabValue: 0 });
+    setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'contentTypesTabList',
+        path: Constant.CONTENT_TYPES_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreateContentType);
     setAuthenticatedRoute(`${Constant.CONTENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContentType);
 
-    setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH, Component.ContentTypesMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'contentTypesTabList',
+        path: Constant.PAGE_TYPES_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageType);
     setAuthenticatedRoute(`${Constant.PAGE_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageType);
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'ADMINISTRER', 'Types de contenus', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
+    insertSubMenu(1, 'PARAMETRER', 'Types', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
 };
 
 export const initReducer = () => {
     setReducer('contentTypes', contentTypesReducer);
     setReducer('pageTypes', pageTypesReducer);
+};
+
+export const initTab = () => {
+    addTabElements('contentTypesTabList', [
+        { label: 'Types de contenus', component: <Component.ContentTypesList />, path: Constant.CONTENT_TYPES_BASE_PATH },
+        { label: 'Types de pages', component: <Component.PageTypesList />, path: Constant.PAGE_TYPES_BASE_PATH },
+    ]);
 };
 
 export const initCrud = () => {
