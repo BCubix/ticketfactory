@@ -51,7 +51,7 @@ export const initReducer = () => {
 };
 
 export const initTab = () => {
-    addTabElements('eventTabList', [{ label: 'Catégories', component: <Component.CategoriesList />, path: Constant.CATEGORIES_BASE_PATH }]);
+    addTabElements('eventTabList', [{ label: 'Catégories', component: <Component.CategoriesList />, path: Constant.CATEGORIES_BASE_PATH }], 2);
 };
 
 export const initCrud = () => {

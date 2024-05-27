@@ -32,6 +32,7 @@ export const EditEvent = () => {
     const [categoriesData, setCategoriesData] = useState(null);
     const [roomsData, setRoomsData] = useState(null);
     const [seasonsData, setSeasonsData] = useState(null);
+    const [eventTypesData, setEventTypesData] = useState(null);
     const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
     const [ticketingData, setTicketingData] = useState(null);
@@ -68,12 +69,28 @@ export const EditEvent = () => {
             setEvent(result.event);
 
             const defaultLanguageId = result?.event?.lang?.id;
-            Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
-            Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
             Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
             Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
+
+            if (parameters?.find((it) => it.paramKey === 'core_use_rooms')?.paramValue) {
+                Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
+            } else {
+                setRoomsData({ rooms: [] });
+            }
+
+            if (parameters?.find((it) => it.paramKey === 'core_use_seasons')?.paramValue) {
+                Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
+            } else {
+                setSeasonsData({ seasons: [] });
+            }
+
+            if (parameters?.find((it) => it.paramKey === 'core_use_event_types')?.paramValue) {
+                Api.eventTypesApi.getAllEventTypes({ lang: defaultLanguageId }).then((results) => setEventTypesData(results));
+            } else {
+                setEventTypesData({ eventTypes: [] });
+            }
         });
     };
 
@@ -106,10 +123,11 @@ export const EditEvent = () => {
         }
     };
 
-    if (!event || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData) {
+    if (!event || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData || !eventTypesData) {
         return <></>;
     }
 
+    console.log(seasonsData.seasons);
     return (
         <Component.CmtCrudForm
             handleSubmit={handleSubmit}
@@ -117,6 +135,7 @@ export const EditEvent = () => {
             categoriesList={categoriesData?.categories}
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
+            eventTypesList={eventTypesData?.eventTypes || []}
             featuresList={featuresData?.features}
             tagsList={tagsData.tags}
             ticketingList={ticketingData?.ticketing || []}

@@ -13,6 +13,7 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
 
 export const initConstant = () => {
     setConstant('ROOMS_BASE_PATH', '/admin/salles');
@@ -28,21 +29,8 @@ export const initApi = () => {
     setApi('roomsApi', roomsApi);
 };
 
-export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.ROOMS_BASE_PATH, Component.CmtAppMenu, {
-        tabListName: 'seasonsTabList',
-        path: Constant.ROOMS_BASE_PATH,
-    });
-    setAuthenticatedRoute(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH, Component.CreateRoom);
-    setAuthenticatedRoute(`${Constant.ROOMS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditRoom);
-};
-
 export const initReducer = () => {
     setReducer('rooms', roomsReducer);
-};
-
-export const initTab = () => {
-    addTabElements('seasonsTabList', [{ label: 'Salles', component: <Component.RoomsList />, path: Constant.ROOMS_BASE_PATH }], 2);
 };
 
 export const initCrud = () => {
@@ -54,3 +42,31 @@ export const initCrud = () => {
 
     setCrud('rooms', crud);
 };
+
+export default async function ({ parameters }) {
+    const useRooms = parameters?.find((el) => el.paramKey === 'core_use_rooms');
+
+    if (!useRooms?.paramValue) {
+        return;
+    }
+
+    setAuthenticatedRoute(Constant.ROOMS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'seasonsTabList',
+        path: Constant.ROOMS_BASE_PATH,
+    });
+    setAuthenticatedRoute(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH, Component.CreateRoom);
+    setAuthenticatedRoute(`${Constant.ROOMS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditRoom);
+
+    addTabElements('seasonsTabList', [{ label: 'Salles', component: <Component.RoomsList />, path: Constant.ROOMS_BASE_PATH }], 1);
+
+    let subMenu = getSubMenu('ADMINISTRER', 'Référentiels');
+    if (!subMenu) {
+        return;
+    }
+
+    setSubMenu(subMenu.position, 'ADMINISTRER', 'Référentiels', subMenu.link, subMenu.icon, {
+        ...subMenu.options,
+        linkList: [...(subMenu.linkList || []), { link: Constant.ROOMS_BASE_PATH, position: 2 }],
+        relatedLinks: [...(subMenu.relatedLinks || []), Constant.ROOMS_BASE_PATH],
+    });
+}

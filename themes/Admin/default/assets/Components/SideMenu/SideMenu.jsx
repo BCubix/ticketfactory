@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { Drawer, Link, List, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
@@ -13,7 +13,7 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
     const checkPath = (path, relatedLinks) => {
         let p = pathname?.split('/')?.at(2);
 
-        if (p === path.split('/')?.at(2)) {
+        if (p === path?.split('/')?.at(2)) {
             return true;
         }
 
@@ -56,37 +56,43 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
                             </Component.MenuTitle>
                             {menu?.menu
                                 ?.sort((itemA, itemB) => itemA?.position > itemB?.position)
-                                ?.map((item, ind) => (
-                                    <Component.MenuItemButton component="li" key={ind} isActive={checkPath(item.link, item?.relatedLinks)}>
-                                        <Link
-                                            underline={'none'}
-                                            component={RouterLink}
-                                            to={item.link || Constant.HOME_PATH}
-                                            sx={{
-                                                flex: 1,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                overflow: 'hidden',
-                                                position: 'relative',
-                                                color: 'inherit',
-                                                p: (theme) => theme.spacing(2, 7),
-                                            }}
-                                        >
-                                            <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>{item.icon}</ListItemIcon>
-                                            <ListItemText
-                                                primary={item.name}
-                                                sx={{
-                                                    m: 0,
-                                                    '& .MuiTypography-root': {
-                                                        whiteSpace: 'nowrap',
+                                ?.map((item, ind) => {
+                                    if (item.link || item.linkList?.length > 0) {
+                                        return (
+                                            <Component.MenuItemButton component="li" key={ind} isActive={checkPath(item.link, item?.relatedLinks)}>
+                                                <Link
+                                                    underline={'none'}
+                                                    component={RouterLink}
+                                                    to={item.link || item.linkList?.sort((a, b) => a.position > b.position)[0]?.link || Constant.HOME_PATH}
+                                                    sx={{
+                                                        flex: 1,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
                                                         overflow: 'hidden',
-                                                        textOverflow: 'ellipsis',
-                                                    },
-                                                }}
-                                            />
-                                        </Link>
-                                    </Component.MenuItemButton>
-                                ))}
+                                                        position: 'relative',
+                                                        color: 'inherit',
+                                                        p: (theme) => theme.spacing(2, 7),
+                                                    }}
+                                                >
+                                                    <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>{item.icon}</ListItemIcon>
+                                                    <ListItemText
+                                                        primary={item.name}
+                                                        sx={{
+                                                            m: 0,
+                                                            '& .MuiTypography-root': {
+                                                                whiteSpace: 'nowrap',
+                                                                overflow: 'hidden',
+                                                                textOverflow: 'ellipsis',
+                                                            },
+                                                        }}
+                                                    />
+                                                </Link>
+                                            </Component.MenuItemButton>
+                                        );
+                                    }
+
+                                    return <React.Fragment key={ind} />;
+                                })}
                         </Box>
                     ))}
                 </List>

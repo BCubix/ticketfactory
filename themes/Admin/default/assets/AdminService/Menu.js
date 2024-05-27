@@ -59,6 +59,31 @@ export function setMenu(position, title, menu = []) {
     });
 }
 
+export function getMenu(title) {
+    checkString(title);
+
+    return MenuObj?.find((item) => item?.title === title);
+}
+
+export function getSubMenu(title, name = null) {
+    checkString(title);
+    if (name !== null) {
+        checkString(name);
+    }
+
+    const index = MenuObj.findIndex((item) => item().title === title);
+    if (index === -1) {
+        throw new Error(`The title '${title}' must be in Menu.`);
+    }
+
+    const menu = MenuObj[index]();
+    if (!name) {
+        return menu;
+    }
+
+    return menu.menu?.find((item) => item?.name === name);
+}
+
 /**
  * Menu's insert.
  *
@@ -107,8 +132,11 @@ export function setSubMenu(position, title, name, link, icon, options = {}) {
     checkPosition(position);
     checkString(title);
     checkString(name);
-    checkString(link);
     checkObject(icon);
+
+    if (null !== link) {
+        checkString(link);
+    }
 
     const index = MenuObj.findIndex((menu) => menu().title === title);
     if (index === -1) {
@@ -116,11 +144,13 @@ export function setSubMenu(position, title, name, link, icon, options = {}) {
     }
 
     const menu = MenuObj[index]();
-    if (position > menu.menu.length) {
-        throw new Error(`The position ${position} must be less than length of menu`);
+
+    const subMenuIndex = menu.menu.findIndex((it) => it.name === name);
+    if (subMenuIndex === -1) {
+        throw new Error(`The name '${name}' must be in Menu ${title}.`);
     }
 
-    menu.menu[position - 1] = { name: name, link: link, icon: icon, position, ...options };
+    menu.menu[subMenuIndex] = { ...menu.menu[subMenuIndex], name: name, link: link, icon: icon, position, ...options };
 
     MenuObj[index] = () => ({
         title: menu.title,
@@ -143,8 +173,11 @@ export function insertSubMenu(position, title, name, link, icon, options = {}) {
     checkPosition(position);
     checkString(title);
     checkString(name);
-    checkString(link);
     checkObject(icon);
+
+    if (null !== link) {
+        checkString(link);
+    }
 
     const index = MenuObj.findIndex((menu) => menu().title === title);
     if (index === -1) {
@@ -152,6 +185,7 @@ export function insertSubMenu(position, title, name, link, icon, options = {}) {
     }
 
     const menu = MenuObj[index]();
+
     menu.menu.splice(position - 1, 0, { name: name, link: link, icon: icon, position, ...options });
 
     MenuObj[index] = () => ({
@@ -160,21 +194,24 @@ export function insertSubMenu(position, title, name, link, icon, options = {}) {
     });
 }
 
-export function addRelatedLinks(link, relatedLink) {
-    const menus = MenuObj;
-    for (let a = 0; a < menus.length; a++) {
-        let menu = menus[a]();
-
-        for (let b = 0; b < menu.menu.length; b++) {
-            if (menu.menu[b].link === link) {
-                if (!menu.menu[b].relatedLinks) {
-                    menu.menu[b].relatedLinks = [];
-                }
-
-                menu.menu[b].relatedLinks.push(relatedLink);
-
-                setMenu(a + 1, menu.title, menu.menu);
-            }
-        }
+export function addRelatedLinks(title, name, relatedLink) {
+    const index = MenuObj.findIndex((menu) => menu().title === title);
+    if (index === -1) {
+        throw new Error(`The title '${title}' must be in Menu.`);
     }
+
+    let menu = MenuObj[index]();
+
+    const subMenuIndex = menu.menu.findIndex((it) => it.name === name);
+    if (subMenuIndex === -1) {
+        throw new Error(`The name '${name}' must be in Menu ${title}.`);
+    }
+
+    if (!menu.menu[subMenuIndex].relatedLinks) {
+        menu.menu[subMenuIndex].relatedLinks = [];
+    }
+
+    menu.menu[subMenuIndex].relatedLinks.push(relatedLink);
+
+    setMenu(index + 1, menu.title, menu.menu);
 }

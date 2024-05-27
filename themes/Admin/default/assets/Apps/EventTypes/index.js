@@ -13,6 +13,7 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
 
 export const initConstant = () => {
     setConstant('EVENT_TYPES_BASE_PATH', '/admin/types-d-evenements');
@@ -28,21 +29,11 @@ export const initApi = () => {
     setApi('eventTypesApi', eventTypesApi);
 };
 
-export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.EVENT_TYPES_BASE_PATH, Component.CmtAppMenu, {
-        tabListName: 'seasonsTabList',
-        path: Constant.EVENT_TYPES_BASE_PATH,
-    });
-    setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
-};
-
 export const initReducer = () => {
     setReducer('eventTypes', eventTypesReducer);
 };
 
-export const initTab = () => {
-    addTabElements('seasonsTabList', [{ label: "Types d'évènements", component: <Component.EventTypesList />, path: Constant.EVENT_TYPES_BASE_PATH }], 3);
-};
+export const initTab = () => {};
 
 export const initCrud = () => {
     const crud = {
@@ -52,3 +43,30 @@ export const initCrud = () => {
 
     setCrud('eventTypes', crud);
 };
+
+export default async function ({ parameters }) {
+    const useEventTypes = parameters?.find((el) => el.paramKey === 'core_use_event_types');
+
+    if (!useEventTypes?.paramValue) {
+        return;
+    }
+
+    setAuthenticatedRoute(Constant.EVENT_TYPES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'seasonsTabList',
+        path: Constant.EVENT_TYPES_BASE_PATH,
+    });
+    setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
+
+    addTabElements('seasonsTabList', [{ label: "Types d'évènements", component: <Component.EventTypesList />, path: Constant.EVENT_TYPES_BASE_PATH }], 3);
+
+    let subMenu = getSubMenu('ADMINISTRER', 'Référentiels');
+    if (!subMenu) {
+        return;
+    }
+
+    setSubMenu(subMenu.position, 'ADMINISTRER', 'Référentiels', subMenu.link, subMenu.icon, {
+        ...subMenu.options,
+        linkList: [...(subMenu.linkList || []), { link: Constant.EVENT_TYPES_BASE_PATH, position: 3 }],
+        relatedLinks: [...(subMenu.relatedLinks || []), Constant.EVENT_TYPES_BASE_PATH],
+    });
+}
