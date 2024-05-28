@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -32,8 +32,13 @@ export const CmtMediaModal = ({
 }) => {
     const [createDialog, setCreateDialog] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
+    const [multipleSelect, setMultipleSelect] = useState([]);
 
-    if (Array.isArray(media)) {
+    const multiple = useMemo(() => {
+        return Array.isArray(media);
+    }, []);
+
+    if (multiple) {
         media = media?.map((el) => el.id) || [];
     }
 
@@ -45,6 +50,56 @@ export const CmtMediaModal = ({
         setCreateDialog(false);
         onAddNewMedia();
         NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
+    };
+
+    const handleMultipleClick = (item, ctrlKey, shiftKey) => {
+        let selected = [...multipleSelect];
+
+        if (ctrlKey) {
+            const index = selected.findIndex((it) => it.id === item.id);
+            if (index === -1) {
+                selected.push(item);
+            } else {
+                selected.splice(index, 1);
+            }
+        } else if (shiftKey && selected.length > 0) {
+            const lastId = selected[selected.length - 1].id;
+            const lastIndex = mediasList.findIndex((it) => it.id === lastId);
+            const newIndex = mediasList.findIndex((it) => it.id === item.id);
+
+            if (lastIndex === -1 || newIndex === -1) {
+                setMultipleSelect([]);
+                return;
+            }
+
+            const startIndex = Math.min(lastIndex, newIndex);
+            const endIndex = Math.max(lastIndex, newIndex);
+            let newSelection = mediasList.slice(startIndex, endIndex + 1);
+
+            newSelection?.forEach((it) => {
+                if (selected.findIndex((el) => el.id === it.id) === -1) {
+                    selected.push(it);
+                }
+            });
+        } else {
+            selected = [item];
+        }
+
+        setMultipleSelect(selected);
+    };
+
+    const handleAddMultiple = () => {
+        if (onClick === null) {
+            return;
+        }
+
+        multipleSelect?.forEach((item) => {
+            if (!media?.includes(item?.id)) {
+                onClick(item);
+            }
+        });
+
+        setMultipleSelect([]);
     };
 
     return (
@@ -77,21 +132,33 @@ export const CmtMediaModal = ({
                             Créer un nouveau média
                         </Component.CreateButton>
 
-                        <Component.MediasFilters filters={mediaFilters} changeFilters={(values) => setMediaFilters(values)} categoriesList={categoriesList} />
+                        <Component.MediasFilters
+                            filters={mediaFilters}
+                            changeFilters={(values) => {
+                                setMultipleSelect([]);
+                                setMediaFilters(values);
+                            }}
+                            categoriesList={categoriesList}
+                        />
 
                         <Box display="flex" pt={5} flexWrap="wrap">
                             {mediasList?.map((item, index) => (
                                 <Component.CmtMediaElement
                                     key={index}
-                                    onClick={() => setSelectedMedia(item)}
+                                    onClick={(e) => {
+                                        if (multiple) {
+                                            handleMultipleClick(item, e.ctrlKey, e.shiftKey);
+                                        }
+                                        setSelectedMedia(item);
+                                    }}
                                     position="relative"
                                     sx={
-                                        item.id === selectedMedia?.id
+                                        item.id === selectedMedia?.id || multipleSelect?.findIndex((it) => it.id === item.id) !== -1
                                             ? {
                                                   outline: (theme) => `3px solid ${theme.palette.crud.action.textColor}`,
                                                   outlineOffset: '-3px',
                                               }
-                                            : (Array.isArray(media) ? media.includes(item.id) : media?.id === item.id)
+                                            : (multiple ? media.includes(item.id) : media?.id === item.id)
                                             ? {
                                                   outline: (theme) => `3px solid ${theme.palette.crud.create.textColor}`,
                                                   outlineOffset: '-3px',
@@ -99,7 +166,7 @@ export const CmtMediaModal = ({
                                             : {}
                                     }
                                 >
-                                    {(Array.isArray(media) ? media.includes(item.id) : media?.id === item.id) && (
+                                    {(multiple ? media.includes(item.id) : media?.id === item.id) && (
                                         <CheckIcon sx={{ color: (theme) => theme.palette.crud.create.textColor, position: 'absolute', top: 5, right: 5 }} />
                                     )}
                                     <Component.CmtDisplayMediaType media={item} displayThumbnail width={'100%'} />
@@ -111,10 +178,24 @@ export const CmtMediaModal = ({
                             page={mediaFilters.page}
                             total={total}
                             limit={mediaFilters.limit}
-                            setPage={(newValue) => setMediaFilters({ ...mediaFilters, page: newValue })}
-                            setLimit={(newValue) => setMediaFilters({ ...mediaFilters, limit: newValue })}
+                            setPage={(newValue) => {
+                                setMultipleSelect([]);
+                                setMediaFilters({ ...mediaFilters, page: newValue });
+                            }}
+                            setLimit={(newValue) => {
+                                setMultipleSelect([]);
+                                setMediaFilters({ ...mediaFilters, limit: newValue });
+                            }}
                             length={mediasList?.length}
                         />
+
+                        {multipleSelect.length > 1 && (
+                            <Box sx={{ display: 'flex', marginTop: 5 }}>
+                                <Component.ActionButton variant="contained" sx={{ marginLeft: 'auto' }} onClick={handleAddMultiple}>
+                                    Ajouter les médias
+                                </Component.ActionButton>
+                            </Box>
+                        )}
                     </Grid>
                     <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%', marginTop: 3 }}>
                         <Component.CmtMediaModalInfos
@@ -129,6 +210,13 @@ export const CmtMediaModal = ({
                             updatedMedia={(newMedia) => {
                                 if (selectedMedia?.id === newMedia?.id) {
                                     setSelectedMedia(newMedia);
+                                }
+
+                                let findIndex = multipleSelect.findIndex((it) => it.id === newMedia.id);
+                                if (findIndex !== -1) {
+                                    let selected = [...multipleSelect];
+                                    selected[findIndex] = newMedia;
+                                    setMultipleSelect(selected);
                                 }
 
                                 if (updatedMedia) {

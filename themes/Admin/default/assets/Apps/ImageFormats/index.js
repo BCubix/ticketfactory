@@ -13,6 +13,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { Tab, addTabElements } from '@/AdminService/Tab';
 
 import imageFormatsReducer from './redux/imageFormats/imageFormatSlice';
 import imageFormatsApi from './services/api/imageFormatsApi';
@@ -37,13 +38,30 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH, Component.MediasMenu, { tabValue: 2 });
+    setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'mediasTabList',
+        path: Constant.IMAGE_FORMATS_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH, Component.CreateImageFormat);
     setAuthenticatedRoute(`${Constant.IMAGE_FORMATS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditImageFormat);
 };
 
 export const initReducer = () => {
     setReducer('imageFormats', imageFormatsReducer);
+};
+
+export const initTab = () => {
+    addTabElements(
+        'mediasTabList',
+        [
+            {
+                label: "Formats d'images",
+                component: <Component.ImageFormatsList />,
+                path: Constant.IMAGE_FORMATS_BASE_PATH,
+            },
+        ],
+        3
+    );
 };
 
 export const initCrud = () => {

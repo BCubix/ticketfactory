@@ -183,7 +183,11 @@ export const CmtDisplayFields = ({ fields, ...inheritedProps }) => {
     return (
         <>
             {fields.map((field, index) => {
-                const { style, input, inputs, component: Cmt, components: Cmts, ...fieldProps } = field;
+                if (typeof field === 'function' && !field(inheritedProps)) {
+                    return <React.Fragment key={index} />;
+                }
+
+                const { style, input, inputs, component: Cmt, components: Cmts, ...fieldProps } = typeof field === 'function' ? field(inheritedProps) : field;
                 const items = input ? [typeof input === 'function' ? input(inheritedProps) : input] : inputs;
 
                 return (

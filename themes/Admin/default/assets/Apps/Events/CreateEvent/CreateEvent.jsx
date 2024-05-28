@@ -14,14 +14,14 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 
-export const eventsCreateCrud = {
+export const eventsCreateCrud = ({ eventName }) => ({
     form: {
         title: "Création d'un évènement",
         initialSchema: eventsInitialSchema,
         validationSchema: eventsValidationSchema,
     },
     ...eventsForm,
-};
+});
 
 export const CreateEvent = () => {
     const dispatch = useDispatch();
@@ -34,6 +34,7 @@ export const CreateEvent = () => {
     const [featuresData, setFeaturesData] = useState(null);
     const [tagsData, setTagsData] = useState(null);
     const [ticketingData, setTicketingData] = useState(null);
+    const [eventTypesData, setEventTypesData] = useState(null);
     const [initialValues, setInitialValues] = useState(null);
 
     const [queryParameters] = useSearchParams();
@@ -60,12 +61,28 @@ export const CreateEvent = () => {
         apiMiddleware(dispatch, async () => {
             const defaultLanguageId = languageId || languagesData?.languages?.find((el) => el.isDefault)?.id;
 
-            Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
-            Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
             Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
             Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
+
+            if (parameters?.find((it) => it.paramKey === 'core_use_rooms')?.paramValue) {
+                Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));
+            } else {
+                setRoomsData({ rooms: [] });
+            }
+
+            if (parameters?.find((it) => it.paramKey === 'core_use_seasons')?.paramValue) {
+                Api.seasonsApi.getAllSeasons({ lang: defaultLanguageId }).then((results) => setSeasonsData(results));
+            } else {
+                setSeasonsData({ seasons: [] });
+            }
+
+            if (parameters?.find((it) => it.paramKey === 'core_use_event_types')?.paramValue) {
+                Api.eventTypesApi.getAllEventTypes({ lang: defaultLanguageId }).then((results) => setEventTypesData(results));
+            } else {
+                setEventTypesData({ eventTypes: [] });
+            }
 
             if (!eventId || !languageId) {
                 return;
@@ -102,7 +119,7 @@ export const CreateEvent = () => {
         });
     };
 
-    if (parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData || (eventId && !initialValues)) {
+    if (parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData || !eventTypesData || (eventId && !initialValues)) {
         return <></>;
     }
 
@@ -112,6 +129,7 @@ export const CreateEvent = () => {
             categoriesList={categoriesData?.categories}
             roomsList={roomsData.rooms}
             seasonsList={seasonsData.seasons}
+            eventTypesList={eventTypesData?.eventTypes || []}
             tagsList={tagsData.tags}
             ticketingList={ticketingData?.ticketing || []}
             featuresList={featuresData?.features}

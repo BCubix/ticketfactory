@@ -74,48 +74,18 @@ class EventManager extends AbstractManager
             return null;
         }
 
+        $checkEventUrl = [
+            'category' => fn ($event, $value) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() === $value : false,
+            'season' => fn ($event, $value) => $event->getSeason() ? $event->getSeason()->getSlug() === $value: false,
+            'room' => fn ($event, $value) => $event->getRoom() ? $event->getRoom()->getSlug() === $value: false,
+            'year' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value,
+            'month' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value,
+            'day' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value,
+        ];
+
         foreach ($matches as $key => $value) {
-            switch ($key) {
-                case 'category':
-                    if (null == $event->getMainCategory() || $event->getMainCategory()->getSlug() !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'season':
-                    if (null == $event->getSeason() || $event->getSeason()->getSlug() !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'room':
-                    if (null == $event->getRoom() || $event->getRoom()->getSlug() !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'year':
-                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('Y') !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'month':
-                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('m') !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'day':
-                    if ($this->mf->get('eventSorter')->getBeginDate($event)->format('d') !== $value) {
-                        return null;
-                    }
-                    break;
-
-                case 'id':
-                case 'slug':
-                default:
-                    break;
+            if (isset($checkEventUrl[$key]) && $checkEventUrl[$key]($event, $value) === false) {
+                return null;
             }
         }
 
@@ -174,10 +144,12 @@ class EventManager extends AbstractManager
     public function getSortedEvents(array $filters): array
     {
         [$sortField, $sortOrder] = $this->getDefaultParameters($filters);
+        $page = $filters['page'] ?? null;
+        $limit = $filters['limit'] ?? null;
 
         $events = $this->getEvents($filters);
 
-        return $this->mf->get('eventSorter')->sortEvents($events, true, $sortField, $sortOrder);
+        return $this->mf->get('eventSorter')->sortEvents($events, true, $sortField, $sortOrder, $page, $limit);
     }
 
     public function getUrlSlugs(Event $event): array
@@ -474,6 +446,35 @@ class EventManager extends AbstractManager
         return null;
     }
 
+    public function getCalendarData(?string $slug, Event $event, array $eventDates): mixed
+    {
+        if (null === $slug) {
+            $slug = (new \DateTime())->format('y-m');
+        }
+
+        $firstDayOfMonth = new \DateTime($slug . '-01');
+        [$beginDate, $endDate] = $this->getPeriodDates($firstDayOfMonth);
+        [$prevLink, $nextLink] = $this->generateLinks($firstDayOfMonth, $event->getId());
+
+        $dates = $this->getEventArray($beginDate, $endDate, $eventDates);
+        return [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates];
+    }
+
+    public function getMaxPage(int $total, ?int $limit): ?int
+    {
+        if (null === $limit) {
+            return null;
+        }
+
+        $maxPage = $total / $limit;
+
+        if (($total % $limit) > 0) {
+            $maxPage += 1;
+        }
+
+        return $maxPage;
+    }
+
     private function getDefaultParameters($filters): array
     {
         [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];
@@ -487,4 +488,64 @@ class EventManager extends AbstractManager
         ]);
     }
 
+    private function getPeriodDates(\DateTime $firstDayOfMonth): array
+    {
+        $beginDate = clone $firstDayOfMonth;
+        $period = new \DateInterval('P' . ($beginDate->format('N') - 1) . 'D');
+        $beginDate->sub($period);
+
+        $endDate = clone $firstDayOfMonth;
+        $period = new \DateInterval('P' . ($firstDayOfMonth->format('t') - 1) . 'D');
+        $endDate->add($period);
+        $period = new \DateInterval('P' . (7 - $endDate->format('N')) . 'D');
+        $endDate->add($period);
+
+        return [$beginDate, $endDate];
+    }
+
+    private function generateLinks(\DateTime $firstDayOfMonth, $eventId): array
+    {
+        $prevLink = clone $firstDayOfMonth;
+        $prevLink->sub(new \DateInterval('P1M'));
+        $prevLink = $this->sf->get('urlService')->generateUrl('tf_website_event_calendar_dates', ['period' => $prevLink->format('y-m'), 'eventId' => $eventId]);
+
+        $nextLink = clone $firstDayOfMonth;
+        $nextLink->add(new \DateInterval('P1M'));
+        $nextLink = $this->sf->get('urlService')->generateUrl('tf_website_event_calendar_dates', ['period' => $nextLink->format('y-m'), 'eventId' => $eventId]);
+
+        return [$prevLink, $nextLink];
+    }
+
+    private function getEventArray(\DateTime $beginDate, \DateTime $endDate, array $eventDates): array
+    {
+        $datesTab = [];
+        $currentDate = clone $beginDate;
+        while ($currentDate <= $endDate) {
+            $datesTab[$currentDate->format('Y-m-d')] = [];
+            $currentDate->add(new \DateInterval('P1D'));
+        }
+
+        foreach ($eventDates as $date) {
+            $currentDate = $date->getEventDate();
+
+            if ($currentDate >= $beginDate && $currentDate <= $endDate) {
+                $datesTab[$currentDate->format('Y-m-d')][] = $date;
+            }
+
+            $reportDate = $date->getReportDate();
+            if ($date->getState() == 'delayed' && null !== $reportDate && $reportDate >= $beginDate && $reportDate <= $endDate) {
+                $delayedDate = clone $date;
+                $delayedDate->setState('valid');
+                $delayedDate->setEventDate($delayedDate->getReportDate());
+                $delayedDate->setReportDate(null);
+
+                $currentDate = $delayedDate->getEventDate();
+                if ($beginDate <= $currentDate && $currentDate <= $endDate) {
+                    $datesTab[$currentDate->format('Y-m-d')][] = $delayedDate;
+                }
+            }
+        }
+
+        return $datesTab;
+    }
 }

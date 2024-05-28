@@ -98,7 +98,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Get('/themes/theme-image/{themeName}', requirements: ['themeName' => '.+'])]
-    public function getModuleImage(Request $request, string $themeName)
+    public function getThemeImage(Request $request, string $themeName)
     {
         $result = $this->mf->get("theme")->getImage($themeName);
 

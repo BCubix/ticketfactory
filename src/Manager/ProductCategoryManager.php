@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
+use App\Entity\Product\Product;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,12 +18,20 @@ class ProductCategoryManager extends AbstractManager
         $rootCategory = $this->em->getRepository(ProductCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(ProductCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
+        $objectsId = [];
         foreach ($childrenCategories as $category) {
             $products = $category->getProducts();
 
             foreach ($products as $product) {
+                $objectsId[] = $product->getId();
                 $this->em->remove($product);
             }
+        }
+
+        $this->em->flush();
+
+        foreach($objectsId as $id) {
+            $this->sf->get('logger')->log(0, 0, 'Deleted object.', Product::class, $id);
         }
     }
 
@@ -31,13 +40,21 @@ class ProductCategoryManager extends AbstractManager
         $rootCategory = $this->em->getRepository(ProductCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(ProductCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
+        $objectsId = [];
         foreach ($childrenCategories as $category) {
             $products = $category->getProducts();
 
             foreach ($products as $product) {
+                $objectsId[] = $product->getId();
                 $product->setMainCategory($rootCategory);
                 $this->em->persist($product);
             }
+        }
+
+        $this->em->flush();
+
+        foreach($objectsId as $id) {
+            $this->sf->get('logger')->log(0, 0, 'Updated object.', Product::class, $id);
         }
     }
 

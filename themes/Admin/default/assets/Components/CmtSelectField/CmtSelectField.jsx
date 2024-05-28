@@ -17,6 +17,7 @@ export const CmtSelectField = ({
     getMenuItem = null,
     disabled = false,
     emptyLabel = '',
+    displayEmpty = true,
 }) => {
     return (
         <FormControl
@@ -25,7 +26,7 @@ export const CmtSelectField = ({
             sx={{ mt: 4 }}
             size="small"
             required={required}
-            className={`Mui-Select-FormControl ${!Boolean(required) && !Boolean(multiple) ? 'displayEmpty' : ''}`}
+            className={`Mui-Select-FormControl ${!Boolean(required) && !Boolean(multiple) && Boolean(displayEmpty) ? 'displayEmpty' : ''}`}
         >
             <InputLabel id={`${id}-label`} required={required} size="small">
                 {label}
@@ -58,9 +59,9 @@ export const CmtSelectField = ({
                         return renderName.join(', ');
                     },
                 })}
-                displayEmpty={!Boolean(required) && !Boolean(multiple)}
+                displayEmpty={!Boolean(required) && !Boolean(multiple) && Boolean(displayEmpty)}
             >
-                {!Boolean(required) && !Boolean(multiple) && (
+                {!Boolean(required) && !Boolean(multiple) && Boolean(displayEmpty) && (
                     <MenuItem value={''}>
                         <ListItemText>{emptyLabel || `Pas de ${label.charAt(0).toLowerCase() + label.slice(1)} `}</ListItemText>
                     </MenuItem>

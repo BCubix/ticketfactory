@@ -12,6 +12,7 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setCrud } from '@/AdminService/Crud';
 import { insertSubMenu } from '@/AdminService/Menu';
 import { setReducer } from '@/AdminService/Reducer';
+import { addTabElements } from '@/AdminService/Tab';
 
 import parametersReducer from '@Apps/Parameters/redux/parameters/parametersSlice';
 import parametersApi from '@Apps/Parameters/services/api/parametersApi';
@@ -37,15 +38,22 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.PARAMETERS_BASE_PATH}/modules/:id`, Component.ParametersModuleMenu);
     setAuthenticatedRoute(`${Constant.PARAMETERS_BASE_PATH}/themes/:id`, Component.ParametersThemeMenu);
-    setAuthenticatedRoute(Constant.PARAMETERS_BASE_PATH, Component.ParametersMenu);
+    setAuthenticatedRoute(Constant.PARAMETERS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'parametersTabList',
+        path: Constant.PARAMETERS_BASE_PATH,
+    });
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'ADMINISTRER', 'Paramètres', Constant.PARAMETERS_BASE_PATH, <SettingsIcon />);
+    insertSubMenu(1, 'PARAMETRER', 'Paramètres', Constant.PARAMETERS_BASE_PATH, <SettingsIcon />);
 };
 
 export const initReducer = () => {
     setReducer('parameters', parametersReducer);
+};
+
+export const initTab = () => {
+    addTabElements('parametersTabList', [{ label: 'Paramètres', component: <Component.ParametersMenu />, path: Constant.PARAMETERS_BASE_PATH }]);
 };
 
 export const initCrud = () => {

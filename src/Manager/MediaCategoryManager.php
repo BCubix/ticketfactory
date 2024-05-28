@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Media\MediaCategory;
 use App\Entity\Language\Language;
+use App\Entity\Media\Media;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,12 +18,20 @@ class MediaCategoryManager extends AbstractManager
         $rootCategory = $this->em->getRepository(MediaCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(MediaCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
+        $objectsId = [];
         foreach ($childrenCategories as $category) {
             $medias = $category->getMedias();
 
             foreach ($medias as $media) {
+                $objectsId[] = $media->getId();
                 $this->em->remove($media);
             }
+        }
+
+        $this->em->flush();
+
+        foreach($objectsId as $id) {
+            $this->sf->get('logger')->log(0, 0, 'Deleted object.', Media::class, $id);
         }
     }
 
@@ -31,13 +40,21 @@ class MediaCategoryManager extends AbstractManager
         $rootCategory = $this->em->getRepository(MediaCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(MediaCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
+        $objectsId = [];
         foreach ($childrenCategories as $category) {
             $medias = $category->getMedias();
 
             foreach ($medias as $media) {
+                $objectsId[] = $media->getId();
                 $media->setMainCategory($rootCategory);
                 $this->em->persist($media);
             }
+        }
+
+        $this->em->flush();
+
+        foreach($objectsId as $id) {
+            $this->sf->get('logger')->log(0, 0, 'Updated object.', Media::class, $id);
         }
     }
 

@@ -3,14 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Event\Event;
-use App\Exception\ApiException;
 use App\Form\Admin\Event\EventType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class EventController extends CrudController

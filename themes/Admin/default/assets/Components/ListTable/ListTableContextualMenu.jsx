@@ -21,6 +21,8 @@ export const ListTableContextualMenu = ({
     setTranslateItem,
     onDuplicate,
     onPreview,
+    contextualClickLabel = null,
+    onContextualClick = null,
 }) => {
     const theme = useTheme();
     const open = Boolean(anchorEl);
@@ -60,7 +62,7 @@ export const ListTableContextualMenu = ({
             {onDuplicate && (
                 <MenuItem
                     sx={{
-                        color: theme.palette.crud.action.textColor,
+                        color: '#1b5e20',
                     }}
                     id={`duplicateButton-${selectedMenuItem?.id}`}
                     onClick={(e) => {
@@ -96,6 +98,27 @@ export const ListTableContextualMenu = ({
                 >
                     <VisibilityIcon sx={{ marginRight: 2 }} />
                     Prévisualiser
+                </MenuItem>
+            )}
+
+            {contextualClickLabel && onContextualClick && (
+                <MenuItem
+                    id={`contextualClickButton-${selectedMenuItem?.id}`}
+                    sx={{
+                        color: '#1a237e',
+                        '&:hover': {
+                            color: '#1a237e',
+                        },
+                    }}
+                    onClick={(e) => {
+                        e.preventDefault();
+
+                        onContextualClick(selectedMenuItem);
+                        setSelectedMenuItem(null);
+                        setAnchorEl(null);
+                    }}
+                >
+                    {contextualClickLabel}
                 </MenuItem>
             )}
         </Menu>

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { Component } from '@/AdminService/Component';
 import { Formik } from 'formik';
+
+import { Component } from '@/AdminService/Component';
+import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
 export const DEFAULT_CRUD_FORM_COMPONENTS = {
@@ -49,6 +52,7 @@ export const initYup = (list, props) => {
 export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, handleSubmit, ...props }) => {
     const initValues = translateInitialValues || initialValues;
     const validationSchema = Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }));
+    const { parameters } = useSelector(parametersSelector);
     const [tabValue, setTabValue] = useState(0);
 
     const checkFormErrors = () => {
@@ -93,6 +97,7 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
                         setTabValue={setTabValue}
                         validateForm={validateForm}
                         submitForm={submitForm}
+                        parameters={parameters}
                         {...props}
                     />
                 </Component.CmtPageWrapper>

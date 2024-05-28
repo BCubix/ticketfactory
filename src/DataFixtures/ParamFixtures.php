@@ -14,7 +14,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Type d'évènements par défaut");
         $parameter->setType("list");
-        $parameter->setParamKey("default_events_type");
+        $parameter->setParamKey("core_default_events_type");
         $parameter->setParamValue("Pièces");
         $parameter->setAvailableValue([
             [
@@ -42,7 +42,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Type de structures par défaut");
         $parameter->setType("list");
-        $parameter->setParamKey("default_structures_type");
+        $parameter->setParamKey("core_default_structures_type");
         $parameter->setParamValue(3);
         $parameter->setAvailableValue([
             [
@@ -67,7 +67,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Nom");
         $parameter->setType("string");
-        $parameter->setParamKey("website_name");
+        $parameter->setParamKey("core_website_name");
         $parameter->setParamValue(null);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -76,20 +76,9 @@ class ParamFixtures extends Fixture
         $om->persist($parameter);
 
         $parameter = new Parameter();
-        $parameter->setName("Logo");
-        $parameter->setType("upload");
-        $parameter->setParamKey("website_logo");
-        $parameter->setParamValue(null);
-        $parameter->setAvailableValue(null);
-        $parameter->setTabName("Paramètres généraux");
-        $parameter->setBlockName("Thème & Logo");
-        $parameter->setBreakpointsValue("xs-12 md-6");
-        $om->persist($parameter);
-
-        $parameter = new Parameter();
         $parameter->setName("Favicon");
         $parameter->setType("upload");
-        $parameter->setParamKey("favicon");
+        $parameter->setParamKey("core_favicon");
         $parameter->setParamValue(null);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -100,7 +89,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Format des images");
         $parameter->setType("string");
-        $parameter->setParamKey("image_format");
+        $parameter->setParamKey("core_image_format");
         $parameter->setParamValue(0);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -111,7 +100,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Cropper ou compléter les images ?");
         $parameter->setType("bool");
-        $parameter->setParamKey("image_to_crop");
+        $parameter->setParamKey("core_image_to_crop");
         $parameter->setParamValue(false);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -122,7 +111,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Qualité d'image WEBP");
         $parameter->setType("int");
-        $parameter->setParamKey("image_webp_quality");
+        $parameter->setParamKey("core_image_webp_quality");
         $parameter->setParamValue(90);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -133,7 +122,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Qualité d'image PNG");
         $parameter->setType("int");
-        $parameter->setParamKey("image_png_quality");
+        $parameter->setParamKey("core_image_png_quality");
         $parameter->setParamValue(90);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -144,7 +133,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Qualité d'image JPG");
         $parameter->setType("int");
-        $parameter->setParamKey("image_jpg_quality");
+        $parameter->setParamKey("core_image_jpg_quality");
         $parameter->setParamValue(90);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -155,7 +144,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Thème principal (admin)");
         $parameter->setType("string");
-        $parameter->setParamKey("admin_theme");
+        $parameter->setParamKey("core_admin_theme");
         $parameter->setParamValue("default");
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -166,7 +155,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Thème principal");
         $parameter->setType("string");
-        $parameter->setParamKey("main_theme");
+        $parameter->setParamKey("core_main_theme");
         $parameter->setParamValue(null);
         $parameter->setAvailableValue(null);
         $parameter->setTabName(null);
@@ -177,7 +166,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Page saisons");
         $parameter->setType("Page");
-        $parameter->setParamKey("page_season");
+        $parameter->setParamKey("core_page_season");
         $parameter->setParamValue(1);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -188,7 +177,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Page salles");
         $parameter->setType("Page");
-        $parameter->setParamKey("page_room");
+        $parameter->setParamKey("core_page_room");
         $parameter->setParamValue(1);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -199,7 +188,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Page catégories");
         $parameter->setType("Page");
-        $parameter->setParamKey("page_eventCategory");
+        $parameter->setParamKey("core_page_eventCategory");
         $parameter->setParamValue(1);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -210,7 +199,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Page tag");
         $parameter->setType("Page");
-        $parameter->setParamKey("page_tag");
+        $parameter->setParamKey("core_page_tag");
         $parameter->setParamValue(1);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -221,7 +210,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Page événements");
         $parameter->setType("Page");
-        $parameter->setParamKey("page_event");
+        $parameter->setParamKey("core_page_event");
         $parameter->setParamValue(1);
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -232,7 +221,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Format de l'URL des événements");
         $parameter->setType("string");
-        $parameter->setParamKey("event_url_format");
+        $parameter->setParamKey("core_event_url_format");
         $parameter->setParamValue('%slug%');
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");
@@ -243,7 +232,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("1er mois de la saison");
         $parameter->setType("list");
-        $parameter->setParamKey("season_month");
+        $parameter->setParamKey("core_season_month");
         $parameter->setParamValue(9);
         $parameter->setAvailableValue([
             [
@@ -292,7 +281,7 @@ class ParamFixtures extends Fixture
         $parameter = new Parameter();
         $parameter->setName("Adresse email d'envoi");
         $parameter->setType("string");
-        $parameter->setParamKey("email_sender");
+        $parameter->setParamKey("core_email_sender");
         $parameter->setParamValue('hi@sender.com');
         $parameter->setAvailableValue(null);
         $parameter->setTabName("Paramètres généraux");

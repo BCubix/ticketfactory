@@ -1,36 +1,10 @@
 import React from 'react';
 import { checkFunction, checkString } from '@Services/utils/check';
 import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
 
 const keys = ['label', 'component', 'path', 'id'];
 
 const TabObj = {
-    CategoriesTabList: () => [
-        { label: 'Catégories', component: <Component.CategoriesList />, path: Constant.CATEGORIES_BASE_PATH },
-        { label: 'Tags', component: <Component.TagsList />, path: Constant.TAGS_BASE_PATH },
-    ],
-    ContentTypesTabList: () => [
-        { label: 'Types de contenus', component: <Component.ContentTypesList />, path: Constant.CONTENT_TYPES_BASE_PATH },
-        { label: 'Types de pages', component: <Component.PageTypesList />, path: Constant.PAGE_TYPES_BASE_PATH },
-    ],
-    MediasTabList: () => [
-        { label: 'Médias', component: <Component.MediasList />, path: Constant.MEDIAS_BASE_PATH },
-        { label: 'Catégories de média', component: <Component.MediaCategoriesList />, path: Constant.MEDIA_CATEGORIES_BASE_PATH },
-        {
-            label: "Formats d'images",
-            component: <Component.ImageFormatsList />,
-            path: Constant.IMAGE_FORMATS_BASE_PATH,
-        },
-    ],
-    PagesTabList: () => [
-        { label: 'Pages', component: <Component.PagesList />, path: Constant.PAGES_BASE_PATH },
-        { label: 'Blocs', component: <Component.PageBlocksList />, path: Constant.PAGE_BLOCKS_BASE_PATH },
-    ],
-    ModulesTabList: () => [
-        { label: 'Modules', component: <Component.ModulesList />, path: Constant.MODULES_BASE_PATH },
-        { label: 'Hooks', component: <Component.HooksList />, path: Constant.HOOKS_BASE_PATH },
-    ],
     EventsFormTabList: (props) => [
         {
             label: 'Evènement',
@@ -82,4 +56,23 @@ export function setTab(name, tabListFunction) {
     checkFunction(tabListFunction);
 
     TabObj[name] = tabListFunction;
+}
+
+export function addTabElements(name, tabList, startPosition = 0) {
+    /* We use try, catch and finally to handle error when key doesn't exist in Tab */
+
+    let newTabList = null;
+    try {
+        newTabList = Tab[name];
+    } catch {
+        newTabList = [];
+    } finally {
+        tabList.forEach((item, index) => {
+            let position = item?.position || startPosition + index;
+
+            newTabList.splice(position - 1, 0, { ...item, position: position });
+        });
+
+        setTab(name, () => [...newTabList]);
+    }
 }

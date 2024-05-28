@@ -9,6 +9,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { addTabElements } from '@/AdminService/Tab';
 
 import themesReducer from '@Apps/Themes/redux/themes/themesSlice';
 import themesApi from '@Apps/Themes/services/api/themesApi';
@@ -29,11 +30,18 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.THEMES_BASE_PATH, Component.ThemesList);
+    setAuthenticatedRoute(Constant.THEMES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'themesTabList',
+        path: Constant.THEMES_BASE_PATH,
+    });
 };
 
 export const initMenu = () => {
     insertSubMenu(6, 'PERSONNALISER', 'Thèmes', Constant.THEMES_BASE_PATH, <TvIcon />);
+};
+
+export const initTab = () => {
+    addTabElements('themesTabList', [{ label: 'Thèmes', component: <Component.ThemesList />, path: Constant.THEMES_BASE_PATH }]);
 };
 
 export const initReducer = () => {

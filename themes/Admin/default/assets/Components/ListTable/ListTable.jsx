@@ -46,6 +46,7 @@ export const ListTable = ({
     contextualMenu = false,
     disableDeleteFunction = null,
     onDragEnd = null,
+    ...rest
 }) => {
     const languagesData = useSelector(languagesSelector);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -118,6 +119,7 @@ export const ListTable = ({
                             handleClick={handleClick}
                             expendElementTranslation={expendElementTranslation}
                             setExpendElementTranslation={setExpendElementTranslation}
+                            {...rest}
                         />
                     ))}
 
@@ -134,6 +136,7 @@ export const ListTable = ({
                         setTranslateItem={setTranslateItem}
                         onDuplicate={onDuplicate}
                         onPreview={onPreview}
+                        {...rest}
                     />
 
                     <Component.CmtTranslateDialog

@@ -148,7 +148,6 @@ const CreateNewTicketingDialog = ({ createDialog, setCreateDialog, modules, tick
                     <Button
                         color="primary"
                         onClick={() => {
-                            console.log(ticketingValue);
                             navigate(`${Constant.TICKETING_BASE_PATH}${Constant.CREATE_PATH}${ticketingValue ? `?ticketingId=${ticketingValue}` : ''}`);
                         }}
                         id="validateDialog"

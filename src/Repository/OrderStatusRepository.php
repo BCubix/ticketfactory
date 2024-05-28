@@ -3,10 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Order\OrderStatus;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class OrderStatusRepository extends ServiceEntityRepository
+class OrderStatusRepository extends CrudRepository
 {
     /*** > Trait ***/
     /*** < Trait ***/

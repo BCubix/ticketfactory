@@ -12,24 +12,24 @@ use JMS\Serializer\Annotation as JMS;
 class OrderStatus
 {
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_all', 'a_order_all', 'a_order_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_all', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_order_status_all', 'a_order_status_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $keyword = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_order_status_all', 'a_order_status_one', 'a_order_all', 'a_order_one'])]
     #[ORM\Column(length: 255)]
     private ?string $color = null;
 

@@ -24,6 +24,10 @@ class DefaultController extends WebsiteController
             $homePage = ($page->getKeyword() == 'home');
         }
 
+        if ($route !== "tf_website_global") {
+            $homePage = false;
+        }
+
         return $this->websiteRender('_partials/header.html.twig', [
             'route'   => $route,
             'locale'  => $this->getLocale(),

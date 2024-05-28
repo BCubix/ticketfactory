@@ -91,7 +91,7 @@ class EventSorterManager extends AbstractManager
         return ($objectString == self::OBJECT_DATE ? $referenceDate : $referenceDateVal);
     }
 
-    public function sortEvents($events, $withActiveSort = false, $sortField = 'beginDate', $sortOrder = 'ASC'): array
+    public function sortEvents(array $events, ?bool $withActiveSort = false, ?string $sortField = 'beginDate', ?string $sortOrder = 'ASC', ?int $page = null, ?int $limit = null): array
     {
         if (null === $events) {
             return null;
@@ -102,10 +102,18 @@ class EventSorterManager extends AbstractManager
         });
 
         if ($withActiveSort) {
-            return $this->sortActiveEvents($events);
+            return $this->sortActiveEvents($events, $page, $limit);
         }
 
-        return $events;
+        if (null === $limit || $page === -1) {
+            return $events;
+        }
+
+        $page = $page ?? 1;
+        return [
+            'total'     => count($events),
+            'events'    => array_slice($events, ($page - 1) * $limit, $limit),
+        ];
     }
 
     public function getBeginDate(Event $event, $objectString = self::STRING_DATE)
@@ -128,7 +136,7 @@ class EventSorterManager extends AbstractManager
         return $endDate < new \DateTime();
     }
 
-    private function sortActiveEvents($events): array
+    private function sortActiveEvents($events, ?int $page = null, ?int $limit = null): array
     {
         $additionalTime = $this->mf->get('parameter')->getCoreParameter('event_additional_time') ?? 0;
         $sortedEvents = ['active' => [], 'inactive' => []];
@@ -144,6 +152,18 @@ class EventSorterManager extends AbstractManager
                 array_push($sortedEvents['inactive'], $event);
             }
         }
+
+        if (null === $limit || $page === -1) {
+            return $sortedEvents;
+        }
+
+        $page = $page ?? 1;
+
+        $sortedEvents['activeTotal'] = count($sortedEvents['active']);
+        $sortedEvents['active'] = array_slice($sortedEvents['active'], ($page - 1) * $limit, $limit);
+
+        $sortedEvents['inactiveTotal'] = count($sortedEvents['inactive']);
+        $sortedEvents['inactive'] = array_slice($sortedEvents['inactive'], ($page - 1) * $limit, $limit);
 
         return $sortedEvents;
     }

@@ -30,8 +30,14 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.PRODUCT_CATEGORIES_BASE_PATH, Component.ProductsMenu, { tabValue: 1 });
-    setAuthenticatedRoute(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/:id`, Component.ProductsMenu, { tabValue: 1 });
+    setAuthenticatedRoute(Constant.PRODUCT_CATEGORIES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'productsTabList',
+        path: Constant.PRODUCT_CATEGORIES_BASE_PATH,
+    });
+    setAuthenticatedRoute(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/:id`, Component.CmtAppMenu, {
+        tabListName: 'productsTabList',
+        path: Constant.PRODUCT_CATEGORIES_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.PRODUCT_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateProductCategory);
     setAuthenticatedRoute(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProductCategory);
 };

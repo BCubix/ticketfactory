@@ -104,6 +104,8 @@ class TicketingController extends CrudController
         $this->em->persist($object);
         $this->em->flush();
 
+        $this->log->log(0, 0, 'Updated object.', $this->entityClass, $object->getId());
+
         return $this->view(null, Response::HTTP_NO_CONTENT);
     }
 

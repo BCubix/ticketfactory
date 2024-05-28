@@ -68,35 +68,70 @@ export const eventMainPartForm = {
                         id: 'description',
                     },
                 },
-                {
-                    keyId: 'input-room',
-                    style: {
-                        xs: 12,
-                        sm: 6,
-                    },
-                    input: {
-                        name: 'room',
-                        label: 'Salle',
-                        inputType: 'selectField',
-                        listName: 'roomsList',
-                        getName: (item) => item.name,
-                        getValue: (item) => item.id,
-                    },
+                ({ roomsList }) => {
+                    if (roomsList.length === 0) {
+                        return null;
+                    }
+
+                    return {
+                        keyId: 'input-room',
+                        style: {
+                            xs: 12,
+                            sm: 6,
+                        },
+                        input: {
+                            name: 'room',
+                            label: 'Salle',
+                            inputType: 'selectField',
+                            listName: 'roomsList',
+                            getName: (item) => item.name,
+                            getValue: (item) => item.id,
+                        },
+                    };
                 },
-                {
-                    keyId: 'input-season',
-                    style: {
-                        xs: 12,
-                        sm: 6,
-                    },
-                    input: {
-                        name: 'season',
-                        label: 'Saison',
-                        inputType: 'selectField',
-                        listName: 'seasonsList',
-                        getName: (item) => item.name,
-                        getValue: (item) => item.id,
-                    },
+                ({ seasonsList }) => {
+                    if (seasonsList.length === 0) {
+                        return null;
+                    }
+
+                    return {
+                        keyId: 'input-season',
+                        style: {
+                            xs: 12,
+                            sm: 6,
+                        },
+                        input: {
+                            name: 'season',
+                            label: 'Saison',
+                            inputType: 'selectField',
+                            listName: 'seasonsList',
+                            getName: (item) => item.name,
+                            getValue: (item) => item.id,
+                        },
+                    };
+                },
+
+                ({ eventTypesList }) => {
+                    if (eventTypesList.length === 0) {
+                        return null;
+                    }
+
+                    return {
+                        keyId: 'input-event-type',
+                        style: {
+                            xs: 12,
+                            sm: 6,
+                        },
+                        input: {
+                            name: 'eventType',
+                            label: "Type d'évènement",
+                            inputType: 'selectField',
+                            listName: 'eventTypesList',
+                            displayEmpty: false,
+                            getName: (item) => item.name,
+                            getValue: (item) => item.id,
+                        },
+                    };
                 },
             ],
         },
@@ -126,12 +161,16 @@ export const eventMainPartForm = {
                         xs: 12,
                         sm: 4,
                     },
-                    input: (props) => ({
-                        name: 'ticketingReference',
-                        label: props?.ticketingList?.find((it) => it?.id === props.values?.ticketing)?.module ? 'Identifiant billetterie' : 'Lien externe',
-                        inputType: 'textField',
-                        disabled: !Boolean(props.values?.ticketing),
-                    }),
+                    component: (props) => (
+                        <Component.CmtKeywordInput
+                            label={props?.ticketingList?.find((it) => it?.id === props.values?.ticketing)?.module ? 'Identifiant billetterie' : 'Lien externe'}
+                            {...props}
+                            name="ticketingReference"
+                            disabled={!Boolean(props.values?.ticketing)}
+                            warningMessage="Ce champ est utilisé pour identifier votre évènement auprès de votre billetterie."
+                            editName="ticketingReferenceEditMode"
+                        />
+                    ),
                 },
                 {
                     keyId: 'input-display-booking-button',

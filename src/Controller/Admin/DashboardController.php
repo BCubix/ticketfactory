@@ -2,8 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Service\Log\Logger;
-
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;

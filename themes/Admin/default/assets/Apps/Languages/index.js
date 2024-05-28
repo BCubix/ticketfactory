@@ -10,6 +10,7 @@ import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { addTabElements } from '@/AdminService/Tab';
 
 import languagesReducer from '@Apps/Languages/redux/languages/languagesSlice';
 import languagesApi from './services/api/languagesApi';
@@ -32,17 +33,24 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH, Component.LanguagesList);
+    setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'languagesTabList',
+        path: Constant.LANGUAGES_BASE_PATH,
+    });
     setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH + Constant.CREATE_PATH, Component.CreateLanguage);
     setAuthenticatedRoute(`${Constant.LANGUAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditLanguage);
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'ADMINISTRER', 'Langues', Constant.LANGUAGES_BASE_PATH, <LanguageIcon />);
+    insertSubMenu(1, 'PARAMETRER', 'Internationalisation', Constant.LANGUAGES_BASE_PATH, <LanguageIcon />);
 };
 
 export const initReducer = () => {
     setReducer('languages', languagesReducer);
+};
+
+export const initTab = () => {
+    addTabElements('languagesTabList', [{ label: 'Langues', component: <Component.LanguagesList />, path: Constant.LANGUAGES_BASE_PATH }]);
 };
 
 export const initCrud = () => {

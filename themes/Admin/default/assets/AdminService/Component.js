@@ -17,6 +17,7 @@ import {
     DeleteFabButton,
     EditFabButton,
 } from '@Components/CmtButton/sc.Buttons';
+import { CmtAppMenu } from '@Components/CmtAppMenu/CmtAppMenu';
 import { CmtCard, CmtCardHeader } from '@Components/CmtCard/sc.CmtCard';
 import { CmtDatePicker } from '@Components/CmtDatePicker/CmtDatePicker';
 import { CmtSelect } from '@Components/CmtSelect/CmtSelect';
@@ -89,6 +90,8 @@ import { TBody } from '@Components/CmtDragAndDrop/sc.TBody';
 const ComponentObj = {
     App: App,
     Routing: Routing,
+
+    CmtAppMenu: CmtAppMenu,
 
     CmtCrudList: CmtCrudList,
     CmtCrudForm: CmtCrudForm,

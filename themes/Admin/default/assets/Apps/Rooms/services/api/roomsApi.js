@@ -7,6 +7,8 @@ import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
 
+const DEFAULT_PATH = '/rooms';
+
 var controller = null;
 
 const roomsApi = {
@@ -22,7 +24,7 @@ const roomsApi = {
 
             controller = new AbortController();
 
-            const result = await axios.get('/rooms', { params: params, signal: controller.signal });
+            const result = await axios.get(DEFAULT_PATH, { params: params, signal: controller.signal });
 
             controller = null;
 
@@ -46,7 +48,7 @@ const roomsApi = {
                 params['filters[lang]'] = filters?.lang;
             }
 
-            const result = await axios.get('/rooms', { params: params });
+            const result = await axios.get(DEFAULT_PATH, { params: params });
 
             return { result: true, rooms: result.data?.results, total: result?.data?.total };
         } catch (error) {
@@ -56,7 +58,7 @@ const roomsApi = {
 
     getOneRoom: async (id) => {
         try {
-            const result = await axios.get(`/rooms/${id}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}`);
 
             return { result: true, room: result.data };
         } catch (error) {
@@ -66,7 +68,7 @@ const roomsApi = {
 
     createRoom: async (values) => {
         try {
-            const result = await axios.post('/rooms', constructFormData({ values, dataFields: Crud?.rooms?.add?.api?.dataFields }));
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.rooms?.add?.api?.dataFields }));
 
             return { result: true, room: result.data };
         } catch (error) {
@@ -77,7 +79,7 @@ const roomsApi = {
 
     editRoom: async (id, values) => {
         try {
-            const result = await axios.post(`/rooms/${id}`, constructFormData({ values, dataFields: Crud?.rooms?.edit?.api?.dataFields }));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.rooms?.edit?.api?.dataFields }));
 
             return { result: true, room: result.data };
         } catch (error) {
@@ -87,7 +89,7 @@ const roomsApi = {
 
     deleteRoom: async (id) => {
         try {
-            await axios.delete(`/rooms/${id}`);
+            await axios.delete(`${DEFAULT_PATH}/${id}`);
 
             return { result: true };
         } catch (error) {
@@ -97,7 +99,7 @@ const roomsApi = {
 
     duplicateRoom: async (id) => {
         try {
-            await axios.post(`/rooms/${id}/duplicate`);
+            await axios.post(`${DEFAULT_PATH}/${id}/duplicate`);
 
             return { result: true };
         } catch (error) {
@@ -107,7 +109,7 @@ const roomsApi = {
 
     getTranslated: async (id, languageId) => {
         try {
-            const result = await axios.get(`/rooms/${id}/translated/${languageId}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}/translated/${languageId}`);
             const data = copyData(result?.data);
 
             return { result: true, room: data };

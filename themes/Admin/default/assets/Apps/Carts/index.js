@@ -18,6 +18,7 @@ import cartsApi from './services/api/cartsApi';
 import cartsReducer from './redux/carts/cartsSlice';
 
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
     setConstant('CARTS_BASE_PATH', '/admin/paniers');
@@ -52,9 +53,12 @@ export default async function ({ parameters }) {
     const useProducts = parameters?.find((el) => el.paramKey === 'core_use_purchase');
 
     if (useProducts?.paramValue) {
-        setAuthenticatedRoute(Constant.CARTS_BASE_PATH, Component.CartsList);
-        setAuthenticatedRoute(`${Constant.CARTS_BASE_PATH}/:id`, Component.CartsDetail);
+        addTabElements('ordersTabList', [{ label: 'Panier', component: <Component.CartsList />, path: Constant.CARTS_BASE_PATH }]);
 
-        insertSubMenu(3, 'VENDRE', 'Panier', Constant.CARTS_BASE_PATH, <ShoppingBasketIcon />);
+        setAuthenticatedRoute(Constant.CARTS_BASE_PATH, Component.CmtAppMenu, {
+            tabListName: 'ordersTabList',
+            path: Constant.CARTS_BASE_PATH,
+        });
+        setAuthenticatedRoute(`${Constant.CARTS_BASE_PATH}/:id`, Component.CartsDetail);
     }
 }

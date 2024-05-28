@@ -41,7 +41,9 @@ class SeasonController extends WebsiteController
             'endDate'   => $request->get('endDate') ?? null,
             'category'  => $request->get('category') ?? null,
             'room'      => $request->get('room') ?? null,
-            'sort'      => $request->get('sort') ?? null
+            'sort'      => $request->get('sort') ?? $this->mf->get('parameter')->getCoreParameter('event_default_sort'),
+            'page'      => $request->get('page') ?? 1,
+            'limit'     => $this->mf->get('parameter')->getCoreParameter('event_limit'),
         ];
 
         if (null !== $filters['category']) {
@@ -92,6 +94,14 @@ class SeasonController extends WebsiteController
             'pageContent'        => $pageContent,
             'filterForm'         => $filterForm->createView(),
             'filterParams'       => $filterParams,
+            'pagination'         => [
+                'page'               => $filters['page'],
+                'limit'              => $filters['limit'],
+                'activeTotal'        => $events['activeTotal'],
+                'inactiveTotal'      => $events['inactiveTotal'],
+                'activeMaxPage'      => $this->mf->get('event')->getMaxPage($events['activeTotal'], $filters['limit']),
+                'inactiveMaxPage'    => $this->mf->get('event')->getMaxPage($events['inactiveTotal'], $filters['limit']),
+            ]
         ]);
     }
 
@@ -104,7 +114,7 @@ class SeasonController extends WebsiteController
         }
 
         $seasons = $this->em->getRepository(Season::class)->findAllForWebsite($this->getLanguageId());
-        
+
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {

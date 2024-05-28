@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
@@ -80,6 +80,15 @@ export const categoriesListCrud = {
                         navigate(`${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}?categoryId=${id}&languageId=${languageId}${path ? `?parentId=${path.at(-1)?.id}` : ''}`);
                     }}
                     onDragEnd={handleDragEnd}
+                    contextualClickLabel={
+                        <>
+                            <SubdirectoryArrowRightIcon sx={{ marginRight: 2 }} /> Sous-catégories
+                        </>
+                    }
+                    onContextualClick={(elem) => {
+                        handleResetFilters();
+                        navigate(`${Constant.CATEGORIES_BASE_PATH}/${elem?.id}`);
+                    }}
                 />
             ),
         },

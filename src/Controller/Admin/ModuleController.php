@@ -79,6 +79,15 @@ class ModuleController extends AdminController
 
         try {
             $module = $this->mm->active($moduleName, $action);
+
+            $messageState = [
+                Module::ACTION_INSTALL => "Updated",
+                Module::ACTION_DISABLE => "Updated",
+                Module::ACTION_UNINSTALL => "Uninstalled",
+                Module::ACTION_UNINSTALL_DELETE => "removed",
+            ];
+
+            $this->log->log(0, 0, $messageState[intval($actionStr)] . " module." , Module::class, $module->getId());
         } finally {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();

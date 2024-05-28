@@ -17,6 +17,7 @@ export const CmtSelect = ({
     errors,
     onChange = null,
     getMenuItem = null,
+    displayEmpty = true,
     emptyLabel = '',
     disabled = false,
 }) => {
@@ -25,7 +26,7 @@ export const CmtSelect = ({
             fullWidth
             sx={{ mt: 4 }}
             required={required}
-            className={`Mui-Select-FormControl ${!Boolean(required) && !Boolean(multiple) ? 'displayEmpty' : ''}`}
+            className={`Mui-Select-FormControl ${!Boolean(required) && !Boolean(multiple) && Boolean(displayEmpty) ? 'displayEmpty' : ''}`}
             size="small"
         >
             <InputLabel id={`${id}-label`} required={required} size="small">
@@ -62,10 +63,10 @@ export const CmtSelect = ({
                 {...(handleBlur && {
                     onBlur: handleBlur,
                 })}
-                displayEmpty={!Boolean(required) && !Boolean(multiple)}
+                displayEmpty={!Boolean(required) && !Boolean(multiple) && Boolean(displayEmpty)}
                 disabled={Boolean(disabled)}
             >
-                {!Boolean(required) && !Boolean(multiple) && (
+                {!Boolean(required) && !Boolean(multiple) && Boolean(displayEmpty) && (
                     <MenuItem value={''}>
                         <ListItemText>{emptyLabel || `Pas de ${label.charAt(0).toLowerCase() + label.slice(1)} `}</ListItemText>
                     </MenuItem>
