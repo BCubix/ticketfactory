@@ -4,18 +4,17 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { CreateSeason, seasonsCreateCrud } from '@Apps/Seasons/CreateSeason/CreateSeason';
 import { EditSeason, seasonsEditCrud } from '@Apps/Seasons/EditSeason/EditSeason';
 import { SeasonsList, seasonsListCrud } from '@Apps/Seasons/SeasonsList/SeasonsList';
+import seasonsReducer from '@Apps/Seasons/redux/seasons/seasonsSlice';
+import seasonsApi from '@Apps/Seasons/services/api/seasonsApi';
 
 import { setReducer } from '@/AdminService/Reducer';
-import { Menu, getMenu, getSubMenu, insertSubMenu, setSubMenu } from '@/AdminService/Menu';
+import { getSubMenu, insertSubMenu, setSubMenu } from '@/AdminService/Menu';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import seasonsReducer from '@Apps/Seasons/redux/seasons/seasonsSlice';
-import seasonsApi from '@Apps/Seasons/services/api/seasonsApi';
 
 export const initConstant = () => {
     setConstant('SEASONS_BASE_PATH', '/admin/saisons');
@@ -58,7 +57,7 @@ export default async function ({ parameters }) {
 
     setAuthenticatedRoute(Constant.SEASONS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'seasonsTabList',
-        path: Constant.SEASONS_BASE_PATH,
+        tabPathValue: Constant.SEASONS_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH, Component.CreateSeason);
     setAuthenticatedRoute(`${Constant.SEASONS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditSeason);

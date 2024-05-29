@@ -160,7 +160,7 @@ class EventCategoryController extends CrudController
 
         $categories = $this->em->getRepository($this->entityClass)->findAllByParentForAdmin($object->getParent()->getId());
 
-        // Order position in slider element s list
+        // Order position
         $this->ecm->orderCategoriesElementsList($categories, $srcPosition, $destPosition);
 
         $this->em->flush();

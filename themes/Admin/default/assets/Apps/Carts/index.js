@@ -7,7 +7,6 @@ import { CartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartPart';
 import { OrderCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/OrderCartPart';
 
 import { setReducer } from '@/AdminService/Reducer';
-import { insertSubMenu } from '@/AdminService/Menu';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
@@ -17,7 +16,6 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import cartsApi from './services/api/cartsApi';
 import cartsReducer from './redux/carts/cartsSlice';
 
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
@@ -57,7 +55,7 @@ export default async function ({ parameters }) {
 
         setAuthenticatedRoute(Constant.CARTS_BASE_PATH, Component.CmtAppMenu, {
             tabListName: 'ordersTabList',
-            path: Constant.CARTS_BASE_PATH,
+            tabPathValue: Constant.CARTS_BASE_PATH,
         });
         setAuthenticatedRoute(`${Constant.CARTS_BASE_PATH}/:id`, Component.CartsDetail);
     }

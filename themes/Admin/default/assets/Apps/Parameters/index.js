@@ -40,7 +40,7 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.PARAMETERS_BASE_PATH}/themes/:id`, Component.ParametersThemeMenu);
     setAuthenticatedRoute(Constant.PARAMETERS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'parametersTabList',
-        path: Constant.PARAMETERS_BASE_PATH,
+        tabPathValue: Constant.PARAMETERS_BASE_PATH,
     });
 };
 

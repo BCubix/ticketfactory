@@ -67,7 +67,7 @@ export default async function ({ parameters }) {
     if (useProducts?.paramValue) {
         setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH, Component.CmtAppMenu, {
             tabListName: 'productsTabList',
-            path: Constant.PRODUCTS_BASE_PATH,
+            tabPathValue: Constant.PRODUCTS_BASE_PATH,
         });
         setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateProduct);
         setAuthenticatedRoute(`${Constant.PRODUCTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProduct);

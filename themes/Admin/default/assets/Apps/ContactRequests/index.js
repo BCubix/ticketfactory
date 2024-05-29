@@ -35,7 +35,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.CONTACT_REQUEST_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'contactsTabList',
-        path: Constant.CONTACT_REQUEST_BASE_PATH,
+        tabPathValue: Constant.CONTACT_REQUEST_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.CONTACT_REQUEST_BASE_PATH + Constant.CREATE_PATH, Component.CreateContactRequests);
     setAuthenticatedRoute(`${Constant.CONTACT_REQUEST_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContactRequest);

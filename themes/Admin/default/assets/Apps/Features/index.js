@@ -33,7 +33,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.FEATURES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'featuresTabList',
-        path: Constant.FEATURES_BASE_PATH,
+        tabPathValue: Constant.FEATURES_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.FEATURES_BASE_PATH + Constant.CREATE_PATH, Component.CreateFeature);
     setAuthenticatedRoute(`${Constant.FEATURES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditFeature);

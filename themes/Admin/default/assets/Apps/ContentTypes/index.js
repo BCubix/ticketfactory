@@ -52,21 +52,21 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'contentTypesTabList',
-        path: Constant.CONTENT_TYPES_BASE_PATH,
+        tabPathValue: Constant.CONTENT_TYPES_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreateContentType);
     setAuthenticatedRoute(`${Constant.CONTENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContentType);
 
     setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'contentTypesTabList',
-        path: Constant.PAGE_TYPES_BASE_PATH,
+        tabPathValue: Constant.PAGE_TYPES_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageType);
     setAuthenticatedRoute(`${Constant.PAGE_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageType);
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'PARAMETRER', 'Types', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
+    insertSubMenu(4, 'PARAMETRER', 'Types', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
 };
 
 export const initReducer = () => {

@@ -57,7 +57,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.MEDIAS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'mediasTabList',
-        path: Constant.MEDIAS_BASE_PATH,
+        tabPathValue: Constant.MEDIAS_BASE_PATH,
     });
 };
 

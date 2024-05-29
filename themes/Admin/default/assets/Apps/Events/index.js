@@ -14,6 +14,8 @@ import { EventsDateBlockForm } from '@Apps/Events/EventsForm/EventsDateBlockForm
 import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
 import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
 import { EventsList, eventsListCrud } from '@Apps/Events/EventsList/EventsList';
+import eventsReducer from '@Apps/Events/redux/events/eventsSlice';
+import eventsApi from '@Apps/Events/services/api/eventsApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -23,9 +25,6 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import eventsReducer from './redux/events/eventsSlice';
-import eventsApi from './services/api/eventsApi';
 
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
@@ -57,7 +56,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.EVENTS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
-        path: Constant.EVENTS_BASE_PATH,
+        tabPathValue: Constant.EVENTS_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.EVENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateEvent);
     setAuthenticatedRoute(`${Constant.EVENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEvent);

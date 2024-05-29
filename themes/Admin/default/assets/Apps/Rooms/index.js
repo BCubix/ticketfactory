@@ -52,7 +52,7 @@ export default async function ({ parameters }) {
 
     setAuthenticatedRoute(Constant.ROOMS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'seasonsTabList',
-        path: Constant.ROOMS_BASE_PATH,
+        tabPathValue: Constant.ROOMS_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH, Component.CreateRoom);
     setAuthenticatedRoute(`${Constant.ROOMS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditRoom);

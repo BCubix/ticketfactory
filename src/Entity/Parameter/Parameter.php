@@ -67,6 +67,11 @@ class Parameter
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $breakpointsValue;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
+    #[ORM\Column]
+    private ?bool $generalParameter = null;
+
 
     public function getId(): int
     {
@@ -177,6 +182,18 @@ class Parameter
     public function setBreakpointsValue(?string $breakpointsValue): self
     {
         $this->breakpointsValue = $breakpointsValue;
+
+        return $this;
+    }
+
+    public function isGeneralParameter(): ?bool
+    {
+        return $this->generalParameter;
+    }
+
+    public function setGeneralParameter(bool $generalParameter): static
+    {
+        $this->generalParameter = $generalParameter;
 
         return $this;
     }

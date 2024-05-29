@@ -31,7 +31,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.ORDER_STATUS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'ordersTabList',
-        path: Constant.ORDER_STATUS_BASE_PATH,
+        tabPathValue: Constant.ORDER_STATUS_BASE_PATH,
     });
     setAuthenticatedRoute(`${Constant.ORDER_STATUS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditOrderStatus);
 };

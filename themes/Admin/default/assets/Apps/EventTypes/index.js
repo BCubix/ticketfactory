@@ -2,7 +2,6 @@ import React from 'react';
 
 import { EventTypesList, eventTypesListCrud } from '@Apps/EventTypes/EventTypesList/EventTypesList';
 import { EditEventType, eventTypesEditCrud } from '@Apps/EventTypes/EditEventType/EditEventType';
-import { eventTypesForm } from '@Apps/EventTypes/EventTypesForm/EventTypesForm';
 import eventTypesReducer from '@Apps/EventTypes/redux/eventTypes/eventTypesSlice';
 import eventTypesApi from '@Apps/EventTypes/services/api/eventTypesApi';
 
@@ -22,7 +21,6 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('EventTypesList', EventTypesList);
     setComponent('EditEventType', EditEventType);
-    setComponent('EventTypesForm', eventTypesForm);
 };
 
 export const initApi = () => {
@@ -32,8 +30,6 @@ export const initApi = () => {
 export const initReducer = () => {
     setReducer('eventTypes', eventTypesReducer);
 };
-
-export const initTab = () => {};
 
 export const initCrud = () => {
     const crud = {
@@ -53,7 +49,7 @@ export default async function ({ parameters }) {
 
     setAuthenticatedRoute(Constant.EVENT_TYPES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'seasonsTabList',
-        path: Constant.EVENT_TYPES_BASE_PATH,
+        tabPathValue: Constant.EVENT_TYPES_BASE_PATH,
     });
     setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
 

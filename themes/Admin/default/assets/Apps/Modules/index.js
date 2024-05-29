@@ -32,7 +32,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.MODULES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'modulesTabList',
-        path: Constant.MODULES_BASE_PATH,
+        tabPathValue: Constant.MODULES_BASE_PATH,
     });
 };
 

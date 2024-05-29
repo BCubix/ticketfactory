@@ -35,14 +35,14 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'languagesTabList',
-        path: Constant.LANGUAGES_BASE_PATH,
+        tabPathValue: Constant.LANGUAGES_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH + Constant.CREATE_PATH, Component.CreateLanguage);
     setAuthenticatedRoute(`${Constant.LANGUAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditLanguage);
 };
 
 export const initMenu = () => {
-    insertSubMenu(1, 'PARAMETRER', 'Internationalisation', Constant.LANGUAGES_BASE_PATH, <LanguageIcon />);
+    insertSubMenu(3, 'PARAMETRER', 'Internationalisation', Constant.LANGUAGES_BASE_PATH, <LanguageIcon />);
 };
 
 export const initReducer = () => {

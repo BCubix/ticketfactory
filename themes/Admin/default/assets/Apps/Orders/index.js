@@ -56,7 +56,7 @@ export default async function ({ parameters }) {
 
         setAuthenticatedRoute(Constant.ORDERS_BASE_PATH, Component.CmtAppMenu, {
             tabListName: 'ordersTabList',
-            path: Constant.ORDERS_BASE_PATH,
+            tabPathValue: Constant.ORDERS_BASE_PATH,
         });
         setAuthenticatedRoute(`${Constant.ORDERS_BASE_PATH}/:id`, Component.OrdersDetail);
 

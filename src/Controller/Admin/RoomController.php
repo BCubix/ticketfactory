@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Event\Room;
 use App\Form\Admin\Event\RoomType;
-use App\Form\Admin\Filters\FilterRoomType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;

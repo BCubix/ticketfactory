@@ -40,7 +40,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'mediasTabList',
-        path: Constant.IMAGE_FORMATS_BASE_PATH,
+        tabPathValue: Constant.IMAGE_FORMATS_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH, Component.CreateImageFormat);
     setAuthenticatedRoute(`${Constant.IMAGE_FORMATS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditImageFormat);

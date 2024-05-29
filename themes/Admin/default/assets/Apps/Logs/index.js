@@ -31,7 +31,7 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.LOGS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'logsTabList',
-        path: Constant.LOGS_BASE_PATH,
+        tabPathValue: Constant.LOGS_BASE_PATH,
     });
 };
 

@@ -36,11 +36,11 @@ export const initApi = () => {
 export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.CATEGORIES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
-        path: Constant.CATEGORIES_BASE_PATH,
+        tabPathValue: Constant.CATEGORIES_BASE_PATH,
     });
     setAuthenticatedRoute(`${Constant.CATEGORIES_BASE_PATH}/:id`, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
-        path: Constant.CATEGORIES_BASE_PATH,
+        tabPathValue: Constant.CATEGORIES_BASE_PATH,
     });
     setAuthenticatedRoute(Constant.CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateCategory);
     setAuthenticatedRoute(`${Constant.CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditCategory);

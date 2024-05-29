@@ -12,7 +12,7 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const CHECK_RELOAD_PARAMETERS = ['core_debug_mode'];
 
-export const ParametersMenu = ({ moduleParameters = false, themeParameters = false, module = null, theme = null, filter = 'core_' }) => {
+export const ParametersMenu = ({ moduleParameters = false, themeParameters = false, module = null, theme = null, filter = 'core_', generalParameter = true }) => {
     const { loading, parameters, error } = useSelector(parametersSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -60,7 +60,7 @@ export const ParametersMenu = ({ moduleParameters = false, themeParameters = fal
             themeParameters={themeParameters}
             module={module}
             theme={theme}
-            parameters={parameters.filter((item) => item?.paramKey?.startsWith(filter))}
+            parameters={parameters.filter((item) => item?.paramKey?.startsWith(filter) && item?.generalParameter === generalParameter)}
         />
     );
 };
