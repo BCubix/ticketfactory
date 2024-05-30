@@ -3,7 +3,7 @@
 namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
-
+use App\Entity\Url\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,6 +13,7 @@ class RouterController extends WebsiteController
     public function orchestrator(string $slugs): Response
     {
         // We explode url to get path as slug tokens
+        $slug = $slugs;
         $slugs = explode('/', $slugs);
         array_filter($slugs, function ($value) {
             return !empty($value);
@@ -30,16 +31,17 @@ class RouterController extends WebsiteController
         // We continue to go down slugs hierarchy as long as they match pages
         $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
 
-        // We check for event relative content mapping
-        $content = $this->forwardEventContents($mainPage, $slugs);
-        if (null !== $content) {
-            return $content;
-        };
+        $urlList = $this->em->getRepository(Url::class)->findAllForWebsite();
+        foreach ($urlList as $url) {
+            $response = $this->forward($url->getController(), [
+                'page' => $mainPage,
+                'slug' => $slug,
+                'urlFormat' => $url->getSlug()
+            ]);
 
-        // We check for other content mapping
-        $content = $this->forwardOtherContents($mainPage, $slugs);
-        if (null !== $content) {
-            return $content;
+            if ($response->getStatusCode() !== 404) {
+                return $response;
+            }
         }
 
         // We check for page mapping
@@ -49,44 +51,6 @@ class RouterController extends WebsiteController
         }
 
         throw $this->createNotFoundException('Cette page n\'existe pas.');
-    }
-
-    private function forwardEventContents(?Page $page, array $slugs): ?Response
-    {
-        $event = $this->mf->get("event")->getEventFromUrl($slugs);
-        if (null !== $event) {
-            return $this->forward('App\Controller\Website\EventController::index', [
-                'page'          => $page,
-                'event'         => $event,
-                'slugs'         => $slugs,
-            ]);
-        }
-
-        if (count($slugs) == 0) {
-            return null;
-        }
-
-        $keywords = ['season', 'room', 'eventCategory', 'tag'];
-        foreach ($keywords as $keyword) {
-            $content = $this->forwardEventRelation($keyword, $page, $slugs);
-
-            if (null !== $content) {
-                return $content;
-            };
-        }
-
-        return null;
-    }
-
-    private function forwardOtherContents(?Page $page, array $slugs): ?Response
-    {
-        if (count($slugs) == 0) {
-            return null;
-        }
-
-        // @TODO : Add Content management
-
-        return null;
     }
 
     private function forwardPages(?Page $page, array $slugs): ?Response
@@ -104,29 +68,6 @@ class RouterController extends WebsiteController
 
         return $this->forward('App\Controller\Website\PageController::index', [
             'page' => $page,
-            'slugs' => $slugs
-        ]);
-    }
-
-    private function forwardEventRelation(string $keyword, ?Page $page, array $slugs): ?Response
-    {
-        $refPage = $this->mf->get('parameter')->getCoreParameter('page_' . $keyword);
-        if ($page != $refPage) {
-            return null;
-        }
-
-        $slug = array_shift($slugs);
-        $content = $this->mf->get($keyword)->getBySlug($slug);
-        if (null === $content || count($slugs) > 0) {
-            return null;
-        }
-
-        $page ??= $this->mf->get('page')->getByKeyword('home');
-
-        $controllerName = 'App\Controller\Website\\' . ucfirst($keyword) . 'Controller::index';
-        return $this->forward($controllerName, [
-            'page' => $page,
-            $keyword => $content,
             'slugs' => $slugs
         ]);
     }

@@ -76,6 +76,8 @@ class EventRepository extends CrudRepository
             ->addSelect('m')
             ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('e.eventCategories', 'c')
+            ->innerJoin('e.tags', 'ta')
+            ->innerJoin('e.eventType', 'ty')
             ->leftJoin('e.season', 's')
             ->leftJoin('e.room', 'r')
             ->leftJoin('e.eventDateBlocks', 'edb')
@@ -100,6 +102,18 @@ class EventRepository extends CrudRepository
             $events
                 ->andWhere('r.id = :roomId')
                 ->setParameter('roomId', $filters['room']);
+        }
+
+        if (!empty($filters['tag'])) {
+            $events
+                ->andWhere('ta.id = :tagId')
+                ->setParameter('tagId', $filters['tag']);
+        }
+
+        if (!empty($filters['type'])) {
+            $events
+                ->andWhere('ty.id = :typeId')
+                ->setParameter('typeId', $filters['type']);
         }
 
         if (!empty($filters['month'])) {
@@ -155,22 +169,33 @@ class EventRepository extends CrudRepository
             ->getOneOrNullResult();
     }
 
-    public function findOneByIdForWebsite(int $eventId): ?Event
+    public function findByIdForWebsite(int $languageId, int $eventId, bool $activeFilter = true): ?Event
     {
-        return $this->createQueryBuilder('e')
-            ->where("e.active = 1")
-            ->andWhere('e.id = :eventId')
+        $result = $this->createQueryBuilder('e')
+            ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('e.id = :eventId');
+
+        if ($activeFilter) {
+            $result = $result->andWhere('e.active = 1');
+        }
+
+        return $result->setParameter('languageId', $languageId)
             ->setParameter('eventId', $eventId)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findBySlugForWebsite(int $languageId, string $slug): ?Event
+    public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?Event
     {
-        return $this->createQueryBuilder('e')
+        $result = $this->createQueryBuilder('e')
             ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->where('e.slug = :slug')
-            ->setParameter('languageId', $languageId)
+            ->where('e.slug = :slug');
+
+        if ($activeFilter) {
+            $result = $result->andWhere('e.active = 1');
+        }
+
+        return $result->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult();

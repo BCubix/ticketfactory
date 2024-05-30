@@ -37,4 +37,31 @@ class EventTypeRepository extends CrudRepository
     {
         parent::__construct($registry, EventType::class);
     }
+
+    public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?EventType
+    {
+        $result = $this->createQueryBuilder('et')
+            ->innerJoin('et.lang', 'l', 'WITH', 'l.id = :languageId');
+
+        if ($activeFilter) {
+            $result = $result->where('et.active = 1');
+        }
+
+        return $result->andWhere('et.slug = :slug')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findAllForWebsite(int $languageId): array
+    {
+        return $this->createQueryBuilder('et')
+            ->innerJoin('et.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where("et.active = 1")
+            ->orderBy('et.id', 'ASC')
+            ->setParameter('languageId', $languageId)
+            ->getQuery()
+            ->getResult();
+    }
 }

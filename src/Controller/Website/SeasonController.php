@@ -3,16 +3,43 @@
 namespace App\Controller\Website;
 
 use App\Entity\Event\EventCategory;
+use App\Entity\Event\EventType;
 use App\Entity\Event\Room;
 use App\Entity\Page\Page;
 use App\Entity\Event\Season;
+use App\Entity\Event\Tag;
+use App\Entity\User\User;
 use App\Form\Website\Event\EventFilterType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class SeasonController extends WebsiteController
 {
-    public function index(Page $page, ?Season $season, array $slugs)
+    public function orchestrator(?Page $page, string $slug, string $urlFormat)
+    {
+        $userAddress = $this->getRequest()->get('u');
+        $userPass = $this->getRequest()->get('t');
+        $user = null;
+
+        if (null  !== $userAddress && null !== $userPass) {
+            $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
+        }
+
+        $activeFilter = true;
+        if (null !== $user && in_array("ROLE_ADMIN", $user->getRoles())) {
+            $activeFilter = false;
+        }
+
+        $contents = $this->mf->get('season')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
+        if (null === $contents) {
+            return new Response(null, 404);
+        }
+
+        return $this->index($page, $contents['Season'], $contents);
+    }
+
+    public function index(?Page $page, ?Season $season, ?array $contents)
     {
         if ($this->getLanguageId() != $this->getDefaultLanguageId()) {
             $this->em->clear();
@@ -40,18 +67,28 @@ class SeasonController extends WebsiteController
             'beginDate' => $request->get('beginDate') ?? null,
             'endDate'   => $request->get('endDate') ?? null,
             'category'  => $request->get('category') ?? null,
-            'room'      => $request->get('room') ?? null,
+            'room'      => $request->get('room') ??  null,
+            'tag'       => $request->get('tag') ?? null,
+            'type'      => $request->get('type') ?? null,
             'sort'      => $request->get('sort') ?? $this->mf->get('parameter')->getCoreParameter('event_default_sort'),
             'page'      => $request->get('page') ?? 1,
             'limit'     => $this->mf->get('parameter')->getCoreParameter('event_limit'),
         ];
 
-        if (null !== $filters['category']) {
-            $filters['category'] = [$this->em->getRepository(EventCategory::class)->find($filters['category'])];
+        if (null !== $filters['category'] || isset($contents['EventCategory'])) {
+            $filters['category'] = [$this->em->getRepository(EventCategory::class)->find($filters['category'] ?? $contents['EventCategory']->getId())];
         }
 
-        if (null !== $filters['room']) {
-            $filters['room'] = $this->em->getRepository(Room::class)->find($filters['room']);
+        if (null !== $filters['room'] || isset($contents['Room'])) {
+            $filters['room'] = $this->em->getRepository(Room::class)->find($filters['room'] ?? $contents['Room']->getId());
+        }
+
+        if (null !== $filters['tag'] || isset($contents['Tag'])) {
+            $filters['tag'] = $this->em->getRepository(Tag::class)->find($filters['tag'] ?? $contents['Tag']->getId());
+        }
+
+        if (null !== $filters['type'] || isset($contents['EventType'])) {
+            $filters['type'] = $this->em->getRepository(EventType::class)->find($filters['type'] ?? $contents['EventType']->getId());
         }
 
         $filterParams = $this->mf->get("event")->getFilterParams();

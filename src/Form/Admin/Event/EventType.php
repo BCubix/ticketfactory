@@ -4,6 +4,7 @@ namespace App\Form\Admin\Event;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
+use App\Entity\Event\EventType as EventEventType;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
@@ -13,6 +14,7 @@ use App\Form\Admin\AdminBaseFormType;
 use App\Form\Admin\Feature\FeatureLinkType;
 use App\Form\Admin\SEOAble\SEOAbleType;
 use App\Repository\EventCategoryRepository;
+use App\Repository\EventTypeRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\TagRepository;
@@ -81,6 +83,16 @@ class EventType extends AdminBaseFormType
                     return $ecr
                         ->createQueryBuilder('ec')
                         ->orderBy('ec.name', 'ASC');
+                }
+            ])
+            ->add('eventType',                        EntityType::class,          [
+                'class'         => EventEventType::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (EventTypeRepository $rr) {
+                    return $rr
+                        ->createQueryBuilder('r')
+                        ->orderBy('r.name', 'ASC');
                 }
             ])
             ->add('room',                        EntityType::class,          [

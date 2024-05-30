@@ -17,10 +17,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class EventManager extends AbstractManager
+class EventManager extends AbstractRouterManager
 {
     public const SERVICE_NAME = 'event';
-    private const UNIQ_EVENT_IDENTIFIER = ['id', 'slug'];
+    protected const ENTITY_CLASS = Event::class;
     private const WEBSITE_SORTS = [
         'nameAsc' => ['name', 'ASC'],
         'nameDesc' => ['name', 'DESC'],
@@ -43,71 +43,75 @@ class EventManager extends AbstractManager
         $this->tr = $tr;
     }
 
-    public function getEventFromUrl(array $slugs): ?Event
+    public function getEventFromUrl(string $url, string $urlFormat, bool $activeFilter): ?array
     {
-        $urlFormat = $this->mf->get('parameter')->getCoreParameter('event_url_format');
+        $result = $this->getObjectFromUrl($url, $urlFormat, $activeFilter);
+        if (null === $result) {
+            return null;
+        }
 
-        $regexPattern = preg_replace('/%([^%]+)%/', '(?P<$1>[^/]+)', $urlFormat);
-        $regexPattern = '#^' . $regexPattern . '$#';
-        $url = implode('/', $slugs);
+        $result['Event'] = $this->formatEvent($result['Event']);
 
+        return $result;
+    }
+
+    public function getObjectFromUrl(string $url, string $urlFormat, bool $activeFilter): ?array
+    {
+        $regexPattern = '#^' . preg_replace('/%([^%]+)%/', '(?P<$1>[^/]+)', $urlFormat) . '$#';
         if (!preg_match($regexPattern, $url, $matches)) {
             return null;
         }
 
-        $index = null;
         $formatValue = null;
-        foreach (self::UNIQ_EVENT_IDENTIFIER as $eventIdentifier) {
+        foreach (static::UNIQ_IDENTIFIER as $eventIdentifier) {
             if (isset($matches[$eventIdentifier])) {
-                $index = $eventIdentifier;
                 $formatValue = $matches[$eventIdentifier];
                 break;
             }
         }
 
-        if (null === $index) {
+        if (null === $formatValue) {
             return null;
         }
 
-        $event = $this->getEventFromFormat($formatValue, $eventIdentifier);
-        if (null === $event) {
+        $languageId = $this->getLanguageId();
+
+        $result = [];
+        $result[$this->entityClassName] = $this->getObjectFromFormat($formatValue, $eventIdentifier, $languageId, $activeFilter);
+        if (null === $result[$this->entityClassName]) {
             return null;
         }
 
-        $checkEventUrl = [
-            'category' => fn ($event, $value) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() === $value : false,
-            'season' => fn ($event, $value) => $event->getSeason() ? $event->getSeason()->getSlug() === $value: false,
-            'room' => fn ($event, $value) => $event->getRoom() ? $event->getRoom()->getSlug() === $value: false,
-            'year' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value,
-            'month' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value,
-            'day' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value,
-        ];
-
+        $checkLinkedContentUrl = $this->getContentLinkTab();
         foreach ($matches as $key => $value) {
-            if (isset($checkEventUrl[$key]) && $checkEventUrl[$key]($event, $value) === false) {
+            if (!isset($checkLinkedContentUrl[$key])) {
+                continue;
+            }
+
+            if ($key === $this->entityClassName) {
+                return null;
+            }
+
+            $result[$key] = $checkLinkedContentUrl[$key]($result[$this->entityClassName], $value);
+
+            if (null === $result[$key] || $result[$key] === false) {
                 return null;
             }
         }
 
-        return $this->formatEvent($event);
+        return $result;
     }
 
-    public function getEventFromFormat($formatValue, $format): ?Event
+    protected function getContentLinkTab(): array
     {
-        $languageId = $this->getLanguageId();
-
-        switch ($format) {
-            case 'id':
-                return $this->em->getRepository(Event::class)->findByIdForWebsite($languageId, $formatValue);
-                break;
-            case 'slug':
-                return $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $formatValue);
-                break;
-            default:
-                break;
-        }
-
-        return null;
+        return [
+            'EventCategory' => fn ($event, $value) => $event->getMainCategory() && $event->getMainCategory()->getSlug() === $value ? $event->getMainCategory() : null,
+            'Season' => fn ($event, $value) => $event->getSeason() && $event->getSeason()->getSlug() === $value ? $event->getSeason() : false,
+            'Room' => fn ($event, $value) => $event->getRoom() && $event->getRoom()->getSlug() === $value ? $event->getRoom() : false,
+            'year' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') : null,
+            'month' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('m') : null,
+            'day' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('d') : null,
+        ];
     }
 
     public function getEventPricesReservationDefault(Event $event): array

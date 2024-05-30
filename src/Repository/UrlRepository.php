@@ -35,4 +35,13 @@ class UrlRepository extends CrudRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAllForWebsite(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.active = 1')
+            ->orderBy('u.position', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -6,11 +6,12 @@ use App\Entity\User\User;
 use App\Entity\Event\Event;
 use App\Form\Website\Event\EventReservationType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventController extends WebsiteController
 {
-    public function index(Event $event)
+    public function orchestrator(string $slug, string $urlFormat)
     {
         $userAddress = $this->getRequest()->get('u');
         $userPass = $this->getRequest()->get('t');
@@ -20,10 +21,22 @@ class EventController extends WebsiteController
             $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
         }
 
-        if (null === $event || (false === $event->isActive() && (null === $user || !in_array("ROLE_ADMIN", $user->getRoles())))) {
-            throw $this->createNotFoundException('This event does not exist.');
+        $activeFilter = true;
+        if (null !== $user && in_array("ROLE_ADMIN", $user->getRoles())) {
+            $activeFilter = false;
         }
 
+        $result = $this->mf->get('event')->getEventFromUrl($slug, $urlFormat, $activeFilter);
+
+        if (null === $result) {
+            return new Response(null, 404);
+        }
+
+        return $this->index($result['Event']);
+    }
+
+    public function index(Event $event)
+    {
         $eventReservationForm = $this->createForm(EventReservationType::class, null, ['eventId' => $event->getId()]);
         $eventReservationForm->get('eventPrices')->setData($this->mf->get("event")->getEventPricesReservationDefault($event));
         $eventReservationForm->handleRequest($this->getRequest());

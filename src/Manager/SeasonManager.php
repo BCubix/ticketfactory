@@ -4,9 +4,11 @@ namespace App\Manager;
 
 use App\Entity\Event\Season;
 
-class SeasonManager extends AbstractManager
+class SeasonManager extends AbstractRouterManager
 {
     public const SERVICE_NAME = 'season';
+
+    protected const ENTITY_CLASS = Season::class;
 
     public function getSeasons(): array
     {
