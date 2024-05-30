@@ -172,7 +172,12 @@ class EventSorterManager extends AbstractManager
     {
         return [
             'name' => [fn ($element) => $element->getName()],
-            'beginDate' => [fn ($element) => $this->getBeginDate($element)]
+            'beginDate' => [fn ($element) => $this->getBeginDate($element)],
+            'hour' => [function ($element) {
+                $date = clone $this->getBeginDate($element);
+                $date->setDate(1970, 1, 1);
+                return $date;
+            }]
         ];
     }
 
