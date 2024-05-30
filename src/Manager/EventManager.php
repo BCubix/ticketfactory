@@ -26,6 +26,8 @@ class EventManager extends AbstractManager
         'nameDesc' => ['name', 'DESC'],
         'chronoAsc' => ['beginDate', 'ASC'],
         'chronoDesc' => ['beginDate', 'DESC'],
+        'hourAsc' => ['hour', 'ASC'],
+        'hourDesc' => ['hour', 'DESC']
     ];
 
     protected $tr;
