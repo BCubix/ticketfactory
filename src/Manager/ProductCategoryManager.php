@@ -4,14 +4,27 @@ namespace App\Manager;
 
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
+use App\Entity\Page\Page;
 use App\Entity\Product\Product;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class ProductCategoryManager extends AbstractManager
+class ProductCategoryManager extends AbstractRouterManager
 {
     public const SERVICE_NAME = 'productCategory';
+
+    protected const ENTITY_CLASS = ProductCategory::class;
+
+    protected function getContentLinkTab(): array
+    {
+        return [];
+    }
+
+    protected function getAttachedPage(): ?Page
+    {
+        return $this->mf->get('parameter')->getCoreParameter('page_productCategory');
+    }
 
     public function deleteProductsFromCategory(ProductCategory $mainCategory): void
     {

@@ -31,7 +31,7 @@ class ManagerFactory implements ServiceSubscriberInterface
                 if ($srcFound) {
                     $namespace[] = $pathElement;
                 }
-                
+
                 if ($pathElement == 'src') {
                     $srcFound = true;
                 }

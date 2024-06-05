@@ -2,6 +2,7 @@
 
 namespace App\Entity\Url;
 
+use App\Entity\Addon\Module;
 use App\Entity\Datable;
 use App\Repository\UrlRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,8 +40,8 @@ class Url extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
-    #[ORM\Column(length: 255)]
-    private ?string $manager = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $entity = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
@@ -51,6 +52,12 @@ class Url extends Datable
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
     #[ORM\Column]
     private ?int $position = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_url_all', 'a_url_one'])]
+    #[ORM\Column(length: 255)]
+    private ?string $urlBuilder = null;
+
 
     public function getId(): ?int
     {
@@ -93,14 +100,14 @@ class Url extends Datable
         return $this;
     }
 
-    public function getManager(): ?string
+    public function getEntity(): ?string
     {
-        return $this->manager;
+        return $this->entity;
     }
 
-    public function setManager(string $manager): static
+    public function setEntity(string $entity): static
     {
-        $this->manager = $manager;
+        $this->entity = $entity;
 
         return $this;
     }
@@ -125,6 +132,18 @@ class Url extends Datable
     public function setPosition(int $position): static
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getUrlBuilder(): ?string
+    {
+        return $this->urlBuilder;
+    }
+
+    public function setUrlBuilder(string $urlBuilder): static
+    {
+        $this->urlBuilder = $urlBuilder;
 
         return $this;
     }

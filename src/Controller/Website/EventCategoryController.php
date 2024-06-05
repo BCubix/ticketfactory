@@ -4,31 +4,38 @@ namespace App\Controller\Website;
 
 use App\Entity\Event\EventCategory;
 use App\Entity\Page\Page;
+use Symfony\Component\HttpFoundation\Response;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
-class EventCategoryController extends WebsiteController
+class EventCategoryController extends EventAbleController
 {
-    public function index(Page $page, EventCategory $eventCategory)
+    public function orchestrator(?Page $page, string $slug, string $urlFormat)
     {
-        if ($this->getLanguageId() != $this->getDefaultLanguageId()) {
-            $this->em->clear();
+        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_eventCategory');
+        if (null !== $parameterPage) {
+            $page = $parameterPage;
 
-            $eventCategory = $this->em->getRepository(EventCategory::class)->findTranslationForWebsite($this->getDefaultLanguageId(), $eventCategory->getLanguageGroup());
+            if ($page->getSlug() === $slug && $page->isActive()) {
+                return $this->list($page);
+            }
 
-            return new RedirectResponse($this->sf->get('urlService')->tfPath($eventCategory, ['_locale' => $this->getDefaultLocale()]), 302);
+            $urlFormat = $page->getSlug() . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
 
+        $activeFilter = $this->getActiveFilter();
+        $contents = $this->mf->get('eventCategory')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
+        if (null === $contents) {
+            return new Response(null, 404);
+        }
+
+        $template = 'EventCategory/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
+
+        return $this->renderListPage($page, $contents, $template);
+    }
+
+    public function list(Page $page) {
         $request = $this->getRequest();
 
-        $filters = [
-            'category'  => [$eventCategory->getId()],
-            'sort'      => $request->get('sort') ?? $this->mf->get('parameter')->getCoreParameter('event_default_sort'),
-            'page'      => $request->get('page') ?? 1,
-            'limit'     => $this->mf->get('parameter')->getCoreParameter('event_limit'),
-        ];
-
-        $events = $this->mf->get('event')->getSortedEvents($filters);
+        $eventCategories = $this->em->getRepository(EventCategory::class)->getTopCategoriesForWebsite($this->getLanguageId());
 
         $pageContent = [];
         if (null !== $page) {
@@ -41,22 +48,12 @@ class EventCategoryController extends WebsiteController
 
         $template = 'EventCategory/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
-        $template .= 'index.html.twig';
+        $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
-            'page'           => $page,
-            'eventCategory'  => $eventCategory,
-            'activeEvents'   => $events['active'],
-            'inactiveEvents' => $events['inactive'],
+            'page'               => $page,
+            'eventCategories'    => $eventCategories,
             'pageContent'        => $pageContent,
-            'pagination'         => [
-                'page'               => $filters['page'],
-                'limit'              => $filters['limit'],
-                'activeTotal'        => $events['activeTotal'],
-                'inactiveTotal'      => $events['inactiveTotal'],
-                'activeMaxPage'      => $this->mf->get('event')->getMaxPage($events['activeTotal'], $filters['limit']),
-                'inactiveMaxPage'    => $this->mf->get('event')->getMaxPage($events['inactiveTotal'], $filters['limit']),
-            ]
         ]);
     }
 }

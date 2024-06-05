@@ -44,4 +44,24 @@ class UrlRepository extends CrudRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByEntityForWebsite(string $entity): ?Url
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.active = 1')
+            ->andWhere('u.entity = :entity')
+            ->setParameter('entity', $entity)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByKeywordForWebsite(string $keyword): ?Url
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.active = 1')
+            ->andWhere('u.keyword = :keyword')
+            ->setParameter('keyword', $keyword)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

@@ -45,18 +45,6 @@ class EventManager extends AbstractRouterManager
         $this->tr = $tr;
     }
 
-    public function getEventFromUrl(string $url, string $urlFormat, bool $activeFilter): ?array
-    {
-        $result = $this->getObjectFromUrl($url, $urlFormat, $activeFilter);
-        if (null === $result) {
-            return null;
-        }
-
-        $result['Event'] = $this->formatEvent($result['Event']);
-
-        return $result;
-    }
-
     public function getObjectFromUrl(string $url, string $urlFormat, bool $activeFilter): ?array
     {
         $regexPattern = '#^' . preg_replace('/%([^%]+)%/', '(?P<$1>[^/]+)', $urlFormat) . '$#';
@@ -72,47 +60,73 @@ class EventManager extends AbstractRouterManager
             }
         }
 
-        if (null === $formatValue) {
-            return null;
-        }
-
         $languageId = $this->getLanguageId();
 
         $result = [];
-        $result[$this->entityClassName] = $this->getObjectFromFormat($formatValue, $eventIdentifier, $languageId, $activeFilter);
-        if (null === $result[$this->entityClassName]) {
-            return null;
-        }
 
-        $checkLinkedContentUrl = $this->getContentLinkTab();
-        foreach ($matches as $key => $value) {
-            if (!isset($checkLinkedContentUrl[$key])) {
-                continue;
-            }
-
-            if ($key === $this->entityClassName) {
+        if (null !== $formatValue) {
+            $result[$this->entityClassName] = $this->getObjectFromFormat($formatValue, $eventIdentifier, $languageId, $activeFilter);
+            if (null === $result[$this->entityClassName]) {
                 return null;
             }
 
-            $result[$key] = $checkLinkedContentUrl[$key]($result[$this->entityClassName], $value);
+            $checkLinkedContentUrl = $this->getEventLinkTab();
 
-            if (null === $result[$key] || $result[$key] === false) {
-                return null;
+            foreach ($matches as $key => $value) {
+                if (!isset($checkLinkedContentUrl[$key])) {
+                    continue;
+                }
+
+                if ($key === $this->entityClassName) {
+                    return null;
+                }
+
+                $result[$key] = $checkLinkedContentUrl[$key]($result[$this->entityClassName], $value);
+
+                if (null === $result[$key] || $result[$key] === false) {
+                    return null;
+                }
+            }
+        } else {
+            $checkLinkedContentUrl = $this->getContentLinkTab();
+
+            foreach ($matches as $key => $value) {
+                if (!isset($checkLinkedContentUrl[$key])) {
+                    continue;
+                }
+
+                $result[$key] = $checkLinkedContentUrl[$key]($languageId, $value, $activeFilter);
+
+                if (null === $result[$key] || $result[$key] === false) {
+                    return null;
+                }
             }
         }
 
         return $result;
     }
 
-    protected function getContentLinkTab(): array
+    protected function getEventLinkTab(): array
     {
         return [
             'EventCategory' => fn ($event, $value) => $event->getMainCategory() && $event->getMainCategory()->getSlug() === $value ? $event->getMainCategory() : null,
-            'Season' => fn ($event, $value) => $event->getSeason() && $event->getSeason()->getSlug() === $value ? $event->getSeason() : false,
-            'Room' => fn ($event, $value) => $event->getRoom() && $event->getRoom()->getSlug() === $value ? $event->getRoom() : false,
+            'Season' => fn ($event, $value) => $event->getSeason() && $event->getSeason()->getSlug() === $value ? $event->getSeason() : null,
+            'Room' => fn ($event, $value) => $event->getRoom() && $event->getRoom()->getSlug() === $value ? $event->getRoom() : null,
             'year' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') : null,
             'month' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('m') : null,
             'day' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('d') : null,
+        ];
+    }
+
+    protected function getBuildContentLinkTab(): array
+    {
+        return [
+            'EventCategory' => fn ($element) => null !== $element->getMainCategory() ? $element->getMainCategory()->getSlug() : null,
+            'Season' => fn ($element) => $element->getSeason() ? $element->getSeason()->getSlug() : null,
+            'Room' => fn ($element) => $element->getRoom() ? $element->getRoom()->getSlug() : null,
+            'year' => fn ($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('Y'),
+            'month' => fn ($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('m'),
+            'day' => fn ($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('d')
         ];
     }
 
@@ -374,14 +388,16 @@ class EventManager extends AbstractRouterManager
         return $formatedMedias;
     }
 
-    public function getFilterParams()
+    public function getFilterParams(array $contents)
     {
         return [
-            'beginDateFilter'   => $this->mf->get("parameter")->getCoreParameter('event_begin_date_filter'),
-            'endDateFilter'     => $this->mf->get("parameter")->getCoreParameter('event_end_date_filter'),
-            'seasonFilter'      => $this->mf->get("parameter")->getCoreParameter('event_season_filter'),
-            'roomFilter'        => $this->mf->get("parameter")->getCoreParameter('event_room_filter'),
-            'categoryFilter'    => $this->mf->get("parameter")->getCoreParameter('event_category_filter')
+            'beginDateFilter'        => $this->mf->get("parameter")->getCoreParameter('event_begin_date_filter'),
+            'endDateFilter'          => $this->mf->get("parameter")->getCoreParameter('event_end_date_filter'),
+            'seasonFilter'           => isset($contents['Season']) ? false : $this->mf->get("parameter")->getCoreParameter('event_season_filter'),
+            'roomFilter'             => isset($contents['Room']) ? false : $this->mf->get("parameter")->getCoreParameter('event_room_filter'),
+            'eventCategoryFilter'    => isset($contents['EventCategory']) ? false : $this->mf->get("parameter")->getCoreParameter('event_category_filter'),
+            'tagFilter'              => isset($contents['Tag']) ? false : $this->mf->get("parameter")->getCoreParameter('event_tag_filter'),
+            'eventTypeFilter'        => isset($contents['EventType']) ? false : $this->mf->get("parameter")->getCoreParameter('event_type_filter')
         ];
     }
 

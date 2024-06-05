@@ -40,4 +40,24 @@ class PageManager extends AbstractManager
 
         return $this->em->getRepository(Page::class)->findBySlugForWebsite($languageId, $slug);
     }
+
+    public function getPageBySlugArray(array $slugs): ?Page
+    {
+        $result = null;
+
+        foreach($slugs as $slug) {
+            $page = $this->mf->get('page')->getBySlug($slug);
+            if (null === $page || (null !== $result && (null === $page->getParent() || $result->getId() !== $page->getParent()->getId()))) {
+                return null;
+            }
+
+            if (null === $result && null !== $page->getParent() && ($page->getParent()->getKeyword() !== 'home' || ($page->getParent()->getSlug() !== "" && null !== $page->getParent()->getSlug()))) {
+                return null;
+            }
+
+            $result = $page;
+        }
+
+        return $result;
+    }
 }

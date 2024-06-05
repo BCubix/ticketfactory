@@ -8,10 +8,12 @@ use App\Entity\Event\EventType;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
+use App\Entity\Page\Page;
 use App\Kernel;
 use App\Service\ServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class AbstractRouterManager extends AbstractManager
 {
@@ -28,7 +30,7 @@ class AbstractRouterManager extends AbstractManager
         ManagerFactory $mf,
         ServiceFactory $sf,
         EntityManagerInterface $em,
-        RequestStack $rs
+        RequestStack $rs,
     ) {
         parent::__construct($kl, $mf, $sf, $em, $rs);
 
@@ -85,6 +87,41 @@ class AbstractRouterManager extends AbstractManager
         return $result;
     }
 
+    public function buildUrl(mixed $element, $urlFormat, int $absolute = RouterInterface::ABSOLUTE_PATH) {
+        $url = $urlFormat->getSlug();
+
+        $attachedPage = $this->getAttachedPage();
+        if (null !== $attachedPage) {
+            $url = $attachedPage->getSlug() . "/" . $url;
+        }
+
+        $buildContentLinkTab = $this->getBuildContentLinkTab();
+        foreach ($buildContentLinkTab as $key => $contentLink) {
+            if (str_contains($url, "%" . $key . "%")) {
+                $result = $contentLink($element);
+                if (null === $result) {
+                    return "";
+                }
+
+                $url = str_replace("%" . $key . "%", $result, $url);
+            }
+        }
+
+        $buildObjectFormatTab = $this->getBuildObjectFormatTab();
+        foreach ($buildObjectFormatTab as $key => $objectFormat) {
+            if (str_contains($url, "%" . $key . "%")) {
+                $url = str_replace("%" . $key . "%", $objectFormat($element), $url);
+            }
+        }
+
+        $parameters = ['slugs' => $url];
+        if (method_exists($element, 'getLang')) {
+            $parameters['_locale'] = $element->getLang()->getLocale();
+        }
+
+        return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
+    }
+
     protected function getObjectFromFormat(string $formatValue, string $format, int $languageId, bool $activeFilter): mixed
     {
         $checkObjectFormatUrl = $this->getObjectFormatTab();
@@ -113,6 +150,24 @@ class AbstractRouterManager extends AbstractManager
         return [
             'id' => fn ($languageId, $formatValue, $activeFilter) => $this->em->getRepository($this->entityClass)->findByIdForWebsite($languageId, $formatValue, $activeFilter),
             'slug' => fn ($languageId, $formatValue, $activeFilter) => $this->em->getRepository($this->entityClass)->findBySlugForWebsite($languageId, $formatValue, $activeFilter),
+        ];
+    }
+
+    protected function getAttachedPage(): ?Page
+    {
+        return null;
+    }
+
+    protected function getBuildContentLinkTab(): array
+    {
+        return [];
+    }
+
+    protected function getBuildObjectFormatTab(): array
+    {
+        return [
+            'id' => fn ($element) => $element->getId(),
+            'slug' => fn ($element) => $element->getSlug(),
         ];
     }
 }

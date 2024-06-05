@@ -6,39 +6,14 @@ use App\Entity\Addon\Module;
 use App\Entity\Hook\Hook;
 use App\Exception\ApiException;
 
-use App\Manager\HookManager;
-use App\Manager\LanguageManager;
-use App\Manager\ManagerFactory;
-use App\Manager\ModuleManager;
-use App\Service\Error\FormErrorsCollector;
-use App\Service\Log\Logger;
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[Rest\Route('/api')]
 class HookController extends AdminController
 {
-    protected $mm;
-    public function __construct(
-        EntityManagerInterface $em,
-        SerializerInterface $se,
-        FormErrorsCollector $fec,
-        Logger $log,
-        LanguageManager $lm,
-        HookManager $hm,
-        ModuleManager $mm,
-        ManagerFactory $mf,
-    ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
-
-        $this->mm = $mm;
-    }
-
-
     #[Rest\Get('/hooks')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
     public function getAll(Request $request): View
@@ -77,7 +52,7 @@ class HookController extends AdminController
         $hook = new Hook();
 
 
-        $moduleInstance = $this->mm->importModuleInstance($module->getName());
+        $moduleInstance = $this->mf->get('module')->importModuleInstance($module->getName());
         $configModule = $moduleInstance->getConfiguration();
         $name = null;
         if ($configModule["hooks"]) {

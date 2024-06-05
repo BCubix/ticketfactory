@@ -4,15 +4,12 @@ namespace App\Service\Url;
 
 use App\Entity\Content\Content;
 use App\Entity\Event\Event;
-use App\Entity\Event\EventCategory;
-use App\Entity\Event\Room;
-use App\Entity\Event\Season;
 use App\Entity\Page\Page;
 use App\Manager\EventManager;
 use App\Manager\ManagerFactory;
 use App\Manager\PageManager;
 use App\Manager\ParameterManager;
-
+use App\Service\ServiceFactory;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -26,19 +23,21 @@ class UrlService
     protected $prm;
     protected $router;
     protected $rs;
+    protected $sf;
 
-    public function __construct(EventManager $em, PageManager $pam, ParameterManager $prm, RouterInterface $router, ManagerFactory $mf)
+    public function __construct(EventManager $em, PageManager $pam, ParameterManager $prm, RouterInterface $router, ManagerFactory $mf, ServiceFactory $sf)
     {
         $this->em = $em;
         $this->mf = $mf;
         $this->pam = $pam;
         $this->prm = $prm;
         $this->router = $router;
+        $this->sf = $sf;
     }
 
-    public function generateUrl(string $key, ?array $options = []): string
+    public function generateUrl(string $key, ?array $options = [], int $absolute = RouterInterface::ABSOLUTE_PATH): string
     {
-        $url = $this->router->generate($key, $options);
+        $url = $this->router->generate($key, $options, $absolute);
 
         return $url;
     }
@@ -59,56 +58,29 @@ class UrlService
             return '';
         }
 
-        switch (ClassUtils::getClass($element)) {
-            case EventCategory::class:
-            case Season::class:
-            case Room::class:
-                return $this->eventRelativePath($element, $parameters, $absolute);
-
-            case Event::class:
-                return $this->eventPath($element, $parameters, $absolute);
-
-            case Page::class:
-                return $this->pagePath($element, $parameters, $absolute);
-
-            case Content::class:
-                return $this->contentPath($element, $parameters, $absolute);
-
-            default:
-                return '';
-        }
-    }
-
-    public function eventRelativePath(object $object, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
-    {
-        $parameters["_locale"] = $object->getLang()->getLocale();
-        $slugs = [];
-        $slugs[] = $object->getSlug();
-
-        $keyword = ClassUtils::getClass($object);
-        $keyword = explode('\\', $keyword);
-        $keyword = array_pop($keyword);
-        $keyword = lcfirst($keyword);
-
-        $page = $this->prm->getCoreParameter('page_' . $keyword);
-        if (null !== $page) {
-            while ($page !== null) {
-                $slugs[] = $page->getSlug();
-                $page = $page->getParent();
-            }
-
-            $slugs = array_reverse($slugs);
+        if (gettype($element) === 'string') {
+            return '';
         }
 
-        return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
-    }
+        $class = ClassUtils::getClass($element);
+        if ($class === Page::class) {
+            return $this->pagePath($element, $parameters, $absolute);
+        }
 
-    public function eventPath(Event $event, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
-    {
-        $parameters["_locale"] = $event->getLang()->getLocale();
-        $slugs = $this->em->getUrlSlugs($event);
+        $class = explode('\\', $class);
+        $class = array_pop($class);
+        $urlFormat = $this->mf->get('url')->findOneByEntityForWebsite($class);
 
-        return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
+        if (null === $urlFormat) {
+            return "";
+        }
+
+        $urlBuilderClassName = explode('::', $urlFormat->getUrlBuilder());
+        if (count($urlBuilderClassName) !== 2) {
+            return "";
+        }
+
+        return $this->mf->get($urlFormat->getKeyword())->buildUrl($element, $urlFormat);
     }
 
     public function pagePath(Page $page, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
@@ -126,22 +98,6 @@ class UrlService
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
     }
 
-    public function contentPath(Content $content, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
-    {
-        $parameters["_locale"] = $content->getLang()->getLocale();
-
-        $contentType = $content->getContentType();
-        $page = $contentType->isPageType() ? $content->getPage() : $contentType->getPageParent();
-
-        $slugs = [];
-        while ($page !== null) {
-            $slugs[] = $page->getSlug();
-            $page = $page->getParent();
-        }
-
-        return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
-    }
-
     private function generateFromMainSlugs(array $slugs, array $parameters, $absolute)
     {
         $slugs = array_filter($slugs, function ($value) {
@@ -154,7 +110,7 @@ class UrlService
         return $this->router->generate('tf_website_global', $slugs, $absolute);
     }
 
-    public function getPageBySlugArray(array $slugs)
+    public function getMainPageBySlugArray(array $slugs)
     {
 
         $mainPage = null;
@@ -164,13 +120,13 @@ class UrlService
             if (null === $page) {
                 break;
             }
-            if (
-                (null === $mainPage && null == $page->getParent()) || (null === $mainPage && null !== $page->getParent()) || ($mainPage->getId() == $page->getParent()->getId())
-            ) {
+
+            if (null === $mainPage || (null !== $page->getParent() && $page->getParent()->getId() === $mainPage->getId())) {
                 $mainPage = $page;
                 array_shift($slugs);
             }
         }
+
         return ($mainPage);
     }
 }

@@ -3,6 +3,9 @@
 namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
+use App\Entity\Page\Page;
+use App\Entity\Product\Product;
+use App\Entity\Product\ProductCategory;
 use App\Entity\Product\ProductMedia;
 use App\Kernel;
 use App\Service\ServiceFactory;
@@ -11,9 +14,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ProductManager extends AbstractManager
+class ProductManager extends AbstractRouterManager
 {
     public const SERVICE_NAME = 'product';
+
+    protected const ENTITY_CLASS = Product::class;
 
     protected $tr;
 
@@ -28,6 +33,25 @@ class ProductManager extends AbstractManager
         parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->tr = $tr;
+    }
+
+    protected function getContentLinkTab(): array
+    {
+        return [
+            'ProductCategory' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(ProductCategory::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+        ];
+    }
+
+    protected function getBuildContentLinkTab(): array
+    {
+        return [
+            'ProductCategory' => fn ($element) => $element->getMainCategory() !== null ? $element->getMainCategory()->getSlug() : null,
+        ];
+    }
+
+    protected function getAttachedPage(): ?Page
+    {
+        return $this->mf->get('parameter')->getCoreParameter('page_product');
     }
 
     public function getFirstFormattedMedia($productMedias, string $slug): ?ProductMedia

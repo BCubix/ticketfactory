@@ -3,12 +3,16 @@
 namespace App\Form\Website\Event;
 
 use App\Entity\Event\EventCategory;
+use App\Entity\Event\EventType;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
+use App\Entity\Event\Tag;
 use App\Form\Website\WebsiteBaseFormType;
 use App\Repository\EventCategoryRepository;
+use App\Repository\EventTypeRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SeasonRepository;
+use App\Repository\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -52,8 +56,8 @@ class EventFilterType extends WebsiteBaseFormType
             ]);
         }
 
-        if ($filterParams['categoryFilter']) {
-            $builder->add('category',                  EntityType::class,               [
+        if ($filterParams['eventCategoryFilter']) {
+            $builder->add('eventCategory',                  EntityType::class,               [
                 'label'         => "Du genre :",
                 'label_attr'    => ['class' => 'filters_label'],
                 'class'         => EventCategory::class,
@@ -95,6 +99,39 @@ class EventFilterType extends WebsiteBaseFormType
                 'multiple'      => false,
                 'placeholder'   => "Toutes les saisons",
                 'query_builder' => function (SeasonRepository $rr) {
+                    return $rr
+                        ->createQueryBuilder('r')
+                        ->orderBy('r.name', 'ASC');
+                }
+            ]);
+        }
+
+        if ($filterParams['eventTypeFilter']) {
+            $builder->add('eventType',                    EntityType::class,               [
+                'label'         => "Type d'évènement :",
+                'label_attr'    => ['class' => 'filters_label'],
+                'class'         => EventType::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'placeholder'   => "Tous les types",
+                'query_builder' => function (EventTypeRepository $rr) {
+                    return $rr
+                        ->createQueryBuilder('r')
+                        ->orderBy('r.name', 'ASC');
+                }
+            ]);
+        }
+
+        if ($filterParams['tagFilter']) {
+            $builder->add('tag',                    EntityType::class,               [
+                'label'         => "Tag :",
+                'label_attr'    => ['class' => 'filters_label'],
+                'class'         => Tag::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'expanded'      => true,
+                'placeholder'   => "Tous les tags",
+                'query_builder' => function (TagRepository $rr) {
                     return $rr
                         ->createQueryBuilder('r')
                         ->orderBy('r.name', 'ASC');

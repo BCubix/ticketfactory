@@ -3,14 +3,14 @@
 namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
-use App\Entity\Event\Season;
+use App\Entity\Product\Product;
 use Symfony\Component\HttpFoundation\Response;
 
-class SeasonController extends EventAbleController
+class ProductController extends EventAbleController
 {
     public function orchestrator(?Page $page, string $slug, string $urlFormat)
     {
-        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_season');
+        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_product');
         if (null !== $parameterPage) {
             $page = $parameterPage;
 
@@ -18,12 +18,12 @@ class SeasonController extends EventAbleController
         }
 
         $activeFilter = $this->getActiveFilter();
-        $contents = $this->mf->get('season')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
+        $contents = $this->mf->get('product')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
         if (null === $contents) {
             return new Response(null, 404);
         }
 
-        $template = 'Season/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
+        $template = 'Product/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
         return $this->renderListPage($page, $contents, $template);
     }
@@ -31,7 +31,7 @@ class SeasonController extends EventAbleController
     public function list(Page $page) {
         $request = $this->getRequest();
 
-        $seasons = $this->em->getRepository(Season::class)->findAllForWebsite($this->getLanguageId());
+        $products = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId());
 
         $pageContent = [];
         if (null !== $page) {
@@ -42,13 +42,13 @@ class SeasonController extends EventAbleController
             }
         }
 
-        $template = 'Season/';
+        $template = 'Product/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
             'page'               => $page,
-            'seasons'            => $seasons,
+            'products'           => $products,
             'pageContent'        => $pageContent,
         ]);
     }

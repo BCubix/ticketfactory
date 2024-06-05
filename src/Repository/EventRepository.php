@@ -92,10 +92,10 @@ class EventRepository extends CrudRepository
                 ->setParameter('seasonId', $filters['season']);
         }
 
-        if (!empty($filters['category']) && count($filters['category']) > 0) {
+        if (!empty($filters['eventCategory']) && count($filters['eventCategory']) > 0) {
             $events
-                ->andWhere('c.id IN (:categoryId)')
-                ->setParameter('categoryId', $filters['category']);
+                ->andWhere('c.id IN (:eventCategoryId)')
+                ->setParameter('eventCategoryId', $filters['eventCategory']);
         }
 
         if (!empty($filters['room'])) {
@@ -104,16 +104,16 @@ class EventRepository extends CrudRepository
                 ->setParameter('roomId', $filters['room']);
         }
 
-        if (!empty($filters['tag'])) {
+        if (!empty($filters['tag']) && count($filters['tag']) > 0) {
             $events
-                ->andWhere('ta.id = :tagId')
+                ->andWhere('ta.id IN (:tagId)')
                 ->setParameter('tagId', $filters['tag']);
         }
 
-        if (!empty($filters['type'])) {
+        if (!empty($filters['eventType'])) {
             $events
-                ->andWhere('ty.id = :typeId')
-                ->setParameter('typeId', $filters['type']);
+                ->andWhere('ty.id = :eventTypeId')
+                ->setParameter('eventTypeId', $filters['eventType']);
         }
 
         if (!empty($filters['month'])) {

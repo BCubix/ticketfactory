@@ -4,41 +4,32 @@ namespace App\Controller\Website;
 
 use App\Entity\Event\Room;
 use App\Entity\Page\Page;
-use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoomController extends WebsiteController
+class RoomController extends EventAbleController
 {
     public function orchestrator(?Page $page, string $slug, string $urlFormat)
     {
-        $userAddress = $this->getRequest()->get('u');
-        $userPass = $this->getRequest()->get('t');
-        $user = null;
+        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_room');
+        if (null !== $parameterPage) {
+            $page = $parameterPage;
 
-        if (null  !== $userAddress && null !== $userPass) {
-            $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
+            $urlFormat = $page->getSlug() . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
 
-        $activeFilter = true;
-        if (null !== $user && in_array("ROLE_ADMIN", $user->getRoles())) {
-            $activeFilter = false;
-        }
-
+        $activeFilter = $this->getActiveFilter();
         $contents = $this->mf->get('room')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
         if (null === $contents) {
             return new Response(null, 404);
         }
 
-        return $this->index($page, $contents['Room'], $contents);
+        $template = 'Room/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
+
+        return $this->renderListPage($page, $contents, $template);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
-
-        $displayRooms = $this->mf->get("parameter")->getCoreParameter("display_rooms");
-        if (!$displayRooms) {
-            throw $this->createNotFoundException('This page does not exist.');
-        }
 
         $rooms = $this->em->getRepository(Room::class)->findAllForWebsite($this->getLanguageId());
 
@@ -60,9 +51,5 @@ class RoomController extends WebsiteController
             'rooms'              => $rooms,
             'pageContent'        => $pageContent,
         ]);
-    }
-
-    public function index(?Page $page, ?Room $season, ?array $contents)
-    {
     }
 }

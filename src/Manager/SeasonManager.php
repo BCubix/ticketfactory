@@ -3,12 +3,23 @@
 namespace App\Manager;
 
 use App\Entity\Event\Season;
+use App\Entity\Page\Page;
 
 class SeasonManager extends AbstractRouterManager
 {
     public const SERVICE_NAME = 'season';
 
     protected const ENTITY_CLASS = Season::class;
+
+    protected function getContentLinkTab(): array
+    {
+        return [];
+    }
+
+    protected function getAttachedPage(): ?Page
+    {
+        return $this->mf->get('parameter')->getCoreParameter('page_season');
+    }
 
     public function getSeasons(): array
     {

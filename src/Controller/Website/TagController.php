@@ -4,31 +4,28 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 use App\Entity\Event\Tag;
+use Symfony\Component\HttpFoundation\Response;
 
-class TagController extends WebsiteController
+class TagController extends EventAbleController
 {
-    public function index(Page $page, array $slugs)
+    public function orchestrator(?Page $page, string $slug, string $urlFormat)
     {
-        if (isset($slugs[0]) && $page->getSlug() === $slugs[0]) {
-            array_shift($slugs);
+        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_tag');
+        if (null !== $parameterPage) {
+            $page = $parameterPage;
+
+            $urlFormat = $page->getSlug() . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
 
-        if (count($slugs) !== 1) {
-            throw $this->createNotFoundException('This tag does not exist.');
+        $activeFilter = $this->getActiveFilter();
+        $contents = $this->mf->get('tag')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
+        if (null === $contents) {
+            return new Response(null, 404);
         }
 
-        $tag = $this->em->getRepository(Tag::class)->findBySlugForWebsite($this->getLanguageId(), $slugs[0]);
-        if (null === $tag) {
-            throw $this->createNotFoundException('This tag does not exist.');
-        }
+        $template = 'Tag/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
-        $events = $this->mf->get('eventSorter')->sortEvents($tag->getEvents()->toArray());
-
-        return $this->websiteRender('Tag/index.html.twig', [
-            'page'    => $page,
-            'tag'     => $tag,
-            'events'  => $events
-        ]);
+        return $this->renderListPage($page, $contents, $template);
     }
 
     public function list(Page $page) {

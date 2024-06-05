@@ -23,7 +23,6 @@ abstract class WebsiteController extends AbstractFOSRestController
     protected $rs;
     protected $mf;
     protected $sf;
-    protected $mm;
     protected $tg;
 
     public function __construct(
@@ -31,14 +30,12 @@ abstract class WebsiteController extends AbstractFOSRestController
         RequestStack $rs,
         ManagerFactory $mf,
         ServiceFactory $sf,
-        ModuleManager $mm,
         Environment $tg
     ) {
         $this->em = $em;
         $this->rs = $rs;
         $this->mf = $mf;
         $this->sf = $sf;
-        $this->mm = $mm;
         $this->tg = $tg;
     }
 
@@ -124,7 +121,7 @@ abstract class WebsiteController extends AbstractFOSRestController
 
     protected function getOtherParameters(): array
     {
-        $modules = $this->mm->getAll(['active' => 1]);
+        $modules = $this->mf->get('module')->getAll(['active' => 1]);
         $modulesName = [];
 
         foreach ($modules['results'] as $module) {

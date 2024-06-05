@@ -36,4 +36,12 @@ class UrlManager extends AbstractManager
 
         $this->em->flush();
     }
+
+    public function findOneByEntityForWebsite(string $entity) {
+        return $this->em->getRepository(Url::class)->findByEntityForWebsite($entity);
+    }
+
+    public function findOneByKeywordForWebsite(string $entity) {
+        return $this->em->getRepository(Url::class)->findByKeywordForWebsite($entity);
+    }
 }

@@ -29,7 +29,7 @@ class RouterController extends WebsiteController
         }
 
         // We continue to go down slugs hierarchy as long as they match pages
-        $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
+        $mainPage = $this->sf->get('urlService')->getMainPageBySlugArray($slugs);
 
         $urlList = $this->em->getRepository(Url::class)->findAllForWebsite();
         foreach ($urlList as $url) {
@@ -45,20 +45,16 @@ class RouterController extends WebsiteController
         }
 
         // We check for page mapping
-        $content = $this->forwardPages($mainPage, $slugs);
-        if (null !== $content) {
-            return $content;
+        $page = $this->mf->get('page')->getPageBySlugArray($slugs);
+        if (null === $page) {
+            throw $this->createNotFoundException('Cette page n\'existe pas.');
         }
 
-        throw $this->createNotFoundException('Cette page n\'existe pas.');
+        return $this->forwardPages($mainPage, $slugs);
     }
 
     private function forwardPages(?Page $page, array $slugs): ?Response
     {
-        if (null == $page) {
-            throw $this->createNotFoundException('Cette page n\'existe pas.');
-        }
-
         if (null !== $page->getController()) {
             return $this->forward($page->getController(), [
                 'page' => $page,

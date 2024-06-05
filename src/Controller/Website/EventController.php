@@ -2,37 +2,45 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\User\User;
 use App\Entity\Event\Event;
+use App\Entity\Page\Page;
 use App\Form\Website\Event\EventReservationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EventController extends WebsiteController
+class EventController extends EventAbleController
 {
-    public function orchestrator(string $slug, string $urlFormat)
+    public function orchestrator(?Page $page, string $slug, string $urlFormat)
     {
-        $userAddress = $this->getRequest()->get('u');
-        $userPass = $this->getRequest()->get('t');
-        $user = null;
+        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_event');
+        if (null !== $parameterPage) {
+            $page = $parameterPage;
 
-        if (null  !== $userAddress && null !== $userPass) {
-            $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
+            $urlFormat = $page->getSlug() . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
 
-        $activeFilter = true;
-        if (null !== $user && in_array("ROLE_ADMIN", $user->getRoles())) {
-            $activeFilter = false;
-        }
+        $activeFilter = $this->getActiveFilter();
+        $contents = $this->mf->get('event')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
 
-        $result = $this->mf->get('event')->getEventFromUrl($slug, $urlFormat, $activeFilter);
-
-        if (null === $result) {
+        if (null === $contents) {
             return new Response(null, 404);
         }
 
-        return $this->index($result['Event']);
+        if (isset($contents['Event'])) {
+            return $this->index($contents['Event']);
+        }
+
+        $template = 'Event/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
+
+        return $this->renderListPage($page, $contents, $template);
+    }
+
+    public function list(Page $page)
+    {
+        $template = 'Event/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
+
+        return $this->renderListPage($page, [], $template);
     }
 
     public function index(Event $event)

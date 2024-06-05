@@ -73,7 +73,7 @@ abstract class Hook
         array_filter($slugs, function ($value) {
             return !empty($value);
         });
-        $mainPage = $this->sf->get('urlService')->getPageBySlugArray($slugs);
+        $mainPage = $this->sf->get('urlService')->getMainPageBySlugArray($slugs);
         return ($mainPage);
     }
 }

@@ -4,18 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Addon\Module;
 use App\Exception\ApiException;
-use App\Manager\HookManager;
-use App\Manager\LanguageManager;
-use App\Manager\ManagerFactory;
-use App\Manager\ModuleManager;
-use App\Service\Error\FormErrorsCollector;
-use App\Service\Log\Logger;
 
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,23 +18,6 @@ class ModuleController extends AdminController
 {
     protected const NOT_FOUND_MESSAGE = "Ce module n'existe pas.";
 
-    protected $mm;
-
-    public function __construct(
-        EntityManagerInterface $em,
-        SerializerInterface $se,
-        FormErrorsCollector $fec,
-        Logger $log,
-        LanguageManager $lm,
-        HookManager $hm,
-        ModuleManager $mm,
-        ManagerFactory $mf,
-    ) {
-        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
-
-        $this->mm = $mm;
-    }
-
     #[Rest\Get('/modules')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_module_all'])]
@@ -51,7 +26,7 @@ class ModuleController extends AdminController
         $filters = $paramFetcher->get('filters');
         $filters = empty($filters) ? [] : $filters;
 
-        $modules = $this->mm->getAll($filters);
+        $modules = $this->mf->get('module')->getAll($filters);
 
         return $this->view($modules, Response::HTTP_OK);
     }
@@ -78,7 +53,7 @@ class ModuleController extends AdminController
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $module = $this->mm->active($moduleName, $action);
+            $module = $this->mf->get('module')->active($moduleName, $action);
 
             $messageState = [
                 Module::ACTION_INSTALL => "Updated",
