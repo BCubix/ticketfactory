@@ -16,11 +16,6 @@ class ProductCategoryManager extends AbstractRouterManager
 
     protected const ENTITY_CLASS = ProductCategory::class;
 
-    protected function getContentLinkTab(): array
-    {
-        return [];
-    }
-
     protected function getAttachedPage(): ?Page
     {
         return $this->mf->get('parameter')->getCoreParameter('page_productCategory');

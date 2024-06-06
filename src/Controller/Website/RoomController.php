@@ -31,6 +31,11 @@ class RoomController extends EventAbleController
     public function list(Page $page) {
         $request = $this->getRequest();
 
+        $displayRooms = $this->mf->get("parameter")->getCoreParameter("display_rooms");
+        if (!$displayRooms) {
+            throw $this->createNotFoundException('This page does not exist.');
+        }
+
         $rooms = $this->em->getRepository(Room::class)->findAllForWebsite($this->getLanguageId());
 
         $pageContent = [];

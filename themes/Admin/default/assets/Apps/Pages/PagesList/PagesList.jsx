@@ -53,6 +53,7 @@ export const pagesListCrud = {
     duplicate: (props) => Api.pagesApi.duplicatePage(props),
     delete: (props) => Api.pagesApi.deletePage(props),
     new: ({ setCreateDialog }) => setCreateDialog(true),
+    disableDeleteFunction: (item) => item?.controller,
     preview: (el) => {
         if (!el?.frontUrl) {
             return;

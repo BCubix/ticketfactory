@@ -136,6 +136,7 @@ export const ListTable = ({
                         setTranslateItem={setTranslateItem}
                         onDuplicate={onDuplicate}
                         onPreview={onPreview}
+                        disableDeleteFunction={disableDeleteFunction}
                         {...rest}
                     />
 

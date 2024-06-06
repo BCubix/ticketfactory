@@ -67,7 +67,6 @@ class EventRepository extends CrudRepository
 
     public function findAllForWebsite(int $languageId, array $filters): ?array
     {
-
         $events = $this->createQueryBuilder('e')
             ->addSelect('s')
             ->addSelect('r')
@@ -76,8 +75,8 @@ class EventRepository extends CrudRepository
             ->addSelect('m')
             ->innerJoin('e.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('e.eventCategories', 'c')
-            ->innerJoin('e.tags', 'ta')
-            ->innerJoin('e.eventType', 'ty')
+            ->leftJoin('e.eventType', 'ty')
+            ->leftJoin('e.tags', 'ta')
             ->leftJoin('e.season', 's')
             ->leftJoin('e.room', 'r')
             ->leftJoin('e.eventDateBlocks', 'edb')

@@ -11,11 +11,6 @@ class SeasonManager extends AbstractRouterManager
 
     protected const ENTITY_CLASS = Season::class;
 
-    protected function getContentLinkTab(): array
-    {
-        return [];
-    }
-
     protected function getAttachedPage(): ?Page
     {
         return $this->mf->get('parameter')->getCoreParameter('page_season');

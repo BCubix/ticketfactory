@@ -2,13 +2,8 @@
 
 namespace App\Manager;
 
-use App\Entity\Event\Event;
-use App\Entity\Event\EventCategory;
-use App\Entity\Event\EventType;
-use App\Entity\Event\Room;
-use App\Entity\Event\Season;
-use App\Entity\Event\Tag;
 use App\Entity\Page\Page;
+use App\Entity\Url\Url;
 use App\Kernel;
 use App\Service\ServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,7 +82,7 @@ class AbstractRouterManager extends AbstractManager
         return $result;
     }
 
-    public function buildUrl(mixed $element, $urlFormat, int $absolute = RouterInterface::ABSOLUTE_PATH) {
+    public function buildUrl(mixed $element, $urlFormat, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH) {
         $url = $urlFormat->getSlug();
 
         $attachedPage = $this->getAttachedPage();
@@ -122,6 +117,45 @@ class AbstractRouterManager extends AbstractManager
         return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
     }
 
+    public function buildUrlFromKeyword(Url $urlFormat, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
+    {
+        $url = $urlFormat->getSlug();
+
+        $attachedPage = $this->getAttachedPage();
+        if (null !== $attachedPage) {
+            $url = $attachedPage->getSlug() . "/" . $url;
+        }
+
+        $buildContentTab = $this->getBuildContentTab();
+        foreach ($buildContentTab as $key => $content) {
+            if (str_contains($url, "%" . $key . "%")) {
+                $result = $content($parameters);
+                if (null === $result) {
+                    return "";
+                }
+
+                $url = str_replace("%" . $key . "%", $result, $url);
+            }
+        }
+
+        $buildObjectTab = $this->getBuildObjectTab();
+        foreach ($buildObjectTab as $key => $object) {
+            if (str_contains($url, "%" . $key . "%")) {
+                $url = str_replace("%" . $key . "%", $object($parameters), $url);
+            }
+        }
+
+        $parameters['slugs'] = $url;
+
+        foreach($parameters as $parameter) {
+            if (!isset($parameters['_locale']) && gettype($parameter) === 'object' && method_exists($parameter, 'getLang')) {
+                $parameters['_locale'] = $parameter->getLang()->getLocale();
+            }
+        }
+
+        return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
+    }
+
     protected function getObjectFromFormat(string $formatValue, string $format, int $languageId, bool $activeFilter): mixed
     {
         $checkObjectFormatUrl = $this->getObjectFormatTab();
@@ -135,14 +169,7 @@ class AbstractRouterManager extends AbstractManager
 
     protected function getContentLinkTab(): array
     {
-        return [
-            'Event' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'EventCategory' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'Room' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Room::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'Season' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Season::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'Tag' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Tag::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'EventType' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(EventType::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-        ];
+        return [];
     }
 
     protected function getObjectFormatTab(): array
@@ -169,5 +196,15 @@ class AbstractRouterManager extends AbstractManager
             'id' => fn ($element) => $element->getId(),
             'slug' => fn ($element) => $element->getSlug(),
         ];
+    }
+
+    protected function getBuildContentTab(): array
+    {
+        return [];
+    }
+
+    protected function getBuildObjectTab(): array
+    {
+        return [];
     }
 }

@@ -31,6 +31,11 @@ class SeasonController extends EventAbleController
     public function list(Page $page) {
         $request = $this->getRequest();
 
+        $displaySeasons = $this->mf->get("parameter")->getCoreParameter("display_seasons");
+        if (!$displaySeasons) {
+            throw $this->createNotFoundException('This page does not exist.');
+        }
+
         $seasons = $this->em->getRepository(Season::class)->findAllForWebsite($this->getLanguageId());
 
         $pageContent = [];

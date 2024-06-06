@@ -59,7 +59,7 @@ class UrlService
         }
 
         if (gettype($element) === 'string') {
-            return '';
+            return $this->keywordElementPath($element, $parameters, $absolute);
         }
 
         $class = ClassUtils::getClass($element);
@@ -80,7 +80,22 @@ class UrlService
             return "";
         }
 
-        return $this->mf->get($urlFormat->getKeyword())->buildUrl($element, $urlFormat);
+        return $this->mf->get($urlFormat->getKeyword())->buildUrl($element, $urlFormat, $parameters, $absolute);
+    }
+
+    public function keywordElementPath(string $keyword, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
+    {
+        $urlFormat = $this->mf->get('url')->findOneByKeywordForWebsite($keyword);
+        if (null === $urlFormat) {
+            return $this->keywordPath($keyword, $parameters, $absolute);
+        }
+
+        /* $urlBuilderClassName = explode('::', $urlFormat->getUrlBuilder());
+        if (count($urlBuilderClassName) !== 2) {
+            return "";
+        } */
+
+        return $this->mf->get($urlFormat->getUrlBuilder())->buildUrlFromKeyword($urlFormat, $parameters, $absolute);
     }
 
     public function pagePath(Page $page, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)

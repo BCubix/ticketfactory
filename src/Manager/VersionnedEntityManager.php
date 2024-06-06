@@ -10,7 +10,6 @@ use App\Exception\ApiException;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\HttpFoundation\Response;
 
 class VersionnedEntityManager extends AbstractManager

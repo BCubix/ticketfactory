@@ -42,7 +42,7 @@ abstract class CrudController extends AdminController
         parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
 
         $this->entityClass = static::ENTITY_CLASS ?? "";
-        $this->typeClass = static::TYPE_CLASS;
+        $this->typeClass = static::TYPE_CLASS ?? "";
 
         $path = explode('\\', $this->entityClass);
         $this->entityClassName = array_pop($path);

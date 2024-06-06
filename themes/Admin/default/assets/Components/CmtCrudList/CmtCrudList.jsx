@@ -110,9 +110,15 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     }, []);
 
     const handleDelete = async (id) => {
-        await listCrud.delete(id);
+        const result = await listCrud.delete(id);
+        if (!result?.result && result?.error?.httpcode !== 500) {
+            NotificationManager.error(result?.error?.message, 'Erreur', Constant.REDIRECTION_TIME);
+        }
 
-        dispatch(listCrud?.loadDataAction());
+        if (result?.result) {
+            dispatch(listCrud?.loadDataAction());
+        }
+
         setDeleteDialog(null);
     };
 

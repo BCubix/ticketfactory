@@ -23,6 +23,7 @@ export const ListTableContextualMenu = ({
     onPreview,
     contextualClickLabel = null,
     onContextualClick = null,
+    disableDeleteFunction,
 }) => {
     const theme = useTheme();
     const open = Boolean(anchorEl);
@@ -42,6 +43,7 @@ export const ListTableContextualMenu = ({
                 }}
                 id={`deleteButton-${selectedMenuItem?.id}`}
                 sx={{ color: theme.palette.error.main }}
+                disabled={Boolean(disableDeleteFunction ? disableDeleteFunction(selectedMenuItem) : false)}
             >
                 <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
             </MenuItem>
