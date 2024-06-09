@@ -41,45 +41,54 @@ abstract class Addon extends Bundle implements ConfigurationInterface
     {
         $node
             ->children()
-            ->scalarNode('name')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('display_name')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->enumNode('type')->isRequired()->cannotBeEmpty()
-            ->values(['module', 'theme'])
-            ->end()
-            ->scalarNode('category')->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('version')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                $intStrArray = explode('.', $v);
-                $filters = array_filter($intStrArray, function ($intStr) {
-                    return strval(intval($intStr)) !== $intStr;
-                });
-                return !empty($filters);
-            })
-            ->thenInvalid('required version in float (example: 1.0.0.0)')
-            ->end()
-            ->end()
+                ->scalarNode('name')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            return !is_string($v);
+                        })
+                        ->thenInvalid('required string')
+                    ->end()
+                ->end()
+                ->scalarNode('display_name')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            return !is_string($v);
+                        })
+                        ->thenInvalid('required string')
+                    ->end()
+                ->end()
+                ->enumNode('type')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->values(['module', 'theme'])
+                ->end()
+                ->scalarNode('category')
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            return !is_string($v);
+                        })
+                        ->thenInvalid('required string')
+                    ->end()
+                ->end()
+                ->scalarNode('version')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->ifTrue(function ($v) {
+                            $intStrArray = explode('.', $v);
+                            $filters = array_filter($intStrArray, function ($intStr) {
+                                return strval(intval($intStr)) !== $intStr;
+                            });
+                            return !empty($filters);
+                        })
+                        ->thenInvalid('required version in float (example: 1.0.0.0)')
+                    ->end()
+                ->end()
             ->end();
     }
 
@@ -87,26 +96,31 @@ abstract class Addon extends Bundle implements ConfigurationInterface
     {
         $node
             ->children()
-            ->arrayNode('author')->isRequired()
-            ->children()
-            ->scalarNode('name')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('email')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->end()
-            ->end()
+                ->arrayNode('author')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('name')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->validate()
+                                ->ifTrue(function ($v) {
+                                    return !is_string($v);
+                                })
+                                ->thenInvalid('required string')
+                            ->end()
+                        ->end()
+                        ->scalarNode('email')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->validate()
+                                ->ifTrue(function ($v) {
+                                    return !is_string($v);
+                                })
+                                ->thenInvalid('required string')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
     }
 
@@ -118,66 +132,129 @@ abstract class Addon extends Bundle implements ConfigurationInterface
     {
         $node
             ->children()
-            ->arrayNode('settings')->isRequired()
-            ->children()
-            ->arrayNode('parameters')
-            ->useAttributeAsKey('name')
-            ->arrayPrototype()
-            ->children()
-            ->scalarNode('displayName')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('type')->isRequired()->cannotBeEmpty()
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('defaultValue')->defaultValue(null)->end()
-            ->arrayNode('availableValue')
-            ->useAttributeAsKey('id')
-            ->scalarPrototype()
-            ->cannotBeEmpty()
-            ->end()
-            ->end()
-            ->scalarNode('tabName')
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('blockName')
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->scalarNode('breakpointValue')
-            ->defaultValue('xs-12 md-6')
-            ->validate()
-            ->ifTrue(function ($v) {
-                return !is_string($v);
-            })
-            ->thenInvalid('required string')
-            ->end()
-            ->end()
-            ->end()
-            ->end()
-            ->end()
-            ->end()
-            ->end()
-            ->end()
+                ->arrayNode('settings')
+                    ->isRequired()
+                    ->children()
+                        ->arrayNode('parameters')
+                            ->useAttributeAsKey('name')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('displayName')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('type')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('defaultValue')
+                                        ->defaultValue(null)
+                                    ->end()
+                                    ->arrayNode('availableValue')
+                                        ->useAttributeAsKey('id')
+                                        ->scalarPrototype()
+                                            ->cannotBeEmpty()
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('tabName')
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('blockName')
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('breakpointValue')
+                                        ->defaultValue('xs-12 md-6')
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+
+                        ->arrayNode('url')
+                            ->useAttributeAsKey('keyword')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('name')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('slug')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('controller')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('entity')
+                                        ->defaultValue(null)
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('urlBuilder')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
     }
 }

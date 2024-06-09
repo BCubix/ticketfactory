@@ -35,5 +35,5 @@ export const ParametersModuleMenu = () => {
         return <></>;
     }
 
-    return <Component.ParametersMenu module={module} moduleParameters filter={`module_${module ? `${module.name}_` : ''}`} />;
+    return <Component.ParametersMenu module={module} moduleParameters filter={`module_${module ? `${module.name}_` : ''}`} generalParameter={false} />;
 };

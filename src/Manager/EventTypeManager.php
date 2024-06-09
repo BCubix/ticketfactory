@@ -11,7 +11,7 @@ class EventTypeManager extends AbstractRouterManager
 
     protected const ENTITY_CLASS = EventType::class;
 
-    protected function getAttachedPage(): ?Page
+    public function getAttachedPage(): ?Page
     {
         return $this->mf->get('parameter')->getCoreParameter('page_eventType');
     }

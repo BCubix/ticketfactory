@@ -3,7 +3,6 @@
 namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
-use App\Entity\User\User;
 use App\Form\Website\Event\EventFilterType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,6 +82,7 @@ class EventAbleController extends WebsiteController
             ...$filters,
             'page'      => intval($request->get('page')) > 0 ? intval($request->get('page')) : 1,
             'limit'     => $this->mf->get('parameter')->getCoreParameter('event_limit'),
+            'sort'      => isset($filters['sort']) ? $filters['sort'] : $this->mf->get('parameter')->getCoreParameter('event_default_sort')
         ];
 
         $contentsLinkTab = [
@@ -141,22 +141,5 @@ class EventAbleController extends WebsiteController
             'page' => $page,
             'pageContent' => $pageContent,
         ]);
-    }
-
-    protected function getActiveFilter(): bool
-    {
-        $userAddress = $this->getRequest()->get('u');
-        $userPass = $this->getRequest()->get('t');
-        $user = null;
-
-        if (null  !== $userAddress && null !== $userPass) {
-            $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
-        }
-
-        if (null !== $user && in_array("ROLE_ADMIN", $user->getRoles())) {
-            return false;
-        }
-
-        return true;
     }
 }

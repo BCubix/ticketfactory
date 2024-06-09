@@ -82,6 +82,10 @@ class ThemeManager extends AddonManager
         if (isset($settings["parameters"])) {
             $this->addParameters('theme', $themeName, $settings["parameters"]);
         }
+        
+        if (isset($settings["url"])) {
+            $this->addUrl($settings["url"]);
+        }
 
         // Apply configs : disable old theme config and enable new theme config
         $themes = [$themeName => Module::ACTION_INSTALL];
@@ -98,6 +102,10 @@ class ThemeManager extends AddonManager
                 if (count($themeParameterValues) > 0) {
                     $this->setNewThemeParameters($themeParameterValues, $themeName);
                 }
+            }
+
+            if (isset($settings['url'])) {
+                $this->removeUrl($settings['url']);
             }
         }
 

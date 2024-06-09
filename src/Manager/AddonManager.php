@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Addon\Theme;
 use App\Entity\Parameter\Parameter;
+use App\Entity\Url\Url;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\ApiException;
 use App\Kernel;
@@ -304,6 +305,32 @@ abstract class AddonManager extends AbstractManager
         $this->em->flush();
     }
 
+    protected function addUrl(array $urlList): void
+    {
+        $maxPosition = ($this->em->getRepository(Url::class)->findMaxPosition() ?? 0) + 1;
+
+        foreach ($urlList as $key => $url) {
+            if (null !== $this->mf->get('url')->findOneByKeywordForAdmin($key)) {
+                continue;
+            }
+
+            $newUrl = new Url();
+            $newUrl->setName($url['name']);
+            $newUrl->setSlug($url['slug']);
+            $newUrl->setKeyword($key);
+            $newUrl->setEntity($url['entity']);
+            $newUrl->setController($url['controller']);
+            $newUrl->setPosition($maxPosition);
+            $newUrl->setUrlBuilder($url['urlBuilder']);
+
+            $this->em->persist($newUrl);
+
+            $maxPosition += 1;
+        }
+
+        $this->em->flush();
+    }
+
     protected function removeParameters(string $type, string $objectName, array $parameters): void
     {
         foreach ($parameters as $key => $parameter) {
@@ -311,6 +338,18 @@ abstract class AddonManager extends AbstractManager
 
             if (null !== $storedParameter) {
                 $this->em->remove($storedParameter);
+            }
+        }
+
+        $this->em->flush();
+    }
+
+    protected function removeUrl(array $urlList): void
+    {
+        foreach($urlList as $key => $url) {
+            $urlData = $this->mf->get('url')->findOneByKeywordForAdmin($key);
+            if (null !== $urlData) {
+                $this->em->remove($urlData);
             }
         }
 

@@ -38,7 +38,7 @@ export const initAuthenticatedRoutes = () => {
 };
 
 export const initMenu = () => {
-    //insertSubMenu(5, 'PERSONNALISER', 'Redirections', Constant.REDIRECTIONS_BASE_PATH, <CallMissedOutgoingIcon />);
+    insertSubMenu(5, 'PERSONNALISER', 'Redirections', Constant.REDIRECTIONS_BASE_PATH, <CallMissedOutgoingIcon />);
 };
 
 export const initReducer = () => {

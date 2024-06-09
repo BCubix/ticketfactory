@@ -2,7 +2,6 @@
 
 namespace App\Entity\Url;
 
-use App\Entity\Addon\Module;
 use App\Entity\Datable;
 use App\Repository\UrlRepository;
 use Doctrine\ORM\Mapping as ORM;

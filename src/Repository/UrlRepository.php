@@ -36,6 +36,23 @@ class UrlRepository extends CrudRepository
             ->getResult();
     }
 
+    public function findMaxPosition(): int
+    {
+        return $this->createQueryBuilder('u')
+            ->select('MAX(u.position)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findByKeywordForAdmin(string $keyword): ?Url
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.keyword = :keyword')
+            ->setParameter('keyword', $keyword)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findAllForWebsite(): array
     {
         return $this->createQueryBuilder('u')

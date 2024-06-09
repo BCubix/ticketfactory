@@ -156,6 +156,11 @@ class AbstractRouterManager extends AbstractManager
         return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
     }
 
+    public function getAttachedPage(): ?Page
+    {
+        return null;
+    }
+
     protected function getObjectFromFormat(string $formatValue, string $format, int $languageId, bool $activeFilter): mixed
     {
         $checkObjectFormatUrl = $this->getObjectFormatTab();
@@ -178,11 +183,6 @@ class AbstractRouterManager extends AbstractManager
             'id' => fn ($languageId, $formatValue, $activeFilter) => $this->em->getRepository($this->entityClass)->findByIdForWebsite($languageId, $formatValue, $activeFilter),
             'slug' => fn ($languageId, $formatValue, $activeFilter) => $this->em->getRepository($this->entityClass)->findBySlugForWebsite($languageId, $formatValue, $activeFilter),
         ];
-    }
-
-    protected function getAttachedPage(): ?Page
-    {
-        return null;
     }
 
     protected function getBuildContentLinkTab(): array

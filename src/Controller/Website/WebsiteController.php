@@ -4,6 +4,7 @@ namespace App\Controller\Website;
 
 use App\Manager\ManagerFactory;
 use App\Entity\Language\Language;
+use App\Entity\User\User;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -148,5 +149,22 @@ abstract class WebsiteController extends AbstractFOSRestController
             ->render();
 
         return ['render' => $render, 'serverSideRendering' => true, 'modules' => $modulesName];
+    }
+
+    protected function getActiveFilter(): bool
+    {
+        $userAddress = $this->getRequest()->get('u');
+        $userPass = $this->getRequest()->get('t');
+        $user = null;
+
+        if (null  !== $userAddress && null !== $userPass) {
+            $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
+        }
+
+        if (null !== $user && in_array("ROLE_ADMIN", $user->getRoles())) {
+            return false;
+        }
+
+        return true;
     }
 }
