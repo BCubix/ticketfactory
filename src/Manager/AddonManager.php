@@ -315,6 +315,7 @@ abstract class AddonManager extends AbstractManager
             }
 
             $newUrl = new Url();
+            $newUrl->setActive(1);
             $newUrl->setName($url['name']);
             $newUrl->setSlug($url['slug']);
             $newUrl->setKeyword($key);
