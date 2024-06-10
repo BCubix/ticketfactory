@@ -3,6 +3,7 @@
 namespace App\Entity\Url;
 
 use App\Entity\Datable;
+use App\Entity\Page\Page;
 use App\Repository\UrlRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -56,6 +57,11 @@ class Url extends Datable
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
     #[ORM\Column(length: 255)]
     private ?string $urlBuilder = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_url_all', 'a_url_one'])]
+    #[ORM\ManyToOne]
+    private ?Page $page = null;
 
 
     public function getId(): ?int
@@ -143,6 +149,18 @@ class Url extends Datable
     public function setUrlBuilder(string $urlBuilder): static
     {
         $this->urlBuilder = $urlBuilder;
+
+        return $this;
+    }
+
+    public function getPage(): ?Page
+    {
+        return $this->page;
+    }
+
+    public function setPage(?Page $page): static
+    {
+        $this->page = $page;
 
         return $this;
     }

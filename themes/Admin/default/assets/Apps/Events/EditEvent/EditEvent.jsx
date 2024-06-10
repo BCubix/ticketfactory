@@ -127,7 +127,6 @@ export const EditEvent = () => {
         return <></>;
     }
 
-    console.log(seasonsData.seasons);
     return (
         <Component.CmtCrudForm
             handleSubmit={handleSubmit}

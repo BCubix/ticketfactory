@@ -5,6 +5,7 @@ export const urlInitialSchema = {
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     slug: (initValues) => initValues?.slug || '',
+    page: (initValues) => initValues?.page?.id || '',
 };
 
 export const urlValidationSchema = {
@@ -22,6 +23,7 @@ export const urlForm = {
             active: { type: 'boolean' },
             name: { type: 'string' },
             slug: { type: 'string' },
+            page: { type: 'string' },
         },
     },
     fields: [
@@ -37,7 +39,7 @@ export const urlForm = {
                     fields: [
                         {
                             keyId: 'input-name',
-                            style: { xs: 12 },
+                            style: { xs: 12, sm: 4 },
                             inputs: [
                                 {
                                     name: 'name',
@@ -48,8 +50,20 @@ export const urlForm = {
                             ],
                         },
                         {
+                            keyId: 'input-page',
+                            style: { xs: 12, sm: 4 },
+                            input: {
+                                name: 'page',
+                                label: 'Page',
+                                inputType: 'selectField',
+                                listName: 'pagesList',
+                                getName: (item) => item.title,
+                                getValue: (item) => item.id,
+                            },
+                        },
+                        {
                             keyId: 'input-slug',
-                            style: { xs: 12 },
+                            style: { xs: 12, sm: 4 },
                             inputs: [
                                 {
                                     name: 'slug',

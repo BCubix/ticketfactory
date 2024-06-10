@@ -106,7 +106,8 @@ export const CreatePage = () => {
             }
 
             const contentResult = await Api.contentsApi.getContentByPageId(pageId);
-            if (contentResult?.result) {
+
+            if (contentResult?.result && contentResult?.content) {
                 const translatedContent = await Api.contentsApi.getTranslated(contentResult?.content?.id, languageId);
                 if (translatedContent) {
                     setInitialValues({

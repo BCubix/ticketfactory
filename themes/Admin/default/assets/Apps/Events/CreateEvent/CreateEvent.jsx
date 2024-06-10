@@ -3,16 +3,16 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { Api } from '@/AdminService/Api';
-import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
-
 import { getEventsAction } from '@Apps/Events/redux/events/eventsSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { eventsInitialSchema, eventsValidationSchema, eventsForm } from '../EventsForm/EventsForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
+
+import { Api } from '@/AdminService/Api';
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 
 export const eventsCreateCrud = ({ eventName }) => ({
     form: {

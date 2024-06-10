@@ -128,7 +128,6 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
     const [sidebarDialog, setSidebarDialog] = useState(null);
     var idImageSidebar = useRef(0);
 
-    console.log(Tab.mediasTabList);
     useEffect(() => {
         if (!loading && !medias && !error) {
             dispatch(getMediasAction());

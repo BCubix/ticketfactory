@@ -38,7 +38,7 @@ class Page extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le titre de la page doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre de la page doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one'])]
+    #[JMS\Groups(['a_all', 'a_content_type_one', 'a_page_all', 'a_page_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
@@ -49,7 +49,7 @@ class Page extends Datable
 
     #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[JMS\Groups(['a_all', 'a_page_all', 'a_page_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
@@ -95,7 +95,7 @@ class Page extends Datable
     private $parent;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[JMS\Groups(['a_all', 'a_page_all', 'a_page_one'])]
     public $frontUrl;
 
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getUrlAction } from '@Apps/Url/redux/url/urlSlice';
 import { urlInitialSchema, urlValidationSchema, urlForm } from '@Apps/Url/UrlForm/UrlForm';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -24,8 +25,10 @@ export const urlEditCrud = {
 export const EditUrl = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const languagesData = useSelector(languagesSelector);
     const { id } = useParams();
     const [url, setUrl] = useState(null);
+    const [pagesList, setPagesList] = useState(null);
 
     const getUrl = async (id) => {
         apiMiddleware(dispatch, async () => {
@@ -37,6 +40,16 @@ export const EditUrl = () => {
             }
 
             setUrl(result.url);
+
+            const defaultLanguageId = languagesData?.languages?.find((el) => el.isDefault)?.id;
+            const pages = await Api.pagesApi.getAllPages({ lang: defaultLanguageId });
+            if (pages?.error) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.URL_BASE_PATH);
+                return;
+            }
+
+            setPagesList(pages.pages);
         });
     };
 
@@ -64,5 +77,5 @@ export const EditUrl = () => {
         return <></>;
     }
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={url} formCrud={Crud?.url?.edit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} pagesList={pagesList} initialValues={url} formCrud={Crud?.url?.edit} />;
 };
