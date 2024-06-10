@@ -59,6 +59,11 @@ class EventPrice
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $ticketingReference = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -132,6 +137,18 @@ class EventPrice
     public function setLang(?Language $lang): self
     {
         $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getTicketingReference(): ?int
+    {
+        return $this->ticketingReference;
+    }
+
+    public function setTicketingReference(?int $ticketingReference): self
+    {
+        $this->ticketingReference = $ticketingReference;
 
         return $this;
     }

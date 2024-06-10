@@ -49,6 +49,11 @@ class Order extends Datable
     #[ORM\Column(nullable: true)]
     private ?array $orderData = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_order_all', 'a_order_one'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $ticketingReference = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -110,6 +115,18 @@ class Order extends Datable
     public function setOrderData(?array $orderData): static
     {
         $this->orderData = $orderData;
+
+        return $this;
+    }
+
+    public function getTicketingReference(): ?int
+    {
+        return $this->ticketingReference;
+    }
+
+    public function setTicketingReference(?int $ticketingReference): self
+    {
+        $this->ticketingReference = $ticketingReference;
 
         return $this;
     }

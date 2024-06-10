@@ -141,6 +141,16 @@ class CartManager extends AbstractManager
         $cart = $this->calculateCartTotal($cart);
         $this->em->persist($cart);
         $this->em->flush();
+
+        $ticketing = $event->getTicketing();
+        if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
+            return;
+        }
+
+        $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+        if (method_exists($class, "synchronizeCartInfo")) {
+            $class->synchronizeCartInfo($event, $cart);
+        }
     }
 
     public function getCart(): ?Cart
@@ -263,6 +273,17 @@ class CartManager extends AbstractManager
 
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
+        $event = $cartRow->getEvent();
+        $ticketing = $event->getTicketing();
+        if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
+            return $cartRow;
+        }
+
+        $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+        if (method_exists($class, "synchronizeCartInfo")) {
+            $class->synchronizeCartInfo($event, $cart);
+        }
+
         return $cartRow;
     }
 
@@ -275,13 +296,29 @@ class CartManager extends AbstractManager
         }
 
         $cart = $cartRow->getCart();
+        $event = $cartRow->getEvent();
 
+        $cartRow->setEventDate(null);
         $this->em->remove($cartRow);
         $this->em->flush();
 
         $this->checkVoucherForCart($cart);
 
+        $cart = $this->calculateCartTotal($cart);
+        $this->em->persist($cart);
+        $this->em->flush();
+
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        $ticketing = $event->getTicketing();
+        if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
+            return;
+        }
+
+        $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+        if (method_exists($class, "synchronizeCartInfo")) {
+            $class->synchronizeCartInfo($event, $cart);
+        }
     }
 
     public function deleteCartSeats(array $data): ?CartRow
@@ -292,21 +329,38 @@ class CartManager extends AbstractManager
         }
 
         $cart = $cartRow->getCart();
+        $event = $cartRow->getEvent();
 
         $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($data["cartRowId"], $data["eventPriceId"]);
         foreach ($cartSeats as $seat) {
             $cartRow->removeCartSeat($seat);
+            $this->em->remove($seat);
         }
 
         if (count($cartRow->getCartSeats()) === 0) {
             $this->checkVoucherForCart($cart);
+            $cartRow->setEventDate(null);
             $this->em->remove($cartRow);
             $cartRow = null;
         }
 
         $this->em->flush();
 
+        $cart = $this->calculateCartTotal($cart);
+        $this->em->persist($cart);
+        $this->em->flush();
+
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        $ticketing = $event->getTicketing();
+        if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
+            return $cartRow;
+        }
+
+        $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+        if (method_exists($class, "synchronizeCartInfo")) {
+            $class->synchronizeCartInfo($event, $cart);
+        }
 
         return $cartRow;
     }
