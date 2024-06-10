@@ -26,6 +26,7 @@ export const urlListCrud = {
         { name: 'name', label: 'Nom', width: '25%', sortable: false },
         { name: 'slug', label: 'Slug', width: '25%', sortable: false },
     ],
+    parameterList: ['core_index_site', 'core_generate_seo'],
     loadDataAction: () => getUrlAction(),
     changeFiltersActions: (props, page) => changeUrlFilters(props, page),
     dataSelector: urlSelector,
@@ -36,6 +37,7 @@ export const urlListCrud = {
     messages: {
         duplicateValidation: "L'url a bien été dupliquée",
     },
+    bottomComponents: [{ component: () => <Component.UrlParameters /> }],
     ...DEFAULT_CRUD_LIST_COMPONENTS,
 };
 

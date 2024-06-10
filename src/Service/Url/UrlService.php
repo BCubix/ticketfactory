@@ -2,8 +2,6 @@
 
 namespace App\Service\Url;
 
-use App\Entity\Content\Content;
-use App\Entity\Event\Event;
 use App\Entity\Page\Page;
 use App\Manager\EventManager;
 use App\Manager\ManagerFactory;
@@ -75,12 +73,7 @@ class UrlService
             return "";
         }
 
-        $urlBuilderClassName = explode('::', $urlFormat->getUrlBuilder());
-        if (count($urlBuilderClassName) !== 2) {
-            return "";
-        }
-
-        return $this->mf->get($urlFormat->getKeyword())->buildUrl($element, $urlFormat, $parameters, $absolute);
+        return $this->mf->get($urlFormat->getUrlBuilder())->buildUrl($element, $urlFormat, $parameters, $absolute);
     }
 
     public function keywordElementPath(string $keyword, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
@@ -89,11 +82,6 @@ class UrlService
         if (null === $urlFormat) {
             return $this->keywordPath($keyword, $parameters, $absolute);
         }
-
-        /* $urlBuilderClassName = explode('::', $urlFormat->getUrlBuilder());
-        if (count($urlBuilderClassName) !== 2) {
-            return "";
-        } */
 
         return $this->mf->get($urlFormat->getUrlBuilder())->buildUrlFromKeyword($urlFormat, $parameters, $absolute);
     }

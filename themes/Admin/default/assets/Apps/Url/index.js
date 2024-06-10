@@ -8,10 +8,11 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-import { getSubMenu, setSubMenu, insertSubMenu } from '@/AdminService/Menu';
+import { insertSubMenu } from '@/AdminService/Menu';
 
 import { UrlList, urlListCrud } from './UrlsList/UrlsList';
 import { EditUrl, urlEditCrud } from './EditUrl/EditUrl';
+import { UrlParameters } from './UrlParameters/UrlParameters';
 import urlApi from './service/api/urlApi';
 import urlReducer from '@Apps/Url/redux/url/urlSlice';
 
@@ -22,6 +23,7 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('UrlList', UrlList);
     setComponent('EditUrl', EditUrl);
+    setComponent('UrlParameters', UrlParameters);
 };
 
 export const initApi = () => {
