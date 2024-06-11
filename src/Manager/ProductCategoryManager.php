@@ -4,7 +4,6 @@ namespace App\Manager;
 
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
-use App\Entity\Page\Page;
 use App\Entity\Product\Product;
 use App\Service\Object\CloneObject;
 
@@ -16,14 +15,8 @@ class ProductCategoryManager extends AbstractRouterManager
 
     protected const ENTITY_CLASS = ProductCategory::class;
 
-    public function getAttachedPage(): ?Page
-    {
-        return $this->mf->get('parameter')->getCoreParameter('page_productCategory');
-    }
-
     public function deleteProductsFromCategory(ProductCategory $mainCategory): void
     {
-        $rootCategory = $this->em->getRepository(ProductCategory::class)->findRootCategory();
         $childrenCategories = $this->em->getRepository(ProductCategory::class)->getChildren($mainCategory, false, null, 'asc', true);
 
         $objectsId = [];

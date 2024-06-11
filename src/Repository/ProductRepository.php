@@ -134,4 +134,20 @@ class ProductRepository extends CrudRepository
             ->getResult()
         ;
     }
+
+    public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?Season
+    {
+        $result = $this->createQueryBuilder('p')
+            ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId');
+
+        if ($activeFilter) {
+            $result = $result->where('p.active = 1');
+        }
+
+        return $result->andWhere('p.slug = :slug')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

@@ -60,4 +60,19 @@ class PageManager extends AbstractManager
 
         return $result;
     }
+
+    public function getPageSlugPath(Page $page): string
+    {
+        $slugs = [];
+
+        while (null !== $page) {
+            $slugs[] = $page->getSlug();
+            $page = $page->getParent();
+        }
+
+        $slugs = array_reverse($slugs);
+        $slugs = implode('/', $slugs);
+
+        return $slugs;
+    }
 }

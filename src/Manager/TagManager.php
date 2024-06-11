@@ -11,11 +11,6 @@ class TagManager extends AbstractRouterManager
 
     protected const ENTITY_CLASS = Tag::class;
 
-    public function getAttachedPage(): ?Page
-    {
-        return $this->mf->get('parameter')->getCoreParameter('page_tag');
-    }
-
     public function getBySlug($slug): ?Tag
     {
         $languageId = $this->getLanguageId();

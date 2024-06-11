@@ -5,7 +5,6 @@ namespace App\Manager;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Language\Language;
-use App\Entity\Page\Page;
 use App\Service\Object\CloneObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,11 +14,6 @@ class EventCategoryManager extends AbstractRouterManager
     public const SERVICE_NAME = 'eventCategory';
 
     protected const ENTITY_CLASS = EventCategory::class;
-
-    public function getAttachedPage(): ?Page
-    {
-        return $this->mf->get('parameter')->getCoreParameter('page_eventCategory');
-    }
 
     public function deleteEventsFromCategory(EventCategory $mainCategory): void
     {

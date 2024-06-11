@@ -4,17 +4,18 @@ namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
 use App\Entity\Event\Season;
+use App\Entity\Url\Url;
 use Symfony\Component\HttpFoundation\Response;
 
 class SeasonController extends EventAbleController
 {
-    public function orchestrator(?Page $page, string $slug, string $urlFormat)
+    public function orchestrator(?Page $page, Url $url, string $slug)
     {
-        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_season');
-        if (null !== $parameterPage) {
-            $page = $parameterPage;
+        $urlFormat = $url->getSlug();
+        if (null !== $url->getPage()) {
+            $page = $url->getPage();
 
-            $urlFormat = $page->getSlug() . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
+            $urlFormat = $this->mf->get('page')->getPageSlugPath($page) . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
 
         $activeFilter = $this->getActiveFilter();

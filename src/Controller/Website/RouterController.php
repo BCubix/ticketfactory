@@ -36,7 +36,7 @@ class RouterController extends WebsiteController
             $response = $this->forward($url->getController(), [
                 'page' => $mainPage,
                 'slug' => $slug,
-                'urlFormat' => $url->getSlug()
+                'url' => $url
             ]);
 
             if ($response->getStatusCode() !== 404) {

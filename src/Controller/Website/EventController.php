@@ -4,6 +4,7 @@ namespace App\Controller\Website;
 
 use App\Entity\Event\Event;
 use App\Entity\Page\Page;
+use App\Entity\Url\Url;
 use App\Form\Website\Event\EventReservationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,13 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EventController extends EventAbleController
 {
-    public function orchestrator(?Page $page, string $slug, string $urlFormat)
+    public function orchestrator(?Page $page, Url $url, string $slug)
     {
-        $parameterPage = $this->mf->get('parameter')->getCoreParameter('page_event');
-        if (null !== $parameterPage) {
-            $page = $parameterPage;
+        $urlFormat = $url->getSlug();
+        if (null !== $url->getPage()) {
+            $page = $url->getPage();
 
-            $urlFormat = $page->getSlug() . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
+            $urlFormat = $this->mf->get('page')->getPageSlugPath($page) . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
 
         $activeFilter = $this->getActiveFilter();

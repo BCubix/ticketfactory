@@ -82,10 +82,10 @@ class AbstractRouterManager extends AbstractManager
         return $result;
     }
 
-    public function buildUrl(mixed $element, $urlFormat, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH) {
+    public function buildUrl(mixed $element, Url $urlFormat, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH) {
         $url = $urlFormat->getSlug();
 
-        $attachedPage = $this->getAttachedPage();
+        $attachedPage = $urlFormat->getPage();
         if (null !== $attachedPage) {
             $url = $attachedPage->getSlug() . "/" . $url;
         }
@@ -121,7 +121,7 @@ class AbstractRouterManager extends AbstractManager
     {
         $url = $urlFormat->getSlug();
 
-        $attachedPage = $this->getAttachedPage();
+        $attachedPage = $urlFormat->getPage();
         if (null !== $attachedPage) {
             $url = $attachedPage->getSlug() . "/" . $url;
         }
@@ -154,11 +154,6 @@ class AbstractRouterManager extends AbstractManager
         }
 
         return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
-    }
-
-    public function getAttachedPage(): ?Page
-    {
-        return null;
     }
 
     protected function getObjectFromFormat(string $formatValue, string $format, int $languageId, bool $activeFilter): mixed

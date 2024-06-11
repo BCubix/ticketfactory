@@ -3,7 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\Media\ImageFormat;
-use App\Entity\Page\Page;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductCategory;
 use App\Entity\Product\ProductMedia;
@@ -47,11 +46,6 @@ class ProductManager extends AbstractRouterManager
         return [
             'ProductCategory' => fn ($element) => $element->getMainCategory() !== null ? $element->getMainCategory()->getSlug() : null,
         ];
-    }
-
-    public function getAttachedPage(): ?Page
-    {
-        return $this->mf->get('parameter')->getCoreParameter('page_product');
     }
 
     public function getFirstFormattedMedia($productMedias, string $slug): ?ProductMedia
