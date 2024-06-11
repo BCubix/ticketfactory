@@ -78,6 +78,17 @@ class PageRepository extends CrudRepository
             ->getOneOrNullResult();
     }
 
+    public function findTranslationByLanguageGroupForWebsite(int $languageId, string $languageGroup): ?Page
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('p.languageGroup = :languageGroup')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('languageGroup', $languageGroup)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findAllForSitemap(): array
     {
         return $this->createQueryBuilder('p')

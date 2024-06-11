@@ -5,6 +5,7 @@ namespace App\Controller\Website;
 use App\Entity\Page\Page;
 use App\Entity\Event\Season;
 use App\Entity\Url\Url;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class SeasonController extends EventAbleController
@@ -12,8 +13,9 @@ class SeasonController extends EventAbleController
     public function orchestrator(?Page $page, Url $url, string $slug)
     {
         $urlFormat = $url->getSlug();
-        if (null !== $url->getPage()) {
-            $page = $url->getPage();
+        $attachedPage = $this->mf->get('season')->getAttachedPage($url);
+        if (null !== $attachedPage) {
+            $page = $attachedPage;
 
             $urlFormat = $this->mf->get('page')->getPageSlugPath($page) . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }

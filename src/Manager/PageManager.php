@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Page\Page;
+use Symfony\Component\Uid\Uuid;
 
 class PageManager extends AbstractManager
 {
@@ -18,6 +19,17 @@ class PageManager extends AbstractManager
         }
 
         return $pages[0];
+    }
+
+    public function getTranslationByLanguageGroup(?int $languageId, Uuid $languageGroup): ?Page
+    {
+        if (null === $languageId) {
+            $languageId = $this->getLanguageId();
+        }
+
+        $page = $this->em->getRepository(Page::class)->findTranslationByLanguageGroupForWebsite($languageId, $languageGroup->toBinary());
+
+        return $page;
     }
 
     public function getTranslationByKeyword(?int $languageId, string $keyword): Page

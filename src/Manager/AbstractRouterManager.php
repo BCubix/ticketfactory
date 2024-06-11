@@ -85,9 +85,9 @@ class AbstractRouterManager extends AbstractManager
     public function buildUrl(mixed $element, Url $urlFormat, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH) {
         $url = $urlFormat->getSlug();
 
-        $attachedPage = $urlFormat->getPage();
+        $attachedPage = $this->getAttachedPage($urlFormat);
         if (null !== $attachedPage) {
-            $url = $attachedPage->getSlug() . "/" . $url;
+            $url = $this->mf->get('page')->getPageSlugPath($attachedPage) . "/" . $url;
         }
 
         $buildContentLinkTab = $this->getBuildContentLinkTab();
@@ -121,9 +121,9 @@ class AbstractRouterManager extends AbstractManager
     {
         $url = $urlFormat->getSlug();
 
-        $attachedPage = $urlFormat->getPage();
+        $attachedPage = $this->getAttachedPage($urlFormat);
         if (null !== $attachedPage) {
-            $url = $attachedPage->getSlug() . "/" . $url;
+            $url = $this->mf->get('page')->getPageSlugPath($attachedPage) . "/" . $url;
         }
 
         $buildContentTab = $this->getBuildContentTab();
@@ -154,6 +154,22 @@ class AbstractRouterManager extends AbstractManager
         }
 
         return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
+    }
+
+    public function getAttachedPage(Url $url): ?Page
+    {
+        $languageId = $this->getLanguageId();
+        $page = $url->getPage();
+
+        if (null === $page) {
+            return null;
+        }
+
+        if ($page->getLang()->getId() !== $languageId) {
+            return $this->mf->get('page')->getTranslationByLanguageGroup($languageId, $page->getLanguageGroup());
+        }
+
+        return $page;
     }
 
     protected function getObjectFromFormat(string $formatValue, string $format, int $languageId, bool $activeFilter): mixed

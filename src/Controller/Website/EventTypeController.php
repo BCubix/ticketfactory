@@ -13,8 +13,9 @@ class EventTypeController extends EventAbleController
     public function orchestrator(?Page $page, Url $url, string $slug)
     {
         $urlFormat = $url->getSlug();
-        if (null !== $url->getPage()) {
-            $page = $url->getPage();
+        $attachedPage = $this->mf->get('eventType')->getAttachedPage($url);
+        if (null !== $attachedPage) {
+            $page = $attachedPage;
 
             $urlFormat = $this->mf->get('page')->getPageSlugPath($page) . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
