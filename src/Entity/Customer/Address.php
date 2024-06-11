@@ -3,7 +3,7 @@
 namespace App\Entity\Customer;
 
 use App\Entity\Datable;
-use App\Repository\Customer\AddressRepository;
+use App\Repository\AddressRepository;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

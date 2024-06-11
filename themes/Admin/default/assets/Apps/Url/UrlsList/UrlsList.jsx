@@ -27,16 +27,13 @@ export const urlListCrud = {
         { name: 'page.slug', label: 'Page', width: '20%', sortable: false },
         { name: 'slug', label: 'PermaLink', width: '20%', sortable: false },
     ],
-    parameterList: ['core_index_site', 'core_generate_seo'],
+    parameterList: ['core_index_site', 'core_generate_seo', 'core_use_ssl'],
     loadDataAction: () => getUrlAction(),
     changeFiltersActions: (props, page) => changeUrlFilters(props, page),
     dataSelector: urlSelector,
     dataList: (selector) => selector.url,
     links: {
         edit: (id) => `${Constant.URL_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
-    },
-    messages: {
-        duplicateValidation: "L'url a bien été dupliquée",
     },
     bottomComponents: [{ component: () => <Component.UrlParameters /> }],
     ...DEFAULT_CRUD_LIST_COMPONENTS,
