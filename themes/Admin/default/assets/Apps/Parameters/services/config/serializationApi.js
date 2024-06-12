@@ -19,6 +19,7 @@ export const serializationApi = {
     requestButton: (value) => value || '',
     float: (value) => value || '',
     font: (value) => value || '',
+    openingHours: (value) => (value ? JSON.stringify(value) : ''),
 };
 
 export const getSerializationApiValue = (type, value) => {

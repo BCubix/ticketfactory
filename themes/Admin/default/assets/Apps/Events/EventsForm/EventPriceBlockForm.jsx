@@ -29,7 +29,7 @@ export const EventsPriceBlockForm = ({
         let block = values.eventPriceBlocks;
 
         if (!block || block.length === 0) {
-            block = { name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices ? JSON.parse(defaultPrices) : [], lang: initialValues?.lang?.id || '' };
+            block = { name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices || [], lang: initialValues?.lang?.id || '' };
         } else {
             block = block[0];
             block.name = defaultPriceBlockName || 'Tarifs';

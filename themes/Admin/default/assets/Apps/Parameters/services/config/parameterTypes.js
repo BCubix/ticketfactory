@@ -16,6 +16,7 @@ import FloatParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesM
 import EventCategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/EventCategoryParameterType';
 import MediaCategoryParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/MediaCategoryParameterType';
 import FontUploadParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/FontUploadParameterType';
+import OpeningHoursParameterType from '@Apps/Parameters/ParametersForm/ParametersTypesModules/OpeningHoursParameterType';
 
 export const parameterTypes = {
     bool: BooleanParameterType,
@@ -36,4 +37,5 @@ export const parameterTypes = {
     requestButton: RequestButtonParameterType,
     float: FloatParameterType,
     font: FontUploadParameterType,
+    openingHours: OpeningHoursParameterType,
 };

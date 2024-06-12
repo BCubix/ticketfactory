@@ -14,11 +14,12 @@ export const deserializationApi = {
     string: (value) => value || '',
     upload: (value) => value || '',
     url: (value) => value || '',
-    prices: (value) => (value ? JSON.parse(value) : {}),
+    prices: (value) => value || {},
     password: (value) => value || '',
     requestButton: (value) => value || '',
     float: (value) => value || '',
     font: (value) => value || '',
+    openingHours: (value) => value || { lundi: '', mardi: '', mercredi: '', jeudi: '', vendredi: '', samedi: '', dimanche: '' },
 };
 
 export const getDeserializationApiValue = (type, value) => {

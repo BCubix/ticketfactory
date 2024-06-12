@@ -79,7 +79,7 @@ export const eventsInitialSchema = {
             ...el,
             lang: el?.lang?.id || '',
             eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
-        })) || [{ name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices ? JSON.parse(defaultPrices) : [], lang: initValues?.lang?.id || '' }],
+        })) || [{ name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues, { roomsList }) => initValues?.room?.id || (roomsList?.length === 1 ? roomsList[0]?.id : ''),
     season: (initValues, { seasonsList }) => initValues?.season?.id || (seasonsList?.length === 1 ? seasonsList[0]?.id : ''),

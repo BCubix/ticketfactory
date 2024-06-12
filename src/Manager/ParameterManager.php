@@ -14,8 +14,8 @@ use App\Exception\ApiException;
 use App\Kernel;
 use App\Service\ServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use FontLib\BinaryStream;
 use FontLib\Font;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -26,12 +26,14 @@ class ParameterManager extends AbstractManager
     private const ENV_FILES_NAME = ['.env.local', '.env'];
 
     protected $twig;
+    protected $se;
 
-    public function __construct(Kernel $kl, ManagerFactory $mf, ServiceFactory $sf, EntityManagerInterface $em, RequestStack $rs, Environment $twig)
+    public function __construct(Kernel $kl, ManagerFactory $mf, ServiceFactory $sf, EntityManagerInterface $em, RequestStack $rs, Environment $twig, SerializerInterface $se)
     {
         parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->twig = $twig;
+        $this->se = $se;
     }
 
     public function getAll()
@@ -122,6 +124,12 @@ class ParameterManager extends AbstractManager
 
             case 'bool':
                 return boolval($value);
+
+            case 'prices':
+                return $this->se->deserialize($value, 'array', 'json');
+
+            case 'openingHours':
+                return $this->se->deserialize($value, 'array', 'json');
 
             case 'upload':
                 return ('/uploads/parameter/' . $value);
