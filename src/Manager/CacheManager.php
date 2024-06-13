@@ -28,21 +28,35 @@ class CacheManager extends AbstractManager
         $this->cache = $cache;
     }
 
-    public function getValue(string $key): mixed
+    public function getValue(string $key, $callback = null): mixed
     {
-        return $this->cache->get($key, function (ItemInterface $item) {
-            return 'Toto';
+        if (!$this->isCacheUsed()) {
+            if (null !== $callback) {
+                return $callback();
+            }
+
+            return null;
+        }
+
+        return $this->cache->get($key, function (ItemInterface $item) use ($callback): mixed {
+            if (null !== $callback) {
+                return $callback();
+            }
+
+            return null;
         });
     }
 
     public function setValue(string $key, mixed $value): void
     {
+        if (!$this->isCacheUsed()) {
+            return;
+        }
+
         $keyExist = true;
-        /* $this->cache->get($key, function (ItemInterface $item) use ($value, &$keyExist) {
-            $item->expiresAfter(0);
 
+        $this->cache->get($key, function (ItemInterface $item) use ($value, &$keyExist): mixed {
             $keyExist = false;
-
             return $value;
         });
 
@@ -51,10 +65,19 @@ class CacheManager extends AbstractManager
         }
 
         $this->cache->delete($key);
-        $this->cache->get($key, function (ItemInterface $item) use ($value) {
-            $item->expiresAfter(0);
-
+        $this->cache->get($key, function (ItemInterface $item) use ($value): mixed {
             return $value;
-        }); */
+        });
+    }
+
+    private function isCacheUsed(): bool
+    {
+        if (!extension_loaded('memcached')) {
+            return false;
+        }
+
+        return $this->cache->get("parameter_core_use_cache", function (ItemInterface $item): mixed {
+            return false;
+        });
     }
 }

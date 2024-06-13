@@ -11,7 +11,6 @@ class EventAbleController extends WebsiteController
 {
     protected function eventList(array $contents)
     {
-        $this->mf->get('cache')->setValue('my_cache_key', 'Yes');
         $request = $this->getRequest();
 
         $sortAvailableValues = $this->mf->get('parameter')->getParameter('core_event_default_sort')->getAvailableValue();
