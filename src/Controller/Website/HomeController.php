@@ -8,6 +8,9 @@ class HomeController extends WebsiteController
 {
     public function index(Page $page)
     {
+        $value = $this->mf->get('cache')->getValue('my_cache_key');
+
+        dd($value);
         $pageTypeBlocks = [];
         foreach ($page->getContents() as $content) {
             foreach ($content->getFields() as $key => $field) {

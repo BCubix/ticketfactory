@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, FormControlLabel, Grid, Switch, Typography } from '@mui/material';
+import { FormControl, Grid, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 

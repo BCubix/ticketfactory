@@ -24,13 +24,14 @@ abstract class WebsiteController extends AbstractFOSRestController
     protected $mf;
     protected $sf;
     protected $tg;
+    protected $cache;
 
     public function __construct(
         EntityManagerInterface $em,
         RequestStack $rs,
         ManagerFactory $mf,
         ServiceFactory $sf,
-        Environment $tg
+        Environment $tg,
     ) {
         $this->em = $em;
         $this->rs = $rs;
