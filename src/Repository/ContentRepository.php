@@ -85,4 +85,31 @@ class ContentRepository extends CrudRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findAllByTypeIdForWebsite(string $id)
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.contentType', 't')
+            ->where("c.active = 1")
+            ->andWhere('t.id = :id')
+            ->setParameter("id", $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?Content
+    {
+        $result = $this->createQueryBuilder('c')
+            ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId');
+
+        if ($activeFilter) {
+            $result = $result->where('c.active = 1');
+        }
+
+        return $result->andWhere('c.slug = :slug')
+            ->setParameter('languageId', $languageId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

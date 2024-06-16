@@ -2,6 +2,7 @@
 
 namespace App\Service\Url;
 
+use App\Entity\Content\Content;
 use App\Entity\Page\Page;
 use App\Manager\EventManager;
 use App\Manager\ManagerFactory;
@@ -65,6 +66,10 @@ class UrlService
             return $this->pagePath($element, $parameters, $absolute);
         }
 
+        if ($class === Content::class) {
+            return $this->contentPath($element, $parameters, $absolute);
+        }
+
         $class = explode('\\', $class);
         $class = array_pop($class);
         $urlFormat = $this->mf->get('url')->findOneByEntityForWebsite($class);
@@ -99,6 +104,18 @@ class UrlService
         $slugs = array_reverse($slugs);
 
         return $this->generateFromMainSlugs($slugs, $parameters, $absolute);
+    }
+
+    public function contentPath(Content $content, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
+    {
+        $parameters["_locale"] = $content->getLang()->getLocale();
+
+        $urlFormat = $this->mf->get('url')->findOneByKeywordForWebsite('contentType_' . $content->getContentType()->getId());
+        if (null === $urlFormat) {
+            return "";
+        }
+
+        return $this->mf->get($urlFormat->getUrlBuilder())->buildUrl($content, $urlFormat, $parameters, $absolute);
     }
 
     private function generateFromMainSlugs(array $slugs, array $parameters, $absolute)

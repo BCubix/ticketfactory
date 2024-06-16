@@ -56,7 +56,9 @@ class ParameterManager extends AbstractManager
 
     public function getModuleParameter(string $objectName, string $key): mixed
     {
-        return $this->getParameterValue($this->getParameter('module_' . $objectName . '_' . $key));
+        return $this->mf->get('cache')->getValue('parameter_module_' . $objectName . '_' . $key , function () use ($objectName, $key) {
+            return $this->getParameterValue($this->getParameter('module_' . $objectName . '_' . $key));
+        });
     }
 
     public function getThemeParameter(?string $objectName, string $key): mixed
@@ -65,12 +67,16 @@ class ParameterManager extends AbstractManager
             $objectName = $this->getCoreParameter('main_theme');
         }
 
-        return $this->getParameterValue($this->getParameter('theme_' . $objectName . '_' . $key));
+        return $this->mf->get('cache')->getValue('parameter_theme_' . $objectName . '_' . $key , function () use ($objectName, $key) {
+            return $this->getParameterValue($this->getParameter('theme_' . $objectName . '_' . $key));
+        });
     }
 
     public function getCoreParameter(string $key): mixed
     {
-        return $this->getParameterValue($this->getParameter('core_' . $key));
+        return $this->mf->get('cache')->getValue('parameter_core_' . $key , function () use ($key) {
+            return $this->getParameterValue($this->getParameter('core_' . $key));
+        });
     }
 
     public function set(string $key, mixed $newValue)

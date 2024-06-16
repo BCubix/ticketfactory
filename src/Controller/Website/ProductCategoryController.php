@@ -3,6 +3,7 @@
 namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
+use App\Entity\Product\Product;
 use App\Entity\Product\ProductCategory;
 use App\Entity\Url\Url;
 
@@ -22,13 +23,11 @@ class ProductCategoryController extends EventAbleController
 
         $activeFilter = $this->getActiveFilter();
         $contents = $this->mf->get('product')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
-        if (null === $contents) {
+        if (null === $contents || !isset($contents['ProductCategory'])) {
             return new Response(null, 404);
         }
 
-        $template = 'ProductCategory/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
-
-        return $this->renderListPage($page, $contents, $template);
+        return $this->detail($page, $contents);
     }
 
     public function list(Page $page) {
@@ -52,6 +51,27 @@ class ProductCategoryController extends EventAbleController
         return $this->websiteRender($template, [
             'page'               => $page,
             'productCategories'  => $productCategories,
+            'pageContent'        => $pageContent,
+        ]);
+    }
+
+    public function detail(Page $page, array $contents)
+    {
+        $products = $this->em->getRepository(Product::class)->findAllForWebsite(['productCategories' => [$contents['ProductCategory']->getId()]]);
+
+        $pageContent = [];
+        if (null !== $page) {
+            foreach ($page->getContents() as $content) {
+                foreach ($content->getFields() as $key => $field) {
+                    $pageContent[$key] = $field;
+                }
+            }
+        }
+
+        return $this->websiteRender('Website/ProductCategory/detail.html.twig', [
+            "page"               => $page,
+            "productCategory"    => $contents['ProductCategory'],
+            'products'           => $products,
             'pageContent'        => $pageContent,
         ]);
     }

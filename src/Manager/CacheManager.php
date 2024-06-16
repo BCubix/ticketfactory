@@ -30,7 +30,9 @@ class CacheManager extends AbstractManager
 
     public function getValue(string $key, $callback = null): mixed
     {
-        if (!$this->isCacheUsed()) {
+        $firewallContext = $this->rs->getMainRequest()->attributes->get('_firewall_context');
+
+        if (!$this->isCacheUsed() || str_ends_with($firewallContext, '.admin') !== false) {
             if (null !== $callback) {
                 return $callback();
             }
@@ -59,6 +61,7 @@ class CacheManager extends AbstractManager
             $keyExist = false;
             return $value;
         });
+
 
         if (!$keyExist) {
             return;

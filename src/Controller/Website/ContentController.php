@@ -3,17 +3,16 @@
 namespace App\Controller\Website;
 
 use App\Entity\Page\Page;
-use App\Entity\Product\Product;
 use App\Entity\Url\Url;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class ProductController extends EventAbleController
+class ContentController extends EventAbleController
 {
     public function orchestrator(?Page $page, Url $url, string $slug)
     {
         $urlFormat = $url->getSlug();
-        $attachedPage = $this->mf->get('product')->getAttachedPage($url);
+        $attachedPage = $this->mf->get('content')->getAttachedPage($url);
         if (null !== $attachedPage) {
             $page = $attachedPage;
 
@@ -21,19 +20,23 @@ class ProductController extends EventAbleController
         }
 
         $activeFilter = $this->getActiveFilter();
-        $contents = $this->mf->get('product')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
-        if (null === $contents || !isset($contents['Product'])) {
+        $contents = $this->mf->get('content')->getContentObjectFromUrl($url, $slug, $urlFormat, $activeFilter);
+        if (null === $contents || !isset($contents['Content'])) {
             return new Response(null, 404);
         }
 
-        return $this->detail($page, $contents);
+        return $this->detail($contents);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
 
-        $products = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId());
-
+        $contentTypes = $page->getContentTypes();
+        $contents = [];
+        foreach($contentTypes as $contentType) {
+            $contents = array_merge($contents, $this->mf->get('content')->getAllByTypeIdForWebsite($contentType->getId()));
+        }
+        
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {
@@ -43,19 +46,22 @@ class ProductController extends EventAbleController
             }
         }
 
-        $template = 'Product/';
+        $template = 'Content/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
             'page'               => $page,
-            'products'           => $products,
+            'contents'           => $contents,
             'pageContent'        => $pageContent,
         ]);
     }
 
-    public function detail(Page $page, array $contents)
+    public function detail(array $contents)
     {
+        $content = $contents['Content'];
+        $page = $content->getContentType()->getPageParent();
+
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {
@@ -65,9 +71,9 @@ class ProductController extends EventAbleController
             }
         }
 
-        return $this->websiteRender('Website/Product/detail.html.twig', [
-            "page"               => $page,
-            "product"            => $contents['Product'],
+        return $this->websiteRender('Content/detail.html.twig', [
+            'page'               => $page,
+            'content'            => $content,
             'pageContent'        => $pageContent,
         ]);
     }

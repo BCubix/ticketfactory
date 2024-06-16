@@ -73,8 +73,9 @@ class ParameterHook extends Hook
         }
 
         $editedList = $this->mf->get('parameter')->getChangedParameters($sObject, $oldParams, $params);
-
         foreach($editedList as $newValue) {
+            $this->mf->get('cache')->setValue('parameter_' . $newValue->getParamKey(), $this->mf->get('parameter')->getParameterValue($newValue));
+
             $this->sf->get('logger')->log(0, 0, 'Updated object.', Parameter::class, $newValue->getId());
         }
     }
