@@ -1,16 +1,1 @@
-INSERT INTO
-    `language` (
-        id,
-        created_at,
-        updated_at,
-        active,
-        name,
-        iso_code,
-        is_default,
-        locale,
-        datetime_format,
-        date_format,
-        time_format
-    )
-VALUES
-    (1,'2023-02-12 00:00:00','2023-02-12 00:00:00',1,'Français','FR',1,'fr','dd/MM/yyyy - HH\'H\'mm','EEEE d MMMM','HH\'H\'mm');
+INSERT INTO `language` (id, created_at, updated_at, active, name, iso_code, is_default, locale, datetime_format, date_format, time_format) VALUES (1,'2023-02-12 00:00:00','2023-02-12 00:00:00',1,'Français','FR',1,'fr','dd/MM/yyyy - HH\'H\'mm','EEEE d MMMM','HH\'H\'mm');

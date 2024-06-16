@@ -1,2 +1,1 @@
-INSERT INTO `event_type` (`id`, `lang_id`, `created_at`, `updated_at`, `active`, `name`, `slug`, `language_group`) VALUES (1, 1, '2024-05-27 15:01:34', '2024-05-27 15:01:38', 1, 'Evènements', 'evenements', 0xE176D5A8A72411EDA7D1815169B0AEEF);
-INSERT INTO `event_type` (`id`, `lang_id`, `created_at`, `updated_at`, `active`, `name`, `slug`, `language_group`) VALUES (2, 2, '2024-05-27 15:01:34', '2024-05-27 15:01:38', 1, 'Events', 'events', 0xE176D5A8A72411EDA7D1815169B0AEEF);
+INSERT INTO `event_type` (`id`, `lang_id`, `created_at`, `updated_at`, `active`, `name`, `slug`, `language_group`) VALUES (1, 1, CURDATE(), CURDATE(), 1, 'Evènements', 'evenements', 0xE176D5A8A72411EDA7D1815169B0AEEF);
