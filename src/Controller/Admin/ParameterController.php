@@ -7,11 +7,18 @@ use App\Entity\Parameter\ParametersContainer;
 use App\Exception\ApiException;
 use App\Form\Admin\Parameter\ParametersContainerType;
 use App\Form\Admin\Parameter\ParameterType;
-
+use App\Manager\HookManager;
+use App\Manager\LanguageManager;
+use App\Manager\ManagerFactory;
 use App\Manager\ParameterManager;
+use App\Service\Error\FormErrorsCollector;
+use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
+use App\Service\ServiceFactory;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,6 +30,23 @@ class ParameterController extends AdminController
 
     protected const NOT_FOUND_MESSAGE = "Les paramètres n'existent pas.";
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
+
+    protected $sf;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        SerializerInterface $se,
+        FormErrorsCollector $fec,
+        Logger $log,
+        LanguageManager $lm,
+        HookManager $hm,
+        ManagerFactory $mf,
+        ServiceFactory $sf,
+    ) {
+        parent::__construct($em, $se, $fec, $log, $lm, $hm, $mf);
+
+        $this->sf = $sf;
+    }
 
     #[Rest\Get('/parametres')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_all'])]
@@ -107,6 +131,23 @@ class ParameterController extends AdminController
     {
         $this->mf->get('parameter')->createRobotFile($request->getScheme() . "://" . $request->getHost());
         $this->mf->get('parameter')->createSitemapFile($request->getScheme() . "://" . $request->getHost());
+
+        return $this->view([], Response::HTTP_OK);
+    }
+
+    #[Rest\Post('/parametres/email-test')]
+    public function sendTestEmail(): View
+    {
+        $testEmailAddress = $this->mf->get('parameter')->getCoreParameter('test_email_address');
+        if (null === $testEmailAddress) {
+            throw new ApiException(
+                Response::HTTP_BAD_REQUEST,
+                1000,
+                "Veuillez renseigner une adresse email pour le test"
+            );
+        }
+
+        $this->sf->get('mailer')->sendTestEmail($testEmailAddress);
 
         return $this->view([], Response::HTTP_OK);
     }

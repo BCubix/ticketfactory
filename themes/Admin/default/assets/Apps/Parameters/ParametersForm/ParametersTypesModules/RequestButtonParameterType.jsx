@@ -31,7 +31,7 @@ const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, index
     };
 
     return (
-        <Grid item key={indexParam} {...paramBreakpoints}>
+        <Grid item key={indexParam} {...paramBreakpoints} display="flex" alignItems="center">
             <Button type="button" variant="contained" id={`button-${paramKey}`} disabled={isExecute} onClick={onClick}>
                 {paramName}
             </Button>

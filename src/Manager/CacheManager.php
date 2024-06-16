@@ -77,7 +77,8 @@ class CacheManager extends AbstractManager
         }
 
         return $this->cache->get("parameter_core_use_cache", function (ItemInterface $item): mixed {
-            return false;
+            $parameter = $this->mf->get('parameter')->getParameter('core_use_cache');
+            return $this->mf->get('parameter')->getParameterValue($parameter);
         });
     }
 }

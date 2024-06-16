@@ -27,7 +27,7 @@ export const urlListCrud = {
         { name: 'page.slug', label: 'Page', width: '20%', sortable: false },
         { name: 'slug', label: 'PermaLink', width: '20%', sortable: false },
     ],
-    parameterList: ['core_index_site', 'core_generate_seo', 'core_use_ssl'],
+    parameterList: ['core_index_site', 'core_generate_seo', 'core_use_ssl', 'core_use_cache'],
     loadDataAction: () => getUrlAction(),
     changeFiltersActions: (props, page) => changeUrlFilters(props, page),
     dataSelector: urlSelector,

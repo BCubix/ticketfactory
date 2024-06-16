@@ -28,10 +28,27 @@ class MenuEntryManager extends AbstractManager
 
     public function getAllMenus(): array
     {
-        $repository = $this->em->getRepository(MenuEntry::class);
+        $languageId = $this->getLanguageId();
+        
+        return $this->mf->get('cache')->getValue('menuEntries_lang_' . $languageId, function () {
+            $repository = $this->em->getRepository(MenuEntry::class);
 
-        $menuEntries = $repository->findAllForWebsite($this->getLanguageId());
-        $menus = $repository->buildTree($menuEntries);
+            $menuEntries = $repository->findAllForWebsite($this->getLanguageId());
+            $menus = $repository->buildTree($menuEntries);
+            $menus = $this->constructMenus($menus);
+    
+            foreach ($menus as $key => $menu) {
+                $menus[$menu['keyword']] = $menu;
+                unset($menus[$key]);
+            }
+
+            return $menus;
+        });
+    }
+
+    public function buildMenus(array $menuEntries): array
+    {
+        $menus = $this->em->getRepository(MenuEntry::class)->buildTree($menuEntries);
         $menus = $this->constructMenus($menus);
 
         foreach ($menus as $key => $menu) {

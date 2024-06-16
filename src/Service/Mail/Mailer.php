@@ -75,4 +75,18 @@ class Mailer
 
         $this->mailer->send($message);
     }
+
+    public function sendTestEmail(string $testEmailAddress)
+    {
+        $sender = $this->mf->get("parameter")->getCoreParameter("email_sender");
+
+        $message = (new TemplatedEmail())
+            ->from($sender)
+            ->to($testEmailAddress)
+            ->subject('Email de test')
+            ->text('Email de test');
+
+        $this->mailer->send($message);
+
+    }
 }

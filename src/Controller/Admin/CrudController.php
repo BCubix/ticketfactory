@@ -194,6 +194,10 @@ abstract class CrudController extends AdminController
         $this->em->remove($object);
         $this->em->flush();
 
+        $this->hm->exec($this->entityClassName . 'Deleted', [
+            'objectId' => $objectId,
+        ]);
+
         $this->log->log(0, 0, 'Deleted object.', $this->entityClass, $objectId);
 
         return $this->view(null, Response::HTTP_NO_CONTENT);

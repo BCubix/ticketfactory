@@ -45,7 +45,7 @@ const pagesApi = {
         try {
             let params = { 'filters[page]': 0 };
 
-            createFilterParams(filters, Crud?.redirections?.list?.filtersData, params);
+            createFilterParams(filters, Crud?.pages?.list?.filtersData, params);
             if (filters?.lang) {
                 params['filters[lang]'] = filters?.lang;
             }

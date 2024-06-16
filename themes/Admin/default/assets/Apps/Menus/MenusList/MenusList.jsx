@@ -25,7 +25,7 @@ const serializeMenuData = (element, name, formData, datas) => {
     formData.append(`${name}[lang]`, element.lang || datas.lang || '');
     formData.append(`${name}[languageGroup]`, element.languageGroup || '');
     formData.append(`${name}[active]`, element.active ? 1 : 0);
-    formData.append(`${name}[target]`, element.target);
+    formData.append(`${name}[target]`, element.target || '_self');
     formData.append(`${name}[noFollow]`, element.noFollow ? 1 : 0);
 
     element?.children?.forEach((el, index) => {
