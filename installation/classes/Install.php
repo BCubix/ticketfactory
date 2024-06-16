@@ -59,6 +59,7 @@ class Install
             foreach (['event', 'media', 'product'] as $entity) {
                 $this->addCategoryToDatabase($entity . '_category');
             }
+            $this->addDomainToDatabase();
             $this->addMenuEntryToDatabase();
             $this->addPageToDatabase();
             $this->addContentToDatabase();
@@ -112,6 +113,22 @@ class Install
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    private function addDomainToDatabase()
+    {
+        $domain = explode(':', $_SERVER['HTTP_HOST']);
+        if (count($domain) === 0) {
+            return;
+        }
+
+        Db::getInstance()->query(sprintf(
+            "UPDATE `parameter`
+            SET param_value='%s'
+            WHERE param_key='core_website_host';",
+            $domain[0]
+        ));
+
     }
 
     private function addCategoryToDatabase(string $table)
@@ -200,7 +217,7 @@ class Install
         Db::getInstance()->query(sprintf(
             "UPDATE `parameter`
             SET param_value='%s'
-            WHERE id=22;",
+            WHERE param_key='core_default_structures_type';",
             $structureId
         ));
     }

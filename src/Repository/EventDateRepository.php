@@ -9,9 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 class EventDateRepository extends CrudRepository
 {
     /*** > Trait ***/
-    /*** > Module: Calendar ***/
-    use \TicketFactory\Module\Calendar\Repository\Override\EventDateRepository;
-    /*** < Module: Calendar ***/
     /*** < Trait ***/
 
     public function __construct(ManagerRegistry $registry)
