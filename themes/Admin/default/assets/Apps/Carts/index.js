@@ -5,6 +5,8 @@ import { CartsDetail, cartsDetailCrud } from '@Apps/Carts/CartsDetail/CartsDetai
 import { CustomerCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CustomerCartPart';
 import { CartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartPart';
 import { OrderCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/OrderCartPart';
+import cartsApi from './services/api/cartsApi';
+import cartsReducer from './redux/carts/cartsSlice';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
@@ -12,10 +14,6 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setCrud } from '@/AdminService/Crud';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
-
-import cartsApi from './services/api/cartsApi';
-import cartsReducer from './redux/carts/cartsSlice';
-
 import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
@@ -51,7 +49,7 @@ export default async function ({ parameters }) {
     const useProducts = parameters?.find((el) => el.paramKey === 'core_use_purchase');
 
     if (useProducts?.paramValue) {
-        addTabElements('ordersTabList', [{ label: 'Panier', component: <Component.CartsList />, path: Constant.CARTS_BASE_PATH }]);
+        addTabElements('ordersTabList', [{ label: 'Panier', component: <Component.CartsList />, path: Constant.CARTS_BASE_PATH }], 2);
 
         setAuthenticatedRoute(Constant.CARTS_BASE_PATH, Component.CmtAppMenu, {
             tabListName: 'ordersTabList',

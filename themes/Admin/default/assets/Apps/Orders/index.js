@@ -60,6 +60,6 @@ export default async function ({ parameters }) {
         });
         setAuthenticatedRoute(`${Constant.ORDERS_BASE_PATH}/:id`, Component.OrdersDetail);
 
-        insertSubMenu(1, 'VENDRE', 'Commandes', Constant.ORDERS_BASE_PATH, <ShoppingCartIcon />);
+        insertSubMenu(1, 'VENDRE', 'Commandes', Constant.ORDERS_BASE_PATH, <ShoppingCartIcon />, { relatedLinks: [Constant.CARTS_BASE_PATH, Constant.ORDER_STATUS_BASE_PATH] });
     }
 }
