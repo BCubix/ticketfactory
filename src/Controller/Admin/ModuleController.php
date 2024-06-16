@@ -62,7 +62,9 @@ class ModuleController extends AdminController
                 Module::ACTION_UNINSTALL_DELETE => "removed",
             ];
 
-            $this->log->log(0, 0, $messageState[intval($actionStr)] . " module." , Module::class, $module->getId());
+            if (null !== $module) {
+                $this->log->log(0, 0, $messageState[intval($actionStr)] . " module." , Module::class, $module->getId());
+            }
         } finally {
             if ($this->em->getConnection()->isTransactionActive()) {
                 $this->em->getConnection()->rollBack();

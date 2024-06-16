@@ -10,6 +10,7 @@ import { Crud } from '@/AdminService/Crud';
 import { getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { contentTypesInitialSchema, contentTypesValidationSchema, contentTypesForm } from '../ContentTypesForm/ContentTypesForm';
+import { getAllContentDataAction } from '@Apps/Contents/redux/contents/contentsSlice';
 
 export const contentTypesEditCrud = {
     form: {
@@ -77,6 +78,7 @@ export const EditContentType = () => {
             if (result.result) {
                 NotificationManager.success('Le type de contenus a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getContentTypesAction());
+                dispatch(getAllContentDataAction());
                 navigate(Constant.CONTENT_TYPES_BASE_PATH);
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);

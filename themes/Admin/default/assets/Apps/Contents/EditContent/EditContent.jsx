@@ -43,7 +43,7 @@ export const EditContent = () => {
         if (result.result) {
             NotificationManager.success('Le contenu a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
 
-            dispatch(getContentsAction());
+            dispatch(getContentsAction(`contentType_${content.contentType.id}`));
 
             navigate(Constant.CONTENTS_BASE_PATH);
         }

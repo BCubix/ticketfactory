@@ -55,7 +55,7 @@ export const ActiveApp = () => {
         listKeys.map(async (item) => {
             const func = list(item)?.default;
             if (func) {
-                func({ parameters: parametersData?.parameters });
+                func({ parameters: parametersData?.parameters, dispatch });
             }
         });
 

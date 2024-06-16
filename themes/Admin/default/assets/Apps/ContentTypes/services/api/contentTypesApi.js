@@ -70,7 +70,6 @@ const contentTypesApi = {
 
             return { result: true, contentType: result.data };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

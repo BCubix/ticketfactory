@@ -78,7 +78,6 @@ const contentsApi = {
 
             return { result: true, content: result.data };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },
@@ -89,7 +88,6 @@ const contentsApi = {
 
             return { result: true, content: result.data };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

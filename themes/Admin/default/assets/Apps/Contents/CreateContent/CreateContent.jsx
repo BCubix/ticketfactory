@@ -8,7 +8,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 
-import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
+import { getAllContentDataAction, getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
 import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -42,7 +42,8 @@ export const CreateContent = () => {
             const result = await Api.contentsApi.createContent(values);
             if (result.result) {
                 NotificationManager.success('Le contenu a bien été créé.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getContentsAction());
+                const urlId = initialValues?.contentType?.id || parseInt(urlParams.get('contentType'));
+                dispatch(getContentsAction(`contentType_${urlId}`));
                 navigate(Constant.CONTENTS_BASE_PATH);
             }
         });

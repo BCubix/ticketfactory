@@ -50,12 +50,6 @@ services:
         arguments:
             $container: '@service_container'
 
-    App\EventSubscriber\Website\RedirectionSubscriber:
-        arguments:
-            $websiteHost: '%env(WEBSITE_HOST)%'
-        tags:
-            - { name: kernel.event_subscriber }
-
     App\Service\Ticketing\TicketingService:
         arguments:
             - '@service_container'

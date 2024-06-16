@@ -194,7 +194,7 @@ export function insertSubMenu(position, title, name, link, icon, options = {}) {
     });
 }
 
-export function addRelatedLinks(title, name, relatedLink) {
+export function addRelatedLink(title, name, relatedLink) {
     const index = MenuObj.findIndex((menu) => menu().title === title);
     if (index === -1) {
         throw new Error(`The title '${title}' must be in Menu.`);

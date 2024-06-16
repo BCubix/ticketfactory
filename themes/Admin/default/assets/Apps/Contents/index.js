@@ -4,6 +4,7 @@ import { ContentsForm } from '@Apps/Contents/ContentsForm/ContentsForm';
 import { DisplayContentField } from '@Apps/Contents/ContentsForm/DisplayContentField';
 import { DisplayContentForm } from '@Apps/Contents/ContentsForm/DisplayContentForm';
 import { ContentsList, contentsListCrud } from '@Apps/Contents/ContentsList/ContentsList';
+import { ContentMenuButton, ContentMenuTitle } from '@Apps/Contents/ContentsList/sc.ContentMenuButton';
 import { CreateContent, contentsCreateCrud } from '@Apps/Contents/CreateContent/CreateContent';
 import { EditContent, contentsEditCrud } from '@Apps/Contents/EditContent/EditContent';
 
@@ -19,6 +20,7 @@ import contentsReducer from './redux/contents/contentsSlice';
 import contentsApi from './services/api/contentsApi';
 
 import SourceIcon from '@mui/icons-material/Source';
+import { ContentCrudList } from './ContentsList/ContentCrudList';
 
 export const initConstant = () => {
     setConstant('CONTENTS_BASE_PATH', '/admin/contenus');
@@ -31,6 +33,9 @@ export const initComponent = () => {
     setComponent('ContentsList', ContentsList);
     setComponent('CreateContent', CreateContent);
     setComponent('EditContent', EditContent);
+    setComponent('ContentMenuButton', ContentMenuButton);
+    setComponent('ContentMenuTitle', ContentMenuTitle);
+    setComponent('ContentCrudList', ContentCrudList);
 };
 
 export const initApi = () => {

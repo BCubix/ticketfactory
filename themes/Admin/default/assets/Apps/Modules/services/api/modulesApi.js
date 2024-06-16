@@ -146,7 +146,6 @@ const modulesApi = {
 
             return { result: true, image: imageDataUrl };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

@@ -74,7 +74,6 @@ const pagesApi = {
 
             return { result: true, page: result.data };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

@@ -33,7 +33,6 @@ const menusApi = {
 
             return { result: true, menu: result.data };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },

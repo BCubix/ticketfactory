@@ -52,7 +52,6 @@ const usersApi = {
 
             return { result: true, user: result.data };
         } catch (error) {
-            console.log(error);
             return { result: false, error: error?.response?.data };
         }
     },
