@@ -21,10 +21,12 @@ class CacheManager extends AbstractManager
         ServiceFactory $sf,
         EntityManagerInterface $em,
         RequestStack $rs,
-        CacheInterface $cache,
     ) {
         parent::__construct($kl, $mf, $sf, $em, $rs);
+    }
 
+    public function setCache(CacheInterface $cache)
+    {
         $this->cache = $cache;
     }
 
@@ -75,7 +77,7 @@ class CacheManager extends AbstractManager
 
     private function isCacheUsed(): bool
     {
-        if (!extension_loaded('memcached')) {
+        if (null === $this->cache || !extension_loaded('memcached')) {
             return false;
         }
 
