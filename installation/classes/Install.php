@@ -56,9 +56,11 @@ class Install
                     Db::getInstance()->query(file_get_contents(_TF_INSTALL_DATA_PATH_ . $file->getFilename()));
                 }
             }
-            foreach (['event', 'media', 'product'] as $entity) {
+            foreach (['event', 'product'] as $entity) {
                 $this->addCategoryToDatabase($entity . '_category');
             }
+
+            $this->addMediaCategoryToDatabase();
             $this->addDomainToDatabase();
             $this->addMenuEntryToDatabase();
             $this->addPageToDatabase();
@@ -138,10 +140,27 @@ class Install
         $sql = sprintf(
             "INSERT INTO
             `%s` (
+                id, tree_root, parent_id, created_at, updated_at, active, name, slug, lft, rgt, lvl, lang_id, language_group, position, indexed
+            )
+            VALUES (1, 1, NULL, '%s', '%s', 1, 'Catégories', 'categories', 1, 14, 0, 1, 0x4DC0AA4F890044E893651930886CB470, 0, 1);",
+            $table,
+            $nowFormatted,
+            $nowFormatted
+        );
+
+        Db::getInstance()->query($sql);
+    }
+
+    private function addMediaCategoryToDatabase()
+    {
+        $nowFormatted = (new \DateTime())->format('Y-m-d H:i:s');
+
+        $sql = sprintf(
+            "INSERT INTO
+            `media_category` (
                 id, tree_root, parent_id, created_at, updated_at, active, name, slug, lft, rgt, lvl, lang_id, language_group, position
             )
             VALUES (1, 1, NULL, '%s', '%s', 1, 'Catégories', 'categories', 1, 14, 0, 1, 0x4DC0AA4F890044E893651930886CB470, 0);",
-            $table,
             $nowFormatted,
             $nowFormatted
         );
@@ -152,16 +171,16 @@ class Install
     private function addMenuEntryToDatabase()
     {
         $values = [
-            "(1, 1, NULL, 'Footer', 'none', NULL, 1, 20, 0, 1, 0x4DC0AA4F890044E893651930886CB470, 0, 'footer')",
-            "(2, 2, NULL, 'Menu principal', 'none', NULL, 1, 34, 0, 1, 0x672CE0960CD648EA9BAE2AEED118FAFC, 0, 'main')",
-            "(3, 2, 2, 'Page principale', 'page', 1, 2, 9, 1, 1, 0x816D0F3F6045478390D4CC4B120E93A2, 0, NULL)"
+            "(1, 1, NULL, 'Footer', 'none', NULL, 1, 20, 0, 1, 0x4DC0AA4F890044E893651930886CB470, 'footer', '_self', 1, 0)",
+            "(2, 2, NULL, 'Menu principal', 'none', NULL, 1, 34, 0, 1, 0x672CE0960CD648EA9BAE2AEED118FAFC, 'main', '_self', 1, 0)",
+            "(3, 2, 2, 'Page principale', 'page', 1, 2, 9, 1, 1, 0x816D0F3F6045478390D4CC4B120E93A2, NULL, '_self', 1, 0)"
         ];
 
         foreach ($values as $value) {
             $sql = sprintf(
                 "INSERT INTO
             `menu_entry` (
-                id, tree_root, parent_id, name, menu_type, value, lft, rgt, lvl, lang_id, language_group, blank, keyword
+                id, tree_root, parent_id, name, menu_type, value, lft, rgt, lvl, lang_id, language_group, keyword, target, active, no_follow
             )
             VALUES %s;",
                 $value
@@ -176,8 +195,8 @@ class Install
         $nowFormatted = (new \DateTime())->format('Y-m-d H:i:s');
 
         $values = [
-            "(1, '%s', '%s', 1, 'Page principale', 1, NULL, '', 0x4DC0AA4F890044E893651930886CB470, 'home', 'App\\\\Controller\\\\Website\\\\HomeController::index')",
-            "(2, '%s', '%s', 1, 'Le Théâtre', 1, NULL, 'le-theatre', 0x672CE0960CD648EA9BAE2AEED118FAFC, 'theater', NULL)",
+            "(1, '%s', '%s', 1, 'Page principale', 1, NULL, '', 0x4DC0AA4F890044E893651930886CB470, 'home', 'App\\\\Controller\\\\Website\\\\HomeController::index', 1)",
+            "(2, '%s', '%s', 1, 'Le Théâtre', 1, NULL, 'le-theatre', 0x672CE0960CD648EA9BAE2AEED118FAFC, 'theater', NULL, 1)",
         ];
 
         foreach ($values as $value) {
@@ -186,7 +205,7 @@ class Install
             $sql = sprintf(
                 "INSERT INTO
             `page` (
-            id, created_at, updated_at, active, title, lang_id, parent_id, slug, language_group, keyword, controller
+            id, created_at, updated_at, active, title, lang_id, parent_id, slug, language_group, keyword, controller, indexed
             )
             VALUES %s;",
                 $value
@@ -203,9 +222,9 @@ class Install
         Db::getInstance()->query(sprintf(
             "INSERT INTO
                 `content` (
-                  id, content_type_id, created_at, updated_at, active, title, slug, fields, lang_id, language_group, page_id
+                  id, content_type_id, created_at, updated_at, active, title, slug, fields, lang_id, language_group, page_id, indexed
                 )
-                VALUES (1, 1, '%s', '%s', 1, 'Théatre Online', 'theatre-online', '%s', 1, 0x4DC0AA4F890044E893651930886CB470, 1);",
+                VALUES (1, 1, '%s', '%s', 1, 'Théatre Online', 'theatre-online', '%s', 1, 0x4DC0AA4F890044E893651930886CB470, 1, 1);",
             $nowFormatted,
             $nowFormatted,
             '{"theater": {"image": 20, "title": "Le Théatre", "button": {"link": 13, "label": "En savoir plus"}, "content": "<div class=\\\\"tcard__description\\\\">\\\\r\\\\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>\\\\r\\\\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>\\\\r\\\\n</div>", "subtitle": "Un théâtre de toute beauté !"}, "columnsBlock": {"blocks": []}}'
