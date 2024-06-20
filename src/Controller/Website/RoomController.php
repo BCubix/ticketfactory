@@ -26,13 +26,15 @@ class RoomController extends EventAbleController
             return new Response(null, 404);
         }
 
+        $breadcrumbs = $this->mf->get('room')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
         $template = 'Room/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
-        return $this->renderListPage($page, $contents, $template);
+        return $this->renderListPage($page, $contents, $breadcrumbs, $template);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $displayRooms = $this->mf->get("parameter")->getCoreParameter("display_rooms");
         if (!$displayRooms) {
@@ -55,6 +57,7 @@ class RoomController extends EventAbleController
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'rooms'              => $rooms,
             'pageContent'        => $pageContent,

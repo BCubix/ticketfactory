@@ -12,8 +12,9 @@ class TagController extends EventAbleController
     public function orchestrator(?Page $page, Url $url, string $slug)
     {
         $urlFormat = $url->getSlug();
-        if (null !== $url->getPage()) {
-            $page = $url->getPage();
+        $attachedPage = $this->mf->get('tag')->getAttachedPage($url);
+        if (null !== $attachedPage) {
+            $page = $attachedPage;
 
             $urlFormat = $this->mf->get('page')->getPageSlugPath($page) . (str_starts_with($urlFormat, '/') ? "" : "/") . $urlFormat;
         }
@@ -24,13 +25,15 @@ class TagController extends EventAbleController
             return new Response(null, 404);
         }
 
+        $breadcrumbs = $this->mf->get('tag')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
         $template = 'Tag/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
-        return $this->renderListPage($page, $contents, $template);
+        return $this->renderListPage($page, $contents, $breadcrumbs, $template);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $displayTags = $this->mf->get("parameter")->getCoreParameter("display_tags");
         if (!$displayTags) {
@@ -53,6 +56,7 @@ class TagController extends EventAbleController
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'tags'               => $tags,
             'pageContent'        => $pageContent,

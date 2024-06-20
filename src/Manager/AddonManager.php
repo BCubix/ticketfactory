@@ -322,7 +322,7 @@ abstract class AddonManager extends AbstractManager
             $newUrl->setEntity($url['entity']);
             $newUrl->setController($url['controller']);
             $newUrl->setPosition($maxPosition);
-            $newUrl->setUrlBuilder($url['urlBuilder']);
+            $newUrl->setManager($url['manager']);
 
             $this->em->persist($newUrl);
 

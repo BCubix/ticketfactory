@@ -3,8 +3,11 @@
 namespace App\Entity\Event;
 
 use App\Entity\Language\Language;
+use App\Entity\Order\CartRow;
 use App\Repository\EventDateRepository;
 use App\Validation\Constraint\EventDateConstraint;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -73,10 +76,27 @@ class EventDate
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
+    #[ORM\OneToMany(mappedBy: 'eventDate', targetEntity: CartRow::class)]
+    private Collection $cartRows;
+
+    public function __construct()
+    {
+        $this->cartRows = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getLanguageGroup(): ?Uuid
@@ -163,6 +183,36 @@ class EventDate
     public function setLang(?Language $lang): self
     {
         $this->lang = $lang;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CartRow>
+     */
+    public function getCartRows(): Collection
+    {
+        return $this->cartRows;
+    }
+
+    public function addCartRow(CartRow $cartRow): static
+    {
+        if (!$this->cartRows->contains($cartRow)) {
+            $this->cartRows->add($cartRow);
+            $cartRow->setEventDate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartRow(CartRow $cartRow): static
+    {
+        if ($this->cartRows->removeElement($cartRow)) {
+            // set the owning side to null (unless already changed)
+            if ($cartRow->getEventDate() === $this) {
+                $cartRow->setEventDate(null);
+            }
+        }
 
         return $this;
     }

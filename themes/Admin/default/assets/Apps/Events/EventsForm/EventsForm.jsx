@@ -69,16 +69,18 @@ export const eventsInitialSchema = {
     description: (initValues) => initValues?.description || '',
     eventLength: (initValues) => initValues?.eventLength || '',
     eventDateBlocks: (initValues, { defaultDateBlockName }) =>
-        initValues?.eventDateBlocks?.map((el) => ({
+        initValues?.eventDateBlocks?.map((el, blockIndex) => ({
             ...el,
             lang: el?.lang?.id || '',
-            eventDates: el.eventDates?.map((date) => ({ ...date, lang: date.lang.id || '' })),
+            eventDates: el.eventDates?.map((date, index) => ({ ...date, lang: date.lang.id || '', index: index })),
+            index: blockIndex,
         })) || [{ name: defaultDateBlockName || 'Dates', eventDates: [], lang: initValues?.lang?.id || '' }],
     eventPriceBlocks: (initValues, { defaultPriceBlockName, defaultPrices }) =>
-        initValues?.eventPriceBlocks?.map((el) => ({
+        initValues?.eventPriceBlocks?.map((el, blockIndex) => ({
             ...el,
             lang: el?.lang?.id || '',
-            eventPrices: el?.eventPrices?.map((price) => ({ ...price, lang: price?.lang?.id || '' })),
+            eventPrices: el?.eventPrices?.map((price, index) => ({ ...price, lang: price?.lang?.id || '', index })),
+            index: blockIndex,
         })) || [{ name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues, { roomsList }) => initValues?.room?.id || (roomsList?.length === 1 ? roomsList[0]?.id : ''),

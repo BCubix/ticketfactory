@@ -240,7 +240,7 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                                             ->thenInvalid('required string')
                                         ->end()
                                     ->end()
-                                    ->scalarNode('urlBuilder')
+                                    ->scalarNode('manager')
                                         ->isRequired()
                                         ->cannotBeEmpty()
                                         ->validate()

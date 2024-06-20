@@ -25,18 +25,21 @@ class ContentController extends EventAbleController
             return new Response(null, 404);
         }
 
-        return $this->detail($contents);
+        $breadcrumbs = $this->mf->get('content')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
+
+        return $this->detail($contents, $breadcrumbs);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $contentTypes = $page->getContentTypes();
         $contents = [];
         foreach($contentTypes as $contentType) {
             $contents = array_merge($contents, $this->mf->get('content')->getAllByTypeIdForWebsite($contentType->getId()));
         }
-        
+
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {
@@ -51,13 +54,14 @@ class ContentController extends EventAbleController
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'contents'           => $contents,
             'pageContent'        => $pageContent,
         ]);
     }
 
-    public function detail(array $contents)
+    public function detail(array $contents, array $breadcrumbs)
     {
         $content = $contents['Content'];
         $page = $content->getContentType()->getPageParent();
@@ -72,6 +76,7 @@ class ContentController extends EventAbleController
         }
 
         return $this->websiteRender('Content/detail.html.twig', [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'content'            => $content,
             'pageContent'        => $pageContent,

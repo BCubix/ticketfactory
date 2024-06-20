@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Event\EventDate;
 use App\Exception\ApiException;
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
@@ -9,7 +10,7 @@ use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
@@ -62,6 +63,7 @@ abstract class CrudController extends AdminController
     protected function getOne(Request $request, int $id): View
     {
         $object = $this->em->getRepository($this->entityClass)->findOneForAdmin($id);
+
         if (is_null($object)) {
             throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_MESSAGE);
         }
@@ -129,7 +131,6 @@ abstract class CrudController extends AdminController
 
         if (!$form->isSubmitted() || !$form->isValid()) {
             $errors = $this->fec->getErrorsFromForm($form);
-
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
         }
 

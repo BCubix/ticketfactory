@@ -5,10 +5,27 @@ const DATA_TYPE = {
     boolean: ({ values, key, field, formData, baseName }) => formData.append(getApiFieldName({ baseName, key, field }), values[key] ? 1 : 0),
     slug: ({ values, key, field, formData, baseName }) => formData.append(getApiFieldName({ baseName, key, field }), changeSlug(values[key] || '')),
     id: ({ values, formData, baseName, key, field }) => formData.append(getApiFieldName({ baseName, key, field }), values[key]?.id || ''),
-    array: ({ values, key, field, baseName, ...props }) =>
-        values[key]?.map((item, index) => {
+    array: ({ values, key, field, baseName, ...props }) => {
+        let maxIndex = 0;
+        values[key]?.forEach((item) => {
+            if (item?.index && item.index >= maxIndex) {
+                maxIndex = item.index + 1;
+            }
+        });
+
+        if (maxIndex === 0) {
+            maxIndex = values[key]?.length || 0;
+        }
+
+        values[key]?.map((item) => {
+            let index = item?.index || item?.index === 0 ? item?.index : maxIndex;
             constructFormData({ ...props, values: item, index, dataFields: field?.subFields, baseName: `${getApiFieldName({ baseName, key, field })}[${index}]` });
-        }),
+
+            if (!item?.index && item?.index !== 0) {
+                maxIndex++;
+            }
+        });
+    },
     object: ({ values, key, field, baseName, ...props }) =>
         constructFormData({ ...props, values: values[key], dataFields: field?.subFields, baseName: getApiFieldName({ baseName, key, field }) }),
 };

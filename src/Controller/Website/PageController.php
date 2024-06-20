@@ -25,16 +25,20 @@ class PageController extends WebsiteController
             }
         }
 
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
+
         return $this->websiteRender('Page/index.html.twig', [
-            'page' => $page,
-            'pageTypeBlocks' => $pageTypeBlocks,
-            'contentTypeBlocks' => $contentTypeBlocks
+            'breadcrumbs'        => $breadcrumbs,
+            'page'               => $page,
+            'pageTypeBlocks'     => $pageTypeBlocks,
+            'contentTypeBlocks'  => $contentTypeBlocks
         ]);
     }
 
     public function history(Page $page)
     {
         $this->checkAccessPage($page);
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $pageContents = [];
         foreach ($page->getContents() as $content) {
@@ -44,8 +48,9 @@ class PageController extends WebsiteController
         }
 
         return $this->websiteRender('Page/history.html.twig', [
-            'page'         => $page,
-            'pageContents' => $pageContents
+            'breadcrumbs'        => $breadcrumbs,
+            'page'               => $page,
+            'pageContents'       => $pageContents
         ]);
     }
 

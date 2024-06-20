@@ -56,7 +56,7 @@ class Url extends Datable
     #[JMS\Expose()]
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
     #[ORM\Column(length: 255)]
-    private ?string $urlBuilder = null;
+    private ?string $manager = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
@@ -141,14 +141,14 @@ class Url extends Datable
         return $this;
     }
 
-    public function getUrlBuilder(): ?string
+    public function getManager(): ?string
     {
-        return $this->urlBuilder;
+        return $this->manager;
     }
 
-    public function setUrlBuilder(string $urlBuilder): static
+    public function setManager(string $manager): static
     {
-        $this->urlBuilder = $urlBuilder;
+        $this->manager = $manager;
 
         return $this;
     }

@@ -16,6 +16,7 @@ import {
     DeleteBlockFabButton,
     DeleteFabButton,
     EditFabButton,
+    DisabledBlockFabButton,
 } from '@Components/CmtButton/sc.Buttons';
 import { CmtAppMenu } from '@Components/CmtAppMenu/CmtAppMenu';
 import { CmtCard, CmtCardHeader } from '@Components/CmtCard/sc.CmtCard';
@@ -109,6 +110,7 @@ const ComponentObj = {
     DeleteFabButton: DeleteFabButton,
     DeleteButton: DeleteButton,
     DeleteBlockFabButton: DeleteBlockFabButton,
+    DisabledBlockFabButton: DisabledBlockFabButton,
     ActionFabButton: ActionFabButton,
     AddBlockButton: AddBlockButton,
     AddBlockFabButton: AddBlockFabButton,

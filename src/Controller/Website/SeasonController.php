@@ -26,13 +26,15 @@ class SeasonController extends EventAbleController
             return new Response(null, 404);
         }
 
+        $breadcrumbs = $this->mf->get('season')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
         $template = 'Season/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
-        return $this->renderListPage($page, $contents, $template);
+        return $this->renderListPage($page, $contents, $breadcrumbs, $template);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $displaySeasons = $this->mf->get("parameter")->getCoreParameter("display_seasons");
         if (!$displaySeasons) {
@@ -55,6 +57,7 @@ class SeasonController extends EventAbleController
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'seasons'            => $seasons,
             'pageContent'        => $pageContent,

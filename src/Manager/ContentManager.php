@@ -34,7 +34,7 @@ class ContentManager extends AbstractRouterManager
 
         $result = [];
         $result[$this->entityClassName] = $this->getObjectFromFormat($formatValue, $eventIdentifier, $languageId, $activeFilter);
-        if (null === $result[$this->entityClassName] || $url->getKeyword() !== ('contentType_' . $result[$this->entityClassName]->getContentType()->getId())) {
+        if (null === $result[$this->entityClassName] || $url->getKeyword() !== ('content_' . $result[$this->entityClassName]->getContentType()->getId())) {
             return null;
         }
 

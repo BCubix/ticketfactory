@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { FieldArray } from 'formik';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -67,6 +67,8 @@ export const eventsPriceFormFields = {
 };
 
 export const EventsPriceForm = ({ values, touched, errors, handleChange, handleBlur, blockIndex, fields }) => {
+    const index = useRef(values?.eventPriceBlocks[blockIndex]?.eventPrices?.length || 0);
+
     return (
         <FieldArray name={`eventPriceBlocks[${blockIndex}].eventPrices`}>
             {({ remove, push }) => (
@@ -111,7 +113,8 @@ export const EventsPriceForm = ({ values, touched, errors, handleChange, handleB
                             variant="outlined"
                             id="addPriceButton"
                             onClick={() => {
-                                push({ name: '', annotation: '', price: '' });
+                                push({ name: '', annotation: '', price: '', index: index.current });
+                                index.current = index.current + 1;
                             }}
                         >
                             <AddIcon /> Ajouter

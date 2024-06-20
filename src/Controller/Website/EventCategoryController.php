@@ -26,13 +26,15 @@ class EventCategoryController extends EventAbleController
             return new Response(null, 404);
         }
 
+        $breadcrumbs = $this->mf->get('eventCategory')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
         $template = 'EventCategory/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
-        return $this->renderListPage($page, $contents, $template);
+        return $this->renderListPage($page, $contents, $breadcrumbs, $template);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $eventCategories = $this->em->getRepository(EventCategory::class)->getTopCategoriesForWebsite($this->getLanguageId());
 
@@ -50,6 +52,7 @@ class EventCategoryController extends EventAbleController
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'eventCategories'    => $eventCategories,
             'pageContent'        => $pageContent,

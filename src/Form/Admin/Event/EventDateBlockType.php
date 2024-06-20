@@ -6,7 +6,6 @@ use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Event\EventDateBlock;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
-
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,6 +41,7 @@ class EventDateBlockType extends AdminBaseFormType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            []);
+
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

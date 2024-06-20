@@ -130,7 +130,7 @@ class EventAbleController extends WebsiteController
         return $this->websiteRender($templateName, $contents);
     }
 
-    protected function renderListPage(?Page $page, array $contents, string $templateName)
+    protected function renderListPage(?Page $page, array $contents, ?array $breadcrumbs, string $templateName)
     {
         $eventContents = $this->eventList($contents);
         $pageContent = $this->getPageContent($page);
@@ -140,6 +140,7 @@ class EventAbleController extends WebsiteController
             ...$eventContents,
             'page' => $page,
             'pageContent' => $pageContent,
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 }

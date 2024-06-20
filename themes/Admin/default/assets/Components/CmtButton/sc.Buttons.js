@@ -114,3 +114,23 @@ export const AddBlockFabButton = styled(Fab)`
         box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
     }
 `;
+
+export const DisabledBlockFabButton = styled(Fab)`
+    background-color: #ffffff;
+    color: ${(props) => props.theme.palette.disabled.main};
+    margin-block: 12px;
+    position: absolute;
+    top: -30px;
+    right: -15px;
+    height: 30px;
+    width: 30px;
+    min-height: 0;
+    min-width: 0;
+    border: ${(props) => `1px solid ${props.theme.palette.disabled.light}`};
+    box-shadow: none;
+
+    &:hover {
+        background-color: ${(props) => props.theme.palette.disabled.light};
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+    }
+`;

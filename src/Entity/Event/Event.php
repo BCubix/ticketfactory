@@ -273,6 +273,13 @@ class Event extends Datable
         return $this->eventDateBlocks;
     }
 
+    public function setEventDateBlocks(?ArrayCollection $eventDateBlocks): self
+    {
+        $this->eventDateBlocks = $eventDateBlocks;
+
+        return $this;
+    }
+
     public function addEventDateBlock(EventDateBlock $eventDateBlock): self
     {
         if (!$this->eventDateBlocks->contains($eventDateBlock)) {

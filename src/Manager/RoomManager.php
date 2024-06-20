@@ -10,6 +10,13 @@ class RoomManager extends AbstractRouterManager
 
     protected const ENTITY_CLASS = Room::class;
 
+    protected function getBreadCrumbTab(): array
+    {
+        return [
+            'Room' => fn ($object) => ['title' => $object->getName(), 'slug' => $object->getSlug()],
+        ];
+    }
+
     public function getBySlug($slug): ?Room
     {
         $languageId = $this->getLanguageId();

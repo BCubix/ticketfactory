@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FieldArray } from 'formik';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -24,6 +24,7 @@ export const EventsPriceBlockForm = ({
     defaultPrices,
 }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
+    const blockIndex = useRef(values?.eventPriceBlocks?.length || 0);
 
     const handleDeleteMultiple = () => {
         let block = values.eventPriceBlocks;
@@ -41,7 +42,6 @@ export const EventsPriceBlockForm = ({
 
     const getBlockError = (index) => {
         const err = getNestedFormikError(touched?.eventPriceBlocks, errors?.eventPriceBlocks, index, 'eventPrices');
-
         if (typeof err === 'string') {
             return err;
         }
@@ -82,7 +82,8 @@ export const EventsPriceBlockForm = ({
                                     color="primary"
                                     variant="contained"
                                     onClick={() => {
-                                        push({ name: '', eventPrices: [], lang: initialValues?.lang?.id || '' });
+                                        push({ name: '', eventPrices: [], lang: initialValues?.lang?.id || '', index: blockIndex.current });
+                                        blockIndex.current = blockIndex.current + 1;
                                     }}
                                     sx={{ ml: 2 }}
                                 >

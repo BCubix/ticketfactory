@@ -16,7 +16,7 @@ const DAY_LIST = [
     { label: 'Dimanche', value: 'dimanche' },
 ];
 
-export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
+export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
     const handleGenerateDate = (values) => {
         let beginDate = moment(`${values.beginDate} ${values.hour}`, 'YYYY-MM-DD HH:mm');
         let endDate = moment(values.endDate);
@@ -32,7 +32,10 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
                 annotation: '',
                 state: 'valid',
                 reportDate: '',
+                index: index.current,
             });
+
+            index.current = index.current + 1;
 
             beginDate.add(1, 'day');
         }
@@ -54,7 +57,7 @@ export const EventDateRange = ({ open, setOpen, submitDateRange }) => {
     });
 
     return (
-        <Dialog maxWidth="sm" fullWidth open={Boolean(open !== null)} onClose={() => setOpen(null)}>
+        <Dialog maxWidth="sm" fullWidth open={open} onClose={() => setOpen(null)}>
             <Formik
                 initialValues={{
                     days: [],

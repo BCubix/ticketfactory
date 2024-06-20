@@ -78,7 +78,7 @@ class UrlService
             return "";
         }
 
-        return $this->mf->get($urlFormat->getUrlBuilder())->buildUrl($element, $urlFormat, $parameters, $absolute);
+        return $this->mf->get($urlFormat->getManager())->buildUrl($element, $urlFormat, $parameters, $absolute);
     }
 
     public function keywordElementPath(string $keyword, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
@@ -88,7 +88,7 @@ class UrlService
             return $this->keywordPath($keyword, $parameters, $absolute);
         }
 
-        return $this->mf->get($urlFormat->getUrlBuilder())->buildUrlFromKeyword($urlFormat, $parameters, $absolute);
+        return $this->mf->get($urlFormat->getManager())->buildUrlFromKeyword($urlFormat, $parameters, $absolute);
     }
 
     public function pagePath(Page $page, array $parameters = [], int $absolute = RouterInterface::ABSOLUTE_PATH)
@@ -110,12 +110,12 @@ class UrlService
     {
         $parameters["_locale"] = $content->getLang()->getLocale();
 
-        $urlFormat = $this->mf->get('url')->findOneByKeywordForWebsite('contentType_' . $content->getContentType()->getId());
+        $urlFormat = $this->mf->get('url')->findOneByKeywordForWebsite('content_' . $content->getContentType()->getId());
         if (null === $urlFormat) {
             return "";
         }
 
-        return $this->mf->get($urlFormat->getUrlBuilder())->buildUrl($content, $urlFormat, $parameters, $absolute);
+        return $this->mf->get($urlFormat->getManager())->buildUrl($content, $urlFormat, $parameters, $absolute);
     }
 
     private function generateFromMainSlugs(array $slugs, array $parameters, $absolute)

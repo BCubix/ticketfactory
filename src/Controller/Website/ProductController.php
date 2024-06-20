@@ -26,11 +26,13 @@ class ProductController extends EventAbleController
             return new Response(null, 404);
         }
 
-        return $this->detail($page, $contents);
+        $breadcrumbs = $this->mf->get('product')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
+        return $this->detail($page, $contents, $breadcrumbs);
     }
 
     public function list(Page $page) {
         $request = $this->getRequest();
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
         $products = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId());
 
@@ -48,13 +50,14 @@ class ProductController extends EventAbleController
         $template .= 'list.html.twig';
 
         return $this->websiteRender($template, [
+            'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'products'           => $products,
             'pageContent'        => $pageContent,
         ]);
     }
 
-    public function detail(Page $page, array $contents)
+    public function detail(Page $page, array $contents, array $breadcrumbs)
     {
         $pageContent = [];
         if (null !== $page) {
@@ -66,6 +69,7 @@ class ProductController extends EventAbleController
         }
 
         return $this->websiteRender('Website/Product/detail.html.twig', [
+            'breadcrumbs'        => $breadcrumbs,
             "page"               => $page,
             "product"            => $contents['Product'],
             'pageContent'        => $pageContent,

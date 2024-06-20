@@ -87,4 +87,23 @@ class PageManager extends AbstractManager
 
         return $slugs;
     }
+
+    public function generatePageBreadCrumbs(Page $page): array
+    {
+        $breadcrumbs = [];
+
+        while (null !== $page) {
+            $breadcrumbs[] = [
+                'title' => $page->getTitle(),
+                'link' => $this->sf->get('urlService')->tfPath($page),
+                'slug' => $page->getSlug(),
+            ];
+
+            $page = $page->getParent();
+        }
+
+        $breadcrumbs = array_reverse($breadcrumbs);
+
+        return $breadcrumbs;
+    }
 }

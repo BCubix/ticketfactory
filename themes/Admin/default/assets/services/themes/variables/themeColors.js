@@ -61,6 +61,7 @@ export const themeColors = {
 
     disabled: {
         main: 'rgb(211, 211, 211)',
+        light: 'rgba(211, 211, 211, 0.3)',
     },
 
     labelColor: 'rgba(0, 0, 0, 0.6)',
@@ -75,23 +76,3 @@ export const themeColors = {
     header: headerTheme,
     sidebar: sidebarTheme,
 };
-
-/* primary: {
-    main: '#2E71B3',
-    dark: '#2E71B3',
-    light: '#2E71B3',
-    contrastText: '#fff',
-    publicMain: '#F9F1E4',
-    family: defaultFamily,
-},
-
-secondary: {
-    main: '#2E71B3',
-    dark: '#16458F',
-    light: '#1D5ABB',
-    contrastText: '#FFFFFF',
-},
-
-tertiary: {
-    main: '#FFC828',
-}, */

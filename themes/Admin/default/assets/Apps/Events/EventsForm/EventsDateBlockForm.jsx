@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { FieldArray } from 'formik';
 import moment from 'moment';
 
@@ -13,6 +13,7 @@ import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
 export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, handleBlur, handleChange, touched, errors, initialValues, fields, defaultDateBlockName }) => {
     const [deleteMultiple, setDeleteMultiple] = useState(false);
+    const blockIndex = useRef(values?.eventDateBlocks?.length || 0);
     const [generateDate, setGenerateDate] = useState(null);
 
     const handleDeleteMultiple = () => {
@@ -29,14 +30,28 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
         setFieldValue('multipleDateBlock', false);
     };
 
+    const blockCartRowsRelations = useMemo(() => {
+        let cartRowsTab = [];
+
+        values?.eventDateBlocks?.forEach((item) => {
+            let rowsLength = item?.eventDates?.reduce((length, eventDate) => {
+                return length + (eventDate?.cartRows?.length || 0);
+            }, 0);
+
+            cartRowsTab.push(rowsLength);
+        });
+
+        return cartRowsTab;
+    }, [values?.eventDateBlocks]);
+
+    const canStopUseGroups = useMemo(() => {
+        return (blockCartRowsRelations?.find((item, index) => index > 0 && item > 0) || null) === null;
+    }, [blockCartRowsRelations]);
+
     const getBlockError = (index) => {
         const err = getNestedFormikError(touched?.eventDateBlocks, errors?.eventDateBlocks, index, 'eventDates');
 
-        if (typeof err === 'string') {
-            return err;
-        }
-
-        return '';
+        return typeof err === 'string' ? err : '';
     };
 
     return (
@@ -45,27 +60,29 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                 {({ remove, push }) => (
                     <Box>
                         <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
-                            <Component.ActionButton
-                                size="small"
-                                color="primary"
-                                variant="contained"
-                                id="useEventDateGroup"
-                                onClick={() => {
-                                    if (values?.multipleDateBlock) {
-                                        if (values?.eventDateBlocks?.length > 1) {
-                                            setDeleteMultiple(true);
+                            {(!values?.multipleDateBlock || (values?.multipleDateBlock && canStopUseGroups)) && (
+                                <Component.ActionButton
+                                    size="small"
+                                    color="primary"
+                                    variant="contained"
+                                    id="useEventDateGroup"
+                                    onClick={() => {
+                                        if (values?.multipleDateBlock) {
+                                            if (values?.eventDateBlocks?.length > 1) {
+                                                setDeleteMultiple(true);
+                                            } else {
+                                                handleDeleteMultiple();
+                                            }
                                         } else {
-                                            handleDeleteMultiple();
+                                            push({ name: '', eventDates: [], lang: initialValues?.lang?.id || '' });
+                                            setFieldValue('multipleDateBlock', true);
                                         }
-                                    } else {
-                                        push({ name: '', eventDates: [], lang: initialValues?.lang?.id || '' });
-                                        setFieldValue('multipleDateBlock', true);
-                                    }
-                                }}
-                            >
-                                <WorkspacesIcon sx={{ marginRight: 1 }} />
-                                {values?.multipleDateBlock ? 'Ne plus utiliser les groupes' : 'Utiliser les groupes'}
-                            </Component.ActionButton>
+                                    }}
+                                >
+                                    <WorkspacesIcon sx={{ marginRight: 1 }} />
+                                    {values?.multipleDateBlock ? 'Ne plus utiliser les groupes' : 'Utiliser les groupes'}
+                                </Component.ActionButton>
+                            )}
 
                             {values?.multipleDateBlock && (
                                 <Component.CreateButton
@@ -73,7 +90,8 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                                     color="primary"
                                     variant="contained"
                                     onClick={() => {
-                                        push({ name: '', eventDates: [], lang: initialValues?.lang?.id || '' });
+                                        push({ name: '', eventDates: [], lang: initialValues?.lang?.id || '', index: blockIndex.current });
+                                        blockIndex.current = blockIndex.current + 1;
                                     }}
                                     sx={{ ml: 2 }}
                                 >
@@ -118,7 +136,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                                     </FormHelperText>
                                 )}
 
-                                {values.multipleDateBlock && (
+                                {values.multipleDateBlock && blockCartRowsRelations[index] === 0 && (
                                     <Component.DeleteBlockFabButton
                                         size="small"
                                         id={`removeEventDateBlock-${index}`}
@@ -140,15 +158,15 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                 </FormHelperText>
             )}
             <Component.EventDateRange
-                open={generateDate}
+                open={Boolean(generateDate !== null)}
                 setOpen={setGenerateDate}
+                index={generateDate?.index}
                 submitDateRange={(newDates) => {
-                    let dates = values.eventDateBlocks[generateDate]?.eventDates;
+                    let dates = values.eventDateBlocks[generateDate?.blockIndex]?.eventDates;
                     dates = [...dates, ...newDates];
-
                     dates.sort((a, b) => moment(a.eventDate).diff(b.eventDate));
 
-                    setFieldValue(`eventDateBlocks.${generateDate}.eventDates`, [...dates]);
+                    setFieldValue(`eventDateBlocks.${generateDate?.blockIndex}.eventDates`, [...dates]);
                 }}
             />
             <Component.DeleteDialog
@@ -162,7 +180,6 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                 <Box textAlign="center" py={3}>
                     <Typography component="p">Êtes-vous sûr de ne plus vouloir utiliser les groupes ?</Typography>
                     <Typography component="p">Attention, seul le premier groupe ne sera pas supprimé.</Typography>
-
                     <Typography component="p">Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>

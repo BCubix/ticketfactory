@@ -19,7 +19,7 @@ class ContentTypeHook extends Hook
 
         $contentType = $event->getParam('object');
 
-        $url = $this->mf->get('url')->findOneByKeywordForAdmin("contentType_" . $contentType->getId());
+        $url = $this->mf->get('url')->findOneByKeywordForAdmin("content_" . $contentType->getId());
         if (null !== $url) {
             $this->em->remove($url);
             $this->em->flush();
@@ -36,9 +36,9 @@ class ContentTypeHook extends Hook
         }
 
         if ($state !== 'add') {
-            $url = $this->mf->get('url')->findOneByKeywordForAdmin("contentType_" . $sObject->getId());
+            $url = $this->mf->get('url')->findOneByKeywordForAdmin("content_" . $sObject->getId());
             if (null !== $url) {
-                $url->setName("Type de contenu (" . $sObject->getName() . ')');
+                $url->setName("Contenu (" . $sObject->getName() . ')');
                 $url->setPage($sObject->getPageParent());
 
                 $this->em->persist($url);
@@ -49,12 +49,12 @@ class ContentTypeHook extends Hook
         }
 
         $url = new Url();
-        $url->setName("Type de contenu (" . $sObject->getName() . ')');
+        $url->setName("Contenu (" . $sObject->getName() . ')');
         $url->setSlug("%slug%");
-        $url->setKeyword('contentType_' . $sObject->getId());
-        $url->setEntity('ContentType');
+        $url->setKeyword('content_' . $sObject->getId());
+        $url->setEntity('Content');
         $url->setController('App\Controller\Website\ContentController::orchestrator');
-        $url->setUrlBuilder('content');
+        $url->setManager('content');
         $url->setPage($sObject->getPageParent());
 
         $maxPosition = $this->em->getRepository(Url::class)->findMaxPosition() + 1;

@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { FieldArray } from 'formik';
 import moment from 'moment';
-
 import { useTheme } from '@emotion/react';
-
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import { Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography } from '@mui/material';
+import { Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography, Tooltip } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
@@ -147,6 +145,7 @@ const DisplayBadge = ({ item }) => {
 
 export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }) => {
     const theme = useTheme();
+    const index = useRef(values?.eventDateBlocks[blockIndex]?.eventDates?.length || 0);
 
     const STATES = [
         { label: 'Valide', value: 'valid', color: theme.palette.dateStatus.valid },
@@ -176,14 +175,28 @@ export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }
                                             />
                                         </Grid>
 
-                                        <Component.DeleteBlockFabButton
-                                            size="small"
-                                            onClick={() => {
-                                                remove(index);
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </Component.DeleteBlockFabButton>
+                                        {item?.cartRows?.length > 0 ? (
+                                            <Tooltip
+                                                title={
+                                                    item?.cartRows?.length > 0
+                                                        ? "Vous ne pouvez pas supprimer cette représentation car des billets ont été vendus. Utilisez la fonction d'annulation."
+                                                        : ''
+                                                }
+                                            >
+                                                <Component.DisabledBlockFabButton>
+                                                    <DeleteIcon />
+                                                </Component.DisabledBlockFabButton>
+                                            </Tooltip>
+                                        ) : (
+                                            <Component.DeleteBlockFabButton
+                                                size="small"
+                                                onClick={() => {
+                                                    remove(index);
+                                                }}
+                                            >
+                                                <DeleteIcon />
+                                            </Component.DeleteBlockFabButton>
+                                        )}
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -201,7 +214,10 @@ export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }
                                     annotation: '',
                                     state: 'valid',
                                     reportDate: '',
+                                    index: index.current,
                                 });
+
+                                index.current = index.current + 1;
                             }}
                         >
                             <AddIcon /> Ajouter
@@ -213,7 +229,7 @@ export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }
                             variant="outlined"
                             id="generateDateButton"
                             onClick={() => {
-                                setGenerateDate(blockIndex);
+                                setGenerateDate({ blockIndex, index });
                             }}
                             sx={{ marginLeft: 3 }}
                         >

@@ -13,7 +13,6 @@ use App\Entity\Event\Room;
 use App\Entity\Event\Season;
 use App\Entity\Event\Tag;
 use App\Entity\Media\ImageFormat;
-
 use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;

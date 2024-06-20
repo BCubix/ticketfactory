@@ -29,23 +29,26 @@ class EventController extends EventAbleController
             return new Response(null, 404);
         }
 
+        $breadCrumbs = $this->mf->get('event')->generateBreadcrumbs($attachedPage, $url, $slug, $contents);
+
         if (isset($contents['Event'])) {
-            return $this->index($contents['Event']);
+            return $this->index($contents['Event'], $breadCrumbs);
         }
 
         $template = 'Event/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
 
-        return $this->renderListPage($page, $contents, $template);
+        return $this->renderListPage($page, $contents, $breadCrumbs, $template);
     }
 
     public function list(Page $page)
     {
         $template = 'Event/' . ($this->getRequest()->isXmlHttpRequest() ? '_' : '') . 'index.html.twig';
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
-        return $this->renderListPage($page, [], $template);
+        return $this->renderListPage($page, [], $breadcrumbs, $template);
     }
 
-    public function index(Event $event)
+    public function index(Event $event, ?array $breadcrumbs)
     {
         $eventReservationForm = $this->createForm(EventReservationType::class, null, ['eventId' => $event->getId()]);
         $eventReservationForm->get('eventPrices')->setData($this->mf->get("event")->getEventPricesReservationDefault($event));
@@ -67,6 +70,7 @@ class EventController extends EventAbleController
         [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData(null, $event, $eventDates);
 
         return $this->websiteRender('Event/detail.html.twig', [
+            'breadcrumbs'          => $breadcrumbs,
             'event'                => $event,
             'medias'               => $medias,
             'eventReservationForm' => $eventReservationForm->createView(),
