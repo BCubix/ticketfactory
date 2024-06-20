@@ -6,6 +6,7 @@ use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Entity\Order\Cart;
+use App\Entity\Order\CartRow;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -28,10 +29,25 @@ class OrderManager extends AbstractManager
 
         $this->em->persist($order);
 
+        $cartRows = $this->em->getRepository(CartRow::class)->findBy(['cart' => $cart]);
+        foreach ($cartRows as $row) {
+            $event = $row->getEvent();
+            $ticketing = $event->getTicketing();
+            if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
+                continue;
+            }
+
+            $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+            if (method_exists($class, "createNewOrder")) {
+                $class->createNewOrder($event, $cart, $order);
+            }
+        }
+
         return $order;
     }
 
-    public function getOrderData(Order $order) {
+    public function getOrderData(Order $order)
+    {
         $orderData = [];
 
         $customer = $order->getCustomer();
@@ -88,7 +104,7 @@ class OrderManager extends AbstractManager
             ] : null;
 
             $newCartRow['cartSeats'] = [];
-            foreach($cartRow->getCartSeats() as $cartSeat) {
+            foreach ($cartRow->getCartSeats() as $cartSeat) {
                 $newCartRow['cartSeats'][] = [
                     'id' => $cartSeat->getId(),
                     'name' => $cartSeat->getName(),
@@ -115,15 +131,15 @@ class OrderManager extends AbstractManager
         }
 
         $orderData['voucher'] = [];
-            foreach ($cart->getVouchers() as $voucher) {
-                $cart['voucher'][] = [
-                    'id' => $voucher->getId(),
-                    'name' => $voucher->getName(),
-                    'code' => $voucher->getCode(),
-                    'discount' => $voucher->getDiscount(),
-                    'unit' => $voucher->getUnit(),
-                ];
-            }
+        foreach ($cart->getVouchers() as $voucher) {
+            $cart['voucher'][] = [
+                'id' => $voucher->getId(),
+                'name' => $voucher->getName(),
+                'code' => $voucher->getCode(),
+                'discount' => $voucher->getDiscount(),
+                'unit' => $voucher->getUnit(),
+            ];
+        }
 
         return $orderData;
     }
@@ -133,12 +149,12 @@ class OrderManager extends AbstractManager
         $chars = self::REFERENCES_CHARS;
         $length = strlen($chars);
         $reference = '';
-    
-        for($i = 0; $i < self::REFERENCES_LENGTH; $i++) {
+
+        for ($i = 0; $i < self::REFERENCES_LENGTH; $i++) {
             $random_character = $chars[mt_rand(0, $length - 1)];
             $reference .= $random_character;
         }
-    
+
         return $reference;
     }
 }

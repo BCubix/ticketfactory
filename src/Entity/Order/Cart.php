@@ -50,6 +50,10 @@ class Cart extends Datable
     #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
     private ?Order $linkedOrder = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $ticketingReference = null;
 
     public function __construct()
     {
@@ -157,6 +161,18 @@ class Cart extends Datable
         }
 
         $this->linkedOrder = $linkedOrder;
+
+        return $this;
+    }
+
+    public function getTicketingReference(): ?int
+    {
+        return $this->ticketingReference;
+    }
+
+    public function setTicketingReference(?int $ticketingReference): self
+    {
+        $this->ticketingReference = $ticketingReference;
 
         return $this;
     }
