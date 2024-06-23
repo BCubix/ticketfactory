@@ -2,10 +2,8 @@
 
 namespace App\Controller\Website;
 
-use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\Season;
-use App\Entity\Event\Tag;
 use App\Entity\Language\Language;
 use App\Entity\Page\Page;
 use Doctrine\Common\Util\ClassUtils;
@@ -34,65 +32,6 @@ class DefaultController extends WebsiteController
             'menus'   => $menus,
             'page'    => $page,
             'homePage' => $homePage,
-        ]);
-    }
-
-    public function generateBreadcrumb($element): Response
-    {
-        $currentSeason = $this->mf->get("season")->getCurrentSeason();
-        $season = $currentSeason;
-        $seasonBack = null;
-
-        $breadcrumbs = [];
-
-        if (null !== $element) {
-            switch (ClassUtils::getClass($element)) {
-                case Event::class:
-                    if (null === $element->getSeason() || $element->getSeason()->getId() != $currentSeason->getId()) {
-                        $seasonBack = $currentSeason;
-                    }
-
-                    $breadcrumbs = $this->mf->get('event')->getUrlBreadCrumb($element);
-
-                    break;
-
-                case EventCategory::class:
-                    if ($season->getId() != $currentSeason->getId()) {
-                        $seasonBack = $currentSeason;
-                    }
-
-                    $breadcrumbs[$element->getName()] = '';
-                    $breadcrumbs[$season->getName()] = $this->sf->get('urlService')->tfPath($season);
-                    break;
-
-                case Season::class:
-                    if ($element->getId() != $currentSeason->getId()) {
-                        $seasonBack = $currentSeason;
-                    }
-
-                    $breadcrumbs[$element->getName()] = '';
-                    break;
-
-                case Tag::class:
-                    $breadcrumbs[$element->getTitle()] = '';
-                    break;
-
-                default:
-                    $breadcrumbs[$element->getTitle()] = '';
-
-                    while (null != $element->getParent()) {
-                        $element = $element->getParent();
-                        $breadcrumbs[$element->getTitle()] = $this->sf->get('urlService')->tfPath($element);
-                    }
-                    break;
-            }
-        }
-
-        $breadcrumbs = array_reverse($breadcrumbs, true);
-
-        return $this->websiteRender('_partials/breadcrumb.html.twig', [
-            'seasonBack'  => $seasonBack,
-            'breadcrumbs' => $breadcrumbs
         ]);
     }
 

@@ -135,7 +135,7 @@ class ProductRepository extends CrudRepository
         ;
     }
 
-    public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?Season
+    public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?Product
     {
         $result = $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId');

@@ -2,12 +2,9 @@
 
 namespace App\Service\Addon;
 
-use App\Controller\Website\RouterController;
 use App\Manager\ManagerFactory;
-use App\Service\PageContext\PageContext;
 use App\Service\ServiceFactory;
 
-use App\Service\Url\UrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;

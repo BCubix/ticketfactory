@@ -68,13 +68,6 @@ class EventDateBlock
         return $this->id;
     }
 
-    public function setId(?int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getLanguageGroup(): ?Uuid
     {
         return $this->languageGroup;
@@ -105,13 +98,6 @@ class EventDateBlock
     public function getEventDates(): Collection
     {
         return $this->eventDates;
-    }
-
-    public function setEventDates(?ArrayCollection $eventDates): self
-    {
-        $this->eventDates = $eventDates;
-
-        return $this;
     }
 
     public function addEventDate(EventDate $eventDate): self

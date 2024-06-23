@@ -82,7 +82,7 @@ class ThemeManager extends AddonManager
         if (isset($settings["parameters"])) {
             $this->addParameters('theme', $themeName, $settings["parameters"]);
         }
-        
+
         if (isset($settings["url"])) {
             $this->addUrl($settings["url"]);
         }

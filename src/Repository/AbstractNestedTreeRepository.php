@@ -199,14 +199,14 @@ class AbstractNestedTreeRepository extends NestedTreeRepository
 
     public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): mixed
     {
-        $result = $this->createQueryBuilder('s')
-            ->innerJoin('s.lang', 'l', 'WITH', 'l.id = :languageId');
+        $result = $this->createQueryBuilder('o')
+            ->innerJoin('o.lang', 'l', 'WITH', 'l.id = :languageId');
 
         if ($activeFilter) {
-            $result = $result->where('s.active = 1');
+            $result = $result->where('o.active = 1');
         }
 
-        return $result->andWhere('s.slug = :slug')
+        return $result->andWhere('o.slug = :slug')
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()

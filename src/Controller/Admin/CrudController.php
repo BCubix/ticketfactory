@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Event\EventDate;
 use App\Exception\ApiException;
 use App\Manager\HookManager;
 use App\Manager\LanguageManager;
@@ -10,7 +9,6 @@ use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;

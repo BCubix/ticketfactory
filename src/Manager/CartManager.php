@@ -3,9 +3,7 @@
 namespace App\Manager;
 
 use App\Kernel;
-use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
-use App\Service\File\MimeTypeMapping;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
 use App\Entity\Event\EventPrice;
@@ -16,7 +14,6 @@ use App\Entity\Order\CartSeat;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Exception\ApiException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
@@ -454,8 +451,6 @@ class CartManager extends AbstractManager
                 return true;
             }
         }
-
-
 
         return false;
     }

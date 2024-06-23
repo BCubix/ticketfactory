@@ -49,4 +49,7 @@ INSERT INTO `parameter` (id, name, type, param_key, param_value, available_value
     (48, 'Filtrer par type', 'bool', 'core_event_type_filter', '1', NULL, '[]', 'Evènements', 'Filtres', 'xs-12 md-6 lg-4', 1),
     (49, 'Utiliser le ssl', 'bool', 'core_use_ssl', '0', NULL, '[]', 'Paramètres généraux', 'URLs', 'xs-12 md-6', 0),
     (50, 'Utiliser le cache', 'bool', 'core_use_cache', '0', NULL, '[]', 'Paramètres généraux', 'URLs', 'xs-12 md-6', 0),
-    (51, 'Nom de domaine', 'string', 'core_website_host', NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    (51, 'Nom de domaine', 'string', 'core_website_host', NULL, NULL, NULL, NULL, NULL, NULL, 1),
+    (52, 'Adresse email de test', 'string', 'core_test_email_address', 'bryanbouillot@gmail.com', NULL, NULL, 'Général', 'Email', 'xs-12 md-6', 1),
+    (53, 'Envoyer un mail de test', 'requestButton', 'core_test_email_send', '/parametres/email-test', NULL, NULL, 'Général', 'Email', 'xs-12 md-6', 1),
+    (54, 'Titre à afficher', 'string', 'core_website_title', NULL, NULL, NULL, 'Général', 'Paramètres du site', 'xs-12 md-6', 1);

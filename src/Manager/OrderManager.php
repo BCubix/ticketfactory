@@ -7,9 +7,6 @@ use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Entity\Order\Cart;
 use App\Entity\Order\CartRow;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class OrderManager extends AbstractManager
 {
