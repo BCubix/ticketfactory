@@ -5,9 +5,9 @@ namespace App\Manager;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventCategory;
 use App\Entity\Event\EventDateBlock;
-use App\Entity\Event\EventDate;
 use App\Entity\Event\EventMedia;
 use App\Entity\Event\EventPrice;
+use App\Entity\Event\EventPriceBlock;
 use App\Entity\Event\EventType;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
@@ -346,18 +346,14 @@ class EventManager extends AbstractRouterManager
         return $medias;
     }
 
-    public function getEventDatesFromEvent(Event $event): ?array
+    public function getEventDateBlocksFromEvent(Event $event): ?array
     {
-        $eventDates = $this->em->getRepository(EventDate::class)->findAllByEventForWebsite($event->getId());
-
-        return $eventDates;
+        return $this->em->getRepository(EventDateBlock::class)->findEventDateBlocksForWebsite($event->getId());
     }
 
-    public function getEventPricesFromEvent(Event $event): ?array
+    public function getEventPriceBlocksFromEvent(Event $event): ?array
     {
-        $eventPrices = $this->em->getRepository(EventPrice::class)->findAllByEventForWebsite($event->getId());
-
-        return $eventPrices;
+        return $this->em->getRepository(EventPriceBlock::class)->findEventPriceBlocksForWebsite($event->getId());
     }
 
     public function getFirstFormattedMedia($eventMedias, string $slug): ?EventMedia
@@ -493,7 +489,7 @@ class EventManager extends AbstractRouterManager
         return null;
     }
 
-    public function getCalendarData(?string $slug, Event $event, array $eventDates): mixed
+    public function getCalendarData(?string $slug, Event $event, array $eventDateBlocks): mixed
     {
         if (null === $slug) {
             $slug = (new \DateTime())->format('y-m');
@@ -503,7 +499,7 @@ class EventManager extends AbstractRouterManager
         [$beginDate, $endDate] = $this->getPeriodDates($firstDayOfMonth);
         [$prevLink, $nextLink] = $this->generateLinks($firstDayOfMonth, $event->getId());
 
-        $dates = $this->getEventArray($beginDate, $endDate, $eventDates);
+        $dates = $this->getEventArray($beginDate, $endDate, $eventDateBlocks);
         return [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates];
     }
 
@@ -522,7 +518,7 @@ class EventManager extends AbstractRouterManager
         return $maxPage;
     }
 
-    private function getDefaultParameters($filters): array
+    public function getDefaultParameters($filters): array
     {
         [$sortField, $sortOrder] = self::WEBSITE_SORTS['chronoDesc'];
         if (isset($filters['sort']) && isset(self::WEBSITE_SORTS[$filters['sort']])) {
@@ -563,8 +559,15 @@ class EventManager extends AbstractRouterManager
         return [$prevLink, $nextLink];
     }
 
-    private function getEventArray(\DateTime $beginDate, \DateTime $endDate, array $eventDates): array
+    private function getEventArray(\DateTime $beginDate, \DateTime $endDate, array $eventDateBlocks): array
     {
+        $eventDates = [];
+        foreach ($eventDateBlocks as $eventDateBlock) {
+            foreach($eventDateBlock->getEventDates() as $eventDate) {
+                $eventDates[] = $eventDate;
+            }
+        }
+
         $datesTab = [];
         $currentDate = clone $beginDate;
         while ($currentDate <= $endDate) {

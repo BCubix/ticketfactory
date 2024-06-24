@@ -12,6 +12,8 @@ class ContactController extends WebsiteController
 {
     public function index(Request $request, Page $page)
     {
+        $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
+
         $pageTypeBlocks = [];
         foreach ($page->getContents() as $content) {
             foreach ($content->getFields() as $key => $field) {
@@ -39,6 +41,7 @@ class ContactController extends WebsiteController
         }
 
         return $this->websiteRender('Contact/index.html.twig', [
+            'breadcrumbs'    => $breadcrumbs,
             'page'           => $page,
             'contact'        => $object,
             'pageTypeBlocks' => $pageTypeBlocks,

@@ -65,17 +65,17 @@ class EventController extends EventAbleController
         }
 
         $medias = $this->mf->get('event')->getMediasFromEvent($event);
-        $eventDates = $this->mf->get('event')->getEventDatesFromEvent($event);
-        $eventPrices = $this->mf->get('event')->getEventPricesFromEvent($event);
-        [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData(null, $event, $eventDates);
+        $eventDateBlocks = $this->mf->get('event')->getEventDateBlocksFromEvent($event);
+        $eventPriceBlocks = $this->mf->get('event')->getEventPriceBlocksFromEvent($event);
+        [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData(null, $event, $eventDateBlocks);
 
         return $this->websiteRender('Event/detail.html.twig', [
             'breadcrumbs'          => $breadcrumbs,
             'event'                => $event,
             'medias'               => $medias,
             'eventReservationForm' => $eventReservationForm->createView(),
-            'eventDates'           => $eventDates,
-            'eventPrices'          => $eventPrices,
+            'eventDateBlocks'      => $eventDateBlocks,
+            'eventPriceBlocks'     => $eventPriceBlocks,
             'firstDayOfMonth'      => $firstDayOfMonth,
             'beginDate'            => $beginDate,
             'endDate'              => $endDate,
@@ -100,13 +100,13 @@ class EventController extends EventAbleController
             throw $this->createNotFoundException('This event does not exist.');
         }
 
-        $eventDates = $this->mf->get('event')->getEventDatesFromEvent($event);
-        [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData($period, $event, $eventDates);
+        $eventDateBlocks = $this->mf->get('event')->getEventDateBlocksFromEvent($event);
+        [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData($period, $event, $eventDateBlocks);
 
 
         return $this->websiteRender('Event/_eventCalendar.html.twig', [
             'event'                => $event,
-            'eventDates'           => $eventDates,
+            'eventDateBlocks'      => $eventDateBlocks,
             'firstDayOfMonth'      => $firstDayOfMonth,
             'beginDate'            => $beginDate,
             'endDate'              => $endDate,
