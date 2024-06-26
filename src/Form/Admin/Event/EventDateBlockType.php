@@ -42,7 +42,6 @@ class EventDateBlockType extends AdminBaseFormType
             ])
             ->add('languageGroup',        UuidType::class,            []);
 
-
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {

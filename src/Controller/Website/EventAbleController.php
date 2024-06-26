@@ -135,8 +135,13 @@ class EventAbleController extends WebsiteController
         $eventContents = $this->eventList($contents);
         $pageContent = $this->getPageContent($page);
 
+        $contentList = [];
+        foreach ($contents as $key => $content) {
+            $contentList[lcfirst($key)] = $content;
+        }
+
         return $this->renderPage($templateName, [
-            ...$contents,
+            ...$contentList,
             ...$eventContents,
             'page' => $page,
             'pageContent' => $pageContent,
