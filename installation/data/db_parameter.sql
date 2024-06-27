@@ -52,4 +52,12 @@ INSERT INTO `parameter` (id, name, type, param_key, param_value, available_value
     (51, 'Nom de domaine', 'string', 'core_website_host', NULL, NULL, NULL, NULL, NULL, NULL, 1),
     (52, 'Adresse email de test', 'string', 'core_test_email_address', 'bryanbouillot@gmail.com', NULL, NULL, 'Général', 'Email', 'xs-12 md-6', 1),
     (53, 'Envoyer un mail de test', 'requestButton', 'core_test_email_send', '/parametres/email-test', NULL, NULL, 'Général', 'Email', 'xs-12 md-6', 1),
-    (54, 'Titre à afficher', 'string', 'core_website_title', NULL, NULL, NULL, 'Général', 'Paramètres du site', 'xs-12 md-6', 1);
+    (54, 'Titre à afficher', 'string', 'core_website_title', NULL, NULL, NULL, 'Général', 'Paramètres du site', 'xs-12 md-6', 1),
+    (55, 'Email de l\'établissement', 'string', 'core_company_email', 'bryan.bouillot@bcubix.com', NULL, NULL, 'Informations', 'Etablissement', 'xs-12 md-6', 1),
+    (56, 'Téléphone de l\'établissement', 'string', 'core_company_phone', '01 11 22 33 44', NULL, NULL, 'Informations', 'Etablissement', 'xs-12 md-6', 1),
+    (57, 'Adresse de l\'établissement', 'string', 'core_company_address', '56 Chemin des prés', NULL, NULL, 'Informations', 'Etablissement', 'xs-12 md-4', 1),
+    (58, 'Code postal de l\'établissement', 'string', 'core_company_zipcode', '77250', NULL, NULL, 'Informations', 'Etablissement', 'xs-12 md-2', 1),
+    (59, 'Ville de l\'établissement', 'string', 'core_company_city', 'Moret Sur/Seine', NULL, NULL, 'Informations', 'Etablissement', 'xs-12 md-3', 1),
+    (60, 'Pays de l\'établissement', 'string', 'core_company_country', 'France', NULL, NULL, 'Informations', 'Etablissement', 'xs-12 md-3', 1),
+    (61, 'Horaires de l\'établissement', 'openingHours', 'core_company_opening_hours', NULL, NULL, NULL, 'Informations', 'Etablissement', 'xs-12', 1),
+    (62, 'Gérer le cache', 'bool', 'core_use_cache', '1', NULL, NULL, 'Général', 'Cache', 'xs-12', 1);
