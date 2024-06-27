@@ -2,11 +2,11 @@
 
 namespace App\Service\Mail;
 
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-
 use App\Entity\Customer\Customer;
 use App\Manager\ManagerFactory;
+
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class Mailer
 {

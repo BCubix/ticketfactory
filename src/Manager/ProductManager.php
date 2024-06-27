@@ -2,11 +2,11 @@
 
 namespace App\Manager;
 
+use App\Kernel;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductCategory;
 use App\Entity\Product\ProductMedia;
-use App\Kernel;
 use App\Service\ServiceFactory;
 
 use Doctrine\ORM\EntityManagerInterface;

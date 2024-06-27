@@ -5,6 +5,7 @@ namespace App\Hook;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
 use App\Service\Addon\Hook;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class PageHook extends Hook

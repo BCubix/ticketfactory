@@ -5,7 +5,7 @@ namespace App\Manager;
 use App\Entity\Addon\Theme;
 use App\Entity\Parameter\Parameter;
 use App\Entity\Url\Url;
-use Symfony\Component\HttpFoundation\Response;
+
 use App\Exception\ApiException;
 use App\Kernel;
 use App\Service\ServiceFactory;
@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class AddonManager extends AbstractManager
 {

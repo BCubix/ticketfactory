@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Service\File\MimeTypeMapping;
+
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
