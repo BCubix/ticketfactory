@@ -86,18 +86,17 @@ class Media extends Datable
     private Collection $mediaThumbnail;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_one'])]
+    #[JMS\Groups(['a_media_all', 'a_media_one', 'a_event_one', 'a_product_one'])]
     #[ORM\ManyToOne(targetEntity: MediaCategory::class, inversedBy: 'mainMedias')]
     private $mainCategory;
 
-
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_one'])]
+    #[JMS\Groups(['a_media_all', 'a_media_one', 'a_event_one', 'a_product_one'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'mediaThumbnail')]
     private ?self $thumbnail = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_media_one'])]
+    #[JMS\Groups(['a_media_all', 'a_media_one', 'a_event_one', 'a_product_one'])]
     #[ORM\ManyToMany(targetEntity: MediaCategory::class, inversedBy: 'medias')]
     private $mediaCategories;
 

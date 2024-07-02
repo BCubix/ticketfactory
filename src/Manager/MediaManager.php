@@ -83,13 +83,8 @@ class MediaManager extends AbstractManager
     {
         $imageFormat = $this->em->getRepository(ImageFormat::class)->findOneBySlugForWebsite($keyword);
 
-        if (null === $imageFormat) {
-            return null;
-        }
-
-        $filePath = $this->getFormattedMediaPathFromFormat($media, $imageFormat);
-
-        if (!$this->checkFileFromPath($filePath)) {
+        $filePath = $this->getFormattedImageUrlFromFormat($media, $imageFormat);
+        if (null === $filePath) {
             return null;
         }
 

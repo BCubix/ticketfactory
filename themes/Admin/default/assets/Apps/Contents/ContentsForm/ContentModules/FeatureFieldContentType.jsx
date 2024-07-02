@@ -6,7 +6,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-const TYPE = 'page';
+const TYPE = 'feature';
 
 const VALIDATION_TYPE = 'string';
 const VALIDATION_LIST = [

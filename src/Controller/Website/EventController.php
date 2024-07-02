@@ -69,6 +69,8 @@ class EventController extends EventAbleController
         $eventPriceBlocks = $this->mf->get('event')->getEventPriceBlocksFromEvent($event);
         [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates] = $this->mf->get('event')->getCalendarData(null, $event, $eventDateBlocks);
 
+        $event = $this->mf->get('event')->formatEvent($event);
+
         return $this->websiteRender('Event/detail.html.twig', [
             'breadcrumbs'          => $breadcrumbs,
             'event'                => $event,
