@@ -466,6 +466,8 @@ class EventManager extends AbstractRouterManager
             if (method_exists($class, "getEventIframeLink")) {
                 return $class->getEventIframeLink($event);
             }
+        } else {
+            return $this->mf->get('ticketing')->getEventIframeLink($event);
         }
 
         return null;
@@ -485,6 +487,8 @@ class EventManager extends AbstractRouterManager
             if (method_exists($class, "getEventExternalLink")) {
                 return $class->getEventExternalLink($event);
             }
+        } else {
+            return $this->mf->get('ticketing')->getEventExternalLink($event);
         }
 
         return null;

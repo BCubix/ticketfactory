@@ -35,5 +35,5 @@ export const ParametersThemeMenu = () => {
         return <></>;
     }
 
-    return <Component.ParametersMenu theme={theme} themeParameters filter={`theme_${theme ? `${theme.name}_` : ''}`} />;
+    return <Component.ParametersMenu theme={theme} themeParameters filter={`theme_${theme ? `${theme.name}_` : ''}`} generalParameter={false} />;
 };

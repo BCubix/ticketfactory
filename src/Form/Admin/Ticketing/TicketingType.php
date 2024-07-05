@@ -65,6 +65,8 @@ class TicketingType extends AdminBaseFormType
             if (null !== $module && class_exists($className)) {
                 $event->getForm()->add('data', $className,  []);
             }
+        } else {
+            $event->getForm()->add('data', TicketingDataType::class,  []);
         }
     }
 

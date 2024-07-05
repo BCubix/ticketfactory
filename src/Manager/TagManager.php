@@ -3,7 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\Event\Tag;
-use App\Entity\Page\Page;
 
 class TagManager extends AbstractRouterManager
 {

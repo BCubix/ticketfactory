@@ -77,18 +77,22 @@ export const LogTags = (item) => {
 
     const severity = severityList[key];
 
+    if (!severity) {
+        return <></>;
+    }
+
     return (
         <Typography
             sx={{
-                color: severity.color,
-                backgroundColor: severity.bgColor,
+                color: severity?.color,
+                backgroundColor: severity?.bgColor,
                 padding: '5px',
                 borderRadius: '4px',
             }}
             component="span"
             variant="body1"
         >
-            {severity.text}
+            {severity?.text}
         </Typography>
     );
 };

@@ -10,8 +10,8 @@ return function (array $context) {
     if (file_exists(_TF_ROOT_DIR_ . '/installation') && ((isset($context['INSTALLATION_STATUS']) && $context['INSTALLATION_STATUS'] !== "installed") || !isset($context['INSTALLATION_STATUS']))) {
         require_once 'install/index.php';
     }
-    
-    if (!file_exists(_TF_ROOT_DIR_ . '/installation') || $context['INSTALLATION_STATUS'] === "installed") {
+
+    if (!file_exists(_TF_ROOT_DIR_ . '/installation') || (isset($context['INSTALLATION_STATUS']) && $context['INSTALLATION_STATUS'] === "installed")) {
         return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
     }
 };

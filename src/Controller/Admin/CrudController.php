@@ -9,6 +9,7 @@ use App\Manager\ManagerFactory;
 use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
+
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
