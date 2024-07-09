@@ -5,6 +5,7 @@ namespace App\Controller\Website;
 use App\Entity\Page\Page;
 use App\Entity\Product\Product;
 use App\Entity\Url\Url;
+use App\Form\Website\Product\ProductFilterType;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,8 +35,6 @@ class ProductController extends EventAbleController
         $request = $this->getRequest();
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
-        $products = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId());
-
         $pageContent = [];
         if (null !== $page) {
             foreach ($page->getContents() as $content) {
@@ -44,6 +43,17 @@ class ProductController extends EventAbleController
                 }
             }
         }
+
+        $filters = [];
+        $filterForm = $this->createForm(ProductFilterType::class, null);
+        $filterForm->handleRequest($request);
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $filters = $filterForm->getData();
+        }
+
+        list($products, $pagination) = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId(), $filters);
+        $topCategories = $this->mf->get('productCategory')->getTopCategories();
 
         $template = 'Product/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
@@ -54,6 +64,9 @@ class ProductController extends EventAbleController
             'page'               => $page,
             'products'           => $products,
             'pageContent'        => $pageContent,
+            'filterForm'         => $filterForm->createView(),
+            'pagination'         => $pagination,
+            'topCategories'      => $topCategories,
         ]);
     }
 
