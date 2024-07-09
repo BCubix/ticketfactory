@@ -45,11 +45,12 @@ class ProductRepository extends CrudRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function findAllForWebsite(array $filters = []): ?array
+    public function findAllForWebsite(int $languageId, array $filters = []): ?array
     {
         list($limit, $page, $sortField, $sortOrder) = $this->getWebsiteSortParameters($filters);
 
         $results = $this->createQueryBuilder('p')
+            ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
             ->where("p.active = 1");
 
         if (!empty($filters['search'])) {
@@ -79,6 +80,7 @@ class ProductRepository extends CrudRepository
         }
 
         $results = $results
+            ->setParameter('languageId', $languageId)
             ->orderBy($sortField, $sortOrder);
 
         $results = new Paginator($results);

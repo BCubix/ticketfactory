@@ -6,6 +6,7 @@ use App\Entity\Page\Page;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductCategory;
 use App\Entity\Url\Url;
+use App\Form\Website\Product\ProductFilterType;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +23,7 @@ class ProductCategoryController extends EventAbleController
         }
 
         $activeFilter = $this->getActiveFilter();
-        $contents = $this->mf->get('product')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
+        $contents = $this->mf->get('productCategory')->getObjectFromUrl($slug, $urlFormat, $activeFilter);
         if (null === $contents || !isset($contents['ProductCategory'])) {
             return new Response(null, 404);
         }
@@ -61,7 +62,7 @@ class ProductCategoryController extends EventAbleController
 
     public function detail(Page $page, array $contents, array $breadcrumbs)
     {
-        $products = $this->em->getRepository(Product::class)->findAllForWebsite(['productCategories' => [$contents['ProductCategory']->getId()]]);
+        $request = $this->getRequest();
 
         $pageContent = [];
         if (null !== $page) {
@@ -72,12 +73,31 @@ class ProductCategoryController extends EventAbleController
             }
         }
 
-        return $this->websiteRender('Website/ProductCategory/detail.html.twig', [
+        $filters = ['topCategory' => [$contents['ProductCategory']->getId()]];
+        $filterForm = $this->createForm(ProductFilterType::class, null, ['productCategory' => $contents['ProductCategory']->getId()]);
+        $filterForm->handleRequest($request);
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $filters = $filterForm->getData();
+            $filters['topCategory'] = $contents['ProductCategory']->getId();
+        }
+
+        list($products, $pagination) = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId(), $filters);
+        $topCategories = $this->mf->get('productCategory')->getTopCategories();
+
+        $template = 'Product/';
+        $template .= ($request->isXmlHttpRequest() ? '_' : '');
+        $template .= 'list.html.twig';
+
+        return $this->websiteRender($template, [
             'breadcrumbs'        => $breadcrumbs,
             "page"               => $page,
             "productCategory"    => $contents['ProductCategory'],
             'products'           => $products,
             'pageContent'        => $pageContent,
+            'filterForm'         => $filterForm->createView(),
+            'pagination'         => $pagination,
+            'topCategories'      => $topCategories,
         ]);
     }
 }
