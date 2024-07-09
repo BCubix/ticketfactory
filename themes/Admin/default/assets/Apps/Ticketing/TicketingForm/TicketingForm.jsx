@@ -46,19 +46,38 @@ export const ticketingForm = {
                 iframe: false,
                 external: true,
             },
+            initialSchema: {
+                external: (initialValues) => ({
+                    link: '',
+                    ...(initialValues?.data?.external || {}),
+                }),
+            },
             formFields: {
                 external: [
                     {
                         keyId: 'input-link',
                         style: { xs: 12, sm: 6, md: 4 },
                         input: {
-                            name: 'link',
+                            name: 'data.external.link',
                             label: 'Lien',
                             inputType: 'textField',
                             required: false,
                         },
                     },
                 ],
+            },
+            api: {
+                data: {
+                    type: 'object',
+                    subFields: {
+                        external: {
+                            type: 'object',
+                            subFields: {
+                                link: { type: 'string' },
+                            },
+                        },
+                    },
+                },
             },
         },
     },
