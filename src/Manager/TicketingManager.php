@@ -27,7 +27,6 @@ class TicketingManager extends AbstractManager
     public function getEventExternalLink(Event $event): ?string
     {
         $ticketing = $event->getTicketing();
-
         if (null === $ticketing) {
             return null;
         }
