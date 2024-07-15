@@ -3,15 +3,10 @@
 namespace App\Manager;
 
 use App\Entity\Event\Event;
-use App\Entity\Event\EventCategory;
 use App\Entity\Event\EventDateBlock;
 use App\Entity\Event\EventMedia;
 use App\Entity\Event\EventPrice;
 use App\Entity\Event\EventPriceBlock;
-use App\Entity\Event\EventType;
-use App\Entity\Event\Room;
-use App\Entity\Event\Season;
-use App\Entity\Event\Tag;
 use App\Entity\Media\ImageFormat;
 use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
@@ -109,18 +104,6 @@ class EventManager extends AbstractRouterManager
         }
 
         return $result;
-    }
-
-    protected function getContentLinkTab(): array
-    {
-        return [
-            'Event' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'EventCategory' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'Room' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Room::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'Season' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Season::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'Tag' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Tag::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-            'EventType' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(EventType::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
-        ];
     }
 
     protected function getEventLinkTab(): array

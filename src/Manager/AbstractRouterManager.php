@@ -2,6 +2,12 @@
 
 namespace App\Manager;
 
+use App\Entity\Event\Event;
+use App\Entity\Event\EventCategory;
+use App\Entity\Event\EventType;
+use App\Entity\Event\Room;
+use App\Entity\Event\Season;
+use App\Entity\Event\Tag;
 use App\Entity\Page\Page;
 use App\Entity\Url\Url;
 use App\Kernel;
@@ -57,11 +63,11 @@ class AbstractRouterManager extends AbstractManager
             return null;
         }
 
-
         // We get the main content wich corresponds to the entityClassName
         $result = [];
         $languageId = $this->getLanguageId();
         $result[$this->entityClassName] = $this->getObjectFromFormat($formatValue, $eventIdentifier, $languageId, $activeFilter);
+
         if (null === $result[$this->entityClassName]) {
             return null;
         }
@@ -90,7 +96,7 @@ class AbstractRouterManager extends AbstractManager
         $url = $urlFormat->getSlug();
 
         // We check if urlFormat has an attached page then we had its path to url
-        $attachedPage = $this->getAttachedPage($urlFormat);
+        $attachedPage = $this->getAttachedPage($urlFormat, $parameters);
         if (null !== $attachedPage) {
             $url = $this->mf->get('page')->getPageSlugPath($attachedPage) . "/" . $url;
         }
@@ -117,8 +123,8 @@ class AbstractRouterManager extends AbstractManager
         }
 
         // We set the parameters with slug and language for translated url
-        $parameters = ['slugs' => $url];
-        if (method_exists($element, 'getLang')) {
+        $parameters['slugs'] = $url;
+        if (!isset($parameters['_locale']) && method_exists($element, 'getLang')) {
             $parameters['_locale'] = $element->getLang()->getLocale();
         }
 
@@ -168,14 +174,31 @@ class AbstractRouterManager extends AbstractManager
         return $this->sf->get('urlService')->generateUrl('tf_website_global', $parameters, $absolute);
     }
 
-    public function getAttachedPage(Url $url): ?Page
+    public function getAttachedPage(Url $url, array $parameters = []): ?Page
     {
-        // We get the languageId and page to use it for translated pages
-        $languageId = $this->getLanguageId();
         $page = $url->getPage();
+
+        // If We have _locale parameter, we get the language from it
+        if (isset($parameters['_locale'])) {
+            $result = $this->mf->get('language')->getLanguageFromLocale($parameters['_locale']);
+            if (null !== $result) {
+                $languageId = $result->getId();
+            }
+        } else {
+            // We get the languageId and page to use it for translated pages
+            $languageId = $this->getLanguageId();
+        }
 
         if (null === $page) {
             return null;
+        }
+
+        // If We have _locale parameter, we get the language from it
+        if (isset($parameters['_locale'])) {
+            $result = $this->mf->get('language')->getLanguageFromLocale($parameters['_locale']);
+            if (null !== $result) {
+                $languageId = $result->getId();
+            }
         }
 
         // If page language doesn't correspond to languageId, we get the translated page
@@ -235,7 +258,14 @@ class AbstractRouterManager extends AbstractManager
 
     protected function getContentLinkTab(): array
     {
-        return [];
+        return [
+            'Event' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Event::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+            'EventCategory' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+            'Room' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Room::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+            'Season' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Season::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+            'Tag' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(Tag::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+            'EventType' => fn ($languageId, $slug, $activeFilter) => $this->em->getRepository(EventType::class)->findBySlugForWebsite($languageId, $slug, $activeFilter),
+        ];
     }
 
     protected function getObjectFormatTab(): array
@@ -261,12 +291,24 @@ class AbstractRouterManager extends AbstractManager
 
     protected function getBuildContentTab(): array
     {
-        return [];
+        return [
+            'EventCategory'     => fn ($parameters) => isset($parameters['eventCategory']) ? $parameters['eventCategory']->getSlug() : null,
+            'Season'            => fn ($parameters) => isset($parameters['season']) ? $parameters['season']->getSlug() : null,
+            'Room'              => fn ($parameters) => isset($parameters['room']) ? $parameters['room']->getSlug() : null,
+            'EventType'         => fn ($parameters) => isset($parameters['eventType']) ? $parameters['eventType']->getSlug() : null,
+            'Tag'               => fn ($parameters) => isset($parameters['tag']) ? $parameters['tag']->getSlug() : null,
+            'Content'           => fn ($parameters) => isset($parameters['content']) ? $parameters['content']->getSlug() : null,
+            'Product'           => fn ($parameters) => isset($parameters['product']) ? $parameters['product']->getSlug() : null,
+            'ProductCategory'   => fn ($parameters) => isset($parameters['productCategory']) ? $parameters['productCategory']->getSlug() : null,
+        ];
     }
 
     protected function getBuildObjectTab(): array
     {
-        return [];
+        return [
+            'id'    => fn ($parameters) => isset($parameters[lcfirst($this->entityClassName)]) ? $parameters[lcfirst($this->entityClassName)]->getId() : null,
+            'slug'    => fn ($parameters) => isset($parameters[lcfirst($this->entityClassName)]) ? $parameters[lcfirst($this->entityClassName)]->getSlug() : null,
+        ];
     }
 
     protected function getBreadCrumbTab(): array
