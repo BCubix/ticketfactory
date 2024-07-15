@@ -78,23 +78,27 @@ class ContentRepository extends CrudRepository
             ->getOneOrNullResult();
     }
 
-    public function findAllByTypeKeyword(string $keyword)
+    public function findAllByTypeKeywordForWebsite(int $languageId, string $keyword)
     {
         return $this->createQueryBuilder('c')
+            ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('c.contentType', 't')
             ->where("c.active = 1")
             ->andWhere('t.keyword = :keyword')
+            ->setParameter("languageId", $languageId)
             ->setParameter("keyword", $keyword)
             ->getQuery()
             ->getResult();
     }
 
-    public function findAllByTypeIdForWebsite(string $id)
+    public function findAllByTypeIdForWebsite(int $languageId, string $id)
     {
         return $this->createQueryBuilder('c')
+            ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('c.contentType', 't')
             ->where("c.active = 1")
             ->andWhere('t.id = :id')
+            ->setParameter("languageId", $languageId)
             ->setParameter("id", $id)
             ->getQuery()
             ->getResult();

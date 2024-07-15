@@ -37,7 +37,7 @@ class ContentController extends EventAbleController
         $contentTypes = $page->getContentTypes();
         $contents = [];
         foreach($contentTypes as $contentType) {
-            $contents = array_merge($contents, $this->mf->get('content')->getAllByTypeIdForWebsite($contentType->getId()));
+            $contents = array_merge($contents, $this->mf->get('content')->getAllByTypeIdForWebsite($this->getLanguageId(), $contentType->getId()));
         }
 
         $pageContent = [];

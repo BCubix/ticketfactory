@@ -63,13 +63,21 @@ class ContentManager extends AbstractRouterManager
         return $this->em->getRepository(Content::class)->findOneBySlugForWebsite($slug);
     }
 
-    public function getAllByTypeKeyword(string $keyword): array
+    public function getAllByTypeKeyword(?int $languageId, string $keyword): array
     {
-        return $this->em->getRepository(Content::class)->findAllByTypeKeyword($keyword);
+        if (null === $languageId) {
+            $languageId = $this->getLanguageId();
+        }
+
+        return $this->em->getRepository(Content::class)->findAllByTypeKeywordForWebsite($languageId, $keyword);
     }
 
-    public function getAllByTypeIdForWebsite(int $id): array
+    public function getAllByTypeIdForWebsite(?int $languageId, int $id): array
     {
-        return $this->em->getRepository(Content::class)->findAllByTypeIdForWebsite($id);
+        if (null === $languageId) {
+            $languageId = $this->getLanguageId();
+        }
+
+        return $this->em->getRepository(Content::class)->findAllByTypeIdForWebsite($languageId, $id);
     }
 }
