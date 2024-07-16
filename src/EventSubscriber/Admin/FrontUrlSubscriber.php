@@ -3,11 +3,11 @@
 namespace App\EventSubscriber\Admin;
 
 use App\Service\ServiceFactory;
-
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+use Doctrine\Common\Util\ClassUtils;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 
@@ -45,17 +45,17 @@ class FrontUrlSubscriber implements EventSubscriberInterface
 
     public function onPreSerialize(PreSerializeEvent $event): void
     {
-        
+
         $object = $event->getObject();
         if (gettype($object) !== "object" || !get_class($object)) {
             return;
         }
-        
-        $class = get_class($object);
+
+        $class = ClassUtils::getClass($object);
         if (!array_key_exists($class, self::URL_TYPE_CLASS) || false === self::URL_TYPE_CLASS[$class]) {
             return;
         }
-        
+
         $user = $this->security->getUser();
         $locale = $object->getLang()->getLocale();
         $frontUrl = $this->sf->get('urlService')->tfPath($object, ['u' => $user->getEmail(), 't' => substr($user->getPassword(), -8), '_locale' => $locale], RouterInterface::ABSOLUTE_PATH);

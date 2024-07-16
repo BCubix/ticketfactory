@@ -26,7 +26,7 @@ class Room extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_event_all', 'a_event_one', 'a_room_all', 'a_room_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_room_all', 'a_room_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
