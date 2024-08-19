@@ -166,15 +166,15 @@ trait SEOAble
 
         if (null !== $description) {
             if (null === $this->getMetaDescription()) {
-                $this->setMetaDescription(substr($description, 0, 500));
+                $this->setMetaDescription(mb_substr($description, 0, 500, 'UTF-8'));
             }
 
             if (null === $this->getFbDescription()) {
-                $this->setFbDescription(substr($description, 0, 500));
+                $this->setFbDescription(mb_substr($description, 0, 500, 'UTF-8'));
             }
 
             if (null === $this->getTwDescription()) {
-                $this->setTwDescription(substr($description, 0, 500));
+                $this->setTwDescription(mb_substr($description, 0, 500, 'UTF-8'));
             }
         }
     }
