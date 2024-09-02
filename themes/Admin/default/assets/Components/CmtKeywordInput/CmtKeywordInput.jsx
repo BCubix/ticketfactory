@@ -8,7 +8,16 @@ import { changeSlug } from '@Services/utils/changeSlug';
 const DEFAULT_WARNING_MESSAGE = "Ce champ est utilisé par le thème pour repérer cet élément. Modifier cette valeur risque de perturber l'affichage de votre site.";
 const DEFAULT_LABEL = 'Mot-clé';
 
-export const CmtKeywordInput = ({ values, setFieldValue, name, warningMessage = DEFAULT_WARNING_MESSAGE, label = DEFAULT_LABEL, editName = 'editKeyword', disabled = false }) => {
+export const CmtKeywordInput = ({
+    values,
+    setFieldValue,
+    name,
+    warningMessage = DEFAULT_WARNING_MESSAGE,
+    label = DEFAULT_LABEL,
+    editName = 'editKeyword',
+    disabled = false,
+    useSluggable = true,
+}) => {
     return (
         <Box
             sx={{ marginTop: 4, fontSize: 12, cursor: 'pointer', color: (theme) => theme.palette.info.main }}
@@ -37,7 +46,7 @@ export const CmtKeywordInput = ({ values, setFieldValue, name, warningMessage = 
                     value={values[name]}
                     onChange={(e) => setFieldValue(name, e.target.value)}
                     onBlur={() => {
-                        setFieldValue(name, changeSlug(values[name]));
+                        setFieldValue(name, useSluggable ? changeSlug(values[name]) : values[name]);
                     }}
                     size="small"
                     disabled={disabled}

@@ -171,6 +171,7 @@ export const eventMainPartForm = {
                             disabled={!Boolean(props.values?.ticketing)}
                             warningMessage="Ce champ est utilisé pour identifier votre évènement auprès de votre billetterie."
                             editName="ticketingReferenceEditMode"
+                            useSluggable={false}
                         />
                     ),
                 },
