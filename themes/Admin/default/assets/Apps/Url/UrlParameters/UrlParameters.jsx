@@ -116,8 +116,8 @@ export const UrlParameters = ({ parametersNameList = Crud.url.list.parameterList
                             };
                         })}
                     />
-                    <Box display="flex" justifyContent="flex-end">
-                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
+                    <Box className="block-active">
+                        <Button type="submit" variant="contained" disabled={isSubmitting}>
                             Enregistrer
                         </Button>
                     </Box>

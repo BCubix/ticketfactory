@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 
 export const CmtActiveBlock = ({ values, setFieldValue, isSubmitting, initialValues, formCrud, createMode, checkFormErrors, submitForm, ...props }) => {
     return (
-        <Box className="flex row-end padding-top-3 padding-bottom-2">
+        <Box className="block-active">
             {formCrud?.submitLine?.activeInput && <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text={formCrud?.submitLine?.activeLabel} />}
 
             <Button

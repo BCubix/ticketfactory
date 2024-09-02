@@ -17,13 +17,20 @@
         padding-bottom: 12px;
     }
 
-    &-activefield {
-        padding-top: 4px;
-        flex-direction: column;
+    &-active {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 12px;
+        padding-bottom: 8px;
 
-        @include for-size('sm') {
-            padding-top: 0;
-            flex-direction: row;
+        &field {
+            padding-top: 4px;
+            flex-direction: column;
+
+            @include for-size('sm') {
+                padding-top: 0;
+                flex-direction: row;
+            }
         }
     }
 }
