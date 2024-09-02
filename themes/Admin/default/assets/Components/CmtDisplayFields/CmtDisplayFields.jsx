@@ -147,6 +147,7 @@ const TypeObj = {
                                             values={values}
                                             fields={props?.fields}
                                             baseName={`${props.baseName || ''}${getName(props)}.${index}.`}
+                                            index={index}
                                         />
                                     </Grid>
                                 </Box>

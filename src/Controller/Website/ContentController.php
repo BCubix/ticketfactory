@@ -68,8 +68,8 @@ class ContentController extends EventAbleController
 
         $pageContent = [];
         if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
+            foreach ($page->getContents() as $pageContentElement) {
+                foreach ($pageContentElement->getFields() as $key => $field) {
                     $pageContent[$key] = $field;
                 }
             }

@@ -55,7 +55,7 @@ export const initTab = () => {
         'mediasTabList',
         [
             {
-                label: "Formats d'images",
+                label: 'Emplacements de média',
                 component: <Component.ImageFormatsList />,
                 path: Constant.IMAGE_FORMATS_BASE_PATH,
             },

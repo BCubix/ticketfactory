@@ -68,6 +68,7 @@ export const eventMainPartForm = {
                         id: 'description',
                     },
                 },
+
                 ({ roomsList }) => {
                     if (roomsList.length === 0) {
                         return null;
@@ -89,6 +90,7 @@ export const eventMainPartForm = {
                         },
                     };
                 },
+
                 ({ seasonsList }) => {
                     if (seasonsList.length === 0) {
                         return null;

@@ -207,6 +207,16 @@ class EventRepository extends CrudRepository
             ->getOneOrNullResult();
     }
 
+    public function findOneByIdForWebsite(int $eventId): ?Event
+    {
+        return $this->createQueryBuilder('e')
+            ->where("e.id = :eventId")
+            ->andWhere("e.active = 1")
+            ->setParameter("eventId", $eventId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findAllForSitemap(): array
     {
         return $this->createQueryBuilder('e')

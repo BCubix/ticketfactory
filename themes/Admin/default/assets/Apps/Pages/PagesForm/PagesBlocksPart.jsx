@@ -89,7 +89,14 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
             return;
         }
 
-        push({ name: pageBlock.name, saveAsModel: false, columns: [...pageBlock.columns], lang: pageBlock.lang?.id || '', languageGroup: pageBlock?.languageGroup || '' });
+        push({
+            name: pageBlock.name,
+            saveAsModel: false,
+            columns: [...pageBlock.columns],
+            blockType: pageBlock.blockType,
+            lang: pageBlock.lang?.id || '',
+            languageGroup: pageBlock?.languageGroup || '',
+        });
         resetChoice();
         close();
     };

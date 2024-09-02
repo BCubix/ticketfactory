@@ -14,7 +14,7 @@ import { imageFormatsInitialSchema, imageFormatsValidationSchema, imageFormatsFo
 
 export const imageFormatsEditCrud = {
     form: {
-        title: "Modification d'un format d'image",
+        title: "Modification d'un emplacement de média",
         initialSchema: imageFormatsInitialSchema,
         validationSchema: imageFormatsValidationSchema,
     },

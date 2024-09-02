@@ -56,6 +56,19 @@ class FeatureRepository extends CrudRepository
             ->getOneOrNullResult();
     }
 
+    public function findOneByNameForAdmin(string $name)
+    {
+        return $this->createQueryBuilder('f')
+            ->addSelect("fv")
+            ->leftJoin('f.featureValues', 'fv', 'WITH', "fv.custom = 0")
+            ->where('f.name = :name')
+            ->setParameter('name', $name)
+            ->orderBy('f.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findOneByKeywordForWebsite(string $keyword, ?int $categoryId)
     {
         $result = $this->createQueryBuilder('f')

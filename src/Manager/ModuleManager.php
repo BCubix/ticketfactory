@@ -341,4 +341,14 @@ class ModuleManager extends AddonManager
 
         return $moduleConfig->{$functionName}(...$args);
     }
+
+    public function isModuleActive(string $name): bool
+    {
+        $module = $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($name);
+        if (null === $module) {
+            return false;
+        }
+
+        return $module->isActive();
+    }
 }

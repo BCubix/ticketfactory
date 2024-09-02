@@ -50,12 +50,12 @@ export const constructFormData = ({ values, dataFields, formData = null, ...prop
     Object.entries(dataFields).map(([key, field]) => {
         if (field?.function) {
             field.function({ values, field, dataFields, key, formData, ...props });
-        }
+        } else {
+            let func = field?.type ? DATA_TYPE[field.type] : null;
 
-        let func = field?.type ? DATA_TYPE[field.type] : null;
-
-        if (func) {
-            func({ key, values, field, dataFields, formData, ...props });
+            if (func) {
+                func({ key, values, field, dataFields, formData, ...props });
+            }
         }
     });
 

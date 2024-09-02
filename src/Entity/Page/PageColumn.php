@@ -11,27 +11,27 @@ class PageColumn
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private mixed $content = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private ?int $xs = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private ?int $s = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private ?int $m = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private ?int $l = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private ?int $xl = null;
 
 

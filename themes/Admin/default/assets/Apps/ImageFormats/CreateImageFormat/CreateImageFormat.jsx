@@ -14,7 +14,7 @@ import { imageFormatsInitialSchema, imageFormatsValidationSchema, imageFormatsFo
 
 export const imageFormatsCreateCrud = {
     form: {
-        title: "Creation d'un format d'image",
+        title: "Creation d'un emplacement de média",
         initialSchema: imageFormatsInitialSchema,
         validationSchema: imageFormatsValidationSchema,
     },

@@ -2,6 +2,7 @@
 
 namespace App\Service\Mail;
 
+use App\Entity\ContactRequest\ContactRequest;
 use App\Entity\Customer\Customer;
 use App\Manager\ManagerFactory;
 
@@ -72,6 +73,29 @@ class Mailer
                 'customer' => $customer,
                 'path'     => $path
             ]);
+
+        $this->mailer->send($message);
+    }
+
+    public function sendContactRequestEmail(ContactRequest $object): void
+    {
+        $emailTemplate = $this->mf->get("theme")->getWebsiteTemplatesPath() . "Email/contact-request.html.twig";
+        $sender = $this->mf->get("parameter")->getCoreParameter("email_sender");
+        $receiver = $this->mf->get("parameter")->getCoreParameter("email_contact_request_receiver");
+
+        if (null === $sender || null === $receiver) {
+            return;
+        }
+
+        $message = (new TemplatedEmail())
+            ->from($sender)
+            ->to($receiver)
+            ->subject("Demande de contact")
+            ->htmlTemplate($emailTemplate)
+            ->context([
+                'message' => $object
+            ])
+        ;
 
         $this->mailer->send($message);
     }

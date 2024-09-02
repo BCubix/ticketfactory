@@ -123,6 +123,8 @@ class EventAbleController extends WebsiteController
                 }
             }
         }
+
+        return $pageContent;
     }
 
     protected function renderPage(string $templateName, array $contents)

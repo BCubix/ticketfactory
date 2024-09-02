@@ -1,23 +1,24 @@
 export const copyData = (data) => {
-    const newData = {};
+    let newData = {};
 
-    Object.entries(data).map(([key, value]) => {
-        if (null !== value && Array.isArray(value)) {
-            let arr = [];
-
-            value.forEach((el, index) => {
-                arr.push(copyData(el));
-            });
-
-            newData[key] = arr;
-        } else if (null !== value && typeof value === 'object') {
-            newData[key] = copyData(value);
-        } else if (null !== value && typeof value === 'function') {
-            newData[key] = value;
-        } else {
-            newData[key] = value !== null ? value : '';
-        }
-    });
+    if (data !== null && Array.isArray(data)) {
+        newData = [...data.map((el) => copyData(el))];
+    } else if (typeof data === 'function') {
+        return data;
+    } else {
+        Object.entries(data).forEach(([key, value]) => {
+            if (value !== null && Array.isArray(value)) {
+                let arr = value.map((el) => copyData(el));
+                newData[key] = arr;
+            } else if (value !== null && typeof value === 'object') {
+                newData[key] = copyData(value);
+            } else if (typeof value === 'function') {
+                newData[key] = value;
+            } else {
+                newData[key] = value !== null ? value : '';
+            }
+        });
+    }
 
     return newData;
 };

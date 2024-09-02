@@ -40,17 +40,17 @@ class PageBlock extends Datable
 
     #[Assert\NotNull(message: 'Cet élément doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column]
     private ?bool $saveAsModel = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(type: Types::INTEGER)]
     private $blockType;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(type: 'json')]
     private array $columns = [];
 

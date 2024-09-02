@@ -4,7 +4,6 @@ namespace App\Entity\SEOAble;
 
 use App\Entity\Media\Media;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
