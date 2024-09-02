@@ -74,15 +74,15 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
             >
                 {({ values, errors, touched, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
                     <Box component="form" onSubmit={handleSubmit}>
-                        <DialogContent dividers sx={{ padding: 5 }}>
+                        <DialogContent dividers padding={5}>
                             <Typography component="h1" variant="h4">
                                 Générer des dates selon la règle:
                             </Typography>
 
-                            <Box className="flex" flexWrap={'wrap'} alignItems="center" marginTop={5}>
+                            <Box className="flex wrap align-center margin-top-5">
                                 <Typography marginRight={5}>Tous les </Typography>
 
-                                <FormControl sx={{ maxWidth: 100 }} fullWidth>
+                                <FormControl className='max-width-100' fullWidth>
                                     <Select
                                         labelId={'days-choice-label'}
                                         variant={'standard'}
@@ -156,7 +156,7 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
                         </DialogContent>
 
                         <DialogActions>
-                            <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                            <Box className="flex row-between align-center fullwidth">
                                 <Button color="error" onClick={() => setOpen(null)} id="cancelDialog">
                                     Annuler
                                 </Button>

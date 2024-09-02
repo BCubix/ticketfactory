@@ -65,7 +65,7 @@ export const HooksList = () => {
     return (
         <>
             <Component.PageWrapper>
-                <Box display="flex" justifyContent="space-between">
+                <Box className="flex row-between">
                     <Component.CmtPageTitle>Hooks</Component.CmtPageTitle>
                     <Component.CreateButton variant="contained" onClick={() => navigate(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH)}>
                         Nouveau
@@ -76,7 +76,7 @@ export const HooksList = () => {
                 ))}
             </Component.PageWrapper>
             <Component.DeleteDialog open={deleteDialog !== null} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDisable(...deleteDialog)} deleteText="Désactiver">
-                <Box textAlign="center" py={3}>
+                <Box className="block-delete">
                     <Typography>Êtes-vous sûr de vouloir désactiver ce hook ?</Typography>
 
                     <Typography>Cette action est irréversible.</Typography>

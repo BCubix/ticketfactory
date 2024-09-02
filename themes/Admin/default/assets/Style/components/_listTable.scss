@@ -1,0 +1,43 @@
+@import '../base/breakpoints';
+
+.list {
+    &-table {
+        min-width: 1024px;
+        width: 100%;
+        margin-top: 20px;
+        transition: 0.3s;
+
+        &-head {
+            width: 175px;
+        }
+
+        &-drag {
+            width: 5%;
+        }
+    }
+
+    &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        @include for-size('xs') {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+    }
+
+    &-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        flex-direction: column;
+        gap: 8px;
+
+        @include for-size('md') {
+            flex-direction: row;
+            gap: 0;
+        }
+    }
+}

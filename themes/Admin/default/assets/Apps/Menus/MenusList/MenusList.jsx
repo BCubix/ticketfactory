@@ -157,7 +157,7 @@ export const menusEditCrud = {
                                 formCrud={Crud.menus.edit}
                             />
 
-                            <Box className="flex row-between" sx={{ mt: 3, mb: 2 }}>
+                            <Box className="menus-footer">
                                 <Button variant="outlined" disabled={isSubmitting} color="error" onClick={() => setDeleteDialog(!deleteDialog)} id="deleteMenuButton">
                                     Supprimer
                                 </Button>

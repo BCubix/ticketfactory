@@ -11,6 +11,7 @@ import {
     DialogTitle,
     Drawer,
     FormControl,
+    IconButton,
     InputLabel,
     List,
     ListItem,
@@ -21,6 +22,8 @@ import {
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -98,7 +101,7 @@ export const ContentsList = () => {
     const theme = useTheme();
     const { contentData, contentDataLoading, contentDataError, contentTypeKey } = useSelector(contentsSelector);
     const [loaded, setLoaded] = useState(false);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= theme.breakpoints.values.md);
 
     useEffect(() => {
         if (!contentData && !contentDataLoading && !contentDataError) {
@@ -172,20 +175,40 @@ export const ContentsList = () => {
 
     return (
         <>
-            <Box marginRight={`${contentMargin}px`}>
+            <Box marginRight={{ xs: 0, md: `${contentMargin}px` }}>
                 {getContentTypeItem && getContentTypeItem?.component && <getContentTypeItem.component />}
                 {getContentTypeItem && getContentTypeItem?.type === 'contentType' && !getContentTypeItem?.component && (
-                    <Component.ContentCrudList
-                        listCrud={{
-                            ...Crud?.contents?.list,
-                            dataList: () => contentData[contentTypeKey]?.contents,
-                            links: {
-                                ...Crud?.contents?.list.links,
-                                new: () => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentType=${contentData[contentTypeKey]?.contentType?.id}`,
-                            },
-                        }}
-                        objectData={contentData[contentTypeKey] || {}}
-                    />
+                    <Box>
+                        <IconButton
+                            edge="start"
+                            color="primary"
+                            aria-label="open right drawer"
+                            sx={{
+                                position: 'absolute',
+                                top: `${theme.layout.header.height}px`,
+                                right: 0,
+                                zIndex: 3,
+                                margin: 2,
+                            }}
+                            onClick={() => {
+                                setSidebarOpen(!sidebarOpen);
+                            }}
+                        >
+                            {sidebarOpen ? <MenuOpenIcon /> : <MenuIcon />}
+                        </IconButton>
+
+                        <Component.ContentCrudList
+                            listCrud={{
+                                ...Crud?.contents?.list,
+                                dataList: () => contentData[contentTypeKey]?.contents,
+                                links: {
+                                    ...Crud?.contents?.list.links,
+                                    new: () => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentType=${contentData[contentTypeKey]?.contentType?.id}`,
+                                },
+                            }}
+                            objectData={contentData[contentTypeKey] || {}}
+                        />
+                    </Box>
                 )}
             </Box>
 
@@ -201,6 +224,7 @@ export const ContentsList = () => {
                         height: `calc(100% - ${theme.layout.header.height}px)`,
                         marginTop: `${theme.layout.header.height}px`,
                     },
+                    zIndex: 2,
                 }}
                 anchor="right"
                 variant="permanent"

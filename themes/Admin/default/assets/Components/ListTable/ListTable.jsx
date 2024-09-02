@@ -85,7 +85,7 @@ export const ListTable = ({
 
     return (
         <TableContainer>
-            <Table sx={{ minWidth: 650, marginTop: 5, transition: '.3s' }}>
+            <Table className="list-table">
                 <Component.ListTableHead
                     table={table}
                     filters={filters}

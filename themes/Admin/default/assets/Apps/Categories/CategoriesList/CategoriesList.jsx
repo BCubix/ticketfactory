@@ -316,7 +316,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Box className="list-header">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     {listCrud?.listTitle}
                                 </Typography>

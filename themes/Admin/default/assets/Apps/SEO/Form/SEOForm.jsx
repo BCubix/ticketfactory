@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
+import { themeBreakpointsVariables } from '@Services/themes/variables/themeVariables';
 
 export const SeoInitialValues = {
     metaTitle: (initValues) => initValues?.metaTitle || '',
@@ -52,7 +53,9 @@ export const SeoInitialFormInputs = {
                 name: 'seo.socialImage',
                 label: 'Social Image',
                 inputType: 'cmtImage',
-                width: '25%',
+                sx: {
+                    width: { xs: '100%', sm: '50%', md: '33%', lg: '25%' },
+                },
             },
         },
         {
@@ -202,7 +205,7 @@ export const IndexSeoInitialFormInputs = {
         ...SeoInitialFormInputs.fields,
         {
             keyId: 'input-indexed',
-            style: { xs: 12, sm: 4, md: 2, sx: { display: 'flex', alignItems: 'center' } },
+            style: { xs: 12, md: 4, lg: 2, sx: { display: 'flex', alignItems: 'center' } },
             input: ({ formCrud }) => {
                 return {
                     name: 'seo.indexed',

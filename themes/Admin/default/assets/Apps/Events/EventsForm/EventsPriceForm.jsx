@@ -72,10 +72,10 @@ export const EventsPriceForm = ({ values, touched, errors, handleChange, handleB
     return (
         <FieldArray name={`eventPriceBlocks[${blockIndex}].eventPrices`}>
             {({ remove, push }) => (
-                <Box sx={{ padding: 2 }}>
+                <Box className="padding-2">
                     <Grid container spacing={6}>
                         {values?.eventPriceBlocks[blockIndex]?.eventPrices?.map((item, index) => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                            <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
                                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
                                     <CardContent sx={{ position: 'relative' }}>
                                         <Grid container spacing={4}>
@@ -106,7 +106,7 @@ export const EventsPriceForm = ({ values, touched, errors, handleChange, handleB
                         ))}
                     </Grid>
 
-                    <Box pt={4} pl={4} display="flex" justifyContent={'flex-end'}>
+                    <Box className="flex row-end padding-top-4 padding-left-4">
                         <Component.AddBlockButton
                             size="small"
                             color="primary"

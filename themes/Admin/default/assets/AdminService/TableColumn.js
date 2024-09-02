@@ -9,7 +9,7 @@ const TableColumnObj = {
     ModulesList: [
         {
             label: 'Logo',
-            width: '7%',
+            width: '67px',
             renderFunction: (item) => {
                 try {
                     return <Avatar src={`/admin/api/modules/module-image/${item.name}`} />;
@@ -22,10 +22,10 @@ const TableColumnObj = {
                 );
             },
         },
-        { name: 'displayName', label: 'Nom', width: '10%' },
-        { name: 'version', label: 'Version', width: '5%' },
-        { name: 'author.name', label: 'Auteur', width: '10%' },
-        { name: 'description', label: 'Description', width: '58%' },
+        { name: 'displayName', label: 'Nom', width: '20%' },
+        { name: 'version', label: 'Version', width: '100px' },
+        { name: 'author.name', label: 'Auteur', width: '15%' },
+        { name: 'description', label: 'Description', width: '50%' },
     ],
 };
 

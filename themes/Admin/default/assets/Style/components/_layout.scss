@@ -1,0 +1,69 @@
+@import '../base/breakpoints';
+
+.layout {
+    flex: 1;
+    min-width: 0;
+    position: 'relative';
+    height: '100%';
+
+    &-header {
+        position: fixed;
+        width: 100%;
+    }
+
+    &-body {
+        display: flex;
+        min-width: 0;
+        flex: 1;
+        min-height: 100%;
+
+        &-main {
+            display: flex;
+            min-width: 0;
+            flex: 1;
+            flex-direction: column;
+            padding-bottom: 16px;
+        }
+    }
+}
+
+.toolbar {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.085);
+
+    &-left {
+        display: flex;
+        align-items: center;
+        padding-inline: 8px;
+        padding-block: 16px;
+    }
+
+    &-right {
+        display: flex;
+    }
+
+    &-button-label {
+        padding-left: 12px;
+        display: none;
+
+        @include for-size('md') {
+            display: block;
+        }
+    }
+
+    &-profile {
+        display: flex;
+        margin-left: 0;
+
+        @include for-size('md') {
+            margin-left: 80px;
+        }
+    }
+
+    &-logo {
+        height: 100%;
+        max-width: 150px;
+    }
+}

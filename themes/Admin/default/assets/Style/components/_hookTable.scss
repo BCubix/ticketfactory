@@ -1,0 +1,38 @@
+@import '../base/breakpoints';
+
+.hook-table {
+    &-drag {
+        &-cell {
+            width: 64px;
+        }
+
+        &-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
+            cursor: pointer;
+        }
+    }
+
+    &-index {
+        width: 32px;
+    }
+
+    &-logo {
+        width: 75px;
+    }
+
+    &-name {
+        width: 200px;
+    }
+
+    &-description {
+        width: auto;
+    }
+
+    &-button {
+        width: 75px;
+    }
+}

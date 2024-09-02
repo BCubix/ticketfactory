@@ -6,9 +6,11 @@ import { Box } from '@mui/system';
 import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
 import { Menu } from '@/AdminService/Menu';
+import { useTheme } from '@emotion/react';
 
-export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
+export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight, closeSidebar }) => {
     const { pathname } = useLocation();
+    const theme = useTheme();
 
     const checkPath = (path, relatedLinks) => {
         let p = pathname?.split('/')?.at(2);
@@ -43,6 +45,11 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
             transitionDuration={300}
             ModalProps={{
                 keepMounted: true,
+            }}
+            onClick={() => {
+                if (innerWidth < theme.breakpoints.values.sm) {
+                    closeSidebar();
+                }
             }}
         >
             <Box sx={{ overflow: 'auto', height: '100%' }}>

@@ -59,7 +59,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
             <FieldArray name="eventDateBlocks">
                 {({ remove, push }) => (
                     <Box>
-                        <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
+                        <Box className="block-head">
                             {(!values?.multipleDateBlock || (values?.multipleDateBlock && canStopUseGroups)) && (
                                 <Component.ActionButton
                                     size="small"
@@ -103,7 +103,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                         {values?.eventDateBlocks?.map((item, index) => (
                             <Component.CmtFormBlock marginBlock={7} title={values?.multipleDateBlock ? '' : item?.name} key={index}>
                                 {values?.multipleDateBlock && (
-                                    <Box mb={4}>
+                                    <Box className="block-title">
                                         <Component.CmtTextField
                                             value={item.name}
                                             onChange={handleChange}
@@ -177,7 +177,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                     setDeleteMultiple(false);
                 }}
             >
-                <Box textAlign="center" py={3}>
+                <Box className="block-delete">
                     <Typography component="p">Êtes-vous sûr de ne plus vouloir utiliser les groupes ?</Typography>
                     <Typography component="p">Attention, seul le premier groupe ne sera pas supprimé.</Typography>
                     <Typography component="p">Cette action est irréversible.</Typography>

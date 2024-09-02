@@ -13,38 +13,27 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
         <Draggable key={index} draggableId={index.toString()} index={index} isCombineEnabled ignoreContainerClipping>
             {(provided, snapshot) => (
                 <TableRow ref={provided.innerRef} {...provided.draggableProps}>
-                    <TableCell sx={{ width: '5%' }}>
-                        <Box
-                            height="100%"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                height: 30,
-                                width: 30,
-                                cursor: 'pointer',
-                            }}
-                            {...provided.dragHandleProps}
-                        >
+                    <TableCell className="hook-table-drag-cell">
+                        <Box className="hook-table-drag-icon" {...provided.dragHandleProps}>
                             <DragHandleIcon sx={{ color: (theme) => theme.palette.crud.action.textColor }} />
                         </Box>
                     </TableCell>
-                    <TableCell sx={{ width: '3%' }}>
+                    <TableCell className="hook-table-index">
                         <Typography>{index + 1}</Typography>
                     </TableCell>
-                    <TableCell sx={{ width: '5%' }}>
+                    <TableCell className="hook-table-logo">
                         <Avatar src={module.logoUrl} />
                     </TableCell>
-                    <TableCell sx={{ width: '10%' }}>
+                    <TableCell className="hook-table-name">
                         <Typography>{module.displayName}</Typography>
                         <Typography variant="subtitle1" color="text.secondary" fontSize={13}>
                             {`v${module.version}`}
                         </Typography>
                     </TableCell>
-                    <TableCell sx={{ width: '70%' }}>
+                    <TableCell className="hook-table-description">
                         <Typography>{module.description}</Typography>
                     </TableCell>
-                    <TableCell sx={{ width: '10%' }}>
+                    <TableCell className="hook-table-button">
                         <Component.ActionFabButton
                             sx={{ marginInline: 1 }}
                             color="primary"
