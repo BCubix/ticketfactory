@@ -58,7 +58,7 @@ const ConstantObj = {
 };
 
 ConstantObj.ALL_FILE_SUPPORTED = () =>
-    `${ConstantObj.IMAGE_FILE_SUPPORTED}, ${ConstantObj.AUDIO_FILE_SUPPORTED}, ${ConstantObj.VIDEO_FILE_SUPPORTED}, ${ConstantObj.WORD_FILE_SUPPORTED}, ${ConstantObj.EXCEL_FILE_SUPPORTED}, ${ConstantObj.POWERPOINT_FILE_SUPPORTED}, ${ConstantObj.PDF_FILE_SUPPORTED}, ${ConstantObj.TEXT_FILE_SUPPORTED}`;
+    `${ConstantObj.IMAGE_FILE_SUPPORTED}, ${ConstantObj.AUDIO_FILE_SUPPORTED}, ${ConstantObj.VIDEO_FILE_SUPPORTED}, ${ConstantObj.WORD_FILE_SUPPORTED}, ${ConstantObj.EXCEL_FILE_SUPPORTED}, ${ConstantObj.POWERPOINT_FILE_SUPPORTED}, ${ConstantObj.PDF_FILE_SUPPORTED}, ${ConstantObj.TEXT_FILE_SUPPORTED}, ${ConstantObj.ZIP_FILE_SUPPORTED}`;
 
 /**
  * Constant's getter.
