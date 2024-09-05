@@ -9,8 +9,6 @@ export const SeoInitialValues = {
     socialImage: (initValues) => initValues?.socialImage || null,
     fbTitle: (initValues) => initValues?.fbTitle || '',
     fbDescription: (initValues) => initValues?.fbDescription || '',
-    twTitle: (initValues) => initValues?.twTitle || '',
-    twDescription: (initValues) => initValues?.twDescription || '',
     indexed: (initValues) => (initValues?.indexed || initValues?.indexed === false ? initValues?.indexed : true),
 };
 
@@ -22,8 +20,6 @@ export const SeoApiDataFields = {
         metaDescription: { type: 'string' },
         fbTitle: { type: 'string' },
         fbDescription: { type: 'string' },
-        twTitle: { type: 'string' },
-        twDescription: { type: 'string' },
         indexed: { type: 'boolean' },
     },
 };
@@ -139,52 +135,6 @@ export const SeoInitialFormInputs = {
                         return touched?.seo?.fbDescription ? (
                             <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <Typography component="span">{values?.seo?.fbDescription?.length} / 160</Typography>
-                            </Box>
-                        ) : (
-                            <></>
-                        );
-                    },
-                },
-            },
-        },
-        {
-            keyId: 'input-seo-twTitle',
-            style: { xs: 12, sm: 6 },
-            input: {
-                name: 'seo.twTitle',
-                label: 'Titre Twitter',
-                inputType: 'textField',
-                inputProps: {
-                    maxLength: 60,
-                },
-                custom: {
-                    helperText: ({ touched, values }) => {
-                        return touched?.seo?.twTitle ? (
-                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Typography component="span">{values?.seo?.twTitle?.length} / 60</Typography>
-                            </Box>
-                        ) : (
-                            <></>
-                        );
-                    },
-                },
-            },
-        },
-        {
-            keyId: 'input-seo-twDescription',
-            style: { xs: 12, sm: 6 },
-            input: {
-                name: 'seo.twDescription',
-                label: 'Description Twitter',
-                inputType: 'textField',
-                inputProps: {
-                    maxLength: 142,
-                },
-                custom: {
-                    helperText: ({ touched, values }) => {
-                        return touched?.seo?.twDescription ? (
-                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Typography component="span">{values?.seo?.twDescription?.length} / 142</Typography>
                             </Box>
                         ) : (
                             <></>
@@ -316,48 +266,6 @@ export const SEOForm = ({ values, setFieldValue, handleChange, handleBlur, touch
                             touched?.seo?.fbDescription && (
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     <Typography>{values?.seo?.fbDescription?.length} / 160</Typography>
-                                </Box>
-                            )
-                        }
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Component.CmtTextField
-                        label="Titre Twitter"
-                        name={`seo.twTitle`}
-                        value={values.seo?.twTitle}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        onFocus={handleBlur}
-                        error={touched?.seo?.twTitle && errors?.seo?.twTitle}
-                        inputProps={{
-                            maxLength: 60,
-                        }}
-                        helperText={
-                            touched?.seo?.twTitle && (
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <Typography>{values?.seo?.twTitle?.length} / 60</Typography>
-                                </Box>
-                            )
-                        }
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Component.CmtTextField
-                        label="Description Twitter"
-                        name={`seo.twDescription`}
-                        value={values.seo?.twDescription}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        onFocus={handleBlur}
-                        error={touched?.seo?.twDescription && errors?.seo?.twDescription}
-                        inputProps={{
-                            maxLength: 142,
-                        }}
-                        helperText={
-                            touched?.seo?.twDescription && (
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <Typography>{values?.seo?.twDescription?.length} / 142</Typography>
                                 </Box>
                             )
                         }

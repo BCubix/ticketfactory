@@ -329,13 +329,6 @@ class EventCategory extends Datable
         return $this;
     }
 
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function completeSeo()
-    {
-        $this->completeFields($this->getName());
-    }
-
     /**
      * @return Collection<int, Voucher>
      */

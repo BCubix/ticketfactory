@@ -34,5 +34,7 @@ class ProductHook extends Hook
                 $this->em->persist($featureValue);
             }
         }
+
+        $this->mf->get('seo')->completeSeoProduct($vObject);
     }
 }

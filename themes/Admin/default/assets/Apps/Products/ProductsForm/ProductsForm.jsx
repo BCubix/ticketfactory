@@ -326,8 +326,6 @@ export const ProductsForm = ({ handleSubmit, initialValues = null, translateInit
                     socialImage: initValues?.socialImage || null,
                     fbTitle: initValues?.fbTitle || '',
                     fbDescription: initValues?.fbDescription || '',
-                    twTitle: initValues?.twTitle || '',
-                    twDescription: initValues?.twDescription || '',
                 },
                 editSlug: false,
             }}
