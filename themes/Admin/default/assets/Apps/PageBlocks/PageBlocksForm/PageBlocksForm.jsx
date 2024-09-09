@@ -71,6 +71,17 @@ export const pageBlocksForm = {
                                 sx: { marginBottom: 6 },
                             },
                         },
+                        {
+                            keyId: 'input-class',
+                            style: { xs: 12 },
+                            input: {
+                                name: 'class',
+                                label: 'Classe du bloc',
+                                inputType: 'textField',
+                                required: false,
+                                sx: { marginBottom: 6 },
+                            },
+                        },
                     ],
                 },
                 {

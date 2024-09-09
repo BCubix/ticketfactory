@@ -63,6 +63,11 @@ class PageBlock extends Datable
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[ORM\Column(length: 255)]
+    private ?string $class = null;
+
 
     public function __construct()
     {
@@ -155,6 +160,18 @@ class PageBlock extends Datable
     public function setLang(?Language $lang): self
     {
         $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(string $class): self
+    {
+        $this->class = $class;
 
         return $this;
     }

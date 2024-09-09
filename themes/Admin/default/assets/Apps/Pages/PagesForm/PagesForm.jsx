@@ -55,10 +55,12 @@ export const pagesInitialSchema = {
     pageBlocks: (initValues) =>
         initValues?.pageBlocks?.map((pageBlock) => ({
             name: pageBlock.name,
+            class: pageBlock.class || '',
             blockType: pageBlock?.blockType || 0,
             saveAsModel: false,
             columns: pageBlock?.columns?.map((column) => ({
                 content: column?.content,
+                class: column?.class || '',
                 xs: column?.xs || 12,
                 s: column?.s || 12,
                 m: column?.m || 12,
@@ -108,6 +110,7 @@ export const pagesForm = {
                 function: ({ values, formData }) => {
                     values.pageBlocks.forEach((block, index) => {
                         formData.append(`pageBlocks[${index}][name]`, block.name);
+                        formData.append(`pageBlocks[${index}][class]`, block.class || '');
                         formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
                         formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
                         formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
@@ -115,6 +118,7 @@ export const pagesForm = {
 
                         block.columns.forEach((column, columnIndex) => {
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, block?.blockType === 1 ? column?.content?.id || '' : column.content || '');
+                            formData.append(`pageBlocks[${index}][columns][${columnIndex}][class]`, column?.class || '');
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);

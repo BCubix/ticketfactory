@@ -3,6 +3,7 @@ import { Grid, IconButton, Typography } from '@mui/material';
 import { FieldArray } from 'formik';
 import { Component } from '@/AdminService/Component';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SettingsIcon from '@mui/icons-material/Settings';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
 import { Box } from '@mui/system';
@@ -10,6 +11,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setFieldTouched, remove, baseName }) => {
     const [size, setSize] = useState(column[media]);
+    const [showClass, setShowClass] = useState(false);
 
     useEffect(() => {
         setSize(column[media]);
@@ -118,16 +120,48 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                                 </Typography>
                             </Box>
 
-                            <Component.DeleteFabButton
-                                size="small"
-                                id={`${baseName.replaceAll('.', '-')}-columns-${index}-remove`}
-                                sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0 }}
-                                onClick={() => {
-                                    remove(index);
+                            <Component.CmtTextField
+                                value={column?.class}
+                                onBlur={() => setFieldTouched(`${baseName}columns.${index}.class`, true, false)}
+                                onChange={(e) => {
+                                    setFieldValue(`${baseName}columns.${index}.class`, e.target.value);
                                 }}
-                            >
-                                <DeleteIcon />
-                            </Component.DeleteFabButton>
+                                label="Classe de la colonne"
+                                name={`${baseName}columns.${index}.class`}
+                                sx={{
+                                    display: showClass ? 'inline-flex' : 'none',
+                                    marginInline: 3,
+                                    width: 150,
+                                    marginBlock: 0,
+                                    '& input': {
+                                        padding: 0,
+                                        fontSize: 14,
+                                    },
+                                }}
+                            />
+
+                            <Box display="flex" gap={2}>
+                                <Component.EditFabButton
+                                    size="small"
+                                    id={`${baseName.replaceAll('.', '-')}-columns-${index}-more`}
+                                    sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0 }}
+                                    onClick={() => {
+                                        setShowClass(!showClass);
+                                    }}
+                                >
+                                    <SettingsIcon />
+                                </Component.EditFabButton>
+                                <Component.DeleteFabButton
+                                    size="small"
+                                    id={`${baseName.replaceAll('.', '-')}-columns-${index}-remove`}
+                                    sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0 }}
+                                    onClick={() => {
+                                        remove(index);
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </Component.DeleteFabButton>
+                            </Box>
                         </Box>
                         <Component.LightEditorFormControl className="pageBlockEditor" id={`${baseName.replaceAll('.', '-')}columns-${index}-contentControl`}>
                             <Component.LightEditor

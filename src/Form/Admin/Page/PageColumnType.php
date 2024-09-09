@@ -9,6 +9,7 @@ use App\Entity\Media\Media;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -19,6 +20,7 @@ class PageColumnType extends AdminBaseFormType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('class',                TextType::class,            ['required' => false, 'empty_data' => ''])
             ->add('xs',                   IntegerType::class,         [])
             ->add('s',                    IntegerType::class,         [])
             ->add('m',                    IntegerType::class,         [])

@@ -15,6 +15,7 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
@@ -156,6 +157,7 @@ const DisplayAddPageBlockModal = ({ push, isOpen, close, initValues }) => {
 export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFieldTouched, handleChange, handleBlur, initValues }) => {
     const [displayAddModal, setDisplayAddModal] = useState(false);
     const [view, setView] = useState('xl');
+    const [showClass, setShowClass] = useState(false);
 
     const handleMoveMenuElement = (index, move) => {
         let newList = values.pageBlocks;
@@ -201,6 +203,29 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                             name={`pageBlocks.${index}.name`}
                                             error={getNestedFormikError(touched?.pageBlocks, errors?.pageBlocks, index, 'name')}
                                         />
+                                    </Grid>
+
+                                    <Grid item xs={12} sm={5} display="flex" alignItems="center" gap={2}>
+                                        <Component.CmtTextField
+                                            value={pageBlock.class}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            label="Classe du bloc"
+                                            name={`pageBlocks.${index}.class`}
+                                            sx={{
+                                                display: showClass ? 'inline-flex' : 'none',
+                                            }}
+                                        />
+                                        <Component.EditFabButton
+                                            size="small"
+                                            id={`pageBlocks-${index}-more`}
+                                            sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0, marginLeft: 'auto' }}
+                                            onClick={() => {
+                                                setShowClass(!showClass);
+                                            }}
+                                        >
+                                            <SettingsIcon />
+                                        </Component.EditFabButton>
                                     </Grid>
 
                                     {pageBlock?.blockType === 0 && (

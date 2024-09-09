@@ -28,7 +28,8 @@ class PageBlockSerializer
                 's'       => $column->getS(),
                 'm'       => $column->getM(),
                 'l'       => $column->getL(),
-                'xl'      => $column->getXl()
+                'xl'      => $column->getXl(),
+                'class'   => $column->getClass(),
             ];
 
             if ($pageBlock->getBlockType() == 1) { // Slider block
@@ -53,6 +54,7 @@ class PageBlockSerializer
             $column->setM($serializedColumn['m']);
             $column->setL($serializedColumn['l']);
             $column->setXl($serializedColumn['xl']);
+            $column->setClass($serializedColumn['class'] ?? "");
 
             if ($pageBlock->getBlockType() == 1) { // Slider block
                 $id = $serializedColumn['content'];

@@ -26,6 +26,7 @@ class PageBlockType extends AdminBaseFormType
             ->add('name',                 TextType::class,            [])
             ->add('saveAsModel',          CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('blockType',            IntegerType::class,         [])
+            ->add('class',                TextType::class,            ['required' => false, 'empty_data' => ''])
             ->add('columns',              CollectionType::class,      [
                 'entry_type'   => PageColumnType::class,
                 'allow_add'    => true,
