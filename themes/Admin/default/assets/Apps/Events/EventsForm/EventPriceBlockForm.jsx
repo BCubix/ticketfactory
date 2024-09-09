@@ -54,7 +54,7 @@ export const EventsPriceBlockForm = ({
             <FieldArray name="eventPriceBlocks">
                 {({ remove, push }) => (
                     <Box>
-                        <Box pt={2} pl={4} display="flex" justifyContent={'flex-end'}>
+                        <Box className="block-head">
                             <Component.ActionButton
                                 size="small"
                                 color="primary"
@@ -95,7 +95,7 @@ export const EventsPriceBlockForm = ({
                         {values?.eventPriceBlocks?.map((item, index) => (
                             <Component.CmtFormBlock title={values?.multiplePriceBlock ? '' : item?.name} marginBlock={7} key={index}>
                                 {values?.multiplePriceBlock && (
-                                    <Box mb={4}>
+                                    <Box className="block-title">
                                         <Component.CmtTextField
                                             value={item.name}
                                             onChange={handleChange}
@@ -148,7 +148,7 @@ export const EventsPriceBlockForm = ({
                     setDeleteMultiple(false);
                 }}
             >
-                <Box textAlign="center" py={3}>
+                <Box className="block-delete">
                     <Typography component="p">Êtes-vous sûr de ne plus vouloir utiliser les groupes ?</Typography>
                     <Typography component="p">Attention, seul le premier groupe ne sera pas supprimé.</Typography>
 

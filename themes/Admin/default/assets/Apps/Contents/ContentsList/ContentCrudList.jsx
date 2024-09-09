@@ -184,7 +184,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Box className="list-header">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     {listCrud?.listTitle}{' '}
                                     {listCrud?.pagination &&
@@ -194,7 +194,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                                         } sur ${objectData?.total})`}
                                     {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
                                 </Typography>
-                                <Box display="flex" alignItems={'center'}>
+                                <Box className="flex align-center margin-left-auto">
                                     {available?.number <= 0 && (
                                         <Tooltip placement="top" title="Vous avez atteint le nombre de contenus que vous pouvez créer avec ce type de contenu.">
                                             <WarningIcon color="warning" sx={{ mr: 5 }} />

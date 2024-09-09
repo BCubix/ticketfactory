@@ -158,10 +158,10 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                     );
                 })}
 
-                <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+                <Component.CmtCard className="fullwidth margin-top-5">
                     <Component.CmtCardHeader
                         title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Box className="list-header">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     {listCrud?.listTitle}{' '}
                                     {listCrud?.pagination &&
@@ -231,7 +231,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                 <listCrud.deleteComponent deleteDialog={deleteDialog} setDeleteDialog={setDeleteDialog} handleDelete={handleDelete} {...props} />
             ) : (
                 <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                    <Box textAlign="center" py={3}>
+                    <Box className="block-delete">
                         <Typography component="p">{listCrud?.messages?.confirmationDelete}</Typography>
 
                         <Typography component="p">Cette action est irréversible.</Typography>

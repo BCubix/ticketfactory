@@ -36,9 +36,9 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
     const navigate = useNavigate();
 
     return (
-        <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
+        <Component.CmtCard className="menus-header">
             <CardContent>
-                <Typography component="span" variant="body1" display={'flex'} alignItems={'center'}>
+                <Typography component="span" variant="body1" className="menus-header-content">
                     {list?.length > 1 && (
                         <>
                             Selectionner votre menu : <SelectMenu selectedMenu={selectedMenu} list={list} handleChange={handleChange} />

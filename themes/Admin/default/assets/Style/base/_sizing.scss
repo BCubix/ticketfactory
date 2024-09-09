@@ -1,0 +1,30 @@
+.full {
+    &height {
+        height: 100%;
+    }
+
+    &width {
+        width: 100%;
+    }
+
+    &size {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.max-width {
+    max-width: 100%;
+
+    &-50 {
+        max-width: 50px;
+    }
+
+    &-100 {
+        max-width: 100px;
+    }
+}
+
+.overflow-y {
+    overflow-y: auto;
+}

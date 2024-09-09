@@ -1,0 +1,13 @@
+@import '../base/breakpoints';
+
+.page-blocks {
+    &-toggle {
+        position: absolute;
+        top: 50%;
+        left: 0;
+
+        @include for-size('md') {
+            transform: translateY(-50%);
+        }
+    }
+}

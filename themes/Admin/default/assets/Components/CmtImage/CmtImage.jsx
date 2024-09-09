@@ -11,7 +11,7 @@ import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-export const CmtImage = ({ label, required = false, id, name, image, setFieldValue, touched, errors, width = null, height = null }) => {
+export const CmtImage = ({ label, required = false, id, name, image, setFieldValue, touched, errors, width = null, height = null, sx }) => {
     const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
     const [imagesList, setImagesList] = useState(null);
@@ -80,7 +80,7 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
             <FormLabel id={`${id}-label`} sx={{ fontSize: '12px' }} required={required}>
                 {label}
             </FormLabel>
-            <Component.CmtImageCard width={width} height={height} onClick={() => setOpenModal(true)}>
+            <Component.CmtImageCard width={width} height={height} onClick={() => setOpenModal(true)} sx={sx}>
                 {image?.id && image?.documentUrl ? (
                     <Component.CmtDisplayMediaType media={image} width={'100%'} height={'auto'} />
                 ) : (

@@ -1,0 +1,9 @@
+@import '../base/breakpoints';
+
+.field {
+    &-editor {
+        @include for-size('md') {
+            height: 600px;
+        }
+    }
+}

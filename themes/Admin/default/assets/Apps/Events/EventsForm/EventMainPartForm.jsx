@@ -122,7 +122,7 @@ export const eventMainPartForm = {
                         keyId: 'input-event-type',
                         style: {
                             xs: 12,
-                            sm: 6,
+                            md: 6,
                         },
                         input: {
                             name: 'eventType',
@@ -146,7 +146,8 @@ export const eventMainPartForm = {
                     keyId: 'input-ticketing',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     input: {
                         name: 'ticketing',
@@ -161,7 +162,8 @@ export const eventMainPartForm = {
                     keyId: 'input-ticketing',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     component: (props) => (
                         <Component.CmtKeywordInput
@@ -179,7 +181,8 @@ export const eventMainPartForm = {
                     keyId: 'input-display-booking-button',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     input: {
                         name: 'displayBookingButton',
@@ -192,7 +195,8 @@ export const eventMainPartForm = {
                     keyId: 'input-event-length',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     input: {
                         name: 'eventLength',

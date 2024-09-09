@@ -220,12 +220,12 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
             <Component.CmtCard sx={{ height: '100%', mt: 5 }}>
                 <Component.CmtCardHeader
                     title={
-                        <Box display="flex" justifyContent={'space-between'} alignItems="center">
+                        <Box className="list-header">
                             <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                 {listCrud?.title}
                                 {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
                             </Typography>
-                            <Box sx={{ display: 'flex' }}>
+                            <Box className="flex margin-left-auto">
                                 <Component.CreateButton variant="contained" onClick={() => setAddIframeDialog(true)} id="addIframeMediaButton" sx={{ marginRight: 3 }}>
                                     Ajouter un iframe
                                 </Component.CreateButton>

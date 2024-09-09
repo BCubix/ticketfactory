@@ -52,7 +52,8 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                 <Grid
                     item
                     key={index}
-                    xs={column[media]}
+                    xs={12}
+                    md={column[media]}
                     sx={{ minHeight: 150, marginTop: 4, display: 'flex', overflowX: 'hidden' }}
                     ref={provided.innerRef}
                     {...provided.draggableProps}

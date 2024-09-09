@@ -1,4 +1,4 @@
 export const sidebarConfig = {
-    open: true,
+    open: window.innerWidth >= 1280,
     mobileCheck: false,
 };

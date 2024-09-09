@@ -1,0 +1,133 @@
+$spacing: 4px;
+
+.margin {
+    margin: $spacing;
+
+    @for $i from 2 through 5 {
+        &-#{$i} {
+            margin: $spacing * $i;
+        }
+    }
+
+    &-top {
+        margin-top: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                margin-top: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            margin-top: auto;
+        }
+    }
+
+    &-bottom {
+        margin-bottom: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                margin-bottom: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            margin-bottom: auto;
+        }
+    }
+
+    &-left {
+        margin-left: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                margin-left: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            margin-left: auto;
+        }
+    }
+
+    &-right {
+        margin-right: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                margin-right: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            margin-right: auto;
+        }
+    }
+}
+
+.padding {
+    padding: $spacing;
+
+    @for $i from 2 through 5 {
+        &-#{$i} {
+            padding: $spacing * $i;
+        }
+    }
+
+    &-top {
+        padding-top: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                padding-top: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            padding-top: auto;
+        }
+    }
+
+    &-bottom {
+        padding-bottom: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                padding-bottom: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            padding-bottom: auto;
+        }
+    }
+
+    &-left {
+        padding-left: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                padding-left: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            padding-left: auto;
+        }
+    }
+
+    &-right {
+        padding-right: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                padding-right: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            padding-right: auto;
+        }
+    }
+}

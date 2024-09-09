@@ -40,6 +40,8 @@ export const CmtTabs = ({ list, mountComponents, tabValue = 0, setTabValue = nul
                         }
                     }}
                     aria-label="Panel"
+                    variant='scrollable'
+                    scrollButtons="auto"
                 >
                     {list
                         ?.filter((el) => !el.hidden)

@@ -4,6 +4,7 @@ import { Button, Fab } from '@mui/material';
 export const CreateButton = styled(Button)`
     background-color: #ffffff;
     color: ${(props) => props.theme.palette.crud.create.textColor};
+    margin-left: auto;
 
     &:hover {
         background-color: ${(props) => props.theme.palette.crud.create.backgroundColor};
