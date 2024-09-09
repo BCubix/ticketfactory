@@ -34,8 +34,6 @@ class SEOAbleType extends AdminBaseFormType
             ])
             ->add('fbTitle',                   TextType::class,                 [])
             ->add('fbDescription',             TextareaType::class,             [])
-            ->add('twTitle',                   TextType::class,                 [])
-            ->add('twDescription',             TextareaType::class,             [])
             ->add('indexed',                   CheckboxType::class,             ['false_values' => ['0', 'null', null, 'false']]);
 
         $builder->addEventListener(

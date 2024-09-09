@@ -38,15 +38,17 @@ class ProductCategoryHook extends Hook
 
     public function hookProductCategoryValidated(HookEvent $event)
     {
-        $eventCategory = $event->getParam('vObject');
-        $eventCategoryId = $eventCategory->getId();
+        $vObject = $event->getParam('vObject');
+        $eventCategoryId = $vObject->getId();
 
-        $eventCategory = $eventCategory->getParent();
+        $eventCategory = $vObject->getParent();
         while (null !== $eventCategory) {
             if ($eventCategory->getId() === $eventCategoryId) {
                 throw  new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'La catégorie courante ne peut être située à plusieurs endroits dans l\'arborescence.');
             }
             $eventCategory = $eventCategory->getParent();
         }
+
+        $this->mf->get('seo')->completeSeoProductCategory($vObject);
     }
 }

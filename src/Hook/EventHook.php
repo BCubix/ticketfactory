@@ -42,5 +42,7 @@ class EventHook extends Hook
                 $this->em->persist($featureValue);
             }
         }
+
+        $this->mf->get('seo')->completeSeoEvent($vObject);
     }
 }

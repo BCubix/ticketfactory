@@ -455,13 +455,6 @@ class Event extends Datable
         return $this;
     }
 
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function completeSeo()
-    {
-        $this->completeFields($this->getName(), $this->getChapo());
-    }
-
     /**
      * @return Collection<int, FeatureLink>
      */

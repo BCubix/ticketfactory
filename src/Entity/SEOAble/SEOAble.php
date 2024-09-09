@@ -38,16 +38,6 @@ trait SEOAble
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private $twTitle;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
-    #[ORM\Column(type: Types::STRING, length: 511, nullable: true)]
-    private $twDescription;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
     #[ORM\Column(type: 'boolean')]
     private $indexed = true;
 
@@ -111,30 +101,6 @@ trait SEOAble
         return $this;
     }
 
-    public function getTwTitle(): ?string
-    {
-        return $this->twTitle;
-    }
-
-    public function setTwTitle(?string $twTitle): self
-    {
-        $this->twTitle = $twTitle;
-
-        return $this;
-    }
-
-    public function getTwDescription(): ?string
-    {
-        return $this->twDescription;
-    }
-
-    public function setTwDescription(?string $twDescription): self
-    {
-        $this->twDescription = $twDescription;
-
-        return $this;
-    }
-
     public function isIndexed(): ?bool
     {
         return $this->indexed;
@@ -157,10 +123,6 @@ trait SEOAble
             if (null === $this->getFbTitle()) {
                 $this->setFbTitle($title);
             }
-
-            if (null === $this->getTwTitle()) {
-                $this->setTwTitle($title);
-            }
         }
 
         if (null !== $description) {
@@ -170,10 +132,6 @@ trait SEOAble
 
             if (null === $this->getFbDescription()) {
                 $this->setFbDescription(mb_substr($description, 0, 500, 'UTF-8'));
-            }
-
-            if (null === $this->getTwDescription()) {
-                $this->setTwDescription(mb_substr($description, 0, 500, 'UTF-8'));
             }
         }
     }
