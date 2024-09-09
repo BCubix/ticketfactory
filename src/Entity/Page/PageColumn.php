@@ -34,6 +34,10 @@ class PageColumn
     #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
     private ?int $xl = null;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    private ?string $class = null;
+
 
     public function getContent(): mixed
     {
@@ -103,6 +107,18 @@ class PageColumn
     public function setXl(int $xl): self
     {
         $this->xl = $xl;
+
+        return $this;
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(string $class): self
+    {
+        $this->class = $class;
 
         return $this;
     }
