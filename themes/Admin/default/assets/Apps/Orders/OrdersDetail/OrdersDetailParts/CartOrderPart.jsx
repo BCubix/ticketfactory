@@ -26,7 +26,7 @@ export const CartOrderPart = ({ cart }) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {cart?.cartRows?.map((item, index) => (
+                                {cart?.eventRows?.map((item, index) => (
                                     <TableRow key={index}>
                                         <TableCell component="td" scope="row">
                                             <Link to={`${Constant.EVENTS_BASE_PATH}/${item?.eventId?.id}${Constant.EDIT_PATH}`} target="_blank">
@@ -66,7 +66,7 @@ export const CartOrderPart = ({ cart }) => {
                                     </TableCell>
                                     <TableCell component="td" scope="row" width="10%">
                                         <Typography component="span" fontWeight={500}>
-                                            {cart?.cartRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €
+                                            {cart?.eventRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €
                                         </Typography>
                                     </TableCell>
                                 </TableRow>

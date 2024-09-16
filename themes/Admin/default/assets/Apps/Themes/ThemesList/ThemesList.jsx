@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box } from '@mui/system';
 import { CardActions, CardContent, CardMedia, CircularProgress, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 
+import { addonVersionsSelector, getAddonVersionsAction } from '@Apps/AddonVersions/redux/addonVersions/addonVersionsSlice';
+import { getThemesAction, themesSelector } from '@Apps/Themes/redux/themes/themesSlice';
+
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getThemesAction, themesSelector } from '@Apps/Themes/redux/themes/themesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const ThemesList = () => {
     const { loading, themes, error } = useSelector(themesSelector);
+    const { addonVersionsLoading, addonVersions, addonVersionsError } = useSelector(addonVersionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isMarketplaceConnected, setMarketplaceConnected] = useState(false);
+    const [marketplaceDialog, setMarketplaceDialog] = useState(false);
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [loadingDialog, setLoadingDialog] = useState(null);
@@ -31,6 +35,12 @@ export const ThemesList = () => {
             dispatch(getThemesAction());
         }
 
+        if (!addonVersionsLoading && !addonVersions && !addonVersionsError) {
+            dispatch(getAddonVersionsAction());
+        }
+
+        checkMarketplaceConnection();
+
         apiMiddleware(dispatch, async () => {
             const result = await Api.parametersApi.getParameterValueByKey('core_main_theme');
             if (!result.result) {
@@ -41,6 +51,19 @@ export const ThemesList = () => {
             setThemeName(result.paramValue);
         });
     }, []);
+
+    const updateList = useMemo(() => {
+        if (!addonVersions || addonVersions?.length === 0 || !themes || themes.length === 0) {
+            return {};
+        }
+
+        let result = {};
+        themes.forEach((e) => {
+            result[e.name] = addonVersions[e.name]?.version > e.version;
+        });
+
+        return result;
+    }, [themes, addonVersions]);
 
     const handleSubmit = () => {
         setLoadingDialog(null);
@@ -83,13 +106,38 @@ export const ThemesList = () => {
         });
     };
 
+    const checkMarketplaceConnection = async () => {
+        const result = await Api.marketplace.checkIsAuth();
+        if (result?.result) {
+            setMarketplaceDialog(false);
+            setMarketplaceConnected(true);
+        }
+    };
+
+    const handleUpdateTheme = async (theme) => {
+        const result = await Api.addonVersionsApi.updateTheme(theme.name);
+        if (result?.result) {
+            NotificationManager.success('Le thème à bien été mis à jour', 'Succès', Constant.REDIRECTION_TIME);
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    };
+
     if (!themes) {
         return <></>;
     }
 
     return (
         <>
-            <Component.CmtPageWrapper title={'Themes'}>
+            <Component.CmtPageWrapper
+                title={'Themes'}
+                actionButton={
+                    !isMarketplaceConnected ? (
+                        <Component.ActionButton variant="contained" onClick={() => setMarketplaceDialog(true)}>
+                            Connexion à la marketplace
+                        </Component.ActionButton>
+                    ) : null
+                }
+            >
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
@@ -169,6 +217,21 @@ export const ThemesList = () => {
                                                 <SettingsIcon />
                                             </Component.EditFabButton>
                                         )}
+
+                                        {updateList[theme.name] && (
+                                            <Component.ActionFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="primary"
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleUpdateTheme(theme);
+                                                }}
+                                            >
+                                                <SystemUpdateAltIcon />
+                                            </Component.ActionFabButton>
+                                        )}
                                     </CardActions>
                                 </Component.CmtCard>
                             ))}
@@ -176,6 +239,7 @@ export const ThemesList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
+
             <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
@@ -192,6 +256,7 @@ export const ThemesList = () => {
                     />
                 </DialogContent>
             </Dialog>
+
             <Component.DeleteDialog open={!!deleteDialog} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
                     <Typography>Êtes-vous sûr de vouloir supprimer ce thème ?</Typography>
@@ -199,6 +264,7 @@ export const ThemesList = () => {
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
+
             <Dialog fullWidth open={loadingDialog !== null} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DialogTitle sx={{ fontSize: 20 }}>{loadingDialog}</DialogTitle>
                 <DialogContent>
@@ -207,6 +273,19 @@ export const ThemesList = () => {
                     </Box>
                 </DialogContent>
             </Dialog>
+
+            {!isMarketplaceConnected && (
+                <Component.MarketplaceConnectionDialog
+                    open={marketplaceDialog}
+                    onCancel={() => setMarketplaceDialog(false)}
+                    onConnected={() => {
+                        setMarketplaceDialog(false);
+                        setMarketplaceConnected(true);
+
+                        dispatch(getAddonVersionsAction());
+                    }}
+                />
+            )}
         </>
     );
 };

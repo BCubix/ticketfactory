@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 
 import { Box } from '@mui/system';
 import {
@@ -16,6 +17,7 @@ import {
     FormControlLabel,
     Radio,
     RadioGroup,
+    Switch,
     Typography,
 } from '@mui/material';
 
@@ -25,6 +27,7 @@ import { Constant } from '@/AdminService/Constant';
 import { TableColumn } from '@/AdminService/TableColumn';
 
 import { getModulesAction, modulesSelector } from '@Apps/Modules/redux/modules/modulesSlice';
+import { getAddonVersionsAction, addonVersionsSelector } from '@Apps/AddonVersions/redux/addonVersions/addonVersionsSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
 const ACTION_DISABLE = 'Désactiver';
@@ -33,8 +36,12 @@ const ACTION_UNINSTALL_DELETE = 'Désinstaller & Supprimer';
 
 export const ModulesList = () => {
     const { loading, modules, error } = useSelector(modulesSelector);
+    const { addonVersionsLoading, addonVersions, addonVersionsError } = useSelector(addonVersionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isMarketplaceConnected, setMarketplaceConnected] = useState(false);
+    const [marketplaceDialog, setMarketplaceDialog] = useState(false);
+    const [updateModuleDialog, setUpdateModuleDialog] = useState({ open: false, addon: null, backupDatabase: false });
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [removeDialog, setRemoveDialog] = useState(null);
@@ -45,7 +52,26 @@ export const ModulesList = () => {
         if (!loading && !modules && !error) {
             dispatch(getModulesAction());
         }
+
+        checkMarketplaceConnection();
+
+        if (!addonVersionsLoading && !addonVersions && !addonVersionsError) {
+            dispatch(getAddonVersionsAction());
+        }
     }, []);
+
+    const updateList = useMemo(() => {
+        if (!addonVersions || addonVersions?.length === 0 || !modules || modules.length === 0) {
+            return {};
+        }
+
+        let result = {};
+        modules.forEach((e) => {
+            result[e.name] = addonVersions[e.name]?.version > e.version;
+        });
+
+        return result;
+    }, [modules, addonVersions]);
 
     const handleSubmit = () => {
         setLoadingDialog(null);
@@ -119,9 +145,42 @@ export const ModulesList = () => {
         setTimeout(() => window.location.reload(), 1000);
     };
 
+    const checkMarketplaceConnection = async () => {
+        const result = await Api.marketplaceApi.checkIsAuth();
+        if (result?.result) {
+            setMarketplaceDialog(false);
+            setMarketplaceConnected(true);
+        }
+    };
+
+    const handleUpdateModule = async (item, backupDatabase) => {
+        const result = await Api.addonVersionsApi.updateModule(item.name, backupDatabase);
+        if (result?.result) {
+            NotificationManager.success('Le module à bien été mis à jour', 'Succès', Constant.REDIRECTION_TIME);
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    };
+
+    const handleUpdateAllModules = async (backupDatabase) => {
+        const result = await Api.addonVersionsApi.updateAllModules(backupDatabase);
+        if (result?.result) {
+            NotificationManager.success('Tous les modules ont bien été mis à jour', 'Succès', Constant.REDIRECTION_TIME);
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    };
+
     return (
         <>
-            <Component.CmtPageWrapper title={'Modules'}>
+            <Component.CmtPageWrapper
+                title={'Modules'}
+                actionButton={
+                    !isMarketplaceConnected ? (
+                        <Component.ActionButton variant="contained" onClick={() => setMarketplaceDialog(true)}>
+                            Connexion à la marketplace
+                        </Component.ActionButton>
+                    ) : null
+                }
+            >
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
@@ -129,9 +188,25 @@ export const ModulesList = () => {
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     Liste des modules
                                 </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
-                                    Upload
-                                </Component.CreateButton>
+
+                                <Box className="flex">
+                                    {Object.values(updateList)?.some(Boolean) && (
+                                        <Component.ActionButton
+                                            variant="contained"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setUpdateModuleDialog({ open: true, addon: null, backupDatabase: false });
+                                            }}
+                                            sx={{ mr: 3 }}
+                                        >
+                                            Tout mettre à jour
+                                        </Component.ActionButton>
+                                    )}
+
+                                    <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                        Upload
+                                    </Component.CreateButton>
+                                </Box>
                             </Box>
                         }
                     />
@@ -144,6 +219,24 @@ export const ModulesList = () => {
                             onRemove={(name) => setRemoveDialog(name)}
                             onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
                             displayParameter={(moduleItem) => Boolean(moduleItem.id)}
+                            additionnalOptions={[
+                                ({ item }) => {
+                                    return updateList[item.name] ? (
+                                        <Component.ActionFabButton
+                                            sx={{ marginInline: 1 }}
+                                            color="primary"
+                                            size="small"
+                                            aria-label="Selection"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setUpdateModuleDialog({ open: true, addon: item, backupDatabase: false });
+                                            }}
+                                        >
+                                            <SystemUpdateAltIcon />
+                                        </Component.ActionFabButton>
+                                    ) : null;
+                                },
+                            ]}
                         />
                     </CardContent>
                 </Component.CmtCard>
@@ -220,6 +313,73 @@ export const ModulesList = () => {
                     </Box>
                 </DialogContent>
             </Dialog>
+
+            <Dialog
+                fullWidth
+                open={updateModuleDialog?.open}
+                onClose={() => setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false })}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+            >
+                <DialogTitle sx={{ fontSize: 17 }}>
+                    Mettre à jour {updateModuleDialog?.addon !== null ? `le module ${updateModuleDialog?.addon?.displayName}` : 'tous les modules'}
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={updateModuleDialog?.backupDatabase}
+                                    onChange={(e) => {
+                                        setUpdateModuleDialog({ ...updateModuleDialog, backupDatabase: e.target.checked });
+                                    }}
+                                />
+                            }
+                            label={'Faire une sauvegarde de la base de donnée ?'}
+                            labelPlacement={'start'}
+                        />
+
+                        <Typography sx={{ marginTop: 5 }}>
+                            Attention, si vous ne faites pas de sauvegarde de la base de donnée, nous ne pourrons pas assurer un retour en arrière en cas d'échec de la mise à jour.
+                        </Typography>
+                    </Box>
+                </DialogContent>
+
+                <DialogActions>
+                    <Box className="flex row-between align-center fullwidth" sx={{ width: '100%' }}>
+                        <Button color="error" onClick={() => setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false })} id="cancelUpdateModuleDialog">
+                            Annuler
+                        </Button>
+                        <Button
+                            color="primary"
+                            type="submit"
+                            id="submitUpdateModuleDialog"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (updateModuleDialog?.addon) {
+                                    handleUpdateModule(updateModuleDialog?.addon, updateModuleDialog?.backupDatabase);
+                                } else {
+                                    handleUpdateAllModules(updateModuleDialog?.backupDatabase);
+                                }
+                            }}
+                        >
+                            Mettre à jour
+                        </Button>
+                    </Box>
+                </DialogActions>
+            </Dialog>
+
+            {!isMarketplaceConnected && (
+                <Component.MarketplaceConnectionDialog
+                    open={marketplaceDialog}
+                    onCancel={() => setMarketplaceDialog(false)}
+                    onConnected={() => {
+                        setMarketplaceDialog(false);
+                        setMarketplaceConnected(true);
+
+                        dispatch(getAddonVersionsAction());
+                    }}
+                />
+            )}
         </>
     );
 };

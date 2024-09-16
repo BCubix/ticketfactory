@@ -1,8 +1,8 @@
 import Dropzone from 'dropzone';
 import $ from 'jquery';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 var countChunk = 0;
 
@@ -10,7 +10,7 @@ export const intitializeDropzone = ({ logFail, onSuccess, onAdded, onFail, id = 
     $('.js-dropzone').each(function (_, element) {
         initDropzoneElement({ element, logFail, onSuccess, onAdded, onFail, id });
     });
-}
+};
 
 export const initDropzoneElement = ({ element, logFail, onSuccess, onAdded, onFail, id }) => {
     if (!element) {
@@ -68,7 +68,7 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, onAdded, onFa
         }
     });
 
-    dZone.on('error', function(file, response) {
+    dZone.on('error', function (file, response) {
         onFail(response);
     });
 

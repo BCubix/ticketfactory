@@ -6,7 +6,7 @@ use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Entity\Order\Cart;
-use App\Entity\Order\CartRow;
+use App\Entity\Order\EventRow;
 
 class OrderManager extends AbstractManager
 {
@@ -26,8 +26,8 @@ class OrderManager extends AbstractManager
 
         $this->em->persist($order);
 
-        $cartRows = $this->em->getRepository(CartRow::class)->findBy(['cart' => $cart]);
-        foreach ($cartRows as $row) {
+        $eventRows = $this->em->getRepository(EventRow::class)->findBy(['cart' => $cart]);
+        foreach ($eventRows as $row) {
             $event = $row->getEvent();
             $ticketing = $event->getTicketing();
             if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
@@ -63,15 +63,36 @@ class OrderManager extends AbstractManager
             'total' => $cart->getTotal(),
         ];
 
-        $orderData['cart']['cartRows'] = [];
-        foreach ($cart->getCartRows() as $cartRow) {
-            $newCartRow = [
-                'id' => $cartRow->getId(),
-                'total' => $cartRow->getTotal(),
+        $orderData['cart']['eventRows'] = $this->getEventRows($cart);
+        $orderData['cart']['productRows'] = $this->getProductRows($cart);
+
+
+        $orderData['voucher'] = [];
+        foreach ($cart->getVouchers() as $voucher) {
+            $cart['voucher'][] = [
+                'id' => $voucher->getId(),
+                'name' => $voucher->getName(),
+                'code' => $voucher->getCode(),
+                'discount' => $voucher->getDiscount(),
+                'unit' => $voucher->getUnit(),
+            ];
+        }
+
+        return $orderData;
+    }
+
+    private function getEventRows(Cart $cart): array
+    {
+        $eventRows = [];
+
+        foreach ($cart->getEventRows() as $eventRow) {
+            $newEventRow = [
+                'id' => $eventRow->getId(),
+                'total' => $eventRow->getTotal(),
             ];
 
-            $event = $cartRow->getEvent();
-            $newCartRow['event'] = [
+            $event = $eventRow->getEvent();
+            $newEventRow['event'] = [
                 'id' => $event->getId(),
                 'name' => $event->getName(),
                 'slug' => $event->getSlug(),
@@ -90,32 +111,32 @@ class OrderManager extends AbstractManager
                 ] : null
             ];
 
-            $newCartRow['eventDate'] = [
-                'eventDate' => $cartRow->getEventDate()->getEventDate(),
-                'state' => $cartRow->getEventDate()->getState(),
-                'reportDate' => $cartRow->getEventDate()->getReportDate(),
+            $newEventRow['eventDate'] = [
+                'eventDate' => $eventRow->getEventDate()->getEventDate(),
+                'state' => $eventRow->getEventDate()->getState(),
+                'reportDate' => $eventRow->getEventDate()->getReportDate(),
             ];
 
-            $newCartRow['seatingPlan'] = null !== $cartRow->getSeatingPlan() ? [
-                'name' => $cartRow->getSeatingPlan()->getName(),
+            $newEventRow['seatingPlan'] = null !== $eventRow->getSeatingPlan() ? [
+                'name' => $eventRow->getSeatingPlan()->getName(),
             ] : null;
 
-            $newCartRow['cartSeats'] = [];
-            foreach ($cartRow->getCartSeats() as $cartSeat) {
-                $newCartRow['cartSeats'][] = [
-                    'id' => $cartSeat->getId(),
-                    'name' => $cartSeat->getName(),
+            $newEventRow['eventSeats'] = [];
+            foreach ($eventRow->getEventSeats() as $eventSeat) {
+                $newEventRow['eventSeats'][] = [
+                    'id' => $eventSeat->getId(),
+                    'name' => $eventSeat->getName(),
                     'eventPrice' => [
-                        'name' => $cartSeat->getEventPrice()->getName(),
-                        'price' => $cartSeat->getEventPrice()->getPrice(),
-                        'annotation' => $cartSeat->getEventPrice()->getAnnotation(),
+                        'name' => $eventSeat->getEventPrice()->getName(),
+                        'price' => $eventSeat->getEventPrice()->getPrice(),
+                        'annotation' => $eventSeat->getEventPrice()->getAnnotation(),
                     ]
                 ];
             }
 
-            $newCartRow['voucher'] = [];
-            foreach ($cartRow->getVouchers() as $voucher) {
-                $newCartRow['voucher'][] = [
+            $newEventRow['voucher'] = [];
+            foreach ($eventRow->getVouchers() as $voucher) {
+                $newEventRow['voucher'][] = [
                     'id' => $voucher->getId(),
                     'name' => $voucher->getName(),
                     'code' => $voucher->getCode(),
@@ -124,21 +145,46 @@ class OrderManager extends AbstractManager
                 ];
             }
 
-            $orderData['cart']['cartRows'][] = $newCartRow;
+            $eventRows['cart']['eventRows'][] = $newEventRow;
         }
 
-        $orderData['voucher'] = [];
-        foreach ($cart->getVouchers() as $voucher) {
-            $cart['voucher'][] = [
-                'id' => $voucher->getId(),
-                'name' => $voucher->getName(),
-                'code' => $voucher->getCode(),
-                'discount' => $voucher->getDiscount(),
-                'unit' => $voucher->getUnit(),
+        return $eventRows;
+    }
+
+    private function getProductRows(Cart $cart): array
+    {
+        $productRows = [];
+
+        foreach ($cart->getProductRows() as $productRow) {
+            $newProductRow = [
+                'id' => $productRow->getId(),
+                'total' => $productRow->getTotal(),
             ];
+
+            $product = $productRow->getProduct();
+            $newProductRow['product'] = [
+                'id' => $product->getId(),
+                'name' => $product->getName(),
+                'slug' => $product->getSlug(),
+                'chapo' => $product->getChapo(),
+                'description' => $product->getDescription(),
+                'ticketingReference' => $product->getTicketingReference(),
+                'ticketing' => null !== $product->getTicketing() ? [
+                    'id' => $product->getTicketing()->getId(),
+                    'name' => $product->getTicketing()->getName(),
+                    'type' => $product->getTicketing()->getType(),
+                    'module' => null !== $product->getTicketing()->getModule() ? [
+                        'id' => $product->getTicketing()->getModule()->getId(),
+                        'name' => $product->getTicketing()->getModule()->getName(),
+                    ] : null
+                ] : null
+            ];
+
+            $productRows[] = $newProductRow;
         }
 
-        return $orderData;
+        return $productRows;
+
     }
 
     private function generateReference(): string

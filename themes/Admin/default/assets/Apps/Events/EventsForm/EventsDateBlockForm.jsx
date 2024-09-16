@@ -30,23 +30,23 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
         setFieldValue('multipleDateBlock', false);
     };
 
-    const blockCartRowsRelations = useMemo(() => {
-        let cartRowsTab = [];
+    const blockEventRowsRelations = useMemo(() => {
+        let eventRowsTab = [];
 
         values?.eventDateBlocks?.forEach((item) => {
             let rowsLength = item?.eventDates?.reduce((length, eventDate) => {
-                return length + (eventDate?.cartRows?.length || 0);
+                return length + (eventDate?.eventRows?.length || 0);
             }, 0);
 
-            cartRowsTab.push(rowsLength);
+            eventRowsTab.push(rowsLength);
         });
 
-        return cartRowsTab;
+        return eventRowsTab;
     }, [values?.eventDateBlocks]);
 
     const canStopUseGroups = useMemo(() => {
-        return (blockCartRowsRelations?.find((item, index) => index > 0 && item > 0) || null) === null;
-    }, [blockCartRowsRelations]);
+        return (blockEventRowsRelations?.find((item, index) => index > 0 && item > 0) || null) === null;
+    }, [blockEventRowsRelations]);
 
     const getBlockError = (index) => {
         const err = getNestedFormikError(touched?.eventDateBlocks, errors?.eventDateBlocks, index, 'eventDates');
@@ -136,7 +136,7 @@ export const EventsDateBlockForm = ({ values, setFieldValue, setFieldTouched, ha
                                     </FormHelperText>
                                 )}
 
-                                {values.multipleDateBlock && blockCartRowsRelations[index] === 0 && (
+                                {values.multipleDateBlock && blockEventRowsRelations[index] === 0 && (
                                     <Component.DeleteBlockFabButton
                                         size="small"
                                         id={`removeEventDateBlock-${index}`}

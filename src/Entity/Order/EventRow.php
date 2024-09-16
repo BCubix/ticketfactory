@@ -5,7 +5,7 @@ namespace App\Entity\Order;
 use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
 use App\Entity\Event\SeatingPlan;
-use App\Repository\CartRowRepository;
+use App\Repository\EventRowRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity(repositoryClass: CartRowRepository::class)]
-class CartRow
+#[ORM\Entity(repositoryClass: EventRowRepository::class)]
+class EventRow
 {
     /*** > Trait ***/
     /*** < Trait ***/
@@ -39,7 +39,7 @@ class CartRow
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\ManyToOne(targetEntity: EventDate::class, inversedBy: 'cartRows', cascade: ['persist', 'remove', 'detach', 'merge'])]
+    #[ORM\ManyToOne(targetEntity: EventDate::class, inversedBy: 'eventRows', cascade: ['persist', 'remove', 'detach', 'merge'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?EventDate $eventDate = null;
 
@@ -48,25 +48,25 @@ class CartRow
     #[ORM\ManyToOne]
     private ?SeatingPlan $seatingPlan = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cartRows')]
+    #[ORM\ManyToOne(inversedBy: 'eventRows')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\OneToMany(mappedBy: 'cartRow', targetEntity: CartSeat::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private Collection $cartSeats;
+    #[ORM\OneToMany(mappedBy: 'eventRow', targetEntity: EventSeat::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private Collection $eventSeats;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'cartRows')]
+    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'eventRows')]
     private Collection $vouchers;
 
 
     public function __construct()
     {
         $this->vouchers = new ArrayCollection();
-        $this->cartSeats = new ArrayCollection();
+        $this->eventSeats = new ArrayCollection();
     }
 
 
@@ -136,29 +136,29 @@ class CartRow
     }
 
     /**
-     * @return Collection<int, CartSeat>
+     * @return Collection<int, EventSeat>
      */
-    public function getCartSeats(): Collection
+    public function getEventSeats(): Collection
     {
-        return $this->cartSeats;
+        return $this->eventSeats;
     }
 
-    public function addCartSeat(CartSeat $cartSeat): self
+    public function addEventSeat(EventSeat $eventSeat): self
     {
-        if (!$this->cartSeats->contains($cartSeat)) {
-            $this->cartSeats->add($cartSeat);
-            $cartSeat->setCartRow($this);
+        if (!$this->eventSeats->contains($eventSeat)) {
+            $this->eventSeats->add($eventSeat);
+            $eventSeat->setEventRow($this);
         }
 
         return $this;
     }
 
-    public function removeCartSeat(CartSeat $cartSeat): self
+    public function removeEventSeat(EventSeat $eventSeat): self
     {
-        if ($this->cartSeats->removeElement($cartSeat)) {
+        if ($this->eventSeats->removeElement($eventSeat)) {
             // set the owning side to null (unless already changed)
-            if ($cartSeat->getCartRow() === $this) {
-                $cartSeat->setCartRow(null);
+            if ($eventSeat->getEventRow() === $this) {
+                $eventSeat->setEventRow(null);
             }
         }
 
@@ -177,7 +177,7 @@ class CartRow
     {
         if (!$this->vouchers->contains($voucher)) {
             $this->vouchers->add($voucher);
-            $voucher->addCartRow($this);
+            $voucher->addEventRow($this);
         }
 
         return $this;
@@ -186,7 +186,7 @@ class CartRow
     public function removeVoucher(Voucher $voucher): self
     {
         if ($this->vouchers->removeElement($voucher)) {
-            $voucher->removeCartRow($this);
+            $voucher->removeEventRow($this);
         }
 
         return $this;

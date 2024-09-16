@@ -29,6 +29,7 @@ export const ListTableCellButtons = ({
     handleClick,
     expendElementTranslation,
     setExpendElementTranslation,
+    additionnalOptions,
 }) => {
     if (
         onDelete !== null ||
@@ -148,6 +149,14 @@ export const ListTableCellButtons = ({
                         </Component.DeleteFabButton>
                     )
                 )}
+
+                {additionnalOptions.map((AdditionnalItem, index) => {
+                    if (!AdditionnalItem({ item })) {
+                        return <React.Fragment key={index} />;
+                    }
+
+                    return <AdditionnalItem item={item} key={index} />;
+                })}
 
                 {item?.translatedElements?.length > 0 && (
                     <Component.ActionFabButton

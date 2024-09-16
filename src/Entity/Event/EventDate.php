@@ -3,7 +3,7 @@
 namespace App\Entity\Event;
 
 use App\Entity\Language\Language;
-use App\Entity\Order\CartRow;
+use App\Entity\Order\EventRow;
 use App\Repository\EventDateRepository;
 use App\Validation\Constraint\EventDateConstraint;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -78,12 +78,12 @@ class EventDate
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\OneToMany(mappedBy: 'eventDate', targetEntity: CartRow::class)]
-    private Collection $cartRows;
+    #[ORM\OneToMany(mappedBy: 'eventDate', targetEntity: EventRow::class)]
+    private Collection $eventRows;
 
     public function __construct()
     {
-        $this->cartRows = new ArrayCollection();
+        $this->eventRows = new ArrayCollection();
     }
 
 
@@ -181,29 +181,29 @@ class EventDate
     }
 
     /**
-     * @return Collection<int, CartRow>
+     * @return Collection<int, EventRow>
      */
-    public function getCartRows(): Collection
+    public function getEventRows(): Collection
     {
-        return $this->cartRows;
+        return $this->eventRows;
     }
 
-    public function addCartRow(CartRow $cartRow): static
+    public function addEventRow(EventRow $eventRow): static
     {
-        if (!$this->cartRows->contains($cartRow)) {
-            $this->cartRows->add($cartRow);
-            $cartRow->setEventDate($this);
+        if (!$this->eventRows->contains($eventRow)) {
+            $this->eventRows->add($eventRow);
+            $eventRow->setEventDate($this);
         }
 
         return $this;
     }
 
-    public function removeCartRow(CartRow $cartRow): static
+    public function removeEventRow(EventRow $eventRow): static
     {
-        if ($this->cartRows->removeElement($cartRow)) {
+        if ($this->eventRows->removeElement($eventRow)) {
             // set the owning side to null (unless already changed)
-            if ($cartRow->getEventDate() === $this) {
-                $cartRow->setEventDate(null);
+            if ($eventRow->getEventDate() === $this) {
+                $eventRow->setEventDate(null);
             }
         }
 

@@ -175,10 +175,10 @@ export const EventsDateForm = ({ values, blockIndex, setGenerateDate, ...props }
                                             />
                                         </Grid>
 
-                                        {item?.cartRows?.length > 0 ? (
+                                        {item?.eventRows?.length > 0 ? (
                                             <Tooltip
                                                 title={
-                                                    item?.cartRows?.length > 0
+                                                    item?.eventRows?.length > 0
                                                         ? "Vous ne pouvez pas supprimer cette représentation car des billets ont été vendus. Utilisez la fonction d'annulation."
                                                         : ''
                                                 }

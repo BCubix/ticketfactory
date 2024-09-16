@@ -3,13 +3,13 @@
 namespace App\Entity\Order;
 
 use App\Entity\Event\EventPrice;
-use App\Repository\CartSeatRepository;
+use App\Repository\EventSeatRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[JMS\ExclusionPolicy('all')]
-#[ORM\Entity(repositoryClass: CartSeatRepository::class)]
-class CartSeat
+#[ORM\Entity(repositoryClass: EventSeatRepository::class)]
+class EventSeat
 {
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
@@ -29,9 +29,9 @@ class CartSeat
     #[ORM\JoinColumn(nullable: false)]
     private ?EventPrice $eventPrice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cartSeats')]
+    #[ORM\ManyToOne(inversedBy: 'eventSeats')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?CartRow $cartRow = null;
+    private ?EventRow $eventRow = null;
 
     public function getId(): ?int
     {
@@ -62,14 +62,14 @@ class CartSeat
         return $this;
     }
 
-    public function getCartRow(): ?CartRow
+    public function getEventRow(): ?EventRow
     {
-        return $this->cartRow;
+        return $this->eventRow;
     }
 
-    public function setCartRow(?CartRow $cartRow): self
+    public function setEventRow(?EventRow $eventRow): self
     {
-        $this->cartRow = $cartRow;
+        $this->eventRow = $eventRow;
 
         return $this;
     }

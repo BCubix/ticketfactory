@@ -4,19 +4,21 @@ namespace App\Form\Admin\Product;
 
 use App\Entity\Product\ProductCategory;
 use App\Entity\Language\Language;
+use App\Form\Admin\AdminBaseFormType;
+use App\Form\Admin\SEOAble\SEOAbleType;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\LanguageRepository;
-use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductCategoryType extends AbstractType
+class ProductCategoryType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -49,6 +51,13 @@ class ProductCategoryType extends AbstractType
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => ProductCategory::class,
             ]);
+
+            $builder->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) {
+                    $this->fm->onPreSetData($event);
+                }
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

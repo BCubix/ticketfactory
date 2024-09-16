@@ -30,7 +30,7 @@ api.interceptors.response.use(
             NotificationManager.error('Une erreur est survenu, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
         }
 
-        if (status === 401 && error?.config?.url !== '/token/refresh') {
+        if (status === 401 && error?.config?.url !== '/token/refresh' && error?.config?.url !== '/marketplace/sign-in') {
             if (api_count === 3) {
                 useDispatch(logoutAction());
             }
@@ -58,6 +58,10 @@ axiosRetry(api, {
     },
     retryCondition: (error) => {
         if (!window.navigator.onLine) {
+            return false;
+        }
+
+        if (error?.config?.url === '/marketplace/sign-in') {
             return false;
         }
 

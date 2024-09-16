@@ -11,7 +11,7 @@ import { ThirdCardDashboard } from '@Apps/Home/ThirdCardDashboard';
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
-import { setComponent } from '@/AdminService/Component';
+import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { Navigate } from 'react-router-dom';
 
@@ -37,7 +37,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.HOME_PATH, () => <Navigate to={Constant.EVENTS_BASE_PATH} />, { exact: true });
+    setAuthenticatedRoute(Constant.HOME_PATH, Component.Home, { exact: true });
 };
 
 export const initReducer = () => {

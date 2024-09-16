@@ -70,8 +70,8 @@ class Voucher extends Datable
     #[ORM\ManyToMany(targetEntity: Cart::class, inversedBy: 'vouchers')]
     private Collection $carts;
 
-    #[ORM\ManyToMany(targetEntity: CartRow::class, inversedBy: 'vouchers')]
-    private Collection $cartRows;
+    #[ORM\ManyToMany(targetEntity: EventRow::class, inversedBy: 'vouchers')]
+    private Collection $eventRows;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
@@ -81,7 +81,7 @@ class Voucher extends Datable
     public function __construct()
     {
         $this->carts = new ArrayCollection();
-        $this->cartRows = new ArrayCollection();
+        $this->eventRows = new ArrayCollection();
         $this->eventCategories = new ArrayCollection();
     }
 
@@ -187,25 +187,25 @@ class Voucher extends Datable
     }
 
     /**
-     * @return Collection<int, CartRow>
+     * @return Collection<int, EventRow>
      */
-    public function getCartRows(): Collection
+    public function getEventRows(): Collection
     {
-        return $this->cartRows;
+        return $this->eventRows;
     }
 
-    public function addCartRow(CartRow $cartRow): self
+    public function addEventRow(EventRow $eventRow): self
     {
-        if (!$this->cartRows->contains($cartRow)) {
-            $this->cartRows->add($cartRow);
+        if (!$this->eventRows->contains($eventRow)) {
+            $this->eventRows->add($eventRow);
         }
 
         return $this;
     }
 
-    public function removeCartRow(CartRow $cartRow): self
+    public function removeEventRow(EventRow $eventRow): self
     {
-        $this->cartRows->removeElement($cartRow);
+        $this->eventRows->removeElement($eventRow);
 
         return $this;
     }

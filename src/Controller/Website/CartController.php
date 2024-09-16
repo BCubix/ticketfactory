@@ -50,9 +50,9 @@ class CartController extends WebsiteController
             return new Response(null, 404);
         }
 
-        $cartRowId = $this->getRequest()->get('cartRowId');
+        $eventRowId = $this->getRequest()->get('eventRowId');
 
-        $this->mf->get("cart")->deleteCartRow($cartRowId);
+        $this->mf->get("cart")->deleteEventRow($eventRowId);
 
         $cart = $this->mf->get("cart")->getCart();
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
@@ -70,10 +70,10 @@ class CartController extends WebsiteController
             return new Response(null, 404);
         }
 
-        $cartRowId = $this->getRequest()->get('cartRowId');
+        $eventRowId = $this->getRequest()->get('eventRowId');
         $eventPriceId = $this->getRequest()->get('eventPriceId');
 
-        $cartRow = $this->mf->get("cart")->deleteCartSeats(['cartRowId' => $cartRowId, 'eventPriceId' => $eventPriceId]);
+        $eventRow = $this->mf->get("cart")->deleteEventSeats(['eventRowId' => $eventRowId, 'eventPriceId' => $eventPriceId]);
 
         $cart = $this->mf->get("cart")->getCart();
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
@@ -118,11 +118,11 @@ class CartController extends WebsiteController
 
         $request = $this->getRequest();
 
-        $cartRowId = $request->get("cartRowId");
+        $eventRowId = $request->get("eventRowId");
         $eventPriceId = $request->get("eventPriceId");
 
-        if (null !== $cartRowId && null !== $eventPriceId) {
-            $this->mf->get("cart")->updateQuantity(["cartRowId" => $cartRowId, "eventPriceId" => $eventPriceId], $quantityChange);
+        if (null !== $eventRowId && null !== $eventPriceId) {
+            $this->mf->get("cart")->updateQuantity(["eventRowId" => $eventRowId, "eventPriceId" => $eventPriceId], $quantityChange);
         }
 
         $cart = $this->mf->get("cart")->getCart();

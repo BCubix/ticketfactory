@@ -79,14 +79,8 @@ class ThemeManager extends AddonManager
             return $theme;
         }
 
-        $settings = $this->getConfiguration($themeName)['settings'];
-        if (isset($settings["parameters"])) {
-            $this->addParameters('theme', $themeName, $settings["parameters"]);
-        }
-
-        if (isset($settings["url"])) {
-            $this->addUrl($settings["url"]);
-        }
+        // we execute this function to add the configuration to be installed with the module.
+        $this->executeConfiguration($themeName, Module::ACTION_INSTALL);
 
         // Apply configs : disable old theme config and enable new theme config
         $themes = [$themeName => Module::ACTION_INSTALL];
@@ -151,6 +145,20 @@ class ThemeManager extends AddonManager
         parent::delete($themeName);
     }
 
+    public function executeConfiguration(string $themeName, int $action): void
+    {
+        if ($action === Module::ACTION_INSTALL) {
+            $settings = $this->getConfiguration($themeName)['settings'];
+            if (isset($settings["parameters"])) {
+                $this->addParameters('theme', $themeName, $settings["parameters"]);
+            }
+
+            if (isset($settings["url"])) {
+                $this->addUrl($settings["url"]);
+            }
+        }
+    }
+
     public function isSSRActive()
     {
         $themeName = $this->mf->get('parameter')->getCoreParameter('main_theme');
@@ -177,6 +185,11 @@ class ThemeManager extends AddonManager
         $themePath = $this->mf->get('parameter')->getCoreParameter('main_theme');
 
         return ('Website/' . $themePath . '/templates/');
+    }
+
+    public function isThemeActive(string $themeName): bool
+    {
+        return $this->mf->get('parameter')->getCoreParameter('main_theme') === $themeName;
     }
 
     protected function applyThemeConfig($themeName, $themeAction): void

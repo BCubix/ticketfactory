@@ -12,6 +12,7 @@ class Zip
 
     public const ZIP_FAIL_OPEN           = "L'ouverture du zip a échoué.";
     public const ZIP_FAIL_EXTRACT        = "L'extraction du zip a échoué.";
+    public const ZIP_FIRST_DIR_REQUIRED  = "Un dossier est requis";
 
     /**
      * Unzip

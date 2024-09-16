@@ -37,8 +37,13 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartRow::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private Collection $cartRows;
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: EventRow::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private Collection $eventRows;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: ProductRow::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private Collection $productRows;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
@@ -55,10 +60,12 @@ class Cart extends Datable
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $ticketingReference = null;
 
+
     public function __construct()
     {
-        $this->cartRows = new ArrayCollection();
+        $this->eventRows = new ArrayCollection();
         $this->vouchers = new ArrayCollection();
+        $this->productRows = new ArrayCollection();
     }
 
 
@@ -92,29 +99,59 @@ class Cart extends Datable
     }
 
     /**
-     * @return Collection<int, CartRow>
+     * @return Collection<int, EventRow>
      */
-    public function getCartRows(): Collection
+    public function getEventRows(): Collection
     {
-        return $this->cartRows;
+        return $this->eventRows;
     }
 
-    public function addCartRow(CartRow $cartRow): self
+    public function addEventRow(EventRow $eventRow): self
     {
-        if (!$this->cartRows->contains($cartRow)) {
-            $this->cartRows->add($cartRow);
-            $cartRow->setCart($this);
+        if (!$this->eventRows->contains($eventRow)) {
+            $this->eventRows->add($eventRow);
+            $eventRow->setCart($this);
         }
 
         return $this;
     }
 
-    public function removeCartRow(CartRow $cartRow): self
+    public function removeEventRow(EventRow $eventRow): self
     {
-        if ($this->cartRows->removeElement($cartRow)) {
+        if ($this->eventRows->removeElement($eventRow)) {
             // set the owning side to null (unless already changed)
-            if ($cartRow->getCart() === $this) {
-                $cartRow->setCart(null);
+            if ($eventRow->getCart() === $this) {
+                $eventRow->setCart(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductRow>
+     */
+    public function getProductRows(): Collection
+    {
+        return $this->productRows;
+    }
+
+    public function addProductRow(ProductRow $productRow): static
+    {
+        if (!$this->productRows->contains($productRow)) {
+            $this->productRows->add($productRow);
+            $productRow->setCart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductRow(ProductRow $productRow): static
+    {
+        if ($this->productRows->removeElement($productRow)) {
+            // set the owning side to null (unless already changed)
+            if ($productRow->getCart() === $this) {
+                $productRow->setCart(null);
             }
         }
 

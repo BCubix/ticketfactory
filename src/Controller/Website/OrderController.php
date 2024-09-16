@@ -135,6 +135,10 @@ class OrderController extends WebsiteController
         $order = $cart->getLinkedOrder();
         if (null === $order) {
             $order = $this->mf->get('order')->createNewOrder($customer, $status, $cart);
+
+            $this->mf->get('hook')->exec("actionOrderCreated", [
+                'cObject' => $order,
+            ]);
         }
 
         $this->mf->get('cart')->createNewCart();

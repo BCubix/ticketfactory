@@ -197,7 +197,7 @@ abstract class AddonManager extends AbstractManager
      *
      * @param string $objectName
      *
-     * @return void
+     * @return array
      * @throws \Exception
      */
     public function install(string $objectName): array

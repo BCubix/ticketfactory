@@ -46,6 +46,7 @@ export const ListTable = ({
     contextualMenu = false,
     disableDeleteFunction = null,
     onDragEnd = null,
+    additionnalOptions = [],
     ...rest
 }) => {
     const languagesData = useSelector(languagesSelector);
@@ -119,6 +120,7 @@ export const ListTable = ({
                             handleClick={handleClick}
                             expendElementTranslation={expendElementTranslation}
                             setExpendElementTranslation={setExpendElementTranslation}
+                            additionnalOptions={additionnalOptions}
                             {...rest}
                         />
                     ))}

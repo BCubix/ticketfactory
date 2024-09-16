@@ -20,7 +20,7 @@ class CartRepository extends CrudRepository
     {
         return $this->createQueryBuilder("c")
             ->addSelect("cr")
-            ->leftJoin("c.cartRows", "cr")
+            ->leftJoin("c.eventRows", "cr")
             ->where("c.active = 1")
             ->andWhere("c.id = :id")
             ->setParameter("id", $id)
@@ -34,7 +34,7 @@ class CartRepository extends CrudRepository
             ->addSelect("cu")
             ->addSelect("cr")
             ->innerJoin("c.customer", "cu", "WITH", "cu.id = :customerId")
-            ->leftJoin("c.cartRows", "cr")
+            ->leftJoin("c.eventRows", "cr")
             ->where("c.active = 1")
             ->setParameter("customerId", $customerId)
             ->orderBy("c.updatedAt", "DESC")

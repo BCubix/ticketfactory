@@ -3,9 +3,11 @@
 namespace App\Service\File;
 
 use App\Exception\ApiException;
+use App\Service\Archive\Zip;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
+use Traversable;
 
 class FileManipulator
 {
@@ -121,6 +123,8 @@ class FileManipulator
                 $foldersNb++;
             }
         }
+
+        return $foldersNb;
     }
 
     public function copy(string $filePath, string $target, bool $force = true): void
@@ -128,9 +132,9 @@ class FileManipulator
         $this->fs->copy($filePath, $target, $force);
     }
 
-    public function mirror(string $filePath, string $target): void
+    public function mirror(string $filePath, string $target, ?Traversable $iterator = null, array $options = []): void
     {
-        $this->fs->mirror($filePath, $target);
+        $this->fs->mirror($filePath, $target, $iterator, $options);
     }
 
     public function mkdir(string $filePath, int $mode = 0755): void

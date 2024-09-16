@@ -82,7 +82,7 @@ class ThemeController extends AdminController
 
     #[Rest\Delete('/themes/{themeName}', requirements: ['themeName' => '.+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
-    public function delete(Request $request, string $themeName): View
+    public function deleteTheme(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
 
