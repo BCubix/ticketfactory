@@ -52,7 +52,7 @@ class ContentType extends Datable implements JsonDoctrineSerializable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
-    #[ORM\Column(length: 191, nullable: true, unique: true)]
+    #[ORM\Column(length: 123, nullable: true, unique: true)]
     private ?string $keyword = null;
 
     #[JMS\Expose()]
@@ -72,7 +72,6 @@ class ContentType extends Datable implements JsonDoctrineSerializable
 
     public function __construct()
     {
-        $this->active   = true;
         $this->contents = new ArrayCollection();
     }
 

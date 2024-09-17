@@ -38,7 +38,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one'])]
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: 'string', length: 123, unique: true)]
     private $email;
 
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]

@@ -31,7 +31,7 @@ class BackupDatabaseCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        // Récupérer les informations de connexion depuis Doctrine
+        // We get connection infos from Doctrine
         $params = $this->connection->getParams();
         $databaseHost = $params['host'];
         $databasePort = $params['port'];
@@ -39,19 +39,19 @@ class BackupDatabaseCommand extends Command
         $databaseUser = $params['user'];
         $databasePassword = $params['password'];
 
-        // Récupérer le chemin fourni en argument ou utiliser un chemin par défaut
+        // We get the path from args or use a default path
         $pathArgument = $input->getArgument('path');
         $backupPath = $pathArgument ?: __DIR__ . '/../../backups/' . date('Y-m-d_H-i-s') . '_backup.sql';
 
-        // Créer le dossier de backup s'il n'existe pas
+        // We create the folder if doesn't exist
         if (!is_dir(dirname($backupPath))) {
             mkdir(dirname($backupPath), 0777, true);
         }
 
-        // Commande mysqldump
+        // mysqldump command
         $command = "mysqldump -h $databaseHost -P $databasePort -u $databaseUser --password=$databasePassword $databaseName > $backupPath";
 
-        // Exécuter la commande
+        // We execute the command
         system($command, $result);
 
         if ($result === 0) {
