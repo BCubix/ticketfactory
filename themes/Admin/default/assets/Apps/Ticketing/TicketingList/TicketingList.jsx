@@ -59,7 +59,24 @@ export const ticketingListCrud = {
         confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette billetterie ?',
     },
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS?.wrapperComponent,
-    components: [{ component: (props) => <DisplayTicketingList {...props} /> }, { component: (props) => <CreateNewTicketingDialog {...props} /> }],
+    components: [
+        { component: (props) => <DisplayTicketingList {...props} /> },
+        { component: (props) => <CreateNewTicketingDialog {...props} /> },
+        {
+            component: ({ objectData, listCrud, dispatch }) => (
+                <Component.CmtPagination
+                    page={objectData?.filters?.page}
+                    total={objectData?.total}
+                    limit={objectData?.filters.limit}
+                    setPage={(newValue) => dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters }, newValue))}
+                    setLimit={(newValue) => {
+                        dispatch(listCrud?.changeFiltersActions({ ...objectData?.filters, limit: newValue }));
+                    }}
+                    length={listCrud?.dataList(objectData)?.length}
+                />
+            ),
+        },
+    ],
     deleteComponent: (props) => <DeleteTicketingDialog {...props} />,
 };
 
