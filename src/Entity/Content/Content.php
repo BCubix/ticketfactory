@@ -38,7 +38,7 @@ class Content extends Datable
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_one'])]
     #[ORM\Column(length: 123, unique: true)]

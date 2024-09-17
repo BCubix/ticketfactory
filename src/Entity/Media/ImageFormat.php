@@ -34,7 +34,7 @@ class ImageFormat extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_image_format_one'])]
     #[ORM\Column(length: 123, unique: true)]

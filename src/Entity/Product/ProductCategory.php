@@ -45,7 +45,7 @@ class ProductCategory extends Datable
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_category_all', 'a_product_category_one'])]
     #[ORM\Column(length: 123, unique: true)]

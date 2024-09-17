@@ -26,7 +26,7 @@ class EventType extends Datable
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_type_all', 'a_event_type_one', 'a_event_all', 'a_event_one'])]
     #[ORM\Column(length: 123, unique: true)]

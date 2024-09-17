@@ -34,7 +34,7 @@ class FeatureCategory extends Datable
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_feature_category_all', 'a_feature_category_one', 'a_feature_all', 'a_feature_one'])]
     #[ORM\Column(length: 123, unique: true)]

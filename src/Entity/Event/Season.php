@@ -39,7 +39,7 @@ class Season extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_season_one'])]
     #[ORM\Column(length: 123, unique: true)]

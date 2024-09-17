@@ -45,7 +45,7 @@ class Media extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $title = null;
 
-    #[Gedmo\Slug(fields: ['title'], updatable: true)]
+    #[Gedmo\Slug(fields: ['title'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]
     #[ORM\Column(length: 123, unique: false)]

@@ -42,7 +42,7 @@ class Product extends Datable
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_all', 'a_product_one', 'a_cart_one'])]
     #[ORM\Column(length: 123)]
