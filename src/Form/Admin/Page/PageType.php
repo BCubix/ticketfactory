@@ -38,7 +38,9 @@ class PageType extends AdminBaseFormType
                         ->orderBy('p.title', 'ASC');
                 }
             ])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
             ->add('pageBlocks',           CollectionType::class,      [
                 'entry_type'   => PageBlockType::class,
                 'allow_add'    => true,

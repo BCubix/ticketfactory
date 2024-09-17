@@ -28,7 +28,9 @@ class ContentType extends AdminBaseFormType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('title',                TextType::class,            [])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,
                 'choice_label'  => 'name',

@@ -39,7 +39,9 @@ class EventType extends AdminBaseFormType
         $builder
             ->add('active',                      CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('name',                        TextType::class,            [])
-            ->add('slug',                        TextType::class,            [])
+            ->add('slug',                        TextType::class,            [
+                'empty_data' => '',
+            ])
             ->add('chapo',                       TextareaType::class,        [])
             ->add('description',                 TextareaType::class,        [])
             ->add('ticketingReference',          TextType::class,            [])

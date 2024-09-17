@@ -22,7 +22,9 @@ class UrlType extends AdminBaseFormType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('name',                 TextType::class,            [])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
             ->add('page',                 EntityType::class,          [
                 'class'         => Page::class,
                 'choice_label'  => 'title',
