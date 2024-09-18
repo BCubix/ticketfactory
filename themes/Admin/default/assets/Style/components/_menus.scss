@@ -17,6 +17,16 @@
         }
     }
 
+    &-title {
+        @include for-size('md') {
+            font-size: 16px !important;
+        }
+
+        @include for-size('xl') {
+            font-size: 18px !important;
+        }
+    }
+
     &-footer {
         display: flex;
         margin-top: 12px;
@@ -26,6 +36,7 @@
         @include for-size('xs') {
             flex-direction: column;
         }
+
         @include for-size('sm') {
             justify-content: space-between;
         }

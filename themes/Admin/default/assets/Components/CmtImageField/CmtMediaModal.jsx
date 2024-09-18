@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -30,6 +30,7 @@ export const CmtMediaModal = ({
     updatedMedia = null,
     imageFormatList,
 }) => {
+    const updateRequestNb = useRef(0);
     const [createDialog, setCreateDialog] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
     const [multipleSelect, setMultipleSelect] = useState([]);
@@ -103,7 +104,16 @@ export const CmtMediaModal = ({
     };
 
     return (
-        <Dialog open={open} onClose={onClose} fullScreen TransitionComponent={Transition}>
+        <Dialog
+            open={open}
+            onClose={() => {
+                if (updateRequestNb.current <= 0) {
+                    closeModal();
+                }
+            }}
+            fullScreen
+            TransitionComponent={Transition}
+        >
             <DialogTitle sx={{ borderBottom: '1px solid #d3d3d3' }}>
                 <Box display="flex" justifyContent="space-between">
                     <Typography component="h1" variant="h5" fontSize={20}>
@@ -112,7 +122,11 @@ export const CmtMediaModal = ({
 
                     <IconButton
                         aria-label="close"
-                        onClick={onClose}
+                        onClick={() => {
+                            if (updateRequestNb.current <= 0) {
+                                closeModal();
+                            }
+                        }}
                         id="close-media-modal"
                         sx={{
                             position: 'absolute',
@@ -207,6 +221,12 @@ export const CmtMediaModal = ({
                             onClick={onClick}
                             AddMediaLabel={AddMediaLabel}
                             RemoveMediaLabel={RemoveMediaLabel}
+                            startUpdatingMedia={() => {
+                                updateRequestNb.current += 1;
+                            }}
+                            endUpdatingMedia={() => {
+                                updateRequestNb.current -= 1;
+                            }}
                             updatedMedia={(newMedia) => {
                                 if (selectedMedia?.id === newMedia?.id) {
                                     setSelectedMedia(newMedia);

@@ -57,7 +57,7 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight, closeSidebar
                     {Menu.filter((el) => el.menu.length > 0).map((menu, index) => (
                         <Box key={index}>
                             <Component.MenuTitle component="li" disableSticky>
-                                <Typography variant="h2" fontSize={12}>
+                                <Typography variant="h2" fontSize={12} className="menus-title">
                                     {menu.title}
                                 </Typography>
                             </Component.MenuTitle>

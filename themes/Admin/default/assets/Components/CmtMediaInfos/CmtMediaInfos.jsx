@@ -35,7 +35,15 @@ const EditValidateIcon = ({ editMode, name, handleSubmit, handleSetEditMode, set
     );
 };
 
-export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, displayMeta = false, updatedMedia = null, imageFormatList }) => {
+export const CmtDisplayMediaInfos = ({
+    selectedMedia,
+    displayImage = false,
+    displayMeta = false,
+    startUpdatingMedia = null,
+    endUpdatingMedia = null,
+    updatedMedia = null,
+    imageFormatList,
+}) => {
     const dispatch = useDispatch();
     const selectedMediaId = useRef(selectedMedia?.id);
     const [editMode, setEditMode] = useState({
@@ -64,7 +72,16 @@ export const CmtDisplayMediaInfos = ({ selectedMedia, displayImage = false, disp
 
     const handleChangeMediaInfos = async (values) => {
         apiMiddleware(dispatch, async () => {
+            if (startUpdatingMedia) {
+                startUpdatingMedia({ ...selectedMedia, [values.submittedInput]: values[values.submittedInput] });
+            }
+
             const result = await Api.mediasApi.editMedia(selectedMedia?.id, { ...selectedMedia, [values.submittedInput]: values[values.submittedInput] });
+
+            if (endUpdatingMedia) {
+                endUpdatingMedia(result);
+            }
+
             if (!result.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 return;
