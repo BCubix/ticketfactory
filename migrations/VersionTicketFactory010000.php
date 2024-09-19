@@ -27,6 +27,10 @@ final class VersionTicketFactory010000 extends AbstractMigration
         $this->addSql('ALTER TABLE product_row_voucher ADD CONSTRAINT FK_D730AEECE1DE2856 FOREIGN KEY (product_row_id) REFERENCES product_row (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE product_row_voucher ADD CONSTRAINT FK_D730AEEC28AA1B6F FOREIGN KEY (voucher_id) REFERENCES voucher (id) ON DELETE CASCADE');
 
+        $this->addSql('ALTER TABLE content_type CHANGE keyword keyword VARCHAR(123) DEFAULT NULL');
+        $this->addSql('ALTER TABLE parameter ADD translated_parameter TINYINT(1) NOT NULL');
+        $this->addSql('ALTER TABLE user CHANGE email email VARCHAR(123) NOT NULL');
+
         $this->addSql("INSERT INTO parameter (name, type, param_key, param_value, available_value, validations, tab_name, block_name, breakpoints_value, general_parameter) VALUES ('Version de Ticket Factory', 'string', 'core_ticket_factory_version', '1.0.0', NULL, NULL, NULL, NULL, NULL, 0)");
         $this->addSql("INSERT INTO parameter (name, type, param_key, param_value, available_value, validations, tab_name, block_name, breakpoints_value, general_parameter) VALUES ('Url de la marketplace', 'string', 'core_marketplace_url', 'https://www.ticketfactory.fr', NULL, NULL, NULL, NULL, NULL, 0)");
     }
@@ -40,6 +44,10 @@ final class VersionTicketFactory010000 extends AbstractMigration
         $this->addSql('ALTER TABLE product_row_voucher DROP FOREIGN KEY FK_D730AEEC28AA1B6F');
         $this->addSql('DROP TABLE product_row');
         $this->addSql('DROP TABLE product_row_voucher');
+
+        $this->addSql('ALTER TABLE content_type CHANGE keyword keyword VARCHAR(191) DEFAULT NULL');
+        $this->addSql('ALTER TABLE parameter DROP translated_parameter');
+        $this->addSql('ALTER TABLE user CHANGE email email VARCHAR(180) NOT NULL');
 
         $this->addSql("DELETE FROM parameter WHERE param_key = 'core_ticket_factory_version'");
         $this->addSql("DELETE FROM parameter WHERE param_key = 'core_marketplace_url'");

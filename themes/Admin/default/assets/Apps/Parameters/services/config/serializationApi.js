@@ -22,10 +22,27 @@ export const serializationApi = {
     openingHours: (value) => (value ? JSON.stringify(value) : ''),
 };
 
-export const getSerializationApiValue = (type, value) => {
-    if (!Crud?.parameters?.edit?.serializationApi[type]) {
-        return value || '';
+export const getSerializationApiValue = (parameter) => {
+    if (parameter.translatedParameter) {
+        if (!parameter.paramValue) {
+            return JSON.stringify({}) || '';
+        }
+
+        let result = {};
+        Object.entries(parameter.paramValue)?.forEach(([key, value]) => {
+            if (!Crud?.parameters?.edit?.serializationApi[parameter.type]) {
+                result[key] = value || '';
+            } else {
+                result[key] = Crud?.parameters?.edit?.serializationApi[parameter.type](value);
+            }
+        });
+
+        return JSON.stringify(result) || '';
     }
 
-    return Crud?.parameters?.edit?.serializationApi[type](value);
+    if (!Crud?.parameters?.edit?.serializationApi[parameter.type]) {
+        return parameter.paramValue || '';
+    }
+
+    return Crud?.parameters?.edit?.serializationApi[parameter.type](parameter.paramValue);
 };

@@ -22,10 +22,27 @@ export const deserializationApi = {
     openingHours: (value) => value || { lundi: '', mardi: '', mercredi: '', jeudi: '', vendredi: '', samedi: '', dimanche: '' },
 };
 
-export const getDeserializationApiValue = (type, value) => {
-    if (!Crud?.parameters?.edit?.deserializationApi[type]) {
+export const getDeserializationApiValue = (parameter) => {
+    if (parameter.translatedParameter) {
+        if (!parameter.paramValue) {
+            return {};
+        }
+
+        let result = {};
+        Object.entries(parameter.paramValue).forEach(([key, value]) => {
+            if (!Crud?.parameters?.edit?.deserializationApi[parameter.type]) {
+                result[key] = '';
+            }
+
+            result[key] = Crud?.parameters?.edit?.deserializationApi[parameter.type](value);
+        });
+
+        return result;
+    }
+
+    if (!Crud?.parameters?.edit?.deserializationApi[parameter.type]) {
         return '';
     }
 
-    return Crud?.parameters?.edit?.deserializationApi[type](value);
+    return Crud?.parameters?.edit?.deserializationApi[parameter.type](parameter.paramValue);
 };

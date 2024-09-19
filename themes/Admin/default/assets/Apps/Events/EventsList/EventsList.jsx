@@ -1,13 +1,12 @@
 import React from 'react';
 
+import { getEventsAction, changeEventsFilters, eventsSelector } from '@Apps/Events/redux/events/eventsSlice';
+
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getEventsAction, changeEventsFilters, eventsSelector } from '@Apps/Events/redux/events/eventsSlice';
-
-import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 export const eventsListCrud = ({ eventName }) => ({
     title: eventName,

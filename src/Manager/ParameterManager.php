@@ -80,6 +80,16 @@ class ParameterManager extends AbstractManager
         });
     }
 
+    public function getCoreTranslatedParameter(string $key, string $locale): mixed
+    {
+        $parameter = $this->getCoreParameter($key);
+        if (null === $parameter || !isset($parameter[$locale])) {
+            return null;
+        }
+
+        return $parameter[$locale];
+    }
+
     public function set(string $key, mixed $newValue)
     {
         $parameter = $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($key);
@@ -122,44 +132,40 @@ class ParameterManager extends AbstractManager
             return null;
         }
 
-        switch ($format) {
-            case 'int':
-                return intval($value);
+        $typeListFunctions = [
+            'int'           => fn ($value) => intval($value),
+            'float'         => fn ($value) => floatval($value),
+            'bool'          => fn ($value) => boolval($value),
+            'prices'        => fn ($value) => $this->se->deserialize($value, 'array', 'json'),
+            'openingHours'  => fn ($value) => $this->se->deserialize($value, 'array', 'json'),
+            'upload'        => fn ($value) => ('/uploads/parameter/' . $value),
+            'Page'          => fn ($value) => $this->em->getRepository(Page::class)->findOneForAdmin($value),
+            'Season'        => fn ($value) => $this->em->getRepository(Season::class)->findOneForAdmin($value),
+            'Room'          => fn ($value) => $this->em->getRepository(Room::class)->findOneForAdmin($value),
+            'EventCategory' => fn ($value) => $this->em->getRepository(EventCategory::class)->findOneForAdmin($value),
+            'MediaCategory' => fn ($value) => $this->em->getRepository(MediaCategory::class)->findOneForAdmin($value),
+            'string'        => fn ($value) => $value,
+        ];
 
-            case 'float':
-                return floatval($value);
+        if (!$parameter->isTranslatedParameter()) {
+            if (isset($typeListFunctions[$format])) {
+                return $typeListFunctions[$format]($value);
+            }
 
-            case 'bool':
-                return boolval($value);
-
-            case 'prices':
-                return $this->se->deserialize($value, 'array', 'json');
-
-            case 'openingHours':
-                return $this->se->deserialize($value, 'array', 'json');
-
-            case 'upload':
-                return ('/uploads/parameter/' . $value);
-
-            case 'Page':
-                return $this->em->getRepository(Page::class)->findOneForAdmin($value);
-
-            case 'Season':
-                return $this->em->getRepository(Season::class)->findOneForAdmin($value);
-
-            case 'Room':
-                return $this->em->getRepository(Room::class)->findOneForAdmin($value);
-
-            case 'EventCategory':
-                return $this->em->getRepository(EventCategory::class)->findOneForAdmin($value);
-
-            case 'MediaCategory':
-                return $this->em->getRepository(MediaCategory::class)->findOneForAdmin($value);
-
-            case 'string':
-            default:
-                return $value;
+            return $value;
         }
+
+        $translatedParameter = $this->se->deserialize($value, 'array', 'json');
+        $result = [];
+        foreach ($translatedParameter as $key => $translatedParameterValue) {
+            if (isset($typeListFunctions[$format])) {
+                $result[$key] = $typeListFunctions[$format]($translatedParameterValue);
+            } else {
+                $result[$key] = $translatedParameterValue;
+            }
+        }
+
+        return $result;
     }
 
     public function changeEnvFileVariable(string $variableName, string $newValue): void

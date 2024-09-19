@@ -1,4 +1,5 @@
 import React from 'react';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
 import { CreateEvent, eventsCreateCrud } from '@Apps/Events/CreateEvent/CreateEvent';
 import { EditEvent, eventsEditCrud } from '@Apps/Events/EditEvent/EditEvent';
@@ -25,8 +26,6 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
 export const initConstant = () => {
     setConstant('EVENTS_BASE_PATH', '/admin/evenements');
