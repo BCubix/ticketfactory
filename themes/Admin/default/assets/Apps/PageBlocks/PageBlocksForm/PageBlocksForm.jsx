@@ -98,7 +98,9 @@ export const pageBlocksForm = {
                                         orientation="vertical"
                                         value={view}
                                         exclusive
-                                        onChange={(e, newValue) => setView(newValue)}
+                                        onChange={(e, newValue) => {
+                                            setView(newValue);
+                                        }}
                                         size="small"
                                         sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
                                     >
