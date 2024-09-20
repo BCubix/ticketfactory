@@ -108,7 +108,7 @@ export const CmtMediaModal = ({
             open={open}
             onClose={() => {
                 if (updateRequestNb.current <= 0) {
-                    closeModal();
+                    onClose();
                 }
             }}
             fullScreen
@@ -124,7 +124,7 @@ export const CmtMediaModal = ({
                         aria-label="close"
                         onClick={() => {
                             if (updateRequestNb.current <= 0) {
-                                closeModal();
+                                onClose();
                             }
                         }}
                         id="close-media-modal"

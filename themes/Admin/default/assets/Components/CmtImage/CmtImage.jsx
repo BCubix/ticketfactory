@@ -46,7 +46,9 @@ export const CmtImage = ({ label, required = false, id, name, image, setFieldVal
     };
 
     const updatedMedia = (newValues) => {
-        setFieldValue(name, { ...newValues });
+        if (image?.id === newValues?.id) {
+            setFieldValue(name, { ...newValues });
+        }
 
         const lIndex = imagesList?.findIndex((el) => el.id === newValues.id);
         if (lIndex > -1) {

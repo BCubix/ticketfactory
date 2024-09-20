@@ -5,7 +5,7 @@ export const imageFormatsInitialSchema = {
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     slug: (initValues) => initValues?.slug || '',
-    imageToCrop: (initValues) => initValues?.imageToCrop || false,
+    imageToCrop: (initValues) => initValues?.imageToCrop || true,
     width: (initValues) => initValues?.width || '',
     height: (initValues) => initValues?.height || '',
     themeUse: (initValues) => initValues?.themeUse || '',
@@ -85,7 +85,7 @@ export const imageFormatsForm = {
                             style: { xs: 12 },
                             input: {
                                 name: 'imageToCrop',
-                                label: "Forcer la taille de l'image",
+                                label: "Retailler l'image",
                                 inputType: 'switch',
                             },
                         },

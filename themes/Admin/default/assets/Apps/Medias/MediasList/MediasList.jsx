@@ -12,7 +12,6 @@ import { changeMediasFilters, getMediasAction, mediasSelector } from '@Apps/Medi
 import CategoryIcon from '@mui/icons-material/Category';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
-import { Tab } from '@/AdminService/Tab';
 
 const LIST_TYPE = [
     { label: 'Image', value: 'Image' },
@@ -126,6 +125,7 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
     const [loadedImage, setLoadedImage] = useState([]);
     const [imageUploads, setImageUploads] = useState([]);
     const [sidebarDialog, setSidebarDialog] = useState(null);
+    const [imageFormatList, setImageFormatList] = useState([]);
     var idImageSidebar = useRef(0);
 
     useEffect(() => {
@@ -212,6 +212,14 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
             }
 
             setMediaCategoriesList(result.mediaCategories);
+
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                }
+            });
         });
     }, []);
 
@@ -286,6 +294,7 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                         onCancel={() => {
                             setAddIframeDialog(false);
                         }}
+                        imageFormatList={imageFormatList}
                     />
                 </DialogContent>
             </Dialog>
@@ -300,6 +309,7 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                             setEditIframeDialog(null);
                         }}
                         deleteElement={(id) => setDeleteDialog(id)}
+                        imageFormatList={imageFormatList}
                     />
                 </DialogContent>
             </Dialog>
@@ -328,6 +338,7 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                             } else setEditDialog(null);
                         }}
                         deleteElement={(id) => setDeleteDialog(id)}
+                        imageFormatList={imageFormatList}
                     />
                 </DialogContent>
             </Dialog>

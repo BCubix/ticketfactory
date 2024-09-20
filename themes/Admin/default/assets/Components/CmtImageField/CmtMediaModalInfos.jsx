@@ -27,17 +27,7 @@ export const CmtMediaModalInfos = ({
     }
 
     return (
-        <Box position="relative" px={10}>
-            <Component.CmtDisplayMediaInfos
-                selectedMedia={selectedMedia}
-                displayImage
-                displayMeta
-                updatedMedia={updatedMedia}
-                imageFormatList={imageFormatList}
-                startUpdatingMedia={startUpdatingMedia}
-                endUpdatingMedia={endUpdatingMedia}
-            />
-
+        <Box position="relative" px={10} pt={7}>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
                     variant={isSelected ? 'outlined' : 'contained'}
@@ -58,6 +48,16 @@ export const CmtMediaModalInfos = ({
                     {isSelected ? RemoveMediaLabel : AddMediaLabel} le média
                 </Button>
             </Box>
+
+            <Component.CmtDisplayMediaInfos
+                selectedMedia={selectedMedia}
+                displayImage
+                displayMeta
+                updatedMedia={updatedMedia}
+                imageFormatList={imageFormatList}
+                startUpdatingMedia={startUpdatingMedia}
+                endUpdatingMedia={endUpdatingMedia}
+            />
         </Box>
     );
 };

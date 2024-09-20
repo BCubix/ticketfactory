@@ -13,14 +13,13 @@ import { getMediasAction } from '@Apps/Medias/redux/medias/mediasSlice';
 
 import { getMediaType } from '@Services/utils/getMediaType';
 
-export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
+export const EditMedia = ({ id, editSuccess, onCancel, deleteElement, imageFormatList = [] }) => {
     const dispatch = useDispatch();
     const [media, setMedia] = useState(null);
     const [editImage, setEditImage] = useState(false);
     const [mediaType, setMediaType] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
     const [mediaParameterList, setMediaFormatList] = useState(null);
-    const [imageFormatList, setImageFormatList] = useState([]);
 
     const getMedia = async () => {
         apiMiddleware(dispatch, async () => {
@@ -78,15 +77,6 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement }) => {
             }
 
             setMediaCategoriesList(result.mediaCategories);
-
-            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
-                if (result.result) {
-                    setImageFormatList(result.imageFormats);
-                } else {
-                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
-                    onCancel();
-                }
-            });
         });
     }, []);
 

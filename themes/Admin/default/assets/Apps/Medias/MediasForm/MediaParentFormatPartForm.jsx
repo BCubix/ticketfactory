@@ -1,6 +1,5 @@
-import { copyData } from '@Services/utils/copyData';
-import React, { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 export const MediaParentFormatPartForm = ({ mediaParameterList, setMediaFormatList, values, setFieldValue }) => {
     const dispatch = useDispatch();

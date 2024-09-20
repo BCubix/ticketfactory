@@ -116,7 +116,56 @@ export const CmtDisplayMediaInfos = ({
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
                 <Box>
-                    <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
+                    <Box className="padding-top-3">
+                        <Typography variant="h3">Emplacements</Typography>
+                    </Box>
+
+                    <Box sx={{ mb: 3, pt: 4, display: 'flex', alignItems: 'center' }}>
+                        {editMode.imageFormats ? (
+                            <Component.CmtSelectField
+                                label="Emplacements"
+                                multiple
+                                name={`imageFormats`}
+                                value={values?.imageFormats}
+                                list={imageFormatList || []}
+                                getValue={(item) => item?.id}
+                                getName={(item) => item?.name}
+                                setFieldValue={setFieldValue}
+                                errors={touched.imageFormats && errors.imageFormats}
+                            />
+                        ) : (
+                            <Box width="100%">
+                                <Typography variant="body1">{selectedMedia?.imageFormats.map((format) => format.name).join(' - ')}</Typography>
+                            </Box>
+                        )}
+
+                        <EditValidateIcon
+                            editMode={editMode.imageFormats}
+                            name="imageFormats"
+                            handleSubmit={handleSubmit}
+                            handleSetEditMode={handleSetEditMode}
+                            setFieldValue={setFieldValue}
+                        />
+                    </Box>
+
+                    {displayImage && (
+                        <>
+                            <Box className="padding-top-3">
+                                <Typography variant="h3">Aperçu</Typography>
+                            </Box>
+                            <Box display="flex" justifyContent={'center'}>
+                                <Box mb={5} mt={5} maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center" position={'relative'}>
+                                    <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
+                                </Box>
+                            </Box>
+                        </>
+                    )}
+
+                    <Box className="padding-top-5">
+                        <Typography variant="h3">Propriétés</Typography>
+                    </Box>
+
+                    <Box sx={{ mb: 3, mt: 5, display: 'flex', alignItems: 'center' }}>
                         {editMode.title ? (
                             <Component.CmtTextField
                                 value={values.title}
@@ -190,44 +239,6 @@ export const CmtDisplayMediaInfos = ({
                             setFieldValue={setFieldValue}
                         />
                     </Box>
-                    <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                        {editMode.imageFormats ? (
-                            <Component.CmtSelectField
-                                label="Formats"
-                                multiple
-                                name={`imageFormats`}
-                                value={values?.imageFormats}
-                                list={imageFormatList || []}
-                                getValue={(item) => item?.id}
-                                getName={(item) => item?.name}
-                                setFieldValue={setFieldValue}
-                                errors={touched.imageFormats && errors.imageFormats}
-                            />
-                        ) : (
-                            <Box width="100%">
-                                <Typography fontSize={10} variant="body2">
-                                    Format
-                                </Typography>
-                                <Typography variant="body1">{selectedMedia?.imageFormats.map((format) => format.name).join(' - ')}</Typography>
-                            </Box>
-                        )}
-
-                        <EditValidateIcon
-                            editMode={editMode.imageFormats}
-                            name="imageFormats"
-                            handleSubmit={handleSubmit}
-                            handleSetEditMode={handleSetEditMode}
-                            setFieldValue={setFieldValue}
-                        />
-                    </Box>
-
-                    {displayImage && (
-                        <Box display="flex" justifyContent={'center'}>
-                            <Box my={10} maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center" position={'relative'}>
-                                <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
-                            </Box>
-                        </Box>
-                    )}
 
                     {displayMeta && <Component.CmtDisplayMediaMeta selectedMedia={selectedMedia} />}
                 </Box>
