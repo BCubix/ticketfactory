@@ -23,6 +23,8 @@
             flex: 1;
             flex-direction: column;
             padding-bottom: 16px;
+            height: fit-content;
+            min-height: 100%;
         }
     }
 }
