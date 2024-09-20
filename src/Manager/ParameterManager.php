@@ -50,6 +50,25 @@ class ParameterManager extends AbstractManager
         return $parameters;
     }
 
+    public function getAllForAdmin()
+    {
+        $parameters = $this->getAll();
+
+        $appEnvLastTimestamp = $this->mf->get('cache')->getValue("app_env_last_timestamp" , function () {
+            return $this->checkAppEnv();
+        });
+
+        $lastCheckDate = (new \DateTime())->setTimestamp($appEnvLastTimestamp);
+        $now = new \DateTime();
+        $interval = $now->diff($lastCheckDate);
+
+        if ($interval->days > 0 || ($interval->days == 0 && $interval->h >= 24)) {
+            $this->checkAppEnv();
+        }
+
+        return $parameters;
+    }
+
     public function get(string $key): mixed
     {
         return $this->getParameterValue($this->getParameter($key));
@@ -285,5 +304,21 @@ class ParameterManager extends AbstractManager
         // $font->close();
 
         //dd($fileName, $fontFilePath, $font);
+    }
+
+    private function checkAppEnv()
+    {
+        $appEnvDebugMode = $_ENV['APP_ENV'] === "dev" ? true : false;
+        $parameterDebugMode = $this->getCoreParameter('debug_mode');
+
+        if ($appEnvDebugMode !== $parameterDebugMode) {
+            $this->set("core_debug_mode", !$parameterDebugMode);
+            $this->em->flush();
+        }
+
+        $date = new \DateTime();
+        $this->mf->get('cache')->setValue("app_env_last_timestamp", $date->getTimestamp());
+
+        return $date->getTimestamp();
     }
 }
