@@ -48,6 +48,8 @@ class EventCategoryHook extends Hook
 
         $this->em->persist($eventCategory);
         $this->em->flush();
+
+        $this->mf->get('seo')->completeSeoEventCategory($eventCategory);
     }
 
     public function hookEventCategoryValidated(HookEvent $event)
@@ -62,7 +64,5 @@ class EventCategoryHook extends Hook
             }
             $eventCategory = $eventCategory->getParent();
         }
-
-        $this->mf->get('seo')->completeSeoEventCategory($vObject);
     }
 }

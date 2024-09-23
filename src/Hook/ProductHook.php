@@ -8,6 +8,13 @@ use App\Service\Addon\Hook;
 
 class ProductHook extends Hook
 {
+    public function hookProductSaved(HookEvent $event)
+    {
+        $sObject = $event->getParam('sObject');
+
+        $this->mf->get('seo')->completeSeoProduct($sObject);
+    }
+
     public function hookProductValidated(HookEvent $event)
     {
         $vObject = $event->getParam('vObject');
@@ -34,7 +41,5 @@ class ProductHook extends Hook
                 $this->em->persist($featureValue);
             }
         }
-
-        $this->mf->get('seo')->completeSeoProduct($vObject);
     }
 }

@@ -34,6 +34,8 @@ class ProductCategoryHook extends Hook
 
         $this->em->persist($mediaCategory);
         $this->em->flush();
+
+        $this->mf->get('seo')->completeSeoProductCategory($mediaCategory);
     }
 
     public function hookProductCategoryValidated(HookEvent $event)
@@ -48,7 +50,5 @@ class ProductCategoryHook extends Hook
             }
             $eventCategory = $eventCategory->getParent();
         }
-
-        $this->mf->get('seo')->completeSeoProductCategory($vObject);
     }
 }

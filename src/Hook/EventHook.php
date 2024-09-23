@@ -14,6 +14,8 @@ class EventHook extends Hook
         $sObject = $event->getParam('sObject');
 
         //$this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
+
+        $this->mf->get('seo')->completeSeoEvent($sObject);
     }
 
     public function hookEventValidated(HookEvent $event)
@@ -42,7 +44,5 @@ class EventHook extends Hook
                 $this->em->persist($featureValue);
             }
         }
-
-        $this->mf->get('seo')->completeSeoEvent($vObject);
     }
 }
