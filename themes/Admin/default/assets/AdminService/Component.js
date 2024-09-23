@@ -2,7 +2,7 @@ import { App } from '@/App';
 import { Routing } from '@/Routing';
 
 import { CmtDisplayMediaInfos, CmtDisplayMediaMeta } from '@Components/CmtMediaInfos/CmtMediaInfos';
-
+import { CmtMediaInfoBlock } from '@Components/CmtMediaInfos/sc.CmtMediaInfoBlock';
 import { CmtBreadCrumb } from '@Components/CmtBreadCrumb/CmtBreadCrumb';
 import { StyledBreadCrumb } from '@Components/CmtBreadCrumb/sc.StyledBreadCrumb';
 import {
@@ -99,6 +99,7 @@ const ComponentObj = {
     CmtFiltersList: CmtFiltersList,
 
     CmtDisplayMediaInfos: CmtDisplayMediaInfos,
+    CmtMediaInfoBlock: CmtMediaInfoBlock,
     CmtDisplayMediaMeta: CmtDisplayMediaMeta,
 
     CmtBreadCrumb: CmtBreadCrumb,

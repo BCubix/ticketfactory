@@ -64,6 +64,34 @@ $spacing: 4px;
             margin-right: auto;
         }
     }
+
+    &-block {
+        margin-block: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                margin-block: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            margin-block: auto;
+        }
+    }
+
+    &-inline {
+        margin-inline: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                margin-inline: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            margin-inline: auto;
+        }
+    }
 }
 
 .padding {
@@ -128,6 +156,34 @@ $spacing: 4px;
 
         &-auto {
             padding-right: auto;
+        }
+    }
+
+    &-block {
+        padding-block: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                padding-block: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            padding-block: auto;
+        }
+    }
+
+    &-inline {
+        padding-inline: $spacing;
+
+        @for $i from 2 through 5 {
+            &-#{$i} {
+                padding-inline: $spacing * $i;
+            }
+        }
+
+        &-auto {
+            padding-inline: auto;
         }
     }
 }
