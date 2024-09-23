@@ -152,6 +152,11 @@ class ModuleManager extends AddonManager
                     $this->em->persist($module);
                     $this->em->flush();
 
+                    // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is true
+                    if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {
+                        $this->em->getConnection()->commit();
+                    }
+
                     // we add the traits to be installed with the module or remove them if we disable the module
                     $this->callConfig($moduleName, "trait", [$action == ModuleEntity::ACTION_DISABLE]);
 
@@ -159,11 +164,6 @@ class ModuleManager extends AddonManager
 
                     // we execute this function to add the configuration to be installed with the module.
                     $this->executeConfiguration($moduleName, $action);
-
-                    // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is true
-                    if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {
-                        $this->em->getConnection()->commit();
-                    }
 
                     break;
 
