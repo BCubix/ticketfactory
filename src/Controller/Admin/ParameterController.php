@@ -52,7 +52,7 @@ class ParameterController extends AdminController
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_all'])]
     public function getAll(Request $request, ParameterManager $pm): View
     {
-        return $this->view($pm->getAll(), Response::HTTP_OK);
+        return $this->view($pm->getAllForAdmin(), Response::HTTP_OK);
     }
 
     #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
@@ -64,7 +64,7 @@ class ParameterController extends AdminController
 
     #[Rest\Post('/parametres')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
-    public function edit(Request $request, ParameterManager $pm): View
+    public function editParameter(Request $request, ParameterManager $pm): View
     {
         $parameters = $request->request->all();
         if (!isset($parameters['parameters'])) {

@@ -268,19 +268,13 @@ class EventManager extends AbstractRouterManager
                 return '';
 
             case 1:
-                return (DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getBeginDate($event), $this->getLocale(), $format));
+                return $this->mf->get('eventDate')->getFormattedEventDatesStr($event, $this->mf->get('parameter')->getCoreTranslatedParameter("event_one_date_format", $this->getLocale()));
 
             case 2:
-                return (DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getBeginDate($event), $this->getLocale(), $format) . ' ' .
-                    $this->tr->trans('global.and') . ' ' .
-                    DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getEndDate($event), $this->getLocale(), $format)
-                );
+                return $this->mf->get('eventDate')->getFormattedEventDatesStr($event, $this->mf->get('parameter')->getCoreTranslatedParameter("event_two_date_format", $this->getLocale()));
 
             default:
-                return (DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getBeginDate($event), $this->getLocale(), $format) . ' ' .
-                    $this->tr->trans('global.to') . ' ' .
-                    DateTimeFormatter::formatDate($this->mf->get('eventSorter')->getEndDate($event), $this->getLocale(), $format)
-                );
+                return $this->mf->get('eventDate')->getFormattedEventDatesStr($event, $this->mf->get('parameter')->getCoreTranslatedParameter("event_many_date_format", $this->getLocale()));
         }
     }
 

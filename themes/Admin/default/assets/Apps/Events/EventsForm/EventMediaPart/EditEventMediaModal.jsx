@@ -39,6 +39,7 @@ export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, s
                                 endUpdatingMedia={() => {
                                     updateRequestNb.current -= 1;
                                 }}
+                                wrapperClasses=""
                             />
 
                             <Box display="flex" my={5}>

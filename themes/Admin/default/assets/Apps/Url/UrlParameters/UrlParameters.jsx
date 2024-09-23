@@ -30,7 +30,7 @@ export const UrlParameters = ({ parametersNameList = Crud.url.list.parameterList
             }
 
             const indexTab = tabs.findIndex((tab) => tab.tabName === parameter.tabName);
-            parameter = { ...parameter, paramValue: getDeserializationApiValue(parameter.type, parameter.paramValue) };
+            parameter = { ...parameter, paramValue: getDeserializationApiValue(parameter) };
 
             if (indexTab === -1) {
                 tabs.push({

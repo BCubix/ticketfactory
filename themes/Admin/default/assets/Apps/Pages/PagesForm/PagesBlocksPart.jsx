@@ -250,7 +250,11 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                                 orientation="vertical"
                                                 value={view}
                                                 exclusive
-                                                onChange={(e, newValue) => setView(newValue)}
+                                                onChange={(e, newValue) => {
+                                                    if (newValue) {
+                                                        setView(newValue);
+                                                    }
+                                                }}
                                                 size="small"
                                                 sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
                                             >

@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { NotificationManager } from 'react-notifications';
-
 import 'tui-image-editor/dist/tui-image-editor.css';
 import ImageEditor from 'tui-image-editor';
-
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Api } from "@/AdminService/Api";
-import { Constant } from "@/AdminService/Constant";
+import { Api } from '@/AdminService/Api';
+import { Constant } from '@/AdminService/Constant';
 
 export const MediaImageForm = ({ media = null, closeImageEditor, editSuccess }) => {
     const editor = useRef(null);
@@ -19,11 +17,7 @@ export const MediaImageForm = ({ media = null, closeImageEditor, editSuccess }) 
         const result = await Api.mediasApi.updateImage(media.id, fileBase64, media.title);
 
         if (result?.result && result?.media?.success) {
-            NotificationManager.success(
-                'Votre image a bien été mise à jour.',
-                'Succès',
-                Constant.REDIRECTION_TIME
-            );
+            NotificationManager.success('Votre image a bien été mise à jour.', 'Succès', Constant.REDIRECTION_TIME);
 
             editSuccess();
         }
@@ -61,12 +55,7 @@ export const MediaImageForm = ({ media = null, closeImageEditor, editSuccess }) 
                     Annuler
                 </Button>
 
-                <Button
-                    variant="contained"
-                    sx={{ ml: 3 }}
-                    color="primary"
-                    onClick={handleValidateImage}
-                >
+                <Button variant="contained" sx={{ ml: 3 }} color="primary" onClick={handleValidateImage}>
                     Valider
                 </Button>
             </Box>

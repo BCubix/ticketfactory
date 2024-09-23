@@ -73,7 +73,7 @@ const Formats = ({ values, setFieldValue, touched, errors, imageFormatList }) =>
         <Grid container spacing={4} sx={{ marginTop: 3 }}>
             <Grid item xs={12}>
                 <Component.CmtSelectField
-                    label="Formats"
+                    label="Emplacements"
                     multiple
                     name={`imageFormats`}
                     value={values.imageFormats}
@@ -103,7 +103,7 @@ const Categories = ({ values, setFieldValue, errors, touched, mediaCategoriesLis
     </Grid>
 );
 
-export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, mediaParameterList, setMediaFormatList, imageFormatList }) => {
+export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, imageFormatList }) => {
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du fichier'),
     });
@@ -158,9 +158,10 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                                 component: <Categories values={values} setFieldValue={setFieldValue} errors={errors} touched={touched} mediaCategoriesList={mediaCategoriesList} />,
                             },
                             {
-                                label: 'Formats',
-                                id: 'formats',
+                                label: 'Emplacements',
+                                id: 'locations',
                                 component: <Formats values={values} setFieldValue={setFieldValue} touched={touched} errors={errors} imageFormatList={imageFormatList} />,
+                                hidden: !['image', 'audio', 'video'].includes(media?.realType),
                             },
                         ]}
                     />

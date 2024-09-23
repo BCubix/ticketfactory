@@ -1,9 +1,14 @@
 import React from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 
+import { DisplayTranslatedParameters } from '@Apps/Parameters/ParametersForm/DisplayTranslatedParameters';
 import { ParametersBlockForm } from '@Apps/Parameters/ParametersForm/ParametersBlockForm';
 import { parametersFormCrud, ParametersForm } from '@Apps/Parameters/ParametersForm/ParametersForm';
 import { ParametersMenu } from '@Apps/Parameters/ParametersMenu/ParametersMenu';
+import { ParametersModuleMenu } from '@Apps/Parameters/ParametersMenu/ParametersModuleMenu';
+import { ParametersThemeMenu } from '@Apps/Parameters/ParametersMenu/ParametersThemeMenu';
+import parametersReducer from '@Apps/Parameters/redux/parameters/parametersSlice';
+import parametersApi from '@Apps/Parameters/services/api/parametersApi';
 
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setApi } from '@/AdminService/Api';
@@ -13,11 +18,6 @@ import { setCrud } from '@/AdminService/Crud';
 import { insertSubMenu } from '@/AdminService/Menu';
 import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
-
-import parametersReducer from '@Apps/Parameters/redux/parameters/parametersSlice';
-import parametersApi from '@Apps/Parameters/services/api/parametersApi';
-import { ParametersModuleMenu } from './ParametersMenu/ParametersModuleMenu';
-import { ParametersThemeMenu } from './ParametersMenu/ParametersThemeMenu';
 
 export const initConstant = () => {
     setConstant('PARAMETERS_BASE_PATH', '/admin/parametres');
@@ -29,6 +29,7 @@ export const initComponent = () => {
     setComponent('ParametersMenu', ParametersMenu);
     setComponent('ParametersModuleMenu', ParametersModuleMenu);
     setComponent('ParametersThemeMenu', ParametersThemeMenu);
+    setComponent('DisplayTranslatedParameters', DisplayTranslatedParameters);
 };
 
 export const initApi = () => {

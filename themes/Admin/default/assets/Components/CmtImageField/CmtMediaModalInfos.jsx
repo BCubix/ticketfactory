@@ -27,37 +27,21 @@ export const CmtMediaModalInfos = ({
     }
 
     return (
-        <Box position="relative" px={10}>
-            <Component.CmtDisplayMediaInfos
-                selectedMedia={selectedMedia}
-                displayImage
-                displayMeta
-                updatedMedia={updatedMedia}
-                imageFormatList={imageFormatList}
-                startUpdatingMedia={startUpdatingMedia}
-                endUpdatingMedia={endUpdatingMedia}
-            />
-
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                    variant={isSelected ? 'outlined' : 'contained'}
-                    color={isSelected ? 'error' : 'primary'}
-                    id="add-remove-media"
-                    onClick={() => {
-                        if (null !== onClick) {
-                            onClick(selectedMedia);
-                        } else {
-                            if (isSelected) {
-                                setFieldValue(name, null);
-                            } else {
-                                setFieldValue(name, selectedMedia);
-                            }
-                        }
-                    }}
-                >
-                    {isSelected ? RemoveMediaLabel : AddMediaLabel} le média
-                </Button>
-            </Box>
-        </Box>
+        <Component.CmtDisplayMediaInfos
+            selectedMedia={selectedMedia}
+            displayImage
+            displayMeta
+            updatedMedia={updatedMedia}
+            imageFormatList={imageFormatList}
+            startUpdatingMedia={startUpdatingMedia}
+            endUpdatingMedia={endUpdatingMedia}
+            isSelected={isSelected}
+            setFieldValue={setFieldValue}
+            name={name}
+            onClick={onClick}
+            AddMediaLabel={AddMediaLabel}
+            RemoveMediaLabel={RemoveMediaLabel}
+            displaySelectButton={true}
+        />
     );
 };

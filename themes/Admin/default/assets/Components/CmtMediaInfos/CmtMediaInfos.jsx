@@ -1,21 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { NotificationManager } from 'react-notifications';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import moment from 'moment/moment';
-
-import { Grid, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-
+import { Button, Grid, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { Component } from '@/AdminService/Component';
 import { Api } from '@/AdminService/Api';
-
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { useDispatch } from 'react-redux';
-import { NotificationManager } from 'react-notifications';
 import { Constant } from '@/AdminService/Constant';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 const EditValidateIcon = ({ editMode, name, handleSubmit, handleSetEditMode, setFieldValue }) => {
     return (
@@ -39,10 +36,18 @@ export const CmtDisplayMediaInfos = ({
     selectedMedia,
     displayImage = false,
     displayMeta = false,
+    displaySelectButton = false,
     startUpdatingMedia = null,
     endUpdatingMedia = null,
     updatedMedia = null,
     imageFormatList,
+    isSelected,
+    setFieldValue,
+    name,
+    onClick,
+    AddMediaLabel,
+    RemoveMediaLabel,
+    wrapperClasses = 'padding-inline-5 padding-bottom-5',
 }) => {
     const dispatch = useDispatch();
     const selectedMediaId = useRef(selectedMedia?.id);
@@ -115,119 +120,169 @@ export const CmtDisplayMediaInfos = ({
             enableReinitialize
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-                <Box>
-                    <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                        {editMode.title ? (
-                            <Component.CmtTextField
-                                value={values.title}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                label="Titre"
-                                name="title"
-                                error={touched.title && errors.title}
-                                required
+                <Box className={wrapperClasses}>
+                    <Component.CmtMediaInfoBlock>
+                        <Box>
+                            <Typography variant="h3">Emplacements</Typography>
+                        </Box>
+
+                        <Box sx={{ mb: 3, pt: 4, display: 'flex', alignItems: 'center' }}>
+                            {editMode.imageFormats ? (
+                                <Component.CmtSelectField
+                                    label="Emplacements"
+                                    multiple
+                                    name={`imageFormats`}
+                                    value={values?.imageFormats}
+                                    list={imageFormatList || []}
+                                    getValue={(item) => item?.id}
+                                    getName={(item) => item?.name}
+                                    setFieldValue={setFieldValue}
+                                    errors={touched.imageFormats && errors.imageFormats}
+                                />
+                            ) : (
+                                <Box width="100%">
+                                    <Typography variant="body1">{selectedMedia?.imageFormats.map((format) => format.name).join(' - ')}</Typography>
+                                </Box>
+                            )}
+
+                            <EditValidateIcon
+                                editMode={editMode.imageFormats}
+                                name="imageFormats"
+                                handleSubmit={handleSubmit}
+                                handleSetEditMode={handleSetEditMode}
+                                setFieldValue={setFieldValue}
                             />
-                        ) : (
-                            <Box width="100%">
-                                <Typography fontSize={10} variant="body2">
-                                    Titre
-                                </Typography>
-                                <Typography variant="body1">{selectedMedia?.title}</Typography>
+                        </Box>
+
+                        {displaySelectButton && (
+                            <Box className="flex row-center padding-top-3">
+                                <Button
+                                    variant={isSelected ? 'outlined' : 'contained'}
+                                    color={isSelected ? 'error' : 'primary'}
+                                    id="add-remove-media"
+                                    onClick={() => {
+                                        if (null !== onClick) {
+                                            onClick(selectedMedia);
+                                        } else {
+                                            if (isSelected) {
+                                                setFieldValue(name, null);
+                                            } else {
+                                                setFieldValue(name, selectedMedia);
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {isSelected ? RemoveMediaLabel : AddMediaLabel} le média
+                                </Button>
                             </Box>
                         )}
+                    </Component.CmtMediaInfoBlock>
 
-                        <EditValidateIcon editMode={editMode.title} name="title" handleSubmit={handleSubmit} handleSetEditMode={handleSetEditMode} setFieldValue={setFieldValue} />
-                    </Box>
+                    {displayImage && (
+                        <Component.CmtMediaInfoBlock>
+                            <Box>
+                                <Typography variant="h3">Aperçu</Typography>
+                            </Box>
+                            <Box display="flex" justifyContent={'center'}>
+                                <Box mb={5} mt={5} maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center" position={'relative'}>
+                                    <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
+                                </Box>
+                            </Box>
+                        </Component.CmtMediaInfoBlock>
+                    )}
 
-                    {selectedMedia?.realType === 'image' && (
-                        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                            {editMode.alt ? (
+                    <Component.CmtMediaInfoBlock>
+                        <Box>
+                            <Typography variant="h3">Propriétés</Typography>
+                        </Box>
+
+                        <Box sx={{ mb: 3, mt: 5, display: 'flex', alignItems: 'center' }}>
+                            {editMode.title ? (
                                 <Component.CmtTextField
-                                    value={values.alt}
+                                    value={values.title}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    label="Texte alternatif"
-                                    name="alt"
-                                    error={touched.alt && errors.alt}
+                                    label="Titre"
+                                    name="title"
+                                    error={touched.title && errors.title}
+                                    required
                                 />
                             ) : (
                                 <Box width="100%">
                                     <Typography fontSize={10} variant="body2">
-                                        Texte alternatif
+                                        Titre
                                     </Typography>
-                                    <Typography variant="body1">{selectedMedia?.alt || '-'}</Typography>
+                                    <Typography variant="body1">{selectedMedia?.title}</Typography>
                                 </Box>
                             )}
 
-                            <EditValidateIcon editMode={editMode.alt} name="alt" handleSubmit={handleSubmit} handleSetEditMode={handleSetEditMode} setFieldValue={setFieldValue} />
-                        </Box>
-                    )}
-
-                    <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                        {editMode.legend ? (
-                            <Component.CmtTextField
-                                value={values.legend}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                label="Légende"
-                                name="legend"
-                                error={touched.legend && errors.legend}
-                            />
-                        ) : (
-                            <Box width="100%">
-                                <Typography fontSize={10} variant="body2">
-                                    Légende
-                                </Typography>
-                                <Typography variant="body1">{selectedMedia?.legend || '-'}</Typography>
-                            </Box>
-                        )}
-
-                        <EditValidateIcon
-                            editMode={editMode.legend}
-                            name="legend"
-                            handleSubmit={handleSubmit}
-                            handleSetEditMode={handleSetEditMode}
-                            setFieldValue={setFieldValue}
-                        />
-                    </Box>
-                    <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-                        {editMode.imageFormats ? (
-                            <Component.CmtSelectField
-                                label="Formats"
-                                multiple
-                                name={`imageFormats`}
-                                value={values?.imageFormats}
-                                list={imageFormatList || []}
-                                getValue={(item) => item?.id}
-                                getName={(item) => item?.name}
+                            <EditValidateIcon
+                                editMode={editMode.title}
+                                name="title"
+                                handleSubmit={handleSubmit}
+                                handleSetEditMode={handleSetEditMode}
                                 setFieldValue={setFieldValue}
-                                errors={touched.imageFormats && errors.imageFormats}
                             />
-                        ) : (
-                            <Box width="100%">
-                                <Typography fontSize={10} variant="body2">
-                                    Format
-                                </Typography>
-                                <Typography variant="body1">{selectedMedia?.imageFormats.map((format) => format.name).join(' - ')}</Typography>
+                        </Box>
+
+                        {selectedMedia?.realType === 'image' && (
+                            <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
+                                {editMode.alt ? (
+                                    <Component.CmtTextField
+                                        value={values.alt}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        label="Texte alternatif"
+                                        name="alt"
+                                        error={touched.alt && errors.alt}
+                                    />
+                                ) : (
+                                    <Box width="100%">
+                                        <Typography fontSize={10} variant="body2">
+                                            Texte alternatif
+                                        </Typography>
+                                        <Typography variant="body1">{selectedMedia?.alt || '-'}</Typography>
+                                    </Box>
+                                )}
+
+                                <EditValidateIcon
+                                    editMode={editMode.alt}
+                                    name="alt"
+                                    handleSubmit={handleSubmit}
+                                    handleSetEditMode={handleSetEditMode}
+                                    setFieldValue={setFieldValue}
+                                />
                             </Box>
                         )}
 
-                        <EditValidateIcon
-                            editMode={editMode.imageFormats}
-                            name="imageFormats"
-                            handleSubmit={handleSubmit}
-                            handleSetEditMode={handleSetEditMode}
-                            setFieldValue={setFieldValue}
-                        />
-                    </Box>
+                        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
+                            {editMode.legend ? (
+                                <Component.CmtTextField
+                                    value={values.legend}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    label="Légende"
+                                    name="legend"
+                                    error={touched.legend && errors.legend}
+                                />
+                            ) : (
+                                <Box width="100%">
+                                    <Typography fontSize={10} variant="body2">
+                                        Légende
+                                    </Typography>
+                                    <Typography variant="body1">{selectedMedia?.legend || '-'}</Typography>
+                                </Box>
+                            )}
 
-                    {displayImage && (
-                        <Box display="flex" justifyContent={'center'}>
-                            <Box my={10} maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center" position={'relative'}>
-                                <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
-                            </Box>
+                            <EditValidateIcon
+                                editMode={editMode.legend}
+                                name="legend"
+                                handleSubmit={handleSubmit}
+                                handleSetEditMode={handleSetEditMode}
+                                setFieldValue={setFieldValue}
+                            />
                         </Box>
-                    )}
+                    </Component.CmtMediaInfoBlock>
 
                     {displayMeta && <Component.CmtDisplayMediaMeta selectedMedia={selectedMedia} />}
                 </Box>

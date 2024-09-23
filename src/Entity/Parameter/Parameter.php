@@ -72,6 +72,11 @@ class Parameter
     #[ORM\Column]
     private ?bool $generalParameter = false;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
+    #[ORM\Column]
+    private ?bool $translatedParameter = false;
+
 
     public function getId(): int
     {
@@ -194,6 +199,18 @@ class Parameter
     public function setGeneralParameter(bool $generalParameter): static
     {
         $this->generalParameter = $generalParameter;
+
+        return $this;
+    }
+
+    public function isTranslatedParameter(): ?bool
+    {
+        return $this->translatedParameter;
+    }
+
+    public function setTranslatedParameter(bool $translatedParameter): static
+    {
+        $this->translatedParameter = $translatedParameter;
 
         return $this;
     }
