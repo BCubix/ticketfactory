@@ -50,8 +50,12 @@ class SeoManager extends AbstractManager
         return ['title' => $metaTitle, 'description' => $metaDescription];
     }
 
-    private function replaceSeoKeywords(string $subject, array $keywords): string
+    private function replaceSeoKeywords(?string $subject, array $keywords): ?string
     {
+        if (null === $subject) {
+            return null;
+        }
+
         foreach ($keywords as $keyword => $replace) {
             $subject = str_replace('%' . $keyword . '%', $replace, $subject);
         }
