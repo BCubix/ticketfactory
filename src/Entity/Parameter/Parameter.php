@@ -75,7 +75,7 @@ class Parameter
     #[JMS\Expose()]
     #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column]
-    private ?bool $translatedParameter = null;
+    private ?bool $translatedParameter = false;
 
 
     public function getId(): int

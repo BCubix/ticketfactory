@@ -41,13 +41,13 @@ export const CmtDisplayMediaInfos = ({
     endUpdatingMedia = null,
     updatedMedia = null,
     imageFormatList,
-
     isSelected,
     setFieldValue,
     name,
     onClick,
     AddMediaLabel,
     RemoveMediaLabel,
+    wrapperClasses = 'padding-inline-5 padding-bottom-5',
 }) => {
     const dispatch = useDispatch();
     const selectedMediaId = useRef(selectedMedia?.id);
@@ -120,7 +120,7 @@ export const CmtDisplayMediaInfos = ({
             enableReinitialize
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-                <Box className="padding-inline-5 padding-bottom-5">
+                <Box className={wrapperClasses}>
                     <Component.CmtMediaInfoBlock>
                         <Box>
                             <Typography variant="h3">Emplacements</Typography>

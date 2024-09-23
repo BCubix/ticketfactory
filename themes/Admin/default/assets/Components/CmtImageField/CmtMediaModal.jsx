@@ -140,7 +140,7 @@ export const CmtMediaModal = ({
                 </Box>
             </DialogTitle>
             <Box height="100%" width={'100%'} sx={{ padding: 0 }}>
-                <Grid container sx={{ height: '100%' }}>
+                <Grid container className="min-height">
                     <Grid item xs={12} md={9} px={5} py={5}>
                         <Component.CreateButton variant="contained" sx={{ marginLeft: 2 }} onClick={() => setCreateDialog(true)}>
                             Créer un nouveau média
@@ -211,7 +211,7 @@ export const CmtMediaModal = ({
                             </Box>
                         )}
                     </Grid>
-                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%', marginTop: 3 }}>
+                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', marginTop: 3 }}>
                         <Component.CmtMediaModalInfos
                             media={media}
                             selectedMedia={selectedMedia}

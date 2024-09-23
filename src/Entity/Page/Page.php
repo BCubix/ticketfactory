@@ -29,7 +29,7 @@ class Page extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one'])]
+    #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one', 'a_parameter_all'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

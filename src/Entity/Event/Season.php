@@ -26,7 +26,7 @@ class Season extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_season_all', 'a_season_one', 'a_tag_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_season_all', 'a_season_one', 'a_tag_one', 'a_parameter_all'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
