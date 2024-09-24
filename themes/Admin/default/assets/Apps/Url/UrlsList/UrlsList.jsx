@@ -40,6 +40,7 @@ export const urlListCrud = {
         'core_seo_product_description',
         'core_seo_product_category_title',
         'core_seo_product_category_description',
+        'core_default_social_network_image',
     ],
     loadDataAction: () => getUrlAction(),
     changeFiltersActions: (props, page) => changeUrlFilters(props, page),
