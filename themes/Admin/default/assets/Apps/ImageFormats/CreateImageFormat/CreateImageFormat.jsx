@@ -36,7 +36,7 @@ export const CreateImageFormat = () => {
         const result = await Api.imageFormatsApi.createImageFormat(values);
 
         if (result.result) {
-            NotificationManager.success('Le format a bien été créé. Pensez à générer les miniatures ici-dessous !', 'Succès', Constant.REDIRECTION_TIME);
+            NotificationManager.success("L'emplacement a bien été créé. Pensez à générer les miniatures ici-dessous !", 'Succès', Constant.REDIRECTION_TIME);
             dispatch(getImageFormatsAction());
             navigate(Constant.IMAGE_FORMATS_BASE_PATH);
         }

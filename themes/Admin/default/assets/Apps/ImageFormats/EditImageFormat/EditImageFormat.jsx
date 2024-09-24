@@ -62,7 +62,7 @@ export const EditImageFormat = () => {
         const result = await Api.imageFormatsApi.editImageFormat(id, values);
 
         if (result.result) {
-            NotificationManager.success('Le format a bien été modifié. Pensez à regénérer les miniatures ici-dessous !', 'Succès', Constant.REDIRECTION_TIME);
+            NotificationManager.success("L'emplacement a bien été modifié. Pensez à regénérer les miniatures ici-dessous !", 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getImageFormatsAction());
 
