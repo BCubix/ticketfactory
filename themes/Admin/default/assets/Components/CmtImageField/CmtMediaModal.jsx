@@ -47,9 +47,9 @@ export const CmtMediaModal = ({
         setSelectedMedia(null);
     }, [open]);
 
-    const handleSubmit = () => {
+    const handleSubmit = async (addedMedias) => {
         setCreateDialog(false);
-        onAddNewMedia();
+        onAddNewMedia(addedMedias);
         NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
     };
 
