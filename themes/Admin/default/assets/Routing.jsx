@@ -10,12 +10,12 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { NonAuthenticatedRoute } from '@/AdminService/NonAuthenticatedRoute';
 
-import { profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 import '@Style/index.scss';
 
 const AuthenticatedLayout = ({ children }) => {
-    const { connected, loading } = useSelector(profileSelector);
+    const { connected, loading } = useSelector(userProfileSelector);
 
     if (connected) {
         return <Component.Layout>{children}</Component.Layout>;

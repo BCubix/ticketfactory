@@ -9,12 +9,12 @@ import { Avatar, Box, Button, Link, Tooltip, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginAction, profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginAction, userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { Stack } from '@mui/system';
 
 export const Login = () => {
     const dispatch = useDispatch();
-    const { connected, modulesLoaded } = useSelector(profileSelector);
+    const { connected, modulesLoaded } = useSelector(userProfileSelector);
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -7,7 +7,7 @@ import { Component } from '@/AdminService/Component';
 
 import { intitializeDropzone } from '@Apps/Themes/UploadTheme/utils/dropzone';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 export const UploadTheme = ({ handleSubmit, handleAdded, handleFail }) => {
     const dispatch = useDispatch();

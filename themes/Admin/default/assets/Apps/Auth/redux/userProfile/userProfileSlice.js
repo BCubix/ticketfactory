@@ -14,8 +14,8 @@ const initialState = {
     user: null,
 };
 
-const profileSlice = createSlice({
-    name: 'profile',
+const userProfileSlice = createSlice({
+    name: 'userProfile',
     initialState: initialState,
     reducers: {
         login: (state) => {
@@ -72,20 +72,20 @@ export function loginAction(data) {
                 return;
             }
 
-            const profile = await Api.profileApi.getProfile(data);
+            const userProfile = await Api.userProfileApi.getProfile(data);
 
-            if (!profile.result) {
-                dispatch(loginFailure({ error: profile.error }));
+            if (!userProfile.result) {
+                dispatch(loginFailure({ error: userProfile.error }));
             }
 
-            dispatch(loginSuccess({ user: profile.profile }));
+            dispatch(loginSuccess({ user: userProfile.userProfile }));
         } catch (error) {
             dispatch(loginFailure({ error: error.message || error }));
         }
     };
 }
 
-export function profileInitAction(data) {
+export function userProfileInitAction(data) {
     return async (dispatch) => {
         try {
             dispatch(login());
@@ -98,15 +98,15 @@ export function profileInitAction(data) {
                 return;
             }
 
-            const profile = await Api.profileApi.getProfile(data);
+            const userProfile = await Api.userProfileApi.getProfile(data);
 
-            if (!profile.result) {
-                dispatch(loginFailure({ error: profile.error }));
+            if (!userProfile.result) {
+                dispatch(loginFailure({ error: userProfile.error }));
 
                 return;
             }
 
-            dispatch(loginSuccess({ user: profile.profile }));
+            dispatch(loginSuccess({ user: userProfile.userProfile }));
         } catch (error) {
             dispatch(loginFailure({ error: error.message || error }));
         }
@@ -127,6 +127,6 @@ export function logoutAction() {
     };
 }
 
-export const { login, loginSuccess, loginFailure, logout, setModulesLoaded, setAppMenus, setAppAuthenticatedRoutes } = profileSlice.actions;
-export const profileSelector = (state) => state.profile;
-export default profileSlice.reducer;
+export const { login, loginSuccess, loginFailure, logout, setModulesLoaded, setAppMenus, setAppAuthenticatedRoutes } = userProfileSlice.actions;
+export const userProfileSelector = (state) => state.userProfile;
+export default userProfileSlice.reducer;

@@ -9,7 +9,7 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
 import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { Crud } from '@/AdminService/Crud';
 import { contentsInitialSchema, contentsValidationSchema, contentsForm } from '../ContentsForm/ContentsForm';
 

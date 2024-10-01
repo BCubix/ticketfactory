@@ -28,7 +28,7 @@ import { TableColumn } from '@/AdminService/TableColumn';
 
 import { getModulesAction, modulesSelector } from '@Apps/Modules/redux/modules/modulesSlice';
 import { getAddonVersionsAction, addonVersionsSelector } from '@Apps/AddonVersions/redux/addonVersions/addonVersionsSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 const ACTION_DISABLE = 'Désactiver';
 const ACTION_UNINSTALL = 'Désinstaller';

@@ -21,6 +21,7 @@ use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ParameterController extends AdminController
@@ -48,6 +49,7 @@ class ParameterController extends AdminController
         $this->sf = $sf;
     }
 
+    #[IsGranted('VIEW')]
     #[Rest\Get('/parametres')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_all'])]
     public function getAll(Request $request, ParameterManager $pm): View
@@ -55,6 +57,7 @@ class ParameterController extends AdminController
         return $this->view($pm->getAllForAdmin(), Response::HTTP_OK);
     }
 
+    #[IsGranted('VIEW')]
     #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function getValue(Request $request, string $parameterKey, ParameterManager $pm): View
@@ -62,6 +65,7 @@ class ParameterController extends AdminController
         return $this->view($pm->get($parameterKey), Response::HTTP_OK);
     }
 
+    #[IsGranted('ADMIN')]
     #[Rest\Post('/parametres')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function editParameter(Request $request, ParameterManager $pm): View
@@ -126,6 +130,7 @@ class ParameterController extends AdminController
         return $this->view($parametersContainer, Response::HTTP_OK);
     }
 
+    #[IsGranted('ADMIN')]
     #[Rest\Post('/parametres/generer/seo')]
     public function generateRobotFile(Request $request): View
     {
@@ -135,6 +140,7 @@ class ParameterController extends AdminController
         return $this->view([], Response::HTTP_OK);
     }
 
+    #[IsGranted('ADMIN')]
     #[Rest\Post('/parametres/email-test')]
     public function sendTestEmail(): View
     {

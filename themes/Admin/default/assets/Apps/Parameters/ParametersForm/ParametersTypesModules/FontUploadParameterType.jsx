@@ -8,7 +8,7 @@ import { Constant } from '@/AdminService/Constant';
 
 import { intitializeParamsDropzone } from '@Apps/Parameters/ParametersForm/ParametersTypesModules/utils/initParamsDropzone';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 const TYPE = 'font';
 

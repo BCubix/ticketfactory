@@ -6,12 +6,12 @@ import { ActiveModuleContext } from '@/AdminService/ActiveModule/ActiveModuleCon
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 
-import { loginFailure, profileSelector, setModulesLoaded } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure, userProfileSelector, setModulesLoaded } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { useSelector } from 'react-redux';
 
 export const ActiveModule = ({ loaded }) => {
     const dispatch = useDispatch();
-    const { connected, modulesLoaded } = useSelector(profileSelector);
+    const { connected, modulesLoaded } = useSelector(userProfileSelector);
 
     const getActiveModules = async () => {
         if (!loaded) {

@@ -7,7 +7,7 @@ import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@m
 import { Box } from '@mui/system';
 
 import { categoriesSelector, changeCategoriesFilters, getCategoriesAction, updateCategoriesFilters } from '@Apps/Categories/redux/categories/categoriesSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';

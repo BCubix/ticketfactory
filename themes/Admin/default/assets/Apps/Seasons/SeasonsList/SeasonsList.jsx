@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { changeSeasonsFilters, getSeasonsAction, seasonsSelector } from '@Apps/Seasons/redux/seasons/seasonsSlice';
+
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';

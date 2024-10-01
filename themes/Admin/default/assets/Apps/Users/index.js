@@ -1,10 +1,14 @@
 import React from 'react';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { CreateUser, usersCreateCrud } from '@Apps/Users/CreateUser/CreateUser';
 import { EditUser, usersEditCrud } from '@Apps/Users/EditUser/EditUser';
 import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
 import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
 import { UserList, usersListCrud } from '@Apps/Users/UserList/UserList';
+import usersReducer from '@Apps/Users/redux/users/usersSlice';
+import userProfileApi from '@Apps/Users/services/api/userProfileApi';
+import usersApi from '@Apps/Users/services/api/usersApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -15,14 +19,9 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 
-import usersReducer from '@Apps/Users/redux/users/usersSlice';
-import profileApi from '@Apps/Users/services/api/profileApi';
-import usersApi from '@Apps/Users/services/api/usersApi';
-import PersonIcon from '@mui/icons-material/Person';
-
 export const initConstant = () => {
     setConstant('USER_BASE_PATH', '/admin/utilisateurs');
-    setConstant('PROFILE_BASE_PATH', '/admin/profil');
+    setConstant('USER_PROFILE_BASE_PATH', '/admin/profil-utilisateur');
 };
 
 export const initComponent = () => {
@@ -34,7 +33,7 @@ export const initComponent = () => {
 };
 
 export const initApi = () => {
-    setApi('profileApi', profileApi);
+    setApi('userProfileApi', userProfileApi);
     setApi('usersApi', usersApi);
 };
 
@@ -46,7 +45,7 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.USER_BASE_PATH + Constant.CREATE_PATH, Component.CreateUser);
     setAuthenticatedRoute(`${Constant.USER_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUser);
 
-    setAuthenticatedRoute(`${Constant.PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, Component.EditProfile);
+    setAuthenticatedRoute(`${Constant.USER_PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, Component.EditProfile);
 };
 
 export const initMenu = () => {

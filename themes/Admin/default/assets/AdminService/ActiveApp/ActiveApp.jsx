@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ActiveModule } from '@/AdminService/ActiveModule/ActiveModule';
 import { Api } from '../Api';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
-import { profileSelector } from '../../Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { userProfileSelector } from '../../Apps/Auth/redux/userProfile/userProfileSlice';
 
 const FUNCTIONS_LIST = ['initConstant', 'initComponent', 'initApi', 'initAuthenticatedRoutes', 'initNonAuthenticatedRoutes', 'initMenu', 'initReducer', 'initTab', 'initCrud'];
 
 export const ActiveApp = () => {
     const [loaded, setLoaded] = useState(null);
     const [loading, setLoading] = useState(false);
-    const { connected } = useSelector(profileSelector);
+    const { connected } = useSelector(userProfileSelector);
     const dispatch = useDispatch();
 
     const getList = useMemo(() => {

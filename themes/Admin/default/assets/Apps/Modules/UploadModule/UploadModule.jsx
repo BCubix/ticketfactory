@@ -7,7 +7,7 @@ import { Component } from '@/AdminService/Component';
 
 import { intitializeDropzone } from '@Apps/Modules/UploadModule/utils/dropzone';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 export const UploadModule = ({ handleSubmit, handleAdded, handleFail }) => {
     const dispatch = useDispatch();

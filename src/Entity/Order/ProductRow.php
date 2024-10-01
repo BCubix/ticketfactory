@@ -3,7 +3,7 @@
 namespace App\Entity\Order;
 
 use App\Entity\Product\Product;
-use App\Repository\Order\ProductRowRepository;
+use App\Repository\ProductRowRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

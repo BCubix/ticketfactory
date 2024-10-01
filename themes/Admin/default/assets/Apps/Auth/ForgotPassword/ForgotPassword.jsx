@@ -13,10 +13,10 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 export const ForgotPassword = () => {
-    const { connected, modulesLoaded } = useSelector(profileSelector);
+    const { connected, modulesLoaded } = useSelector(userProfileSelector);
     const navigate = useNavigate();
 
     useEffect(() => {

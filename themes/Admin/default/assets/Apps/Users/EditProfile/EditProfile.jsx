@@ -9,14 +9,14 @@ import { Constant } from '@/AdminService/Constant';
 
 import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { useSelector } from 'react-redux';
-import { profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const EditProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user } = useSelector(profileSelector);
-    const [profile, setProfile] = useState(null);
+    const { user } = useSelector(userProfileSelector);
+    const [userProfile, setProfile] = useState(null);
 
     const getProfile = async () => {
         apiMiddleware(dispatch, async () => {
@@ -45,7 +45,7 @@ export const EditProfile = () => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.usersApi.editUser(id, values);
             if (result.result) {
-                NotificationManager.success('Votre profile a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
+                NotificationManager.success('Votre userProfile a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
 
                 dispatch(getUsersAction());
                 navigate(Constant.USER_BASE_PATH);
@@ -53,9 +53,9 @@ export const EditProfile = () => {
         });
     };
 
-    if (!profile) {
+    if (!userProfile) {
         return <></>;
     }
 
-    return <Component.EditProfileForm handleSubmit={handleSubmit} initialValues={profile} />;
+    return <Component.EditProfileForm handleSubmit={handleSubmit} initialValues={userProfile} />;
 };

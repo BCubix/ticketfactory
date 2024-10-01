@@ -9,7 +9,7 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setNonAuthenticatedRoute } from '@/AdminService/NonAuthenticatedRoute';
 
-import profileReducer from './redux/profile/profileSlice';
+import userProfileReducer from './redux/userProfile/userProfileSlice';
 import authApi from './services/api/authApi';
 
 export const initConstant = () => {

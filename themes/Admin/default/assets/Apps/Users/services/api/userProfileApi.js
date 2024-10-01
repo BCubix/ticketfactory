@@ -1,9 +1,9 @@
 import axios from '@Services/api/config';
 
-const profileApi = {
+const userProfileApi = {
     getProfile: async () => {
         try {
-            const result = await axios.get('/profile');
+            const result = await axios.get('/user-profile');
 
             return { result: true, profile: result.data };
         } catch (error) {
@@ -12,4 +12,4 @@ const profileApi = {
     },
 };
 
-export default profileApi;
+export default userProfileApi;

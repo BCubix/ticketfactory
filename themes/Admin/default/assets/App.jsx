@@ -4,28 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import 'react-notifications/lib/notifications.css';
 import 'moment/locale/fr';
-
 import { createTheme, ThemeProvider } from '@mui/material';
 
-import { Component } from '@/AdminService/Component';
-
-import { profileInitAction, profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
+import { userProfileInitAction, userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { getParametersAction, parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { getLanguagesAction, languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
+import { Component } from '@/AdminService/Component';
 import defaultTheme from '@Services/themes/defaultTheme';
 
 import '@Style/index.scss';
 
 export const App = () => {
-    const { connected, loading } = useSelector(profileSelector);
+    const { connected, loading } = useSelector(userProfileSelector);
     const parametersData = useSelector(parametersSelector);
     const languagesData = useSelector(languagesSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (connected === null && !loading) {
-            dispatch(profileInitAction());
+            dispatch(userProfileInitAction());
         }
     }, []);
 

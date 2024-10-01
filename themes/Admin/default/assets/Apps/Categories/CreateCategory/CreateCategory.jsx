@@ -8,7 +8,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getCategoriesAction } from '@Apps/Categories/redux/categories/categoriesSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
 import { categoriesInitialSchema, categoriesValidationSchema, categoriesForm } from '../CategoriesForm/CategoriesForm';
