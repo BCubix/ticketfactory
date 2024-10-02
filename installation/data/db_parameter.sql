@@ -68,5 +68,7 @@ INSERT INTO `parameter` (id, name, type, param_key, param_value, available_value
     (67, 'Description meta produit', 'string', 'core_seo_product_description', '', NULL, NULL, 'Paramètres généraux', 'Seo', 'xs-12 md-6', 0),
     (68, 'Titre meta catégorie produit', 'string', 'core_seo_product_category_title', '', NULL, NULL, 'Paramètres généraux', 'Seo', 'xs-12 md-6', 0),
     (69, 'Description meta catégorie produit', 'string', 'core_seo_product_category_description', '', NULL, NULL, 'Paramètres généraux', 'Seo', 'xs-12 md-6', 0),
-    (70, 'Version de Ticket Factory', 'string', 'core_ticket_factory_version', NULL, NULL, NULL, NULL, NULL, NULL, 0),
-    (71, 'Url de la marketplace', 'string', 'core_marketplace_url', NULL, NULL, NULL, NULL, NULL, NULL, 0);
+    (70, 'Image de partage sur les réseaux', 'upload', 'core_default_social_network_image', NULL, NULL, NULL, 'Paramètres généraux', 'Seo', 'xs-12 md-6', 0),
+    (71, 'Version de Ticket Factory', 'string', 'core_ticket_factory_version', NULL, NULL, NULL, NULL, NULL, NULL, 0),
+    (72, 'Url de la marketplace', 'string', 'core_marketplace_url', NULL, NULL, NULL, NULL, NULL, NULL, 0),
+    (73, 'Adresse email des demandes de contact', 'string', 'core_email_contact_request_receiver', NULL, NULL, NULL, 'Général', 'Email', 'xs-12 md-6', 1);

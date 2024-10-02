@@ -82,7 +82,7 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
                             <Box className="flex wrap align-center margin-top-5">
                                 <Typography marginRight={5}>Tous les </Typography>
 
-                                <FormControl className='max-width-100' fullWidth>
+                                <FormControl className="max-width-100" fullWidth>
                                     <Select
                                         labelId={'days-choice-label'}
                                         variant={'standard'}
