@@ -34,7 +34,7 @@ class ContentTypeManager extends AbstractManager
         parent::__construct($kl, $mf, $sf, $em, $rs);
 
         $this->ff = $ff;
-        $this->types = $this->loadTypes();
+        $this->types = $this->loadAllTypes();
     }
 
     public function getFieldsSelect()
@@ -139,19 +139,38 @@ class ContentTypeManager extends AbstractManager
         return $parameters;
     }
 
-    private function loadTypes()
+    private function loadAllTypes()
+    {
+        $types = $this->loadTypes($this->sf->get('pathGetter')->getProjectDir());
+
+        $moduleFolder = $this->sf->get('pathGetter')->getModulesDir();
+        $modules = $this->mf->get('module')->getAll(['active' => true]);
+        foreach($modules['results'] as $module) {
+            $types = array_merge($types, $this->loadTypes($moduleFolder . "/" . $module['name'] . "/", $module['name']));
+        }
+
+        return $types;
+    }
+
+    private function loadTypes(string $basePath, string $moduleName = null)
     {
         $types = [];
-        $files = glob($this->sf->get('pathGetter')->getProjectDir() . self::TYPE_FILES_PATH);
+        $files = glob($basePath . self::TYPE_FILES_PATH);
+
+        $namespace_path = self::NAMESPACE_PATH;
+
+        if ($moduleName !== null) {
+            $namespace_path = '\TicketFactory\Module\\' . $moduleName . '\Form\Admin\Content\Types\\';
+        }
+
 
         foreach ($files as $file) {
             $className = explode('/', $file);
             $className = $className[count($className) - 1];
-
             $className = explode('.', $className);
             $className = $className[0];
 
-            $className = (self::NAMESPACE_PATH . $className);
+            $className = ($namespace_path . $className);
 
             if (defined("$className::SERVICE_NAME")) {
                 $typeName = $className::SERVICE_NAME;

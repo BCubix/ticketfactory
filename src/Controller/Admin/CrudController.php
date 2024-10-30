@@ -72,6 +72,7 @@ abstract class CrudController extends AdminController
 
     protected function add(Request $request): View
     {
+
         $object = new $this->entityClass();
         $iObject = CloneObject::cloneObject($object);
 

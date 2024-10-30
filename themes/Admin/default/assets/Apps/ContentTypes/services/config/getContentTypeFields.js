@@ -47,7 +47,6 @@ export const CONTENT_TYPE_FIELDS = {
 
     // Contents
     audioVideo: AudioVideoFieldType,
-    map: MapFieldType,
     color: ColorFieldType,
     wysiwyg: ContentEditorFieldType,
     file: FileFieldType,

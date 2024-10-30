@@ -15,7 +15,6 @@ import FileFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/Fil
 import GroupFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/GroupFieldContentType';
 import IframeFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/IframeFieldContentType';
 import ImageFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/ImageFieldContentType';
-import MapFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/MapFieldContentType';
 import NumberFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/NumberFieldContentType';
 import PageLinkFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/PageLinkFieldContentType';
 import PasswordFieldContentType from '@Apps/Contents/ContentsForm/ContentModules/PasswordFieldContentType';
@@ -47,7 +46,6 @@ export const CONTENT_FIELDS = {
 
     // Contents
     audioVideo: AudioVideoFieldContentType,
-    map: MapFieldContentType,
     color: ColorFieldContentType,
     wysiwyg: ContentEditorFieldContentType,
     file: FileFieldContentType,

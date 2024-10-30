@@ -64,7 +64,7 @@ const FormComponent = ({ values, setFieldValue, name, errors, field, label, touc
                 getName={(item) => item?.name}
             />
             {field.helper && (
-                <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 3 }}>
+                <Typography component="p" variant="body2" sx={{ fontSize: 10, marginTop: 10 }}>
                     {field.helper}
                 </Typography>
             )}

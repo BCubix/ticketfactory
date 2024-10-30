@@ -10,6 +10,9 @@ class FormErrorsCollector
 
     public function getErrorsFromForm(FormInterface $form)
     {
+
+
+
         $errors = array();
         foreach ($form->getErrors() as $error) {
             $errors[] = $error->getMessage();
