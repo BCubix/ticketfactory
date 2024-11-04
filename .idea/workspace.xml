@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3d00882-4ea0-476c-8ed3-d780e102f742" name="Changes" comment="de">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/commandlinetools/Symfony_10_16_24__11_50_AM.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_blame.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/Version20241021132937.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/VersionNewsletter010000.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Repository/LngRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/CrudController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/CrudController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Event/Event.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Event/Event.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/Admin/Content/Types/ContentTypeFieldMapType.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/ContentTypeManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/ContentTypeManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/Error/FormErrorsCollector.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/Error/FormErrorsCollector.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/ContentTypes/services/config/getContentTypeFields.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/ContentTypes/services/config/getContentTypeFields.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/ContentModules/EventLinkFieldContentType.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/ContentModules/EventLinkFieldContentType.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/ContentModules/MapFieldContentType.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/DisplayContentField.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/DisplayContentField.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/DisplayContentForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/ContentsForm/DisplayContentForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/services/config/getContentFields.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/services/config/getContentFields.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Components/ListTable/ListTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Components/ListTable/ListTable.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,26 +176,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "Development",
-    "last_opened_file_path": "/Users/bastiencantet/Documents/dev/bcubix/project/TicketFactory/modules/Mapbox/assets/Admin/Apps/Contents",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.stylelint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.stylelint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "terminal",
-    "ts.external.directory.path": "/Users/bastiencantet/Applications/PhpStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Development&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/bastiencantet/Documents/dev/bcubix/project/TicketFactory/modules/Mapbox/assets/Admin/Apps/Contents&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/bastiencantet/Applications/PhpStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/modules/Mapbox/assets/Admin/Apps/Contents" />
@@ -282,7 +257,8 @@
       <workItem from="1729585622210" duration="19976000" />
       <workItem from="1730108944777" duration="19014000" />
       <workItem from="1730194836725" duration="17405000" />
-      <workItem from="1730281292390" duration="11412000" />
+      <workItem from="1730281292390" duration="14652000" />
+      <workItem from="1730713993977" duration="2302000" />
     </task>
     <servers />
   </component>
