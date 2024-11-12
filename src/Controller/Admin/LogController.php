@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class LogController extends AdminController
 {
     #[Rest\Get('/logs')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_log_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, Logger $logger): View
     {

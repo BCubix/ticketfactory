@@ -8,6 +8,7 @@ use App\Entity\Url\Url;
 use App\Form\Website\Product\ProductFilterType;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends EventAbleController
 {
@@ -31,7 +32,8 @@ class ProductController extends EventAbleController
         return $this->detail($page, $contents, $breadcrumbs);
     }
 
-    public function list(Page $page) {
+    public function list(Page $page)
+    {
         $request = $this->getRequest();
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
@@ -87,5 +89,38 @@ class ProductController extends EventAbleController
             "product"            => $contents['Product'],
             'pageContent'        => $pageContent,
         ]);
+    }
+
+    #[Route("/products/add-product-to-cart", name: "tf_website_cart_add_product", priority: 1)]
+    public function addProduct()
+    {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_purchase') || $this->mf->get("parameter")->getCoreParameter('catalog_mode')) {
+            return new Response(null, 404);
+        }
+
+        $quantity = $this->getRequest()->get('quantity') ?? 1;
+        $productId = $this->getRequest()->get('productId');
+        if (null === $productId) {
+            return new Response(null, 400);
+        }
+
+        $product = $this->em->getRepository(Product::class)->findOneByIdForWebsite($productId);
+        $stock = $product->getStock();
+
+        // if not enough stock we render an error
+        if ($stock - $quantity < 0) {
+            $notif = [
+                'title' => 'Erreur',
+                'message' => "Impossible d'ajouter au panier. La quantité demandée dépasse le stock disponible."
+            ];
+        } else {
+            $this->mf->get('cart')->addProductToCart($product, $quantity);
+            $notif = [
+                'title' => 'Succès',
+                'message' => "Votre produit à été ajouté au panier."
+            ];
+        }
+
+        return $this->websiteRender("_partials/_notification.html.twig", $notif);
     }
 }

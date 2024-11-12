@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Url extends Datable
 {
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_url_all', 'a_url_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

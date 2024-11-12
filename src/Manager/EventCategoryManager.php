@@ -128,6 +128,13 @@ class EventCategoryManager extends AbstractRouterManager
         return $this->em->getRepository(EventCategory::class)->findBySlugForWebsite($languageId, $slug);
     }
 
+    public function getByKeyword($keyword): ?EventCategory
+    {
+        $languageId = $this->getLanguageId();
+
+        return $this->em->getRepository(EventCategory::class)->findByKeywordForWebsite($languageId, $keyword);
+    }
+
     public function orderTranslatedElement(object $element, int $position)
     {
         $translatedObjects = $this->em->getRepository(EventCategory::class)->findAllTranslationsByElementForAdmin($element->getLanguageGroup()->toBinary());

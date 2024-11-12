@@ -5,7 +5,10 @@ namespace App\Entity\Order;
 use App\Entity\Customer\Customer;
 use App\Repository\OrderRepository;
 use App\Entity\Datable;
+use App\Entity\Product\ProductStockMovement;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,7 +25,7 @@ class Order extends Datable
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one', 'a_product_one', 'a_product_stock_movement_all'])]
     #[ORM\Column(length: 32)]
     private ?string $reference = null;
 
@@ -51,8 +54,18 @@ class Order extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_order_all', 'a_order_one'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'bigint', nullable: true)]
     private ?int $ticketingReference = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_order_one'])]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: ProductStockMovement::class, orphanRemoval: true)]
+    private Collection $productStockMovements;
+
+    public function __construct()
+    {
+        $this->productStockMovements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -127,6 +140,26 @@ class Order extends Datable
     public function setTicketingReference(?int $ticketingReference): self
     {
         $this->ticketingReference = $ticketingReference;
+
+        return $this;
+    }
+
+    public function addProductStockMovement(ProductStockMovement $productStockMovement): static
+    {
+        if (!$this->productStockMovements->contains($productStockMovement)) {
+            $this->productStockMovements->add($productStockMovement);
+        }
+
+        return $this;
+    }
+
+    public function removeProductStockMovement(ProductStockMovement $productStockMovement): static
+    {
+        if ($this->productStockMovements->removeElement($productStockMovement)) {
+            if ($productStockMovement->getProduct() === $this) {
+                $productStockMovement->setProduct(null);
+            }
+        }
 
         return $this;
     }

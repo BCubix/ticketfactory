@@ -15,6 +15,7 @@ export const productsInitialSchema = {
     chapo: (initValues) => initValues?.chapo || '',
     description: (initValues) => initValues?.description || '',
     price: (initValues) => initValues?.price || '',
+    stock: (initValues) => initValues?.stock || '',
     mainCategory: (initValues, { productCategoriesList }) => initValues?.mainCategory?.id || productCategoriesList?.id || '',
     productCategories: (initValues, { productCategoriesList }) => (initValues?.productCategories ? initValues?.productCategories?.map((el) => el.id) : [productCategoriesList?.id]),
     productMedias: (initValues) =>
@@ -78,6 +79,7 @@ export const productsForm = {
             chapo: { type: 'string' },
             description: { type: 'string' },
             price: { type: 'string' },
+            stock: { type: 'string' },
             mainCategory: { type: 'string' },
             ticketing: { type: 'string' },
             ticketingReference: { type: 'string' },
@@ -252,6 +254,34 @@ export const productsForm = {
         },
         {
             type: 'tabs',
+            keyId: 'stock',
+            label: 'Stock',
+            fields: [
+                {
+                    keyId: 'block-stockHandle',
+                    title: 'Gestion du stock',
+
+                    fields: [
+                        {
+                            keyId: 'input-stock',
+                            component: (props) => <Component.ProductMovementPartForm {...props} />,
+                        },
+                    ],
+                },
+                {
+                    keyId: 'block-stockVisualise',
+                    title: 'Mouvements récents des stocks',
+                    fields: [
+                        {
+                            keyId: 'product-stockMovement',
+                            component: (props) => <Component.ProductStockMovementList {...props} />,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            type: 'tabs',
             keyId: 'features',
             label: 'Attributs',
             fields: [
@@ -282,87 +312,4 @@ export const productsForm = {
         },
     ],
     ...DEFAULT_CRUD_FORM_COMPONENTS,
-};
-
-export const ProductsForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, productCategoriesList }) => {
-    const initValues = translateInitialValues || initialValues;
-
-    if (!productCategoriesList) {
-        return <></>;
-    }
-
-    const productSchema = Yup.object().shape({
-        name: Yup.string().required('Veuillez renseigner le nom du produit.').max(250, 'Le nom du produit est trop long'),
-        chapo: Yup.string().required('Veuillez renseigner le chapô.'),
-        productCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
-        mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
-        description: Yup.string().required('Veuillez renseigner une description.'),
-        price: Yup.number().required('Veuillez renseigner un prix').min(0, 'Le prix renseigné est invalide'),
-    });
-
-    return (
-        <Formik
-            initialValues={{
-                active: initValues?.active || false,
-                name: initValues?.name || '',
-                slug: initValues?.slug || '',
-                chapo: initValues?.chapo || '',
-                description: initValues?.description || '',
-                price: initValues?.price || '',
-                mainCategory: initValues?.mainCategory?.id || productCategoriesList.id,
-                productCategories: initValues?.productCategories ? initValues?.productCategories?.map((el) => el.id) : [productCategoriesList.id],
-                productMedias:
-                    initValues?.productMedias?.map((el) => ({
-                        mainImg: el.mainImg,
-                        position: el.position,
-                        id: el.media?.id,
-                        media: el.media,
-                    })) || [],
-                lang: initValues?.lang?.id || '',
-                languageGroup: initValues?.languageGroup || '',
-                seo: {
-                    metaTitle: initValues?.metaTitle || '',
-                    metaDescription: initValues?.metaDescription || '',
-                    socialImage: initValues?.socialImage || null,
-                    fbTitle: initValues?.fbTitle || '',
-                    fbDescription: initValues?.fbDescription || '',
-                },
-                editSlug: false,
-            }}
-            validationSchema={productSchema}
-            onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values);
-
-                setSubmitting(false);
-            }}
-        >
-            {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un produit`}>
-                    <Component.CmtTabs
-                        containerStyle={{ mt: 3 }}
-                        list={Tab.ProductsFormTabList({
-                            values,
-                            handleChange,
-                            handleBlur,
-                            touched,
-                            errors,
-                            setFieldTouched,
-                            setFieldValue,
-                            productCategoriesList,
-                            initialValues: initValues,
-                            editMode: Boolean(initialValues),
-                        })}
-                    />
-
-                    <Box display="flex" justifyContent="flex-end" sx={{ pt: 3, pb: 2 }}>
-                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Produit actif ?" />
-
-                        <Button type="submit" variant="contained" id="submitForm" disabled={isSubmitting}>
-                            {initialValues ? 'Modifier' : 'Créer'}
-                        </Button>
-                    </Box>
-                </Component.CmtPageWrapper>
-            )}
-        </Formik>
-    );
 };

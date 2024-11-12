@@ -82,7 +82,7 @@ class ProductCategoryController extends EventAbleController
             $filters['topCategory'] = $contents['ProductCategory']->getId();
         }
 
-        list($products, $pagination) = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId(), $filters);
+        list($products, $pagination) = $this->mf->get('product')->getProducts($this->getLanguageId(), $filters);
         $topCategories = $this->mf->get('productCategory')->getTopCategories();
 
         $template = 'Product/';

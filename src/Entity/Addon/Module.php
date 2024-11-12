@@ -4,6 +4,7 @@ namespace App\Entity\Addon;
 
 use App\Entity\Datable;
 use App\Entity\Hook\Hook;
+use App\Entity\Order\DeliveryMode;
 use App\Repository\ModuleRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -40,9 +41,13 @@ class Module extends Datable
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: Hook::class, orphanRemoval: true,  cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $hooks;
 
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: DeliveryMode::class, orphanRemoval: true)]
+    private Collection $deliveryModes;
+
     public function __construct()
     {
         $this->hooks = new ArrayCollection();
+        $this->deliveryModes = new ArrayCollection();
     }
 
     public function getId(): int
@@ -85,6 +90,36 @@ class Module extends Datable
         if ($this->hooks->removeElement($hook)) {
             if ($hook->getModule() === $this) {
                 $hook->setModule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DeliveryMode>
+     */
+    public function getDeliveryModes(): Collection
+    {
+        return $this->deliveryModes;
+    }
+
+    public function addDeliveryMode(DeliveryMode $deliveryMode): static
+    {
+        if (!$this->deliveryModes->contains($deliveryMode)) {
+            $this->deliveryModes->add($deliveryMode);
+            $deliveryMode->setModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeliveryMode(DeliveryMode $deliveryMode): static
+    {
+        if ($this->deliveryModes->removeElement($deliveryMode)) {
+            // set the owning side to null (unless already changed)
+            if ($deliveryMode->getModule() === $this) {
+                $deliveryMode->setModule(null);
             }
         }
 

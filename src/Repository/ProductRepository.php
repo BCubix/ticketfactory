@@ -152,4 +152,14 @@ class ProductRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneByIdForWebsite(int $productId):?Product
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.active = 1')
+            ->andWhere('p.id = :productId')
+            ->setParameter('productId', $productId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

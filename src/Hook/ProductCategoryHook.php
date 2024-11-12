@@ -2,7 +2,7 @@
 
 namespace App\Hook;
 
-use App\Entity\Media\MediaCategory;
+use App\Entity\Product\ProductCategory;
 use App\Event\HookEvent;
 use App\Exception\ApiException;
 use App\Service\Addon\Hook;
@@ -17,25 +17,25 @@ class ProductCategoryHook extends Hook
             return;
         }
 
-        $mediaCategory = $event->getParam('sObject');
-        $parentId = $mediaCategory->getParent()->getId();
+        $productCategory = $event->getParam('sObject');
+        $parentId = $productCategory->getParent()->getId();
 
-        if ($mediaCategory->getPosition() > 0) {
+        if ($productCategory->getPosition() > 0) {
             return;
         }
 
-        $maxPosition = $this->em->getRepository(MediaCategory::class)->findMaxPositionForAdmin($parentId);
+        $maxPosition = $this->em->getRepository(ProductCategory::class)->findMaxPositionForAdmin($parentId);
 
         if (null === $maxPosition || count($maxPosition) === 0) {
-            $mediaCategory->setPosition(1);
+            $productCategory->setPosition(1);
         } else {
-            $mediaCategory->setPosition($maxPosition[0]->getPosition() + 1);
+            $productCategory->setPosition($maxPosition[0]->getPosition() + 1);
         }
 
-        $this->em->persist($mediaCategory);
+        $this->em->persist($productCategory);
         $this->em->flush();
 
-        $this->mf->get('seo')->completeSeoProductCategory($mediaCategory);
+        $this->mf->get('seo')->completeSeoProductCategory($productCategory);
     }
 
     public function hookProductCategoryValidated(HookEvent $event)

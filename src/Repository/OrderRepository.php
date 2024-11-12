@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Order\Order;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class OrderRepository extends CrudRepository
@@ -38,5 +37,17 @@ class OrderRepository extends CrudRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Order::class);
+    }
+
+    public function findOneForWebsite(int $orderId, int $customerId): ?Order
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.customer', 'c', 'WITH', 'c.id = :customerId')
+            ->where("o.active = 1")
+            ->andWhere("o.id = :orderId")
+            ->setParameter("customerId", $customerId)
+            ->setParameter("orderId", $orderId)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

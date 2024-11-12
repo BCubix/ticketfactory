@@ -9,8 +9,10 @@ use App\Form\Admin\Order\OrderType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Rest\Route('/api')]
 class OrderController extends CrudController
@@ -74,5 +76,26 @@ class OrderController extends CrudController
         }
 
         return parent::delete($request, $orderId);
+    }
+
+    #[Rest\Get('/orders/exports')]
+    public function exportOrders(Request $request)
+    {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_purchase')) {
+            throw new ApiException(Response::HTTP_NOT_FOUND, 1404, self::NOT_FOUND_PAGE);
+        }
+
+        $spreadsheet = $this->mf->get("order")->getOrdersSpreadsheet();
+
+        $response = new StreamedResponse(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
+
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment;filename="orders.xlsx"');
+        $response->headers->set('Cache-Control', 'max-age=0');
+
+        return $response;
     }
 }

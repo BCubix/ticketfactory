@@ -253,6 +253,33 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+
+                        ->arrayNode('deliveryModes')
+                            ->useAttributeAsKey('name')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('manager')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('description')
+                                        ->defaultValue(null)
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Addon\Module as ModuleEntity;
+use App\Entity\Order\DeliveryMode;
 use App\Exception\ApiException;
 use App\Service\Addon\Module;
 
@@ -163,7 +164,7 @@ class ModuleManager extends AddonManager
                     ($action == ModuleEntity::ACTION_INSTALL ? $this->enableHooks($module) : $this->disableHooks($module));
 
                     // we execute this function to add the configuration to be installed with the module.
-                    $this->executeConfiguration($moduleName, $action);
+                    $this->executeConfiguration($moduleName, $action, $module);
 
                     break;
 
@@ -174,6 +175,7 @@ class ModuleManager extends AddonManager
                     // We remove the module from the table in the database
                     $this->em->remove($module);
                     $this->em->flush();
+                    $module = null;
 
                     // We remove traits added by the module
                     $this->callConfig($moduleName, "trait", [true]);
@@ -379,23 +381,31 @@ class ModuleManager extends AddonManager
         }
     }
 
-    public function executeConfiguration(string $objectName, int $action): void
+    public function executeConfiguration(string $objectName, int $action, ?ModuleEntity $module = null): void
     {
         $settings = $this->getConfiguration($objectName)['settings'];
         if ($action == ModuleEntity::ACTION_INSTALL) {
             // If there are parameters defined by the module configuration, we add them to the database
-            if (isset($settings["parameters"])) {
+            if (isset($settings['parameters'])) {
                 $this->addParameters('module', $objectName, $settings["parameters"]);
             }
 
             // If there are URLs defined by the module configuration, we add them to the database
-            if (isset($settings["url"])) {
+            if (isset($settings['url'])) {
                 $this->addUrl($settings["url"]);
+            }
+
+            if (isset($settings['deliveryModes'])) {
+                $this->addDeliveryModes($module, $objectName, $settings['deliveryModes']);
             }
         } else if ($action == ModuleEntity::ACTION_DISABLE) {
             // If there are URLs defined by the module configuration, we remove them
             if (isset($settings['url'])) {
                 $this->removeUrl($settings['url']);
+            }
+
+            if (isset($settings['deliveryModes'])) {
+                $this->removeDeliveryModes($module, $objectName, $settings['deliveryModes']);
             }
         } else {
             // If there are parameters defined by the module configuration, we remove them
@@ -407,7 +417,6 @@ class ModuleManager extends AddonManager
             if (isset($settings['url'])) {
                 $this->removeUrl($settings['url']);
             }
-
         }
     }
 
@@ -419,5 +428,43 @@ class ModuleManager extends AddonManager
         }
 
         return $module->isActive();
+    }
+
+    private function addDeliveryModes(?ModuleEntity $module, string $objectName, array $deliveryModes): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+        foreach ($deliveryModes as $name => $mode) {
+            $newDeliveryMode = new DeliveryMode();
+
+            $newDeliveryMode->setName($name);
+            $newDeliveryMode->setModule($module);
+            $newDeliveryMode->setManager($mode['manager']);
+            $newDeliveryMode->setDescription($mode['description']);
+            $newDeliveryMode->setActive(true);
+
+            $this->em->persist($newDeliveryMode);
+        }
+
+        $this->em->flush();
+    }
+
+    private function removeDeliveryModes(?ModuleEntity $module, string $objectName): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+
+        foreach ($module->getDeliveryModes() as $mode) {
+            $module->removeDeliveryMode($mode);
+        }
+
+        $this->em->persist($module);
+        $this->em->flush();
     }
 }

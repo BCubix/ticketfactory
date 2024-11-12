@@ -163,7 +163,7 @@ class EventFilterType extends WebsiteBaseFormType
             'data_class'        => null,
             'csrf_protection'   => false,
             'sort'              => [],
-            'filterParams'      => []
+            'filterParams'      => [],
         ]);
     }
 }

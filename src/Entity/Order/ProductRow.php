@@ -51,7 +51,6 @@ class ProductRow
     private Collection $vouchers;
 
 
-
     public function __construct()
     {
         $this->vouchers = new ArrayCollection();

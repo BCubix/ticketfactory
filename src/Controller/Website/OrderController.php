@@ -8,6 +8,7 @@ use App\Form\Website\Customer\CustomerType;
 use App\Form\Website\Customer\AddressType;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -68,26 +69,45 @@ class OrderController extends WebsiteController
         $page = $this->mf->get('page')->getByKeyword("order-address");
         $cart = $this->mf->get("cart")->getCart();
 
+        // We redirect to connection page if there is no customer
         if (null === $customer) {
             return $this->redirectToRoute("tf_website_order_connection");
         }
 
+        // We redirect to cart page if there is no cart
         if (null === $cart) {
             $this->addFlash('Erreur',  "Vous n'avez pas de panier.");
 
-            return $this->redirectToRoute('tf_website_cart');
+            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
         }
 
-        $addressForm = $this->createForm(AddressType::class, $customer->getAddress());
+        // We get the address from the cart if exist or create a new one from customer address
+        if (null !== $cart->getAddress()) {
+            $address = $cart->getAddress();
+        } else {
+            $address = $this->mf->get('address')->createNewAddressObject($customer->getAddress());
+            $address->setCart($cart);
+        }
+
+        // We set the delivery mode and calculate delivery price
+        $this->mf->get('deliveryMode')->setCartDeliveryMode($cart);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        // We create the address form with cart address
+        $addressForm = $this->createForm(AddressType::class, $address);
         $addressForm->handleRequest($request);
 
+        // We handle address form submition and save data, then redirect to payment page
         if ($addressForm->isSubmitted() && $addressForm->isValid()) {
-            $this->em->persist($customer);
+            $this->em->persist($address);
             $this->em->flush();
 
             return $this->redirectToRoute("tf_website_order_payment");
         }
 
+        // We render the address template
         return $this->websiteRender('Order/address.html.twig', [
             'page'        => $page,
             'addressForm' => $addressForm->createView(),
@@ -115,21 +135,21 @@ class OrderController extends WebsiteController
         if (null === $cart) {
             $this->addFlash('Erreur',  "Vous n'avez pas de panier.");
 
-            return $this->redirectToRoute('tf_website_cart');
+            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
         }
 
         $status = $this->em->getRepository(OrderStatus::class)->findOneByKeywordForWebsite("waiting");
         if (null === $status) {
             $this->addFlash('Erreur',  "Une erreur est survenue.");
 
-            return $this->redirectToRoute('tf_website_cart');
+            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
         }
 
         $customer = $this->getUser();
         if (null === $customer) {
             $this->addFlash('Erreur',  "Une erreur est survenue.");
 
-            return $this->redirectToRoute('tf_website_cart');
+            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
         }
 
         $order = $cart->getLinkedOrder();
@@ -141,12 +161,44 @@ class OrderController extends WebsiteController
             ]);
         }
 
+        // call to the validatedOrder hook
+        $this->mf->get('hook')->exec('OrderCompleted', [
+            'cart' => $cart,
+        ]);
+
         $this->mf->get('cart')->createNewCart();
         $this->em->flush();
 
         return $this->websiteRender("Order/validated.html.twig", [
             'page'      => $page,
             'orderStep' => 3,
+        ]);
+    }
+
+    #[Route("/commande/facture/{orderId}", name: "tf_website_order_invoice", requirements: ['eventId' => '\d+'], priority: 1)]
+    public function orderInvoice(Request $request, int $orderId)
+    {
+        // Get Customer object and check for null.
+        $customer = $this->getUser();
+        if (null === $customer) {
+            $this->addFlash('Erreur',  "Une erreur est survenue.");
+
+            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
+        }
+
+        // Get Order object using OrderID and CustomerID, and check for null.
+        $order = $this->mf->get("order")->getOrderForWebsite($orderId, $customer->getId());
+        if (null === $order) {
+            throw $this->createNotFoundException('Cette commande n\'existe pas.');
+        }
+
+        // Generate invoice PDF File from OrderManager
+        $invoice = $this->mf->get("order")->getInvoiceFile($order);
+
+        // Return the invoice file with the correct content type and name.
+        return new Response($invoice, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="facture.pdf"',
         ]);
     }
 }

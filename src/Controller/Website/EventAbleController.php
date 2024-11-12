@@ -30,6 +30,7 @@ class EventAbleController extends WebsiteController
         }
 
         $filters = $this->getContentFilter($request, $filters, $contents);
+
         $events = $this->mf->get('event')->getSortedEvents($filters);
 
         return [

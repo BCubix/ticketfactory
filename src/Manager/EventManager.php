@@ -9,7 +9,6 @@ use App\Entity\Event\EventPrice;
 use App\Entity\Event\EventPriceBlock;
 use App\Entity\Media\ImageFormat;
 use App\Kernel;
-use App\Service\Formatter\DateTimeFormatter;
 use App\Service\ServiceFactory;
 use App\Service\File\MimeTypeMapping;
 
@@ -394,7 +393,7 @@ class EventManager extends AbstractRouterManager
             'endDateFilter'          => $this->mf->get("parameter")->getCoreParameter('event_end_date_filter'),
             'seasonFilter'           => isset($contents['Season']) ? false : $this->mf->get("parameter")->getCoreParameter('event_season_filter'),
             'roomFilter'             => isset($contents['Room']) ? false : $this->mf->get("parameter")->getCoreParameter('event_room_filter'),
-            'eventCategoryFilter'    => isset($contents['EventCategory']) ? false : $this->mf->get("parameter")->getCoreParameter('event_category_filter'),
+            'eventCategoryFilter'    => $this->mf->get("parameter")->getCoreParameter('event_category_filter'),
             'tagFilter'              => isset($contents['Tag']) ? false : $this->mf->get("parameter")->getCoreParameter('event_tag_filter'),
             'eventTypeFilter'        => isset($contents['EventType']) ? false : $this->mf->get("parameter")->getCoreParameter('event_type_filter')
         ];

@@ -47,7 +47,7 @@ class ProductCategoryController extends CrudController
 
     #[Rest\Get('/product-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_product_category_all'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_product_category_all', 'a_product_category_one'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, int $categoryId = null): View
     {
         $filters = $paramFetcher->get('filters');

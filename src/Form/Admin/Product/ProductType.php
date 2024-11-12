@@ -16,6 +16,7 @@ use App\Repository\TicketingRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
@@ -40,6 +41,7 @@ class ProductType extends AdminBaseFormType
             ->add('ticketingReference',     TextType::class,            [])
             ->add('displayBuyingButton',    CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('price',                  MoneyType::class,           [])
+            ->add('stock',                  IntegerType::class,         [])
             ->add('mainCategory',           EntityType::class,          [
                 'class'         => ProductCategory::class,
                 'choice_label'  => 'name',
@@ -99,12 +101,12 @@ class ProductType extends AdminBaseFormType
                 'data_class' => Product::class,
             ]);
 
-            $builder->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) {
-                    $this->fm->onPreSetData($event);
-                }
-            );
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $this->fm->onPreSetData($event);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

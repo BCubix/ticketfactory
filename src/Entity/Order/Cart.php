@@ -2,6 +2,7 @@
 
 namespace App\Entity\Order;
 
+use App\Entity\Customer\Address;
 use App\Entity\Customer\Customer;
 use App\Entity\Datable;
 use App\Repository\CartRepository;
@@ -32,6 +33,16 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\Column(nullable: true)]
+    private ?float $deliveryPrice = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $ticketingReference = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToOne(inversedBy: 'carts')]
     private ?Customer $customer = null;
 
@@ -52,13 +63,18 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_one'])]
-    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist'])]
     private ?Order $linkedOrder = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $ticketingReference = null;
+    #[JMS\Groups(['a_cart_one'])]
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one'])]
+    #[ORM\ManyToOne]
+    private ?DeliveryMode $deliveryMode = null;
 
 
     public function __construct()
@@ -82,6 +98,30 @@ class Cart extends Datable
     public function setTotal(float $total): self
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    public function getDeliveryPrice(): ?float
+    {
+        return $this->deliveryPrice;
+    }
+
+    public function setDeliveryPrice(?float $deliveryPrice): static
+    {
+        $this->deliveryPrice = $deliveryPrice;
+
+        return $this;
+    }
+
+    public function getTicketingReference(): ?int
+    {
+        return $this->ticketingReference;
+    }
+
+    public function setTicketingReference(?int $ticketingReference): self
+    {
+        $this->ticketingReference = $ticketingReference;
 
         return $this;
     }
@@ -202,14 +242,36 @@ class Cart extends Datable
         return $this;
     }
 
-    public function getTicketingReference(): ?int
+    public function getAddress(): ?Address
     {
-        return $this->ticketingReference;
+        return $this->address;
     }
 
-    public function setTicketingReference(?int $ticketingReference): self
+    public function setAddress(?Address $address): static
     {
-        $this->ticketingReference = $ticketingReference;
+        // unset the owning side of the relation if necessary
+        if ($address === null && $this->address !== null) {
+            $this->address->setCart(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($address !== null && $address->getCart() !== $this) {
+            $address->setCart($this);
+        }
+
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getDeliveryMode(): ?DeliveryMode
+    {
+        return $this->deliveryMode;
+    }
+
+    public function setDeliveryMode(?DeliveryMode $deliveryMode): static
+    {
+        $this->deliveryMode = $deliveryMode;
 
         return $this;
     }
