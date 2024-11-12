@@ -181,7 +181,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Development&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/bastiencantet/Documents/dev/bcubix/project/TicketFactory/modules/Mapbox/assets/Admin/Apps/Contents&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/bastiencantet/Documents/dev/bcubix/project/TicketFactory/modules/AddToMyCalendar&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
@@ -198,11 +198,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/modules/AddToMyCalendar" />
       <recent name="$PROJECT_DIR$/modules/Mapbox/assets/Admin/Apps/Contents" />
       <recent name="$PROJECT_DIR$/modules/Mapbox/src/Repository" />
       <recent name="$PROJECT_DIR$/modules/Mapbox/src" />
       <recent name="$PROJECT_DIR$/modules/OpenAgenda/src/Controller" />
-      <recent name="$PROJECT_DIR$/modules/OpenAgenda/src/Manager" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/modules/Mapbox/assets/Admin/Apps/Contents/ContentForm/ContentModules" />
@@ -258,7 +258,11 @@
       <workItem from="1730108944777" duration="19014000" />
       <workItem from="1730194836725" duration="17405000" />
       <workItem from="1730281292390" duration="14652000" />
-      <workItem from="1730713993977" duration="2302000" />
+      <workItem from="1730713993977" duration="8575000" />
+      <workItem from="1730799514116" duration="686000" />
+      <workItem from="1730813548220" duration="4630000" />
+      <workItem from="1730892716218" duration="11376000" />
+      <workItem from="1731404774533" duration="6216000" />
     </task>
     <servers />
   </component>
