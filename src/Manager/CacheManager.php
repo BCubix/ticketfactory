@@ -32,8 +32,11 @@ class CacheManager extends AbstractManager
 
     public function getValue(string $key, $callback = null): mixed
     {
-        $firewallContext = $this->rs->getMainRequest()->attributes->get('_firewall_context');
+        if (null === $this->rs->getMainRequest()) {
+            return $callback();
+        }
 
+        $firewallContext = $this->rs->getMainRequest()->attributes->get('_firewall_context');
         if (!$this->isCacheUsed() || str_ends_with($firewallContext, '.admin') !== false) {
             if (null !== $callback) {
                 return $callback();
