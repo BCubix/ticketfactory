@@ -1,29 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { createUsersInitialSchema, createUsersValidationSchema, createUsersForm } from '../UserForm/CreateUserForm';
+import { profilesForm, profilesInitialSchema, profilesValidationSchema } from '../ProfilesForm/ProfilesForm';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
-import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-export const usersCreateCrud = {
+export const profilesCreateCrud = {
     form: {
-        title: "Creation d'un utilisateur",
-        initialSchema: createUsersInitialSchema,
-        validationSchema: createUsersValidationSchema,
+        title: "Creation d'un profil",
+        initialSchema: profilesInitialSchema,
+        validationSchema: profilesValidationSchema,
     },
-    ...createUsersForm,
+    ...profilesForm,
 };
 
-export const CreateUser = () => {
+export const CreateProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [rolesData, setRolesData] = useState(null);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            Api.rolesApi.getRoles().then((results) => setRolesData(results));
+        });
+    }, []);
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
@@ -36,5 +42,6 @@ export const CreateUser = () => {
         });
     };
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.users?.add} />;
+    console.log(Crud.profiles);
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud.profiles.add} />;
 };

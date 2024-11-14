@@ -2,6 +2,9 @@ import React from 'react';
 
 import { changeProfilesFilters, getProfilesAction, profilesSelector } from '@Apps/Profiles/redux/profiles/profilesSlice';
 
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 export const profilesListCrud = {
@@ -21,12 +24,15 @@ export const profilesListCrud = {
             },
         },
     ],
-    filterList: [{ key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' }],
+    filterList: [
+        { key: 'active', title: 'Chercher par status', label: 'Actif', type: 'boolean' },
+        { key: 'name', title: 'Chercher par nom', label: 'Nom', type: 'search' },
+    ],
     pagination: true,
     tableContextualMenu: false,
     tableList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom', width: '50%', sortable: true },
+        { name: 'name', label: 'Nom', width: '80%', sortable: true },
     ],
     loadDataAction: () => getProfilesAction(),
     changeFiltersActions: (props, page) => changeProfilesFilters(props, page),
@@ -43,6 +49,6 @@ export const profilesListCrud = {
     ...DEFAULT_CRUD_LIST_COMPONENTS,
 };
 
-export const ProfileList = () => {
+export const ProfilesList = () => {
     return <Component.CmtCrudList listCrud={Crud?.profiles?.list} />;
 };

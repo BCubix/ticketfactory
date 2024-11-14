@@ -1,25 +1,31 @@
 import React from 'react';
 
-import { ProfileList, profilesListCrud } from './ProfileList/ProfileList';
-import userProfilesApi from './services/api.userProfilesApi';
+import { ProfilesList, profilesListCrud } from './ProfilesList/ProfilesList';
+import { CreateProfile, profilesCreateCrud } from './CreateProfile/CreateProfile';
+import profilesApi from './services/api/profilesApi';
+import rolesApi from './services/api/rolesApi';
 import profilesReducer from './redux/profiles/profilesSlice';
 
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setApi } from '@/AdminService/Api';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
+import { setCrud } from '@/AdminService/Crud';
+import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
 
 export const initConstant = () => {
-    setConstant('PROFILE_BASE_PATH', '/admin/profils');
+    setConstant('PROFILES_BASE_PATH', '/admin/profils');
 };
 
 export const initComponent = () => {
-    setComponent('ProfileList', ProfileList);
+    setComponent('ProfilesList', ProfilesList);
+    setComponent('CreateProfile', CreateProfile);
 };
 
 export const initApi = () => {
-    setApi('userProfilesApi', userProfilesApi);
+    setApi('profilesApi', profilesApi);
+    setApi('rolesApi', rolesApi);
 };
 
 export const initReducer = () => {
@@ -27,19 +33,21 @@ export const initReducer = () => {
 };
 
 export const initAuthenticatedRoutes = () => {
-    setAuthenticatedRoute(Constant.PROFILE_BASE_PATH, Component.ProfileList, {
+    setAuthenticatedRoute(Constant.PROFILES_BASE_PATH, Component.ProfilesList, {
         tabListName: 'usersTabList',
-        tabPathValue: Constant.PROFILE_BASE_PATH,
+        tabPathValue: Constant.PROFILES_BASE_PATH,
     });
+    setAuthenticatedRoute(Constant.PROFILES_BASE_PATH + Constant.CREATE_PATH, Component.CreateProfile);
 };
 
 export const initTab = () => {
-    addTabElements('usersTabList', [{ label: 'Profils', component: <Component.ProfileList /> }]);
+    addTabElements('usersTabList', [{ label: 'Profils', component: <Component.ProfilesList />, path: Constant.PROFILES_BASE_PATH }]);
 };
 
 export const initCrud = () => {
     const crud = {
         list: profilesListCrud,
+        add: profilesCreateCrud,
     };
 
     setCrud('profiles', crud);

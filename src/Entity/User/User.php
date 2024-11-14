@@ -70,11 +70,11 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[Assert\Regex(pattern: '/^\S*(?=\S{10,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/', message: 'Le mot de passe ne répond pas aux exigences de sécurité.')]
     private $plainPassword;
 
+
     public function __construct()
     {
         $this->profiles = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -238,9 +238,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     {
         $roles = [];
         foreach ($this->profiles as $profile) {
-            foreach ($profile->getRoles() as $role) {
-                $roles[] = $role;
-            }
+            $roles = array_merge($profile->getRoleNames());
         }
 
         return array_unique($roles);

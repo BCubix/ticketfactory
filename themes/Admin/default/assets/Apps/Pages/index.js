@@ -1,4 +1,5 @@
 import React from 'react';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 import { CreatePage, pagesCreateCrud } from '@Apps/Pages/CreatePage/CreatePage';
 import { EditPage, pagesEditCrud } from '@Apps/Pages/EditPage/EditPage';
@@ -8,6 +9,9 @@ import { PagesBlocksSliderPart } from '@Apps/Pages/PagesForm/PagesBlocksSliderPa
 import { PagesList, pagesListCrud } from '@Apps/Pages/PagesList/PagesList';
 import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
 import { PageHistory } from '@Apps/Pages/PageHistory/PageHistory';
+import pagesApi from '@Apps/Pages/services/api/pagesApi';
+import pageHistoryApi from '@Apps/Pages/services/api/pageHistoryApi';
+import pagesReducer from '@Apps/Pages/redux/pages/pagesSlice';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -17,12 +21,6 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import pagesApi from '@Apps/Pages/services/api/pagesApi';
-import pageHistoryApi from '@Apps/Pages/services/api/pageHistoryApi';
-import pagesReducer from '@Apps/Pages/redux/pages/pagesSlice';
-
-import DescriptionIcon from '@mui/icons-material/Description';
 
 export const initConstant = () => {
     setConstant('PAGES_BASE_PATH', '/admin/pages');
