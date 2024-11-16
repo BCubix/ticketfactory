@@ -10,11 +10,13 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class HookController extends AdminController
 {
     #[Rest\Get('/hooks')]
+    #[IsGranted('ROLE_HOOK_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
     public function getAll(Request $request): View
     {
@@ -23,6 +25,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Get('/hooks/displaylist')]
+    #[IsGranted('ROLE_HOOK_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_all'])]
     public function getAllDisplayHooks(Request $request): View
     {
@@ -31,6 +34,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Post('/hooks')]
+    #[IsGranted('ROLE_HOOK_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_one'])]
     public function add(Request $request): View
     {
@@ -82,6 +86,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Post('/hooks/{hookName}/disable', requirements: ['hookName' => '.+'])]
+    #[IsGranted('ROLE_HOOK_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_one'])]
     public function disable(Request $request, string $hookName): View
     {
@@ -105,6 +110,7 @@ class HookController extends AdminController
     }
 
     #[Rest\Post('/hooks/{hookName}', requirements: ['hookName' => '.+'])]
+    #[IsGranted('ROLE_HOOK_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_hook_one'])]
     public function update(Request $request, string $hookName): View
     {

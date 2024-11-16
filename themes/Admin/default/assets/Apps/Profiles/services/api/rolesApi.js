@@ -11,7 +11,7 @@ const rolesApi = {
                 params: params,
             });
 
-            return { result: true, roles: result.data?.results };
+            return { result: true, roles: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

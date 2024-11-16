@@ -12,6 +12,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class UserController extends CrudController
@@ -30,6 +31,7 @@ class UserController extends CrudController
     }
 
     #[Rest\Get('/users/{userId}', requirements: ['userId' => '\d+'])]
+    #[IsGranted('ROLE_USER_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function getOne(Request $request, int $userId): View
     {
@@ -47,6 +49,7 @@ class UserController extends CrudController
 
 
     #[Rest\Post('/users')]
+    #[IsGranted('ROLE_USER_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function add(Request $request): View
     {
@@ -54,6 +57,7 @@ class UserController extends CrudController
     }
 
     #[Rest\Post('/users/{userId}', requirements: ['userId' => '\d+'])]
+    #[IsGranted('ROLE_USER_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function edit(Request $request, int $userId): View
     {
@@ -85,6 +89,7 @@ class UserController extends CrudController
     }
 
     #[Rest\Delete('/users/{userId}', requirements: ['userId' => '\d+'])]
+    #[IsGranted('ROLE_USER_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
     public function delete(Request $request, int $userId): View
     {

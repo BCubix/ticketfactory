@@ -3,8 +3,8 @@ import PersonIcon from '@mui/icons-material/Person';
 
 import { CreateUser, usersCreateCrud } from '@Apps/Users/CreateUser/CreateUser';
 import { EditUser, usersEditCrud } from '@Apps/Users/EditUser/EditUser';
-import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
-import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
+import { EditUserProfile } from '@Apps/Users/EditUserProfile/EditUserProfile';
+import { EditUserProfileForm } from '@Apps/Users/UserProfileForm/EditUserProfileForm';
 import { UserList, usersListCrud } from '@Apps/Users/UserList/UserList';
 import usersReducer from '@Apps/Users/redux/users/usersSlice';
 import userProfileApi from '@Apps/Users/services/api/userProfileApi';
@@ -27,8 +27,8 @@ export const initConstant = () => {
 export const initComponent = () => {
     setComponent('CreateUser', CreateUser);
     setComponent('EditUser', EditUser);
-    setComponent('EditProfile', EditProfile);
-    setComponent('EditProfileForm', EditProfileForm);
+    setComponent('EditUserProfile', EditUserProfile);
+    setComponent('EditUserProfileForm', EditUserProfileForm);
     setComponent('UserList', UserList);
 };
 
@@ -45,7 +45,7 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(Constant.USER_BASE_PATH + Constant.CREATE_PATH, Component.CreateUser);
     setAuthenticatedRoute(`${Constant.USER_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUser);
 
-    setAuthenticatedRoute(`${Constant.USER_PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, Component.EditProfile);
+    setAuthenticatedRoute(`${Constant.USER_PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, Component.EditUserProfile);
 };
 
 export const initMenu = () => {

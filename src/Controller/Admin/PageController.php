@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class PageController extends CrudController
@@ -27,6 +28,7 @@ class PageController extends CrudController
     }
 
     #[Rest\Get('/pages/{pageId}', requirements: ['pageId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_one'])]
     public function getOne(Request $request, int $pageId): View
     {
@@ -34,6 +36,7 @@ class PageController extends CrudController
     }
 
     #[Rest\Post('/pages')]
+    #[IsGranted('ROLE_PAGE_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class PageController extends CrudController
     }
 
     #[Rest\Post('/pages/{pageId}', requirements: ['pageId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_one'])]
     public function edit(Request $request, int $pageId): View
     {
@@ -48,6 +52,7 @@ class PageController extends CrudController
     }
 
     #[Rest\Post('/pages/{pageId}/duplicate', requirements: ['pageId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_one'])]
     public function duplicate(Request $request, int $pageId): View
     {
@@ -55,6 +60,7 @@ class PageController extends CrudController
     }
 
     #[Rest\Delete('/pages/{pageId}', requirements: ['pageId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_one'])]
     public function delete(Request $request, int $pageId): View
     {
@@ -62,6 +68,7 @@ class PageController extends CrudController
     }
 
     #[Rest\Get('/pages/{pageId}/translated/{languageId}', requirements: ['pageId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_one'])]
     public function getTranslated(Request $request, int $pageId, int $languageId): View
     {

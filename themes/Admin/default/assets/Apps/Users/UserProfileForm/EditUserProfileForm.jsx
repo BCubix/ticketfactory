@@ -7,7 +7,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const EditProfileForm = ({ handleSubmit, initialValues = null }) => {
+export const EditUserProfileForm = ({ handleSubmit, initialValues = null }) => {
     const userSchema = Yup.object().shape({
         firstName: Yup.string().required('Veuillez renseigner le prénom.'),
         lastName: Yup.string().required('Veuillez renseigner le nom.'),

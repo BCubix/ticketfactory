@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ProfileController extends CrudController
@@ -20,6 +21,7 @@ class ProfileController extends CrudController
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
 
     #[Rest\Get('/profiles')]
+    #[IsGranted('ROLE_PROFILE_READ')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['a_all', 'a_profile_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -28,6 +30,7 @@ class ProfileController extends CrudController
     }
 
     #[Rest\Get('/profiles/{profileId}', requirements: ['profileId' => '\d+'])]
+    #[IsGranted('ROLE_PROFILE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
     public function getOne(Request $request, int $profileId): View
     {
@@ -35,6 +38,7 @@ class ProfileController extends CrudController
     }
 
     #[Rest\Post('/profiles')]
+    #[IsGranted('ROLE_PROFILE_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
     public function add(Request $request): View
     {
@@ -42,6 +46,7 @@ class ProfileController extends CrudController
     }
 
     #[Rest\Post('/profiles/{profileId}', requirements: ['profileId' => '\d+'])]
+    #[IsGranted('ROLE_PROFILE_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
     public function edit(Request $request, int $profileId): View
     {
@@ -49,6 +54,7 @@ class ProfileController extends CrudController
     }
 
     #[Rest\Delete('/profiles/{profileId}', requirements: ['profileId' => '\d+'])]
+    #[IsGranted('ROLE_PROFILE_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
     public function delete(Request $request, int $profileId): View
     {

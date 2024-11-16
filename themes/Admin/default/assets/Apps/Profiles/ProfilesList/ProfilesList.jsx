@@ -14,6 +14,7 @@ export const profilesListCrud = {
         'name',
         'page',
         'limit',
+        { key: 'active', type: 'boolean' },
         {
             key: 'sort',
             transformFilter: (params, sort) => {
@@ -32,7 +33,8 @@ export const profilesListCrud = {
     tableContextualMenu: false,
     tableList: [
         { name: 'id', label: 'ID', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom', width: '80%', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
+        { name: 'name', label: 'Nom', width: '70%', sortable: true },
     ],
     loadDataAction: () => getProfilesAction(),
     changeFiltersActions: (props, page) => changeProfilesFilters(props, page),

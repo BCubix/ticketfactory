@@ -13,6 +13,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ImageFormatController extends CrudController
@@ -29,6 +30,7 @@ class ImageFormatController extends CrudController
     }
 
     #[Rest\Get('/image-formats/{formatId}', requirements: ['formatId' => '\d+'])]
+    #[IsGranted('ROLE_IMAGE_FORMAT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function getOne(Request $request, int $formatId): View
     {
@@ -36,6 +38,7 @@ class ImageFormatController extends CrudController
     }
 
     #[Rest\Post('/image-formats')]
+    #[IsGranted('ROLE_IMAGE_FORMAT_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function add(Request $request): View
     {
@@ -43,6 +46,7 @@ class ImageFormatController extends CrudController
     }
 
     #[Rest\Post('/image-formats/{formatId}', requirements: ['formatId' => '\d+'])]
+    #[IsGranted('ROLE_IMAGE_FORMAT_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function edit(Request $request, int $formatId): View
     {
@@ -50,6 +54,7 @@ class ImageFormatController extends CrudController
     }
 
     #[Rest\Delete('/image-formats/{formatId}', requirements: ['formatId' => '\d+'])]
+    #[IsGranted('ROLE_IMAGE_FORMAT_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function delete(Request $request, int $formatId): View
     {
@@ -57,6 +62,7 @@ class ImageFormatController extends CrudController
     }
 
     #[Rest\Post('/image-formats/generate/{formatId}', requirements: ['formatId' => '\d+'])]
+    #[IsGranted('ROLE_IMAGE_FORMAT_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_image_format_one'])]
     public function generate(Request $request, ImageFormatManager $ifm, int $formatId = null): View
     {

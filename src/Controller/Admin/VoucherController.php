@@ -11,6 +11,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class VoucherController extends CrudController
@@ -33,6 +34,7 @@ class VoucherController extends CrudController
     }
 
     #[Rest\Get('/vouchers/{voucherId}', requirements: ['voucherId' => '\d+'])]
+    #[IsGranted('ROLE_VOUCHER_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_voucher_one'])]
     public function getOne(Request $request, int $voucherId): View
     {
@@ -44,6 +46,7 @@ class VoucherController extends CrudController
     }
 
     #[Rest\Post('/vouchers')]
+    #[IsGranted('ROLE_VOUCHER_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_voucher_one'])]
     public function add(Request $request): View
     {
@@ -55,6 +58,7 @@ class VoucherController extends CrudController
     }
 
     #[Rest\Post('/vouchers/{voucherId}', requirements: ['voucherId' => '\d+'])]
+    #[IsGranted('ROLE_VOUCHER_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_voucher_one'])]
     public function edit(Request $request, int $voucherId): View
     {
@@ -66,6 +70,7 @@ class VoucherController extends CrudController
     }
 
     #[Rest\Post('/vouchers/{voucherId}/duplicate', requirements: ['voucherId' => '\d+'])]
+    #[IsGranted('ROLE_VOUCHER_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_voucher_one'])]
     public function duplicate(Request $request, int $voucherId): View
     {
@@ -77,6 +82,7 @@ class VoucherController extends CrudController
     }
 
     #[Rest\Delete('/vouchers/{voucherId}', requirements: ['voucherId' => '\d+'])]
+    #[IsGranted('ROLE_VOUCHER_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_voucher_one'])]
     public function delete(Request $request, int $voucherId): View
     {
@@ -88,6 +94,7 @@ class VoucherController extends CrudController
     }
 
     #[Rest\Get('/vouchers/{voucherId}/translated/{languageId}', requirements: ['voucherId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_VOUCHER_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_voucher_one'])]
     public function getTranslated(Request $request, int $voucherId, int $languageId): View
     {

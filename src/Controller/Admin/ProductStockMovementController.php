@@ -9,11 +9,13 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ProductStockMovementController extends AdminController
 {
     #[Rest\Get('/productStockMovement/{productId}', requirements: ['productId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_READ')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_product_one', 'a_order_all', 'a_product_stock_movement_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher,  int $productId): View

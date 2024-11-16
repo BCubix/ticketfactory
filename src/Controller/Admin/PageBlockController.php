@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class PageBlockController extends CrudController
@@ -19,6 +20,7 @@ class PageBlockController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Ce bloc n'existe pas.";
 
     #[Rest\Get('/page-blocks')]
+    #[IsGranted('ROLE_PAGE_BLOCK_READ')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -27,6 +29,7 @@ class PageBlockController extends CrudController
     }
 
     #[Rest\Get('/page-blocks/{blockId}', requirements: ['blockId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_BLOCK_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_one'])]
     public function getOne(Request $request, int $blockId): View
     {
@@ -34,6 +37,7 @@ class PageBlockController extends CrudController
     }
 
     #[Rest\Post('/page-blocks')]
+    #[IsGranted('ROLE_PAGE_BLOCK_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +45,7 @@ class PageBlockController extends CrudController
     }
 
     #[Rest\Post('/page-blocks/{blockId}', requirements: ['blockId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_BLOCK_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_one'])]
     public function edit(Request $request, int $blockId): View
     {
@@ -48,6 +53,7 @@ class PageBlockController extends CrudController
     }
 
     #[Rest\Post('/page-blocks/{blockId}/duplicate', requirements: ['blockId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_BLOCK_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_one'])]
     public function duplicate(Request $request, int $blockId): View
     {
@@ -55,6 +61,7 @@ class PageBlockController extends CrudController
     }
 
     #[Rest\Delete('/page-blocks/{blockId}', requirements: ['blockId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_BLOCK_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_one'])]
     public function delete(Request $request, int $blockId): View
     {
@@ -62,6 +69,7 @@ class PageBlockController extends CrudController
     }
 
     #[Rest\Get('/page-blocks/{pageBlockId}/translated/{languageId}', requirements: ['pageBlockId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_PAGE_BLOCK_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_page_block_one'])]
     public function getTranslated(Request $request, int $pageBlockId, int $languageId): View
     {

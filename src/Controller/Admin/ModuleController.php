@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ModuleController extends AdminController
@@ -32,6 +33,7 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Get('/modules/{moduleId}', requirements: ['moduleId' => '\d+'])]
+    #[IsGranted('ROLE_MODULE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_module_one'])]
     public function getOne(Request $request, int $moduleId): View
     {
@@ -44,6 +46,7 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Post('/modules/{moduleName}/active', requirements: ['moduleName' => '.+'])]
+    #[IsGranted('ROLE_MODULE_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_module_one'])]
     public function active(Request $request, string $moduleName): View
     {
@@ -75,6 +78,7 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Get('/modules/module-image/{moduleName}', requirements: ['moduleName' => '.+'])]
+    #[IsGranted('ROLE_MODULE_READ')]
     public function getModuleImage(Request $request, string $moduleName)
     {
         $result = $this->mf->get("module")->getImage($moduleName);

@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
-export const EditProfile = () => {
+export const EditUserProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useSelector(userProfileSelector);
@@ -57,5 +57,5 @@ export const EditProfile = () => {
         return <></>;
     }
 
-    return <Component.EditProfileForm handleSubmit={handleSubmit} initialValues={userProfile} />;
+    return <Component.EditUserProfileForm handleSubmit={handleSubmit} initialValues={userProfile} />;
 };

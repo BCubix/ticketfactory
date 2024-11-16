@@ -3,10 +3,12 @@
 namespace App\Form\Admin\Profile;
 
 use App\Entity\User\Profile;
+use App\Entity\User\Role;
 use App\Form\Admin\AdminBaseFormType;
+use App\Repository\User\RoleRepository;
 
-use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -18,28 +20,18 @@ class ProfileType extends AdminBaseFormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name',                 TextType::class,           [])
-            ->add('roles',                ChoiceType::class,          [
-                'required' => true,
-                'multiple' => false,
-                'expanded' => false,
-                'choices'  => array_flip(Profile::ROLE_TYPE)
-            ]);
-
-        $builder
-            ->get('roles')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($roles) {
-                    if (count($roles) == 0) {
-                        return null;
-                    }
-
-                    return $roles[0];
-                },
-                function ($roles) {
-                    return [$roles];
+            ->add('active',                      CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
+            ->add('name',                        TextType::class,            [])
+            ->add('roles',                       EntityType::class,          [
+                'class'         => Role::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function (RoleRepository $ecr) {
+                    return $ecr
+                        ->createQueryBuilder('rc')
+                        ->orderBy('rc.name', 'ASC');
                 }
-            ));
+            ]);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

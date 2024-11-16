@@ -2,10 +2,11 @@ import React from 'react';
 import * as Yup from 'yup';
 
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
+import { Component } from '@/AdminService/Component';
 
 export const profilesInitialSchema = {
     name: (initValues) => initValues?.name || '',
-    roles: (initValues) => initValues?.roles?.map((role) => role.id),
+    roles: (initValues) => initValues?.roles?.map((role) => role.id) || [],
     active: (initValues) => initValues?.active || false,
 };
 
@@ -51,6 +52,18 @@ export const profilesForm = {
                                 inputType: 'textField',
                                 required: true,
                             },
+                        },
+                    ],
+                },
+                {
+                    type: 'block',
+                    keyId: 'block-rights',
+                    title: 'Droits du profil',
+                    fields: [
+                        {
+                            keyId: 'input-rights',
+                            style: { xs: 12 },
+                            component: (props) => <Component.ProfileRightsForm {...props} />,
                         },
                     ],
                 },

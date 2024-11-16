@@ -1,5 +1,6 @@
 import { Crud } from '@/AdminService/Crud';
 import axios from '@Services/api/config';
+import { constructFormData } from '@Services/utils/constructFormData';
 import { createFilterParams } from '@Services/utils/createFilterParams';
 
 const DEFAULT_PATH = '/profiles';
@@ -55,9 +56,8 @@ const profilesApi = {
     getOneProfile: async (id) => {
         try {
             const result = await axios.get(`${DEFAULT_PATH}/${id}`);
-            const data = copyData(result?.data);
 
-            return { result: true, profile: data };
+            return { result: true, profile: result?.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

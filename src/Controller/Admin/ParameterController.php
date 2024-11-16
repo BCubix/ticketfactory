@@ -15,6 +15,7 @@ use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
 use App\Service\ServiceFactory;
+
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
@@ -49,7 +50,6 @@ class ParameterController extends AdminController
         $this->sf = $sf;
     }
 
-    #[IsGranted('VIEW')]
     #[Rest\Get('/parametres')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_all'])]
     public function getAll(Request $request, ParameterManager $pm): View
@@ -57,7 +57,6 @@ class ParameterController extends AdminController
         return $this->view($pm->getAllForAdmin(), Response::HTTP_OK);
     }
 
-    #[IsGranted('VIEW')]
     #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function getValue(Request $request, string $parameterKey, ParameterManager $pm): View
@@ -65,8 +64,8 @@ class ParameterController extends AdminController
         return $this->view($pm->get($parameterKey), Response::HTTP_OK);
     }
 
-    #[IsGranted('ADMIN')]
     #[Rest\Post('/parametres')]
+    #[IsGranted('ROLE_PARAMETER_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function editParameter(Request $request, ParameterManager $pm): View
     {
@@ -130,8 +129,8 @@ class ParameterController extends AdminController
         return $this->view($parametersContainer, Response::HTTP_OK);
     }
 
-    #[IsGranted('ADMIN')]
     #[Rest\Post('/parametres/generer/seo')]
+    #[IsGranted('ROLE_PARAMETER_EXECUTE')]
     public function generateRobotFile(Request $request): View
     {
         $this->mf->get('parameter')->createRobotFile($request->getScheme() . "://" . $request->getHost());
@@ -140,8 +139,8 @@ class ParameterController extends AdminController
         return $this->view([], Response::HTTP_OK);
     }
 
-    #[IsGranted('ADMIN')]
     #[Rest\Post('/parametres/email-test')]
+    #[IsGranted('ROLE_PARAMETER_EXECUTE')]
     public function sendTestEmail(): View
     {
         $testEmailAddress = $this->mf->get('parameter')->getCoreParameter('test_email_address');

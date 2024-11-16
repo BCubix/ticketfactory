@@ -19,6 +19,7 @@ use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ProductCategoryController extends CrudController
@@ -74,6 +75,7 @@ class ProductCategoryController extends CrudController
     }
 
     #[Rest\Post('/product-categories')]
+    #[IsGranted('ROLE_PRODUCT_CATEGORY_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_category_one'])]
     public function add(Request $request): View
     {
@@ -81,6 +83,7 @@ class ProductCategoryController extends CrudController
     }
 
     #[Rest\Post('/product-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_CATEGORY_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_category_one'])]
     public function edit(Request $request, int $categoryId): View
     {
@@ -88,6 +91,7 @@ class ProductCategoryController extends CrudController
     }
 
     #[Rest\Post('/product-categories/{categoryId}/duplicate', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_CATEGORY_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_category_one'])]
     public function duplicate(Request $request, int $categoryId): View
     {
@@ -95,6 +99,7 @@ class ProductCategoryController extends CrudController
     }
 
     #[Rest\Delete('/product-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_CATEGORY_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_category_one'])]
     public function delete(Request $request, int $categoryId): View
     {
@@ -130,6 +135,7 @@ class ProductCategoryController extends CrudController
     }
 
     #[Rest\Get('/product-categories/{categoryId}/translated/{languageId}', requirements: ['categoryId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_CATEGORY_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_category_one'])]
     public function getTranslated(Request $request, int $categoryId, int $languageId): View
     {
@@ -144,6 +150,7 @@ class ProductCategoryController extends CrudController
     }
 
     #[Rest\Post('/product-categories/{categoryId}/order', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_CATEGORY_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_category_one'])]
     public function order(Request $request, int $categoryId): View
     {
