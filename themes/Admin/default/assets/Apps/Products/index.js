@@ -21,12 +21,17 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { setTab } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('PRODUCTS_BASE_PATH', '/admin/produits');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+        return;
+    }
+
     setComponent('ProductsList', ProductsList);
     setComponent('ProductsFilters', ProductsFilters);
     setComponent('EditProduct', EditProduct);
@@ -46,14 +51,22 @@ export const initReducer = () => {
     setReducer('products', productsReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+        return;
+    }
+
     setTab('productsTabList', () => [
         { label: 'Produits', component: <Component.ProductsList />, path: Constant.PRODUCTS_BASE_PATH },
         { label: 'Catégories de produits', component: <Component.ProductCategoriesList />, path: Constant.PRODUCT_CATEGORIES_BASE_PATH },
     ]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+        return;
+    }
+
     const crud = {
         list: productsListCrud,
         add: productsCreateCrud,
@@ -63,9 +76,12 @@ export const initCrud = () => {
     setCrud('products', crud);
 };
 
-export default async function ({ parameters }) {
-    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_products');
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+        return;
+    }
 
+    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_products');
     if (useProducts?.paramValue) {
         setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH, Component.CmtAppMenu, {
             tabListName: 'productsTabList',

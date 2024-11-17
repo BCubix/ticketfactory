@@ -64,7 +64,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_user_all', 'a_user_one'])]
-    #[ORM\ManyToMany(targetEntity: Profile::class, mappedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Profile::class, inversedBy: 'users')]
     private Collection $profiles;
 
     #[Assert\Regex(pattern: '/^\S*(?=\S{10,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/', message: 'Le mot de passe ne répond pas aux exigences de sécurité.')]
@@ -219,7 +219,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     {
         if (!$this->profiles->contains($profile)) {
             $this->profiles->add($profile);
-            $profile->addUser($this);
+            $profile->addUser($this); // Mettez à jour le côté inverse
         }
 
         return $this;
@@ -228,7 +228,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     public function removeProfile(Profile $profile): static
     {
         if ($this->profiles->removeElement($profile)) {
-            $profile->removeUser($this);
+            $profile->removeUser($this); // Mettez à jour le côté inverse
         }
 
         return $this;

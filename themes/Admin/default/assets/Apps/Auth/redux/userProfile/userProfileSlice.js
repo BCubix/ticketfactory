@@ -91,7 +91,6 @@ export function userProfileInitAction(data) {
             dispatch(login());
 
             const response = await Api.authApi.checkIsAuth();
-
             if (!response.result) {
                 dispatch(loginFailure({ error: response.error }));
 
@@ -99,7 +98,6 @@ export function userProfileInitAction(data) {
             }
 
             const userProfile = await Api.userProfileApi.getProfile(data);
-
             if (!userProfile.result) {
                 dispatch(loginFailure({ error: userProfile.error }));
 

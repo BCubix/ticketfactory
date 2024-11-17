@@ -15,12 +15,17 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setCrud } from '@/AdminService/Crud';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('CARTS_BASE_PATH', '/admin/paniers');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CART_READ')) {
+        return;
+    }
+
     setComponent('CartsList', CartsList);
     setComponent('CartsDetail', CartsDetail);
     setComponent('CustomerCartPart', CustomerCartPart);
@@ -36,7 +41,11 @@ export const initReducer = () => {
     setReducer('carts', cartsReducer);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CART_READ')) {
+        return;
+    }
+
     const crud = {
         list: cartsListCrud,
         detail: cartsDetailCrud,
@@ -45,7 +54,11 @@ export const initCrud = () => {
     setCrud('carts', crud);
 };
 
-export default async function ({ parameters }) {
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, 'ROLE_CART_READ')) {
+        return;
+    }
+
     const useProducts = parameters?.find((el) => el.paramKey === 'core_use_purchase');
 
     if (useProducts?.paramValue) {

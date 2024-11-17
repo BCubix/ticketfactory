@@ -6,7 +6,7 @@ export const editUsersInitialSchema = {
     firstName: (initValues) => initValues?.firstName || '',
     lastName: (initValues) => initValues?.lastName || '',
     email: (initValues) => initValues?.email || '',
-    roles: (initValues) => initValues?.roles?.at(0) || '',
+    profiles: (initValues) => initValues?.profiles?.map((profile) => profile.id) || [],
     plainPassword: '',
     confirmPassword: '',
     active: (initValues) => initValues?.active || false,
@@ -30,7 +30,7 @@ export const editUsersValidationSchema = {
                 .required('Veuillez confirmer le mot de passe.');
         }
     }),
-    roles: Yup.string().required('Veuillez renseigner le rôle de cet utilisateur.'),
+    profiles: Yup.array().required('Veuillez renseigner au moins un profil pour cet utilisateur.'),
 };
 
 export const editUsersForm = {
@@ -51,7 +51,13 @@ export const editUsersForm = {
                     }
                 },
             },
-            roles: { type: 'string' },
+            profiles: {
+                function: ({ values, formData }) => {
+                    values.profiles.forEach((profile, index) => {
+                        formData.append(`profiles[${index}]`, profile);
+                    });
+                },
+            },
         },
     },
     fields: [
@@ -76,17 +82,17 @@ export const editUsersForm = {
                             },
                         },
                         {
-                            keyId: 'input-roles',
+                            keyId: 'input-profiles',
                             style: { xs: 12, sm: 6 },
                             input: {
-                                name: 'roles',
-                                label: 'Rôles',
+                                name: 'profiles',
+                                label: 'Profils',
                                 inputType: 'selectField',
-                                inputList: Constant.USER_ROLES,
-                                listName: 'inputList',
-                                getName: (item) => item.label,
-                                getValue: (item) => item.value,
+                                listName: 'profilesList',
+                                getName: (item) => item.name,
+                                getValue: (item) => item.id,
                                 required: true,
+                                multiple: true,
                             },
                         },
                         {

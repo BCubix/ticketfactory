@@ -26,17 +26,19 @@ export const EditUser = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [user, setUser] = useState(null);
+    const [profilesData, setProfilesData] = useState(null);
 
     const getUser = async (id) => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.usersApi.getOneUser(id);
-            if (!result.result) {
+            const [profilesResult, userResult] = await Promise.all([Api.profilesApi.getAllProfiles(), Api.usersApi.getOneUser(id)]);
+            if (!profilesResult.result || !userResult.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
                 navigate(Constant.USER_BASE_PATH);
                 return;
             }
 
-            setUser(result.user);
+            setUser(userResult.user);
+            setProfilesData(profilesResult);
         });
     };
 
@@ -64,5 +66,5 @@ export const EditUser = () => {
         return <></>;
     }
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={user} formCrud={Crud?.users?.edit} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={user} formCrud={Crud?.users?.edit} profilesList={profilesData?.profiles || []} />;
 };

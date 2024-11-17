@@ -32,7 +32,7 @@ export const EditProfile = () => {
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
             const [profileResult, rolesResult] = await Promise.all([Api.profilesApi.getOneProfile(id), Api.rolesApi.getRoles()]);
-            console.log('ok', profileResult, rolesResult);
+
             if (profileResult?.result && rolesResult?.result) {
                 setProfile(profileResult.profile);
                 setRolesData(rolesResult);

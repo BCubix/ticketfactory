@@ -160,7 +160,7 @@ class Event extends Datable
         $this->eventPriceBlocks = new ArrayCollection();
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
-        $this->featureLinks = new ArrayCollection();
+        $this->featureLinks     = new ArrayCollection();
     }
 
 

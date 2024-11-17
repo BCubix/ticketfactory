@@ -5,7 +5,7 @@ const userProfileApi = {
         try {
             const result = await axios.get('/user-profile');
 
-            return { result: true, profile: result.data };
+            return { result: true, userProfile: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

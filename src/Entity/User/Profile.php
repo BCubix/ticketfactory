@@ -33,8 +33,8 @@ class Profile extends Datable
      * @var Collection<int, User>
      */
     #[JMS\Expose()]
-    #[JMS\Groups(['a_profile_all', 'a_profile_one', 'a_user_all', 'a_user_one'])]
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'profiles')]
+    #[JMS\Groups(['a_profile_all', 'a_profile_one'])]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'profiles')]
     private Collection $users;
 
     /**

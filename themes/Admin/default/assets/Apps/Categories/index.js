@@ -5,6 +5,8 @@ import { CategoriesList, categoriesListCrud } from '@Apps/Categories/CategoriesL
 import { EditCategoryLink } from '@Apps/Categories/CategoriesList/sc.EditCategoryLink';
 import { CreateCategory, categoriesCreateCrud } from '@Apps/Categories/CreateCategory/CreateCategory';
 import { EditCategory, categoriesEditCrud } from '@Apps/Categories/EditCategory/EditCategory';
+import categoriesReducer from './redux/categories/categoriesSlice';
+import categoriesApi from './services/api/categoriesApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
@@ -13,15 +15,17 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import categoriesReducer from './redux/categories/categoriesSlice';
-import categoriesApi from './services/api/categoriesApi';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('CATEGORIES_BASE_PATH', '/admin/categories');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_READ')) {
+        return;
+    }
+
     setComponent('ParentCategoryPartForm', ParentCategoryPartForm);
     setComponent('CategoriesList', CategoriesList);
     setComponent('EditCategoryLink', EditCategoryLink);
@@ -33,7 +37,11 @@ export const initApi = () => {
     setApi('categoriesApi', categoriesApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.CATEGORIES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
         tabPathValue: Constant.CATEGORIES_BASE_PATH,
@@ -50,11 +58,19 @@ export const initReducer = () => {
     setReducer('categories', categoriesReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_READ')) {
+        return;
+    }
+
     addTabElements('eventTabList', [{ label: 'Catégories', component: <Component.CategoriesList />, path: Constant.CATEGORIES_BASE_PATH }], 2);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_READ')) {
+        return;
+    }
+
     const crud = {
         list: categoriesListCrud,
         add: categoriesCreateCrud,

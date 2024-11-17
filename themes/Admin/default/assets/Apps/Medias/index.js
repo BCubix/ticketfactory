@@ -1,4 +1,5 @@
 import React from 'react';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
 
 import { DropzoneWrapper } from '@Apps/Medias/Components/DropzoneWrapper';
 import { CreateMedia } from '@Apps/Medias/CreateMedia/CreateMedia';
@@ -14,6 +15,8 @@ import { MediasFilters } from '@Apps/Medias/MediasList/MediasFilters/MediasFilte
 import { RotatingIcons } from '@Apps/Medias/MediasList/MediasFilters/sc.Filters';
 import { MediasList, mediasListCrud } from '@Apps/Medias/MediasList/MediasList';
 import { MediasMenu } from '@Apps/Medias/MediasMenu/MediasMenu';
+import mediasReducer from './redux/medias/mediasSlice';
+import mediasApi from './services/api/mediasApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -23,17 +26,17 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import mediasReducer from './redux/medias/mediasSlice';
-import mediasApi from './services/api/mediasApi';
-
-import PermMediaIcon from '@mui/icons-material/PermMedia';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('MEDIAS_BASE_PATH', '/admin/medias');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+        return;
+    }
+
     setComponent('DropzoneWrapper', DropzoneWrapper);
     setComponent('CreateMedia', CreateMedia);
     setComponent('EditMedia', EditMedia);
@@ -54,14 +57,22 @@ export const initApi = () => {
     setApi('mediasApi', mediasApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.MEDIAS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'mediasTabList',
         tabPathValue: Constant.MEDIAS_BASE_PATH,
     });
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+        return;
+    }
+
     insertSubMenu(4, 'PERSONNALISER', 'Médias', Constant.MEDIAS_BASE_PATH, <PermMediaIcon />, {
         relatedLinks: [Constant.MEDIA_CATEGORIES_BASE_PATH, Constant.IMAGE_FORMATS_BASE_PATH],
     });
@@ -71,11 +82,19 @@ export const initReducer = () => {
     setReducer('medias', mediasReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+        return;
+    }
+
     addTabElements('mediasTabList', [{ label: 'Médias', component: <Component.MediasList />, path: Constant.MEDIAS_BASE_PATH }]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+        return;
+    }
+
     const crud = {
         list: mediasListCrud,
     };

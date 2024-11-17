@@ -1,9 +1,13 @@
 import config from '@Services/api/config';
+import authApi from '@Services/api/authApi';
+import userProfileApi from '@Services/api/userProfileApi';
 
 import { checkObject, checkString } from '@Services/utils/check';
 
 const ApiObj = {
     config: config,
+    authApi: authApi,
+    userProfileApi: userProfileApi,
 };
 
 /**

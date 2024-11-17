@@ -1,4 +1,5 @@
 import React from 'react';
+import WidgetsIcon from '@mui/icons-material/Widgets';
 
 import { ContentTypeFieldArrayForm } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/ContentTypeFieldArrayForm';
 import { FieldArrayElem } from '@Apps/ContentTypes/ContentTypesForm/FieldArray/FieldArrayElem';
@@ -10,6 +11,9 @@ import { CreateContentType, contentTypesCreateCrud } from '@Apps/ContentTypes/Cr
 import { CreatePageType, pageTypesCreateCrud } from '@Apps/ContentTypes/CreateContentType/CreatePageType';
 import { EditContentType, contentTypesEditCrud } from '@Apps/ContentTypes/EditContentType/EditContentType';
 import { EditPageType, pageTypesEditCrud } from '@Apps/ContentTypes/EditContentType/EditPageType';
+import contentTypesReducer from './redux/contentTypes/contentTypesSlice';
+import pageTypesReducer from './redux/pageTypes/pageTypesSlice';
+import contentTypesApi from './services/api/contentTypesApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -19,19 +23,18 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import contentTypesReducer from './redux/contentTypes/contentTypesSlice';
-import pageTypesReducer from './redux/pageTypes/pageTypesSlice';
-import contentTypesApi from './services/api/contentTypesApi';
-
-import WidgetsIcon from '@mui/icons-material/Widgets';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('CONTENT_TYPES_BASE_PATH', '/admin/types-de-contenus');
     setConstant('PAGE_TYPES_BASE_PATH', '/admin/types-de-pages');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+        return;
+    }
+
     setComponent('ContentTypeFieldArrayForm', ContentTypeFieldArrayForm);
     setComponent('FieldArrayElem', FieldArrayElem);
     setComponent('MainPartFieldForm', MainPartFieldForm);
@@ -49,7 +52,11 @@ export const initApi = () => {
     setApi('contentTypesApi', contentTypesApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'contentTypesTabList',
         tabPathValue: Constant.CONTENT_TYPES_BASE_PATH,
@@ -65,7 +72,11 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.PAGE_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageType);
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+        return;
+    }
+
     insertSubMenu(4, 'PARAMETRER', 'Types', Constant.CONTENT_TYPES_BASE_PATH, <WidgetsIcon />, { relatedLinks: [Constant.PAGE_TYPES_BASE_PATH] });
 };
 
@@ -74,14 +85,22 @@ export const initReducer = () => {
     setReducer('pageTypes', pageTypesReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+        return;
+    }
+
     addTabElements('contentTypesTabList', [
         { label: 'Types de contenus', component: <Component.ContentTypesList />, path: Constant.CONTENT_TYPES_BASE_PATH },
         { label: 'Types de pages', component: <Component.PageTypesList />, path: Constant.PAGE_TYPES_BASE_PATH },
     ]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+        return;
+    }
+
     const contentTypesCrud = {
         list: contentTypesListCrud,
         add: contentTypesCreateCrud,

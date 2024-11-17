@@ -21,13 +21,18 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('PAGES_BASE_PATH', '/admin/pages');
     setConstant('PAGE_HISTORY_BASE_PATH', '/admin/historique-de-page');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+        return;
+    }
+
     setComponent('CreatePage', CreatePage);
     setComponent('EditPage', EditPage);
     setComponent('PagesBlocksPart', PagesBlocksPart);
@@ -43,7 +48,11 @@ export const initApi = () => {
     setApi('pageHistoryApi', pageHistoryApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.PAGES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'pagesTabList',
         tabPathValue: Constant.PAGES_BASE_PATH,
@@ -54,7 +63,11 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.PAGE_HISTORY_BASE_PATH}/:id`, Component.PageHistory);
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+        return;
+    }
+
     insertSubMenu(2, 'PERSONNALISER', 'Pages', Constant.PAGES_BASE_PATH, <DescriptionIcon />, { relatedLinks: [Constant.PAGE_BLOCKS_BASE_PATH, Constant.PAGE_HISTORY_BASE_PATH] });
 };
 
@@ -62,11 +75,19 @@ export const initReducer = () => {
     setReducer('pages', pagesReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+        return;
+    }
+
     addTabElements('pagesTabList', [{ label: 'Pages', component: <Component.PagesList />, path: Constant.PAGES_BASE_PATH }]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+        return;
+    }
+
     const crud = {
         list: pagesListCrud,
         add: pagesCreateCrud,

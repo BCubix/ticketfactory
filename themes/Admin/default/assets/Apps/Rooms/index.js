@@ -14,12 +14,17 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('ROOMS_BASE_PATH', '/admin/salles');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_ROOM_READ')) {
+        return;
+    }
+
     setComponent('CreateRoom', CreateRoom);
     setComponent('EditRoom', EditRoom);
     setComponent('RoomsList', RoomsList);
@@ -33,7 +38,11 @@ export const initReducer = () => {
     setReducer('rooms', roomsReducer);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_ROOM_READ')) {
+        return;
+    }
+
     const crud = {
         list: roomsListCrud,
         add: roomsCreateCrud,
@@ -43,9 +52,12 @@ export const initCrud = () => {
     setCrud('rooms', crud);
 };
 
-export default async function ({ parameters }) {
-    const useRooms = parameters?.find((el) => el.paramKey === 'core_use_rooms');
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, 'ROLE_ROOM_READ')) {
+        return;
+    }
 
+    const useRooms = parameters?.find((el) => el.paramKey === 'core_use_rooms');
     if (!useRooms?.paramValue) {
         return;
     }

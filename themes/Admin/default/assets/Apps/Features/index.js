@@ -14,13 +14,18 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { setCrud } from '@/AdminService/Crud';
 import { insertSubMenu } from '@/AdminService/Menu';
 import { setReducer } from '@/AdminService/Reducer';
-import { setTab } from '@/AdminService/Tab';
+import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('FEATURES_BASE_PATH', '/admin/attributs');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+        return;
+    }
+
     setComponent('FeaturesList', FeaturesList);
     setComponent('CreateFeature', CreateFeature);
     setComponent('EditFeature', EditFeature);
@@ -30,7 +35,11 @@ export const initApi = () => {
     setApi('featuresApi', featuresApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.FEATURES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'featuresTabList',
         tabPathValue: Constant.FEATURES_BASE_PATH,
@@ -39,7 +48,11 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.FEATURES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditFeature);
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+        return;
+    }
+
     insertSubMenu(4, 'PROGRAMMATION', 'Attributs', Constant.FEATURES_BASE_PATH, <BusinessIcon />, { relatedLinks: [Constant.FEATURE_CATEGORIES_BASE_PATH] });
 };
 
@@ -47,11 +60,12 @@ export const initReducer = () => {
     setReducer('features', featuresReducer);
 };
 
-export const initTab = () => {
-    setTab('featuresTabList', () => [
-        { label: 'Attributs', component: <Component.FeaturesList />, path: Constant.FEATURES_BASE_PATH },
-        { label: "Catégories d'attributs", component: <Component.FeatureCategoriesList />, path: Constant.FEATURE_CATEGORIES_BASE_PATH },
-    ]);
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+        return;
+    }
+
+    addTabElements('featuresTabList', [{ label: 'Attributs', component: <Component.FeaturesList />, path: Constant.FEATURES_BASE_PATH }]);
 };
 
 export const initCrud = () => {

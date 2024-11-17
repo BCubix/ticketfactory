@@ -1,4 +1,4 @@
-export function ActiveModuleContext(modulesActive) {
+export function ActiveModuleContext(modulesActive, userRoles) {
     if (!modulesActive) return;
 
     const list = require.context(`@/../../../../modules`, true, /\.*\/assets\/Admin\/index.js$/);
@@ -13,7 +13,7 @@ export function ActiveModuleContext(modulesActive) {
             const func = list(item).default;
 
             if (typeof func === 'function') {
-                func();
+                func({ userRoles });
             }
         }
     });

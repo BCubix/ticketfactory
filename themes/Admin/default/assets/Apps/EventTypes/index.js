@@ -13,12 +13,17 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('EVENT_TYPES_BASE_PATH', '/admin/types-d-evenements');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_READ')) {
+        return;
+    }
+
     setComponent('EventTypesList', EventTypesList);
     setComponent('EditEventType', EditEventType);
 };
@@ -31,7 +36,11 @@ export const initReducer = () => {
     setReducer('eventTypes', eventTypesReducer);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_READ')) {
+        return;
+    }
+
     const crud = {
         list: eventTypesListCrud,
         edit: eventTypesEditCrud,
@@ -40,9 +49,12 @@ export const initCrud = () => {
     setCrud('eventTypes', crud);
 };
 
-export default async function ({ parameters }) {
-    const useEventTypes = parameters?.find((el) => el.paramKey === 'core_use_event_types');
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_READ')) {
+        return;
+    }
 
+    const useEventTypes = parameters?.find((el) => el.paramKey === 'core_use_event_types');
     if (!useEventTypes?.paramValue) {
         return;
     }

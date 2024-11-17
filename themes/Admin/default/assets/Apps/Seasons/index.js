@@ -15,12 +15,17 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('SEASONS_BASE_PATH', '/admin/saisons');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+        return;
+    }
+
     setComponent('CreateSeason', CreateSeason);
     setComponent('EditSeason', EditSeason);
     setComponent('SeasonsList', SeasonsList);
@@ -30,7 +35,11 @@ export const initApi = () => {
     setApi('seasonsApi', seasonsApi);
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+        return;
+    }
+
     insertSubMenu(5, 'ADMINISTRER', 'Référentiels', null, <CalendarMonthIcon />, {});
 };
 
@@ -38,7 +47,11 @@ export const initReducer = () => {
     setReducer('seasons', seasonsReducer);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+        return;
+    }
+
     const crud = {
         list: seasonsListCrud,
         add: seasonsCreateCrud,
@@ -48,9 +61,12 @@ export const initCrud = () => {
     setCrud('seasons', crud);
 };
 
-export default async function ({ parameters }) {
-    const useSeasons = parameters?.find((el) => el.paramKey === 'core_use_seasons');
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+        return;
+    }
 
+    const useSeasons = parameters?.find((el) => el.paramKey === 'core_use_seasons');
     if (!useSeasons?.paramValue) {
         return;
     }

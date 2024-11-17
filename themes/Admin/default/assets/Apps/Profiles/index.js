@@ -15,12 +15,17 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('PROFILES_BASE_PATH', '/admin/profils');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+        return;
+    }
+
     setComponent('ProfilesList', ProfilesList);
     setComponent('ProfileRightsForm', ProfileRightsForm);
     setComponent('CreateProfile', CreateProfile);
@@ -36,7 +41,11 @@ export const initReducer = () => {
     setReducer('profiles', profilesReducer);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.PROFILES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'usersTabList',
         tabPathValue: Constant.PROFILES_BASE_PATH,
@@ -45,11 +54,19 @@ export const initAuthenticatedRoutes = () => {
     setAuthenticatedRoute(`${Constant.PROFILES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProfile);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+        return;
+    }
+
     addTabElements('usersTabList', [{ label: 'Profils', component: <Component.ProfilesList />, path: Constant.PROFILES_BASE_PATH }]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+        return;
+    }
+
     const crud = {
         list: profilesListCrud,
         add: profilesCreateCrud,

@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ActiveModuleContext } from '@/AdminService/ActiveModule/ActiveModuleContext';
+import { loginFailure, userProfileSelector, setModulesLoaded } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
-
-import { loginFailure, userProfileSelector, setModulesLoaded } from '@Apps/Auth/redux/userProfile/userProfileSlice';
-import { useSelector } from 'react-redux';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const ActiveModule = ({ loaded }) => {
     const dispatch = useDispatch();
-    const { connected, modulesLoaded } = useSelector(userProfileSelector);
+    const { connected, user, modulesLoaded } = useSelector(userProfileSelector);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
 
     const getActiveModules = async () => {
         if (!loaded) {
@@ -23,7 +26,7 @@ export const ActiveModule = ({ loaded }) => {
         if (check.result) {
             const result = await Api.modulesApi.getModulesActive();
             if (result.result) {
-                ActiveModuleContext(result.modules);
+                ActiveModuleContext(result.modules, userRoles);
                 dispatch(setModulesLoaded({ modulesLoaded: true }));
             }
         } else {

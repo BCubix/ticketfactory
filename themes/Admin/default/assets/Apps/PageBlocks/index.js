@@ -17,12 +17,17 @@ import { addTabElements } from '@/AdminService/Tab';
 import pageBlocksApi from '@Apps/PageBlocks/services/api/pageBlocksApi';
 import pageBlocksReducer from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
 import { setCrud } from '@/AdminService/Crud';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('PAGE_BLOCKS_BASE_PATH', '/admin/page-blocks');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+        return;
+    }
+
     setComponent('PageBlockColumnPart', PageBlockColumnPart);
     setComponent('CreatePageBlock', CreatePageBlock);
     setComponent('EditPageBlock', EditPageBlock);
@@ -35,7 +40,11 @@ export const initApi = () => {
     setApi('pageBlocksApi', pageBlocksApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'pagesTabList',
         tabPathValue: Constant.PAGE_BLOCKS_BASE_PATH,
@@ -48,11 +57,19 @@ export const initReducer = () => {
     setReducer('pageBlocks', pageBlocksReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+        return;
+    }
+
     addTabElements('pagesTabList', [{ label: 'Blocs', component: <Component.PageBlocksList />, path: Constant.PAGE_BLOCKS_BASE_PATH }]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+        return;
+    }
+
     const crud = {
         list: pageBlocksListCrud,
         add: pageBlocksCreateCrud,

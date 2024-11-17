@@ -13,12 +13,17 @@ import { setCrud } from '@/AdminService/Crud';
 import tagsReducer from '@Apps/Tags/redux/tags/tagsSlice';
 import tagsApi from '@Apps/Tags/services/api/tagsApi';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('TAGS_BASE_PATH', '/admin/tags');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+        return;
+    }
+
     setComponent('CreateTag', CreateTag);
     setComponent('EditTag', EditTag);
     setComponent('TagsList', TagsList);
@@ -28,7 +33,11 @@ export const initApi = () => {
     setApi('tagsApi', tagsApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.TAGS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
         tabPathValue: Constant.TAGS_BASE_PATH,
@@ -41,11 +50,19 @@ export const initReducer = () => {
     setReducer('tags', tagsReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+        return;
+    }
+
     addTabElements('eventTabList', [{ label: 'Tags', component: <Component.TagsList />, path: Constant.TAGS_BASE_PATH }], 3);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+        return;
+    }
+
     const crud = {
         list: tagsListCrud,
         add: tagsCreateCrud,

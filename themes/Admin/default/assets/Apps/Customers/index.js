@@ -1,8 +1,11 @@
 import React from 'react';
+import PeopleIcon from '@mui/icons-material/People';
 
 import { CustomersList, customersListCrud } from '@Apps/Customers/CustomersList/CustomersList';
 import { CreateCustomer, customersCreateCrud } from '@Apps/Customers/CreateCustomer/CreateCustomer';
 import { EditCustomer, customersEditCrud } from '@Apps/Customers/EditCustomer/EditCustomer';
+import customersReducer from '@Apps/Customers/redux/customers/customersSlice';
+import customersApi from './services/api/customersApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -12,17 +15,17 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
-
-import customersReducer from '@Apps/Customers/redux/customers/customersSlice';
-import customersApi from './services/api/customersApi';
-
-import PeopleIcon from '@mui/icons-material/People';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const initConstant = () => {
     setConstant('CUSTOMERS_BASE_PATH', '/admin/clients');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CUSTOMER_READ')) {
+        return;
+    }
+
     setComponent('CustomersList', CustomersList);
     setComponent('CreateCustomer', CreateCustomer);
     setComponent('EditCustomer', EditCustomer);
@@ -32,13 +35,15 @@ export const initApi = () => {
     setApi('customersApi', customersApi);
 };
 
-export const initMenu = () => {};
-
 export const initReducer = () => {
     setReducer('customers', customersReducer);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, 'ROLE_CUSTOMER_READ')) {
+        return;
+    }
+
     const crud = {
         list: customersListCrud,
         add: customersCreateCrud,
@@ -48,9 +53,12 @@ export const initCrud = () => {
     setCrud('customers', crud);
 };
 
-export default async function ({ parameters }) {
-    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_customers');
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, 'ROLE_CUSTOMER_READ')) {
+        return;
+    }
 
+    const useProducts = parameters?.find((el) => el.paramKey === 'core_use_customers');
     if (useProducts?.paramValue) {
         addTabElements('customersTabList', [{ label: 'Clients', component: <Component.CustomersList />, path: Constant.CUSTOMERS_BASE_PATH }]);
 
