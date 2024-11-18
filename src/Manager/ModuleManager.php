@@ -506,12 +506,10 @@ class ModuleManager extends AddonManager
             return;
         }
 
-
         foreach ($module->getRoles() as $role) {
             $module->removeRole($role);
         }
 
         $this->em->flush();
     }
-
 }
