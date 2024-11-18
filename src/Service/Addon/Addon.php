@@ -280,6 +280,33 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+
+                        ->arrayNode('roles')
+                            ->useAttributeAsKey('name')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('label')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('groupName')
+                                        ->defaultValue(null)
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

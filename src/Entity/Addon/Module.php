@@ -5,6 +5,7 @@ namespace App\Entity\Addon;
 use App\Entity\Datable;
 use App\Entity\Hook\Hook;
 use App\Entity\Order\DeliveryMode;
+use App\Entity\User\Role;
 use App\Repository\ModuleRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,10 +45,14 @@ class Module extends Datable
     #[ORM\OneToMany(mappedBy: 'module', targetEntity: DeliveryMode::class, orphanRemoval: true)]
     private Collection $deliveryModes;
 
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Role::class, orphanRemoval: true)]
+    private Collection $roles;
+
     public function __construct()
     {
         $this->hooks = new ArrayCollection();
         $this->deliveryModes = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId(): int
@@ -120,6 +125,36 @@ class Module extends Datable
             // set the owning side to null (unless already changed)
             if ($deliveryMode->getModule() === $this) {
                 $deliveryMode->setModule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getRoles(): Collection
+    {
+        return $this->roles;
+    }
+
+    public function addRole(Role $role): static
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+            $role->setModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role): static
+    {
+        if ($this->roles->removeElement($role)) {
+            // set the owning side to null (unless already changed)
+            if ($role->getModule() === $this) {
+                $role->setModule(null);
             }
         }
 

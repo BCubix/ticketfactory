@@ -12,4 +12,13 @@ class RoleRepository extends CrudRepository
     {
         parent::__construct($registry, Role::class);
     }
+
+    public function findAllByModule(int $moduleId)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.module', 'm', 'WITH', 'm.id = :moduleId')
+            ->setParameter('moduleId', $moduleId)
+            ->getQuery()
+            ->getResult();
+    }
 }

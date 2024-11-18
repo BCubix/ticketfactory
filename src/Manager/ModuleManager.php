@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Addon\Module as ModuleEntity;
 use App\Entity\Order\DeliveryMode;
+use App\Entity\User\Role;
 use App\Exception\ApiException;
 use App\Service\Addon\Module;
 
@@ -398,6 +399,10 @@ class ModuleManager extends AddonManager
             if (isset($settings['deliveryModes'])) {
                 $this->addDeliveryModes($module, $objectName, $settings['deliveryModes']);
             }
+
+            if (isset($settings['roles'])) {
+                $this->addRoles($module, $objectName, $settings['roles']);
+            }
         } else if ($action == ModuleEntity::ACTION_DISABLE) {
             // If there are URLs defined by the module configuration, we remove them
             if (isset($settings['url'])) {
@@ -416,6 +421,10 @@ class ModuleManager extends AddonManager
             // If there are URLs defined by the module configuration, we remove them
             if (isset($settings['url'])) {
                 $this->removeUrl($settings['url']);
+            }
+
+            if (isset($settings['roles'])) {
+                $this->removeRoles($module, $objectName);
             }
         }
     }
@@ -467,4 +476,42 @@ class ModuleManager extends AddonManager
         $this->em->persist($module);
         $this->em->flush();
     }
+
+    private function addRoles (?ModuleEntity $module, string $objectName, array $roles): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+        foreach ($roles as $name => $role) {
+            $newRole = new Role();
+
+            $newRole->setName($name);
+            $newRole->setModule($module);
+            $newRole->setLabel($role['label']);
+            $newRole->setGroupName($role['groupName']);
+            $newRole->setDescription($role['description'] ?? null);
+
+            $this->em->persist($newRole);
+        }
+
+        $this->em->flush();
+    }
+
+    private function removeRoles(?ModuleEntity $module, string $objectName): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+
+        foreach ($module->getRoles() as $role) {
+            $module->removeRole($role);
+        }
+
+        $this->em->flush();
+    }
+
 }
