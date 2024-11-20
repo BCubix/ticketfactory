@@ -15,12 +15,14 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_THEME_READ';
+
 export const initConstant = () => {
     setConstant('THEMES_BASE_PATH', '/admin/themes');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_THEME_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -33,7 +35,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_THEME_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -44,7 +46,7 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_THEME_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -52,7 +54,7 @@ export const initMenu = ({ userRoles }) => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_THEME_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

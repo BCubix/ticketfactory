@@ -17,12 +17,16 @@ import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_FEATURE_READ';
+const ROLE_CREATE = 'ROLE_FEATURE_CREATE';
+const ROLE_EDIT = 'ROLE_FEATURE_EDIT';
+
 export const initConstant = () => {
     setConstant('FEATURES_BASE_PATH', '/admin/attributs');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -36,7 +40,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -44,12 +48,18 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'featuresTabList',
         tabPathValue: Constant.FEATURES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.FEATURES_BASE_PATH + Constant.CREATE_PATH, Component.CreateFeature);
-    setAuthenticatedRoute(`${Constant.FEATURES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditFeature);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.FEATURES_BASE_PATH + Constant.CREATE_PATH, Component.CreateFeature);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.FEATURES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditFeature);
+    }
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -61,7 +71,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_FEATURE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

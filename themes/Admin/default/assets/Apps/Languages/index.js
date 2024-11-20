@@ -17,12 +17,16 @@ import { addTabElements } from '@/AdminService/Tab';
 import { setCrud } from '@/AdminService/Crud';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_LANGUAGE_READ';
+const ROLE_CREATE = 'ROLE_LANGUAGE_CREATE';
+const ROLE_EDIT = 'ROLE_LANGUAGE_EDIT';
+
 export const initConstant = () => {
     setConstant('LANGUAGES_BASE_PATH', '/admin/langues');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_LANGUAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -36,7 +40,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_LANGUAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -44,12 +48,18 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'languagesTabList',
         tabPathValue: Constant.LANGUAGES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH + Constant.CREATE_PATH, Component.CreateLanguage);
-    setAuthenticatedRoute(`${Constant.LANGUAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditLanguage);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.LANGUAGES_BASE_PATH + Constant.CREATE_PATH, Component.CreateLanguage);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.LANGUAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditLanguage);
+    }
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_LANGUAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -61,7 +71,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_LANGUAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -69,7 +79,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_LANGUAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

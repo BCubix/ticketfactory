@@ -7,6 +7,7 @@ import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeRoomsFilters, getRoomsAction, roomsSelector } from '@Apps/Rooms/redux/rooms/roomsSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const roomsListCrud = {
     title: 'Salles',
@@ -47,6 +48,11 @@ export const roomsListCrud = {
     dataList: (selector) => selector.rooms,
     duplicate: (props) => Api.roomsApi.duplicateRoom(props),
     delete: (props) => Api.roomsApi.deleteRoom(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_ROOM_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_ROOM_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_ROOM_DELETE'),
+    },
     links: {
         new: () => `${Constant.ROOMS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.ROOMS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

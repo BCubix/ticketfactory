@@ -60,6 +60,11 @@ export const pagesListCrud = {
         }
         window.open(el.frontUrl, '_blank').focus();
     },
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_DELETE'),
+    },
     links: {
         new: () => `${Constant.PAGES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

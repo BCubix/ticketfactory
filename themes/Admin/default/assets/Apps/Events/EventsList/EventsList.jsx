@@ -7,6 +7,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const eventsListCrud = ({ eventName }) => ({
     title: eventName,
@@ -90,6 +91,11 @@ export const eventsListCrud = ({ eventName }) => ({
             return;
         }
         window.open(el.frontUrl, '_blank').focus();
+    },
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_DELETE'),
     },
     links: {
         new: () => `${Constant.EVENTS_BASE_PATH}${Constant.CREATE_PATH}`,

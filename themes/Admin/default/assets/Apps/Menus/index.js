@@ -24,12 +24,15 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_MENU_READ';
+const ROLE_CREATE = 'ROLE_MENU_CREATE';
+
 export const initConstant = () => {
     setConstant('MENUS_BASE_PATH', '/admin/menus');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MENU_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -50,7 +53,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MENU_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -58,11 +61,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'menusTabList',
         tabPathValue: Constant.MENUS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.MENUS_BASE_PATH + Constant.CREATE_PATH, Component.CreateMenu);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.MENUS_BASE_PATH + Constant.CREATE_PATH, Component.CreateMenu);
+    }
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MENU_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -75,7 +81,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MENU_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -83,7 +89,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MENU_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

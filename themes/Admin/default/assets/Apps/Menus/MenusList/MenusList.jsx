@@ -17,6 +17,9 @@ import { DisplayFormTabs } from '@Components/CmtCrudForm/CmtCrudForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { getAvailableLanguages } from '@Services/utils/translationUtils';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 const serializeMenuData = (element, name, formData, datas) => {
     formData.append(`${name}[name]`, element.name);
@@ -75,7 +78,7 @@ export const menusEditCrud = {
     },
     headerComponents: [
         {
-            component: ({ setFieldValue, setTranslationInitialValues, changeFormikInitialValues, initialValues, setInitialValues, menus }) => (
+            component: ({ setFieldValue, setTranslationInitialValues, changeFormikInitialValues, initialValues, setInitialValues, menus, accessUserCreate }) => (
                 <Component.MenuHeaderLine
                     selectedMenu={initialValues}
                     list={menus}
@@ -84,6 +87,7 @@ export const menusEditCrud = {
                         setTranslationInitialValues(val);
                         changeFormikInitialValues(setFieldValue, val);
                     }}
+                    accessUserCreate={accessUserCreate}
                 />
             ),
         },
@@ -97,27 +101,28 @@ export const menusEditCrud = {
             label: 'Saison',
             fields: [
                 {
-                    component: ({ translationInitialValues, values, setFieldValue }) => (
-                        <Grid item xs={12} md={6} lg={3}>
-                            <Component.AddMenuElement
-                                language={translationInitialValues?.lang}
-                                formCrud={Crud.menus.edit}
-                                addElementToMenu={(newElements) => {
-                                    let menu = [...values.children];
+                    component: ({ translationInitialValues, values, setFieldValue, accessUserCreate }) =>
+                        accessUserCreate && (
+                            <Grid item xs={12} md={6} lg={3}>
+                                <Component.AddMenuElement
+                                    language={translationInitialValues?.lang}
+                                    formCrud={Crud.menus.edit}
+                                    addElementToMenu={(newElements) => {
+                                        let menu = [...values.children];
 
-                                    newElements.forEach((el) => {
-                                        if (!el?.lang) {
-                                            menu.push({ ...el, lang: values?.lang });
-                                        } else {
-                                            menu.push(el);
-                                        }
-                                    });
+                                        newElements.forEach((el) => {
+                                            if (!el?.lang) {
+                                                menu.push({ ...el, lang: values?.lang });
+                                            } else {
+                                                menu.push(el);
+                                            }
+                                        });
 
-                                    setFieldValue('children', menu);
-                                }}
-                            />
-                        </Grid>
-                    ),
+                                        setFieldValue('children', menu);
+                                    }}
+                                />
+                            </Grid>
+                        ),
                 },
                 {
                     component: ({
@@ -136,8 +141,10 @@ export const menusEditCrud = {
                         isSubmitting,
                         setDeleteDialog,
                         deleteDialog,
+                        accessUserEdit,
+                        accessUserDelete,
                     }) => (
-                        <Grid item xs={12} md={6} lg={9}>
+                        <Grid item xs={12} {...(accessUserEdit ? { md: 6, lg: 9 } : {})}>
                             <Component.MenuStructure
                                 values={values}
                                 setFieldValue={setFieldValue}
@@ -155,19 +162,24 @@ export const menusEditCrud = {
                                 }}
                                 selectedMenu={initialValues}
                                 formCrud={Crud.menus.edit}
+                                accessUserEdit={accessUserEdit}
                             />
 
                             <Box className="menus-footer">
-                                <Button variant="outlined" disabled={isSubmitting} color="error" onClick={() => setDeleteDialog(!deleteDialog)} id="deleteMenuButton">
-                                    Supprimer
-                                </Button>
-
-                                <Box className="flex">
-                                    <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text={'Menu actif ?'} />
-                                    <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
-                                        Modifier
+                                {accessUserDelete && (
+                                    <Button variant="outlined" disabled={isSubmitting} color="error" onClick={() => setDeleteDialog(!deleteDialog)} id="deleteMenuButton">
+                                        Supprimer
                                     </Button>
-                                </Box>
+                                )}
+
+                                {accessUserEdit && (
+                                    <Box className="flex">
+                                        <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text={'Menu actif ?'} />
+                                        <Button type="submit" variant="contained" disabled={isSubmitting} id="submitForm">
+                                            Modifier
+                                        </Button>
+                                    </Box>
+                                )}
                             </Box>
                         </Grid>
                     ),
@@ -178,14 +190,31 @@ export const menusEditCrud = {
 };
 
 export const MenusList = () => {
-    const { loading, menus, error } = useSelector(menusSelector);
-    const languagesData = useSelector(languagesSelector);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { loading, menus, error } = useSelector(menusSelector);
+    const { user } = useSelector(userProfileSelector);
+    const languagesData = useSelector(languagesSelector);
     const [initialValues, setInitialValues] = useState(null);
     const [translationInitialValues, setTranslationInitialValues] = useState(null);
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [translateDialog, setTranslateDialog] = useState(false);
-    const navigate = useNavigate();
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const accessUserCreate = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_MENU_CREATE');
+    }, [userRoles]);
+
+    const accessUserEdit = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_MENU_EDIT');
+    }, [userRoles]);
+
+    const accessUserDelete = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_MENU_DELETE');
+    }, [userRoles]);
 
     useEffect(() => {
         if (!loading && !menus && !error) {
@@ -317,6 +346,9 @@ export const MenusList = () => {
             translateDialog={translateDialog}
             setTranslateDialog={setTranslateDialog}
             navigate={navigate}
+            accessUserCreate={accessUserCreate}
+            accessUserEdit={accessUserEdit}
+            accessUserDelete={accessUserDelete}
         />
     );
 };
@@ -338,6 +370,7 @@ const InitForm = ({
     translateDialog,
     setTranslateDialog,
     navigate,
+    ...rest
 }) => {
     return (
         <Formik
@@ -369,6 +402,7 @@ const InitForm = ({
                             deleteDialog,
                             setDeleteDialog,
                         }}
+                        {...rest}
                     />
 
                     {Object.keys(initialValues).length > 0 && (
@@ -393,6 +427,7 @@ const InitForm = ({
                                     deleteDialog,
                                     setDeleteDialog,
                                 }}
+                                {...rest}
                             />
                         </Grid>
                     )}

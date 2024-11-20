@@ -23,6 +23,10 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_PAGE_READ';
+const ROLE_CREATE = 'ROLE_PAGE_CREATE';
+const ROLE_EDIT = 'ROLE_PAGE_EDIT';
+
 export const initConstant = () => {
     setConstant('PAGES_BASE_PATH', '/admin/pages');
     setConstant('PAGE_HISTORY_BASE_PATH', '/admin/historique-de-page');
@@ -57,10 +61,15 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'pagesTabList',
         tabPathValue: Constant.PAGES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.PAGES_BASE_PATH + Constant.CREATE_PATH, Component.CreatePage);
-    setAuthenticatedRoute(`${Constant.PAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPage);
 
-    setAuthenticatedRoute(`${Constant.PAGE_HISTORY_BASE_PATH}/:id`, Component.PageHistory);
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.PAGES_BASE_PATH + Constant.CREATE_PATH, Component.CreatePage);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.PAGES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPage);
+        setAuthenticatedRoute(`${Constant.PAGE_HISTORY_BASE_PATH}/:id`, Component.PageHistory);
+    }
 };
 
 export const initMenu = ({ userRoles }) => {

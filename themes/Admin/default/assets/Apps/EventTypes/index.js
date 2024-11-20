@@ -15,12 +15,15 @@ import { addTabElements } from '@/AdminService/Tab';
 import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_EVENT_TYPE_READ';
+const ROLE_EDIT = 'ROLE_EVENT_TYPE_EDIT';
+
 export const initConstant = () => {
     setConstant('EVENT_TYPES_BASE_PATH', '/admin/types-d-evenements');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -37,7 +40,7 @@ export const initReducer = () => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -50,7 +53,7 @@ export const initCrud = ({ userRoles }) => {
 };
 
 export default async function ({ parameters, userRoles }) {
-    if (!checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -63,7 +66,10 @@ export default async function ({ parameters, userRoles }) {
         tabListName: 'seasonsTabList',
         tabPathValue: Constant.EVENT_TYPES_BASE_PATH,
     });
-    setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
+    }
 
     addTabElements('seasonsTabList', [{ label: "Types d'évènements", component: <Component.EventTypesList />, path: Constant.EVENT_TYPES_BASE_PATH }], 3);
 

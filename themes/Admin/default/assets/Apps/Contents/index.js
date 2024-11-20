@@ -21,12 +21,16 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_CONTENT_READ';
+const ROLE_CREATE = 'ROLE_CONTENT_CREATE';
+const ROLE_EDIT = 'ROLE_CONTENT_EDIT';
+
 export const initConstant = () => {
     setConstant('CONTENTS_BASE_PATH', '/admin/contenus');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -46,17 +50,23 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
     setAuthenticatedRoute(Constant.CONTENTS_BASE_PATH, Component.ContentsList);
-    setAuthenticatedRoute(Constant.CONTENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateContent);
-    setAuthenticatedRoute(`${Constant.CONTENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContent);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.CONTENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateContent);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.CONTENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContent);
+    }
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

@@ -28,29 +28,27 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_MEDIA_READ';
+
 export const initConstant = () => {
     setConstant('MEDIAS_BASE_PATH', '/admin/medias');
 };
 
-export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
-        return;
-    }
-
+export const initComponent = () => {
     setComponent('DropzoneWrapper', DropzoneWrapper);
+    setComponent('ImageUploads', ImageUploads);
+    setComponent('MediasFilters', MediasFilters);
+    setComponent('MediasSorters', MediasSorters);
     setComponent('CreateMedia', CreateMedia);
     setComponent('EditMedia', EditMedia);
-    setComponent('ImageUploads', ImageUploads);
     setComponent('MediaDataForm', MediaDataForm);
     setComponent('IframeMediaForm', IframeMediaForm);
     setComponent('MediaImageForm', MediaImageForm);
     setComponent('MediaParentCategoryPartForm', MediaParentCategoryPartForm);
     setComponent('MediaParentFormatPartForm', MediaParentFormatPartForm);
-    setComponent('MediasSorters', MediasSorters);
     setComponent('RotatingIcons', RotatingIcons);
     setComponent('MediasList', MediasList);
     setComponent('MediasMenu', MediasMenu);
-    setComponent('MediasFilters', MediasFilters);
 };
 
 export const initApi = () => {
@@ -58,7 +56,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -69,7 +67,7 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -83,18 +81,14 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
     addTabElements('mediasTabList', [{ label: 'Médias', component: <Component.MediasList />, path: Constant.MEDIAS_BASE_PATH }]);
 };
 
-export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_MEDIA_READ')) {
-        return;
-    }
-
+export const initCrud = () => {
     const crud = {
         list: mediasListCrud,
     };

@@ -19,12 +19,16 @@ import pageBlocksReducer from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice
 import { setCrud } from '@/AdminService/Crud';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_PAGE_BLOCK_READ';
+const ROLE_CREATE = 'ROLE_PAGE_BLOCK_CREATE';
+const ROLE_EDIT = 'ROLE_PAGE_BLOCK_EDIT';
+
 export const initConstant = () => {
     setConstant('PAGE_BLOCKS_BASE_PATH', '/admin/page-blocks');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -41,7 +45,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -49,8 +53,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'pagesTabList',
         tabPathValue: Constant.PAGE_BLOCKS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageBlock);
-    setAuthenticatedRoute(`${Constant.PAGE_BLOCKS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageBlock);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.PAGE_BLOCKS_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageBlock);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.PAGE_BLOCKS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageBlock);
+    }
 };
 
 export const initReducer = () => {
@@ -58,7 +68,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -66,7 +76,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

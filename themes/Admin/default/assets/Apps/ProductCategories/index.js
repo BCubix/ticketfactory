@@ -14,12 +14,16 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_PRODUCT_CATEGORY_READ';
+const ROLE_CREATE = 'ROLE_PRODUCT_CATEGORY_CREATE';
+const ROLE_EDIT = 'ROLE_PRODUCT_CATEGORY_EDIT';
+
 export const initConstant = () => {
     setConstant('PRODUCT_CATEGORIES_BASE_PATH', '/admin/categories-de-produits');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_CATEGORY_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -34,7 +38,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_CATEGORY_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -46,8 +50,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'productsTabList',
         tabPathValue: Constant.PRODUCT_CATEGORIES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.PRODUCT_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateProductCategory);
-    setAuthenticatedRoute(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProductCategory);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.PRODUCT_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateProductCategory);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.PRODUCT_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProductCategory);
+    }
 };
 
 export const initReducer = () => {
@@ -55,7 +65,7 @@ export const initReducer = () => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_CATEGORY_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

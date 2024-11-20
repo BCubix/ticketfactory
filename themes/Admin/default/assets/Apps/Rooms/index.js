@@ -16,6 +16,10 @@ import { addTabElements } from '@/AdminService/Tab';
 import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_ROOM_READ';
+const ROLE_CREATE = 'ROLE_ROOM_CREATE';
+const ROLE_EDIT = 'ROLE_ROOM_EDIT';
+
 export const initConstant = () => {
     setConstant('ROOMS_BASE_PATH', '/admin/salles');
 };
@@ -66,8 +70,14 @@ export default async function ({ parameters, userRoles }) {
         tabListName: 'seasonsTabList',
         tabPathValue: Constant.ROOMS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH, Component.CreateRoom);
-    setAuthenticatedRoute(`${Constant.ROOMS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditRoom);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.ROOMS_BASE_PATH + Constant.CREATE_PATH, Component.CreateRoom);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.ROOMS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditRoom);
+    }
 
     addTabElements('seasonsTabList', [{ label: 'Salles', component: <Component.RoomsList />, path: Constant.ROOMS_BASE_PATH }], 1);
 

@@ -30,6 +30,9 @@ export const ListTableCellButtons = ({
     expendElementTranslation,
     setExpendElementTranslation,
     additionnalOptions,
+    accessUserCreate,
+    accessUserEdit,
+    accessUserDelete,
 }) => {
     if (
         onDelete !== null ||
@@ -41,7 +44,7 @@ export const ListTableCellButtons = ({
     ) {
         return (
             <TableCell component="td" scope="row">
-                {onActive !== null && onDisable !== null && (
+                {accessUserEdit && onActive !== null && onDisable !== null && (
                     <Component.ActionFabButton
                         sx={{ marginInline: 1 }}
                         color="primary"
@@ -55,7 +58,8 @@ export const ListTableCellButtons = ({
                         {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
                     </Component.ActionFabButton>
                 )}
-                {onSelect !== null && item.id !== themeId && (
+
+                {accessUserEdit && onSelect !== null && item.id !== themeId && (
                     <Component.ActionFabButton
                         sx={{ marginInline: 1 }}
                         color="primary"
@@ -70,7 +74,7 @@ export const ListTableCellButtons = ({
                     </Component.ActionFabButton>
                 )}
 
-                {onParameter !== null && displayParameter(item) && (
+                {accessUserEdit && onParameter !== null && displayParameter(item) && (
                     <Component.EditFabButton
                         sx={{ marginInline: 1 }}
                         size="small"
@@ -84,7 +88,7 @@ export const ListTableCellButtons = ({
                     </Component.EditFabButton>
                 )}
 
-                {onRemove !== null && (item.active === undefined || onDisable === null) && (
+                {accessUserDelete && onRemove !== null && (item.active === undefined || onDisable === null) && (
                     <Component.DeleteFabButton
                         sx={{ marginInline: 1 }}
                         color="error"
@@ -99,7 +103,8 @@ export const ListTableCellButtons = ({
                         <DeleteIcon />
                     </Component.DeleteFabButton>
                 )}
-                {onEdit !== null && (
+
+                {accessUserEdit && onEdit !== null && (
                     <Component.EditFabButton
                         sx={{ marginInline: 1 }}
                         color="primary"
@@ -132,6 +137,7 @@ export const ListTableCellButtons = ({
                         <MoreHorizIcon />
                     </Component.ActionFabButton>
                 ) : (
+                    accessUserDelete &&
                     onDelete !== null && (
                         <Component.DeleteFabButton
                             sx={{ marginInline: 1 }}

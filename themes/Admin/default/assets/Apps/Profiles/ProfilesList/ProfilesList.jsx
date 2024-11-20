@@ -6,6 +6,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const profilesListCrud = {
     title: 'Profils',
@@ -41,6 +42,10 @@ export const profilesListCrud = {
     dataSelector: profilesSelector,
     dataList: (selector) => selector.profiles,
     delete: (props) => Api.profilesApi.deleteProfile(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_EDIT'),
+    },
     links: {
         new: () => `${Constant.PROFILES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PROFILES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

@@ -25,13 +25,17 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_CONTENT_TYPE_READ';
+const ROLE_CREATE = 'ROLE_CONTENT_TYPE_CREATE';
+const ROLE_EDIT = 'ROLE_CONTENT_TYPE_EDIT';
+
 export const initConstant = () => {
     setConstant('CONTENT_TYPES_BASE_PATH', '/admin/types-de-contenus');
     setConstant('PAGE_TYPES_BASE_PATH', '/admin/types-de-pages');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -53,7 +57,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -61,19 +65,24 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'contentTypesTabList',
         tabPathValue: Constant.CONTENT_TYPES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreateContentType);
-    setAuthenticatedRoute(`${Constant.CONTENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContentType);
-
     setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'contentTypesTabList',
         tabPathValue: Constant.PAGE_TYPES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageType);
-    setAuthenticatedRoute(`${Constant.PAGE_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageType);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.CONTENT_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreateContentType);
+        setAuthenticatedRoute(Constant.PAGE_TYPES_BASE_PATH + Constant.CREATE_PATH, Component.CreatePageType);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.CONTENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContentType);
+        setAuthenticatedRoute(`${Constant.PAGE_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditPageType);
+    }
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -86,7 +95,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -97,7 +106,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

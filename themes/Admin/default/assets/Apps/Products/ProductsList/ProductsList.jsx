@@ -8,6 +8,7 @@ import { changeProductsFilters, productsSelector, getProductsAction } from '@App
 
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Crud } from '@/AdminService/Crud';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const productsListCrud = {
     title: 'Produits',
@@ -55,6 +56,11 @@ export const productsListCrud = {
     dataList: (selector) => selector.products,
     duplicate: (props) => Api.productsApi.duplicateProduct(props),
     delete: (props) => Api.productsApi.deleteProduct(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_DELETE'),
+    },
     links: {
         new: () => `${Constant.PRODUCTS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PRODUCTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

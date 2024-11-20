@@ -17,12 +17,16 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_CUSTOMER_READ';
+const ROLE_CREATE = 'ROLE_CUSTOMER_CREATE';
+const ROLE_EDIT = 'ROLE_CUSTOMER_EDIT';
+
 export const initConstant = () => {
     setConstant('CUSTOMERS_BASE_PATH', '/admin/clients');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CUSTOMER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -40,7 +44,7 @@ export const initReducer = () => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_CUSTOMER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -54,21 +58,29 @@ export const initCrud = ({ userRoles }) => {
 };
 
 export default async function ({ parameters, userRoles }) {
-    if (!checkUserAccess(userRoles, 'ROLE_CUSTOMER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
     const useProducts = parameters?.find((el) => el.paramKey === 'core_use_customers');
-    if (useProducts?.paramValue) {
-        addTabElements('customersTabList', [{ label: 'Clients', component: <Component.CustomersList />, path: Constant.CUSTOMERS_BASE_PATH }]);
-
-        setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH, Component.CmtAppMenu, {
-            tabListName: 'customersTabList',
-            tabPathValue: Constant.CUSTOMERS_BASE_PATH,
-        });
-        setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateCustomer);
-        setAuthenticatedRoute(`${Constant.CUSTOMERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditCustomer);
-
-        insertSubMenu(1, 'VENDRE', 'Clients', Constant.CUSTOMERS_BASE_PATH, <PeopleIcon />);
+    if (!useProducts?.paramValue) {
+        return;
     }
+
+    addTabElements('customersTabList', [{ label: 'Clients', component: <Component.CustomersList />, path: Constant.CUSTOMERS_BASE_PATH }]);
+
+    setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH, Component.CmtAppMenu, {
+        tabListName: 'customersTabList',
+        tabPathValue: Constant.CUSTOMERS_BASE_PATH,
+    });
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.CUSTOMERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateCustomer);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.CUSTOMERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditCustomer);
+    }
+
+    insertSubMenu(1, 'VENDRE', 'Clients', Constant.CUSTOMERS_BASE_PATH, <PeopleIcon />);
 }

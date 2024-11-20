@@ -18,12 +18,16 @@ import { insertSubMenu } from '@/AdminService/Menu';
 import { setReducer } from '@/AdminService/Reducer';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_TICKETING_READ';
+const ROLE_CREATE = 'ROLE_TICKETING_CREATE';
+const ROLE_EDIT = 'ROLE_TICKETING_EDIT';
+
 export const initConstant = () => {
     setConstant('TICKETING_BASE_PATH', '/admin/billetteries');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TICKETING_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -43,7 +47,7 @@ export const initReducer = () => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TICKETING_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -51,17 +55,23 @@ export const initMenu = ({ userRoles }) => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TICKETING_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
     setAuthenticatedRoute(Constant.TICKETING_BASE_PATH, Component.TicketingList);
-    setAuthenticatedRoute(Constant.TICKETING_BASE_PATH + Constant.CREATE_PATH, Component.CreateTicketing);
-    setAuthenticatedRoute(`${Constant.TICKETING_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTicketing);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.TICKETING_BASE_PATH + Constant.CREATE_PATH, Component.CreateTicketing);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.TICKETING_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTicketing);
+    }
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TICKETING_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

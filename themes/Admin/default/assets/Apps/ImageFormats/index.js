@@ -19,12 +19,16 @@ import { addTabElements } from '@/AdminService/Tab';
 import { setCrud } from '@/AdminService/Crud';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_IMAGE_FORMAT_READ';
+const ROLE_CREATE = 'ROLE_IMAGE_FORMAT_CREATE';
+const ROLE_EDIT = 'ROLE_IMAGE_FORMAT_EDIT';
+
 export const initConstant = () => {
     setConstant('IMAGE_FORMATS_BASE_PATH', '/admin/image-formats');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -42,7 +46,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -50,8 +54,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'mediasTabList',
         tabPathValue: Constant.IMAGE_FORMATS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH, Component.CreateImageFormat);
-    setAuthenticatedRoute(`${Constant.IMAGE_FORMATS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditImageFormat);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.IMAGE_FORMATS_BASE_PATH + Constant.CREATE_PATH, Component.CreateImageFormat);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.IMAGE_FORMATS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditImageFormat);
+    }
 };
 
 export const initReducer = () => {
@@ -59,7 +69,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -77,7 +87,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

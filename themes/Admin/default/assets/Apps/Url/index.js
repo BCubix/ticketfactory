@@ -17,12 +17,15 @@ import { addTabElements } from '@/AdminService/Tab';
 import { insertSubMenu } from '@/AdminService/Menu';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_URL_READ';
+const ROLE_EDIT = 'ROLE_URL_EDIT';
+
 export const initConstant = () => {
     setConstant('URL_BASE_PATH', '/admin/urls');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_URL_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -36,7 +39,7 @@ export const initApi = () => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_URL_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -48,7 +51,7 @@ export const initReducer = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_URL_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -56,11 +59,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'urlTabList',
         tabPathValue: Constant.URL_BASE_PATH,
     });
-    setAuthenticatedRoute(`${Constant.URL_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUrl);
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.URL_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUrl);
+    }
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_URL_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -68,7 +74,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_URL_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

@@ -17,12 +17,16 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_SEASON_READ';
+const ROLE_CREATE = 'ROLE_SEASON_CREATE';
+const ROLE_EDIT = 'ROLE_SEASON_EDIT';
+
 export const initConstant = () => {
     setConstant('SEASONS_BASE_PATH', '/admin/saisons');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -36,7 +40,7 @@ export const initApi = () => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -48,7 +52,7 @@ export const initReducer = () => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -62,7 +66,7 @@ export const initCrud = ({ userRoles }) => {
 };
 
 export default async function ({ parameters, userRoles }) {
-    if (!checkUserAccess(userRoles, 'ROLE_SEASON_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -75,8 +79,14 @@ export default async function ({ parameters, userRoles }) {
         tabListName: 'seasonsTabList',
         tabPathValue: Constant.SEASONS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH, Component.CreateSeason);
-    setAuthenticatedRoute(`${Constant.SEASONS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditSeason);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.SEASONS_BASE_PATH + Constant.CREATE_PATH, Component.CreateSeason);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.SEASONS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditSeason);
+    }
 
     addTabElements('seasonsTabList', [{ label: 'Saisons', component: <Component.SeasonsList />, path: Constant.SEASONS_BASE_PATH }], 1);
 

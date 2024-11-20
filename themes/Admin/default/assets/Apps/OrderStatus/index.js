@@ -16,12 +16,15 @@ import { addTabElements } from '@/AdminService/Tab';
 import { setCrud } from '@/AdminService/Crud';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_ORDER_STATUS_READ';
+const ROLE_EDIT = 'ROLE_ORDER_STATUS_EDIT';
+
 export const initConstant = () => {
     setConstant('ORDER_STATUS_BASE_PATH', '/admin/etapes-de-commandes');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_ORDER_STATUS_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -34,7 +37,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_ORDER_STATUS_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -42,7 +45,10 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'ordersTabList',
         tabPathValue: Constant.ORDER_STATUS_BASE_PATH,
     });
-    setAuthenticatedRoute(`${Constant.ORDER_STATUS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditOrderStatus);
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.ORDER_STATUS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditOrderStatus);
+    }
 };
 
 export const initReducer = () => {
@@ -50,7 +56,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_ORDER_STATUS_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -58,7 +64,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_ORDER_STATUS_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

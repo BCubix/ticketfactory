@@ -19,12 +19,16 @@ import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_VOUCHER_READ';
+const ROLE_CREATE = 'ROLE_VOUCHER_CREATE';
+const ROLE_EDIT = 'ROLE_VOUCHER_EDIT';
+
 export const initConstant = () => {
     setConstant('VOUCHERS_BASE_PATH', '/admin/reductions');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_VOUCHER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -42,7 +46,7 @@ export const initReducer = () => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_VOUCHER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -56,7 +60,7 @@ export const initCrud = ({ userRoles }) => {
 };
 
 export default async function ({ parameters, userRoles }) {
-    if (!checkUserAccess(userRoles, 'ROLE_VOUCHER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -68,8 +72,14 @@ export default async function ({ parameters, userRoles }) {
             tabListName: 'vouchersTabList',
             tabPathValue: Constant.VOUCHERS_BASE_PATH,
         });
-        setAuthenticatedRoute(Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateVoucher);
-        setAuthenticatedRoute(`${Constant.VOUCHERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditVoucher);
+
+        if (checkUserAccess(userRoles, ROLE_CREATE)) {
+            setAuthenticatedRoute(Constant.VOUCHERS_BASE_PATH + Constant.CREATE_PATH, Component.CreateVoucher);
+        }
+
+        if (checkUserAccess(userRoles, ROLE_EDIT)) {
+            setAuthenticatedRoute(`${Constant.VOUCHERS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditVoucher);
+        }
 
         insertSubMenu(4, 'VENDRE', 'Réductions', Constant.VOUCHERS_BASE_PATH, <MoneyOffIcon />);
     }

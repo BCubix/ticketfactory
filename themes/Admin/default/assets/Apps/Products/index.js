@@ -23,12 +23,16 @@ import { setCrud } from '@/AdminService/Crud';
 import { setTab } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_PRODUCT_READ';
+const ROLE_CREATE = 'ROLE_PRODUCT_CREATE';
+const ROLE_EDIT = 'ROLE_PRODUCT_EDIT';
+
 export const initConstant = () => {
     setConstant('PRODUCTS_BASE_PATH', '/admin/produits');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -52,7 +56,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -63,7 +67,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -77,7 +81,7 @@ export const initCrud = ({ userRoles }) => {
 };
 
 export default async function ({ parameters, userRoles }) {
-    if (!checkUserAccess(userRoles, 'ROLE_PRODUCT_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -87,8 +91,14 @@ export default async function ({ parameters, userRoles }) {
             tabListName: 'productsTabList',
             tabPathValue: Constant.PRODUCTS_BASE_PATH,
         });
-        setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateProduct);
-        setAuthenticatedRoute(`${Constant.PRODUCTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProduct);
+
+        if (checkUserAccess(userRoles, ROLE_CREATE)) {
+            setAuthenticatedRoute(Constant.PRODUCTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateProduct);
+        }
+
+        if (checkUserAccess(userRoles, ROLE_EDIT)) {
+            setAuthenticatedRoute(`${Constant.PRODUCTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProduct);
+        }
 
         insertSubMenu(3, 'PROGRAMMATION', 'Produits', Constant.PRODUCTS_BASE_PATH, <FastfoodIcon />, { relatedLinks: [Constant.PRODUCT_CATEGORIES_BASE_PATH] });
     }

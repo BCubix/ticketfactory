@@ -28,6 +28,7 @@ export const DisplayMenuElement = ({
     menuEntryModule,
     language,
     errors,
+    accessUserEdit,
 }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const displayMove = index > 0 || index < list?.length - 1 || isSubMenu;
@@ -93,7 +94,7 @@ export const DisplayMenuElement = ({
     return (
         <Box sx={{ marginTop: 3 }}>
             <Accordion sx={{ maxWidth: 400 }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header">
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} id="rooms-menus-elements-header" disabled={!accessUserEdit}>
                     <Typography>{element.name}</Typography>
                 </AccordionSummary>
 
@@ -250,7 +251,13 @@ export const DisplayMenuElement = ({
                         {element?.children?.length > 0 &&
                             level < maxLevel &&
                             element?.children?.map((item, ind) => (
-                                <Draggable key={`${name}.${index}.children.${ind}`} draggableId={`${name}.${index}.children.${ind}`} index={index} item={item}>
+                                <Draggable
+                                    key={`${name}.${index}.children.${ind}`}
+                                    draggableId={`${name}.${index}.children.${ind}`}
+                                    index={index}
+                                    item={item}
+                                    isDragDisabled={!accessUserEdit}
+                                >
                                     {(provided2, snapshot2) => (
                                         <Component.RenderElement provided={provided2} snapshot={snapshot2}>
                                             <Component.DisplayMenuElement

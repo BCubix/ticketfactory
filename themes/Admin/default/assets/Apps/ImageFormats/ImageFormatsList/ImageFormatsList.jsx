@@ -10,6 +10,7 @@ import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeImageFormatsFilters, getImageFormatsAction, imageFormatsSelector } from '@Apps/ImageFormats/redux/imageFormats/imageFormatSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const imageFormatsListCrud = {
     title: 'Emplacements de média',
@@ -47,6 +48,11 @@ export const imageFormatsListCrud = {
     dataSelector: imageFormatsSelector,
     dataList: (selector) => selector.imageFormats,
     delete: (props) => Api.imageFormatsApi.deleteImageFormat(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_IMAGE_FORMAT_DELETE'),
+    },
     links: {
         new: () => `${Constant.IMAGE_FORMATS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.IMAGE_FORMATS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

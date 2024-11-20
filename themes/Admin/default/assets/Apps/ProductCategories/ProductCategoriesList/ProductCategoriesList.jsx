@@ -1,6 +1,6 @@
 import { CardContent, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,6 +20,9 @@ import { getProductsAction } from '@Apps/Products/redux/products/productsSlice';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const productCategoriesListCrud = {
     title: 'Catégories de produits',
@@ -42,6 +45,11 @@ export const productCategoriesListCrud = {
     changeFiltersActions: (props) => changeProductCategoriesFilters(props),
     duplicate: (props) => Api.productCategories.duplicateProductCategory(props),
     delete: (props) => Api.productCategories.deleteProductCategory(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_CATEGORY_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_CATEGORY_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_PRODUCT_CATEGORY_DELETE'),
+    },
     links: {
         new: () => `${Constant.PRODUCT_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PRODUCT_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
@@ -95,14 +103,16 @@ export const productCategoriesListCrud = {
     ],
     headerComponents: [
         {
-            component: ({ listCrud, productCategory, path, navigate, handleResetFilters }) => (
+            component: ({ listCrud, productCategory, path, navigate, handleResetFilters, userRoles }) => (
                 <Box display="flex" alignItems="center" pt={5}>
                     <Component.CmtBreadCrumb list={path} additionalClick={handleResetFilters} />
-                    <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(productCategory.id))}>
-                        <Component.EditCategoryLink component="span" variant="body1">
-                            Modifier
-                        </Component.EditCategoryLink>
-                    </Box>
+                    {listCrud.checkUserAccess.edit(userRoles) && (
+                        <Box pl={3} onClick={() => navigate(listCrud?.links?.edit(productCategory.id))}>
+                            <Component.EditCategoryLink component="span" variant="body1">
+                                Modifier
+                            </Component.EditCategoryLink>
+                        </Box>
+                    )}
                 </Box>
             ),
         },
@@ -147,14 +157,19 @@ export const productCategoriesListCrud = {
 };
 
 export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list, ...props }) => {
-    const { loading, productCategories, filters, error } = useSelector(productCategoriesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    const { loading, productCategories, filters, error } = useSelector(productCategoriesSelector);
+    const { user } = useSelector(userProfileSelector);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [deleteProducts, setDeleteProducts] = useState(false);
     const [productCategory, setProductCategory] = useState(null);
     const [path, setPath] = useState(null);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
 
     const getProductCategory = async () => {
         apiMiddleware(dispatch, async () => {
@@ -289,6 +304,7 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
                             productCategories={productCategories}
                             productCategory={productCategory}
                             handleResetFilters={handleResetFilters}
+                            userRoles={userRoles}
                             {...props}
                         />
                     );
@@ -301,7 +317,7 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     {listCrud?.listTitle}
                                 </Typography>
-                                {(listCrud?.new || listCrud?.links?.new) && (
+                                {listCrud?.checkUserAccess?.new(userRoles) && (listCrud?.new || listCrud?.links?.new) && (
                                     <Component.CreateButton
                                         variant="contained"
                                         onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
@@ -334,6 +350,7 @@ export const ProductCategoriesList = ({ listCrud = Crud?.productCategories?.list
                                     handleDuplicate={handleDuplicate}
                                     setDeleteDialog={setDeleteDialog}
                                     handleResetFilters={handleResetFilters}
+                                    userRoles={userRoles}
                                     {...props}
                                 />
                             );

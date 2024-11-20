@@ -16,6 +16,7 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const categoriesListCrud = {
     title: 'Catégories',
@@ -38,6 +39,11 @@ export const categoriesListCrud = {
     dataList: (selector) => selector.categories?.children,
     duplicate: (props) => Api.categoriesApi.duplicateCategory(props),
     delete: (props) => Api.categoriesApi.deleteCategory(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_CATEGORY_DELETE'),
+    },
     links: {
         new: () => `${Constant.CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

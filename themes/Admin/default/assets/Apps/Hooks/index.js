@@ -17,12 +17,15 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_HOOK_READ';
+const ROLE_CREATE = 'ROLE_HOOK_CREATE';
+
 export const initConstant = () => {
     setConstant('HOOKS_BASE_PATH', '/admin/hooks');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_HOOK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -39,7 +42,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_HOOK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -47,11 +50,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'modulesTabList',
         tabPathValue: Constant.HOOKS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH, Component.CreateHook);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH, Component.CreateHook);
+    }
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_HOOK_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

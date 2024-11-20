@@ -17,12 +17,16 @@ import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_PROFILE_READ';
+const ROLE_CREATE = 'ROLE_PROFILE_CREATE';
+const ROLE_EDIT = 'ROLE_PROFILE_EDIT';
+
 export const initConstant = () => {
     setConstant('PROFILES_BASE_PATH', '/admin/profils');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -42,7 +46,7 @@ export const initReducer = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -50,12 +54,18 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'usersTabList',
         tabPathValue: Constant.PROFILES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.PROFILES_BASE_PATH + Constant.CREATE_PATH, Component.CreateProfile);
-    setAuthenticatedRoute(`${Constant.PROFILES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProfile);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.PROFILES_BASE_PATH + Constant.CREATE_PATH, Component.CreateProfile);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.PROFILES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditProfile);
+    }
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -63,7 +73,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PROFILE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

@@ -6,6 +6,7 @@ import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeEventTypesFilters, getEventTypesAction, eventTypesSelector } from '@Apps/EventTypes/redux/eventTypes/eventTypesSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const eventTypesListCrud = {
     title: 'Types',
@@ -41,6 +42,11 @@ export const eventTypesListCrud = {
     changeFiltersActions: (props, page) => changeEventTypesFilters(props, page),
     dataSelector: eventTypesSelector,
     dataList: (selector) => selector.eventTypes,
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_TYPE_DELETE'),
+    },
     links: {
         edit: (id) => `${Constant.EVENT_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
     },

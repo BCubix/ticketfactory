@@ -20,15 +20,13 @@ import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_EDIT = 'ROLE_EVENT_EDIT';
+
 export const initConstant = () => {
     setConstant('PARAMETERS_BASE_PATH', '/admin/parametres');
 };
 
-export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PARAMETER_READ')) {
-        return;
-    }
-
+export const initComponent = () => {
     setComponent('ParametersBlockForm', ParametersBlockForm);
     setComponent('ParametersForm', ParametersForm);
     setComponent('ParametersMenu', ParametersMenu);
@@ -42,7 +40,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PARAMETER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_EDIT)) {
         return;
     }
 
@@ -55,7 +53,7 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PARAMETER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_EDIT)) {
         return;
     }
 
@@ -67,18 +65,14 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PARAMETER_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_EDIT)) {
         return;
     }
 
     addTabElements('parametersTabList', [{ label: 'Paramètres', component: <Component.ParametersMenu />, path: Constant.PARAMETERS_BASE_PATH }]);
 };
 
-export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PARAMETER_READ')) {
-        return;
-    }
-
+export const initCrud = () => {
     const crud = {
         edit: parametersFormCrud,
     };

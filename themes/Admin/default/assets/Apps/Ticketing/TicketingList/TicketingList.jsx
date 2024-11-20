@@ -14,6 +14,7 @@ import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudLis
 import { useDispatch } from 'react-redux';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useTheme } from '@emotion/react';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const ticketingListCrud = {
     title: 'Billetteries',
@@ -50,6 +51,11 @@ export const ticketingListCrud = {
     dataList: (selector) => selector.ticketing,
     new: ({ setCreateDialog }) => setCreateDialog(true),
     delete: (props) => Api.ticketingApi.deleteTicketing(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_TICKETING_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_TICKETING_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_TICKETING_DELETE'),
+    },
     links: {
         new: () => `${Constant.TICKETING_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.TICKETING_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

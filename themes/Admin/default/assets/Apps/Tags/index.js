@@ -15,12 +15,16 @@ import tagsApi from '@Apps/Tags/services/api/tagsApi';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
+const ROLE_READ = 'ROLE_TAG_READ';
+const ROLE_CREATE = 'ROLE_TAG_CREATE';
+const ROLE_EDIT = 'ROLE_TAG_EDIT';
+
 export const initConstant = () => {
     setConstant('TAGS_BASE_PATH', '/admin/tags');
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -34,7 +38,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -42,8 +46,14 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
         tabListName: 'eventTabList',
         tabPathValue: Constant.TAGS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, Component.CreateTag);
-    setAuthenticatedRoute(`${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTag);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, Component.CreateTag);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTag);
+    }
 };
 
 export const initReducer = () => {
@@ -51,7 +61,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -59,7 +69,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_TAG_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

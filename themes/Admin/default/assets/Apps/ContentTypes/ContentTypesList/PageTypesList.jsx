@@ -7,6 +7,7 @@ import { Constant } from '@/AdminService/Constant';
 import { changePageTypesFilters, pageTypesSelector, getPageTypesAction } from '@Apps/ContentTypes/redux/pageTypes/pageTypesSlice';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const pageTypesListCrud = {
     title: 'Types de pages',
@@ -42,6 +43,11 @@ export const pageTypesListCrud = {
     dataSelector: pageTypesSelector,
     dataList: (selector) => selector.pageTypes,
     delete: (props) => Api.contentTypesApi.deleteContentType(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_DELETE'),
+    },
     links: {
         new: () => `${Constant.PAGE_TYPES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PAGE_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
