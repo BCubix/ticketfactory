@@ -81,5 +81,5 @@ export const initCrud = ({ userRoles }) => {
         edit: ticketingEditCrud,
     };
 
-    setCrud('ticketing', { ...crud });
+    setCrud('ticketing', crud);
 };

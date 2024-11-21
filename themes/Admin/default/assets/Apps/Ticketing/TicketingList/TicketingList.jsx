@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +15,9 @@ import { useDispatch } from 'react-redux';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useTheme } from '@emotion/react';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { useSelector } from 'react-redux';
 
 export const ticketingListCrud = {
     title: 'Billetteries',
@@ -183,7 +186,7 @@ const CreateNewTicketingDialog = ({ createDialog, setCreateDialog, modules, tick
     );
 };
 
-const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog, setDefaultTicketing }) => {
+const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog, setDefaultTicketing, accessUserEdit, accessUserDelete }) => {
     const theme = useTheme();
 
     return (
@@ -192,36 +195,45 @@ const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog,
                 <Grid item xs={12} md={6} lg={4} key={index}>
                     <Component.CmtCard sx={{ backgroundColor: `${theme.palette.secondary.light} !important` }}>
                         <Box sx={{ position: 'relative', display: 'flex', padding: 3 }}>
-                            <Avatar src={`/admin/api/modules/moduleImage/${item?.module?.name}`} />
+                            <Avatar src={item?.module ? `/admin/api/modules/module-image/${item?.module?.name}` : ''} />
                             <Box pl={4}>
                                 <Typography variant="h3">{item?.name}</Typography>
                                 <Typography variant="h4">{item?.module?.name ? `Module ${item?.module?.name}` : 'Aucun module'}</Typography>
                             </Box>
 
                             <Tooltip title="Billetterie par défaut">
-                                <Radio checked={Boolean(item?.defaultTicketing)} sx={{ position: 'absolute', right: 3, top: 3 }} onClick={() => setDefaultTicketing(item?.id)} />
+                                <Radio
+                                    checked={Boolean(item?.defaultTicketing)}
+                                    sx={{ position: 'absolute', right: 3, top: 3 }}
+                                    onClick={() => setDefaultTicketing(item?.id)}
+                                    disabled={!accessUserEdit}
+                                />
                             </Tooltip>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 3 }}>
-                            <IconButton
-                                aria-label="edit"
-                                size="small"
-                                sx={{ marginLeft: 3, color: theme.palette.crud.update.textColor }}
-                                onClick={() => (listCrud?.links?.edit ? navigate(listCrud?.links?.edit(item?.id)) : null)}
-                            >
-                                <EditIcon fontSize="inherit" />
-                            </IconButton>
+                            {accessUserEdit && (
+                                <IconButton
+                                    aria-label="edit"
+                                    size="small"
+                                    sx={{ marginLeft: 3, color: theme.palette.crud.update.textColor }}
+                                    onClick={() => (listCrud?.links?.edit ? navigate(listCrud?.links?.edit(item?.id)) : null)}
+                                >
+                                    <EditIcon fontSize="inherit" />
+                                </IconButton>
+                            )}
 
-                            <IconButton
-                                aria-label="delete"
-                                color="error"
-                                size="small"
-                                sx={{ marginLeft: 3 }}
-                                onClick={() => (listCrud?.delete ? setDeleteDialog(item?.id) : null)}
-                                disabled={Boolean(item?.defaultTicketing)}
-                            >
-                                <DeleteIcon fontSize="inherit" />
-                            </IconButton>
+                            {accessUserDelete && (
+                                <IconButton
+                                    aria-label="delete"
+                                    color="error"
+                                    size="small"
+                                    sx={{ marginLeft: 3 }}
+                                    onClick={() => (listCrud?.delete ? setDeleteDialog(item?.id) : null)}
+                                    disabled={Boolean(item?.defaultTicketing)}
+                                >
+                                    <DeleteIcon fontSize="inherit" />
+                                </IconButton>
+                            )}
                         </Box>
                     </Component.CmtCard>
                 </Grid>
@@ -232,9 +244,18 @@ const DisplayTicketingList = ({ objectData, listCrud, navigate, setDeleteDialog,
 
 export const TicketingList = () => {
     const dispatch = useDispatch();
+    const { user } = useSelector(userProfileSelector);
     const [modules, setModules] = useState([]);
     const [createDialog, setCreateDialog] = useState(false);
     const [ticketingValue, setTicketingValue] = useState('');
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const [accessUserEdit, accessUserDelete] = useMemo(() => {
+        return [checkUserAccess(userRoles, 'ROLE_TICKETING_EDIT'), checkUserAccess(userRoles, 'ROLE_TICKETING_DELETE')];
+    }, [userRoles]);
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
@@ -264,6 +285,8 @@ export const TicketingList = () => {
             ticketingValue={ticketingValue}
             setTicketingValue={setTicketingValue}
             setDefaultTicketing={setDefaultTicketing}
+            accessUserEdit={accessUserEdit}
+            accessUserDelete={accessUserDelete}
         />
     );
 };

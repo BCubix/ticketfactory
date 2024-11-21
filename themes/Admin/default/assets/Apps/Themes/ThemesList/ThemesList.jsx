@@ -123,7 +123,7 @@ export const ThemesList = () => {
     };
 
     const checkMarketplaceConnection = async () => {
-        const result = await Api.marketplace.checkIsAuth();
+        const result = await Api.marketplaceApi.checkIsAuth();
         if (result?.result) {
             setMarketplaceDialog(false);
             setMarketplaceConnected(true);

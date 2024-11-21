@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TableCell } from '@mui/material';
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Component } from '@/AdminService/Component';
 
@@ -18,14 +15,11 @@ export const ListTableCellButtons = ({
     onEdit,
     onRemove,
     onSelect,
-    onActive,
     onDisable,
     onPreview,
-    onParameter,
-    displayParameter,
+    onDuplicate,
     disableDeleteFunction,
     contextualMenu,
-    themeId,
     handleClick,
     expendElementTranslation,
     setExpendElementTranslation,
@@ -34,61 +28,30 @@ export const ListTableCellButtons = ({
     accessUserEdit,
     accessUserDelete,
 }) => {
-    if (
-        onDelete !== null ||
-        onEdit !== null ||
-        (onRemove !== null && onSelect !== null) ||
-        (onActive !== null && onDisable !== null) ||
-        onPreview !== null ||
-        (onParameter !== null && displayParameter(item))
-    ) {
+    const checkContextualMenu = useMemo(() => {
+        if (!contextualMenu) {
+            return false;
+        }
+
+        if (onPreview) {
+            return true;
+        }
+
+        if (accessUserDelete !== false) {
+            return true;
+        }
+
+        if (accessUserCreate !== false) {
+            if ((null !== onTranslate && languageList?.length > 0) || onDuplicate) {
+                return true;
+            }
+        }
+    }, []);
+
+    if (onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || onPreview !== null || additionnalOptions?.length > 0) {
         return (
             <TableCell component="td" scope="row">
-                {accessUserEdit && onActive !== null && onDisable !== null && (
-                    <Component.ActionFabButton
-                        sx={{ marginInline: 1 }}
-                        color="primary"
-                        size="small"
-                        aria-label="Action"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            (item.active ? onDisable : onActive)(item.name);
-                        }}
-                    >
-                        {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
-                    </Component.ActionFabButton>
-                )}
-
-                {accessUserEdit && onSelect !== null && item.id !== themeId && (
-                    <Component.ActionFabButton
-                        sx={{ marginInline: 1 }}
-                        color="primary"
-                        size="small"
-                        aria-label="Selection"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onSelect(item.name);
-                        }}
-                    >
-                        <CheckCircleIcon />
-                    </Component.ActionFabButton>
-                )}
-
-                {accessUserEdit && onParameter !== null && displayParameter(item) && (
-                    <Component.EditFabButton
-                        sx={{ marginInline: 1 }}
-                        size="small"
-                        aria-label="Selection"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onParameter(item);
-                        }}
-                    >
-                        <SettingsIcon />
-                    </Component.EditFabButton>
-                )}
-
-                {accessUserDelete && onRemove !== null && (item.active === undefined || onDisable === null) && (
+                {accessUserDelete !== false && onRemove !== null && (item.active === undefined || onDisable === null) && (
                     <Component.DeleteFabButton
                         sx={{ marginInline: 1 }}
                         color="error"
@@ -104,7 +67,7 @@ export const ListTableCellButtons = ({
                     </Component.DeleteFabButton>
                 )}
 
-                {accessUserEdit && onEdit !== null && (
+                {accessUserEdit !== false && onEdit !== null && (
                     <Component.EditFabButton
                         sx={{ marginInline: 1 }}
                         color="primary"
@@ -126,7 +89,7 @@ export const ListTableCellButtons = ({
                     </Component.ActionFabButton>
                 )}
 
-                {contextualMenu ? (
+                {checkContextualMenu ? (
                     <Component.ActionFabButton
                         sx={{ marginInline: 1 }}
                         size="small"
@@ -137,7 +100,7 @@ export const ListTableCellButtons = ({
                         <MoreHorizIcon />
                     </Component.ActionFabButton>
                 ) : (
-                    accessUserDelete &&
+                    accessUserDelete !== false &&
                     onDelete !== null && (
                         <Component.DeleteFabButton
                             sx={{ marginInline: 1 }}

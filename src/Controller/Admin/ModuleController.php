@@ -78,7 +78,6 @@ class ModuleController extends AdminController
     }
 
     #[Rest\Get('/modules/module-image/{moduleName}', requirements: ['moduleName' => '.+'])]
-    #[IsGranted('ROLE_MODULE_READ')]
     public function getModuleImage(Request $request, string $moduleName)
     {
         $result = $this->mf->get("module")->getImage($moduleName);

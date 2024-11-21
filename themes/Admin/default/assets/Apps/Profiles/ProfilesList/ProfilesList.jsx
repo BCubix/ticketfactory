@@ -7,6 +7,7 @@ import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { Api } from '@/AdminService/Api';
 
 export const profilesListCrud = {
     title: 'Profils',

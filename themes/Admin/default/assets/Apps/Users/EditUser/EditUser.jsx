@@ -58,6 +58,10 @@ export const EditUser = () => {
                 NotificationManager.success("L'utilisateur a bien été modifié.", 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getUsersAction());
                 navigate(Constant.USER_BASE_PATH);
+            } else {
+                if (result?.error?.httpcode < 500) {
+                    NotificationManager.error(result?.error?.message || "Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                }
             }
         });
     };

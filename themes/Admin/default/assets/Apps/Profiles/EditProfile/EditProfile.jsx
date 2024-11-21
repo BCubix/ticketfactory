@@ -49,7 +49,6 @@ export const EditProfile = () => {
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
-            console.log(id, values);
             const result = await Api.profilesApi.editProfile(id, values);
             if (result.result) {
                 NotificationManager.success('Le profil a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);

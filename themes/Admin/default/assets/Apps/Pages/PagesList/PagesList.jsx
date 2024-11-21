@@ -13,6 +13,7 @@ import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { useDispatch } from 'react-redux';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const pagesListCrud = {
     title: 'Pages',

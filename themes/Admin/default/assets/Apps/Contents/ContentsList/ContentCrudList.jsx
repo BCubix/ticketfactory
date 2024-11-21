@@ -9,6 +9,9 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Api } from '@/AdminService/Api';
+import { useSelector } from 'react-redux';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const DEFAULT_CONTENT_CRUD_LIST_COMPONENTS = {
     wrapperComponent: (props) => <Component.CmtCrudList {...props} />,
@@ -101,8 +104,21 @@ export const DEFAULT_CONTENT_CRUD_LIST_COMPONENTS = {
 export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useSelector(userProfileSelector);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [available, setAvailable] = useState(null);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const [accessUserCreate, accessUserEdit, accessUserDelete] = useMemo(() => {
+        return [
+            !listCrud.checkUserAccess?.new || listCrud.checkUserAccess?.new(userRoles),
+            !listCrud.checkUserAccess?.edit || listCrud.checkUserAccess?.edit(userRoles),
+            !listCrud.checkUserAccess?.delete || listCrud.checkUserAccess?.delete(userRoles),
+        ];
+    }, [userRoles]);
 
     useEffect(() => {
         if (!objectData?.loading && !listCrud?.dataList(objectData) && !objectData?.error) {
@@ -176,6 +192,9 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                             dispatch={dispatch}
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
+                            accessUserCreate={accessUserCreate}
+                            accessUserEdit={accessUserEdit}
+                            accessUserDelete={accessUserDelete}
                             {...props}
                         />
                     );
@@ -201,7 +220,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                                         </Tooltip>
                                     )}
 
-                                    {(listCrud?.new || listCrud?.links?.new) && (
+                                    {accessUserCreate && (listCrud?.new || listCrud?.links?.new) && (
                                         <Component.CreateButton
                                             variant="contained"
                                             onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
@@ -231,6 +250,9 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                                     dispatch={dispatch}
                                     handleDuplicate={handleDuplicate}
                                     setDeleteDialog={setDeleteDialog}
+                                    accessUserCreate={accessUserCreate}
+                                    accessUserEdit={accessUserEdit}
+                                    accessUserDelete={accessUserDelete}
                                     {...props}
                                 />
                             );
@@ -259,6 +281,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                     );
                 })}
             </Component.CmtPageWrapper>
+
             {listCrud?.deleteComponent ? (
                 <listCrud.deleteComponent deleteDialog={deleteDialog} setDeleteDialog={setDeleteDialog} handleDelete={handleDelete} {...props} />
             ) : (

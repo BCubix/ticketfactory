@@ -102,6 +102,7 @@ export const ListTableBodyLine = ({
                         setExpendElementTranslation={setExpendElementTranslation}
                         additionnalOptions={additionnalOptions}
                         isTranslated
+                        {...rest}
                     />
                 ))}
         </>
