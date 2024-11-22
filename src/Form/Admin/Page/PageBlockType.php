@@ -10,7 +10,6 @@ use App\Repository\LanguageRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,7 +24,6 @@ class PageBlockType extends AdminBaseFormType
         $builder
             ->add('name',                 TextType::class,            [])
             ->add('saveAsModel',          CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
-            ->add('blockType',            IntegerType::class,         [])
             ->add('class',                TextType::class,            ['required' => false, 'empty_data' => ''])
             ->add('columns',              CollectionType::class,      [
                 'entry_type'   => PageColumnType::class,

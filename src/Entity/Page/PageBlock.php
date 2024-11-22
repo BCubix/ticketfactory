@@ -46,11 +46,6 @@ class PageBlock extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
-    #[ORM\Column(type: Types::INTEGER)]
-    private $blockType;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(type: 'json')]
     private array $columns = [];
 
@@ -112,18 +107,6 @@ class PageBlock extends Datable
     public function setSaveAsModel(bool $saveAsModel): self
     {
         $this->saveAsModel = $saveAsModel;
-
-        return $this;
-    }
-
-    public function getBlockType(): ?int
-    {
-        return $this->blockType;
-    }
-
-    public function setBlockType(int $blockType): self
-    {
-        $this->blockType = $blockType;
 
         return $this;
     }

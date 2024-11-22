@@ -35,8 +35,12 @@ class PageColumn
     private ?int $xl = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_one', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     private ?string $class = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
+    private ?string $type = null;
 
 
     public function getContent(): mixed
@@ -119,6 +123,18 @@ class PageColumn
     public function setClass(string $class): self
     {
         $this->class = $class;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

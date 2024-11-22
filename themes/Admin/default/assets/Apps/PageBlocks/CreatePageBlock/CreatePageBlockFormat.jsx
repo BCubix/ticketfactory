@@ -17,6 +17,7 @@ export const GetPageBlockColumn = (value) => {
         m: 12,
         l: 12,
         xl: value,
+        type: 'text',
     };
 };
 

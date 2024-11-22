@@ -30,13 +30,9 @@ class PageBlockSerializer
                 'l'       => $column->getL(),
                 'xl'      => $column->getXl(),
                 'class'   => $column->getClass(),
+                'type'    => $column->getType(),
+                'content' => $column->getcontent(),
             ];
-
-            if ($pageBlock->getBlockType() == 1) { // Slider block
-                $serializedColumn['content'] = (is_string($column->getContent()) ? $column->getContent() : $column->getContent()->getId());
-            } else {
-                $serializedColumn['content'] = $column->getcontent();
-            }
 
             $columns[] = $serializedColumn;
         }
@@ -55,15 +51,8 @@ class PageBlockSerializer
             $column->setL($serializedColumn['l']);
             $column->setXl($serializedColumn['xl']);
             $column->setClass($serializedColumn['class'] ?? "");
-
-            if ($pageBlock->getBlockType() == 1) { // Slider block
-                $id = $serializedColumn['content'];
-                $content = $this->em->getRepository(Media::class)->find($id);
-
-                $column->setContent($content);
-            } else {
-                $column->setContent($serializedColumn['content']);
-            }
+            $column->setType($serializedColumn['type'] ?? "");
+            $column->setContent($serializedColumn['content']);
 
             $columns[] = $column;
         }

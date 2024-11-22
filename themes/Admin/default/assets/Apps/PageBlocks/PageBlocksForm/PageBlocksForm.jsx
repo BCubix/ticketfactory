@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import { Component } from '@/AdminService/Component';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Box } from '@mui/system';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
+import { PAGE_COLUMN_TYPE_FIELDS } from '@Apps/PageBlocks/services/config/getPageColumnTypeFields';
 
 export const pageBlocksInitialSchema = {
     name: (initValues) => initValues?.name || '',
     columns: (initValues) =>
         initValues?.columns?.map((element) => ({
-            content: element?.content || '',
+            content: element?.content,
             xs: element?.xs || 12,
             s: element?.s || 12,
             m: element?.m || 12,
             l: element?.l || 12,
             xl: element?.xl || 12,
+            type: element?.type || 'text',
         })) || [],
     saveAsModel: 1,
     lang: (initValues) => initValues?.lang?.id || '',
@@ -35,11 +37,11 @@ export const pageBlocksForm = {
             saveAsModel: { type: 'boolean' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
-            blockType: { type: 'boolean' },
             columns: {
                 type: 'array',
                 subFields: {
                     content: { type: 'string' },
+                    type: { type: 'string' },
                     xs: { type: 'string' },
                     s: { type: 'string' },
                     m: { type: 'string' },
@@ -49,6 +51,7 @@ export const pageBlocksForm = {
             },
         },
     },
+    pageColumnTypeFields: PAGE_COLUMN_TYPE_FIELDS,
     fields: [
         {
             type: 'tabs',
@@ -92,7 +95,7 @@ export const pageBlocksForm = {
                         {
                             keyId: 'input-blocks',
                             style: { xs: 12 },
-                            component: ({ setView, view, values, setFieldValue, setFieldTouched }) => (
+                            component: ({ setView, view, values, errors, touched, setFieldValue, setFieldTouched, getPageColumnTypeModules }) => (
                                 <Box sx={{ paddingLeft: 5 }} minHeight={200}>
                                     <ToggleButtonGroup
                                         orientation="vertical"
@@ -124,7 +127,15 @@ export const pageBlocksForm = {
                                             XL
                                         </ToggleButton>
                                     </ToggleButtonGroup>
-                                    <Component.PageBlockColumnPart values={values} media={view} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched} />
+                                    <Component.PageBlockColumnPart
+                                        values={values}
+                                        errors={errors}
+                                        touched={touched}
+                                        media={view}
+                                        setFieldValue={setFieldValue}
+                                        setFieldTouched={setFieldTouched}
+                                        pageColumnTypeModules={getPageColumnTypeModules}
+                                    />
                                 </Box>
                             ),
                         },
@@ -140,9 +151,24 @@ export const PageBlocksForm = ({ handleSubmit, initialValues = null, modelValues
     const [view, setView] = useState('xl');
     const initValues = translateInitialValues || initialValues || modelValues;
 
+    const getPageColumnTypeModules = useMemo(() => {
+        return formCrud.pageColumnTypeFields;
+    }, []);
+
     return (
         <Component.CmtCrudForm
-            {...{ createMode: !Boolean(initialValues), handleSubmit, view, setView, initialValues: initValues, modelValues, translateInitialValues, formCrud, ...props }}
+            {...{
+                createMode: !Boolean(initialValues),
+                handleSubmit,
+                view,
+                setView,
+                initialValues: initValues,
+                modelValues,
+                translateInitialValues,
+                formCrud,
+                getPageColumnTypeModules,
+                ...props,
+            }}
         />
     );
 };
