@@ -114,20 +114,6 @@ class EventAbleController extends WebsiteController
         return $result;
     }
 
-    protected function getPageContent(?Page $page)
-    {
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
-        return $pageContent;
-    }
-
     protected function renderPage(string $templateName, array $contents)
     {
         return $this->websiteRender($templateName, $contents);
@@ -136,7 +122,6 @@ class EventAbleController extends WebsiteController
     protected function renderListPage(?Page $page, array $contents, ?array $breadcrumbs, string $templateName)
     {
         $eventContents = $this->eventList($contents);
-        $pageContent = $this->getPageContent($page);
 
         $contentList = [];
         foreach ($contents as $key => $content) {
@@ -147,7 +132,6 @@ class EventAbleController extends WebsiteController
             ...$contentList,
             ...$eventContents,
             'page' => $page,
-            'pageContent' => $pageContent,
             'breadcrumbs' => $breadcrumbs,
         ]);
     }

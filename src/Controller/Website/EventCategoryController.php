@@ -38,15 +38,6 @@ class EventCategoryController extends EventAbleController
 
         $eventCategories = $this->em->getRepository(EventCategory::class)->getTopCategoriesForWebsite($this->getLanguageId());
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'EventCategory/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -55,7 +46,6 @@ class EventCategoryController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'eventCategories'    => $eventCategories,
-            'pageContent'        => $pageContent,
         ]);
     }
 }

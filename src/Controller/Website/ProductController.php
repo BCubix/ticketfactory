@@ -37,15 +37,6 @@ class ProductController extends EventAbleController
         $request = $this->getRequest();
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $filters = [];
         $filterForm = $this->createForm(ProductFilterType::class, null);
         $filterForm->handleRequest($request);
@@ -65,7 +56,6 @@ class ProductController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'products'           => $products,
-            'pageContent'        => $pageContent,
             'filterForm'         => $filterForm->createView(),
             'pagination'         => $pagination,
             'topCategories'      => $topCategories,
@@ -74,20 +64,10 @@ class ProductController extends EventAbleController
 
     public function detail(Page $page, array $contents, array $breadcrumbs)
     {
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         return $this->websiteRender('Website/Product/detail.html.twig', [
             'breadcrumbs'        => $breadcrumbs,
             "page"               => $page,
             "product"            => $contents['Product'],
-            'pageContent'        => $pageContent,
         ]);
     }
 

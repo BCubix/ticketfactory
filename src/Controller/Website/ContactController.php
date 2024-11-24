@@ -14,13 +14,6 @@ class ContactController extends WebsiteController
     {
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
-        $pageTypeBlocks = [];
-        foreach ($page->getContents() as $content) {
-            foreach ($content->getFields() as $key => $field) {
-                $pageTypeBlocks[$key] = $field;
-            }
-        }
-
         $object = new ContactRequest();
         $object->setActive(false);
 
@@ -46,7 +39,6 @@ class ContactController extends WebsiteController
             'breadcrumbs'    => $breadcrumbs,
             'page'           => $page,
             'contact'        => $object,
-            'pageTypeBlocks' => $pageTypeBlocks,
             'form'           => $form->createView()
         ]);
     }
