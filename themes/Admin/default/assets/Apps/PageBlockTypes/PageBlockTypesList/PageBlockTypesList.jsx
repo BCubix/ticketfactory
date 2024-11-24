@@ -4,17 +4,16 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { changePageTypesFilters, pageTypesSelector, getPageTypesAction } from '@Apps/ContentTypes/redux/pageTypes/pageTypesSlice';
+import { changePageBlockTypesFilters, pageBlockTypesSelector, getPageBlockTypesAction } from '@Apps/PageBlockTypes/redux/pageBlockTypes/pageBlockTypesSlice';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
-export const pageTypesListCrud = {
-    title: 'Types de pages',
-    listTitle: 'Liste des types de pages',
+export const pageBlockTypesListCrud = {
+    title: 'Types de blocs',
+    listTitle: 'Liste des types de blocs',
     filtersData: [
         { key: 'active', type: 'boolean' },
-        { key: 'pageType', type: 'boolean' },
         'name',
         'page',
         'limit',
@@ -38,26 +37,26 @@ export const pageTypesListCrud = {
         { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
         { name: 'name', label: 'Nom', width: '70%', sortable: true },
     ],
-    loadDataAction: () => getPageTypesAction(),
-    changeFiltersActions: (props, page) => changePageTypesFilters(props, page),
-    dataSelector: pageTypesSelector,
-    dataList: (selector) => selector.pageTypes,
-    delete: (props) => Api.contentTypesApi.deleteContentType(props),
+    loadDataAction: () => getPageBlockTypesAction(),
+    changeFiltersActions: (props, page) => changePageBlockTypesFilters(props, page),
+    dataSelector: pageBlockTypesSelector,
+    dataList: (selector) => selector.pageBlockTypes,
+    delete: (props) => Api.pageBlockTypesApi.deletePageBlockType(props),
     checkUserAccess: {
-        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_CREATE'),
-        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_EDIT'),
-        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_DELETE'),
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_TYPE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_TYPE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_TYPE_DELETE'),
     },
     links: {
-        new: () => `${Constant.PAGE_TYPES_BASE_PATH}${Constant.CREATE_PATH}`,
-        edit: (id) => `${Constant.PAGE_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
+        new: () => `${Constant.PAGE_BLOCK_TYPES_BASE_PATH}${Constant.CREATE_PATH}`,
+        edit: (id) => `${Constant.PAGE_BLOCK_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
     },
     messages: {
-        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer ce type de contenus ?',
+        confirmationDelete: 'Êtes-vous sûr de vouloir supprimer ce type de bloc ?',
     },
     ...DEFAULT_CRUD_LIST_COMPONENTS,
 };
 
-export const PageTypesList = () => {
-    return <Component.CmtCrudList listCrud={Crud?.pageTypes?.list} />;
+export const PageBlockTypesList = () => {
+    return <Component.CmtCrudList listCrud={Crud?.pageBlockTypes?.list} />;
 };

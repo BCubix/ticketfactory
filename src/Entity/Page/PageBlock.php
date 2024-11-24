@@ -49,6 +49,11 @@ class PageBlock extends Datable
     #[ORM\Column(type: 'json')]
     private array $columns = [];
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[ORM\Column]
+    private array $fields = [];
+
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'pageBlocks')]
     private $page;
 
@@ -62,6 +67,11 @@ class PageBlock extends Datable
     #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(length: 255)]
     private ?string $class = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[ORM\ManyToOne(inversedBy: 'pageBlocks')]
+    private ?PageBlockType $pageBlockType = null;
 
 
     public function __construct()
@@ -123,6 +133,18 @@ class PageBlock extends Datable
         return $this;
     }
 
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    public function setFields(array $fields): self
+    {
+        $this->fields = $fields;
+
+        return $this;
+    }
+
     public function getPage(): ?Page
     {
         return $this->page;
@@ -155,6 +177,18 @@ class PageBlock extends Datable
     public function setClass(string $class): self
     {
         $this->class = $class;
+
+        return $this;
+    }
+
+    public function getPageBlockType(): ?PageBlockType
+    {
+        return $this->pageBlockType;
+    }
+
+    public function setPageBlockType(?PageBlockType $pageBlockType): static
+    {
+        $this->pageBlockType = $pageBlockType;
 
         return $this;
     }

@@ -32,7 +32,7 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
                         <>
                             {values &&
                                 values[field.name]?.map((item, index) => (
-                                    <Component.CmtFormBlock title={`${label} N° ${index + 1}`}>
+                                    <Component.CmtFormBlock title={`${label} N° ${index + 1}`} key={index}>
                                         <Box sx={{ position: 'absolute', right: 20, top: 3 }}>
                                             {index < values[field.name]?.length - 1 && (
                                                 <Component.MoveElementButton onClick={() => handleMoveMenuElement(index, 1)} title="Descendre d'un cran">

@@ -68,7 +68,6 @@ export const contentsInitialSchema = {
     languageGroup: (initValues) => initValues?.languageGroup || '',
     fields: (initValues) => initValues?.fields || {},
     contentType: (initValues, { contentType }) => initValues?.contentType?.id || contentType?.id,
-    page: (initValues) => initValues?.page?.id || '',
     editSlug: false,
     seo: SeoInitialValues,
 };
@@ -76,11 +75,6 @@ export const contentsInitialSchema = {
 export const contentsValidationSchema = {
     title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
     fields: ({ initialValues, contentType, getContentModules }) => getFieldsValidation(initialValues?.contentType || contentType, getContentModules),
-    pageBlocks: Yup.array().of(
-        Yup.object().shape({
-            name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
-        })
-    ),
 };
 
 export const contentsForm = {
@@ -95,13 +89,6 @@ export const contentsForm = {
         dataFields: {
             active: { type: 'boolean' },
             title: { type: 'string' },
-            page: {
-                function: ({ values, formData }) => {
-                    if (values.page) {
-                        formData.append('page', values.page);
-                    }
-                },
-            },
             slug: { type: 'slug' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
@@ -119,8 +106,8 @@ export const contentsForm = {
     fields: [
         {
             type: 'tabs',
-            keyId: 'page',
-            label: 'Page',
+            keyId: 'tab-general-info',
+            label: 'Informations générales',
             fields: [
                 {
                     type: 'block',
@@ -155,6 +142,14 @@ export const contentsForm = {
                         },
                     ],
                 },
+                IndexSeoInitialFormInputs,
+            ],
+        },
+        {
+            type: 'tabs',
+            keyId: 'tab-contents',
+            label: 'Formulaire',
+            fields: [
                 {
                     type: 'block',
                     title: 'Formulaire',
@@ -179,7 +174,6 @@ export const contentsForm = {
                         );
                     },
                 },
-                IndexSeoInitialFormInputs,
             ],
         },
     ],

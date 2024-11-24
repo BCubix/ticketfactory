@@ -68,11 +68,6 @@ class Content extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
-    #[ORM\ManyToOne(inversedBy: 'contents')]
-    private ?Page $page = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_content_all', 'a_content_one'])]
     public $frontUrl;
 
 
@@ -157,17 +152,5 @@ class Content extends Datable
     #[ORM\PreUpdate]
     public function completeSeo() {
         $this->completeFields($this->getTitle());
-    }
-
-    public function getPage(): ?Page
-    {
-        return $this->page;
-    }
-
-    public function setPage(?Page $page): self
-    {
-        $this->page = $page;
-
-        return $this;
     }
 }

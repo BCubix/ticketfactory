@@ -20,19 +20,16 @@ const serializeData = (element, name, formData) => {
     });
 };
 
-export const contentTypesInitialSchema = {
+export const pageBlockTypesInitialSchema = {
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     fields: (initValues) => initValues?.fields || [],
-    pageParent: (initValues) => initValues?.pageParent?.id || '',
-    maxObjectNb: (initValues) => initValues?.maxObjectNb || '',
     keyword: (initValues) => initValues?.keyword || '',
 };
 
-export const contentTypesValidationSchema = {
+export const pageBlockTypesValidationSchema = {
     name: Yup.string().required('Veuillez renseigner le nom du type de contenus.'),
-    pageParent: Yup.string().required('Veuillez renseigner la page parente.'),
-    fields: ({ getContentTypesModules }) =>
+    fields: ({ getPageBlockTypesModules }) =>
         Yup.array()
             .of(
                 Yup.object().shape({
@@ -44,9 +41,9 @@ export const contentTypesValidationSchema = {
                             return Yup.object().nullable();
                         }
 
-                        if (getContentTypesModules[type]?.getValidation) {
+                        if (getPageBlockTypesModules[type]?.getValidation) {
                             return Yup.object().shape({
-                                ...getContentTypesModules[type].getValidation(),
+                                ...getPageBlockTypesModules[type].getValidation(),
                             });
                         }
 
@@ -58,7 +55,7 @@ export const contentTypesValidationSchema = {
             .min(1, 'Veuillez renseigner au moins un type de champs'),
 };
 
-export const contentTypesForm = {
+export const pageBlockTypesForm = {
     submitLine: {
         activeInput: true,
         activeLabel: 'Type de contenus active ?',
@@ -67,9 +64,7 @@ export const contentTypesForm = {
         dataFields: {
             active: { type: 'boolean' },
             name: { type: 'string' },
-            maxObjectNb: { type: 'string' },
             keyword: { type: 'string' },
-            pageParent: { type: 'string' },
             fields: {
                 function: ({ values, formData }) => {
                     values.fields?.forEach((el, index) => {
@@ -79,12 +74,12 @@ export const contentTypesForm = {
             },
         },
     },
-    contentTypeFields: CONTENT_TYPE_FIELDS,
+    pageBlockTypeFields: CONTENT_TYPE_FIELDS,
     fields: [
         {
             type: 'tabs',
-            keyId: 'contentType',
-            label: 'Type de contenu',
+            keyId: 'pageBlockType',
+            label: 'Type de bloc',
             fields: [
                 {
                     type: 'block',
@@ -102,32 +97,6 @@ export const contentTypesForm = {
                             },
                         },
                         {
-                            keyId: 'input-pageParent',
-                            style: {
-                                xs: 12,
-                                sm: 6,
-                            },
-                            input: {
-                                name: 'pageParent',
-                                label: 'Page parente',
-                                inputType: 'selectField',
-                                listName: 'pagesList',
-                                getName: (item) => item.title,
-                                getValue: (item) => item.id,
-                                required: true,
-                            },
-                        },
-                        {
-                            keyId: 'input-maxObjectNb',
-                            style: { xs: 12, sm: 6 },
-                            input: {
-                                name: 'maxObjectNb',
-                                label: "Nombre maximum d'objet",
-                                inputType: 'textField',
-                                type: 'number',
-                            },
-                        },
-                        {
                             keyId: 'input-keyword',
                             style: { xs: 12, sm: 6 },
                             component: (props) => <Component.CmtKeywordInput {...props} name="keyword" />,
@@ -137,16 +106,16 @@ export const contentTypesForm = {
 
                 {
                     type: 'block',
-                    title: 'Informations générales',
-                    keyId: 'block-general-info',
+                    title: 'Champs',
+                    keyId: 'block-fields',
                     fields: [
                         {
                             keyId: 'input-fields',
                             style: { xs: 12 },
-                            component: ({ getContentTypesModules, values, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched }) => (
+                            component: ({ getPageBlockTypesModules, values, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched }) => (
                                 <>
                                     <Component.ContentTypeFieldArrayForm
-                                        contentTypesModules={getContentTypesModules}
+                                        contentTypesModules={getPageBlockTypesModules}
                                         values={values}
                                         errors={errors}
                                         touched={touched}

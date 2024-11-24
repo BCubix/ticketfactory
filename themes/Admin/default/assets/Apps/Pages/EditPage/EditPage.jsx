@@ -25,11 +25,11 @@ export const EditPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-
     const [page, setPage] = useState(null);
     const [pagesList, setPagesList] = useState(null);
+    const [pageBlockTypesList, setPageBlockTypesList] = useState(null);
 
-    const getPageList = (langId) => {
+    const getPagesList = (langId) => {
         apiMiddleware(dispatch, async () => {
             const pages = await Api.pagesApi.getAllPages({ sort: 'title ASC', lang: langId });
             if (pages?.error) {
@@ -40,6 +40,17 @@ export const EditPage = () => {
 
             setPagesList(pages.pages);
         });
+    };
+
+    const getPageBlockTypesList = async () => {
+        const result = await Api.pageBlockTypesApi.getAllPageBlockTypes();
+        if (!result?.result) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            navigate(Constant.PAGES_BASE_PATH);
+            return;
+        }
+
+        setPageBlockTypesList(result.pageBlockTypes);
     };
 
     useEffect(() => {
@@ -56,18 +67,16 @@ export const EditPage = () => {
                 return;
             }
 
-            const contentResult = await Api.contentsApi.getContentByPageId(result.page.id);
-
-            if (!contentResult.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.PAGES_BASE_PATH);
-                return;
-            }
-
-            setPage({ ...result.page, contentId: contentResult?.content?.id, fields: contentResult?.content?.fields, contentType: contentResult?.content?.contentType });
-            getPageList(result.page?.lang?.id);
+            setPage(result.page);
+            getPagesList(result.page?.lang?.id);
         });
     }, [id]);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, () => {
+            getPageBlockTypesList();
+        });
+    }, []);
 
     const handleUpdateContent = async (pageId, id, values) => {
         values.page = pageId;
@@ -98,5 +107,14 @@ export const EditPage = () => {
         return <></>;
     }
 
-    return <Component.PagesForm handleSubmit={handleSubmit} initialValues={page} contentType={page?.contentType} pagesList={pagesList} formCrud={Crud?.pages?.edit} />;
+    return (
+        <Component.PagesForm
+            handleSubmit={handleSubmit}
+            initialValues={page}
+            contentType={page?.contentType}
+            pagesList={pagesList}
+            pageBlockTypesList={pageBlockTypesList}
+            formCrud={Crud?.pages?.edit}
+        />
+    );
 };

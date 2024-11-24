@@ -6,7 +6,6 @@ use App\Entity\Content\ContentTypeField;
 use App\Manager\ContentTypeManager;
 use App\Validation\Constraint\ContentTypeFieldConstraint;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

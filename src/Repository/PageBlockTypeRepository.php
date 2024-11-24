@@ -2,15 +2,12 @@
 
 namespace App\Repository;
 
-use App\Entity\Content\ContentType;
+use App\Entity\Page\PageBlockType;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class ContentTypeRepository extends CrudRepository
+class PageBlockTypeRepository extends CrudRepository
 {
-    /*** > Trait ***/
-    /*** < Trait ***/
-
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['name', 'o.name', 'search'],
@@ -24,6 +21,6 @@ class ContentTypeRepository extends CrudRepository
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ContentType::class);
+        parent::__construct($registry, PageBlockType::class);
     }
 }

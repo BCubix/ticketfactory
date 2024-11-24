@@ -26,7 +26,7 @@ class Tag extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_content_one', 'a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

@@ -53,7 +53,6 @@ export const pagesListCrud = {
     dataList: (selector) => selector.pages,
     duplicate: (props) => Api.pagesApi.duplicatePage(props),
     delete: (props) => Api.pagesApi.deletePage(props),
-    new: ({ setCreateDialog }) => setCreateDialog(true),
     disableDeleteFunction: (item) => item?.controller,
     preview: (el) => {
         if (!el?.frontUrl) {
@@ -76,99 +75,7 @@ export const pagesListCrud = {
         confirmationDelete: 'Êtes-vous sûr de vouloir supprimer cette page ?',
     },
     wrapperComponent: DEFAULT_CRUD_LIST_COMPONENTS?.wrapperComponent,
-    components: [...DEFAULT_CRUD_LIST_COMPONENTS?.components, { component: (props) => <CreateNewPageDialog {...props} /> }],
-};
-
-const CreateNewPageDialog = ({
-    createDialog,
-    setCreateDialog,
-    formContentType,
-    setAvailableCreateContent,
-    setFormContentType,
-    handleGetAvailable,
-    contentTypes,
-    availableCreateContent,
-    navigate,
-}) => {
-    return (
-        <Dialog open={createDialog} onClose={() => setCreateDialog(false)} fullWidth maxWidth="sm">
-            <DialogTitle sx={{ fontSize: 20 }}>Créer une page</DialogTitle>
-            <DialogContent dividers>
-                <FormControl fullWidth sx={{ marginTop: 3 }}>
-                    <InputLabel id={`contentType-label`} size="small">
-                        Type de page
-                    </InputLabel>
-                    <Select
-                        labelId={`contentType-label`}
-                        variant="standard"
-                        size="small"
-                        id={`selectContentType`}
-                        value={formContentType}
-                        onChange={(e) => {
-                            if (e.target.value === 0) {
-                                setAvailableCreateContent({ ...availableCreateContent, loading: false, number: 1 });
-                                setFormContentType(e.target.value);
-                                return;
-                            }
-
-                            setAvailableCreateContent({ ...availableCreateContent, loading: true });
-                            setFormContentType(e.target.value);
-                            handleGetAvailable(e.target.value);
-                        }}
-                        label="Type de contenus"
-                    >
-                        <MenuItem key={0} value={0} id={`selectContentTypeValue-0`}>
-                            Page classique
-                        </MenuItem>
-
-                        {contentTypes?.map((typeList, typeIndex) => (
-                            <MenuItem key={typeIndex} value={typeList?.id} id={`selectContentTypeValue-${typeList.id}`}>
-                                {typeList?.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                {!availableCreateContent.loading && availableCreateContent.loaded && availableCreateContent.number <= 0 && (
-                    <Box sx={{ mt: 3, width: '100%', borderRadius: 2, padding: 3, backgroundColor: (theme) => theme.palette.warning.light }}>
-                        <Typography sx={{ color: (theme) => theme.palette.warning.main }}>
-                            Attention, vous avez {availableCreateContent.createdNumber > availableCreateContent.maxObjectNb ? 'dépassé' : 'atteint'} le nombre de page que vous
-                            pouvez créer avec ce type de page. ({availableCreateContent.createdNumber} / {availableCreateContent.maxNumber})
-                        </Typography>
-                    </Box>
-                )}
-            </DialogContent>
-
-            <DialogActions>
-                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                    <Button
-                        color="error"
-                        onClick={() => {
-                            setCreateDialog(false);
-                            setFormContentType('');
-                        }}
-                        id="cancelDialog"
-                    >
-                        Annuler
-                    </Button>
-                    <Button
-                        color="primary"
-                        onClick={() => {
-                            if (formContentType !== '') {
-                                navigate(`${Constant.PAGES_BASE_PATH}${Constant.CREATE_PATH}?pageType=${formContentType}`);
-                            } else {
-                                NotificationManager.error('Vous devez renseigner le type de contenu.', 'Erreur', Constant.REDIRECTION_TIME);
-                            }
-                        }}
-                        id="validateDialog"
-                        disabled={availableCreateContent.loading || availableCreateContent.number <= 0}
-                    >
-                        Suivant
-                    </Button>
-                </Box>
-            </DialogActions>
-        </Dialog>
-    );
+    ...DEFAULT_CRUD_LIST_COMPONENTS,
 };
 
 export const PagesList = () => {

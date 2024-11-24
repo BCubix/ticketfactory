@@ -27,6 +27,7 @@ export const EditPageBlock = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [pageBlock, setPageBlock] = useState(null);
+    const [pageBlockTypesList, setPageBlockTypesList] = useState(null);
 
     const getPageBlock = async (id) => {
         apiMiddleware(dispatch, async () => {
@@ -43,6 +44,23 @@ export const EditPageBlock = () => {
             setPageBlock(result.pageBlock);
         });
     };
+
+    const getPageBlockTypesList = async () => {
+        const result = await Api.pageBlockTypesApi.getAllPageBlockTypes();
+        if (!result?.result) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            navigate(Constant.PAGES_BASE_PATH);
+            return;
+        }
+
+        setPageBlockTypesList(result.pageBlockTypes);
+    };
+
+    useEffect(() => {
+        apiMiddleware(dispatch, () => {
+            getPageBlockTypesList();
+        });
+    }, []);
 
     useEffect(() => {
         if (!id) {
@@ -67,9 +85,9 @@ export const EditPageBlock = () => {
         });
     };
 
-    if (!pageBlock) {
+    if (!pageBlockTypesList || !pageBlock) {
         return <></>;
     }
 
-    return <Component.PageBlocksForm handleSubmit={handleSubmit} initialValues={pageBlock} formCrud={Crud?.pageBlocks?.edit} />;
+    return <Component.PageBlocksForm pageBlockTypesList={pageBlockTypesList} handleSubmit={handleSubmit} initialValues={pageBlock} formCrud={Crud?.pageBlocks?.edit} />;
 };

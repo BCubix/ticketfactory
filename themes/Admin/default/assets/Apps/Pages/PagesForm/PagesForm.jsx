@@ -4,13 +4,34 @@ import { Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import { Component } from '@/AdminService/Component';
 import { CONTENT_FIELDS } from '@Apps/Contents/services/config/getContentFields';
+import { PAGE_COLUMN_TYPE_FIELDS } from '@Apps/PageBlocks/services/config/getPageColumnTypeFields';
 import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
+
+import { Component } from '@/AdminService/Component';
 import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
-import { PAGE_COLUMN_TYPE_FIELDS } from '@Apps/PageBlocks/services/config/getPageColumnTypeFields';
+
+const serializeData = (element, name, formData) => {
+    if (null !== element && typeof element !== 'object') {
+        formData.append(name, element);
+
+        return;
+    }
+
+    Object.entries(element).map(([key, value]) => {
+        if (null !== value && typeof value === 'object') {
+            serializeData(value, `${name}[${key}]`, formData);
+        } else if (null !== value && Array.isArray(value)) {
+            value.forEach((el, index) => {
+                serializeData(el, `${name}[${key}][${index}]`, formData);
+            });
+        } else {
+            formData.append(`${name}[${key}]`, value !== null ? value : '');
+        }
+    });
+};
 
 const getValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
@@ -57,7 +78,10 @@ export const pagesInitialSchema = {
             name: pageBlock.name,
             class: pageBlock.class || '',
             saveAsModel: false,
+            pageBlockType: pageBlock?.pageBlockType?.id || '',
+            fields: pageBlock?.fields || {},
             columns: pageBlock?.columns?.map((column) => ({
+                ...column,
                 content: column?.content,
                 class: column?.class || '',
                 xs: column?.xs || 12,
@@ -131,6 +155,11 @@ export const pagesForm = {
                         formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
                         formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
                         formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
+                        formData.append(`pageBlocks[${index}][pageBlockType]`, block.pageBlockType || '');
+
+                        Object.entries(block.fields)?.map(([key, value]) => {
+                            serializeData(value, `pageBlocks[${index}][fields][${key}]`, formData);
+                        });
 
                         block.columns.forEach((column, columnIndex) => {
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content);
@@ -148,8 +177,8 @@ export const pagesForm = {
             seo: SeoApiDataFields,
         },
     },
-    contentFields: CONTENT_FIELDS,
     pageColumnTypeFields: PAGE_COLUMN_TYPE_FIELDS,
+    contentFields: CONTENT_FIELDS,
     fields: [
         {
             type: 'tabs',
@@ -215,34 +244,21 @@ export const pagesForm = {
                 },
                 {
                     type: 'block',
-                    title: 'Champs',
-                    keyId: 'block-fields',
-                    component: ({ values, errors, touched, handleBlur, handleChange, setFieldTouched, setFieldValue, contentType, getContentModules }) => {
-                        return contentType ? (
-                            <Component.CmtFormBlock title="Champs">
-                                <Component.DisplayContentForm
-                                    values={values.fields}
-                                    errors={errors}
-                                    touched={touched}
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    setFieldTouched={setFieldTouched}
-                                    setFieldValue={setFieldValue}
-                                    contentType={contentType}
-                                    contentModules={getContentModules}
-                                    prefixName="fields."
-                                />
-                            </Component.CmtFormBlock>
-                        ) : (
-                            <></>
-                        );
-                    },
-                },
-                {
-                    type: 'block',
                     title: 'Blocs',
                     keyId: 'block-blocks',
-                    component: ({ initValue, values, errors, touched, handleBlur, handleChange, setFieldTouched, setFieldValue, contentType, getPageColumnTypeModules }) => {
+                    component: ({
+                        initValue,
+                        values,
+                        errors,
+                        touched,
+                        handleBlur,
+                        handleChange,
+                        setFieldTouched,
+                        setFieldValue,
+                        contentType,
+                        getPageColumnTypeModules,
+                        ...rest
+                    }) => {
                         return !contentType || contentType?.displayBlocks ? (
                             <Component.CmtFormBlock title="Blocs">
                                 <Component.PagesBlocksPart
@@ -255,6 +271,7 @@ export const pagesForm = {
                                     handleBlur={handleBlur}
                                     initValue={initValue}
                                     pageColumnTypeModules={getPageColumnTypeModules}
+                                    {...rest}
                                 />
 
                                 {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}

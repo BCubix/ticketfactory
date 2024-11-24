@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\User;
+namespace App\Repository;
 
 use App\Entity\User\Role;
 use App\Repository\CrudRepository;

@@ -44,16 +44,6 @@ class ContentType extends AdminBaseFormType
             ->add('languageGroup',        UuidType::class,            [])
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => Content::class,
-            ])
-            ->add('page',                 EntityType::class,          [
-                'class'         => Page::class,
-                'choice_label'  => 'title',
-                'multiple'      => false,
-                'query_builder' => function (PageRepository $pr) {
-                    return $pr
-                        ->createQueryBuilder('p')
-                        ->orderBy('p.title', 'ASC');
-                }
             ]);
 
         $builder->addEventListener(

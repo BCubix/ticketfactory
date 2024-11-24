@@ -80,9 +80,6 @@ class Page extends Datable
     #[ORM\OneToMany(mappedBy: 'pageParent', targetEntity: ContentType::class, orphanRemoval: true)]
     private $contentTypes;
 
-    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private Collection $contents;
-
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\ManyToOne(targetEntity: Language::class)]
@@ -104,7 +101,6 @@ class Page extends Datable
         $this->pageBlocks = new ArrayCollection();
         $this->pages = new ArrayCollection();
         $this->contentTypes = new ArrayCollection();
-        $this->contents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -275,36 +271,6 @@ class Page extends Datable
     public function completeSeo()
     {
         $this->completeFields($this->getTitle());
-    }
-
-    /**
-     * @return Collection<int, Content>
-     */
-    public function getContents(): Collection
-    {
-        return $this->contents;
-    }
-
-    public function addContent(Content $content): self
-    {
-        if (!$this->contents->contains($content)) {
-            $this->contents->add($content);
-            $content->setPage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContent(Content $content): self
-    {
-        if ($this->contents->removeElement($content)) {
-            // set the owning side to null (unless already changed)
-            if ($content->getPage() === $this) {
-                $content->setPage(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getLang(): ?Language

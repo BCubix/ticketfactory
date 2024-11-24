@@ -25,10 +25,21 @@ export const pageBlocksCreateCrud = {
     ...pageBlocksForm,
 };
 
+const NEW_BLOCK_DATA = {
+    name: '',
+    saveAsModel: true,
+    formatIndex: 0,
+    pageBlock: null,
+    selectedBlock: 0,
+    pageBlockType: '',
+};
+
 export const CreatePageBlock = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [initialValues, setInitialValues] = useState(null);
+    const [newBlockData, setNewBlockData] = useState(NEW_BLOCK_DATA);
+    const [pageBlockTypesList, setPageBlockTypesList] = useState(null);
 
     const [queryParameters] = useSearchParams();
     const pageBlockId = queryParameters.get('pageBlockId');
@@ -37,13 +48,22 @@ export const CreatePageBlock = () => {
     const [dialog, setDialog] = useState(pageBlockId && languageId ? false : true);
     const [submitModel, setSubmitModel] = useState(pageBlockId && languageId ? true : false);
 
-    const [name, setName] = useState('');
-    const [formatIndex, setFormatIndex] = useState(0);
-    const [model, setModel] = useState({
-        name: '',
-        saveAsModel: true,
-        columns: [],
-    });
+    const getPageBlockTypesList = async () => {
+        const result = await Api.pageBlockTypesApi.getAllPageBlockTypes();
+        if (!result?.result) {
+            NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            navigate(Constant.PAGES_BASE_PATH);
+            return;
+        }
+
+        setPageBlockTypesList(result.pageBlockTypes);
+    };
+
+    useEffect(() => {
+        apiMiddleware(dispatch, () => {
+            getPageBlockTypesList();
+        });
+    }, []);
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
@@ -76,15 +96,29 @@ export const CreatePageBlock = () => {
     };
 
     const handleCreate = () => {
+        let formCrud = Crud.pageBlocks.add;
+
         const columns = [];
-        Constant.PAGE_BLOCKS_FORMATS[formatIndex].forEach((value) => {
-            columns.push(GetPageBlockColumn(value));
-        });
+        if (!newBlockData.pageBlockType) {
+            Constant.PAGE_BLOCKS_FORMATS[newBlockData.formatIndex].forEach((value) => {
+                columns.push(GetPageBlockColumn(value));
+            });
+        }
 
-        model.name = name;
-        model.columns = columns;
+        let fields = {};
+        if (newBlockData.pageBlockType) {
+            pageBlockTypesList
+                ?.find((item) => item.id === newBlockData.pageBlockType)
+                .fields.forEach((el) => {
+                    if (formCrud.contentFields[el.type]?.getInitialValue) {
+                        fields[el.name] = formCrud.contentFields[el.type]?.getInitialValue(el, formCrud.contentFields) || '';
+                    } else {
+                        fields[el.name] = '';
+                    }
+                });
+        }
 
-        setModel(model);
+        setNewBlockData({ ...newBlockData, columns, fields });
         setSubmitModel(true);
         setDialog(false);
     };
@@ -95,10 +129,19 @@ export const CreatePageBlock = () => {
 
     return (
         <>
-            {submitModel && <Component.PageBlocksForm handleSubmit={handleSubmit} modelValues={model} translateInitialValues={initialValues} formCrud={Crud?.pageBlocks?.add} />}
+            {submitModel && (
+                <Component.PageBlocksForm
+                    pageBlockTypesList={pageBlockTypesList}
+                    handleSubmit={handleSubmit}
+                    modelValues={newBlockData}
+                    translateInitialValues={initialValues}
+                    formCrud={Crud?.pageBlocks?.add}
+                />
+            )}
+
             <Dialog
                 open={dialog}
-                maxWidth="md"
+                maxWidth="lg"
                 fullWidth
                 onClose={() => {
                     setDialog(false);
@@ -107,14 +150,14 @@ export const CreatePageBlock = () => {
                     }
                 }}
             >
-                <DialogTitle sx={{ borderBottom: '1px solid #d3d3d3' }}>
-                    <Typography component="h3" variant="h3" fontSize={20}>
-                        Créer un nouveau bloc
-                    </Typography>
+                <DialogTitle sx={{ borderBottom: '1px solid #d3d3d3' }} component="h3" variant="h3" fontSize={20}>
+                    Créer un nouveau bloc
                 </DialogTitle>
-                <DialogContent sx={{ minHeight: 250 }}>
-                    <Component.CreatePageBlockFormat name={name} setName={setName} formatIndex={formatIndex} setFormatIndex={setFormatIndex} />
+
+                <DialogContent sx={{ minHeight: 350 }}>
+                    <Component.CreatePageBlockFormat newBlockData={newBlockData} setNewBlockData={setNewBlockData} pageBlockTypesList={pageBlockTypesList || []} />
                 </DialogContent>
+
                 <DialogActions>
                     <Button id="createBlockSubmit" onClick={handleCreate}>
                         Créer

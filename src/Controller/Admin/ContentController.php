@@ -153,14 +153,4 @@ class ContentController extends CrudController
 
         return $this->view($count, Response::HTTP_OK);
     }
-
-    #[Rest\Get('/contents/{pageId}/page', requirements: ['pageId' => '\d+'])]
-    #[IsGranted('ROLE_CONTENT_READ')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
-    public function getContentFromPageId(Request $request, int $pageId): View
-    {
-        $object = $this->em->getRepository($this->entityClass)->findContentByPageIdForAdmin($pageId);
-
-        return $this->view($object, Response::HTTP_OK);
-    }
 }

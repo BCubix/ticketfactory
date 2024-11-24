@@ -5,9 +5,9 @@ import { CreatePage, pagesCreateCrud } from '@Apps/Pages/CreatePage/CreatePage';
 import { EditPage, pagesEditCrud } from '@Apps/Pages/EditPage/EditPage';
 import { PagesBlocksPart } from '@Apps/Pages/PagesForm/PagesBlocksPart';
 import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
-import { PagesBlocksSliderPart } from '@Apps/Pages/PagesForm/PagesBlocksSliderPart';
 import { PagesList, pagesListCrud } from '@Apps/Pages/PagesList/PagesList';
 import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
+import { PageBlockContentPart } from '@Apps/Pages/PagesForm/PageBlockContentPart';
 import { PageHistory } from '@Apps/Pages/PageHistory/PageHistory';
 import pagesApi from '@Apps/Pages/services/api/pagesApi';
 import pageHistoryApi from '@Apps/Pages/services/api/pageHistoryApi';
@@ -33,7 +33,7 @@ export const initConstant = () => {
 };
 
 export const initComponent = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -41,8 +41,8 @@ export const initComponent = ({ userRoles }) => {
     setComponent('EditPage', EditPage);
     setComponent('PagesBlocksPart', PagesBlocksPart);
     setComponent('ImportPageBlock', ImportPageBlock);
+    setComponent('PageBlockContentPart', PageBlockContentPart);
     setComponent('PagesForm', PagesForm);
-    setComponent('PagesBlocksSliderPart', PagesBlocksSliderPart);
     setComponent('PagesList', PagesList);
     setComponent('PageHistory', PageHistory);
 };
@@ -53,7 +53,7 @@ export const initApi = () => {
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -73,7 +73,7 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
 };
 
 export const initMenu = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -85,7 +85,7 @@ export const initReducer = () => {
 };
 
 export const initTab = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 
@@ -93,7 +93,7 @@ export const initTab = ({ userRoles }) => {
 };
 
 export const initCrud = ({ userRoles }) => {
-    if (!checkUserAccess(userRoles, 'ROLE_PAGE_READ')) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
         return;
     }
 

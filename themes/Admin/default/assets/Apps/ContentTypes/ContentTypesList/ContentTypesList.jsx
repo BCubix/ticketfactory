@@ -14,7 +14,6 @@ export const contentTypesListCrud = {
     listTitle: 'Liste des types de contenus',
     filtersData: [
         { key: 'active', type: 'boolean' },
-        { key: 'pageType', type: 'boolean' },
         'name',
         'page',
         'limit',
