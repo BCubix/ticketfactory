@@ -240,38 +240,7 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                 </Grid>
 
                                 <Box className={`${!pageBlock?.pageBlockType ? 'padding-left-5' : ''}`} minHeight={200}>
-                                    {!pageBlock?.pageBlockType && (
-                                        <ToggleButtonGroup
-                                            orientation="vertical"
-                                            value={view}
-                                            exclusive
-                                            onChange={(e, newValue) => newValue && setView(newValue)}
-                                            size="small"
-                                            sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
-                                        >
-                                            <ToggleButton value="xs" aria-label="XS">
-                                                XS
-                                            </ToggleButton>
-
-                                            <ToggleButton value="s" aria-label="S">
-                                                S
-                                            </ToggleButton>
-
-                                            <ToggleButton value="m" aria-label="M">
-                                                M
-                                            </ToggleButton>
-
-                                            <ToggleButton value="l" aria-label="L">
-                                                L
-                                            </ToggleButton>
-
-                                            <ToggleButton value="xl" aria-label="XL">
-                                                XL
-                                            </ToggleButton>
-                                        </ToggleButtonGroup>
-                                    )}
-
-                                    {pageBlock.pageBlockType ? (
+                                    {Boolean(pageBlock.pageBlockType) ? (
                                         <Component.PageBlockContentPart
                                             values={pageBlock}
                                             errors={errors}
@@ -288,17 +257,48 @@ export const PagesBlocksPart = ({ values, errors, touched, setFieldValue, setFie
                                             {...rest}
                                         />
                                     ) : (
-                                        <Component.PageBlockColumnPart
-                                            values={pageBlock}
-                                            errors={errors}
-                                            touched={touched}
-                                            media={view}
-                                            setFieldValue={setFieldValue}
-                                            setFieldTouched={setFieldTouched}
-                                            baseName={`pageBlocks.${index}.`}
-                                            pageColumnTypeModules={pageColumnTypeModules}
-                                            formCrud={formCrud}
-                                        />
+                                        <>
+                                            <ToggleButtonGroup
+                                                orientation="vertical"
+                                                value={view}
+                                                exclusive
+                                                onChange={(e, newValue) => newValue && setView(newValue)}
+                                                size="small"
+                                                sx={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: 0 }}
+                                            >
+                                                <ToggleButton value="xs" aria-label="XS">
+                                                    XS
+                                                </ToggleButton>
+
+                                                <ToggleButton value="s" aria-label="S">
+                                                    S
+                                                </ToggleButton>
+
+                                                <ToggleButton value="m" aria-label="M">
+                                                    M
+                                                </ToggleButton>
+
+                                                <ToggleButton value="l" aria-label="L">
+                                                    L
+                                                </ToggleButton>
+
+                                                <ToggleButton value="xl" aria-label="XL">
+                                                    XL
+                                                </ToggleButton>
+                                            </ToggleButtonGroup>
+
+                                            <Component.PageBlockColumnPart
+                                                values={pageBlock}
+                                                errors={errors}
+                                                touched={touched}
+                                                media={view}
+                                                setFieldValue={setFieldValue}
+                                                setFieldTouched={setFieldTouched}
+                                                baseName={`pageBlocks.${index}.`}
+                                                pageColumnTypeModules={pageColumnTypeModules}
+                                                formCrud={formCrud}
+                                            />
+                                        </>
                                     )}
 
                                     <Component.DeleteBlockFabButton
