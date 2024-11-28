@@ -43,6 +43,10 @@ table {
     table-layout: fixed;
 }
 
+.relative {
+    position: relative;
+}
+
 .numberTypeField-noArrow {
     & input::-webkit-outer-spin-button,
     & input::-webkit-inner-spin-button {
