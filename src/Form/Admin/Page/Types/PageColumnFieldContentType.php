@@ -3,7 +3,6 @@
 namespace App\Form\Admin\Page\Types;
 
 use App\Entity\Content\Content;
-use App\Entity\Content\ContentTypeField;
 use App\Repository\ContentRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -34,7 +33,7 @@ class PageColumnFieldContentType extends PageColumnFieldAbstractType
         ]);
     }
 
-    public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentSerialize(mixed $cf): mixed
     {
         if (empty($cf)) {
             return null;
@@ -43,7 +42,7 @@ class PageColumnFieldContentType extends PageColumnFieldAbstractType
         return $cf->getId();
     }
 
-    public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentDeserialize(mixed $cf): mixed
     {
         if (empty($cf)) {
             return null;

@@ -31,9 +31,8 @@ class ContentSerializer
     {
         $fields = [];
         $contentType = $content->getContentType();
-        
-        foreach ($content->getFields() as $contentFieldName => $contentField) {
 
+        foreach ($content->getFields() as $contentFieldName => $contentField) {
             $contentTypeFields = $contentType->getFields();
             if ((count($contentTypeFields) > 0) && is_array($contentTypeFields[0])) {
                 $contentType = ContentType::jsonDeserialize($contentType);
@@ -50,7 +49,7 @@ class ContentSerializer
                     } else {
                         $fields[$contentFieldName] = $contentField;
                     }
-                    
+
                     break;
                 }
             }

@@ -6,6 +6,7 @@ use App\Entity\Page\PageBlock;
 use App\Entity\Page\PageBlockType;
 use App\Entity\Page\PageColumn;
 use App\Manager\ContentTypeManager;
+use App\Manager\PageManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PageBlockSerializer
@@ -14,17 +15,22 @@ class PageBlockSerializer
 
     protected $em;
     protected $ctm;
+    protected $pm;
 
-    public function __construct(EntityManagerInterface $em, ContentTypeManager $ctm)
+    public function __construct(EntityManagerInterface $em, ContentTypeManager $ctm, PageManager $pm)
     {
         $this->em = $em;
         $this->ctm = $ctm;
+        $this->pm = $pm;
     }
 
     public function serializePageBlock(PageBlock &$pageBlock): void
     {
         $columns = [];
+
         foreach ($pageBlock->getColumns() as $column) {
+            $content = $this->serializePageColumnContent($column);
+
             $serializedColumn = [
                 'xs'      => $column->getXs(),
                 's'       => $column->getS(),
@@ -33,7 +39,7 @@ class PageBlockSerializer
                 'xl'      => $column->getXl(),
                 'class'   => $column->getClass(),
                 'type'    => $column->getType(),
-                'content' => $column->getcontent(),
+                'content' => $content,
             ];
 
             $columns[] = $serializedColumn;
@@ -42,7 +48,7 @@ class PageBlockSerializer
         $pageBlock->setColumns($columns);
 
         if (null !== $pageBlock->getFields() && count($pageBlock->getFields()) > 0) {
-            $this->handlePageBlockContent($pageBlock, 'jsonContentSerialize');
+            $this->handlePageBlockField($pageBlock, 'jsonContentSerialize');
         }
     }
 
@@ -50,6 +56,8 @@ class PageBlockSerializer
     {
         $columns = [];
         foreach ($pageBlock->getColumns() as $serializedColumn) {
+            $content = $this->deSerializePageColumnContent($serializedColumn);
+
             $column = new PageColumn();
             $column->setXs($serializedColumn['xs']);
             $column->setS($serializedColumn['s']);
@@ -58,26 +66,25 @@ class PageBlockSerializer
             $column->setXl($serializedColumn['xl']);
             $column->setClass($serializedColumn['class'] ?? "");
             $column->setType($serializedColumn['type'] ?? "");
-            $column->setContent($serializedColumn['content']);
+            $column->setContent($content);
 
             $columns[] = $column;
         }
 
         $pageBlock->setColumns($columns);
 
-        $this->handlePageBlockContent($pageBlock, 'jsonContentDeserialize');
+        $this->handlePageBlockField($pageBlock, 'jsonContentDeserialize');
     }
 
-    private function handlePageBlockContent(PageBlock &$pageBlock, string $methodName): void
+    private function handlePageBlockField(PageBlock &$pageBlock, string $methodName): void
     {
         $fields = [];
         $pageBlockType = $pageBlock->getPageBlockType();
         if (null === $pageBlockType) {
             $pageBlock->setFields([]);
         }
-        
-        foreach ($pageBlock->getFields() as $contentFieldName => $contentField) {
 
+        foreach ($pageBlock->getFields() as $contentFieldName => $contentField) {
             $contentTypeFields = $pageBlockType->getFields();
             if ((count($contentTypeFields) > 0) && is_array($contentTypeFields[0])) {
                 $pageBlockType = PageBlockType::jsonDeserialize($pageBlockType);
@@ -94,7 +101,7 @@ class PageBlockSerializer
                     } else {
                         $fields[$contentFieldName] = $contentField;
                     }
-                    
+
                     break;
                 }
             }
@@ -102,5 +109,35 @@ class PageBlockSerializer
 
 
         $pageBlock->setFields($fields);
+    }
+
+    private function serializePageColumnContent(PageColumn $column): mixed
+    {
+        $typeList = $this->pm->getFieldsSelect();
+        if (!isset($typeList[$column->getType()])) {
+            return $column->getContent();
+        }
+
+        $typeInstance = $this->pm->getPageColumnInstanceFromType($column->getType());
+        if (method_exists($typeInstance, "jsonContentSerialize")) {
+            return $typeInstance->jsonContentSerialize($column->getContent());
+        }
+
+        return $column->getContent();
+    }
+
+    private function deSerializePageColumnContent(array $column): mixed
+    {
+        $typeList = $this->pm->getFieldsSelect();
+        if (!isset($column['type']) || !isset($typeList[$column['type']])) {
+            return $column['content'];
+        }
+
+        $typeInstance = $this->pm->getPageColumnInstanceFromType($column['type']);
+        if (method_exists($typeInstance, "jsonContentDeserialize")) {
+            return $typeInstance->jsonContentDeserialize($column['content']);
+        }
+
+        return $column['content'];
     }
 }

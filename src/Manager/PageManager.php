@@ -49,6 +49,7 @@ class PageManager extends AbstractManager
             return $pageColumnField;
         }
 
+        dd($fieldType, $this->types);
         throw new ApiException(
             Response::HTTP_INTERNAL_SERVER_ERROR,
             1500,

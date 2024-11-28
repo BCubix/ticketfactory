@@ -2,7 +2,6 @@
 
 namespace App\Form\Admin\Page\Types;
 
-use App\Entity\Content\ContentTypeField;
 use App\Entity\Event\Event;
 use App\Repository\EventRepository;
 
@@ -34,7 +33,7 @@ class PageColumnFieldEventType extends PageColumnFieldAbstractType
         ]);
     }
 
-    public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentSerialize(mixed $cf): mixed
     {
         if (empty($cf)) {
             return null;
@@ -43,7 +42,7 @@ class PageColumnFieldEventType extends PageColumnFieldAbstractType
         return $cf->getId();
     }
 
-    public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentDeserialize(mixed $cf): mixed
     {
         if (empty($cf)) {
             return null;

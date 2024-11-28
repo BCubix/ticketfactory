@@ -2,7 +2,6 @@
 
 namespace App\Form\Admin\Page\Types;
 
-use App\Entity\Content\ContentTypeField;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,7 +25,7 @@ class PageColumnFieldDateType extends PageColumnFieldAbstractType
         ]);
     }
 
-    public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentSerialize(mixed $cf): mixed
     {
         return [
             'date' => $cf->format('Y-m-d'),
@@ -34,7 +33,7 @@ class PageColumnFieldDateType extends PageColumnFieldAbstractType
         ];
     }
 
-    public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentDeserialize(mixed $cf): mixed
     {
         $tz = new \DateTimeZone($cf['timezone']);
 

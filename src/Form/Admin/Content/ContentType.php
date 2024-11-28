@@ -5,9 +5,7 @@ namespace App\Form\Admin\Content;
 use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Content\Content;
 use App\Entity\Language\Language;
-use App\Entity\Page\Page;
 use App\Repository\LanguageRepository;
-use App\Repository\PageRepository;
 use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Component\Form\FormBuilderInterface;

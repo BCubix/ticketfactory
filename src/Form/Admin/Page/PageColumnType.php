@@ -47,25 +47,40 @@ class PageColumnType extends AdminBaseFormType
         );
 
         $builder->addEventListener(
-            FormEvents::SUBMIT,
-            [$this, 'onSubmit']
+            FormEvents::PRE_SET_DATA,
+            [$this, 'onPreSetData']
+        );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            [$this, 'onPreSubmit']
         );
     }
 
-    public function onSubmit(FormEvent $event): void
+    public function onPreSetData (FormEvent $event) {
+        $data = $event->getData();
+
+        if (null === $data) {
+            return;
+        }
+
+        $data->setContent(null);
+        $event->setData($data);
+    }
+
+    public function onPreSubmit(FormEvent $event): void
     {
+        $data = $event->getData();
         $form = $event->getForm();
-        if (!$form->has('type')) {
+
+        if (!isset($data['type']) || null === $data['type']) {
             return;
         }
 
-        $type = $form->get('type')->getData();
-        if (null === $type) {
-            return;
-        }
-
+        $type = $data['type'];
         $component = $this->pm->getPageColumnFieldFromType($type);
         $options = $this->pm->getPageColumnInstanceFromType($type)->getFormOptions();
+
         $form->add(
             'content',
             $component,

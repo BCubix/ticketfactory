@@ -278,6 +278,7 @@ export const DisplayMenuElement = ({
                                                 menuEntryModule={menuEntryModule}
                                                 language={language}
                                                 errors={errors?.at(children)}
+                                                accessUserEdit={accessUserEdit}
                                             />
                                         </Component.RenderElement>
                                     )}

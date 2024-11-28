@@ -2,11 +2,8 @@
 
 namespace App\Form\Admin\Page\Types;
 
-use App\Entity\Content\ContentTypeField;
 use App\Entity\Media\Media;
-use App\Manager\ContentTypeManager;
 use App\Repository\MediaRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +32,7 @@ class PageColumnFieldSliderType extends PageColumnFieldAbstractType
         ]);
     }
 
-    public function jsonContentSerialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentSerialize(mixed $cf): mixed
     {
         $result = "";
         foreach ($cf as $media) {
@@ -49,7 +46,7 @@ class PageColumnFieldSliderType extends PageColumnFieldAbstractType
         return $result;
     }
 
-    public function jsonContentDeserialize(mixed $cf, ?ContentTypeField $ctf): mixed
+    public function jsonContentDeserialize(mixed $cf): mixed
     {
         if (empty($cf)) {
             return [];

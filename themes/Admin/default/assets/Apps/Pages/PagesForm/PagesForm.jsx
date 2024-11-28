@@ -289,9 +289,6 @@ export const pagesForm = {
 };
 
 export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null, formCrud, ...props }) => {
-    const [initValue, setInitValue] = useState(null);
-    const navigate = useNavigate();
-
     const getContentModules = useMemo(() => {
         return formCrud.contentFields;
     }, []);
@@ -300,33 +297,9 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         return formCrud.pageColumnTypeFields;
     }, []);
 
-    useEffect(() => {
-        let initVal = translateInitialValues || initialValues;
-
-        if (initVal) {
-            setInitValue(constructInitialValues(formCrud.form.initialSchema, initVal, { pagesList, contentType, ...props }));
-
-            return;
-        }
-
-        const formModules = getContentModules;
-
-        let fields = {};
-
-        contentType?.fields?.forEach((el) => {
-            fields[el.name] = formModules[el.type]?.getInitialValue(el, getContentModules) || '';
-        });
-
-        setInitValue(constructInitialValues(formCrud.form.initialSchema, { fields }, { pagesList, contentType, ...props }));
-    }, []);
-
-    if (!initValue) {
-        return <></>;
-    }
-
     return (
         <Formik
-            initialValues={initValue}
+            initialValues={constructInitialValues(formCrud.form.initialSchema, translateInitialValues || initialValues, { pagesList, ...props })}
             validationSchema={Yup.object().shape(
                 initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, getPageColumnTypeModules, ...props })
             )}
