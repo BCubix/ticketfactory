@@ -5,7 +5,7 @@ namespace App\Form\Admin\Profile;
 use App\Entity\User\Profile;
 use App\Entity\User\Role;
 use App\Form\Admin\AdminBaseFormType;
-use App\Repository\User\RoleRepository;
+use App\Repository\RoleRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
+use App\Entity\Subscription\Subscription;
 use App\Entity\Ticketing\Ticketing;
 use App\Repository\EventRepository;
 
@@ -29,7 +30,7 @@ class Event extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_page_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_page_one', 'a_page_block_all', 'a_page_block_one', 'a_subscription_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -153,6 +154,15 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontBookingButton = true;
 
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    private ?Subscription $subscription = null;
+
+    /**
+     * @var Collection<int, Subscription>
+     */
+    #[ORM\ManyToMany(targetEntity: Subscription::class, mappedBy: 'events')]
+    private Collection $subscriptions;
+
     public function __construct()
     {
         $this->eventCategories  = new ArrayCollection();
@@ -161,6 +171,7 @@ class Event extends Datable
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
         $this->featureLinks     = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
 
@@ -505,6 +516,45 @@ class Event extends Datable
     public function setEventType(?EventType $eventType): static
     {
         $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(?Subscription $subscription): static
+    {
+        $this->subscription = $subscription;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subscription>
+     */
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addSubscription(Subscription $subscription): static
+    {
+        if (!$this->subscriptions->contains($subscription)) {
+            $this->subscriptions->add($subscription);
+            $subscription->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscription(Subscription $subscription): static
+    {
+        if ($this->subscriptions->removeElement($subscription)) {
+            $subscription->removeEvent($this);
+        }
 
         return $this;
     }

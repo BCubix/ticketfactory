@@ -238,7 +238,9 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     {
         $roles = [];
         foreach ($this->profiles as $profile) {
-            $roles = array_merge($profile->getRoleNames());
+            if ($profile->isActive()) {
+                $roles = array_merge($profile->getRoleNames());
+            }
         }
 
         return array_unique($roles);

@@ -27,6 +27,10 @@ class ProfileManager extends AbstractManager
                 $currentProfile = $profile;
             }
 
+            if (!$currentProfile->isActive()) {
+                continue;
+            }
+
             $profileRoles = array_map(fn($role) => $role->getName(), $currentProfile->getRoles()->toArray());
             if (array_intersect($criticalRoles, $profileRoles) === $criticalRoles) {
                 if (count(array_map(fn($user) => $user->isActive(), $currentProfile->getUsers()->toArray())) > 0) {

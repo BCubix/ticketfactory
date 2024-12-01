@@ -3,5 +3,15 @@ export const getUserRoles = (user) => {
         return [];
     }
 
-    return user?.profiles?.map((profile) => profile?.roles?.map((role) => role.name) || []).reduce((arr, roles) => arr.concat(roles), []) || [];
+    return (
+        user?.profiles
+            ?.map((profile) => {
+                if (!profile.active) {
+                    return [];
+                }
+
+                return profile?.roles?.map((role) => role.name) || [];
+            })
+            .reduce((arr, roles) => arr.concat(roles), []) || []
+    );
 };
