@@ -3,7 +3,6 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { OrdersList, ordersListCrud } from '@Apps/Orders/OrdersList/OrdersList';
 import { OrdersDetail, ordersDetailCrud } from '@Apps/Orders/OrdersDetail/OrdersDetail';
-import { CartOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CartOrderPart';
 import { CustomerOrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/CustomerOrderPart';
 import { OrderPart } from '@Apps/Orders/OrdersDetail/OrdersDetailParts/OrderPart';
 import ordersReducer from './redux/orders/ordersSlice';
@@ -30,7 +29,6 @@ export const initComponent = ({ userRoles }) => {
 
     setComponent('OrdersList', OrdersList);
     setComponent('OrdersDetail', OrdersDetail);
-    setComponent('CartOrderPart', CartOrderPart);
     setComponent('CustomerOrderPart', CustomerOrderPart);
     setComponent('OrderPart', OrderPart);
 };

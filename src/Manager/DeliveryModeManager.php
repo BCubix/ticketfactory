@@ -16,6 +16,8 @@ class DeliveryModeManager extends AbstractManager
             $cart->setDeliveryPrice(null);
 
             $this->em->persist($cart);
+
+            return;
         }
 
         if (null === $cart->getDeliveryMode()) {

@@ -1,0 +1,7 @@
+.cart {
+    &_element {
+        &_wrapper:not(:first-of-type) {
+            margin-top: 40px;
+        }
+    }
+}

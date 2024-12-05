@@ -17,6 +17,7 @@ class CartController extends WebsiteController
 
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
         $cart = $this->mf->get("cart")->getCart();
+        $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
 
         $this->mf->get("cart")->checkForOldCart();
@@ -24,7 +25,8 @@ class CartController extends WebsiteController
         return $this->websiteRender('Cart/index.html.twig', [
             "breadcrumbs" => $breadcrumbs,
             "cart" => $cart,
-            'discount' => $discount,
+            "discount" => $discount,
+            "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
 
@@ -40,19 +42,24 @@ class CartController extends WebsiteController
         $eventRowId = $request->get("eventRowId");
         $eventPriceId = $request->get("eventPriceId");
         $productRowId = $request->get("productRowId");
+        $subscriptionRowId = $request->get('subscriptionRowId');
 
         if (null !== $quantity && null !== $eventRowId && null !== $eventPriceId) {
             $this->mf->get("cart")->updateQuantity(["eventRowId" => $eventRowId, "eventPriceId" => $eventPriceId], $quantity);
         } else if (null !== $quantity && null !== $productRowId) {
             $this->mf->get("cart")->updateProductQuantity(["productRowId" => $productRowId], $quantity);
+        } else if (null !== $quantity && null !== $subscriptionRowId) {
+            $this->mf->get('cart')->updateSubscriptionQuantity(['subscriptionRowId' => $subscriptionRowId], $quantity);
         }
 
         $cart = $this->mf->get("cart")->getCart();
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
+        $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
         return $this->websiteRender('Cart/_index.html.twig', [
             "cart" => $cart,
-            'discount' => $discount,
+            "discount" => $discount,
+            "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
 
@@ -66,19 +73,24 @@ class CartController extends WebsiteController
         $request = $this->getRequest();
         $eventRowId = $request->get('eventRowId');
         $productRowId = $request->get('productRowId');
+        $subscriptionRowId = $request->get('subscriptionRowId');
 
         if (null !== $eventRowId) {
             $this->mf->get("cart")->deleteEventRow($eventRowId);
         } else if (null !== $productRowId) {
             $this->mf->get("cart")->deleteProductRow($productRowId);
+        } else if (null !== $subscriptionRowId) {
+            $this->mf->get("cart")->deleteSubscriptionRow($subscriptionRowId);
         }
 
         $cart = $this->mf->get("cart")->getCart();
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
+        $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
         return $this->websiteRender('Cart/_index.html.twig', [
             "cart" => $cart,
-            'discount' => $discount,
+            "discount" => $discount,
+            "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
 
@@ -96,10 +108,12 @@ class CartController extends WebsiteController
 
         $cart = $this->mf->get("cart")->getCart();
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
+        $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
         return $this->websiteRender('Cart/_index.html.twig', [
             "cart" => $cart,
-            'discount' => $discount,
+            "discount" => $discount,
+            "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
 
@@ -119,10 +133,12 @@ class CartController extends WebsiteController
 
             $cart = $this->mf->get("cart")->getCart();
             $discount = $this->mf->get("cart")->calculateDiscount($cart);
+            $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
             return $this->websiteRender('Cart/_index.html.twig', [
                 "cart" => $cart,
-                'discount' => $discount,
+                "discount" => $discount,
+                "subscriptionDiscount" => $subscriptionDiscount
             ]);
         }
 

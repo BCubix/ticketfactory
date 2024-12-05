@@ -3,6 +3,7 @@
 namespace App\Entity\Order;
 
 use App\Entity\Event\EventPrice;
+use App\Entity\Subscription\SubscriptionUsage;
 use App\Repository\EventSeatRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -32,6 +33,11 @@ class EventSeat
     #[ORM\ManyToOne(inversedBy: 'eventSeats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?EventRow $eventRow = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\OneToOne(mappedBy: 'eventSeat', cascade: ['persist', 'remove'])]
+    private ?SubscriptionUsage $subscriptionUsage = null;
 
     public function getId(): ?int
     {
@@ -70,6 +76,23 @@ class EventSeat
     public function setEventRow(?EventRow $eventRow): self
     {
         $this->eventRow = $eventRow;
+
+        return $this;
+    }
+
+    public function getSubscriptionUsage(): ?SubscriptionUsage
+    {
+        return $this->subscriptionUsage;
+    }
+
+    public function setSubscriptionUsage(SubscriptionUsage $subscriptionUsage): static
+    {
+        // set the owning side of the relation if necessary
+        if ($subscriptionUsage->getEventRow() !== $this) {
+            $subscriptionUsage->setEventRow($this);
+        }
+
+        $this->subscriptionUsage = $subscriptionUsage;
 
         return $this;
     }

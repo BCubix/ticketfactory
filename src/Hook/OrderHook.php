@@ -14,11 +14,11 @@ class OrderHook extends Hook
 
         $isCommandValidated =  $this->mf->get('parameter')->getParameter('core_order_validated');
 
-        if (null !== $isCommandValidated) {
+        /* if (null !== $isCommandValidated) {
             $customerEmailAddress = $this->mf->get('parameter')->getParameter('core_order_validated_email');
             if (null !== $customerEmailAddress) {
                 $this->sf->get('mailer')->sendEmailValidatedOrder($cart);
             }
-        }
+        } */
     }
 }

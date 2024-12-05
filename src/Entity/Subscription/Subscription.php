@@ -5,6 +5,7 @@ namespace App\Entity\Subscription;
 use App\Entity\Datable;
 use App\Entity\Event\Event;
 use App\Entity\Language\Language;
+use App\Entity\Media\Media;
 use App\Repository\SubscriptionRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,14 +20,14 @@ use Symfony\Component\Uid\Uuid;
 class Subscription extends Datable
 {
     #[JMS\Expose()]
-    #[JMS\Groups(['a_subscription_all', 'a_subscription_one'])]
+    #[JMS\Groups(['a_subscription_all', 'a_subscription_one', 'a_order_one', 'a_cart_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_subscription_all', 'a_subscription_one'])]
+    #[JMS\Groups(['a_subscription_all', 'a_subscription_one', 'a_order_one', 'a_cart_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -41,7 +42,7 @@ class Subscription extends Datable
     private ?int $eventNb = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_subscription_all', 'a_subscription_one'])]
+    #[JMS\Groups(['a_subscription_all', 'a_subscription_one', 'a_order_one', 'a_cart_one'])]
     #[ORM\Column]
     private ?float $price = null;
 
@@ -70,6 +71,11 @@ class Subscription extends Datable
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_subscription_all', 'a_subscription_one'])]
+    #[ORM\ManyToOne]
+    private ?Media $media = null;
 
     /**
      * @var Collection<int, Event>
@@ -206,6 +212,18 @@ class Subscription extends Datable
     public function removeEvent(Event $event): static
     {
         $this->events->removeElement($event);
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): static
+    {
+        $this->media = $media;
 
         return $this;
     }

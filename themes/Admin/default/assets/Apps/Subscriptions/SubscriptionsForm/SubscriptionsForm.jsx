@@ -13,6 +13,7 @@ export const subscriptionsInitialSchema = {
     endDate: (initValues) => initValues?.endDate || '',
     duration: (initValues) => initValues?.duration || 1,
     events: (initValues) => initValues?.events?.map((item) => item.id) || [],
+    media: (initValues) => initValues?.media || '',
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
 };
@@ -37,6 +38,7 @@ export const subscriptionsForm = {
             eventNb: { type: 'string' },
             price: { type: 'string' },
             duration: { type: 'string' },
+            media: { type: 'id' },
             events: {
                 function: ({ values, formData }) => {
                     values?.events?.forEach((events, index) => {
@@ -71,22 +73,11 @@ export const subscriptionsForm = {
                     fields: [
                         {
                             keyId: 'input-name',
-                            style: { xs: 12, sm: 9 },
+                            style: { xs: 12 },
                             input: {
                                 name: 'name',
                                 label: 'Nom',
                                 inputType: 'textField',
-                                required: true,
-                            },
-                        },
-                        {
-                            keyId: 'input-duration',
-                            style: { xs: 12, sm: 3 },
-                            input: {
-                                name: 'duration',
-                                label: 'Durée (mois)',
-                                inputType: 'textField',
-                                type: 'number',
                                 required: true,
                             },
                         },
@@ -99,6 +90,28 @@ export const subscriptionsForm = {
                                 inputType: 'editorField',
                                 required: true,
                                 id: 'description',
+                            },
+                        },
+                        {
+                            keyId: 'input-price',
+                            style: { xs: 12, sm: 6 },
+                            input: {
+                                name: 'price',
+                                label: 'Prix',
+                                inputType: 'textField',
+                                type: 'number',
+                                required: true,
+                            },
+                        },
+                        {
+                            keyId: 'input-duration',
+                            style: { xs: 12, sm: 6 },
+                            input: {
+                                name: 'duration',
+                                label: "Durée de l'abonnement (mois)",
+                                inputType: 'textField',
+                                type: 'number',
+                                required: true,
                             },
                         },
                     ],
@@ -155,6 +168,22 @@ export const subscriptionsForm = {
                                 getValue: (item) => item?.id,
                                 required: true,
                                 multiple: true,
+                            },
+                        },
+                    ],
+                },
+                {
+                    type: 'block',
+                    title: 'Média',
+                    keyId: 'block-media',
+                    fields: [
+                        {
+                            keyId: 'input-media',
+                            style: { xs: 12, sm: 3, lg: 3 },
+                            input: {
+                                name: 'media',
+                                label: 'Image',
+                                inputType: 'cmtImage',
                             },
                         },
                     ],

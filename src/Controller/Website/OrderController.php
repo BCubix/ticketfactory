@@ -52,6 +52,9 @@ class OrderController extends WebsiteController
             $this->addFlash('Erreur',  "Un compte avec cette adresse email existe déjà.");
         }
 
+        $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
+
         return $this->websiteRender('Connection/index.html.twig', [
             'page'               => $page,
             'signupForm'         => $signupForm->createView(),
@@ -59,6 +62,8 @@ class OrderController extends WebsiteController
             'login_error'        => $error,
             'signinPath'         => $this->generateUrl('tf_website_order_login'),
             'orderStep'          => 1,
+            "cart"               => $cart,
+            "discount"           => $discount,
         ]);
     }
 
@@ -107,11 +112,18 @@ class OrderController extends WebsiteController
             return $this->redirectToRoute("tf_website_order_payment");
         }
 
+        $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
+        $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
+
         // We render the address template
         return $this->websiteRender('Order/address.html.twig', [
-            'page'        => $page,
-            'addressForm' => $addressForm->createView(),
-            'orderStep'   => 2
+            'page'                  => $page,
+            'addressForm'           => $addressForm->createView(),
+            'orderStep'             => 2,
+            "cart"                  => $cart,
+            "discount"              => $discount,
+            "subscriptionDiscount"  => $subscriptionDiscount
         ]);
     }
 
@@ -120,9 +132,16 @@ class OrderController extends WebsiteController
     {
         $page = $this->mf->get("page")->getByKeyword('order-payment');
 
+        $cart = $this->mf->get("cart")->getCart();
+        $discount = $this->mf->get("cart")->calculateDiscount($cart);
+        $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
+
         return $this->websiteRender("Order/payment.html.twig", [
-            'page'      => $page,
-            'orderStep' => 3,
+            'page'                  => $page,
+            'orderStep'             => 3,
+            "cart"                  => $cart,
+            "discount"              => $discount,
+            "subscriptionDiscount"  => $subscriptionDiscount
         ]);
     }
 

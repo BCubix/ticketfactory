@@ -76,7 +76,7 @@ class Product extends Datable
     private ?bool $displayBuyingButton = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_cart_one', 'a_order_one'])]
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
 

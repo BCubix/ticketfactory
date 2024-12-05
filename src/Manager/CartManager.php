@@ -13,7 +13,9 @@ use App\Entity\Order\Voucher;
 use App\Entity\Order\EventRow;
 use App\Entity\Order\EventSeat;
 use App\Entity\Order\ProductRow;
+use App\Entity\Order\SubscriptionRow;
 use App\Entity\Product\Product;
+use App\Entity\Subscription\Subscription;
 use App\Exception\ApiException;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -96,6 +98,23 @@ class CartManager extends AbstractManager
         return $productRow;
     }
 
+    public function createNewSubscriptionRow(Cart $cart, Subscription $subscription, int $quantity): SubscriptionRow
+    {
+        $subscriptionRow = new SubscriptionRow();
+        $subscriptionRow->setSubscription($subscription);
+        $subscriptionRow->setQuantity($quantity);
+        $subscriptionRow->setTotal($quantity * $subscription->getPrice());
+
+        $cart->addSubscriptionRow($subscriptionRow);
+
+        $this->em->persist($subscriptionRow);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        return $subscriptionRow;
+    }
+
     public function addNewEventSeats(EventRow $eventRow, EventPrice $eventPrice, int $quantity): EventRow
     {
         foreach (range(1, $quantity) as $index) {
@@ -128,6 +147,13 @@ class CartManager extends AbstractManager
         return $productRow;
     }
 
+    public function calculateSubscriptionRowTotal(SubscriptionRow $subscriptionRow): SubscriptionRow
+    {
+        $subscriptionRow->setTotal($subscriptionRow->getSubscription()->getPrice() * $subscriptionRow->getQuantity());
+
+        return $subscriptionRow;
+    }
+
     public function calculateDeliveryPrice(Cart $cart): void
     {
         // If there is no delivery mode attached to the cart, we set deliveryPrice to null
@@ -151,6 +177,10 @@ class CartManager extends AbstractManager
 
         foreach ($cart->getProductRows() as $row) {
             $total += $this->calculateProductRowTotal($row)->getTotal();
+        }
+
+        foreach ($cart->getSubscriptionRows() as $row) {
+            $total += $this->calculateSubscriptionRowTotal($row)->getTotal();
         }
 
         $cart->setTotal($total);
@@ -359,6 +389,28 @@ class CartManager extends AbstractManager
         return $productRow;
     }
 
+    public function updateSubscriptionQuantity(array $element, int $quantityChange): ?SubscriptionRow
+    {
+        $subscriptionRow = $this->em->getRepository(SubscriptionRow::class)->findOneByIdForWebsite($element['subscriptionRowId']);
+        if (null === $subscriptionRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        if ($quantityChange === 0 || ($quantityChange < 0 && $subscriptionRow->getQuantity() + $quantityChange < 1)) {
+            return $subscriptionRow;
+        }
+
+        $subscriptionRow->setQuantity($subscriptionRow->getQuantity() + $quantityChange);
+
+        $cart = $this->calculateCartTotal($subscriptionRow->getCart());
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        return $subscriptionRow;
+    }
+
     public function deleteEventRow(int $eventRowId): void
     {
         $eventRow = $this->em->getRepository(EventRow::class)->findOneByIdForWebsite($eventRowId);
@@ -404,7 +456,7 @@ class CartManager extends AbstractManager
         $this->changeStock($productRow->getProduct(), $productRow->getQuantity());
 
         $cart = $productRow->getCart();
-        //$cart->removeProductRow($productRow);
+
         $this->em->remove($productRow);
         $this->em->flush();
 
@@ -459,6 +511,28 @@ class CartManager extends AbstractManager
         }
 
         return $eventRow;
+    }
+
+    public function deleteSubscriptionRow(int $subscriptionRowId)
+    {
+        $subscriptionRow = $this->em->getRepository(SubscriptionRow::class)->findOneByIdForWebsite($subscriptionRowId);
+
+        if (null === $subscriptionRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        $cart = $subscriptionRow->getCart();
+
+        $this->em->remove($subscriptionRow);
+        $this->em->flush();
+
+        $this->checkVoucherForCart($cart);
+        $cart = $this->calculateCartTotal($cart);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
     }
 
     public function calculateDiscount(?Cart $cart): int
@@ -564,9 +638,6 @@ class CartManager extends AbstractManager
 
         $cartId = $session->get("cartId", null);
         $cart = $cartId ? $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId) : $this->createNewCart();
-        if (null === $cart) {
-            $cart = $this->createNewCart();
-        }
 
         $this->changeStock($product, (-1) * $quantity);
 
@@ -576,6 +647,32 @@ class CartManager extends AbstractManager
         } else {
             $productRow->setQuantity($productRow->getQuantity() + $quantity);
             $this->em->persist($productRow);
+        }
+
+        $cart = $this->calculateCartTotal($cart);
+        $this->em->persist($cart);
+        $this->em->flush();
+    }
+
+    public function addSubscriptionToCart(?Subscription $subscription, int $quantity)
+    {
+        $session = $this->rs->getSession();
+
+        if (null === $subscription) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'abonnement n'existe pas.");
+        }
+
+        $cartId = $session->get("cartId", null);
+        $cart = $cartId ? $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId) : $this->createNewCart();
+
+        $subscriptionRow = null === $cartId ? null : $this->em->getRepository(SubscriptionRow::class)->findOneSubscriptionRowByCartForWebsite($cart->getId(), $subscription->getId());
+        if (null === $subscriptionRow) {
+            $this->createNewSubscriptionRow($cart, $subscription, $quantity);
+        } else {
+            $subscriptionRow->setQuantity($subscriptionRow->getQuantity() + $quantity);
+            $subscriptionRow = $this->calculateSubscriptionRowTotal($subscriptionRow);
+
+            $this->em->persist($subscriptionRow);
         }
 
         $cart = $this->calculateCartTotal($cart);

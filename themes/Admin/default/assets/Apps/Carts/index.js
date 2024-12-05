@@ -4,6 +4,9 @@ import { CartsList, cartsListCrud } from '@Apps/Carts/CartsList/CartsList';
 import { CartsDetail, cartsDetailCrud } from '@Apps/Carts/CartsDetail/CartsDetail';
 import { CustomerCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CustomerCartPart';
 import { CartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartPart';
+import { CartEventPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartEventPart';
+import { CartProductPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartProductPart';
+import { CartSubscriptionPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/CartSubscriptionPart';
 import { OrderCartPart } from '@Apps/Carts/CartsDetail/CartsDetailParts/OrderCartPart';
 import cartsApi from './services/api/cartsApi';
 import cartsReducer from './redux/carts/cartsSlice';
@@ -22,6 +25,11 @@ export const initConstant = () => {
 };
 
 export const initComponent = ({ userRoles }) => {
+    setComponent('CartPart', CartPart);
+    setComponent('CartEventPart', CartEventPart);
+    setComponent('CartProductPart', CartProductPart);
+    setComponent('CartSubscriptionPart', CartSubscriptionPart);
+
     if (!checkUserAccess(userRoles, 'ROLE_CART_READ')) {
         return;
     }
@@ -29,7 +37,6 @@ export const initComponent = ({ userRoles }) => {
     setComponent('CartsList', CartsList);
     setComponent('CartsDetail', CartsDetail);
     setComponent('CustomerCartPart', CustomerCartPart);
-    setComponent('CartPart', CartPart);
     setComponent('OrderCartPart', OrderCartPart);
 };
 

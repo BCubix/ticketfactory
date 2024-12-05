@@ -7,6 +7,7 @@ use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Entity\Order\Cart;
 use App\Entity\Order\EventRow;
+use App\Entity\Subscription\SubscriptionUsage;
 use App\Kernel;
 use App\Service\ServiceFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,6 +43,8 @@ class OrderManager extends AbstractManager
         $order->setCart($cart);
         $order->setReference($this->generateReference());
         $order->setOrderData($this->getOrderData($order));
+
+        $this->addSubscriptions($order);
 
         $this->em->persist($order);
 
@@ -86,6 +89,7 @@ class OrderManager extends AbstractManager
 
         $orderData['cart']['eventRows'] = $this->getEventRows($cart);
         $orderData['cart']['productRows'] = $this->getProductRows($cart);
+        $orderData['cart']['subscriptionRows'] = $this->getSubscriptionRows($cart);
 
         $address = $cart->getAddress();
         if (null !== $address) {
@@ -250,6 +254,43 @@ class OrderManager extends AbstractManager
         return $productRows;
     }
 
+    private function getSubscriptionRows(Cart $cart): array
+    {
+        $subscriptionRows = [];
+
+        foreach ($cart->getSubscriptionRows() as $subscriptionRow) {
+            $newSubscriptionRow = [
+                'id'       => $subscriptionRow->getId(),
+                'quantity' => $subscriptionRow->getQuantity(),
+                'total'    => $subscriptionRow->getTotal(),
+            ];
+
+            $subscription = $subscriptionRow->getSubscription();
+            $newSubscriptionRow['subscription'] = [
+                'id'                    => $subscription->getId(),
+                'name'                  => $subscription->getName(),
+                'price'                 => $subscription->getPrice(),
+                'description'           => $subscription->getDescription(),
+                'eventNb'               => $subscription->getEventNb(),
+                'beginDate'             => null !== $subscription->getBeginDate() ? $subscription->getBeginDate()->format('Y-m-d') : "",
+                'endDate'               => null !== $subscription->getEndDate() ? $subscription->getEndDate()->format('Y-m-d') : "",
+                'duration'              => $subscription->getDuration(),
+                'events'                => [],
+            ];
+
+            foreach ($subscription->getEvents() as $event) {
+                $newSubscriptionRow['subscription']["events"][] = [
+                    'id'        => $event->getId(),
+                    'name'      => $event->getName(),
+                ];
+            }
+
+            $subscriptionRows[] = $newSubscriptionRow;
+        }
+
+        return $subscriptionRows;
+    }
+
     private function generateReference(): string
     {
         $chars = self::REFERENCES_CHARS;
@@ -406,5 +447,26 @@ class OrderManager extends AbstractManager
         }
 
         return $result;
+    }
+
+    private function addSubscriptions(Order $order): void
+    {
+        $subscriptions = $this->mf->get('subscription')->findSubscriptionForCart($order->getCart());
+        if (empty($subscriptions)) {
+            return;
+        }
+
+        foreach ($subscriptions['subscriptionDiscounts'] as $subscription) {
+            foreach ($subscription['eventSeats'] as $eventSeat) {
+                $newSubscriptionUsage = new SubscriptionUsage();
+                $newSubscriptionUsage->setSubscriptionRow($eventSeat['subscriptionRow']);
+                $newSubscriptionUsage->setEventSeat($eventSeat['eventSeat']);
+                $newSubscriptionUsage->setEvent($subscription['event']);
+
+                $order->addSubscriptionUsage($newSubscriptionUsage);
+
+                $this->em->persist($newSubscriptionUsage);
+            }
+        }
     }
 }

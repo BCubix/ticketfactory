@@ -4,11 +4,12 @@ namespace App\Form\Admin\Subscription;
 
 use App\Entity\Event\Event;
 use App\Entity\Language\Language;
+use App\Entity\Media\Media;
 use App\Entity\Subscription\Subscription;
 use App\Form\Admin\AdminBaseFormType;
 use App\Repository\EventRepository;
 use App\Repository\LanguageRepository;
-
+use App\Repository\MediaRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -47,6 +48,16 @@ class SubscriptionType extends AdminBaseFormType
                 'html5'          => false
             ])
             ->add('duration',             IntegerType::class,          [])
+            ->add('media',                EntityType::class,           [
+                'class'         => Media::class,
+                'choice_label'  => 'media',
+                'multiple'      => false,
+                'query_builder' => function (MediaRepository $mr) {
+                    return $mr
+                        ->createQueryBuilder('m')
+                        ->orderBy('m.title', 'ASC');
+                }
+            ])
             ->add('events',               EntityType::class,           [
                 'class'         => Event::class,
                 'choice_label'  => 'name',
