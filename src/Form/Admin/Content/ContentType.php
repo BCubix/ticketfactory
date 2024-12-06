@@ -11,6 +11,7 @@ use App\Form\Admin\SEOAble\SEOAbleType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormEvent;
@@ -28,6 +29,9 @@ class ContentType extends AdminBaseFormType
             ->add('title',                TextType::class,            [])
             ->add('slug',                 TextType::class,            [
                 'empty_data' => '',
+            ])
+            ->add('publicationStatus',    ChoiceType::class,          [
+                'choices'  => array_flip(Content::PUBLICATION_STATUS)
             ])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,

@@ -24,7 +24,6 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
         setFieldValue(name, newList);
     };
 
-    console.log(field);
     return (
         <>
             <Component.CmtFormBlock title={label}>

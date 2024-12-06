@@ -2,7 +2,6 @@
 
 namespace App\Entity\Page;
 
-use App\Entity\Content\Content;
 use App\Entity\Content\ContentType;
 use App\Entity\Datable;
 use App\Entity\SEOAble\SEOAble;
@@ -27,6 +26,12 @@ class Page extends Datable
     /*** < Trait ***/
 
     use SEOAble;
+
+    public const PUBLICATION_STATUS = [
+        'PUBLISHED'   => 'Publié',
+        'TO_VALIDATE' => 'À valider',
+        'DRAFT' => 'Brouillon'
+    ];
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one', 'a_parameter_all', 'a_url_one'])]
@@ -57,6 +62,12 @@ class Page extends Datable
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(length: 123, nullable: true)]
     private ?string $keyword = null;
+
+    #[Assert\Choice(callback: 'getPublicationStatusKeys', message: 'Vous devez choisir un status valide.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[ORM\Column(length: 255)]
+    private ?string $publicationStatus = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
@@ -152,6 +163,18 @@ class Page extends Datable
     public function setKeyword(?string $keyword): self
     {
         $this->keyword = $keyword;
+
+        return $this;
+    }
+
+    public function getPublicationStatus(): ?string
+    {
+        return $this->publicationStatus;
+    }
+
+    public function setPublicationStatus(string $publicationStatus): static
+    {
+        $this->publicationStatus = $publicationStatus;
 
         return $this;
     }
@@ -266,13 +289,6 @@ class Page extends Datable
         return $this;
     }
 
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function completeSeo()
-    {
-        $this->completeFields($this->getTitle());
-    }
-
     public function getLang(): ?Language
     {
         return $this->lang;
@@ -295,5 +311,17 @@ class Page extends Datable
         $this->parent = $parent;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo()
+    {
+        $this->completeFields($this->getTitle());
+    }
+
+    public function getPublicationStatusKeys()
+    {
+        return array_keys(self::PUBLICATION_STATUS);
     }
 }

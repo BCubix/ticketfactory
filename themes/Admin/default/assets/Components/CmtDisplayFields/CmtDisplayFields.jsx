@@ -72,16 +72,14 @@ const TypeObj = {
         />
     ),
     cmtImage: ({ values, setFieldValue, touched, errors, ...props }) => (
-        <>
-            <Component.CmtImage
-                {...props}
-                name={`${props.baseName || ''}${getName(props)}`}
-                image={getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
-                setFieldValue={setFieldValue}
-                touched={getPropByString(touched, `${props.baseName || ''}${getName(props)}`)}
-                errors={getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
-            />
-        </>
+        <Component.CmtImage
+            {...props}
+            name={`${props.baseName || ''}${getName(props)}`}
+            image={getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
+            setFieldValue={setFieldValue}
+            touched={getPropByString(touched, `${props.baseName || ''}${getName(props)}`)}
+            errors={getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
+        />
     ),
     switch: ({ name, values, value, handleChange, label, labelPlacement, setFieldValue, sx, ...props }) => {
         return (

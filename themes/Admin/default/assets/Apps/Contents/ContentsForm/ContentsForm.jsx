@@ -9,6 +9,16 @@ import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/C
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 
+const ROLE_CONTENT_PUBLISH = 'ROLE_CONTENT_PUBLISH';
+
+const getInitPublishedStatus = (initValues, userRoles) => {
+    if (initValues?.publicationStatus !== 'PUBLISHED' || checkUserAccess(userRoles, ROLE_CONTENT_PUBLISH)) {
+        return initValues?.publicationStatus || 'DRAFT';
+    }
+
+    return 'DRAFT';
+};
+
 const getValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
         return;
@@ -67,6 +77,7 @@ export const contentsInitialSchema = {
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
     fields: (initValues) => initValues?.fields || {},
+    publicationStatus: (initValues, { userRoles }) => getInitPublishedStatus(initValues, userRoles),
     contentType: (initValues, { contentType }) => initValues?.contentType?.id || contentType?.id,
     editSlug: false,
     seo: SeoInitialValues,
@@ -90,6 +101,7 @@ export const contentsForm = {
             active: { type: 'boolean' },
             title: { type: 'string' },
             slug: { type: 'slug' },
+            publicationStatus: { type: 'string' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
             fields: {
@@ -103,6 +115,11 @@ export const contentsForm = {
         },
     },
     contentFields: CONTENT_FIELDS,
+    publicationStatusList: [
+        { value: 'PUBLISHED', label: 'Publié' },
+        { value: 'TO_VALIDATE', label: 'À valider' },
+        { value: 'DRAFT', label: 'Brouillon' },
+    ],
     fields: [
         {
             type: 'tabs',
@@ -116,7 +133,7 @@ export const contentsForm = {
                     fields: [
                         {
                             keyId: 'input-title',
-                            style: { xs: 12 },
+                            style: { xs: 12, sm: 8 },
                             inputs: [
                                 {
                                     name: 'title',
@@ -139,6 +156,22 @@ export const contentsForm = {
                                     inputType: 'slugInput',
                                 },
                             ],
+                        },
+                        {
+                            keyId: 'input-publicationStatus',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: {
+                                name: 'publicationStatus',
+                                label: 'Status de publication',
+                                inputType: 'selectField',
+                                listName: 'publicationStatusList',
+                                getName: (item) => item.label,
+                                getValue: (item) => item.value,
+                                required: true,
+                            },
                         },
                     ],
                 },
@@ -189,17 +222,13 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
     useEffect(() => {
         let initVal = translateInitialValues || initialValues;
-
         if (initVal) {
             setInitValue(constructInitialValues(formCrud.form.initialSchema, initVal, { contentType: selectedContentType, ...props }));
-
             return;
         }
 
-        const formModules = getContentModules;
-
         let fields = {};
-
+        const formModules = getContentModules;
         selectedContentType?.fields?.forEach((el) => {
             fields[el.name] = formModules[el.type]?.getInitialValue(el, getContentModules) || '';
         });

@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { FormHelperText } from '@mui/material';
 import { Formik } from 'formik';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import { CONTENT_FIELDS } from '@Apps/Contents/services/config/getContentFields';
@@ -12,6 +11,17 @@ import { Component } from '@/AdminService/Component';
 import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_PAGE_PUBLISH = 'ROLE_PAGE_PUBLISH';
+
+const getInitPublishedStatus = (initValues, userRoles) => {
+    if (initValues?.publicationStatus !== 'PUBLISHED' || checkUserAccess(userRoles, ROLE_PAGE_PUBLISH)) {
+        return initValues?.publicationStatus || 'DRAFT';
+    }
+
+    return 'DRAFT';
+};
 
 const serializeData = (element, name, formData) => {
     if (null !== element && typeof element !== 'object') {
@@ -95,6 +105,7 @@ export const pagesInitialSchema = {
             languageGroup: pageBlock?.languageGroup || '',
         })) || [],
     slug: (initValues) => initValues?.slug || '',
+    publicationStatus: (initValues, { userRoles }) => getInitPublishedStatus(initValues, userRoles),
     editSlug: false,
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
@@ -145,6 +156,7 @@ export const pagesForm = {
             parent: { type: 'string' },
             subtitle: { type: 'string' },
             slug: { type: 'slug' },
+            publicationStatus: { type: 'string' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
             pageBlocks: {
@@ -179,6 +191,11 @@ export const pagesForm = {
     },
     pageColumnTypeFields: PAGE_COLUMN_TYPE_FIELDS,
     contentFields: CONTENT_FIELDS,
+    publicationStatusList: [
+        { value: 'PUBLISHED', label: 'Publié' },
+        { value: 'TO_VALIDATE', label: 'À valider' },
+        { value: 'DRAFT', label: 'Brouillon' },
+    ],
     fields: [
         {
             type: 'tabs',
@@ -192,7 +209,7 @@ export const pagesForm = {
                     fields: [
                         {
                             keyId: 'input-title',
-                            style: { xs: 12, sm: 8 },
+                            style: { xs: 12, sm: 4 },
                             inputs: [
                                 {
                                     name: 'title',
@@ -229,6 +246,22 @@ export const pagesForm = {
                                 listName: 'pagesList',
                                 getName: (item) => item.title,
                                 getValue: (item) => item.id,
+                            },
+                        },
+                        {
+                            keyId: 'input-publicationStatus',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: {
+                                name: 'publicationStatus',
+                                label: 'Status de publication',
+                                inputType: 'selectField',
+                                listName: 'publicationStatusList',
+                                getName: (item) => item.label,
+                                getValue: (item) => item.value,
+                                required: true,
                             },
                         },
                         {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,6 +11,12 @@ import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
 import { pagesInitialSchema, pagesValidationSchema, pagesForm } from '../PagesForm/PagesForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { useSelector } from 'react-redux';
+
+const ROLE_PAGE_PUBLISH = 'ROLE_PAGE_PUBLISH';
 
 export const pagesEditCrud = {
     form: {
@@ -24,6 +30,7 @@ export const pagesEditCrud = {
 export const EditPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useSelector(userProfileSelector);
     const { id } = useParams();
     const [page, setPage] = useState(null);
     const [pagesList, setPagesList] = useState(null);
@@ -53,31 +60,6 @@ export const EditPage = () => {
         setPageBlockTypesList(result.pageBlockTypes);
     };
 
-    useEffect(() => {
-        if (!id) {
-            navigate(Constant.PAGES_BASE_PATH);
-            return;
-        }
-
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.pagesApi.getOnePage(id);
-            if (!result.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.PAGES_BASE_PATH);
-                return;
-            }
-
-            setPage(result.page);
-            getPagesList(result.page?.lang?.id);
-        });
-    }, [id]);
-
-    useEffect(() => {
-        apiMiddleware(dispatch, () => {
-            getPageBlockTypesList();
-        });
-    }, []);
-
     const handleUpdateContent = async (pageId, id, values) => {
         values.page = pageId;
 
@@ -103,6 +85,39 @@ export const EditPage = () => {
         });
     }
 
+    const publicationStatusList = useMemo(() => {
+        if (checkUserAccess(getUserRoles(user), ROLE_PAGE_PUBLISH)) {
+            return Crud.pages.edit.publicationStatusList;
+        }
+
+        return Crud.pages.edit.publicationStatusList?.filter((item) => item.value !== 'PUBLISHED');
+    }, []);
+
+    useEffect(() => {
+        if (!id) {
+            navigate(Constant.PAGES_BASE_PATH);
+            return;
+        }
+
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.pagesApi.getOnePage(id);
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.PAGES_BASE_PATH);
+                return;
+            }
+
+            setPage(result.page);
+            getPagesList(result.page?.lang?.id);
+        });
+    }, [id]);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, () => {
+            getPageBlockTypesList();
+        });
+    }, []);
+
     if (!page || !pagesList) {
         return <></>;
     }
@@ -115,6 +130,7 @@ export const EditPage = () => {
             pagesList={pagesList}
             pageBlockTypesList={pageBlockTypesList}
             formCrud={Crud?.pages?.edit}
+            publicationStatusList={publicationStatusList}
         />
     );
 };

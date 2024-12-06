@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -6,12 +6,17 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { pagesInitialSchema, pagesValidationSchema, pagesForm } from '../PagesForm/PagesForm';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_PAGE_PUBLISH = 'ROLE_PAGE_PUBLISH';
 
 export const pagesCreateCrud = {
     form: {
@@ -25,6 +30,7 @@ export const pagesCreateCrud = {
 export const CreatePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useSelector(userProfileSelector);
     const languagesData = useSelector(languagesSelector);
     const [initialValues, setInitialValues] = useState(null);
     const [pagesList, setPagesList] = useState(null);
@@ -71,6 +77,25 @@ export const CreatePage = () => {
         setInitialValues(page?.page);
     };
 
+    const handleSubmit = (values) => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.pagesApi.createPage(values);
+            if (result?.result) {
+                NotificationManager.success('La page a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
+                dispatch(getPagesAction());
+                navigate(Constant.PAGES_BASE_PATH);
+            }
+        });
+    };
+
+    const publicationStatusList = useMemo(() => {
+        if (checkUserAccess(getUserRoles(user), ROLE_PAGE_PUBLISH)) {
+            return Crud.pages.add.publicationStatusList;
+        }
+
+        return Crud.pages.add.publicationStatusList?.filter((item) => item.value !== 'PUBLISHED');
+    }, []);
+
     useEffect(() => {
         if ((!languageId && !languagesData?.languages) || pagesList) {
             return;
@@ -90,17 +115,6 @@ export const CreatePage = () => {
         });
     }, []);
 
-    const handleSubmit = (values) => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.pagesApi.createPage(values);
-            if (result?.result) {
-                NotificationManager.success('La page a bien été créée.', 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(getPagesAction());
-                navigate(Constant.PAGES_BASE_PATH);
-            }
-        });
-    };
-
     if (!pagesList || !pageBlockTypesList || (pageId && !initialValues)) {
         return <></>;
     }
@@ -112,6 +126,7 @@ export const CreatePage = () => {
             pagesList={pagesList}
             pageBlockTypesList={pageBlockTypesList}
             formCrud={Crud?.pages?.add}
+            publicationStatusList={publicationStatusList}
         />
     );
 };

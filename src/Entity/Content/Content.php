@@ -4,7 +4,6 @@ namespace App\Entity\Content;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
-use App\Entity\Page\Page;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\ContentRepository;
 
@@ -23,6 +22,12 @@ class Content extends Datable
     /*** < Trait ***/
 
     use SEOAble;
+
+    public const PUBLICATION_STATUS = [
+        'PUBLISHED'   => 'Publié',
+        'TO_VALIDATE' => 'À valider',
+        'DRAFT' => 'Brouillon'
+    ];
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -43,6 +48,12 @@ class Content extends Datable
     #[JMS\Groups(['a_content_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
+
+    #[Assert\Choice(callback: 'getPublicationStatusKeys', message: 'Vous devez choisir un status valide.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
+    #[ORM\Column(length: 255)]
+    private ?string $publicationStatus = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -100,6 +111,18 @@ class Content extends Datable
         return $this;
     }
 
+    public function getPublicationStatus(): ?string
+    {
+        return $this->publicationStatus;
+    }
+
+    public function setPublicationStatus(string $publicationStatus): static
+    {
+        $this->publicationStatus = $publicationStatus;
+
+        return $this;
+    }
+
     public function getLanguageGroup(): ?Uuid
     {
         return $this->languageGroup;
@@ -152,5 +175,10 @@ class Content extends Datable
     #[ORM\PreUpdate]
     public function completeSeo() {
         $this->completeFields($this->getTitle());
+    }
+
+    public function getPublicationStatusKeys()
+    {
+        return array_keys(self::PUBLICATION_STATUS);
     }
 }
