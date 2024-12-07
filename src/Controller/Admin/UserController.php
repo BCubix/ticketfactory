@@ -39,14 +39,13 @@ class UserController extends CrudController
     }
 
     #[Rest\Get('/user-profile')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_user_one', 'a_user_profile_one'])]
     public function getUserProfile(Request $request): View
     {
         $user = $this->getUser();
 
         return $this->view($user, Response::HTTP_OK);
     }
-
 
     #[Rest\Post('/users')]
     #[IsGranted('ROLE_USER_CREATE')]

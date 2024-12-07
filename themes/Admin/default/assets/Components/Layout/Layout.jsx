@@ -12,12 +12,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { Component } from '@/AdminService/Component';
-import { Constant } from '@/AdminService/Constant';
-import useAppContext from '@/Config/useAppContext';
 import { logoutAction, userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { ProfileButton } from './sc.ProfileButton';
+
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import useAppContext from '@/Config/useAppContext';
 
 export const Layout = ({ children }) => {
     const dispatch = useDispatch();
@@ -121,6 +122,8 @@ export const Layout = ({ children }) => {
                         )}
 
                         <Box className="toolbar-userProfile">
+                            <Component.NotificationsList />
+
                             {user && (
                                 <ProfileButton size="small" sx={{ marginLeft: 3 }} component={RouterLink} to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}>
                                     <PersonIcon />

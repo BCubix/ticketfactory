@@ -3,6 +3,7 @@
 namespace App\Entity\User;
 
 use App\Entity\Datable;
+use App\Entity\Notification\Notification;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,7 +26,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one', 'a_profile_one'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -35,21 +36,21 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one', 'a_profile_one'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Column(type: 'string', length: 123, unique: true)]
     private $email;
 
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le prénom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one', 'a_profile_one'])]
+    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstName;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one', 'a_profile_one'])]
+    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastName;
 
@@ -61,6 +62,9 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $passwordRequestedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
+    private Collection $notifications;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_user_all', 'a_user_one'])]
@@ -74,6 +78,7 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     public function __construct()
     {
         $this->profiles = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,42 +174,33 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
+     * @return Collection<int, Notification>
      */
-    public function getUserIdentifier(): string
+    public function getNotifications(): Collection
     {
-        return $this->getUsername();
+        return $this->notifications;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
+    public function addNotification(Notification $notification): static
     {
-        return (string) $this->email;
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
+        }
+
+        return $this;
     }
 
-    /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
-     * @see UserInterface
-     */
-    public function getSalt(): ?string
+    public function removeNotification(Notification $notification): static
     {
-        return null;
-    }
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        $this->plainPassword = null;
+        return $this;
     }
 
     /**
@@ -244,5 +240,44 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
         }
 
         return array_unique($roles);
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        $this->plainPassword = null;
     }
 }
