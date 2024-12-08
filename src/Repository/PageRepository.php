@@ -11,6 +11,8 @@ class PageRepository extends CrudRepository
     /*** > Trait ***/
     /*** < Trait ***/
 
+    protected const STATUS_PUBLISHED = "PUBLISHED";
+
     protected const SELECTS = [
         'el' => null
     ];
@@ -43,8 +45,11 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('p.active = 1')
+            ->andWhere('p.publicationStatus = :publicationStatus')
             ->andWhere('p.id = :pageId')
             ->setParameter('languageId', $languageId)
+            ->setParameter('publicationStatus', Page::STATUS_PUBLISHED)
             ->setParameter('pageId', $pageId)
             ->getQuery()
             ->getOneOrNullResult();
@@ -54,8 +59,11 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->where('p.keyword = :keyword')
+            ->where('p.active = 1')
+            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('p.keyword = :keyword')
             ->setParameter('languageId', $languageId)
+            ->setParameter('publicationStatus', Page::STATUS_PUBLISHED)
             ->setParameter('keyword', $keyword)
             ->getQuery()
             ->getResult();
@@ -65,8 +73,11 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->where('p.slug = :slug')
+            ->where('p.active = 1')
+            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('p.slug = :slug')
             ->setParameter('languageId', $languageId)
+            ->setParameter('publicationStatus', Page::STATUS_PUBLISHED)
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult();
@@ -76,8 +87,11 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->where('p.languageGroup = :languageGroup')
+            ->where('p.active = 1')
+            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('p.languageGroup = :languageGroup')
             ->setParameter('languageId', $languageId)
+            ->setParameter('publicationStatus', Page::STATUS_PUBLISHED)
             ->setParameter('languageGroup', $languageGroup)
             ->getQuery()
             ->getOneOrNullResult();
@@ -87,7 +101,9 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->where('p.active = 1')
+            ->andWhere('p.publicationStatus = :publicationStatus')
             ->andWhere('p.indexed = 1')
+            ->setParameter('publicationStatus', Page::STATUS_PUBLISHED)
             ->orderBy('p.id', 'ASC')
             ->getQuery()
             ->getResult();

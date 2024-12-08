@@ -12,6 +12,9 @@ import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/C
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { useSelector } from 'react-redux';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 const ROLE_PAGE_PUBLISH = 'ROLE_PAGE_PUBLISH';
 
@@ -322,6 +325,8 @@ export const pagesForm = {
 };
 
 export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null, formCrud, ...props }) => {
+    const { user } = useSelector(userProfileSelector);
+
     const getContentModules = useMemo(() => {
         return formCrud.contentFields;
     }, []);
@@ -330,9 +335,13 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         return formCrud.pageColumnTypeFields;
     }, []);
 
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
     return (
         <Formik
-            initialValues={constructInitialValues(formCrud.form.initialSchema, translateInitialValues || initialValues, { pagesList, ...props })}
+            initialValues={constructInitialValues(formCrud.form.initialSchema, translateInitialValues || initialValues, { pagesList, userRoles, ...props })}
             validationSchema={Yup.object().shape(
                 initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, getPageColumnTypeModules, ...props })
             )}

@@ -27,6 +27,7 @@ class Page extends Datable
 
     use SEOAble;
 
+    public const STATUS_PUBLISHED = "PUBLISHED";
     public const PUBLICATION_STATUS = [
         'PUBLISHED'   => 'Publié',
         'TO_VALIDATE' => 'À valider',

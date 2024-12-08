@@ -25,10 +25,11 @@ class ContactController extends WebsiteController
                 'vObject' => $object,
             ]);
 
-            $this->sf->get('mailer')->sendContactRequestEmail($object);
-
             $this->em->persist($object);
             $this->em->flush();
+
+            $this->mf->get('notification')->createNewContactRequestNotification($object);
+            $this->sf->get('mailer')->sendContactRequestEmail($object);
 
             $this->addFlash('contact-success', "Votre message à bien été envoyé");
 

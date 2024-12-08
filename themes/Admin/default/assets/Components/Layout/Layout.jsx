@@ -102,20 +102,35 @@ export const Layout = ({ children }) => {
                             color="primary"
                             href="/"
                             target="_blank"
+                            className="toolbar-button"
                         >
                             <VisibilityIcon fontSize="small" />
                             <Typography className="toolbar-button-label">Voir le site</Typography>
                         </Button>
 
                         {debugParameter && (
-                            <Button size="small" sx={{ marginLeft: 3 }} variant="text" color="error" onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}>
+                            <Button
+                                size="small"
+                                sx={{ marginLeft: 3 }}
+                                variant="text"
+                                color="error"
+                                onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}
+                                className="toolbar-button"
+                            >
                                 <PestControlIcon fontSize="small" />
                                 <Typography className="toolbar-button-label">Mode débug</Typography>
                             </Button>
                         )}
 
                         {maintenanceParameter && (
-                            <Button size="small" sx={{ marginLeft: 3 }} variant="text" color="warning" onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}>
+                            <Button
+                                size="small"
+                                sx={{ marginLeft: 3 }}
+                                variant="text"
+                                color="warning"
+                                onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}
+                                className="toolbar-button"
+                            >
                                 <EngineeringIcon fontSize="small" />
                                 <Typography className="toolbar-button-label">Mode maintenance</Typography>
                             </Button>
@@ -125,12 +140,18 @@ export const Layout = ({ children }) => {
                             <Component.NotificationsList />
 
                             {user && (
-                                <ProfileButton size="small" sx={{ marginLeft: 3 }} component={RouterLink} to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}>
+                                <ProfileButton
+                                    size="small"
+                                    sx={{ marginLeft: 3 }}
+                                    component={RouterLink}
+                                    to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}
+                                    className="toolbar-profile-button"
+                                >
                                     <PersonIcon />
                                 </ProfileButton>
                             )}
 
-                            <ProfileButton size="small" sx={{ marginLeft: 3 }} onClick={handleLogout}>
+                            <ProfileButton size="small" sx={{ marginLeft: 3 }} onClick={handleLogout} className="toolbar-profile-button">
                                 <LogoutIcon color="primary" />
                             </ProfileButton>
                         </Box>

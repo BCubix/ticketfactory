@@ -14,12 +14,23 @@ class NotificationRepository extends ServiceEntityRepository
         parent::__construct($registry, Notification::class);
     }
 
-    public function findAllNotificationForUser(int $userId): array
+    public function findAllNotificationForUser(int $userId, array $filters): array
     {
-        return $this->createQueryBuilder('n')
-            ->innerJoin("n.user", "u", "WITH", "u.id = :userId")
+        $limit = isset($filters['limit']) ? $filters['limit'] : 10;
+
+        $result = $this->createQueryBuilder('n')
+            ->innerJoin("n.user", "u", "WITH", "u.id = :userId");
+
+        if (isset($filters['lastNotification'])) {
+            $result = $result
+                ->andWhere('n.id < :lastNotification')
+                ->setParameter('lastNotification', $filters['lastNotification']);
+        }
+
+        return $result
             ->setParameter("userId", $userId)
             ->orderBy('n.createdAt', 'DESC')
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

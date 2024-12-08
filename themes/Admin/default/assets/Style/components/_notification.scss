@@ -1,0 +1,68 @@
+.notification {
+    &_title {
+        margin: 8px 8px 8px 16px !important;
+        font-size: 18px !important;
+        text-transform: uppercase;
+    }
+
+    &_element {
+        cursor: 'pointer';
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.08);
+            cursor: pointer !important;
+        }
+
+        &_date {
+            font-size: 10px !important;
+        }
+
+        &_text {
+            &.readed {
+                .MuiListItemText-primary,
+                .MuiListItemText-secondary {
+                    font-weight: 400;
+                }
+            }
+
+            .MuiListItemText-primary {
+                font-size: 13px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+
+            .MuiListItemText-secondary {
+                text-wrap: wrap !important;
+                font-size: 8px;
+                font-weight: 600;
+
+                @include for-size('md') {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    &_load {
+        &_wrapper {
+            transition: 0.3s;
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.08);
+            }
+        }
+
+        &_progress {
+            position: absolute;
+            right: -30px;
+            top: 2px;
+            height: 20px !important;
+            width: 20px !important;
+        }
+    }
+}

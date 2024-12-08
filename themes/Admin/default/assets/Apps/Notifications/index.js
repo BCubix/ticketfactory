@@ -1,5 +1,5 @@
 import notificationsApi from './services/api/notificationsApi';
-import { NotificationsList } from './NotificationsList/NotificationsList';
+import { NotificationsList, notificationsListCrud } from './NotificationsList/NotificationsList';
 import notificationsReducer from './redux/notifications/notificationsSlice';
 
 import { setApi } from '@/AdminService/Api';
@@ -20,7 +20,9 @@ export const initReducer = () => {
 };
 
 export const initCrud = () => {
-    const crud = {};
+    const crud = {
+        list: notificationsListCrud,
+    };
 
     setCrud('notifications', crud);
 };

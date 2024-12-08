@@ -6,6 +6,9 @@ const initialState = {
     loading: false,
     error: null,
     notifications: null,
+    filters: {
+        limit: 10,
+    },
 };
 
 const notificationsSlice = createSlice({
@@ -28,6 +31,10 @@ const notificationsSlice = createSlice({
             state.notifications = null;
         },
 
+        setNotifications: (state, action) => {
+            state.notifications = action.payload.notifications;
+        },
+
         resetNotifications: (state) => {
             state = { ...initialState };
         },
@@ -40,21 +47,21 @@ export function getNotificationsAction() {
             dispatch(getNotifications());
 
             apiMiddleware(dispatch, async () => {
-                let lastNotificationId = null;
+                let lastNotification = null;
 
-                const state = getState().notifications?.notifications;
-                if (state?.length > 0) {
-                    lastNotificationId = state?.at(-1);
+                const notificationsList = [...(getState().notifications?.notifications || [])];
+                if (notificationsList?.length > 0) {
+                    lastNotification = notificationsList?.at(-1);
                 }
 
-                const notifications = await Api.notificationsApi.getNotifications({ lastNotificationId });
+                const notifications = await Api.notificationsApi.getNotifications({ lastNotification: lastNotification?.id });
                 if (!notifications.result) {
                     dispatch(getNotificationsFailure({ error: notifications.error }));
 
                     return;
                 }
 
-                dispatch(getNotificationsSuccess({ notifications: notifications.notifications }));
+                dispatch(getNotificationsSuccess({ notifications: [...notificationsList, ...notifications.notifications] }));
             });
         } catch (error) {
             dispatch(getNotificationsFailure({ error: error.message || error }));
@@ -62,6 +69,51 @@ export function getNotificationsAction() {
     };
 }
 
-export const { getNotifications, getNotificationsSuccess, getNotificationsFailure, resetNotifications } = notificationsSlice.actions;
+export function readNotificationAction(notification) {
+    return async (dispatch, getState) => {
+        try {
+            apiMiddleware(dispatch, async () => {
+                const result = await Api.notificationsApi.readNotification(notification.id);
+                if (!result?.result) {
+                    return;
+                }
+
+                const notifications = [...getState().notifications?.notifications];
+                let index = notifications?.findIndex((nt) => nt.id === notification?.id);
+                if (index === -1) {
+                    return;
+                }
+
+                notifications[index] = result?.notification;
+                dispatch(setNotifications({ notifications: notifications }));
+            });
+        } catch (error) {
+            return;
+        }
+    };
+}
+
+export function deleteNotificationAction(notification) {
+    return async (dispatch, getState) => {
+        try {
+            apiMiddleware(dispatch, async () => {
+                Api.notificationsApi.deleteNotification(notification.id);
+
+                const notifications = [...getState().notifications?.notifications];
+                let index = notifications?.findIndex((nt) => nt.id === notification?.id);
+                if (index === -1) {
+                    return;
+                }
+
+                notifications.splice(index, 1);
+                dispatch(setNotifications({ notifications: notifications }));
+            });
+        } catch (error) {
+            return;
+        }
+    };
+}
+
+export const { getNotifications, getNotificationsSuccess, getNotificationsFailure, setNotifications, resetNotifications } = notificationsSlice.actions;
 export const notificationsSelector = (state) => state.notifications;
 export default notificationsSlice.reducer;

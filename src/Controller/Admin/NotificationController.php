@@ -26,7 +26,7 @@ class NotificationController extends CrudController
         $filters = empty($filters) ? [] : $filters;
 
         $user = $this->getUser();
-        $notifications = $this->em->getRepository(Notification::class)->findAllNotificationForUser($user->getId());
+        $notifications = $this->em->getRepository(Notification::class)->findAllNotificationForUser($user->getId(), $filters);
 
         return $this->view($notifications, Response::HTTP_OK);
     }

@@ -9,8 +9,8 @@ const notificationsApi = {
     getNotifications: async (filters) => {
         try {
             let params = {};
-            if (filters?.lastNotificationId) {
-                params['filters[lastNotificationId'] = filters?.lastNotificationId;
+            if (filters?.lastNotification) {
+                params['filters[lastNotification]'] = filters?.lastNotification;
             }
 
             if (null !== controller) {
@@ -51,6 +51,16 @@ const notificationsApi = {
             await axios.delete(`${DEFAULT_PATH}/${id}`);
 
             return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    readNotification: async (id) => {
+        try {
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`);
+
+            return { result: true, notification: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

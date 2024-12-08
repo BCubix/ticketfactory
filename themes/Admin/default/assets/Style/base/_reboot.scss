@@ -77,3 +77,23 @@ table {
         }
     }
 }
+
+.cursor {
+    &-pointer {
+        cursor: pointer;
+    }
+}
+
+.overflow {
+    &-hidden {
+        overflow: hidden;
+    }
+
+    &-visible {
+        overflow: visible;
+    }
+
+    &-auto {
+        overflow: auto;
+    }
+}
