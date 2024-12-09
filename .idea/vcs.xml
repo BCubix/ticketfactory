@@ -2,5 +2,19 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/BamTicket" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/ElasticSearch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/EventArticle" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/HomeEvent" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/Mailjet" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/Mapado" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/Mapbox" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/Newsletter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/OpenAgenda" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/SameCategory" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/Search" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/SliderElement" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/SocialNetwork" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/themes/Website/default" vcs="Git" />
   </component>
 </project>

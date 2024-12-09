@@ -117,6 +117,7 @@ class ServiceFactory implements ServiceSubscriberInterface
     public function get(string $keyword)
     {
         $keyword = 'service_' . $keyword;
+
         if (!$this->locator->has($keyword)) {
             throw new \Exception('The service ' . $keyword . ' does not exist.');
         }

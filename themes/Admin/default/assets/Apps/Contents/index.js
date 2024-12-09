@@ -64,5 +64,4 @@ export const initCrud = () => {
     };
 
     setCrud('contents', crud);
-    console.log(crud);
 };

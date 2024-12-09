@@ -81,8 +81,6 @@ export const ListTable = ({
     }, [languagesData?.languages]);
 
     if (!table || table?.length === 0 || !list || list.length === 0) {
-        console.log("table", table);
-        console.log("list", list);
         return <></>;
     }
 

@@ -8,6 +8,8 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 
+
+
 class Module extends Addon
 {
     public const SERVICE_NAME = 'module';
@@ -206,12 +208,36 @@ class Module extends Addon
         return $str;
     }
 
-    private function importVendorAutoload(): void
+    public function importVendorAutoload(): void
     {
-        $vendorDir = $this->getPath() . '/../vendor';
+        $vendorAutoload = $this->getPath() . '/../vendor/autoload.php';;
+        if (file_exists($vendorAutoload)) {
+            require_once $vendorAutoload;
+            // Define the namespace to search
+            $namespace = 'FOS\\ElasticaBundle\\';
 
-        if (is_dir($vendorDir)) {
-            require_once($vendorDir . '/autoload.php');
+// Get all declared classes
+            $allClasses = get_declared_classes();
+
+// Filter classes in the target namespace
+            $namespaceClasses = array_filter($allClasses, function ($class) use ($namespace) {
+                return strpos($class, $namespace) === 0;
+            });
+
+
+            $string = '';
+// Display subclasses
+            foreach ($namespaceClasses as $class) {
+                // Check if the class is a subclass of a specific class or interface (optional)
+                if (is_subclass_of($class, $namespace . 'BaseClass')) { // Replace BaseClass with the actual class
+                    $string .= "Subclass: $class\n";
+                } else {
+                    $string .= "Class in namespace: $class\n";
+                }
+            }
+
+            dd($string);
         }
     }
 }
+
