@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3d00882-4ea0-476c-8ed3-d780e102f742" name="Changes" comment="de">
-      <change afterPath="$PROJECT_DIR$/mih/Controller/Website/ElasticSearchController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/TicketFactory.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TicketFactory.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/BamTicket/src/Form/Admin/Ticketing/TicketingDataType.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/BamTicket/src/Form/Admin/Ticketing/TicketingDataType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/BamTicket/src/Manager/TicketingManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/BamTicket/src/Manager/TicketingManager.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/ElasticSearch/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/ElasticSearch/composer.json" afterDir="false" />
@@ -2841,11 +2835,6 @@
       <change beforePath="$PROJECT_DIR$/modules/Mapbox/src/Mapbox.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/Mapbox/src/Mapbox.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/Newsletter/assets/Admin/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/Newsletter/assets/Admin/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/Search/src/Controller/Website/SearchController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/Search/src/Controller/Website/SearchController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/WeezEvent/src/Manager/TicketingManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/WeezEvent/src/Manager/TicketingManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/Addon/Module.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/Addon/Module.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/ServiceFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/ServiceFactory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Apps/Contents/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/Admin/default/assets/Components/ListTable/ListTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Admin/default/assets/Components/ListTable/ListTable.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/themes/Website/default/templates/Event/_dates.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/themes/Website/default/templates/Event/_dates.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -3117,7 +3106,7 @@
       <workItem from="1732701176342" duration="17165000" />
       <workItem from="1733131839530" duration="38327000" />
       <workItem from="1733303621037" duration="18316000" />
-      <workItem from="1733736077002" duration="6696000" />
+      <workItem from="1733736077002" duration="9380000" />
     </task>
     <servers />
   </component>
