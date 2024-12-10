@@ -10,16 +10,18 @@ import { Box } from '@mui/system';
 import moment from 'moment/moment';
 
 const TypeObj = {
-    textField: ({ values, touched, errors, handleBlur, handleChange, value, error, ...props }) => (
-        <Component.CmtTextField
-            {...props}
-            value={value ? value : getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
-            error={error ? error : getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            name={`${props.baseName || ''}${getName(props)}`}
-        />
-    ),
+    textField: ({ values, touched, errors, handleBlur, handleChange, value, error, ...props }) => {
+        return (
+            <Component.CmtTextField
+                {...props}
+                value={value ? value : getPropByString(values, `${props.baseName || ''}${getName(props)}`)}
+                error={error ? error : getPropByString(touched, `${props.baseName || ''}${getName(props)}`) && getPropByString(errors, `${props.baseName || ''}${getName(props)}`)}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                name={`${props.baseName || ''}${getName(props)}`}
+            />
+        );
+    },
     slugInput: (props) => <Component.CmtSlugInput {...props} name={`${props.baseName || ''}${getName(props)}`} />,
     date: ({ values, touched, errors, setFieldValue, setFieldTouched, ...props }) => (
         <Component.CmtDatePicker
@@ -210,7 +212,6 @@ export const CmtDisplayFields = ({ fields, ...inheritedProps }) => {
                                 }
 
                                 const customProps = custom ? Object.fromEntries(Object.entries(custom).map(([key, func]) => [key, func(inheritedProps)])) : null;
-
                                 return <CmtInput key={index} {...inheritedProps} {...inputProps} name={inputProps.name} {...customProps} />;
                             })
                         )}

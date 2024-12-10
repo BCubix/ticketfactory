@@ -5,6 +5,7 @@ namespace App\Entity\Url;
 use App\Entity\Datable;
 use App\Entity\Page\Page;
 use App\Repository\UrlRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,6 +48,11 @@ class Url extends Datable
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
     #[ORM\Column(length: 255)]
     private ?string $controller = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_url_all', 'a_url_one'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $helper = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_url_all', 'a_url_one'])]
@@ -125,6 +131,18 @@ class Url extends Datable
     public function setController(string $controller): static
     {
         $this->controller = $controller;
+
+        return $this;
+    }
+
+    public function getHelper(): ?string
+    {
+        return $this->helper;
+    }
+
+    public function setHelper(?string $helper): static
+    {
+        $this->helper = $helper;
 
         return $this;
     }

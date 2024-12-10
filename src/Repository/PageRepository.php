@@ -11,8 +11,6 @@ class PageRepository extends CrudRepository
     /*** > Trait ***/
     /*** < Trait ***/
 
-    protected const STATUS_PUBLISHED = "PUBLISHED";
-
     protected const SELECTS = [
         'el' => null
     ];
@@ -73,11 +71,8 @@ class PageRepository extends CrudRepository
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.lang', 'l', 'WITH', 'l.id = :languageId')
-            ->where('p.active = 1')
-            ->andWhere('p.publicationStatus = :publicationStatus')
             ->andWhere('p.slug = :slug')
             ->setParameter('languageId', $languageId)
-            ->setParameter('publicationStatus', Page::STATUS_PUBLISHED)
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult();

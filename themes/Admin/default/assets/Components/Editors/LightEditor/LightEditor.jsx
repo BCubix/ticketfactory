@@ -59,87 +59,22 @@ import { NotificationManager } from 'react-notifications';
 import { Component } from '@/AdminService/Component';
 
 export const LightEditor = ({ value, onChange, className, ...rest }) => {
-    const dispatch = useDispatch();
     const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
     const [filePickerCallback, setFilePickerCallback] = useState(null);
-    const [image, setImage] = useState(null);
-    const [imagesList, setImagesList] = useState(null);
-    const [imageMediasTotal, setImageMediasTotal] = useState(null);
-    const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
-    const [imageFormatList, setImageFormatList] = useState([]);
-    const [mediaFilters, setMediaFilters] = useState({
-        title: '',
-        active: null,
-        iframe: null,
-        sort: 'id DESC',
-        page: 1,
-        limit: 20,
-        type: '',
-        category: '',
-    });
 
-    useEffect(() => {
-        getImages();
-    }, [mediaFilters]);
-
-    const getImages = async () => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getMediasList(mediaFilters);
-            if (!result?.result) {
-                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-            }
-
-            setImagesList(result?.medias);
-            setImageMediasTotal(result.total);
-        });
-    };
-
-    const updatedMedia = (newValues) => {
-        if (image?.id === newValues?.id) {
-            setFieldValue(name, { ...newValues });
-        }
-
-        const lIndex = imagesList?.findIndex((el) => el.id === newValues.id);
-        if (lIndex > -1) {
-            let newList = imagesList;
-            newList[lIndex] = newValues;
-            setImagesList(newList);
-        }
-    };
-
-    useEffect(() => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.mediaCategoriesApi.getAllMediaCategories();
-            if (!result.result) {
-                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-            }
-
-            setMediaCategoriesList(result.mediaCategories);
-
-            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
-                if (result.result) {
-                    setImageFormatList(result.imageFormats);
-                } else {
-                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
-                }
-            });
-        });
-    }, []);
-
-    // Simuler la sélection d'un fichier
-    const handleFileSelection = (fileUrl) => {
+    const handleFileSelection = (media) => {
         if (filePickerCallback) {
-            filePickerCallback(fileUrl); // Retourne l'URL à TinyMCE
-            setFilePickerCallback(null); // Réinitialise le callback
+            filePickerCallback(media.documentUrl);
+            setFilePickerCallback(null);
         }
-        setIsMediaLibraryOpen(false); // Ferme la bibliothèque
+        setIsMediaLibraryOpen(false);
     };
 
     const getFileManager = (callback, value, meta) => {
         setFilePickerCallback(() => (fileUrl) => {
             callback(fileUrl, { title: fileUrl });
         });
-        setIsMediaLibraryOpen(true); // Ouvre la bibliothèque
+        setIsMediaLibraryOpen(true);
     };
 
     return (
@@ -179,23 +114,94 @@ export const LightEditor = ({ value, onChange, className, ...rest }) => {
                 }}
                 {...rest}
             />
-
-            <Component.CmtMediaModal
-                title={`Selectionner l'image §§§`}
-                open={isMediaLibraryOpen}
-                onClose={() => setIsMediaLibraryOpen(false)}
-                mediasList={imagesList}
-                media={image}
-                setFieldValue={(value) => console.log(value)}
-                name={name}
-                onAddNewMedia={getImages}
-                mediaFilters={mediaFilters}
-                setMediaFilters={setMediaFilters}
-                total={imageMediasTotal}
-                categoriesList={mediaCategoriesList}
-                updatedMedia={updatedMedia}
-                imageFormatList={imageFormatList}
-            />
+            {isMediaLibraryOpen && (
+                <ImageSelector
+                    handleSelect={handleFileSelection}
+                    handleClose={() => {
+                        setFilePickerCallback(null);
+                        setIsMediaLibraryOpen(false);
+                    }}
+                />
+            )}
         </>
+    );
+};
+
+const ImageSelector = ({ handleSelect, handleClose }) => {
+    const dispatch = useDispatch();
+    const [imagesList, setImagesList] = useState(null);
+    const [imageMediasTotal, setImageMediasTotal] = useState(null);
+    const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+    const [imageFormatList, setImageFormatList] = useState([]);
+    const [mediaFilters, setMediaFilters] = useState({
+        title: '',
+        active: null,
+        iframe: null,
+        sort: 'id DESC',
+        page: 1,
+        limit: 20,
+        type: '',
+        category: '',
+    });
+
+    useEffect(() => {
+        getImages();
+    }, [mediaFilters]);
+
+    const getImages = async () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediasApi.getMediasList(mediaFilters);
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
+
+            setImagesList(result?.medias);
+            setImageMediasTotal(result.total);
+        });
+    };
+
+    const updatedMedia = (newValues) => {
+        const lIndex = imagesList?.findIndex((el) => el.id === newValues.id);
+        if (lIndex > -1) {
+            let newList = imagesList;
+            newList[lIndex] = newValues;
+            setImagesList(newList);
+        }
+    };
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.getAllMediaCategories();
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            }
+
+            setMediaCategoriesList(result.mediaCategories);
+
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                }
+            });
+        });
+    }, []);
+
+    return (
+        <Component.CmtMediaModal
+            title={`Selectionner l'image §§§`}
+            open={true}
+            onClose={handleClose}
+            mediasList={imagesList}
+            setFieldValue={(_, value) => handleSelect(value)}
+            onAddNewMedia={getImages}
+            mediaFilters={mediaFilters}
+            setMediaFilters={setMediaFilters}
+            total={imageMediasTotal}
+            categoriesList={mediaCategoriesList}
+            updatedMedia={updatedMedia}
+            imageFormatList={imageFormatList}
+        />
     );
 };

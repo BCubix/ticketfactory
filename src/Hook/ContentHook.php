@@ -40,6 +40,13 @@ class ContentHook extends Hook
         $iObject = $event->getParam('iObject');
         $sObject = $event->getParam('sObject');
 
+        if ($sObject->getPublicationStatus() === "TO_VALIDATE") {
+            $userRoles = $this->sc->getUser()->getRoles();
+            if (!in_array("ROLE_CONTENT_PUBLISH", $userRoles, true)) {
+                $this->mf->get('notification')->createContentPublicationStatusNotification($sObject);
+            }
+        }
+
         $this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
     }
 }

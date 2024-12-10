@@ -32,7 +32,9 @@ class PageHook extends Hook
 
         if ($sObject->getPublicationStatus() === "TO_VALIDATE") {
             $userRoles = $this->sc->getUser()->getRoles();
-            $this->mf->get('notification')->createPagePublicationStatusNotification($sObject);
+            if (!in_array("ROLE_PAGE_PUBLISH", $userRoles, true)) {
+                $this->mf->get('notification')->createPagePublicationStatusNotification($sObject);
+            }
         }
 
         //$this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);

@@ -93,6 +93,13 @@ export const MainDashboard = () => {
                                 </CardContent>
                             </Component.CmtCard>
                         )}
+                        <Component.FirstCardDashboard data={dashboard.col1} />
+                    </Grid>
+                    <Grid item xs={12} md={8} lg={7}>
+                        <Component.SecondCardDashboard data={dashboard.col2} />
+                    </Grid>
+                    <Grid item xs={12} md={2} lg={2}>
+                        <Component.ThirdCardDashboard data={dashboard.col3} />
                     </Grid>
                 </Grid>
             )}

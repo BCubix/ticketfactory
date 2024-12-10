@@ -285,6 +285,8 @@ abstract class AddonManager extends AbstractManager
             $newParameter->setTabName($parameter['tabName'] ?? null);
             $newParameter->setBlockName($parameter['blockName'] ?? null);
             $newParameter->setBreakpointsValue($parameter['breakpointValue']);
+            $newParameter->setTranslatedParameter($parameter['translatedParameter']);
+            $newParameter->setHelper($parameter['helper']);
 
             if (isset($parameter['availableValue']) && count($parameter['availableValue']) > 0) {
                 $availableValue = [];

@@ -1,5 +1,6 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 export const CmtTextField = ({
     margin = 'normal',
@@ -24,6 +25,7 @@ export const CmtTextField = ({
     multiline = false,
     autoComplete = '',
     sx = null,
+    helper = '',
 }) => {
     return (
         <TextField
@@ -39,7 +41,20 @@ export const CmtTextField = ({
             id={id}
             {...(className && { className: className })}
             color={color}
-            label={label}
+            label={
+                helper ? (
+                    <>
+                        {label}{' '}
+                        <Tooltip title={<Box dangerouslySetInnerHTML={{ __html: helper }} />} arrow>
+                            <IconButton size="small" aria-label="help" color="info">
+                                <HelpOutlineIcon fontSize="small" />
+                            </IconButton>
+                        </Tooltip>
+                    </>
+                ) : (
+                    label
+                )
+            }
             name={name}
             error={Boolean(error)}
             helperText={error}

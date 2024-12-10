@@ -14,9 +14,7 @@ import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
 import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { getUserRoles } from '@Services/utils/getUserRoles';
-
-const ROLE_CREATE = 'ROLE_EVENT_CREATE';
-const ROLE_EDIT = 'ROLE_EVENT_EDIT';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
@@ -36,15 +34,11 @@ export const HooksList = () => {
     }, [user]);
 
     const accessUserCreate = useMemo(() => {
-        return !listCrud.checkUserAccess?.new || listCrud.checkUserAccess?.new(userRoles);
-    }, [userRoles]);
-
-    const accessUserEdit = useMemo(() => {
-        return !listCrud.checkUserAccess?.edit || listCrud.checkUserAccess?.edit(userRoles);
+        return checkUserAccess(userRoles, 'ROLE_HOOK_CREATE');
     }, [userRoles]);
 
     const accessUserDelete = useMemo(() => {
-        return !listCrud.checkUserAccess?.delete || listCrud.checkUserAccess?.delete(userRoles);
+        return checkUserAccess(userRoles, 'ROLE_HOOK_DELETE');
     }, [userRoles]);
 
     const handleDragEnd = async (result) => {

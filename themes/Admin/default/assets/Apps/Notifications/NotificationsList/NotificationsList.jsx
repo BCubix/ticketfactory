@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment/moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Box, CircularProgress, IconButton, List, ListItem, ListItemText, Popover, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, IconButton, List, ListItem, ListItemText, Popover, Typography } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -15,6 +15,7 @@ import { Constant } from '@/AdminService/Constant';
 export const notificationsListCrud = {
     actionsList: {
         Page: ({ notification, navigate }) => navigate(`${Constant.PAGES_BASE_PATH}/${notification.objectId}${Constant.EDIT_PATH}`),
+        Content: ({ notification, navigate }) => navigate(`${Constant.PAGES_BASE_PATH}/${notification.objectId}${Constant.EDIT_PATH}`),
         Order: ({ notification, navigate }) => navigate(`${Constant.ORDERS_BASE_PATH}/${notification.objectId}`),
         Customer: ({ notification, navigate }) => navigate(`${Constant.CUSTOMERS_BASE_PATH}/${notification.objectId}${Constant.EDIT_PATH}`),
         ContactRequest: ({ notification, navigate }) => navigate(`${Constant.CONTACT_REQUEST_BASE_PATH}/${notification.objectId}${Constant.EDIT_PATH}`),
@@ -74,42 +75,48 @@ export const NotificationsList = () => {
                         Notifications
                     </Typography>
                     {notifications && notifications.length > 0 ? (
-                        <List>
-                            {notifications.map((item, index) => (
-                                <ListItem
-                                    key={index}
-                                    secondaryAction={
-                                        <IconButton
-                                            edge="end"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDelete(item);
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    }
-                                    onClick={() => {
-                                        handleClick(item);
-                                    }}
-                                    className="notification_element"
-                                >
-                                    <ListItemText
-                                        primary={item.title || 'Titre manquant'}
-                                        secondary={item.description || 'Description manquante'}
-                                        className={`notification_element_text ${item?.readed ? 'readed' : ''}`}
-                                    />
+                        <List sx={{ p: 0 }}>
+                            <Divider component="li" />
 
-                                    <Typography variant="body2" className="notification_element_date">
-                                        {moment(item?.createdAt).format('DD/MM HH:mm')}
-                                    </Typography>
-                                </ListItem>
+                            {notifications.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    <ListItem
+                                        secondaryAction={
+                                            <IconButton
+                                                edge="end"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(item);
+                                                }}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        }
+                                        onClick={() => {
+                                            handleClick(item);
+                                        }}
+                                        className={`notification_element ${item?.readed ? 'readed' : ''}`}
+                                    >
+                                        <ListItemText
+                                            primary={item.title || 'Titre manquant'}
+                                            secondary={item.description || 'Description manquante'}
+                                            className={`notification_element_text ${item?.readed ? 'readed' : ''}`}
+                                        />
+
+                                        <Typography variant="body2" className={`notification_element_date ${item?.readed ? 'readed' : ''}`}>
+                                            {moment(item?.createdAt).format('DD/MM HH:mm')}
+                                        </Typography>
+                                    </ListItem>
+                                    <Divider component="li" />
+                                </React.Fragment>
                             ))}
                         </List>
                     ) : (
-                        <Typography variant="body2" color="textSecondary">
-                            Aucune notification pour le moment.
-                        </Typography>
+                        <Box className="margin-4">
+                            <Typography variant="body2" color="textSecondary">
+                                Aucune notification pour le moment.
+                            </Typography>
+                        </Box>
                     )}
                     <Box className="flex row-center padding-3 cursor-pointer notification_load_wrapper" onClick={loadMoreNotifications}>
                         <Box className="flex relative">

@@ -12,6 +12,10 @@
         flex-direction: column;
         align-items: flex-start !important;
 
+        &.readed {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
         &:hover {
             background-color: rgba(0, 0, 0, 0.08);
             cursor: pointer !important;
@@ -26,6 +30,12 @@
                 .MuiListItemText-primary,
                 .MuiListItemText-secondary {
                     font-weight: 400;
+                }
+            }
+
+            &:not(.readed) {
+                .MuiListItemText-primary {
+                    color: $primary-color-main;
                 }
             }
 

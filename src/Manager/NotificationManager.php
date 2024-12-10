@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\ContactRequest\ContactRequest;
+use App\Entity\Content\Content;
 use App\Entity\Customer\Customer;
 use App\Entity\Notification\Notification;
 use App\Entity\Order\Order;
@@ -22,6 +23,23 @@ class NotificationManager extends AbstractManager
             $notification->setDescription("La page (" . $page->getTitle() . ") est prête à être validée.");
             $notification->setType('Page');
             $notification->setObjectId($page->getId());
+            $notification->setUser($user);
+
+            $this->em->persist($notification);
+        }
+
+        $this->em->flush();
+    }
+
+    public function createContentPublicationStatusNotification(Content $content): void
+    {
+        $users = $this->em->getRepository(User::class)->findAllByRoleForAdmin('ROLE_CONTENT_PUBLISH');
+        foreach ($users as $user) {
+            $notification = new Notification();
+            $notification->setTitle("Contenu à valider");
+            $notification->setDescription("Le contenu (" . $content->getTitle() . ") est prête à être validée.");
+            $notification->setType('Content');
+            $notification->setObjectId($content->getId());
             $notification->setUser($user);
 
             $this->em->persist($notification);

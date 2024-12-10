@@ -39,6 +39,7 @@ export const DisplayTranslatedParameters = ({
                     paramValue={(parameter.paramValue && parameter?.paramValue[selectedLanguage]) || ''}
                     paramAvailableValue={parameter.availableValue}
                     validations={parameter.validations}
+                    helper={parameter.helper || ''}
                     paramBreakpoints={{ xs: 12 }}
                     setFieldValue={(name, value) => {
                         setFieldValue(`${name}.${selectedLanguage}`, value);

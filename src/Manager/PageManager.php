@@ -127,7 +127,11 @@ class PageManager extends AbstractManager
             $result = $page;
         }
 
-        return $result;
+        if (null !== $result && $result->isActive() && $result->getPublicationStatus() === "PUBLISHED") {
+            return $result;
+        }
+
+        return null;
     }
 
     public function getPageSlugPath(Page $page): string

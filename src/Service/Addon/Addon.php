@@ -193,6 +193,24 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                                             ->thenInvalid('required string')
                                         ->end()
                                     ->end()
+                                    ->scalarNode('translatedParameter')
+                                        ->defaultValue(false)
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_bool($v);
+                                            })
+                                            ->thenInvalid('required boolean')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('helper')
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                        ->defaultValue(null)
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
