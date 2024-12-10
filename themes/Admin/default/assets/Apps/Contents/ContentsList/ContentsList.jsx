@@ -79,7 +79,7 @@ export const contentsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     contentTypes: {},
-    loadDataAction: () => getContentsAction(),
+    loadDataAction: (contentTypeKey, filters) => getContentsAction(contentTypeKey, filters),
     changeFiltersActions: (objectData, props, page) => changeContentsFilters(objectData, props, page),
     dataSelector: contentsSelector,
     dataList: (selector) => selector.contents,
@@ -110,6 +110,7 @@ export const ContentsList = () => {
     const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= theme.breakpoints.values.md);
 
     useEffect(() => {
+        console.log('ok');
         if (!contentData && !contentDataLoading && !contentDataError) {
             dispatch(getAllContentDataAction());
             return;
@@ -213,6 +214,7 @@ export const ContentsList = () => {
                                 },
                             }}
                             objectData={contentData[contentTypeKey] || {}}
+                            contentTypeKey={contentTypeKey}
                         />
                     </Box>
                 )}

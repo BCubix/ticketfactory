@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { FormHelperText } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -8,11 +10,11 @@ import { PAGE_COLUMN_TYPE_FIELDS } from '@Apps/PageBlocks/services/config/getPag
 import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
 
 import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
-import { useSelector } from 'react-redux';
 import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { getUserRoles } from '@Services/utils/getUserRoles';
 
@@ -325,6 +327,7 @@ export const pagesForm = {
 };
 
 export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null, formCrud, ...props }) => {
+    const navigate = useNavigate();
     const { user } = useSelector(userProfileSelector);
 
     const getContentModules = useMemo(() => {
@@ -355,7 +358,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                     component="form"
                     onSubmit={handleSubmit}
                     title={formCrud?.form?.title}
-                    /*actionButton={
+                    actionButton={
                         initialValues && (
                             <Component.ActionButton
                                 variant="contained"
@@ -365,7 +368,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                 Historique de la page
                             </Component.ActionButton>
                         )
-                    }*/
+                    }
                 >
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}

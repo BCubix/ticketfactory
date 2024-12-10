@@ -126,8 +126,17 @@ class VersionnedEntityManager extends AbstractManager
             $reflectionProperty = new \ReflectionProperty($className, $propertyName);
             $reflectionProperty->setAccessible(true);
 
-            $oldValue = $reflectionProperty->getValue($oldEntity);
-            $newValue = $reflectionProperty->getValue($newEntity);
+            if ($reflectionProperty->isInitialized($oldEntity)) {
+                $oldValue = $reflectionProperty->getValue($oldEntity);
+            } else {
+                $oldValue = null;
+            }
+
+            if ($reflectionProperty->isInitialized($newEntity)) {
+                $newValue = $reflectionProperty->getValue($newEntity);
+            } else {
+                $newValue = null;
+            }
 
             if (is_object($newValue)) {
                 if ($newValue instanceof Collection) {
