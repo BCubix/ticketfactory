@@ -325,4 +325,22 @@ class Page extends Datable
     {
         return array_keys(self::PUBLICATION_STATUS);
     }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'title'                 => $this->title,
+            'subtitle'              => $this->subtitle,
+            'slug'                  => $this->slug,
+            'keyword'               => $this->keyword,
+            'publicationStatus'     => $this->publicationStatus,
+            'pageBlocks'            => []
+        ];
+
+        foreach ($this->pageBlocks as $pageBlock) {
+            $result['pageBlocks'][] = $pageBlock->toStringToCompare();
+        }
+
+        return $result;
+    }
 }

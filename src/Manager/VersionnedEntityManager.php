@@ -30,7 +30,10 @@ class VersionnedEntityManager extends AbstractManager
             return;
         }
 
-        $changeSet = $this->compareObjects($newEntity, $oldEntity);
+        $oldEntityCompareArray = $oldEntity->toStringToCompare();
+        $newEntityCompareArray = $newEntity->toStringToCompare();
+
+        $changeSet = $this->compareObjects($newEntityCompareArray, $oldEntityCompareArray);
         if (isset($changeSet['createdAt'])) {
             unset($changeSet['createdAt']);
         }
@@ -100,102 +103,43 @@ class VersionnedEntityManager extends AbstractManager
         return self::SUPPORTED_TYPES[$keyword];
     }
 
-    protected function compareObjects(Object $newEntity, Object $oldEntity): array
-    {
-        if (property_exists($newEntity, 'id')) {
-            $key = $this->getKeyword($newEntity) . '-' . $newEntity->getId();
-            if (false !== array_search($key, $this->parsedObjects)) {
-                return [];
-            }
-
-            $this->parsedObjects[] = $key;
-        }
-
-        $changeSet = [];
-
-        $reflectionObj = new \ReflectionClass($newEntity);
-        $properties = $reflectionObj->getProperties();
-        $className = $reflectionObj->getName();
-
-        foreach ($properties as $property) {
-            $propertyName = $property->getName();
-            if ($propertyName == 'id') {
-                continue;
-            }
-
-            $reflectionProperty = new \ReflectionProperty($className, $propertyName);
-            $reflectionProperty->setAccessible(true);
-
-            if ($reflectionProperty->isInitialized($oldEntity)) {
-                $oldValue = $reflectionProperty->getValue($oldEntity);
-            } else {
-                $oldValue = null;
-            }
-
-            if ($reflectionProperty->isInitialized($newEntity)) {
-                $newValue = $reflectionProperty->getValue($newEntity);
-            } else {
-                $newValue = null;
-            }
-
-            if (is_object($newValue)) {
-                if ($newValue instanceof Collection) {
-                    $childChangeSet = $this->compareCollections($newValue, $oldValue);
-                } else {
-                    $childChangeSet = $this->compareObjects($newValue, $oldValue);
-                }
-
-                if (count($childChangeSet) > 0) {
-                    $changeSet[$propertyName] = $childChangeSet;
-                }
-            } elseif ($oldValue !== $newValue) {
-                $changeSet[$propertyName] = ['before' => $oldValue, 'after' => $newValue];
-            }
-        }
-
-        return $changeSet;
-    }
-
-    protected function compareCollections(Collection $newCollection, Collection $oldCollection): array
+    protected function compareObjects($newObject, $oldObject): mixed
     {
         $changeSet = [];
 
-        $refCollection = $newCollection;
-        $othCollection = $oldCollection;
-        $refIsNew = true;
-
-        if (count($refCollection) < count($othCollection)) {
-            $refCollection = $oldCollection;
-            $othCollection = $newCollection;
-            $refIsNew = false;
+        if (!is_array($newObject) || !is_array($oldObject)) {
+            return $newObject !== $oldObject ? $oldObject : [];
         }
 
-        foreach ($refCollection as $key => $refElement) {
-            $othElement = $othCollection->get($key);
-            $newElement = ($refIsNew ? $refElement : $othElement);
-            $oldElement = ($refIsNew ? $othElement : $refElement);
-
-            if (gettype($oldElement) != gettype($newElement)) {
-                $changeSet[] = ['before' => $oldElement, 'after' => $newElement];
-                break;
+        foreach ($oldObject as $key => $oldObjectElement) {
+            if (!array_key_exists($key, $newObject)) {
+                $changeSet[$key] = $oldObjectElement;
             }
 
-            if (is_object($newElement)) {
-                if ($newElement instanceof Collection) {
-                    $childChangeSet = $this->compareCollections($newElement, $oldElement);
+            if (is_array($newObject[$key]) || is_array($oldObject[$key])) {
+                if (is_array($newObject[$key]) && is_array($oldObject[$key])) {
+                    foreach ($oldObject[$key] as $oldObjectKeyIndex => $oldObjectKeyElement) {
+                        if (!array_key_exists($oldObjectKeyIndex, $newObject[$key])) {
+                            $changeSet[$key][$oldObjectKeyIndex] = $oldObjectKeyElement;
+                        } else {
+                            $result = $this->compareObjects($newObject[$key][$oldObjectKeyIndex], $oldObjectKeyElement);
+                            if (!empty($result)) {
+                                $changeSet[$key][$oldObjectKeyIndex] = $result;
+                            }
+                        }
+                    }
                 } else {
-                    $childChangeSet = $this->compareObjects($newElement, $oldElement);
+                    $changeSet[$key] = $oldObject[$key];
                 }
-
-                if (count($childChangeSet) > 0) {
-                    $changeSet[] = $childChangeSet;
+            } else if (is_object($newObject[$key]) && is_object($oldObject[$key])) {
+                $result = $this->compareObjects($newObject[$key], $oldObject[$key]);
+                if (!empty($result)) {
+                    $changeSet[$key] = $result;
                 }
-                break;
-            }
-
-            if ($newElement != $oldElement) {
-                $changeSet[] = ['before' => $newElement, 'after' => $oldElement];
-                break;
+            } else {
+                if ($newObject[$key] !== $oldObject[$key]) {
+                    $changeSet[$key] = $oldObject[$key];
+                }
             }
         }
 

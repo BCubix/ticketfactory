@@ -7,12 +7,9 @@ import { Constant } from '@/AdminService/Constant';
 import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Component } from '@/AdminService/Component';
-import { CardContent, Container, Grid, Slider, Typography } from '@mui/material';
+import { CardContent, Grid, Typography } from '@mui/material';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
-
-import HistoryList from './HistoryList';
-import VersionDiffViewer from './VersionDiffViewer';
 
 export const PageHistory = () => {
     const dispatch = useDispatch();
@@ -20,7 +17,6 @@ export const PageHistory = () => {
     const { id } = useParams();
 
     const [pageHistory, setPageHistory] = useState(null);
-    const [selectedVersion, setSelectedVersion] = useState(null);
     const [selectedHistory, setSelectedHistory] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -77,30 +73,45 @@ export const PageHistory = () => {
 
     const history = pageHistory?.at(selectedHistory);
 
-    console.log(pageHistory);
+    console.log(history);
     return (
-        <Box sx={{ p: 2 }}>
-            <Typography variant="h4" gutterBottom>
-                Historique des versions
-            </Typography>
-            <Grid container spacing={2}>
-                {/* Liste des versions */}
-                <Grid item xs={4}>
-                    <HistoryList versions={pageHistory} onSelectVersion={setSelectedVersion} />
-                </Grid>
+        <Component.CmtPageWrapper title="Historique de page">
+            <Component.CmtHistoryDate historyList={pageHistory} selectedHistory={selectedHistory} setSelectedHistory={setSelectedHistory} />
 
-                {/* Vue des différences */}
-                <Grid item xs={8}>
-                    {selectedVersion ? (
-                        <>
-                            <VersionDiffViewer version={selectedVersion} />
-                        </>
-                    ) : (
-                        <Typography variant="body1">Sélectionnez une version pour voir les détails.</Typography>
+            <Component.CmtCard sx={{ marginTop: 5 }}>
+                <CardContent>
+                    {history?.fields?.title && (
+                        <Box>
+                            <Typography component="h2" variant="h4">
+                                Titre
+                            </Typography>
+                            <Grid container spacing={4} sx={{ marginBottom: 5 }}>
+                                <DisplayHistoryValue
+                                    isModified={history?.fields?.title.before !== history?.fields?.title.after}
+                                    oldValue={history?.fields?.title.before}
+                                    newValue={history?.fields?.title.after}
+                                />
+                            </Grid>
+                        </Box>
                     )}
-                </Grid>
-            </Grid>
-        </Box>
+
+                    {history?.fields?.active && (
+                        <Box>
+                            <Typography component="h2" variant="h4">
+                                Page Activé ?
+                            </Typography>
+                            <Grid container spacing={4} sx={{ marginBottom: 5 }}>
+                                <DisplayHistoryValue
+                                    isModified={history?.fields?.active.before !== history?.fields?.active.after}
+                                    oldValue={history?.fields?.active.before ? 'Activé' : 'Désactivé'}
+                                    newValue={history?.fields?.active.after ? 'Activé' : 'Désactivé'}
+                                />
+                            </Grid>
+                        </Box>
+                    )}
+                </CardContent>
+            </Component.CmtCard>
+        </Component.CmtPageWrapper>
     );
 };
 

@@ -149,4 +149,11 @@ class PageBlockType extends Datable implements JsonDoctrineSerializable
         return $data;
     }
 
+    public function toStringToCompare(): array
+    {
+        return [
+            'id'     => $this->id,
+            'fields' => $this->fields
+        ];
+    }
 }

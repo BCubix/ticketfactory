@@ -191,4 +191,22 @@ class PageBlock extends Datable
 
         return $this;
     }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'name'          => $this->name,
+            'saveAsModel'   => $this->saveAsModel,
+            'class'         => $this->class,
+            'pageBlockType' => null !== $this->pageBlockType ? $this->pageBlockType->toStringToCompare() : null,
+            'fields'        => $this->fields,
+            'columns'       => [],
+        ];
+
+        foreach ($this->columns as $column) {
+            $result['columns'][] = PageColumn::toStringToCompare($column);
+        }
+
+        return $result;
+    }
 }
