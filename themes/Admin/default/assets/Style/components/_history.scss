@@ -1,0 +1,64 @@
+.history {
+    &_diff {
+        &_title {
+            font-size: 13px !important;
+            text-transform: uppercase;
+        }
+
+        &_display {
+            &_old {
+                background-color: #cce7ff;
+                padding-left: 3px;
+                min-height: 30px;
+
+                pre {
+                    padding: 2px;
+                    line-height: 25px;
+                    font-size: 13px;
+                    font-family: monospace;
+                }
+            }
+
+            &_new {
+                background-color: #e6ffe6;
+                padding-left: 3px;
+
+                pre {
+                    padding: 2px;
+                    line-height: 25px;
+                    font-size: 13px;
+                    font-family: monospace;
+                }
+            }
+        }
+
+        &_actual {
+            padding-left: 3px;
+
+            pre {
+                line-height: 25px;
+                font-size: 13px;
+                font-family: monospace;
+            }
+        }
+        &_new {
+            [class*='css-'][class*='-diff-removed'] {
+                display: none;
+            }
+
+            [class*='css-'][class*='-marker'] {
+                display: none;
+            }
+        }
+
+        &_old {
+            [class*='css-'][class*='-diff-added'] {
+                display: none;
+            }
+
+            [class*='css-'][class*='-marker'] {
+                display: none;
+            }
+        }
+    }
+}

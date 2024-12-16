@@ -3,12 +3,10 @@
 namespace App\Manager;
 
 use App\Entity\Content\Content;
-use App\Entity\Event\Event;
 use App\Entity\Page\Page;
 use App\Entity\VersionnedEntity\VersionnedEntity;
 use App\Exception\ApiException;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +16,6 @@ class VersionnedEntityManager extends AbstractManager
 
     private const SUPPORTED_TYPES = [
         'content' => Content::class,
-        'event'   => Event::class,
         'page'    => Page::class
     ];
 
@@ -123,7 +120,7 @@ class VersionnedEntityManager extends AbstractManager
                             $changeSet[$key][$oldObjectKeyIndex] = $oldObjectKeyElement;
                         } else {
                             $result = $this->compareObjects($newObject[$key][$oldObjectKeyIndex], $oldObjectKeyElement);
-                            if (!empty($result)) {
+                            if (!empty($result) && ($key === "columns" || $oldObjectKeyIndex !== 0)) {
                                 $changeSet[$key][$oldObjectKeyIndex] = $result;
                             }
                         }
@@ -137,8 +134,8 @@ class VersionnedEntityManager extends AbstractManager
                     $changeSet[$key] = $result;
                 }
             } else {
-                if ($newObject[$key] !== $oldObject[$key]) {
-                    $changeSet[$key] = $oldObject[$key];
+                if ($newObject[$key] !== $oldObject[$key] || $key === "content" || $key === "type") {
+                    $changeSet[$key] = $oldObject[$key] . "-old";
                 }
             }
         }

@@ -1,4 +1,4 @@
-export const getPropByString = (object, path, defaultValue) => {
+export const getPropByString = (object, path, defaultValue = undefined) => {
     let result = path
         .split(/[\.\[\]\'\"]/)
         .filter((p) => p)
