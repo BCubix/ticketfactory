@@ -1,27 +1,41 @@
 import React, { useMemo } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import ReactDiffViewer from 'react-diff-viewer';
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 import { getNextFieldValue } from '../../services/utils/getNextFieldValue';
 import { getPropByString } from '@Services/utils/getPropByString';
 
 export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, pageHistory, page, name, label = '' }) => {
+    const previousVersionValue = useMemo(() => {
+        if (previousVersion && getPropByString(previousVersion, name) !== undefined) {
+            return getPropByString(previousVersion, name);
+        }
+
+        return undefined;
+    }, [selectedHistory]);
+
     const actualVersionValue = useMemo(() => {
         if (actualVersion && getPropByString(actualVersion, name) !== undefined) {
             return getPropByString(actualVersion, name);
         }
 
-        let value = getNextFieldValue(pageHistory, selectedHistory, name);
+        return undefined;
+    }, [selectedHistory]);
 
-        if (value === undefined && page && getPropByString(page, name) !== undefined) {
-            return getPropByString(page, name);
+    const nextVersionValue = useMemo(() => {
+        if (nextVersion && getPropByString(nextVersion, name) !== undefined) {
+            return getPropByString(nextVersion, name);
         }
 
-        return value;
+        return undefined;
     }, [selectedHistory]);
 
     const displayDifferences = useMemo(() => {
-        const isDifferentFromPrevious = previousVersion && getPropByString(previousVersion, name) !== undefined && getPropByString(previousVersion, name) !== actualVersionValue;
-        const isDifferentFromNext = nextVersion && getPropByString(nextVersion, name) !== undefined && getPropByString(nextVersion, name) !== actualVersionValue;
+        if (actualVersionValue === undefined) {
+            return { hasDifferences: false };
+        }
+
+        const isDifferentFromPrevious = previousVersionValue !== undefined && previousVersionValue !== actualVersionValue;
+        const isDifferentFromNext = nextVersionValue !== undefined && nextVersionValue !== actualVersionValue;
 
         return {
             isDifferentFromPrevious,
@@ -46,7 +60,7 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                     <Grid item xs={4}>
                         {displayDifferences.isDifferentFromPrevious && (
                             <Box className="history_diff_display_old">
-                                <Typography component="pre">{getPropByString(previousVersion, name)}</Typography>
+                                <Typography component="pre">{previousVersionValue || ''}</Typography>
                             </Box>
                         )}
                     </Grid>
@@ -57,15 +71,16 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                         <Box className="history_diff_new">
                             <ReactDiffViewer
                                 oldValue={actualVersionValue || ''}
-                                newValue={getPropByString(nextVersion, name) || ''}
+                                newValue={nextVersionValue || ''}
                                 splitView={false}
                                 hideLineNumbers={true}
+                                compareMethod={DiffMethod.WORDS}
                                 styles={{
                                     variables: {
                                         light: {
-                                            removedBackground: '#e6ffe6', // Fond vert clair pour la différence suivante
-                                            removedColor: '#006400', // Texte vert foncé
-                                            diffViewerBackground: '#ffffff', // Fond global
+                                            removedBackground: '#e6ffe6',
+                                            removedColor: '#006400',
+                                            diffViewerBackground: '#ffffff',
                                         },
                                     },
                                     line: {
@@ -85,10 +100,11 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                     {displayDifferences.isDifferentFromPrevious && (
                         <Box className="history_diff_old">
                             <ReactDiffViewer
-                                oldValue={getPropByString(previousVersion, name) || ''}
+                                oldValue={previousVersionValue || ''}
                                 newValue={actualVersionValue || ''}
                                 splitView={false}
                                 showDiffOnly={false}
+                                compareMethod={DiffMethod.WORDS}
                                 styles={{
                                     variables: {
                                         light: {
@@ -109,7 +125,7 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                 <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_display_new">
-                            <Typography component="pre">{nextVersion && getPropByString(nextVersion, name)}</Typography>
+                            <Typography component="pre">{nextVersionValue || ''}</Typography>
                         </Box>
                     )}
                 </Grid>
