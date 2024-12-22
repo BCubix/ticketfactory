@@ -54,6 +54,7 @@ export const PageBlocksDifferences = ({ previousVersion, actualVersion, nextVers
                                     pageHistory={pageHistory}
                                     page={page}
                                     baseName={`pageBlocks.${key}.columns.`}
+                                    blockIndex={index}
                                     {...rest}
                                 />
                             </Box>

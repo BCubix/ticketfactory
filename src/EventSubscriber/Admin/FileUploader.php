@@ -5,7 +5,6 @@ namespace App\EventSubscriber\Admin;
 use App\Entity\Media\ImageFormat;
 use App\Entity\Media\Media;
 use App\Entity\Addon\Module;
-use App\Entity\Parameter\Parameter;
 use App\Exception\ApiException;
 use App\Manager\ImageFormatManager;
 use App\Manager\ModuleManager;

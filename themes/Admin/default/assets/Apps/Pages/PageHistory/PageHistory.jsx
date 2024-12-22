@@ -11,6 +11,11 @@ import { CardContent, Typography } from '@mui/material';
 import { NotificationManager } from 'react-notifications';
 
 import { DisplayPageDifferences } from './DisplayPageDifferences';
+import { HISTORY_TYPE_FIELDS } from '../services/utils/getHistoryTypeDisplay';
+
+export const pageHistoryCrud = {
+    historyTypes: HISTORY_TYPE_FIELDS,
+};
 
 export const PageHistory = () => {
     const dispatch = useDispatch();
@@ -63,8 +68,6 @@ export const PageHistory = () => {
             </Box>
         );
     }
-
-    console.log(pageHistory);
 
     return (
         <Component.CmtPageWrapper title="Historique de page">

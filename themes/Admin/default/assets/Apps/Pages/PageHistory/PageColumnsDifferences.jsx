@@ -1,22 +1,44 @@
 import React, { useMemo } from 'react';
 import { getPropByString } from '@Services/utils/getPropByString';
-import { CardContent, InputLabel } from '@mui/material';
+import { Box, CardContent, InputLabel, Typography } from '@mui/material';
 import { TextDifferenceType } from './DifferencesTypes/TextDifferenceType';
 import { Component } from '@/AdminService/Component';
+import { Crud } from '@/AdminService/Crud';
 
-export const PageColumnsDifferences = ({ previousVersion, actualVersion, nextVersion, selectedHistory, pageHistory, page, baseName, ...rest }) => {
+export const PageColumnsDifferences = ({ previousVersion, actualVersion, nextVersion, selectedHistory, pageHistory, page, baseName, blockIndex, ...rest }) => {
     const pageBlockColumns = useMemo(() => {
         return getPropByString(actualVersion, baseName) || {};
     });
 
-    console.log(actualVersion, baseName + 'columns', pageBlockColumns);
+    const getFieldType = (columnIndex) => {
+        return getPropByString(page, `pageBlocks.${blockIndex}.columns.${columnIndex}.type`);
+    };
 
     return Object.keys(pageBlockColumns)?.map((key, index) => {
+        /* if (getPropByString(actualVersion, baseName + key)?.type) {
+            return (
+                <Box key={index}>
+                    <Typography>Colonne N°{parseInt(key) + 1}</Typography>
+                    <Typography>Le type de champs à été modifié</Typography>
+                </Box>
+            );
+        } */
+
+        if (!Crud?.pages?.history?.historyTypes || !Crud?.pages?.history?.historyTypes[getFieldType(index)]) {
+            return (
+                <Box key={index}>
+                    <Typography>Colonne N°{parseInt(key) + 1}</Typography>
+                    <Typography>Le type de champs n'existe pas</Typography>
+                </Box>
+            );
+        }
+
+        let DifferenceComponent = Crud?.pages?.history?.historyTypes[getFieldType(index)];
         return (
-            <Component.CmtCard className="margin-bottom-5">
+            <Component.CmtCard className="margin-bottom-5" key={index}>
                 <CardContent>
                     <InputLabel className="margin-bottom-3">Colonne n°{index + 1}</InputLabel>
-                    <TextDifferenceType
+                    <DifferenceComponent
                         previousVersion={previousVersion}
                         actualVersion={actualVersion}
                         nextVersion={nextVersion}
@@ -32,12 +54,3 @@ export const PageColumnsDifferences = ({ previousVersion, actualVersion, nextVer
         );
     });
 };
-
-/* if (getPropByString(actualVersion, baseName + key)?.type) {
-    return (
-        <Box key={index}>
-        <Typography>Colonne N°{key + 1}</Typography>
-        <Typography>Le type de champs à été modifié</Typography>
-        </Box>
-    );
-} */

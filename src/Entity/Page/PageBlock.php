@@ -209,4 +209,10 @@ class PageBlock extends Datable
 
         return $result;
     }
+
+    public function __clone()
+    {
+        $this->columns = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->columns);
+        $this->fields = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->fields);
+    }
 }

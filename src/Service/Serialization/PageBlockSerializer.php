@@ -92,7 +92,6 @@ class PageBlockSerializer
             }
 
             foreach ($pageBlockType->getFields() as $pageBlockTypeField) {
-
                 if ($contentFieldName == $pageBlockTypeField->getName()) {
                     $component = $this->ctm->getContentTypeInstanceFromType($pageBlockTypeField->getType());
 

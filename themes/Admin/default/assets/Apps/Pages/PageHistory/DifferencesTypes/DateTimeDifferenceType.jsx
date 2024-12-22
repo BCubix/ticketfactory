@@ -2,11 +2,14 @@ import React, { useMemo } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 import { getPropByString } from '@Services/utils/getPropByString';
+import moment from 'moment/moment';
 
-export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, name, label = '' }) => {
+export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, name, label = '' }) => {
     const previousVersionValue = useMemo(() => {
         if (previousVersion && getPropByString(previousVersion, name) !== undefined) {
-            return getPropByString(previousVersion, name);
+            let value = getPropByString(previousVersion, name);
+
+            return value ? moment(value).format('DD/MM/YYYY HH:mm') : '';
         }
 
         return undefined;
@@ -14,7 +17,9 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
 
     const actualVersionValue = useMemo(() => {
         if (actualVersion && getPropByString(actualVersion, name) !== undefined) {
-            return getPropByString(actualVersion, name);
+            let value = getPropByString(actualVersion, name);
+
+            return value ? moment(value).format('DD/MM/YYYY HH:mm') : '';
         }
 
         return undefined;
@@ -22,7 +27,9 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
 
     const nextVersionValue = useMemo(() => {
         if (nextVersion && getPropByString(nextVersion, name) !== undefined) {
-            return getPropByString(nextVersion, name);
+            let value = getPropByString(nextVersion, name);
+
+            return value ? moment(value).format('DD/MM/YYYY HH:mm') : '';
         }
 
         return undefined;

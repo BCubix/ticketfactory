@@ -61,4 +61,34 @@
             }
         }
     }
+
+    &_img {
+        height: 200px;
+        width: auto;
+        max-width: 350px;
+
+        &_wrapper {
+            padding: 10px;
+        }
+
+        &_container {
+            display: flex;
+            flex-direction: column;
+            width: min-content;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        &_name {
+            text-align: center;
+            word-break: break-word;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+
+            &_wrapper {
+                background-color: $secondary-color-light;
+            }
+        }
+    }
 }

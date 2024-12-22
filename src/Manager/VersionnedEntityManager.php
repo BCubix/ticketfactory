@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Content\Content;
 use App\Entity\Page\Page;
+use App\Entity\Page\PageBlockType;
 use App\Entity\VersionnedEntity\VersionnedEntity;
 use App\Exception\ApiException;
 
@@ -61,7 +62,12 @@ class VersionnedEntityManager extends AbstractManager
 
     public function getEntityVersions(string $entityKeyword, int $entityId): array
     {
-        return $this->em->getRepository(VersionnedEntity::class)->findEntityVersionsForAdmin($entityKeyword, $entityId);
+        $versions = $this->em->getRepository(VersionnedEntity::class)->findEntityVersionsForAdmin($entityKeyword, $entityId);
+        foreach ($versions as &$version) {
+            $version = $this->deSerializeVersionnedEntity($version);
+        }
+
+        return $versions;
     }
 
     public function restoreEntityVersion(string $entityKeyword, int $versionId): ?Object
@@ -100,6 +106,66 @@ class VersionnedEntityManager extends AbstractManager
         return self::SUPPORTED_TYPES[$keyword];
     }
 
+    public function deSerializeVersionnedEntity(VersionnedEntity $entity)
+    {
+        if ($entity->getEntityKeyword() !== "page") {
+            return $entity;
+        }
+
+        $page = $this->em->getRepository(Page::class)->find($entity->getEntityId());
+        if (null === $page || !isset($entity->getFields()['pageBlocks'])) {
+            return $entity;
+        }
+
+        $pagePageBlocks = $page->getPageBlocks()->toArray();
+        $fields = $entity->getFields();
+        foreach ($fields['pageBlocks'] as $key => &$pageBlock) {
+            if (isset($pageBlock['fields']) && isset($pagePageBlocks[$key]) && null !== $pagePageBlocks[$key]->getPageBlockType()) {
+                $pageBlockType = $pagePageBlocks[$key]->getPageBlockType();
+
+                foreach ($pageBlock['fields'] as $contentFieldName => &$contentField) {
+                    foreach ($pageBlockType->getFields() as $pageBlockTypeField) {
+                        if ($contentFieldName == $pageBlockTypeField->getName()) {
+                            $component = $this->mf->get('contentType')->getContentTypeInstanceFromType($pageBlockTypeField->getType());
+
+                            if (method_exists($component, "jsonContentDeserialize")) {
+                                $contentField = $component->jsonContentDeserialize($contentField, $pageBlockTypeField);
+                            } else {
+                                $contentField = $contentField;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                continue;
+            }
+
+            if (!isset($pageBlock['columns'])) {
+                continue;
+            }
+
+            $pagePageColumns = [];
+            if (isset($pagePageBlocks[$key])) {
+                $pagePageColumns = $pagePageBlocks[$key]->getColumns() ?? [];
+            }
+
+            foreach ($pageBlock['columns'] as $columnKey => &$column) {
+                if (isset($column['content']) && isset($pagePageColumns[$columnKey])) {
+                    $typeInstance = $this->mf->get('page')->getPageColumnInstanceFromType($pagePageColumns[$columnKey]->getType());
+                    if (method_exists($typeInstance, "jsonContentDeserialize")) {
+                        $column['content'] = $typeInstance->jsonContentDeserialize($column['content']);
+                    }
+                }
+            }
+        }
+
+        $entity->setFields($fields);
+
+        return $entity;
+    }
+
     protected function compareObjects($newObject, $oldObject): mixed
     {
         $changeSet = [];
@@ -120,7 +186,7 @@ class VersionnedEntityManager extends AbstractManager
                             $changeSet[$key][$oldObjectKeyIndex] = $oldObjectKeyElement;
                         } else {
                             $result = $this->compareObjects($newObject[$key][$oldObjectKeyIndex], $oldObjectKeyElement);
-                            if (!empty($result) && ($key === "columns" || $oldObjectKeyIndex !== 0)) {
+                            if (!empty($result)) {
                                 $changeSet[$key][$oldObjectKeyIndex] = $result;
                             }
                         }
@@ -134,8 +200,8 @@ class VersionnedEntityManager extends AbstractManager
                     $changeSet[$key] = $result;
                 }
             } else {
-                if ($newObject[$key] !== $oldObject[$key] || $key === "content" || $key === "type") {
-                    $changeSet[$key] = $oldObject[$key] . "-old";
+                if ($newObject[$key] !== $oldObject[$key]) {
+                    $changeSet[$key] = $oldObject[$key];
                 }
             }
         }
