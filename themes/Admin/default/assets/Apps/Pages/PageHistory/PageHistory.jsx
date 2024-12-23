@@ -7,11 +7,12 @@ import { Constant } from '@/AdminService/Constant';
 import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Component } from '@/AdminService/Component';
-import { CardContent, Typography } from '@mui/material';
+import { Button, CardContent, Typography } from '@mui/material';
 import { NotificationManager } from 'react-notifications';
 
 import { DisplayPageDifferences } from './DisplayPageDifferences';
 import { HISTORY_TYPE_FIELDS } from '../services/utils/getHistoryTypeDisplay';
+import { checkPageBlockTypeChange } from '../services/utils/checkTypes';
 
 export const pageHistoryCrud = {
     historyTypes: HISTORY_TYPE_FIELDS,
@@ -23,6 +24,7 @@ export const PageHistory = () => {
     const { id } = useParams();
     const [pageHistory, setPageHistory] = useState(null);
     const [page, setPage] = useState(null);
+    const [isRestorable, setIsRestorable] = useState(true);
     const [selectedHistory, setSelectedHistory] = useState(null);
 
     useEffect(() => {
@@ -57,6 +59,31 @@ export const PageHistory = () => {
         return pageHistory?.length > selectedHistory + 1 ? pageHistory?.at(selectedHistory + 1)?.fields : page;
     }, [selectedHistory]);
 
+    const restoreVersion = () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.pageHistoryApi.restoreHistory(pageHistory?.at(selectedHistory)?.id);
+            console.log(result);
+            if (result?.result) {
+                NotificationManager.success('La page à bien été restauré.', 'Succès', Constant.REDIRECTION_TIME);
+                navigate(`${Constant.PAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                return;
+            }
+        });
+    };
+
+    useEffect(() => {
+        if (!pageHistory) {
+            return;
+        }
+
+        if (checkPageBlockTypeChange(pageHistory, selectedHistory)) {
+            setIsRestorable(false);
+            return;
+        }
+
+        setIsRestorable(true);
+    }, [selectedHistory]);
+
     if (!pageHistory) {
         return <></>;
     }
@@ -74,18 +101,38 @@ export const PageHistory = () => {
             <Component.CmtHistoryDate historyList={pageHistory} selectedHistory={selectedHistory} setSelectedHistory={setSelectedHistory} />
 
             {selectedHistory !== null && (
-                <Component.CmtCard sx={{ marginTop: 5 }}>
-                    <CardContent>
-                        <DisplayPageDifferences
-                            previousVersion={previousVersion}
-                            actualVersion={actualVersion}
-                            nextVersion={nextVersion}
-                            selectedHistory={selectedHistory}
-                            pageHistory={pageHistory}
-                            page={page}
-                        />
-                    </CardContent>
-                </Component.CmtCard>
+                <>
+                    <Component.CmtCard sx={{ marginTop: 5 }}>
+                        <CardContent>
+                            <DisplayPageDifferences
+                                previousVersion={previousVersion}
+                                actualVersion={actualVersion}
+                                nextVersion={nextVersion}
+                                selectedHistory={selectedHistory}
+                                pageHistory={pageHistory}
+                                page={page}
+                                isRestorable={isRestorable}
+                                setIsRestorable={setIsRestorable}
+                            />
+                        </CardContent>
+                    </Component.CmtCard>
+
+                    {isRestorable && (
+                        <Box className="flex row-end margin-top-5">
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                id="restoreVersion"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    restoreVersion();
+                                }}
+                            >
+                                Restaurer
+                            </Button>
+                        </Box>
+                    )}
+                </>
             )}
         </Component.CmtPageWrapper>
     );

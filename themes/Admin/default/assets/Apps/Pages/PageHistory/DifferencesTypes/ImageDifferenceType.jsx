@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import { getPropByString } from '@Services/utils/getPropByString';
 
-export const ImageDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, pageHistory, page, name, label = '' }) => {
+export const ImageDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, basePreviousVersion, name, label = '' }) => {
     const previousVersionValue = useMemo(() => {
         if (previousVersion && getPropByString(previousVersion, name) !== undefined) {
             return getPropByString(previousVersion, name);
@@ -51,7 +51,7 @@ export const ImageDifferenceType = ({ previousVersion, actualVersion, nextVersio
             )}
 
             <Grid container spacing={4}>
-                {Boolean(previousVersion) && (
+                {(Boolean(previousVersion) || Boolean(basePreviousVersion)) && (
                     <Grid item xs={4}>
                         {displayDifferences.isDifferentFromPrevious && (
                             <Box className="history_diff_display_old history_img_wrapper">
@@ -68,7 +68,7 @@ export const ImageDifferenceType = ({ previousVersion, actualVersion, nextVersio
                     </Grid>
                 )}
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     <Box className="history_diff_actual history_img_wrapper">
                         <Box className="history_img_container ">
                             <Box component="img" className="history_img" src={actualVersionValue?.documentUrl} />
@@ -81,7 +81,7 @@ export const ImageDifferenceType = ({ previousVersion, actualVersion, nextVersio
                     </Box>
                 </Grid>
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_display_new history_img_wrapper">
                             <Box className="history_img_container">

@@ -4,12 +4,12 @@ import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 import { getPropByString } from '@Services/utils/getPropByString';
 import moment from 'moment/moment';
 
-export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, name, label = '' }) => {
+export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVersion, basePreviousVersion, selectedHistory, name, format = 'DD/MM/YYYY HH:mm', label = '' }) => {
     const previousVersionValue = useMemo(() => {
         if (previousVersion && getPropByString(previousVersion, name) !== undefined) {
             let value = getPropByString(previousVersion, name);
 
-            return value ? moment(value).format('DD/MM/YYYY HH:mm') : '';
+            return value ? moment(value).format(format) : '';
         }
 
         return undefined;
@@ -19,7 +19,7 @@ export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVer
         if (actualVersion && getPropByString(actualVersion, name) !== undefined) {
             let value = getPropByString(actualVersion, name);
 
-            return value ? moment(value).format('DD/MM/YYYY HH:mm') : '';
+            return value ? moment(value).format(format) : '';
         }
 
         return undefined;
@@ -29,7 +29,7 @@ export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVer
         if (nextVersion && getPropByString(nextVersion, name) !== undefined) {
             let value = getPropByString(nextVersion, name);
 
-            return value ? moment(value).format('DD/MM/YYYY HH:mm') : '';
+            return value ? moment(value).format(format) : '';
         }
 
         return undefined;
@@ -57,7 +57,7 @@ export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVer
                 </Typography>
             )}
             <Grid container spacing={4}>
-                {Boolean(previousVersion) && (
+                {(Boolean(previousVersion) || Boolean(basePreviousVersion)) && (
                     <Grid item xs={4}>
                         {displayDifferences.isDifferentFromPrevious && (
                             <Box className="history_diff_display_old">
@@ -67,7 +67,7 @@ export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVer
                     </Grid>
                 )}
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_new">
                             <ReactDiffViewer
@@ -123,7 +123,7 @@ export const DateTimeDifferenceType = ({ previousVersion, actualVersion, nextVer
                     )}
                 </Grid>
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_display_new">
                             <Typography component="pre">{nextVersionValue || ''}</Typography>

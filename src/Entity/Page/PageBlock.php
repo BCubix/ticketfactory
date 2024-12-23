@@ -215,4 +215,44 @@ class PageBlock extends Datable
         $this->columns = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->columns);
         $this->fields = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->fields);
     }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['name'])) {
+            $this->name = $fields['name'];
+        }
+    
+        if (isset($fields['saveAsModel'])) {
+            $this->saveAsModel = $fields['saveAsModel'];
+        }
+    
+        if (isset($fields['class'])) {
+            $this->class = $fields['class'];
+        }
+    
+        if (isset($fields['fields'])) {
+            $this->fields = $this->deepMerge($this->fields, $fields['fields']);
+        }
+    
+        if (isset($fields['columns'])) {
+            $this->columns = $this->deepMerge($this->columns, $fields['columns']);
+        }
+
+        return $this;
+    }
+
+    private function deepMerge(array $target, array $source): array
+    {
+        foreach ($source as $key => $value) {
+            // Si la clé existe et que les deux valeurs sont des tableaux, fusionner récursivement
+            if (array_key_exists($key, $target) && is_array($target[$key]) && is_array($value)) {
+                $target[$key] = $this->deepMerge($target[$key], $value);
+            } else {
+                // Sinon, remplacer ou ajouter la valeur
+                $target[$key] = $value;
+            }
+        }
+
+        return $target;
+    }
 }

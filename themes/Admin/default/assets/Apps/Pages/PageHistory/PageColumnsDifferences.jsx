@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { getPropByString } from '@Services/utils/getPropByString';
 import { Box, CardContent, InputLabel, Typography } from '@mui/material';
-import { TextDifferenceType } from './DifferencesTypes/TextDifferenceType';
 import { Component } from '@/AdminService/Component';
 import { Crud } from '@/AdminService/Crud';
 
@@ -15,15 +14,6 @@ export const PageColumnsDifferences = ({ previousVersion, actualVersion, nextVer
     };
 
     return Object.keys(pageBlockColumns)?.map((key, index) => {
-        /* if (getPropByString(actualVersion, baseName + key)?.type) {
-            return (
-                <Box key={index}>
-                    <Typography>Colonne N°{parseInt(key) + 1}</Typography>
-                    <Typography>Le type de champs à été modifié</Typography>
-                </Box>
-            );
-        } */
-
         if (!Crud?.pages?.history?.historyTypes || !Crud?.pages?.history?.historyTypes[getFieldType(index)]) {
             return (
                 <Box key={index}>

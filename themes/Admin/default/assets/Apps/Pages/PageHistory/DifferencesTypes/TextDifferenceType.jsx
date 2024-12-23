@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 import { getPropByString } from '@Services/utils/getPropByString';
 
-export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, name, label = '' }) => {
+export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion, basePreviousVersion, selectedHistory, name, label = '' }) => {
     const previousVersionValue = useMemo(() => {
         if (previousVersion && getPropByString(previousVersion, name) !== undefined) {
             return getPropByString(previousVersion, name);
@@ -50,7 +50,7 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                 </Typography>
             )}
             <Grid container spacing={4}>
-                {Boolean(previousVersion) && (
+                {(Boolean(previousVersion) || Boolean(basePreviousVersion)) && (
                     <Grid item xs={4}>
                         {displayDifferences.isDifferentFromPrevious && (
                             <Box className="history_diff_display_old">
@@ -60,7 +60,7 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                     </Grid>
                 )}
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_new">
                             <ReactDiffViewer
@@ -116,7 +116,7 @@ export const TextDifferenceType = ({ previousVersion, actualVersion, nextVersion
                     )}
                 </Grid>
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_display_new">
                             <Typography component="pre">{nextVersionValue || ''}</Typography>

@@ -27,17 +27,17 @@ class PageBlockType extends Datable implements JsonDoctrineSerializable
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_one'])]
     #[ORM\Column(length: 123, nullable: true, unique: true)]
     private ?string $keyword = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[JMS\Groups(['a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_one'])]
     #[ORM\Column(type: 'json')]
     private array $fields = [];
 

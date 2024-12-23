@@ -29,8 +29,11 @@ class PageBlockSerializer
         $columns = [];
 
         foreach ($pageBlock->getColumns() as $column) {
-            $content = $this->serializePageColumnContent($column);
+            if (!($column instanceof PageColumn)) {
+                continue;
+            }
 
+            $content = $this->serializePageColumnContent($column);
             $serializedColumn = [
                 'xs'      => $column->getXs(),
                 's'       => $column->getS(),

@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import { getPropByString } from '@Services/utils/getPropByString';
 
-export const EntityDifferenceType = ({ previousVersion, actualVersion, nextVersion, selectedHistory, name, displayName = 'name', label = '' }) => {
+export const EntityDifferenceType = ({ previousVersion, actualVersion, nextVersion, basePreviousVersion, selectedHistory, name, displayName = 'name', label = '' }) => {
     const previousVersionValue = useMemo(() => {
         if (previousVersion && getPropByString(previousVersion, name) !== undefined) {
             return getPropByString(previousVersion, name);
@@ -51,7 +51,7 @@ export const EntityDifferenceType = ({ previousVersion, actualVersion, nextVersi
             )}
 
             <Grid container spacing={4}>
-                {Boolean(previousVersion) && (
+                {(Boolean(previousVersion) || Boolean(basePreviousVersion)) && (
                     <Grid item xs={4}>
                         {displayDifferences.isDifferentFromPrevious && (
                             <Box className="history_diff_display_old">
@@ -63,7 +63,7 @@ export const EntityDifferenceType = ({ previousVersion, actualVersion, nextVersi
                     </Grid>
                 )}
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     <Box className="history_diff_actual">
                         <Typography component="pre" style={{ margin: 0 }}>
                             {actualVersionValue[displayName]}
@@ -71,7 +71,7 @@ export const EntityDifferenceType = ({ previousVersion, actualVersion, nextVersi
                     </Box>
                 </Grid>
 
-                <Grid item xs={Boolean(previousVersion) ? 4 : 6}>
+                <Grid item xs={Boolean(previousVersion) || Boolean(basePreviousVersion) ? 4 : 6}>
                     {displayDifferences.isDifferentFromNext && (
                         <Box className="history_diff_display_new">
                             <Typography component="pre" style={{ margin: 0 }}>

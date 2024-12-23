@@ -81,6 +81,8 @@ class VersionnedEntityManager extends AbstractManager
         $object = $this->em->getRepository($keyword)->findOneForAdmin($version->getEntityId());
 
         $this->restoreFieldsVersion($object, $version->getFields());
+
+        return $object;
     }
 
     public function getKeyword(?Object $entity): ?string
@@ -211,24 +213,25 @@ class VersionnedEntityManager extends AbstractManager
 
     private function restoreFieldsVersion(Object &$object, array $fields): void
     {
-        foreach ($fields as $fName => $fValues) {
-            $reflectionProperty = new \ReflectionProperty(ClassUtils::getClass($object), $fName);
-            $reflectionProperty->setAccessible(true);
+        $keyword = $this->getKeyword($object);
+        if ($keyword === 'page') {
+            $this->restorePageVersion($object, $fields);
+        }
 
-            // Simple element
-            if (isset($fValues['after'])) {
-                $reflectionProperty->setValue($object, $fValues['after']);
-                continue;
-            }
+        $this->em->persist($object);
+        $this->em->flush();
+    }
 
-            // Collection element
-            $getMethod = 'get' . ucfirst(substr($fName, 0, -1)) . 's';
-            foreach ($object->$getMethod() as &$childObject) {
-                foreach ($fValues as $fValue) {
-                    $this->restoreFieldsVersion($childObject, $fValue);
-                    break;
-                }
-            }
+    private function restorePageVersion(Object &$object, array $fields): void
+    {
+        foreach($object->getPageBlocks() as &$pageBlock) {
+            $this->sf->get('pageBlockSerializer')->serializePageBlock($pageBlock);
+        }
+
+        $object->restoreHistory($fields);
+
+        foreach($object->getPageBlocks() as &$pageBlock) {
+            $this->sf->get('pageBlockSerializer')->deSerializePageBlock($pageBlock);
         }
     }
 }

@@ -343,4 +343,33 @@ class Page extends Datable
 
         return $result;
     }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['title'])) {
+            $this->title = $fields['title'];
+        }
+        
+        if (isset($fields['subtitle'])) {
+            $this->subtitle = $fields['subtitle'];
+        }
+        
+        if (isset($fields['slug'])) {
+            $this->slug = $fields['slug'];
+        }
+        
+        if (isset($fields['keyword'])) {
+            $this->keyword = $fields['keyword'];
+        }
+        
+        if (isset($fields['pageBlocks'])) {
+            foreach ($fields['pageBlocks'] as $key => $pageBlockValue) {
+                if (isset($this->pageBlocks[$key])) {
+                    $this->pageBlocks[$key] = $this->pageBlocks[$key]->restoreHistory($pageBlockValue);
+                }
+            }
+        }
+
+        return $this;
+    }
 }
