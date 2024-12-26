@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, CardContent, InputLabel, Typography } from '@mui/material';
-import { TextDifferenceType } from './DifferencesTypes/TextDifferenceType';
 import { Component } from '@/AdminService/Component';
 import { PageColumnsDifferences } from './PageColumnsDifferences';
 import { PageContentDifferences } from './PageContentHistory';
 import { checkPageBlockIndexTypeChange } from '../services/utils/checkTypes';
+import { TextDifferenceType } from './DifferencesTypes/TextDifferenceType';
 
 export const PageBlocksDifferences = ({ previousVersion, actualVersion, nextVersion, selectedHistory, pageHistory, page, ...rest }) => {
     if (!('pageBlocks' in actualVersion)) {

@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Content\Content;
+use App\Entity\Content\ContentType;
 use App\Entity\Page\Page;
 use App\Entity\Page\PageBlockType;
 use App\Entity\VersionnedEntity\VersionnedEntity;
@@ -110,10 +111,68 @@ class VersionnedEntityManager extends AbstractManager
 
     public function deSerializeVersionnedEntity(VersionnedEntity $entity)
     {
-        if ($entity->getEntityKeyword() !== "page") {
-            return $entity;
+        if ($entity->getEntityKeyword() === "page") {
+            return $this->deSerializePageVersion($entity);
         }
 
+        if ($entity->getEntityKeyword() === "content") {
+            return $this->deSerializeContentVersion($entity);
+        }
+    }
+
+    protected function compareObjects($newObject, $oldObject): mixed
+    {
+        $changeSet = [];
+
+        if (!is_array($newObject) || !is_array($oldObject)) {
+            return $newObject !== $oldObject ? $oldObject : [];
+        }
+
+        foreach ($oldObject as $key => $oldObjectElement) {
+            if (!array_key_exists($key, $newObject)) {
+                $changeSet[$key] = $oldObjectElement;
+            }
+
+            if (is_array($newObject[$key]) || is_array($oldObject[$key])) {
+                if (is_array($newObject[$key]) && is_array($oldObject[$key])) {
+                    foreach ($oldObject[$key] as $oldObjectKeyIndex => $oldObjectKeyElement) {
+                        if (!array_key_exists($oldObjectKeyIndex, $newObject[$key])) {
+                            $changeSet[$key][$oldObjectKeyIndex] = $oldObjectKeyElement;
+                        } else {
+                            $result = $this->compareObjects($newObject[$key][$oldObjectKeyIndex], $oldObjectKeyElement);
+                            if (!empty($result)) {
+                                $changeSet[$key][$oldObjectKeyIndex] = $result;
+                            }
+                        }
+                    }
+                } else {
+                    $changeSet[$key] = $oldObject[$key];
+                }
+            } else if (is_object($newObject[$key]) && is_object($oldObject[$key])) {
+                $result = $this->compareObjects($newObject[$key], $oldObject[$key]);
+                if (!empty($result)) {
+                    $changeSet[$key] = $result;
+                }
+            } else {
+                if ($newObject[$key] !== $oldObject[$key]) {
+                    $changeSet[$key] = $oldObject[$key];
+                }
+            }
+        }
+
+        return $changeSet;
+    }
+
+    private function restoreFieldsVersion(Object &$object, array $fields): void
+    {
+        $object->restoreHistory($fields);
+
+        $this->em->persist($object);
+        $this->em->flush();
+    }
+
+    private function deSerializePageVersion(VersionnedEntity $entity)
+    {
         $page = $this->em->getRepository(Page::class)->find($entity->getEntityId());
         if (null === $page || !isset($entity->getFields()['pageBlocks'])) {
             return $entity;
@@ -168,70 +227,43 @@ class VersionnedEntityManager extends AbstractManager
         return $entity;
     }
 
-    protected function compareObjects($newObject, $oldObject): mixed
+    private function deSerializeContentVersion(VersionnedEntity $entity)
     {
-        $changeSet = [];
-
-        if (!is_array($newObject) || !is_array($oldObject)) {
-            return $newObject !== $oldObject ? $oldObject : [];
+        $content = $this->em->getRepository(Content::class)->find($entity->getEntityId());
+        if (null === $content) {
+            return $entity;
         }
 
-        foreach ($oldObject as $key => $oldObjectElement) {
-            if (!array_key_exists($key, $newObject)) {
-                $changeSet[$key] = $oldObjectElement;
+        $fields = $entity->getFields();
+        $contentType = $content->getContentType();
+        if (!isset($fields['fields'])) {
+            return $entity;
+        }
+
+        foreach ($fields['fields'] as $contentFieldName => &$contentField) {
+            $contentTypeFields = $contentType->getFields();
+            if ((count($contentTypeFields) > 0) && is_array($contentTypeFields[0])) {
+                $contentType = ContentType::jsonDeserialize($contentType);
+                $contentTypeFields = $contentType->getFields();
             }
 
-            if (is_array($newObject[$key]) || is_array($oldObject[$key])) {
-                if (is_array($newObject[$key]) && is_array($oldObject[$key])) {
-                    foreach ($oldObject[$key] as $oldObjectKeyIndex => $oldObjectKeyElement) {
-                        if (!array_key_exists($oldObjectKeyIndex, $newObject[$key])) {
-                            $changeSet[$key][$oldObjectKeyIndex] = $oldObjectKeyElement;
-                        } else {
-                            $result = $this->compareObjects($newObject[$key][$oldObjectKeyIndex], $oldObjectKeyElement);
-                            if (!empty($result)) {
-                                $changeSet[$key][$oldObjectKeyIndex] = $result;
-                            }
-                        }
+            foreach ($contentType->getFields() as $contentTypeField) {
+                if ($contentFieldName == $contentTypeField->getName()) {
+                    $component = $this->mf->get('contentType')->getContentTypeInstanceFromType($contentTypeField->getType());
+
+                    if (method_exists($component, "jsonContentDeserialize")) {
+                        $contentField = $component->jsonContentDeserialize($contentField, $contentTypeField);
+                    } else {
+                        $contentField = $contentField;
                     }
-                } else {
-                    $changeSet[$key] = $oldObject[$key];
-                }
-            } else if (is_object($newObject[$key]) && is_object($oldObject[$key])) {
-                $result = $this->compareObjects($newObject[$key], $oldObject[$key]);
-                if (!empty($result)) {
-                    $changeSet[$key] = $result;
-                }
-            } else {
-                if ($newObject[$key] !== $oldObject[$key]) {
-                    $changeSet[$key] = $oldObject[$key];
+
+                    break;
                 }
             }
         }
 
-        return $changeSet;
-    }
+        $entity->setFields($fields);
 
-    private function restoreFieldsVersion(Object &$object, array $fields): void
-    {
-        $keyword = $this->getKeyword($object);
-        if ($keyword === 'page') {
-            $this->restorePageVersion($object, $fields);
-        }
-
-        $this->em->persist($object);
-        $this->em->flush();
-    }
-
-    private function restorePageVersion(Object &$object, array $fields): void
-    {
-        foreach($object->getPageBlocks() as &$pageBlock) {
-            $this->sf->get('pageBlockSerializer')->serializePageBlock($pageBlock);
-        }
-
-        $object->restoreHistory($fields);
-
-        foreach($object->getPageBlocks() as &$pageBlock) {
-            $this->sf->get('pageBlockSerializer')->deSerializePageBlock($pageBlock);
-        }
+        return $entity;
     }
 }

@@ -30,7 +30,7 @@ class Event extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_page_one', 'a_page_block_all', 'a_page_block_one', 'a_subscription_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_page_one', 'a_page_block_all', 'a_page_block_one', 'a_subscription_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -39,7 +39,7 @@ class Event extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 

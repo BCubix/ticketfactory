@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { TextDifferenceType } from './DifferencesTypes/TextDifferenceType';
 import { PageBlocksDifferences } from './PageBlocksDifferences';
+import { TextDifferenceType } from './DifferencesTypes/TextDifferenceType';
 
 export const DisplayPageDifferences = ({ ...rest }) => {
     return (

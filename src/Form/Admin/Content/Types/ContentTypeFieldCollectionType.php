@@ -77,15 +77,15 @@ class ContentTypeFieldCollectionType extends ContentTypeFieldAbstractType
         $fieldType = $childrenContentType['fields'][0];
         $fields = [];
 
-        foreach ($cf as $childrenCf) {
+        foreach ($cf as $childrenCfKey => $childrenCf) {
             $component = $this->ctm->getContentTypeInstanceFromType($fieldType->getType());
             if (method_exists($component, 'jsonContentDeserialize')) {
                 $tmpFields = $component->jsonContentDeserialize($childrenCf, $fieldType);
                 $tmpFields = [$fieldType->getName() => $tmpFields];
 
-                $fields[] = $tmpFields;
+                $fields[$childrenCfKey] = $tmpFields;
             } else {
-                $fields[] = $childrenCf;
+                $fields[$childrenCfKey] = $childrenCf;
             }
         }
 

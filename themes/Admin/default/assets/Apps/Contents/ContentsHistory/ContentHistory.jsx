@@ -1,81 +1,78 @@
-import { Box } from '@mui/system';
-import React, { useMemo, useState } from 'react';
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { HISTORY_TYPE_FIELDS } from '../services/config/getHistoryTypeDisplay';
 import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import { Constant } from '@/AdminService/Constant';
-import { Api } from '@/AdminService/Api';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
-import { Button, CardContent, Typography } from '@mui/material';
-import { NotificationManager } from 'react-notifications';
+import { Box, Button, CardContent } from '@mui/material';
+import { DisplayContentDifferences } from './DisplayContentDifferences';
+import { checkContentTypeChange } from '../services/config/checkTypes';
 
-import { DisplayPageDifferences } from './DisplayPageDifferences';
-import { checkPageBlockTypeChange } from '../services/utils/checkTypes';
-import { HISTORY_TYPE_FIELDS } from '../services/utils/getHistoryTypeDisplay';
-
-export const pageHistoryCrud = {
+export const contentHistoryCrud = {
     historyTypes: HISTORY_TYPE_FIELDS,
 };
 
-export const PageHistory = () => {
+export const ContentHistory = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [pageHistory, setPageHistory] = useState(null);
-    const [page, setPage] = useState(null);
+    const [contentHistory, setContentHistory] = useState(null);
+    const [content, setContent] = useState(null);
     const [isRestorable, setIsRestorable] = useState(true);
     const [selectedHistory, setSelectedHistory] = useState(null);
 
     useEffect(() => {
         if (!id) {
-            navigate(Constant.PAGES_BASE_PATH);
+            navigate(Constant.CONTENTS_BASE_PATH);
             return;
         }
 
         apiMiddleware(dispatch, async () => {
-            const [pageResult, historyResult] = await Promise.all([Api.pagesApi.getOnePage(id), Api.pageHistoryApi.getOnePageHistory(id)]);
-            if (!pageResult.result || !historyResult.result) {
+            const [contentResult, historyResult] = await Promise.all([Api.contentsApi.getOneContent(id), Api.contentHistoryApi.getOneContentHistory(id)]);
+            if (!contentResult.result || !historyResult.result) {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
-                navigate(Constant.PAGES_BASE_PATH);
+                navigate(Constant.CONTENTS_BASE_PATH);
                 return;
             }
 
-            setPage(pageResult.page);
-            setPageHistory(historyResult.pageHistory || []);
-            setSelectedHistory(historyResult.pageHistory.length > 0 ? historyResult.pageHistory.length - 1 : null);
+            setContent(contentResult.content);
+            setContentHistory(historyResult.contentHistory || []);
+            setSelectedHistory(historyResult.contentHistory.length > 0 ? historyResult.contentHistory.length - 1 : null);
         });
     }, [id]);
 
     const previousVersion = useMemo(() => {
-        return selectedHistory !== null && selectedHistory > 0 ? pageHistory?.at(selectedHistory - 1)?.fields : null;
+        return selectedHistory !== null && selectedHistory > 0 ? contentHistory?.at(selectedHistory - 1)?.fields : null;
     }, [selectedHistory]);
 
     const actualVersion = useMemo(() => {
-        return selectedHistory !== null ? pageHistory?.at(selectedHistory)?.fields : null;
+        return selectedHistory !== null ? contentHistory?.at(selectedHistory)?.fields : null;
     }, [selectedHistory]);
 
     const nextVersion = useMemo(() => {
-        return pageHistory?.length > selectedHistory + 1 ? pageHistory?.at(selectedHistory + 1)?.fields : page;
+        return contentHistory?.length > selectedHistory + 1 ? contentHistory?.at(selectedHistory + 1)?.fields : content;
     }, [selectedHistory]);
 
     const restoreVersion = () => {
         apiMiddleware(dispatch, async () => {
-            const result = await Api.pageHistoryApi.restoreHistory(pageHistory?.at(selectedHistory)?.id);
+            const result = await Api.contentHistoryApi.restoreHistory(contentHistory?.at(selectedHistory)?.id);
             if (result?.result) {
-                NotificationManager.success('La page à bien été restauré.', 'Succès', Constant.REDIRECTION_TIME);
-                navigate(`${Constant.PAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
+                NotificationManager.success('La content à bien été restauré.', 'Succès', Constant.REDIRECTION_TIME);
+                navigate(`${Constant.CONTENTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`);
                 return;
             }
         });
     };
 
     useEffect(() => {
-        if (!pageHistory) {
+        if (!contentHistory) {
             return;
         }
 
-        if (checkPageBlockTypeChange(pageHistory, selectedHistory)) {
+        if (checkContentTypeChange(contentHistory, selectedHistory)) {
             setIsRestorable(false);
             return;
         }
@@ -83,7 +80,7 @@ export const PageHistory = () => {
         setIsRestorable(true);
     }, [selectedHistory]);
 
-    if (!pageHistory) {
+    if (!contentHistory) {
         return <></>;
     }
 
@@ -96,20 +93,20 @@ export const PageHistory = () => {
     }
 
     return (
-        <Component.CmtPageWrapper title="Historique de page">
-            <Component.CmtHistoryDate historyList={pageHistory} selectedHistory={selectedHistory} setSelectedHistory={setSelectedHistory} />
+        <Component.CmtPageWrapper title="Historique de contenu">
+            <Component.CmtHistoryDate historyList={contentHistory} selectedHistory={selectedHistory} setSelectedHistory={setSelectedHistory} />
 
             {selectedHistory !== null && (
                 <>
                     <Component.CmtCard sx={{ marginTop: 5 }}>
                         <CardContent>
-                            <DisplayPageDifferences
+                            <DisplayContentDifferences
                                 previousVersion={previousVersion}
                                 actualVersion={actualVersion}
                                 nextVersion={nextVersion}
                                 selectedHistory={selectedHistory}
-                                pageHistory={pageHistory}
-                                page={page}
+                                contentHistory={contentHistory}
+                                content={content}
                                 isRestorable={isRestorable}
                                 setIsRestorable={setIsRestorable}
                             />

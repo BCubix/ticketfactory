@@ -231,28 +231,13 @@ class PageBlock extends Datable
         }
     
         if (isset($fields['fields'])) {
-            $this->fields = $this->deepMerge($this->fields, $fields['fields']);
+            $this->fields = array_replace_recursive($this->fields, $fields['fields']);
         }
     
         if (isset($fields['columns'])) {
-            $this->columns = $this->deepMerge($this->columns, $fields['columns']);
+            $this->columns = array_replace_recursive($this->columns, $fields['columns']);
         }
 
         return $this;
-    }
-
-    private function deepMerge(array $target, array $source): array
-    {
-        foreach ($source as $key => $value) {
-            // Si la clé existe et que les deux valeurs sont des tableaux, fusionner récursivement
-            if (array_key_exists($key, $target) && is_array($target[$key]) && is_array($value)) {
-                $target[$key] = $this->deepMerge($target[$key], $value);
-            } else {
-                // Sinon, remplacer ou ajouter la valeur
-                $target[$key] = $value;
-            }
-        }
-
-        return $target;
     }
 }
