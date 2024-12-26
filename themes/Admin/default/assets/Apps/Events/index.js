@@ -10,13 +10,13 @@ import { MoveEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/MoveEven
 import { DeleteEventMedias } from '@Apps/Events/EventsForm/EventMediaPart/DeleteEventMedias';
 import { EventDateRange } from '@Apps/Events/EventsForm/EventDateRange';
 import { EventParentCategoryPartForm } from '@Apps/Events/EventsForm/EventParentCategoryPartForm';
-import { EventsPriceBlockForm } from '@Apps/Events/EventsForm/EventPriceBlockForm';
-import { EventsDateBlockForm } from '@Apps/Events/EventsForm/EventsDateBlockForm';
+import { EventsPriceCategoryForm } from '@Apps/Events/EventsForm/EventPriceCategoryForm';
 import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
 import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
 import { EventsList, eventsListCrud } from '@Apps/Events/EventsList/EventsList';
 import eventsReducer from '@Apps/Events/redux/events/eventsSlice';
 import eventsApi from '@Apps/Events/services/api/eventsApi';
+import { CmtCalendar } from '@Apps/Events/EventsForm/CmtCalendar/CmtCalendar';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -41,11 +41,11 @@ export const initComponent = () => {
     setComponent('DeleteEventMedias', DeleteEventMedias);
     setComponent('EventDateRange', EventDateRange);
     setComponent('EventParentCategoryPartForm', EventParentCategoryPartForm);
-    setComponent('EventsPriceBlockForm', EventsPriceBlockForm);
-    setComponent('EventsDateBlockForm', EventsDateBlockForm);
+    setComponent('EventsPriceCategoryForm', EventsPriceCategoryForm);
     setComponent('EventsDateForm', EventsDateForm);
     setComponent('EventsPriceForm', EventsPriceForm);
     setComponent('EventsList', EventsList);
+    setComponent('CmtCalendar', CmtCalendar);
 };
 
 export const initApi = () => {

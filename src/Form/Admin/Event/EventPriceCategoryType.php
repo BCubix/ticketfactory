@@ -3,7 +3,7 @@
 namespace App\Form\Admin\Event;
 
 use App\Form\Admin\AdminBaseFormType;
-use App\Entity\Event\EventDateBlock;
+use App\Entity\Event\EventPriceCategory;
 use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
@@ -16,16 +16,14 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventDateBlockType extends AdminBaseFormType
+class EventPriceCategoryType extends AdminBaseFormType
 {
-    protected const ENTITY_CLASS = EventDateBlock::class;
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name',                 TextType::class,            [])
-            ->add('eventDates',           CollectionType::class,      [
-                'entry_type'   => EventDateType::class,
+            ->add('eventPrices',          CollectionType::class,      [
+                'entry_type'   => EventPriceType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
@@ -54,7 +52,7 @@ class EventDateBlockType extends AdminBaseFormType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => EventDateBlock::class,
+            'data_class' => EventPriceCategory::class,
             'csrf_protection' => false
         ]);
     }

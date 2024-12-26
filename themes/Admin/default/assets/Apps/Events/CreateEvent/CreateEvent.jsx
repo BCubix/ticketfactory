@@ -45,7 +45,7 @@ export const CreateEvent = () => {
         return parameters?.find((it) => it.paramKey === 'core_default_event_date_block_name')?.paramValue || null;
     }, [parameters]);
 
-    const defaultPriceBlockName = useMemo(() => {
+    const defaultPriceCategoryName = useMemo(() => {
         return parameters?.find((it) => it.paramKey === 'core_default_event_price_block_name')?.paramValue || null;
     }, [parameters]);
 
@@ -118,26 +118,24 @@ export const CreateEvent = () => {
             }
         });
     };
-
-    if (parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData || !eventTypesData || (eventId && !initialValues)) {
-        return <></>;
-    }
+    const formLoading = parameters?.length === 0 || !categoriesData || !roomsData || !seasonsData || !tagsData || !ticketingData || !eventTypesData || (eventId && !initialValues);
 
     return (
         <Component.CmtCrudForm
             handleSubmit={handlesubmit}
             categoriesList={categoriesData?.categories}
-            roomsList={roomsData.rooms}
-            seasonsList={seasonsData.seasons}
+            roomsList={roomsData?.rooms}
+            seasonsList={seasonsData?.seasons}
             eventTypesList={eventTypesData?.eventTypes || []}
-            tagsList={tagsData.tags}
+            tagsList={tagsData?.tags}
             ticketingList={ticketingData?.ticketing || []}
             featuresList={featuresData?.features}
             translateInitialValues={initialValues}
             formCrud={Crud?.events?.add}
-            defaultPriceBlockName={defaultPriceBlockName}
+            defaultPriceCategoryName={defaultPriceCategoryName}
             defaultDateBlockName={defaultDateBlockName}
             defaultPrices={defaultPrices}
+            formLoading={formLoading}
         />
     );
 };

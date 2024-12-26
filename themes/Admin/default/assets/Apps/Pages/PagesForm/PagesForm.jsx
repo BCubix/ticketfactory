@@ -281,7 +281,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
     }, []);
 
     if (!initValue) {
-        return <></>;
+        return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
     }
 
     return (

@@ -6,11 +6,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { FormHelperText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import EventIcon from '@mui/icons-material/Event';
 
 import { Component } from '@/AdminService/Component';
+import { format, parse } from 'date-fns';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
 
-export const EventsPriceBlockForm = ({
+export const EventsPriceCategoryForm = ({
+    dataPath = 'eventPriceCategories',
+    selectedDate = null,
     values,
     setFieldValue,
     setFieldTouched,
@@ -20,38 +24,49 @@ export const EventsPriceBlockForm = ({
     errors,
     initialValues,
     fields,
-    defaultPriceBlockName,
+    defaultPriceCategoryName,
     defaultPrices,
 }) => {
-    const [deleteMultiple, setDeleteMultiple] = useState(false);
-    const blockIndex = useRef(values?.eventPriceBlocks?.length || 0);
-
-    const handleDeleteMultiple = () => {
-        let block = values.eventPriceBlocks;
-
-        if (!block || block.length === 0) {
-            block = { name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices || [], lang: initialValues?.lang?.id || '' };
-        } else {
-            block = block[0];
-            block.name = defaultPriceBlockName || 'Tarifs';
-        }
-
-        setFieldValue('eventPriceBlocks', [block]);
-        setFieldValue('multiplePriceBlock', false);
+    // Helper functions
+    const getNestedValue = (path, object) => {
+        return path.split('.').reduce((acc, key) => acc?.[key], object);
     };
-
     const getBlockError = (index) => {
-        const err = getNestedFormikError(touched?.eventPriceBlocks, errors?.eventPriceBlocks, index, 'eventPrices');
+        const err = getNestedFormikError(getNestedValue(dataPath, touched), getNestedValue(dataPath, errors), index, 'eventPrices');
         if (typeof err === 'string') {
             return err;
         }
 
         return '';
     };
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const parsedDate = parse(dateString, 'yyyy-MM-dd HH:mm:ss', new Date());
+        return format(parsedDate, 'dd/MM/yyyy');
+    };
+    // End of helper functions
+
+    const [deleteMultiple, setDeleteMultiple] = useState(false);
+    const blockIndex = useRef(getNestedValue(dataPath, values)?.length || 0);
+    const eventPriceCategories = getNestedValue(dataPath, values) || [];
+
+    const handleDeleteMultiple = () => {
+        let block = getNestedValue(dataPath, values) || [];
+
+        if (!block || block.length === 0) {
+            block = { name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initialValues?.lang?.id || '' };
+        } else {
+            block = block[0];
+            block.name = defaultPriceCategoryName || 'Tarifs';
+        }
+
+        setFieldValue(dataPath, [block]);
+        setFieldValue('multiplePriceCategory', false);
+    };
 
     return (
         <>
-            <FieldArray name="eventPriceBlocks">
+            <FieldArray name={dataPath}>
                 {({ remove, push }) => (
                     <Box>
                         <Box className="block-head">
@@ -60,23 +75,23 @@ export const EventsPriceBlockForm = ({
                                 color="primary"
                                 variant="contained"
                                 onClick={() => {
-                                    if (values?.multiplePriceBlock) {
-                                        if (values?.eventPriceBlocks?.length > 1) {
+                                    if (values?.multiplePriceCategory) {
+                                        if (eventPriceCategories?.length > 1) {
                                             setDeleteMultiple(true);
                                         } else {
                                             handleDeleteMultiple();
                                         }
                                     } else {
-                                        push({ name: '', eventPrices: [], lang: initialValues?.lang?.id || '' });
-                                        setFieldValue('multiplePriceBlock', true);
+                                        push({ name: '', eventPrices: [], eventDate: selectedDate || '', lang: initialValues?.lang?.id || '' });
+                                        setFieldValue('multiplePriceCategory', true);
                                     }
                                 }}
                             >
                                 <WorkspacesIcon sx={{ marginRight: 1 }} />
-                                {values?.multiplePriceBlock ? 'Ne plus utiliser les groupes' : 'Utiliser les groupes'}
+                                {values?.multiplePriceCategory ? 'Ne plus utiliser les groupes' : 'Utiliser les groupes'}
                             </Component.ActionButton>
 
-                            {values?.multiplePriceBlock && (
+                            {values?.multiplePriceCategory && (
                                 <Component.CreateButton
                                     size="small"
                                     color="primary"
@@ -92,9 +107,14 @@ export const EventsPriceBlockForm = ({
                                 </Component.CreateButton>
                             )}
                         </Box>
-                        {values?.eventPriceBlocks?.map((item, index) => (
-                            <Component.CmtFormBlock title={values?.multiplePriceBlock ? '' : item?.name} marginBlock={7} key={index}>
-                                {values?.multiplePriceBlock && (
+                        {eventPriceCategories?.map((item, index) => {
+                            if (selectedDate !== null && item.eventDate?.eventDate !== selectedDate?.eventDate)
+                                {
+                                    return null;
+                                }
+
+                            return <Component.CmtFormBlock title={values?.multiplePriceCategory ? '' : item?.name} marginBlock={7} key={index}>
+                                {values?.multiplePriceCategory && (
                                     <Box className="block-title">
                                         <Component.CmtTextField
                                             value={item.name}
@@ -102,30 +122,42 @@ export const EventsPriceBlockForm = ({
                                             onBlur={handleBlur}
                                             required
                                             label="Nom"
-                                            name={`eventPriceBlocks.${index}.name`}
-                                            error={getNestedFormikError(touched?.eventPriceBlocks, errors?.eventPriceBlocks, index, 'name')}
+                                            name={`${dataPath}.${index}.name`}
+                                            error={getNestedFormikError(touched?.eventPriceCategories, errors?.eventPriceCategories, index, 'name')}
                                         />
                                     </Box>
                                 )}
                                 <Component.EventsPriceForm
+                                    dataPath={dataPath}
                                     values={values}
                                     setFieldValue={setFieldValue}
                                     setFieldTouched={setFieldTouched}
-                                    touched={touched?.eventPriceBlocks && touched.eventPriceBlocks[index]}
-                                    errors={errors?.eventPriceBlocks && errors.eventPriceBlocks[index]}
+                                    touched={touched?.eventPriceCategories && touched.eventPriceCategories[index]}
+                                    errors={errors?.eventPriceCategories && errors.eventPriceCategories[index]}
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     blockIndex={index}
                                     fields={fields}
                                 />
+                                
+                                {item?.eventDate && item?.eventDate !== "" && selectedDate === null &&
+                                    <Box className="block-notification">
+                                        <EventIcon className="block-notification__icon"/>
+                                        
+                                        <Typography>
+                                            {formatDate(item?.eventDate?.eventDate)}
+                                        </Typography>
+                                    </Box>
+                                
+                                }
 
                                 {getBlockError(index) && (
-                                    <FormHelperText error id={`eventPriceBlocks-${index}-helper-text`}>
+                                    <FormHelperText error id={`${dataPath}-${index}-helper-text`}>
                                         {getBlockError(index)}
                                     </FormHelperText>
                                 )}
 
-                                {values.multiplePriceBlock && (
+                                {values.multiplePriceCategory && (
                                     <Component.DeleteBlockFabButton
                                         size="small"
                                         onClick={() => {
@@ -135,8 +167,10 @@ export const EventsPriceBlockForm = ({
                                         <DeleteIcon />
                                     </Component.DeleteBlockFabButton>
                                 )}
+
                             </Component.CmtFormBlock>
-                        ))}
+
+                        })}
                     </Box>
                 )}
             </FieldArray>

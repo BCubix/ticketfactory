@@ -1,14 +1,26 @@
+import React from 'react';
+import * as Yup from 'yup';
+
 import { changeSlug } from '@Services/utils/changeSlug';
 import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
-import * as Yup from 'yup';
+
+import { eventsPriceFormFields } from './../../Events/EventsForm/EventsPriceForm';
+import { Component } from '@/AdminService/Component';
 
 export const roomsInitialSchema = {
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     seatsNb: (initValues) => initValues?.seatsNb || '',
     area: (initValues) => initValues?.area || '',
-    seatingPlans: (initValues) => (initValues?.seatingPlans ? initValues?.seatingPlans?.map((el) => ({ ...el, lang: el?.lang?.id || '' })) : []),
+    seatingPlans: (initValues, { defaultPriceCategoryName, defaultPrices }) => (initValues?.seatingPlans ? 
+        initValues?.seatingPlans?.map((el) => 
+            ({ ...el,
+            eventPriceCategories:  [{ name: defaultPriceCategoryName || 'Tarifs', 
+                eventPrices: defaultPrices || [],
+                 lang: initValues?.lang?.id || '' }],
+            lang: el?.lang?.id || '' }))
+        : []),
     slug: (initValues) => initValues?.slug || '',
     editSlug: false,
     lang: (initValues) => initValues?.lang?.id || '',
@@ -21,7 +33,20 @@ export const roomsValidationSchema = {
     seatingPlans: Yup.array().of(
         Yup.object().shape({
             name: Yup.string().required('Veuillez renseigner le nom du plan'),
-        })
+        }),
+        Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom du bloc est trop long'),
+                eventPrices: Yup.array()
+                    .of(
+                        Yup.object().shape({
+                            name: Yup.string().required('Veuillez renseigner le nom du tarif.'),
+                            price: Yup.number().required('Veuillez renseigner le prix').min(0, 'Veuillez renseigner un prix valide.'),
+                        })
+                    )
+                    .min(1, 'Veuillez renseigner au moins un prix.'),
+            })
+        ),
     ),
 };
 
@@ -45,6 +70,24 @@ export const roomsForm = {
                     name: { type: 'string' },
                     lang: { type: 'string' },
                     languageGroup: { type: 'string' },
+                    eventPriceCategories: {
+                        type: 'array',
+                        subFields: {
+                            name: { type: 'string' },
+                            lang: { type: 'string' },
+                            languageGroup: { type: 'string' },
+                            eventPrices: {
+                                type: 'array',
+                                subFields: {
+                                    name: { type: 'string' },
+                                    annotation: { type: 'string' },
+                                    price: { type: 'string' },
+                                    lang: { type: 'string' },
+                                    languageGroup: { type: 'string' },
+                                },
+                            },
+                        },
+                    },
                 },
             },
             seo: SeoApiDataFields,
@@ -111,6 +154,14 @@ export const roomsForm = {
                         },
                     ],
                 },
+                SeoInitialFormInputs,
+            ],
+        },
+        {
+            type: 'tabs',
+            keyId: 'seatingPlan',
+            label: 'Plans',
+            fields: [
                 {
                     type: 'block',
                     title: 'Plans',
@@ -123,7 +174,7 @@ export const roomsForm = {
                                 name: 'seatingPlans',
                                 label: 'Plans',
                                 inputType: 'fieldArray',
-                                newObject: { name: '' },
+                                newObject: { name: '', eventPriceCategories: []},
                                 fields: [
                                     {
                                         keyId: 'input-name',
@@ -138,13 +189,28 @@ export const roomsForm = {
                                             sx: { marginBottom: 6 },
                                         },
                                     },
+                                    {
+                                        keyId: 'prices',
+                                        label: 'Tarifs',
+                                        component: (props) => {
+                                            const index = props.index;
+                                            return (
+                                              <Component.EventsPriceCategoryForm
+                                                {...props}
+                                                dataPath={`seatingPlans.${index}.eventPriceCategories`}
+                                              />
+                                            );
+                                          },
+                                        fields: eventsPriceFormFields.fields,
+                                    }
                                 ],
                             },
+                           
                         },
                     ],
                 },
-                SeoInitialFormInputs,
-            ],
+            ]
+            
         },
     ],
     ...DEFAULT_CRUD_FORM_COMPONENTS,

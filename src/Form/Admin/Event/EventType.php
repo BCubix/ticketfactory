@@ -7,6 +7,7 @@ use App\Entity\Event\EventCategory;
 use App\Entity\Event\EventType as EventEventType;
 use App\Entity\Event\Room;
 use App\Entity\Event\Season;
+use App\Entity\Event\SeatingPlan;
 use App\Entity\Event\Tag;
 use App\Entity\Language\Language;
 use App\Entity\Ticketing\Ticketing;
@@ -19,6 +20,7 @@ use App\Repository\RoomRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\TagRepository;
 use App\Repository\LanguageRepository;
+use App\Repository\SeatingPlanRepository;
 use App\Repository\TicketingRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -54,15 +56,15 @@ class EventType extends AdminBaseFormType
                 'delete_empty' => true,
                 'by_reference' => false
             ])
-            ->add('eventDateBlocks',             CollectionType::class,      [
-                'entry_type'   => EventDateBlockType::class,
+            ->add('eventDate',             CollectionType::class,      [
+                'entry_type'   => EventDateType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'by_reference' => false
             ])
-            ->add('eventPriceBlocks',            CollectionType::class,      [
-                'entry_type'   => EventPriceBlockType::class,
+            ->add('eventPriceCategories',            CollectionType::class,      [
+                'entry_type'   => EventPriceCategoryType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
@@ -88,7 +90,7 @@ class EventType extends AdminBaseFormType
                         ->orderBy('ec.name', 'ASC');
                 }
             ])
-            ->add('eventType',                        EntityType::class,          [
+            ->add('eventType',                   EntityType::class,          [
                 'class'         => EventEventType::class,
                 'choice_label'  => 'name',
                 'multiple'      => false,
@@ -106,6 +108,16 @@ class EventType extends AdminBaseFormType
                     return $rr
                         ->createQueryBuilder('r')
                         ->orderBy('r.name', 'ASC');
+                }
+            ])
+            ->add('seatingPlan',                   EntityType::class,          [
+                'class'         => SeatingPlan::class,
+                'choice_label'  => 'name',
+                'multiple'      => false,
+                'query_builder' => function (SeatingPlanRepository $spr) {
+                    return $spr
+                        ->createQueryBuilder('sp')
+                        ->orderBy('sp.name', 'ASC');
                 }
             ])
             ->add('season',                      EntityType::class,          [

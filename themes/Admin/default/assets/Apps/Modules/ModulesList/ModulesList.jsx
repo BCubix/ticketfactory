@@ -211,33 +211,35 @@ export const ModulesList = () => {
                         }
                     />
                     <CardContent>
-                        <Component.ListTable
-                            table={TableColumn.ModulesList}
-                            list={modules}
-                            onActive={(name) => handleActive(name)}
-                            onDisable={(name) => setDeleteDialog(name)}
-                            onRemove={(name) => setRemoveDialog(name)}
-                            onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
-                            displayParameter={(moduleItem) => Boolean(moduleItem.id)}
-                            additionnalOptions={[
-                                ({ item }) => {
-                                    return updateList[item.name] ? (
-                                        <Component.ActionFabButton
-                                            sx={{ marginInline: 1 }}
-                                            color="primary"
-                                            size="small"
-                                            aria-label="Selection"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setUpdateModuleDialog({ open: true, addon: item, backupDatabase: false });
-                                            }}
-                                        >
-                                            <SystemUpdateAltIcon />
-                                        </Component.ActionFabButton>
-                                    ) : null;
-                                },
-                            ]}
-                        />
+                        {loading? (<Component.CmtSkeletonList></Component.CmtSkeletonList>): 
+                            (<Component.ListTable
+                                table={TableColumn.ModulesList}
+                                list={modules}
+                                onActive={(name) => handleActive(name)}
+                                onDisable={(name) => setDeleteDialog(name)}
+                                onRemove={(name) => setRemoveDialog(name)}
+                                onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
+                                displayParameter={(moduleItem) => Boolean(moduleItem.id)}
+                                additionnalOptions={[
+                                    ({ item }) => {
+                                        return updateList[item.name] ? (
+                                            <Component.ActionFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="primary"
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setUpdateModuleDialog({ open: true, addon: item, backupDatabase: false });
+                                                }}
+                                            >
+                                                <SystemUpdateAltIcon />
+                                            </Component.ActionFabButton>
+                                        ) : null;
+                                    },
+                                ]}
+                            />)
+                        }
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box, CardContent, Typography } from '@mui/material';
-
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -102,11 +100,13 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
     const objectData = useSelector(listCrud.dataSelector);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!objectData?.loading && !listCrud?.dataList(objectData) && !objectData?.error) {
             dispatch(listCrud?.loadDataAction());
         }
+        setLoading(objectData?.loading);
     }, []);
 
     const handleDelete = async (id) => {
@@ -162,47 +162,51 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                     <Component.CmtCardHeader
                         title={
                             <Box className="list-header">
-                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                    {listCrud?.listTitle}{' '}
-                                    {listCrud?.pagination &&
-                                        listCrud?.dataList(objectData) &&
-                                        `(${((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + 1} - ${
-                                            ((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + listCrud?.dataList(objectData)?.length
-                                        } sur ${objectData?.total})`}
-                                    {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
-                                </Typography>
+                                    <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                        {listCrud?.listTitle}{' '}
+                                        {listCrud?.pagination &&
+                                            listCrud?.dataList(objectData) &&
+                                            `(${((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + 1} - ${
+                                                ((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + listCrud?.dataList(objectData)?.length
+                                            } sur ${objectData?.total})`}
+                                        {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
+                                    </Typography>
                                 {(listCrud?.new || listCrud?.links?.new) && (
                                     <Component.CreateButton
                                         variant="contained"
                                         onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
-                                    >
-                                        Nouveau
-                                    </Component.CreateButton>
+                                    >Nouveau</Component.CreateButton>
                                 )}
                             </Box>
                         }
                     />
                     <CardContent>
-                        {listCrud?.components?.map((item, index) => {
-                            const { component: ItemComponent } = item;
+                    {loading ? (
+                            <>
+                                <Component.CmtSkeletonList numberLines={10} />
+                            </>
+                        ) : (
+                            listCrud?.components?.map((item, index) => {
+                                const { component: ItemComponent } = item;
 
-                            if (!ItemComponent) {
-                                return <></>;
-                            }
+                                if (!ItemComponent) {
+                                    return <></>;
+                                }
 
-                            return (
-                                <ItemComponent
-                                    key={index}
-                                    objectData={objectData}
-                                    listCrud={listCrud}
-                                    navigate={navigate}
-                                    dispatch={dispatch}
-                                    handleDuplicate={handleDuplicate}
-                                    setDeleteDialog={setDeleteDialog}
-                                    {...props}
-                                />
-                            );
-                        })}
+                                return (
+                                    <ItemComponent
+                                        key={index}
+                                        objectData={objectData}
+                                        listCrud={listCrud}
+                                        navigate={navigate}
+                                        dispatch={dispatch}
+                                        handleDuplicate={handleDuplicate}
+                                        setDeleteDialog={setDeleteDialog}
+                                        {...props}
+                                    />
+                                );
+                            })
+                        )}
                     </CardContent>
                 </Component.CmtCard>
 

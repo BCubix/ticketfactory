@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -214,6 +214,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
                             </Box>
                         }
                     />
+
                     <CardContent>
                         {listCrud?.components?.map((item, index) => {
                             const { component: ItemComponent } = item;

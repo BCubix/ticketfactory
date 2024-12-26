@@ -19,7 +19,7 @@ const TabObj = {
         {
             label: 'Tarifs',
             id: 'pricesPartButton',
-            component: <Component.EventsPriceBlockForm {...props} />,
+            component: <Component.EventsPriceCategoryForm {...props} />,
         },
         {
             label: 'Médias',

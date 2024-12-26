@@ -51,7 +51,7 @@ class Order extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_order_all', 'a_order_one'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'bigint', nullable: true)]
     private ?int $ticketingReference = null;
 
     public function getId(): ?int

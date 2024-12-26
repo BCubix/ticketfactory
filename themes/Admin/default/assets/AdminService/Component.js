@@ -88,6 +88,12 @@ import { CmtFeaturesInputField } from '@Components/CmtFeaturesInputField/CmtFeat
 import { TRow } from '@Components/CmtDragAndDrop/sc.TRow';
 import { TBody } from '@Components/CmtDragAndDrop/sc.TBody';
 
+import { CmtSkeletonList } from '@Components/CmtSkeleton/CmtSkeletonList';
+import { CmtSkeletonForm } from '@Components/CmtSkeleton/CmtSkeletonForm';
+import {CmtSkeletonContentList} from '@Components/CmtSkeleton/CmtSkeletonContentList';
+import { CmtSkeletonOrderDetails } from '@Components/CmtSkeleton/CmtSkeletonOrderDetails';
+import { CmtSkeletonMenus } from '@Components/CmtSkeleton/CmtSkeletonMenus';
+
 const ComponentObj = {
     App: App,
     Routing: Routing,
@@ -190,6 +196,12 @@ const ComponentObj = {
     CmtEditMediaModal: CmtEditMediaModal,
     CmtMediaPartForm: CmtMediaPartForm,
     CmtMoveMedias: CmtMoveMedias,
+
+    CmtSkeletonList: CmtSkeletonList,
+    CmtSkeletonForm: CmtSkeletonForm,
+    CmtSkeletonContentList: CmtSkeletonContentList,
+    CmtSkeletonOrderDetails: CmtSkeletonOrderDetails,
+    CmtSkeletonMenus: CmtSkeletonMenus,
 };
 
 /**
