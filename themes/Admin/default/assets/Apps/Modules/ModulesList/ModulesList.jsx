@@ -238,14 +238,43 @@ export const ModulesList = () => {
                             <Component.ListTable
                                 table={TableColumn.ModulesList}
                                 list={modules}
-                                onActive={(name) => handleActive(name)}
-                                onDisable={(name) => setDeleteDialog(name)}
-                                onRemove={(name) => setRemoveDialog(name)}
+                                onRemove={accessUserDelete ? (name) => setRemoveDialog(name) : null}
                                 onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
-                                displayParameter={(moduleItem) => Boolean(moduleItem.id)}
+                                displayParameter={accessUserEdit && accessUserParameterEdit ? (moduleItem) => Boolean(moduleItem.id) : null}
                                 additionnalOptions={[
                                     ({ item }) => {
-                                        return updateList[item.name] ? (
+                                        return accessUserEdit ? (
+                                            <Component.ActionFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="primary"
+                                                size="small"
+                                                aria-label="Action"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    item.active ? setDeleteDialog(item.name) : handleActive(item.name);
+                                                }}
+                                            >
+                                                {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
+                                            </Component.ActionFabButton>
+                                        ) : null;
+                                    },
+                                    ({ item }) => {
+                                        return accessUserEdit && accessUserParameterEdit && Boolean(item.id) ? (
+                                            <Component.EditFabButton
+                                                sx={{ marginInline: 1 }}
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${item.id}`);
+                                                }}
+                                            >
+                                                <SettingsIcon />
+                                            </Component.EditFabButton>
+                                        ) : null;
+                                    },
+                                    ({ item }) => {
+                                        return accessUserEdit && updateList[item.name] ? (
                                             <Component.ActionFabButton
                                                 sx={{ marginInline: 1 }}
                                                 color="primary"
