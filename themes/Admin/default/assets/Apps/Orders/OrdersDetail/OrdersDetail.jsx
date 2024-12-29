@@ -47,7 +47,7 @@ export const OrdersDetail = () => {
     }, [id]);
 
     if (!order) {
-        return <></>;
+        return <Component.CmtSkeletonOrderDetails />;
     }
 
     return (

@@ -324,9 +324,7 @@ export const MenusList = () => {
         setFieldValue('children', deserializeChildrenData(values.children));
     };
 
-    if (!menus || !initialValues || !translationInitialValues || !languagesData.languages) {
-        return <></>;
-    }
+    const loadingForm = !menus || !initialValues || !translationInitialValues || !languagesData.languages;
 
     return (
         <InitForm
@@ -349,6 +347,7 @@ export const MenusList = () => {
             accessUserCreate={accessUserCreate}
             accessUserEdit={accessUserEdit}
             accessUserDelete={accessUserDelete}
+            loading={loadingForm}
         />
     );
 };
@@ -370,6 +369,7 @@ const InitForm = ({
     translateDialog,
     setTranslateDialog,
     navigate,
+    loading,
     ...rest
 }) => {
     return (
@@ -381,73 +381,79 @@ const InitForm = ({
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }) => (
-                <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
-                    <Component.CmtDisplayComponents
-                        list={formCrud?.headerComponents}
-                        {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }}
-                        {...{
-                            languageList,
-                            changeFormikInitialValues,
-                            translationInitialValues,
-                            setTranslationInitialValues,
-                            handleDelete,
-                            updateMenu,
-                            menus,
-                            initialValues,
-                            setInitialValues,
-                            deserializeChildrenData,
-                            formCrud,
-                            translateDialog,
-                            setTranslateDialog,
-                            deleteDialog,
-                            setDeleteDialog,
-                        }}
-                        {...rest}
-                    />
+                <>
+                    <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
+                        {loading ? (
+                            <Component.CmtSkeletonMenus formCrud={formCrud} handleSubmit={handleSubmit} />
+                        ) : (
+                            <>
+                                <Component.CmtDisplayComponents
+                                    list={formCrud?.headerComponents}
+                                    {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }}
+                                    {...{
+                                        languageList,
+                                        changeFormikInitialValues,
+                                        translationInitialValues,
+                                        setTranslationInitialValues,
+                                        handleDelete,
+                                        updateMenu,
+                                        menus,
+                                        initialValues,
+                                        setInitialValues,
+                                        deserializeChildrenData,
+                                        formCrud,
+                                        translateDialog,
+                                        setTranslateDialog,
+                                        deleteDialog,
+                                        setDeleteDialog,
+                                    }}
+                                    {...rest}
+                                />
 
-                    {Object.keys(initialValues).length > 0 && (
-                        <Grid container spacing={5} sx={{ marginTop: 5 }}>
-                            <DisplayFormTabs
-                                tabs={formCrud?.fields}
-                                {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }}
-                                {...{
-                                    languageList,
-                                    changeFormikInitialValues,
-                                    translationInitialValues,
-                                    setTranslationInitialValues,
-                                    handleDelete,
-                                    updateMenu,
-                                    menus,
-                                    initialValues,
-                                    setInitialValues,
-                                    deserializeChildrenData,
-                                    formCrud,
-                                    translateDialog,
-                                    setTranslateDialog,
-                                    deleteDialog,
-                                    setDeleteDialog,
-                                }}
-                                {...rest}
-                            />
-                        </Grid>
-                    )}
+                                {Object.keys(initialValues).length > 0 && (
+                                    <Grid container spacing={5} sx={{ marginTop: 5 }}>
+                                        <DisplayFormTabs
+                                            tabs={formCrud?.fields}
+                                            {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }}
+                                            {...{
+                                                languageList,
+                                                changeFormikInitialValues,
+                                                translationInitialValues,
+                                                setTranslationInitialValues,
+                                                handleDelete,
+                                                updateMenu,
+                                                menus,
+                                                initialValues,
+                                                setInitialValues,
+                                                deserializeChildrenData,
+                                                formCrud,
+                                                translateDialog,
+                                                setTranslateDialog,
+                                                deleteDialog,
+                                                setDeleteDialog,
+                                            }}
+                                        />
+                                    </Grid>
+                                )}
 
-                    <Component.DeleteDialog open={deleteDialog ? true : false} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
-                        <Box textAlign="center" py={3}>
-                            <Typography component="p">Êtes-vous sûr de vouloir supprimer ce menu ?</Typography>
+                                <Component.DeleteDialog open={deleteDialog} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
+                                    <Box textAlign="center" py={3}>
+                                        <Typography component="p">Êtes-vous sûr de vouloir supprimer ce menu ?</Typography>
+                                        <Typography component="p">Cette action est irréversible.</Typography>
+                                    </Box>
+                                </Component.DeleteDialog>
 
-                            <Typography component="p">Cette action est irréversible.</Typography>
-                        </Box>
-                    </Component.DeleteDialog>
-
-                    <Component.CmtTranslateDialog
-                        item={initialValues}
-                        isOpen={translateDialog}
-                        onClose={() => setTranslateDialog(false)}
-                        languageList={languageList}
-                        onTranslate={(id, languageId) => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)}
-                    />
-                </Component.CmtPageWrapper>
+                                <Component.CmtTranslateDialog
+                                    item={initialValues}
+                                    isOpen={translateDialog}
+                                    onClose={() => setTranslateDialog(false)}
+                                    languageList={languageList}
+                                    onTranslate={(id, languageId) => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)}
+                                />
+                            </>
+                        )}
+                    </Component.CmtPageWrapper>
+                </>
             )}
         </Formik>
     );

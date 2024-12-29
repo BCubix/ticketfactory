@@ -240,7 +240,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
     }, []);
 
     if (!initValue) {
-        return <></>;
+        return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
     }
 
     return (

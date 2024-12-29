@@ -8,6 +8,7 @@ use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
@@ -26,6 +27,7 @@ class EventPriceType extends AdminBaseFormType
             ->add('price',                 MoneyType::class,           [
                 'currency' => 'EUR'
             ])
+            ->add('defaultPrice',                      CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,
                 'choice_label'  => 'name',

@@ -4,7 +4,6 @@ import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box, CardContent, Typography } from '@mui/material';
-
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
@@ -105,6 +104,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     const [deleteDialog, setDeleteDialog] = useState(null);
     const { user } = useSelector(userProfileSelector);
     const objectData = useSelector(listCrud.dataSelector);
+    const [loading, setLoading] = useState(true);
 
     const userRoles = useMemo(() => {
         return getUserRoles(user);
@@ -122,6 +122,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
         if (!objectData?.loading && !listCrud?.dataList(objectData) && !objectData?.error) {
             dispatch(listCrud?.loadDataAction());
         }
+        setLoading(objectData?.loading);
     }, []);
 
     const handleDelete = async (id) => {
@@ -204,29 +205,35 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                         }
                     />
                     <CardContent>
-                        {listCrud?.components?.map((item, index) => {
-                            const { component: ItemComponent } = item;
+                        {loading ? (
+                            <>
+                                <Component.CmtSkeletonList numberLines={10} />
+                            </>
+                        ) : (
+                            listCrud?.components?.map((item, index) => {
+                                const { component: ItemComponent } = item;
 
-                            if (!ItemComponent) {
-                                return <></>;
-                            }
+                                if (!ItemComponent) {
+                                    return <></>;
+                                }
 
-                            return (
-                                <ItemComponent
-                                    key={index}
-                                    objectData={objectData}
-                                    listCrud={listCrud}
-                                    navigate={navigate}
-                                    dispatch={dispatch}
-                                    handleDuplicate={handleDuplicate}
-                                    setDeleteDialog={setDeleteDialog}
-                                    accessUserCreate={accessUserCreate}
-                                    accessUserEdit={accessUserEdit}
-                                    accessUserDelete={accessUserDelete}
-                                    {...props}
-                                />
-                            );
-                        })}
+                                return (
+                                    <ItemComponent
+                                        key={index}
+                                        objectData={objectData}
+                                        listCrud={listCrud}
+                                        navigate={navigate}
+                                        dispatch={dispatch}
+                                        handleDuplicate={handleDuplicate}
+                                        setDeleteDialog={setDeleteDialog}
+                                        accessUserCreate={accessUserCreate}
+                                        accessUserEdit={accessUserEdit}
+                                        accessUserDelete={accessUserDelete}
+                                        {...props}
+                                    />
+                                );
+                            })
+                        )}
                     </CardContent>
                 </Component.CmtCard>
 

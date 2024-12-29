@@ -40,12 +40,12 @@ describe('Create Event Spec', () => {
         cy.get('#datesPartButton').click();
 
         cy.get('#addDateButton').click();
-        cy.get('#eventDateBlocks-0-eventDates-0-eventDate')
+        cy.get('#eventDates-0-eventDate')
             .click()
             .click()
             .type(moment().add(2, 'days').format('DD/MM/YYYY HH:mm'));
-        cy.get('#eventDateBlocks-0-eventDates-0-annotation').type('Test Event Date 1');
-        cy.get('#eventDateBlocks-0-eventDates-0-state').click();
+        cy.get('#eventDates-0-annotation').type('Test Event Date 1');
+        cy.get('#eventDates-0-state').click();
         cy.get('#eventDateStateValue-valid').click();
         /* ---------- ---------- */
 
@@ -53,9 +53,9 @@ describe('Create Event Spec', () => {
         cy.get('#pricesPartButton').click();
 
         cy.get('#addPriceButton').click();
-        cy.get('#eventPriceBlocks-0-eventPrices-0-name').type('Test Event Price 1');
-        cy.get('#eventPriceBlocks-0-eventPrices-0-price').type('10');
-        cy.get('#eventPriceBlocks-0-eventPrices-0-annotation').type(
+        cy.get('#eventPriceCategories-0-eventPrices-0-name').type('Test Event Price 1');
+        cy.get('#eventPriceCategories-0-eventPrices-0-price').type('10');
+        cy.get('#eventPriceCategories-0-eventPrices-0-annotation').type(
             'Test Event Price 1 Annotation'
         );
         /* ---------- ---------- */
@@ -103,18 +103,18 @@ describe('Create Event Spec', () => {
         cy.get('#datesPartButton').click();
         cy.get('#submitForm').click();
 
-        cy.get('#eventDateBlocks-0-helper-text').should('exist');
+        cy.get('#eventDates-0-helper-text').should('exist');
         cy.get('#addDateButton').click();
 
-        cy.get('#eventDateBlocks-0-eventDates-0-eventDate').click().click();
-        cy.get('#eventDateBlocks-0-eventDates-0-eventDate-helper-text').should('exist');
+        cy.get('#eventDates-0-eventDate').click().click();
+        cy.get('#eventDates-0-eventDate-helper-text').should('exist');
 
-        cy.get('#eventDateBlocks-0-eventDates-0-state').focus().blur();
-        cy.get('#eventDateBlocks-0-eventDates-0-state-helper-text').should('exist');
+        cy.get('#eventDates-0-state').focus().blur();
+        cy.get('#eventDates-0-state-helper-text').should('exist');
 
         cy.get('#useEventDateGroup').click();
-        cy.get('#removeEventDateBlock-0').click();
-        cy.get('#removeEventDateBlock-0').click();
+        cy.get('#removeEventDate-0').click();
+        cy.get('#removeEventDate-0').click();
 
         //Check the helper text
         /* ---------- ---------- */
@@ -125,14 +125,14 @@ describe('Create Event Spec', () => {
         cy.get('#pricesPartButton').click();
         cy.get('#submitForm').click();
 
-        cy.get('#eventPriceBlocks-0-helper-text').should('exist');
+        cy.get('#eventPriceCategories-0-helper-text').should('exist');
         cy.get('#addPriceButton').click();
 
-        cy.get('#eventPriceBlocks-0-eventPrices-0-name').focus().blur();
-        cy.get('#eventPriceBlocks-0-eventPrices-0-name-helper-text').should('exist');
+        cy.get('#eventPriceCategories-0-eventPrices-0-name').focus().blur();
+        cy.get('#eventPriceCategories-0-eventPrices-0-name-helper-text').should('exist');
 
-        cy.get('#eventPriceBlocks-0-eventPrices-0-price').focus().blur();
-        cy.get('#eventPriceBlocks-0-eventPrices-0-price-helper-text').should('exist');
+        cy.get('#eventPriceCategories-0-eventPrices-0-price').focus().blur();
+        cy.get('#eventPriceCategories-0-eventPrices-0-price-helper-text').should('exist');
         /* ---------- ---------- */
     });
 });

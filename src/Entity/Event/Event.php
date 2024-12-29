@@ -77,22 +77,22 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $eventLength = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $eventLength = null;
 
     #[Assert\Valid]
-    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins une dates.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDateBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private $eventDateBlocks;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDate::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private $eventDate;
 
     #[Assert\Valid]
-    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de tarifs.')]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins une catégorie de tarifs.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private $eventPriceBlocks;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceCategory::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private $eventPriceCategories;
 
     #[Assert\NotNull(message: 'La catégorie principale de l\'événement doit être renseignée.')]
     #[JMS\Expose()]
@@ -148,14 +148,16 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[ORM\ManyToOne]
+    private ?SeatingPlan $seatingPlan = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontBookingButton = true;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?Subscription $subscription = null;
 
     /**
      * @var Collection<int, Subscription>
@@ -166,12 +168,12 @@ class Event extends Datable
     public function __construct()
     {
         $this->eventCategories  = new ArrayCollection();
-        $this->eventDateBlocks  = new ArrayCollection();
-        $this->eventPriceBlocks = new ArrayCollection();
+        $this->eventDate        = new ArrayCollection();
+        $this->eventPriceCategories = new ArrayCollection();
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
         $this->featureLinks     = new ArrayCollection();
-        $this->subscriptions = new ArrayCollection();
+        $this->subscriptions    = new ArrayCollection();
     }
 
 
@@ -276,30 +278,26 @@ class Event extends Datable
         return $this;
     }
 
-    /**
-     * @return Collection<int, EventDateBlock>
-     */
-    public function getEventDateBlocks(): Collection
+    public function getEventDate(): Collection
     {
-        return $this->eventDateBlocks;
+        return $this->eventDate;
     }
 
-    public function addEventDateBlock(EventDateBlock $eventDateBlock): self
+    public function addEventDate(EventDate $eventDate): self
     {
-        if (!$this->eventDateBlocks->contains($eventDateBlock)) {
-            $this->eventDateBlocks[] = $eventDateBlock;
-            $eventDateBlock->setEvent($this);
+        if (!$this->eventDate->contains($eventDate)) {
+            $this->eventDate[] = $eventDate;
+            $eventDate->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeEventDateBlock(EventDateBlock $eventDateBlock): self
+    public function removeEventDate(EventDate $eventDate): self
     {
-        if ($this->eventDateBlocks->removeElement($eventDateBlock)) {
-            // set the owning side to null (unless already changed)
-            if ($eventDateBlock->getEvent() === $this) {
-                $eventDateBlock->setEvent(null);
+        if ($this->eventDate->removeElement($eventDate)) {
+            if ($eventDate->getEvent() === $this) {
+                $eventDate->setEvent(null);
             }
         }
 
@@ -307,29 +305,29 @@ class Event extends Datable
     }
 
     /**
-     * @return Collection<int, EventPriceBlock>
+     * @return Collection<int, EventPriceCategory>
      */
-    public function getEventPriceBlocks(): Collection
+    public function getEventPriceCategories(): Collection
     {
-        return $this->eventPriceBlocks;
+        return $this->eventPriceCategories;
     }
 
-    public function addEventPriceBlock(EventPriceBlock $eventPriceBlock): self
+    public function addEventPriceCategory(EventPriceCategory $eventPriceCategory): self
     {
-        if (!$this->eventPriceBlocks->contains($eventPriceBlock)) {
-            $this->eventPriceBlocks[] = $eventPriceBlock;
-            $eventPriceBlock->setEvent($this);
+        if (!$this->eventPriceCategories->contains($eventPriceCategory)) {
+            $this->eventPriceCategories[] = $eventPriceCategory;
+            $eventPriceCategory->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeEventPriceBlock(EventPriceBlock $eventPriceBlock): self
+    public function removeEventPriceCategory(EventPriceCategory $eventPriceCategory): self
     {
-        if ($this->eventPriceBlocks->removeElement($eventPriceBlock)) {
+        if ($this->eventPriceCategories->removeElement($eventPriceCategory)) {
             // set the owning side to null (unless already changed)
-            if ($eventPriceBlock->getEvent() === $this) {
-                $eventPriceBlock->setEvent(null);
+            if ($eventPriceCategory->getEvent() === $this) {
+                $eventPriceCategory->setEvent(null);
             }
         }
 
@@ -520,18 +518,6 @@ class Event extends Datable
         return $this;
     }
 
-    public function getSubscription(): ?Subscription
-    {
-        return $this->subscription;
-    }
-
-    public function setSubscription(?Subscription $subscription): static
-    {
-        $this->subscription = $subscription;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Subscription>
      */
@@ -555,6 +541,18 @@ class Event extends Datable
         if ($this->subscriptions->removeElement($subscription)) {
             $subscription->removeEvent($this);
         }
+
+        return $this;
+    }
+
+    public function getSeatingPlan(): ?SeatingPlan
+    {
+        return $this->seatingPlan;
+    }
+
+    public function setSeatingPlan(?SeatingPlan $seatingPlan): static
+    {
+        $this->seatingPlan = $seatingPlan;
 
         return $this;
     }

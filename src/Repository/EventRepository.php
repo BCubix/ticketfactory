@@ -18,7 +18,6 @@ class EventRepository extends CrudRepository
         'et' => null,
         'el' => null,
         'ed' => null,
-        'edb' => null,
     ];
 
     protected const JOINS = [
@@ -27,8 +26,7 @@ class EventRepository extends CrudRepository
         ['leftJoin', 'o.room', 'er'],
         ['leftJoin', 'o.tags', 'et'],
         ['leftJoin', 'o.lang', 'el'],
-        ['leftJoin', 'o.eventDateBlocks', 'edb'],
-        ['leftJoin', 'edb.eventDates', 'ed'],
+        ['leftJoin', 'o.eventDate', 'ed'],
     ];
 
     protected const FILTERS = [
@@ -73,8 +71,7 @@ class EventRepository extends CrudRepository
             ->leftJoin('e.tags', 'ta')
             ->leftJoin('e.season', 's')
             ->leftJoin('e.room', 'r')
-            ->leftJoin('e.eventDateBlocks', 'edb')
-            ->leftJoin('edb.eventDates', 'ed')
+            ->leftJoin('e.eventDate', 'ed')
             ->leftJoin('e.eventMedias', 'em')
             ->leftJoin('em.media', 'm')
             ->where('e.active = 1');

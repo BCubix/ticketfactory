@@ -1,24 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     Drawer,
-    FormControl,
     IconButton,
-    InputLabel,
     List,
-    ListItem,
     ListItemText,
-    MenuItem,
-    Select,
-    Skeleton,
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
@@ -33,7 +20,6 @@ import { DEFAULT_CONTENT_CRUD_LIST_COMPONENTS } from '@Apps/Contents/ContentsLis
 
 import { changeContentsFilters, contentsSelector, getAllContentDataAction, getContentsAction, setContentTypeKey } from '@Apps/Contents/redux/contents/contentsSlice';
 
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useTheme } from '@emotion/react';
 import { useSelector } from 'react-redux';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
@@ -166,17 +152,11 @@ export const ContentsList = () => {
 
     if (!loaded) {
         return (
-            <>
-                <Box marginRight={`${contentMargin}px`} padding={8} height="100%">
-                    <Skeleton variant="rounded" height="40px" width="30%" />
-                    <Skeleton variant="rounded" height="90%" width="100%" sx={{ marginTop: 4 }} />
-                </Box>
-                {sidebarOpen && (
-                    <Box position="absolute" right={0} top={`${theme.layout.header.height}px`} bottom={0} width={contentMargin}>
-                        <Skeleton variant="rectangular" height="100%" width="100%" />
-                    </Box>
-                )}
-            </>
+            <Component.CmtSkeletonContentList
+                theme={theme}
+                contentMargin={contentMargin}
+                sidebarOpen={sidebarOpen}
+            />
         );
     }
 

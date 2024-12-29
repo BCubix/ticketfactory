@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\Event\EventPriceBlock;
+use App\Entity\Event\EventPriceCategory;
 
 use Doctrine\Persistence\ManagerRegistry;
 
-class EventPriceBlockRepository extends CrudRepository
+class EventPriceCategoryRepository extends CrudRepository
 {
     /*** > Trait ***/
     /*** < Trait ***/
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, EventPriceBlock::class);
+        parent::__construct($registry, EventPriceCategory::class);
     }
 
-    public function findEventPriceBlocksForWebsite(int $eventId)
+    public function findEventPriceCategoriesForWebsite(int $eventId)
     {
         return $this->createQueryBuilder('epb')
             ->addSelect('ep')

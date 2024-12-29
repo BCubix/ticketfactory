@@ -51,7 +51,7 @@ export const initYup = (list, props) => {
     return result;
 };
 
-export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, handleSubmit, ...props }) => {
+export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, handleSubmit, formLoading, ...props }) => {
     const initValues = translateInitialValues || initialValues;
     const validationSchema = Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }));
     const { parameters } = useSelector(parametersSelector);
@@ -73,45 +73,51 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
     }, [user]);
 
     return (
-        <Formik
-            initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { ...props, userRoles })}
-            validationSchema={validationSchema}
-            translateInitialValues={translateInitialValues}
-            onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values);
-                setSubmitting(false);
-            }}
-            {...(formCrud?.form?.formProps || {})}
-        >
-            {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting, validateForm, submitForm }) => (
-                <Component.CmtPageWrapper component="form" noValidate onSubmit={handleSubmit} title={formCrud?.form?.title}>
-                    <Component.CmtDisplayComponents
-                        formCrud={formCrud}
-                        list={formCrud.components}
-                        initialValues={initialValues}
-                        translateInitialValues={translateInitialValues}
-                        initValues={initValues}
-                        values={values}
-                        errors={errors}
-                        touched={touched}
-                        handleChange={handleChange}
-                        handleBlur={handleBlur}
-                        handleSubmit={handleSubmit}
-                        setFieldTouched={setFieldTouched}
-                        setFieldValue={setFieldValue}
-                        isSubmitting={isSubmitting}
-                        validationSchema={validationSchema}
-                        checkFormErrors={checkFormErrors}
-                        tabValue={tabValue}
-                        setTabValue={setTabValue}
-                        validateForm={validateForm}
-                        submitForm={submitForm}
-                        parameters={parameters}
-                        userRoles={userRoles}
-                        {...props}
-                    />
-                </Component.CmtPageWrapper>
+        <>
+            {formLoading ? (
+                <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />
+            ) : (
+                <Formik
+                    initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { ...props })}
+                    validationSchema={validationSchema}
+                    translateInitialValues={translateInitialValues}
+                    onSubmit={(values, { setSubmitting }) => {
+                        handleSubmit(values);
+                        setSubmitting(false);
+                    }}
+                    {...(formCrud?.form?.formProps || {})}
+                >
+                    {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting, validateForm, submitForm }) => (
+                        <Component.CmtPageWrapper component="form" noValidate onSubmit={handleSubmit} title={formCrud?.form?.title}>
+                            <Component.CmtDisplayComponents
+                                formCrud={formCrud}
+                                list={formCrud.components}
+                                initialValues={initialValues}
+                                translateInitialValues={translateInitialValues}
+                                initValues={initValues}
+                                values={values}
+                                errors={errors}
+                                touched={touched}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                handleSubmit={handleSubmit}
+                                setFieldTouched={setFieldTouched}
+                                setFieldValue={setFieldValue}
+                                isSubmitting={isSubmitting}
+                                validationSchema={validationSchema}
+                                checkFormErrors={checkFormErrors}
+                                tabValue={tabValue}
+                                setTabValue={setTabValue}
+                                validateForm={validateForm}
+                                submitForm={submitForm}
+                                parameters={parameters}
+                                userRoles={userRoles}
+                                {...props}
+                            />
+                        </Component.CmtPageWrapper>
+                    )}
+                </Formik>
             )}
-        </Formik>
+        </>
     );
 };

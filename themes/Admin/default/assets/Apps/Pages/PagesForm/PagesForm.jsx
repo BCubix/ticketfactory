@@ -342,6 +342,10 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         return getUserRoles(user);
     }, [user]);
 
+    if (!initValue) {
+        return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
+    }
+
     return (
         <Formik
             initialValues={constructInitialValues(formCrud.form.initialSchema, translateInitialValues || initialValues, { pagesList, userRoles, ...props })}

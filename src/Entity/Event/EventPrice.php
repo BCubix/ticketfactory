@@ -19,7 +19,7 @@ class EventPrice
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -28,39 +28,44 @@ class EventPrice
     #[Assert\Length(max: 250, maxMessage: 'Le nom du tarif doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du tarif doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
+    #[ORM\Column(type: 'boolean')]
+    private $defaultPrice;
 
     #[Assert\PositiveOrZero(message: 'Le tarif doit être un nombre supérieur ou égal à 0.')]
     #[Assert\NotBlank(message: 'Le tarif doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'float')]
     private $price;
 
-    #[ORM\ManyToOne(targetEntity: EventPriceBlock::class, inversedBy: 'eventPrices')]
+    #[ORM\ManyToOne(targetEntity: EventPriceCategory::class, inversedBy: 'eventPrices')]
     #[ORM\JoinColumn(nullable: false)]
-    private $eventPriceBlock;
+    private $eventPriceCategory;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[JMS\Groups(['a_event_one', 'a_cart_one', 'a_order_all', 'a_order_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'integer', nullable: true)]
     private $ticketingReference = null;
 
@@ -105,6 +110,18 @@ class EventPrice
         return $this;
     }
 
+    public function getDefaultPrice(): ?bool
+    {
+        return $this->defaultPrice;
+    }
+
+    public function setDefaultPrice(bool $defaultPrice): self
+    {
+        $this->defaultPrice = $defaultPrice;
+
+        return $this;
+    }
+
     public function getPrice(): ?float
     {
         return $this->price;
@@ -117,14 +134,14 @@ class EventPrice
         return $this;
     }
 
-    public function getEventPriceBlock(): ?EventPriceBlock
+    public function getEventPriceCategory(): ?EventPriceCategory
     {
-        return $this->eventPriceBlock;
+        return $this->eventPriceCategory;
     }
 
-    public function setEventPriceBlock(?EventPriceBlock $eventPriceBlock): self
+    public function setEventPriceCategory(?EventPriceCategory $eventPriceCategory): self
     {
-        $this->eventPriceBlock = $eventPriceBlock;
+        $this->eventPriceCategory = $eventPriceCategory;
 
         return $this;
     }

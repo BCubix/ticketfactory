@@ -3,10 +3,10 @@
 namespace App\Manager;
 
 use App\Entity\Event\Event;
-use App\Entity\Event\EventDateBlock;
+use App\Entity\Event\EventDate;
 use App\Entity\Event\EventMedia;
 use App\Entity\Event\EventPrice;
-use App\Entity\Event\EventPriceBlock;
+use App\Entity\Event\EventPriceCategory;
 use App\Entity\Media\ImageFormat;
 use App\Kernel;
 use App\Service\ServiceFactory;
@@ -108,33 +108,33 @@ class EventManager extends AbstractRouterManager
     protected function getEventLinkTab(): array
     {
         return [
-            'EventCategory' => fn ($event, $value) => $event->getMainCategory() && $event->getMainCategory()->getSlug() === $value ? $event->getMainCategory() : null,
-            'Season' => fn ($event, $value) => $event->getSeason() && $event->getSeason()->getSlug() === $value ? $event->getSeason() : null,
-            'Room' => fn ($event, $value) => $event->getRoom() && $event->getRoom()->getSlug() === $value ? $event->getRoom() : null,
-            'year' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') : null,
-            'month' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('m') : null,
-            'day' => fn ($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('d') : null,
+            'EventCategory' => fn($event, $value) => $event->getMainCategory() && $event->getMainCategory()->getSlug() === $value ? $event->getMainCategory() : null,
+            'Season' => fn($event, $value) => $event->getSeason() && $event->getSeason()->getSlug() === $value ? $event->getSeason() : null,
+            'Room' => fn($event, $value) => $event->getRoom() && $event->getRoom()->getSlug() === $value ? $event->getRoom() : null,
+            'year' => fn($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('Y') : null,
+            'month' => fn($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('m') : null,
+            'day' => fn($event, $value) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d') === $value ? $this->mf->get('eventSorter')->getBeginDate($event)->format('d') : null,
         ];
     }
 
     protected function getBuildContentLinkTab(): array
     {
         return [
-            'EventCategory' => fn ($element) => null !== $element->getMainCategory() ? $element->getMainCategory()->getSlug() : null,
-            'Season' => fn ($element) => $element->getSeason() ? $element->getSeason()->getSlug() : null,
-            'Room' => fn ($element) => $element->getRoom() ? $element->getRoom()->getSlug() : null,
-            'year' => fn ($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('Y'),
-            'month' => fn ($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('m'),
-            'day' => fn ($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('d')
+            'EventCategory' => fn($element) => null !== $element->getMainCategory() ? $element->getMainCategory()->getSlug() : null,
+            'Season' => fn($element) => $element->getSeason() ? $element->getSeason()->getSlug() : null,
+            'Room' => fn($element) => $element->getRoom() ? $element->getRoom()->getSlug() : null,
+            'year' => fn($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('Y'),
+            'month' => fn($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('m'),
+            'day' => fn($element) => $this->mf->get('eventSorter')->getBeginDate($element)->format('d')
         ];
     }
 
     protected function getBuildContentTab(): array
     {
         return [
-            'EventCategory' => fn ($parameters) => isset($parameters['eventCategory']) ? $parameters['eventCategory']->getSlug() : null,
-            'Season' => fn ($parameters) => isset($parameters['season']) ? $parameters['season']->getSlug() : null,
-            'Room' => fn ($parameters) => isset($parameters['room']) ? $parameters['room']->getSlug() : null,
+            'EventCategory' => fn($parameters) => isset($parameters['eventCategory']) ? $parameters['eventCategory']->getSlug() : null,
+            'Season' => fn($parameters) => isset($parameters['season']) ? $parameters['season']->getSlug() : null,
+            'Room' => fn($parameters) => isset($parameters['room']) ? $parameters['room']->getSlug() : null,
         ];
     }
 
@@ -158,9 +158,9 @@ class EventManager extends AbstractRouterManager
 
         // Dates
         foreach ($events as &$event) {
-            $eventDateBlocks = $this->em->getRepository(EventDateBlock::class)->findEventDateBlocksForWebsite($event->getId());
-            foreach ($eventDateBlocks as $eventDateBlock) {
-                $event->addEventDateBlock($eventDateBlock);
+            $eventDates = $this->em->getRepository(EventDate::class)->findAllByEventForWebsiteOption($event->getId());
+            foreach ($eventDates as $eventDate) {
+                $event->addEventDate($eventDate);
             }
 
             $event->frontBookingButton = $this->getDisplayBookingButton($event);
@@ -184,14 +184,14 @@ class EventManager extends AbstractRouterManager
     {
         $url = $this->mf->get('parameter')->getCoreParameter('event_url_format');
         $eventUrlConstruct = [
-            '%id%' => fn ($event) => $event->getId(),
-            '%slug%' => fn ($event) => $event->getSlug(),
-            '%category%' => fn ($event) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() : '',
-            '%season%' => fn ($event) => $event->getSeason() ? $event->getSeason()->getSlug() : '',
-            '%room%' => fn ($event) => $event->getRoom() ? $event->getRoom()->getSlug() : '',
-            '%year%' => fn ($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y'),
-            '%month%' => fn ($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m'),
-            '%day%' => fn ($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d'),
+            '%id%' => fn($event) => $event->getId(),
+            '%slug%' => fn($event) => $event->getSlug(),
+            '%category%' => fn($event) => $event->getMainCategory() ? $event->getMainCategory()->getSlug() : '',
+            '%season%' => fn($event) => $event->getSeason() ? $event->getSeason()->getSlug() : '',
+            '%room%' => fn($event) => $event->getRoom() ? $event->getRoom()->getSlug() : '',
+            '%year%' => fn($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('Y'),
+            '%month%' => fn($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('m'),
+            '%day%' => fn($event) => $this->mf->get('eventSorter')->getBeginDate($event)->format('d'),
         ];
 
         foreach ($eventUrlConstruct as $key => $fn) {
@@ -255,12 +255,7 @@ class EventManager extends AbstractRouterManager
             $format = $this->tr->trans('global.datetime-format');
         }
 
-        $datesNb = 0;
-        foreach ($event->getEventDateBlocks() as $dateBlock) {
-            foreach ($dateBlock->getEventDates() as $eventDate) {
-                $datesNb++;
-            }
-        }
+        $datesNb = $event->getEventDate()->count();
 
         switch ($datesNb) {
             case 0:
@@ -323,14 +318,14 @@ class EventManager extends AbstractRouterManager
         return $medias;
     }
 
-    public function getEventDateBlocksFromEvent(Event $event): ?array
+    public function getEventDatesFromEvent(Event $event): ?array
     {
-        return $this->em->getRepository(EventDateBlock::class)->findEventDateBlocksForWebsite($event->getId());
+        return $this->em->getRepository(EventDate::class)->findAllByEventForWebsiteOption($event->getId());
     }
 
-    public function getEventPriceBlocksFromEvent(Event $event): ?array
+    public function getEventPriceCategoriesFromEvent(Event $event): ?array
     {
-        return $this->em->getRepository(EventPriceBlock::class)->findEventPriceBlocksForWebsite($event->getId());
+        return $this->em->getRepository(EventPriceCategory::class)->findEventPriceCategoriesForWebsite($event->getId());
     }
 
     public function getFirstFormattedMedia($eventMedias, string $slug): ?EventMedia
@@ -470,7 +465,7 @@ class EventManager extends AbstractRouterManager
         return null;
     }
 
-    public function getCalendarData(?string $slug, Event $event, array $eventDateBlocks): mixed
+    public function getCalendarData(?string $slug, Event $event, array $eventDate): mixed
     {
         if (null === $slug) {
             $slug = (new \DateTime())->format('y-m');
@@ -480,7 +475,7 @@ class EventManager extends AbstractRouterManager
         [$beginDate, $endDate] = $this->getPeriodDates($firstDayOfMonth);
         [$prevLink, $nextLink] = $this->generateLinks($firstDayOfMonth, $event->getId());
 
-        $dates = $this->getEventArray($beginDate, $endDate, $eventDateBlocks);
+        $dates = $this->getEventArray($beginDate, $endDate, $eventDate);
         return [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates];
     }
 
@@ -540,15 +535,8 @@ class EventManager extends AbstractRouterManager
         return [$prevLink, $nextLink];
     }
 
-    private function getEventArray(\DateTime $beginDate, \DateTime $endDate, array $eventDateBlocks): array
+    private function getEventArray(\DateTime $beginDate, \DateTime $endDate, array $eventDates): array
     {
-        $eventDates = [];
-        foreach ($eventDateBlocks as $eventDateBlock) {
-            foreach($eventDateBlock->getEventDates() as $eventDate) {
-                $eventDates[] = $eventDate;
-            }
-        }
-
         $datesTab = [];
         $currentDate = clone $beginDate;
         while ($currentDate <= $endDate) {
