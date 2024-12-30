@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { Box, Button, CardContent, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { HISTORY_TYPE_FIELDS } from '../services/utils/getHistoryTypeDisplay';
@@ -12,6 +12,10 @@ import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
+import { eventDateHistoryPart } from './EventHistoryTabs/EventDateHistoryPart';
+import { eventPriceHistoryPart } from './EventHistoryTabs/EventPriceHistoryPart';
+import { eventMediaHistoryPart } from './EventHistoryTabs/EventMediaHistoryPart';
+import { eventFeatureHistoryPart } from './EventHistoryTabs/EventFeatureHistoryPart';
 
 export const eventHistoryCrud = {
     historyTypes: HISTORY_TYPE_FIELDS,
@@ -21,6 +25,30 @@ export const eventHistoryCrud = {
             keyId: 'events',
             label: 'Evènement',
             fields: eventMainHistoryPart.blocks,
+        },
+        {
+            type: 'tabs',
+            keyId: 'dates',
+            label: 'Dates',
+            fields: eventDateHistoryPart.blocks,
+        },
+        {
+            type: 'tabs',
+            keyId: 'prices',
+            label: 'Tarifs',
+            fields: eventPriceHistoryPart.blocks,
+        },
+        {
+            type: 'tabs',
+            keyId: 'features',
+            label: 'Attributs',
+            fields: eventFeatureHistoryPart.blocks,
+        },
+        {
+            type: 'tabs',
+            keyId: 'medias',
+            label: 'Médias',
+            fields: eventMediaHistoryPart.blocks,
         },
     ],
 };
@@ -66,6 +94,20 @@ export const EventHistory = () => {
         return eventHistory?.length > selectedHistory + 1 ? eventHistory?.at(selectedHistory + 1)?.fields : event;
     }, [selectedHistory]);
 
+    const getHistoryTabs = useMemo(() => {
+        if (!actualVersion) {
+            return [];
+        }
+
+        let keys = Object.keys(actualVersion);
+
+        return Crud.events.history.fields?.filter((tab) => {
+            return tab.fields?.some((block) => {
+                return block.fields?.some((field) => keys.includes(field.name));
+            });
+        });
+    }, [selectedHistory]);
+
     const restoreVersion = () => {
         apiMiddleware(dispatch, async () => {
             const result = await Api.eventHistoryApi.restoreHistory(eventHistory?.at(selectedHistory)?.id);
@@ -100,7 +142,7 @@ export const EventHistory = () => {
                         tabValue={tabValue}
                         setTabValue={setTabValue}
                         mountComponents
-                        list={Crud.events.history.fields.map((elem) => ({
+                        list={getHistoryTabs.map((elem) => ({
                             id: elem.keyId,
                             label: elem.label,
                             component: Component.DisplayEventHistoryBlock({ blocks: elem?.fields, previousVersion, actualVersion, nextVersion, event, selectedHistory }),

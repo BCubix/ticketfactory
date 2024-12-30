@@ -593,15 +593,15 @@ class Event extends Datable
         foreach ($this->eventMedias as $eventMedia) {
             $result['eventMedias'][] = $eventMedia->toStringToCompare();
         }
-    
+
         foreach ($this->eventCategories as $eventCategory) {
             $result['eventCategories'][] = $eventCategory->getId();
         }
-    
+
         foreach ($this->tags as $tag) {
             $result['tags'][] = $tag->getId();
         }
-    
+
         foreach ($this->featureLinks as $featureLink) {
             $result['featureLinks'][] = $featureLink->toStringToCompare();
         }
@@ -612,8 +612,8 @@ class Event extends Datable
     public function restoreHistory(array $fields): self
     {
         $simpleFields = [
-            'name', 'slug', 'chapo', 'description', 
-            'ticketingReference', 'displayBookingButton', 
+            'name', 'slug', 'chapo', 'description',
+            'ticketingReference', 'displayBookingButton',
             'eventLength'
         ];
         foreach ($simpleFields as $field) {

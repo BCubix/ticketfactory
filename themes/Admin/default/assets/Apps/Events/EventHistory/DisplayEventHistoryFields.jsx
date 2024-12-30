@@ -14,6 +14,6 @@ export const DisplayEventHistoryFields = ({ fields, ...props }) => {
             );
         }
 
-        return <FieldComponent key={index} name={field.name} label={field.label} {...props} />;
+        return <FieldComponent key={index} name={field.name} label={field.label} fields={field.fields} {...props} />;
     });
 };

@@ -58,13 +58,13 @@ class EventPriceCategory
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPriceCategory')]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPriceCategories')]
     #[ORM\JoinColumn(nullable: true)]
     private $event;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
-    #[ORM\ManyToOne(targetEntity: SeatingPlan::class, inversedBy: 'eventPriceCategory')]
+    #[ORM\ManyToOne(targetEntity: SeatingPlan::class, inversedBy: 'eventPriceCategories')]
     #[ORM\JoinColumn(nullable: true)]
     private $seatingPlan;
 

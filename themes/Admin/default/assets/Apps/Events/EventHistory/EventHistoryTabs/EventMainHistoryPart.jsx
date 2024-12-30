@@ -84,7 +84,11 @@ export const eventMainHistoryPart = {
             type: 'block',
             keyId: 'block-categories',
             title: 'Catégories',
-            fields: [{ name: 'mainCategory', label: 'Categorie principale', inputType: 'category' }],
+            fields: [
+                { name: 'mainCategory', label: 'Categorie principale', inputType: 'category' },
+                { name: 'eventCategories', label: 'Catégories', inputType: 'collection', fields: [{ label: 'Catégorie', inputType: 'category' }] },
+                { name: 'tags', label: 'Tags', inputType: 'collection', fields: [{ label: 'Tag', inputType: 'tag' }] },
+            ],
         },
     ],
 };

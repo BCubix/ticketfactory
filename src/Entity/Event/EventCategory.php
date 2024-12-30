@@ -37,7 +37,7 @@ class EventCategory extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de la catégorie doit être inférieure à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de la catégorie doit être renseignée.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one', 'a_tag_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one', 'a_tag_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
