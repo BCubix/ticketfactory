@@ -16,9 +16,9 @@ class EventHook extends Hook
         $iObject = $event->getParam('iObject');
         $sObject = $event->getParam('sObject');
 
-        //$this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
-
         $this->mf->get('seo')->completeSeoEvent($sObject);
+
+        $this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
     }
 
     public function hookEventValidated(HookEvent $event)

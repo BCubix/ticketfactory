@@ -67,8 +67,8 @@ class SeoManager extends AbstractManager
     {
         $eventDateStart = null;
         $eventDateEnd = null;
-        if (0 !== count($event->getEventDate())) {
-            $dates = $event->getEventDate();
+        if (0 !== count($event->getEventDates())) {
+            $dates = $event->getEventDates();
 
             if (0 !== count($dates)) {
                 $date_start = $dates->first()->getEventDate();

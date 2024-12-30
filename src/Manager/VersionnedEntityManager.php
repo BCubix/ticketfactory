@@ -4,8 +4,8 @@ namespace App\Manager;
 
 use App\Entity\Content\Content;
 use App\Entity\Content\ContentType;
+use App\Entity\Event\Event;
 use App\Entity\Page\Page;
-use App\Entity\Page\PageBlockType;
 use App\Entity\VersionnedEntity\VersionnedEntity;
 use App\Exception\ApiException;
 
@@ -17,6 +17,7 @@ class VersionnedEntityManager extends AbstractManager
     public const SERVICE_NAME = 'versionnedEntity';
 
     private const SUPPORTED_TYPES = [
+        'event'   => Event::class,
         'content' => Content::class,
         'page'    => Page::class
     ];
@@ -111,6 +112,11 @@ class VersionnedEntityManager extends AbstractManager
 
     public function deSerializeVersionnedEntity(VersionnedEntity $entity)
     {
+        if ($entity->getEntityKeyword() === "event") {
+            $entity->setFields($this->mf->get('eventHistory')->deSerializeEventHistoryFields($entity->getFields()));
+            return $entity;
+        }
+
         if ($entity->getEntityKeyword() === "page") {
             return $this->deSerializePageVersion($entity);
         }
@@ -165,6 +171,10 @@ class VersionnedEntityManager extends AbstractManager
 
     private function restoreFieldsVersion(Object &$object, array $fields): void
     {
+        if ($this->getKeyword($object) === "event") {
+            $fields = $this->mf->get('eventHistory')->deSerializeEventHistoryFields($fields);
+        }
+
         $object->restoreHistory($fields);
 
         $this->em->persist($object);

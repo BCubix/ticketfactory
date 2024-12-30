@@ -14,9 +14,13 @@ import { EventsPriceCategoryForm } from '@Apps/Events/EventsForm/EventPriceCateg
 import { EventsDateForm } from '@Apps/Events/EventsForm/EventsDateForm';
 import { EventsPriceForm } from '@Apps/Events/EventsForm/EventsPriceForm';
 import { EventsList, eventsListCrud } from '@Apps/Events/EventsList/EventsList';
+import { EventHistory } from '@Apps/Events/EventHistory/EventHistory';
 import eventsReducer from '@Apps/Events/redux/events/eventsSlice';
 import eventsApi from '@Apps/Events/services/api/eventsApi';
+import eventHistoryApi from '@Apps/Events/services/api/eventHistoryApi';
 import { CmtCalendar } from '@Apps/Events/EventsForm/CmtCalendar/CmtCalendar';
+import { eventHistoryCrud } from './EventHistory/EventHistory';
+import { DisplayEventHistoryBlock } from './EventHistory/DisplayEventHistoryBlock';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -27,6 +31,7 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { DisplayEventHistoryFields } from './EventHistory/DisplayEventHistoryFields';
 
 const ROLE_READ = 'ROLE_EVENT_READ';
 const ROLE_CREATE = 'ROLE_EVENT_CREATE';
@@ -34,6 +39,7 @@ const ROLE_EDIT = 'ROLE_EVENT_EDIT';
 
 export const initConstant = () => {
     setConstant('EVENTS_BASE_PATH', '/admin/evenements');
+    setConstant('EVENT_HISTORY_BASE_PATH', '/admin/historique-d-evenement');
 };
 
 export const initComponent = ({ userRoles }) => {
@@ -54,11 +60,15 @@ export const initComponent = ({ userRoles }) => {
     setComponent('EventsDateForm', EventsDateForm);
     setComponent('EventsPriceForm', EventsPriceForm);
     setComponent('EventsList', EventsList);
+    setComponent('EventHistory', EventHistory);
     setComponent('CmtCalendar', CmtCalendar);
+    setComponent('DisplayEventHistoryBlock', DisplayEventHistoryBlock);
+    setComponent('DisplayEventHistoryFields', DisplayEventHistoryFields);
 };
 
 export const initApi = () => {
     setApi('eventsApi', eventsApi);
+    setApi('eventHistoryApi', eventHistoryApi);
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
@@ -77,6 +87,7 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
 
     if (checkUserAccess(userRoles, ROLE_EDIT)) {
         setAuthenticatedRoute(`${Constant.EVENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEvent);
+        setAuthenticatedRoute(`${Constant.EVENT_HISTORY_BASE_PATH}/:id`, Component.EventHistory);
     }
 };
 
@@ -100,6 +111,7 @@ export default async function ({ parameters, userRoles }) {
         list: eventsListCrud({ eventName }),
         add: eventsCreateCrud({ eventName }),
         edit: eventsEditCrud({ eventName }),
+        history: eventHistoryCrud,
     };
 
     setCrud('events', crud);

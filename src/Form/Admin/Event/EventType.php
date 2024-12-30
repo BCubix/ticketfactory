@@ -56,7 +56,7 @@ class EventType extends AdminBaseFormType
                 'delete_empty' => true,
                 'by_reference' => false
             ])
-            ->add('eventDate',             CollectionType::class,      [
+            ->add('eventDates',             CollectionType::class,      [
                 'entry_type'   => EventDateType::class,
                 'allow_add'    => true,
                 'allow_delete' => true,

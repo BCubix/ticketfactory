@@ -169,4 +169,28 @@ class EventPrice
 
         return $this;
     }
+
+    public function toStringToCompare(): array
+    {
+        return [
+            'name'                  => $this->name,
+            'annotation'            => $this->annotation,
+            'defaultPrice'          => $this->defaultPrice,
+            'price'                 => $this->price,
+            'ticketingReference'    => $this->ticketingReference,
+        ];
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        $simpleFields = ['name', 'annotation', 'defaultPrice', 'price', 'ticketingReference'];
+
+        foreach ($simpleFields as $field) {
+            if (isset($fields[$field])) {
+                $this->$field = $fields[$field];
+            }
+        }
+
+        return $this;
+    }
 }

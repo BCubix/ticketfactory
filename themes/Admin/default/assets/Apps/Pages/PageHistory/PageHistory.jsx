@@ -1,18 +1,18 @@
-import { Box } from '@mui/system';
-import React, { useMemo, useState } from 'react';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Constant } from '@/AdminService/Constant';
-import { Api } from '@/AdminService/Api';
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Component } from '@/AdminService/Component';
-import { Button, CardContent, Typography } from '@mui/material';
+import React, { useMemo, useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Box } from '@mui/system';
+import { Button, CardContent, Typography } from '@mui/material';
 
 import { DisplayPageDifferences } from './DisplayPageDifferences';
 import { checkPageBlockTypeChange } from '../services/utils/checkTypes';
 import { HISTORY_TYPE_FIELDS } from '../services/utils/getHistoryTypeDisplay';
+
+import { Constant } from '@/AdminService/Constant';
+import { Api } from '@/AdminService/Api';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Component } from '@/AdminService/Component';
 
 export const pageHistoryCrud = {
     historyTypes: HISTORY_TYPE_FIELDS,

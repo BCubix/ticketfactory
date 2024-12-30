@@ -1,13 +1,16 @@
 import React from 'react';
-import * as Yup from 'yup';
-import { Component } from '@/AdminService/Component';
-import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
-import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import moment from 'moment';
+import * as Yup from 'yup';
+
+import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
 import { eventMainPartForm } from './EventMainPartForm';
 import { eventFeaturesPartForm } from './EventFeaturesPartForm';
 import { eventsPriceFormFields } from './EventsPriceForm';
 import { eventsDateFormFields } from './EventsDateForm';
+
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 
 export const eventsValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
@@ -15,21 +18,21 @@ export const eventsValidationSchema = {
     eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
     mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
     description: Yup.string().required('Veuillez renseigner une description.'),
-    eventDate: Yup.array()
+    eventDates: Yup.array()
         .of(
-                        Yup.object().shape({
-                            eventDate: Yup.string().required('Veuillez renseigner la date.'),
-                            state: Yup.string().required('Veuillez renseigner le status de cette date.'),
-                            reportDate: Yup.string().when('state', (state) => {
-                                if (state === 'delayed') {
-                                    return Yup.string().required('Veuillez renseigner la nouvelle date.');
-                                } else {
-                                    return Yup.string().nullable();
-                                }
-                            }),
-                        })
-                    )
-                    .min(1, 'Veuillez renseigner au moins une date.'),
+            Yup.object().shape({
+                eventDate: Yup.string().required('Veuillez renseigner la date.'),
+                state: Yup.string().required('Veuillez renseigner le status de cette date.'),
+                reportDate: Yup.string().when('state', (state) => {
+                    if (state === 'delayed') {
+                        return Yup.string().required('Veuillez renseigner la nouvelle date.');
+                    } else {
+                        return Yup.string().nullable();
+                    }
+                }),
+            })
+        )
+        .min(1, 'Veuillez renseigner au moins une date.'),
     eventPriceCategories: Yup.array().of(
         Yup.object().shape({
             name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom du bloc est trop long'),
@@ -62,9 +65,9 @@ export const eventsInitialSchema = {
     chapo: (initValues) => initValues?.chapo || '',
     description: (initValues) => initValues?.description || '',
     eventLength: (initValues) => initValues?.eventLength || '',
-    eventDate: (initValues) => {
+    eventDates: (initValues) => {
         return (
-            initValues?.eventDate?.map((el, index) => ({
+            initValues?.eventDates?.map((el, index) => ({
                 ...el,
                 lang: el?.lang?.id || '',
                 index: index,
@@ -76,13 +79,9 @@ export const eventsInitialSchema = {
         initValues?.eventPriceCategories?.map((el, blockIndex) => ({
             ...el,
             lang: el?.lang?.id || '',
-            eventPrices: el?.eventPrices?.map((price, index) => (
-                { ...price, lang: price?.lang?.id || '', index 
-
-                })) || defaultPrices,
+            eventPrices: el?.eventPrices?.map((price, index) => ({ ...price, lang: price?.lang?.id || '', index })) || defaultPrices,
             index: blockIndex,
-        })) 
-        || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
+        })) || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues, { roomsList }) => initValues?.room?.id || (roomsList?.length === 1 ? roomsList[0]?.id : ''),
     seatingPlan: (initValues) => initValues?.seatingPlan?.id || '',
@@ -147,26 +146,26 @@ export const eventsForm = {
             ticketingReference: { type: 'string' },
             displayBookingButton: { type: 'boolean' },
             eventLength: { type: 'string' },
-            eventDate: {
-                        type: 'array',
-                        subFields: {
-                            eventDate: {
-                                function: ({ values, formData, baseName }) => {
-                                    formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
-                                },
-                            },
-                            annotation: { type: 'string' },
-                            state: { type: 'string' },
-                            lang: { type: 'string' },
-                            languageGroup: { type: 'string' },
-                            reportDate: {
-                                function: ({ values, formData, baseName }) => {
-                                    if (values.reportDate) {
-                                        formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
-                                    }
-                                },
-                            },
+            eventDates: {
+                type: 'array',
+                subFields: {
+                    eventDate: {
+                        function: ({ values, formData, baseName }) => {
+                            formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
                         },
+                    },
+                    annotation: { type: 'string' },
+                    state: { type: 'string' },
+                    lang: { type: 'string' },
+                    languageGroup: { type: 'string' },
+                    reportDate: {
+                        function: ({ values, formData, baseName }) => {
+                            if (values.reportDate) {
+                                formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
+                            }
+                        },
+                    },
+                },
             },
             eventPriceCategories: {
                 type: 'array',
@@ -257,5 +256,14 @@ export const eventsForm = {
             component: (props) => <Component.EventMediaPartForm {...props} />,
         },
     ],
+    actionButton: ({ initialValues, navigate }) => {
+        return (
+            initialValues && (
+                <Component.ActionButton variant="contained" sx={{ marginLeft: 'auto' }} onClick={() => navigate(Constant.EVENT_HISTORY_BASE_PATH + `/${initialValues?.id}`)}>
+                    Historique de l'événement
+                </Component.ActionButton>
+            )
+        );
+    },
     ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

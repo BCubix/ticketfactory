@@ -125,6 +125,10 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
         setLoading(objectData?.loading);
     }, []);
 
+    useEffect(() => {
+        setLoading(objectData?.loading);
+    }, [objectData?.loading]);
+
     const handleDelete = async (id) => {
         const result = await listCrud.delete(id);
         if (!result?.result && result?.error?.httpcode !== 500) {

@@ -342,7 +342,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         return getUserRoles(user);
     }, [user]);
 
-    if (!initValue) {
+    if (!initialValues && !translateInitialValues) {
         return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
     }
 

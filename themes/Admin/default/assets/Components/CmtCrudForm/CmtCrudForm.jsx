@@ -8,6 +8,7 @@ import { parametersSelector } from '@Apps/Parameters/redux/parameters/parameters
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
 import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { getUserRoles } from '@Services/utils/getUserRoles';
+import { useNavigate } from 'react-router-dom';
 
 export const DEFAULT_CRUD_FORM_COMPONENTS = {
     wrapperComponent: (props) => <Component.CmtCrudForm {...props} />,
@@ -53,6 +54,7 @@ export const initYup = (list, props) => {
 
 export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, handleSubmit, formLoading, ...props }) => {
     const initValues = translateInitialValues || initialValues;
+    const navigate = useNavigate();
     const validationSchema = Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }));
     const { parameters } = useSelector(parametersSelector);
     const { user } = useSelector(userProfileSelector);
@@ -88,7 +90,27 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
                     {...(formCrud?.form?.formProps || {})}
                 >
                     {({ values, errors, touched, handleChange, setFieldTouched, setFieldValue, handleBlur, handleSubmit, isSubmitting, validateForm, submitForm }) => (
-                        <Component.CmtPageWrapper component="form" noValidate onSubmit={handleSubmit} title={formCrud?.form?.title}>
+                        <Component.CmtPageWrapper
+                            component="form"
+                            noValidate
+                            onSubmit={handleSubmit}
+                            title={formCrud?.form?.title}
+                            actionButton={
+                                formCrud?.actionButton
+                                    ? formCrud.actionButton({
+                                          navigate,
+                                          formCrud,
+                                          initValues,
+                                          initialValues,
+                                          translateInitialValues,
+                                          handleSubmit,
+                                          formLoading,
+                                          userRoles,
+                                          ...props,
+                                      })
+                                    : null
+                            }
+                        >
                             <Component.CmtDisplayComponents
                                 formCrud={formCrud}
                                 list={formCrud.components}

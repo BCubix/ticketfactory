@@ -184,4 +184,35 @@ class EventPriceCategory
 
         return $this;
     }
+
+    public function toStringToCompare(): array
+    {
+        $result =  [
+            'name' => $this->name,
+            'eventPrices' => []
+        ];
+
+        foreach ($this->eventPrices as $eventPrice) {
+            $result['eventPrices'][] = $eventPrice->toStringToCompare();
+        }
+
+        return $result;
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['name'])) {
+            $this->name = $fields['name'];
+        }
+
+        if (isset($fields['eventPrices'])) {
+            foreach ($fields['eventPrices'] as $key => $value) {
+                if (isset($this->eventPrices[$key])) {
+                    $this->eventPrices[$key] = $this->eventPrices[$key]->restoreHistory($value);
+                }
+            }
+        }
+
+        return $this;
+    }
 }
