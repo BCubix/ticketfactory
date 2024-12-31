@@ -25,34 +25,34 @@ class EventCategoryType extends AdminBaseFormType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
-            ->add('name',                 TextType::class,            [])
-            ->add('slug',                 TextType::class,            [
+            ->add('active', CheckboxType::class, ['false_values' => ['0', 'null', 'false']])
+            ->add('name', TextType::class, [])
+            ->add('slug', TextType::class, [
                 'empty_data' => '',
             ])
-            ->add('keyword',              TextType::class,            [])
-            ->add('parent',               EntityType::class,          [
-                'class'         => EventCategory::class,
-                'choice_label'  => 'name',
-                'multiple'      => false,
+            ->add('keyword', TextType::class, [])
+            ->add('parent', EntityType::class, [
+                'class' => EventCategory::class,
+                'choice_label' => 'name',
+                'multiple' => false,
                 'query_builder' => function (EventCategoryRepository $ecr) {
                     return $ecr
                         ->createQueryBuilder('ec')
                         ->orderBy('ec.name', 'ASC');
                 }
             ])
-            ->add('lang',                 EntityType::class,          [
-                'class'         => Language::class,
-                'choice_label'  => 'name',
-                'multiple'      => false,
+            ->add('lang', EntityType::class, [
+                'class' => Language::class,
+                'choice_label' => 'name',
+                'multiple' => false,
                 'query_builder' => function (LanguageRepository $lr) {
                     return $lr
                         ->createQueryBuilder('l')
                         ->orderBy('l.name', 'ASC');
                 }
             ])
-            ->add('languageGroup',        UuidType::class,            [])
-            ->add('seo',                  SEOAbleType::class,         [
+            ->add('languageGroup', UuidType::class, [])
+            ->add('seo', SEOAbleType::class, [
                 'data_class' => EventCategory::class,
             ]);
 

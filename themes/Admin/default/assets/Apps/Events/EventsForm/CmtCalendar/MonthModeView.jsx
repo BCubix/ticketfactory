@@ -7,6 +7,7 @@ import {
   TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions,
   Button, Box,
 } from "@mui/material";
+import { v4 as uuidv4 } from 'uuid';
 import {
   CustomTableCell, CustomTableContainer, DayLabel, SelectedTimeBox, CustomPaper
 } from './sc.MonthModeView';
@@ -69,6 +70,7 @@ const MonthModeView = (props) => {
       state: 'valid',
       reportDate: '',
       index: index,
+      eventDateUuid: uuidv4(),
     });
     setCreatingItem(true);
     setDialogOpen(true);

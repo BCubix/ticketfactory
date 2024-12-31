@@ -4,6 +4,7 @@ import { Box } from '@mui/system';
 import moment from 'moment';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { v4 as uuidv4 } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Component } from '@/AdminService/Component';
 
@@ -33,6 +34,7 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
                         state: 'valid',
                         reportDate: '',
                         index: index.current,
+                        eventDateUuid: uuidv4(),
                     });
 
                     index.current = index.current + 1;

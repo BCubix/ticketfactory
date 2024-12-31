@@ -71,7 +71,7 @@ export const eventsPriceFormFields = {
             component: ({ values, setFieldValue, ...props }) => {
                 const eventPrices = values?.eventPriceCategories?.[props.blockIndex]?.eventPrices || [];
                 const isDefaultPrice = eventPrices[props.index]?.defaultPrice;
-            
+
                 return (
                     <div>
                         <Typography> Tarif par défaut :
@@ -79,12 +79,12 @@ export const eventsPriceFormFields = {
                                 checked={isDefaultPrice}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    
+
                                     const updatedEventPrices = eventPrices.map((price, index) => ({
                                         ...price,
                                         defaultPrice: index === props.index,
                                     }));
-                
+
                                     setFieldValue(
                                         `eventPriceCategories.${props.blockIndex}.eventPrices`,
                                         updatedEventPrices
@@ -92,12 +92,12 @@ export const eventsPriceFormFields = {
                                 }}
                                 id={`eventPriceCategories.${props.blockIndex}.eventPrices.${props.index}.defaultPrice`}
                             />
-                         </Typography>
-                        
+                        </Typography>
+
                     </div>
                 );
             }
-            
+
         },
     ],
 };
@@ -140,39 +140,39 @@ export const EventsPriceForm = ({
                         {/* Loop over eventPrices */}
                         {eventPrices.map((item, index) => {
 
-                        return (
-                            <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
-                                <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
-                                    <CardContent sx={{ position: 'relative' }}>
-                                        <Grid container spacing={4}>
-                                            <Component.CmtDisplayFields
-                                                fields={fields}
-                                                values={values}
-                                                touched={touched}
-                                                errors={errors}
-                                                handleChange={handleChange}
-                                                handleBlur={handleBlur}
-                                                blockIndex={blockIndex}
-                                                item={item}
-                                                index={index}
-                                                baseName={handleString(dataPath)}
-                                                {...props}
-                                            />
-                                        </Grid>
+                            return (
+                                <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
+                                    <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
+                                        <CardContent sx={{ position: 'relative' }}>
+                                            <Grid container spacing={4}>
+                                                <Component.CmtDisplayFields
+                                                    fields={fields}
+                                                    values={values}
+                                                    touched={touched}
+                                                    errors={errors}
+                                                    handleChange={handleChange}
+                                                    handleBlur={handleBlur}
+                                                    blockIndex={blockIndex}
+                                                    item={item}
+                                                    index={index}
+                                                    baseName={handleString(dataPath)}
+                                                    {...props}
+                                                />
+                                            </Grid>
 
-                                        <Component.DeleteBlockFabButton
-                                            size="small"
-                                            onClick={() => {
-                                                remove(index);  // Remove the eventPrice from the array
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </Component.DeleteBlockFabButton>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        );
-                    })}
+                                            <Component.DeleteBlockFabButton
+                                                size="small"
+                                                onClick={() => {
+                                                    remove(index);  // Remove the eventPrice from the array
+                                                }}
+                                            >
+                                                <DeleteIcon />
+                                            </Component.DeleteBlockFabButton>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            );
+                        })}
                     </Grid>
 
                     <Box className="flex row-end padding-top-4 padding-left-4">

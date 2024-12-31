@@ -39,7 +39,11 @@ class EventPriceCategoryType extends AdminBaseFormType
                         ->orderBy('l.name', 'ASC');
                 }
             ])
-            ->add('languageGroup',        UuidType::class,            []);
+            ->add('languageGroup',        UuidType::class,            [])
+            
+            ->add('eventDateUuid', UuidType::class, [
+                'required' => false,
+            ]);
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

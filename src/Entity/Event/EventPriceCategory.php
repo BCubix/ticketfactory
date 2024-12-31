@@ -42,11 +42,13 @@ class EventPriceCategory
     #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
+    
+    private ?string $eventDateUuid = null;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_room_one',  'a_room_all'])]
+    #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
     #[ORM\OneToMany(mappedBy: 'eventPriceCategory', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventPrices;
 
@@ -58,7 +60,7 @@ class EventPriceCategory
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPriceCategory')]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventPriceCategories')]
     #[ORM\JoinColumn(nullable: true)]
     private $event;
 
@@ -105,6 +107,17 @@ class EventPriceCategory
     {
         $this->languageGroup = $languageGroup;
 
+        return $this;
+    }
+    
+    public function getEventDateUuid(): ?string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 

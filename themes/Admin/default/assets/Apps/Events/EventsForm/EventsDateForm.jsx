@@ -9,6 +9,7 @@ import { Button, ButtonGroup, Card, CardContent, FormControl, Grid, InputLabel, 
 
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import { v4 as uuidv4 } from 'uuid';
 
 import EventAddSpecialPricing from './EventAddSpecialPricing';
 
@@ -321,6 +322,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                     state: 'valid',
                                     reportDate: '',
                                     index: index.current,
+                                    eventDateUuid: uuidv4(),
                                 });
 
                                 index.current = index.current + 1;

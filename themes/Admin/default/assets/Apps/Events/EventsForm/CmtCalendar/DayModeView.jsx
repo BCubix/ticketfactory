@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Component } from '@/AdminService/Component';
+import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
 import { StyledTableCell, StyledTableContainer, SlotDiv, DayModeStyledCell } from './sc.DayModeView';
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
@@ -36,6 +37,7 @@ const DayModeView = ({ values, columns, rows, options, setFieldValue, setGenerat
         state: 'valid',
         reportDate: '',
         index: itemIndex,
+        eventDateUuid: uuidv4(),
       });
     }
 

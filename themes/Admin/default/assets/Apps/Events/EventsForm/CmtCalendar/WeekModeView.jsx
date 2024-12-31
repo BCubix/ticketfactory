@@ -6,6 +6,7 @@ import {
   Button,
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { v4 as uuidv4 } from 'uuid';
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
 import { StyledTableContainer, StyledTableCell, DayModeStyledCell, SlotDiv } from './sc.WeekModeView';
 import { Component } from '@/AdminService/Component';
@@ -42,6 +43,7 @@ const WeekModeView = (props) => {
         state: 'valid',
         reportDate: '',
         index: itemIndex,
+        eventDateUuid: uuidv4(),
       });
     }
 

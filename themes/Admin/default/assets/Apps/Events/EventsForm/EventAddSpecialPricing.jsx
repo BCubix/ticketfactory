@@ -57,18 +57,21 @@ function EventAddSpecialPricing({
       eventDate: selectedDate,
       name: category?.name,
       lang: category?.lang?.id || category?.lang,
+      eventDateUuid: selectedDate.eventDateUuid,
       eventPrices: category?.eventPrices?.map((price) => ({
         name: price?.name,
         annotation: price?.annotation,
         price: price?.price,
         index: price?.index,
+        defaultPrice: price?.defaultPrice,
       })),
     }));
-    
+
     setFieldValue(
       'eventPriceCategories',
-      [...(values?.eventPriceCategories ||  [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }]), ...filteredEventPriceCategories]);
-  };
+      [...(values?.eventPriceCategories || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }]), ...filteredEventPriceCategories]);
+      
+    };
 
   const [open, setOpen] = useState(false);
 
@@ -118,7 +121,7 @@ function EventAddSpecialPricing({
       >
         <DialogTitle>Tarifs spéciaux</DialogTitle>
         <DialogContent>
-          
+
 
           <EventsPriceCategoryForm
             dataPath={dataPath}
@@ -138,7 +141,7 @@ function EventAddSpecialPricing({
           />
         </DialogContent>
         <DialogActions>
-        <Button onClick={handleDelete} color="error">
+          <Button onClick={handleDelete} color="error">
             Supprimer
           </Button>
 
@@ -147,7 +150,7 @@ function EventAddSpecialPricing({
           </Button>
         </DialogActions>
       </Dialog>
-      </div>
+    </div>
   );
 }
 
