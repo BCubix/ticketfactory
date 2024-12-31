@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,7 @@ import { getVouchersAction } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { vouchersInitialSchema, vouchersValidationSchema, vouchersForm } from '@Apps/Vouchers/VouchersForm/VouchersForm';
 import { Crud } from '@/AdminService/Crud';
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 export const vouchersCreateCrud = {
     form: {
@@ -23,14 +25,27 @@ export const vouchersCreateCrud = {
 export const CreateVoucher = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [categories, setCategories] = useState([]);
+    const languagesData = useSelector(languagesSelector);
+    const [eventCategories, setEventCategories] = useState([]);
+    const [productCategories, setProductCategories] = useState([]);
 
     useEffect(() => {
+        const defaultLanguageId = languagesData?.languages?.find((el) => el.isDefault)?.id;
+
         apiMiddleware(dispatch, async () => {
-            const categories = await Api.categoriesApi.getCategories();
-            if (categories.result) {
-                setCategories(categories?.categories);
+            const [eventCategoriesResult, productCategoriesResult] = await Promise.all([
+                Api.categoriesApi.getCategories({ lang: defaultLanguageId }),
+                Api.productCategoriesApi.getProductCategories({ lang: defaultLanguageId }),
+            ]);
+
+            if (!eventCategoriesResult.result || !productCategoriesResult.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.VOUCHERS_BASE_PATH);
+                return;
             }
+
+            setEventCategories(eventCategoriesResult?.categories);
+            setProductCategories(productCategoriesResult?.productCategories);
         });
     }, []);
 
@@ -49,5 +64,5 @@ export const CreateVoucher = () => {
         return <></>;
     }
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} eventCategoriesList={categories} formCrud={Crud?.vouchers?.add} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} eventCategoriesList={eventCategories} productCategories={productCategories} formCrud={Crud?.vouchers?.add} />;
 };
