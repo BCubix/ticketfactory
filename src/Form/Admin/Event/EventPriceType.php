@@ -27,8 +27,8 @@ class EventPriceType extends AdminBaseFormType
             ->add('price',                 MoneyType::class,           [
                 'currency' => 'EUR'
             ])
-            ->add('defaultPrice',                      CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
-            ->add('lang',                 EntityType::class,          [
+            ->add('defaultPrice',          CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
+            ->add('lang',                  EntityType::class,          [
                 'class'         => Language::class,
                 'choice_label'  => 'name',
                 'multiple'      => false,

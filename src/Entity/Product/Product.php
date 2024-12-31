@@ -39,7 +39,7 @@ class Product extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_tag_all', 'a_tag_one', 'a_order_one', 'a_cart_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

@@ -221,19 +221,19 @@ class PageBlock extends Datable
         if (isset($fields['name'])) {
             $this->name = $fields['name'];
         }
-    
+
         if (isset($fields['saveAsModel'])) {
             $this->saveAsModel = $fields['saveAsModel'];
         }
-    
+
         if (isset($fields['class'])) {
             $this->class = $fields['class'];
         }
-    
+
         if (isset($fields['fields'])) {
             $this->fields = array_replace_recursive($this->fields, $fields['fields']);
         }
-    
+
         if (isset($fields['columns'])) {
             $this->columns = array_replace_recursive($this->columns, $fields['columns']);
         }
