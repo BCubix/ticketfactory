@@ -193,7 +193,6 @@ export const eventsForm = {
                             languageGroup: { type: 'string' },
                         },
                     },
-
                     eventDate: {
                         eventDate: {
                             function: ({ values, formData, baseName }) => {

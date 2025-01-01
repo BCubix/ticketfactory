@@ -63,23 +63,22 @@ const MonthModeView = (props) => {
             state: 'valid',
             reportDate: '',
             index: index,
+            eventDateUuid: uuidv4(),
         });
         setCreatingItem(true);
         setDialogOpen(true);
     };
 
-    setDialogItemIndex(index);
-    setFieldValue(`eventDates.${index}`, {
-      eventDate: '',
-      annotation: '',
-      state: 'valid',
-      reportDate: '',
-      index: index,
-      eventDateUuid: uuidv4(),
-    });
-    setCreatingItem(true);
-    setDialogOpen(true);
-  };
+    const handleCloseDialog = () => {
+        if (creatingItem && dialogItemIndex !== null) {
+            const updatedEventDate = [...values.eventDates];
+            updatedEventDate.splice(dialogItemIndex, 1);
+            setFieldValue('eventDates', updatedEventDate);
+        }
+        setCreatingItem(false);
+        setDialogOpen(false);
+        setDialogItemIndex(null);
+    };
 
     const handleSubmitForm = () => {
         setCreatingItem(false);

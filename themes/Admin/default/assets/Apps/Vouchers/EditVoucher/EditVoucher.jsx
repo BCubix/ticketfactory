@@ -85,7 +85,7 @@ export const EditVoucher = () => {
         });
     };
 
-    if (!voucher || categories.length < 1) {
+    if (!voucher) {
         return <></>;
     }
 
@@ -94,7 +94,7 @@ export const EditVoucher = () => {
             handleSubmit={handleSubmit}
             initialValues={voucher}
             eventCategoriesList={eventCategories}
-            productCategories={productCategories}
+            productCategoriesList={productCategories}
             formCrud={Crud?.vouchers?.edit}
         />
     );

@@ -23,57 +23,63 @@ export const DEFAULT_CRUD_LIST_COMPONENTS = {
             ),
         },
         {
-            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog, ...props }) => (
-                <Component.ListTable
-                    contextualMenu={Boolean(listCrud?.tableContextualMenu)}
-                    table={listCrud?.tableList}
-                    list={listCrud?.dataList(objectData)}
-                    onEdit={
-                        listCrud?.links?.edit
-                            ? (id) => {
-                                  navigate(listCrud?.links?.edit(id));
-                              }
-                            : null
-                    }
-                    onDuplicate={
-                        listCrud?.duplicate
-                            ? (id) => {
-                                  handleDuplicate(id);
-                              }
-                            : null
-                    }
-                    onTranslate={
-                        listCrud?.links?.translate
-                            ? (id, languageId) => {
-                                  navigate(listCrud?.links?.translate(id, languageId));
-                              }
-                            : null
-                    }
-                    onClick={
-                        listCrud?.links?.detail
-                            ? (itemId) => {
-                                  navigate(listCrud?.links?.detail(itemId));
-                              }
-                            : null
-                    }
-                    onPreview={
-                        listCrud?.preview || listCrud?.links?.preview
-                            ? (item) => {
-                                  if (listCrud?.preview) {
-                                      listCrud.preview(item);
-                                  } else {
-                                      navigate(listCrud?.links?.preview(item));
+            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog, listLoading, ...props }) => {
+                if (listLoading) {
+                    return <Component.CmtSkeletonList numberLines={10} />;
+                }
+
+                return (
+                    <Component.ListTable
+                        contextualMenu={Boolean(listCrud?.tableContextualMenu)}
+                        table={listCrud?.tableList}
+                        list={listCrud?.dataList(objectData)}
+                        onEdit={
+                            listCrud?.links?.edit
+                                ? (id) => {
+                                      navigate(listCrud?.links?.edit(id));
                                   }
-                              }
-                            : null
-                    }
-                    disableDeleteFunction={listCrud?.disableDeleteFunction}
-                    onDelete={listCrud?.delete ? (id) => setDeleteDialog(id) : null}
-                    filters={objectData?.filters}
-                    changeFilters={(newFilters) => dispatch(listCrud?.changeFiltersActions(newFilters))}
-                    {...props}
-                />
-            ),
+                                : null
+                        }
+                        onDuplicate={
+                            listCrud?.duplicate
+                                ? (id) => {
+                                      handleDuplicate(id);
+                                  }
+                                : null
+                        }
+                        onTranslate={
+                            listCrud?.links?.translate
+                                ? (id, languageId) => {
+                                      navigate(listCrud?.links?.translate(id, languageId));
+                                  }
+                                : null
+                        }
+                        onClick={
+                            listCrud?.links?.detail
+                                ? (itemId) => {
+                                      navigate(listCrud?.links?.detail(itemId));
+                                  }
+                                : null
+                        }
+                        onPreview={
+                            listCrud?.preview || listCrud?.links?.preview
+                                ? (item) => {
+                                      if (listCrud?.preview) {
+                                          listCrud.preview(item);
+                                      } else {
+                                          navigate(listCrud?.links?.preview(item));
+                                      }
+                                  }
+                                : null
+                        }
+                        disableDeleteFunction={listCrud?.disableDeleteFunction}
+                        onDelete={listCrud?.delete ? (id) => setDeleteDialog(id) : null}
+                        filters={objectData?.filters}
+                        changeFilters={(newFilters) => dispatch(listCrud?.changeFiltersActions(newFilters))}
+                        {...props}
+                    />
+                );
+            },
         },
         {
             component: ({ objectData, listCrud, dispatch }) => {
@@ -209,35 +215,30 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                         }
                     />
                     <CardContent>
-                        {loading ? (
-                            <>
-                                <Component.CmtSkeletonList numberLines={10} />
-                            </>
-                        ) : (
-                            listCrud?.components?.map((item, index) => {
-                                const { component: ItemComponent } = item;
+                        {listCrud?.components?.map((item, index) => {
+                            const { component: ItemComponent } = item;
 
-                                if (!ItemComponent) {
-                                    return <></>;
-                                }
+                            if (!ItemComponent) {
+                                return <></>;
+                            }
 
-                                return (
-                                    <ItemComponent
-                                        key={index}
-                                        objectData={objectData}
-                                        listCrud={listCrud}
-                                        navigate={navigate}
-                                        dispatch={dispatch}
-                                        handleDuplicate={handleDuplicate}
-                                        setDeleteDialog={setDeleteDialog}
-                                        accessUserCreate={accessUserCreate}
-                                        accessUserEdit={accessUserEdit}
-                                        accessUserDelete={accessUserDelete}
-                                        {...props}
-                                    />
-                                );
-                            })
-                        )}
+                            return (
+                                <ItemComponent
+                                    key={index}
+                                    objectData={objectData}
+                                    listCrud={listCrud}
+                                    navigate={navigate}
+                                    dispatch={dispatch}
+                                    handleDuplicate={handleDuplicate}
+                                    setDeleteDialog={setDeleteDialog}
+                                    accessUserCreate={accessUserCreate}
+                                    accessUserEdit={accessUserEdit}
+                                    accessUserDelete={accessUserDelete}
+                                    listLoading={loading}
+                                    {...props}
+                                />
+                            );
+                        })}
                     </CardContent>
                 </Component.CmtCard>
 

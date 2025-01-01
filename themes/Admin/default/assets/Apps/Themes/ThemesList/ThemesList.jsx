@@ -249,6 +249,11 @@ export const ThemesList = () => {
                                                 aria-label="Selection"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+
+                                                    if (!isMarketplaceConnected) {
+                                                        setMarketplaceDialog(true);
+                                                    }
+
                                                     handleUpdateTheme(theme);
                                                 }}
                                             >
@@ -300,7 +305,10 @@ export const ThemesList = () => {
             {!isMarketplaceConnected && (
                 <Component.MarketplaceConnectionDialog
                     open={marketplaceDialog}
-                    onCancel={() => setMarketplaceDialog(false)}
+                    onCancel={() => {
+                        setMarketplaceDialog(false);
+                        setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false });
+                    }}
                     onConnected={() => {
                         setMarketplaceDialog(false);
                         setMarketplaceConnected(true);

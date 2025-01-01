@@ -214,6 +214,11 @@ export const ModulesList = () => {
                                             variant="contained"
                                             onClick={(e) => {
                                                 e.stopPropagation();
+
+                                                if (!isMarketplaceConnected) {
+                                                    setMarketplaceDialog(true);
+                                                }
+
                                                 setUpdateModuleDialog({ open: true, addon: null, backupDatabase: false });
                                             }}
                                             sx={{ mr: 3 }}
@@ -238,7 +243,6 @@ export const ModulesList = () => {
                             <Component.ListTable
                                 table={TableColumn.ModulesList}
                                 list={modules}
-                                onRemove={accessUserDelete ? (name) => setRemoveDialog(name) : null}
                                 onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
                                 displayParameter={accessUserEdit && accessUserParameterEdit ? (moduleItem) => Boolean(moduleItem.id) : null}
                                 additionnalOptions={[
@@ -282,6 +286,11 @@ export const ModulesList = () => {
                                                 aria-label="Selection"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+
+                                                    if (!isMarketplaceConnected) {
+                                                        setMarketplaceDialog(true);
+                                                    }
+
                                                     setUpdateModuleDialog({ open: true, addon: item, backupDatabase: false });
                                                 }}
                                             >
@@ -384,7 +393,7 @@ export const ModulesList = () => {
 
             <Dialog
                 fullWidth
-                open={updateModuleDialog?.open}
+                open={isMarketplaceConnected && !marketplaceDialog && updateModuleDialog?.open}
                 onClose={() => setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false })}
                 sx={{ display: 'flex', justifyContent: 'center' }}
             >
@@ -439,7 +448,10 @@ export const ModulesList = () => {
             {!isMarketplaceConnected && (
                 <Component.MarketplaceConnectionDialog
                     open={marketplaceDialog}
-                    onCancel={() => setMarketplaceDialog(false)}
+                    onCancel={() => {
+                        setMarketplaceDialog(false);
+                        setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false });
+                    }}
                     onConnected={() => {
                         setMarketplaceDialog(false);
                         setMarketplaceConnected(true);

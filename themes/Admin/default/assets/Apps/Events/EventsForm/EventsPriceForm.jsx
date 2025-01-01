@@ -7,7 +7,6 @@ import { Box, Card, CardContent, Grid, Radio, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-
 export const eventsPriceFormFields = {
     fields: [
         {
@@ -74,7 +73,9 @@ export const eventsPriceFormFields = {
 
                 return (
                     <div>
-                        <Typography> Tarif par défaut :
+                        <Typography>
+                            {' '}
+                            Tarif par défaut :
                             <Radio
                                 checked={isDefaultPrice}
                                 onClick={(e) => {
@@ -85,34 +86,18 @@ export const eventsPriceFormFields = {
                                         defaultPrice: index === props.index,
                                     }));
 
-                                    setFieldValue(
-                                        `eventPriceCategories.${props.blockIndex}.eventPrices`,
-                                        updatedEventPrices
-                                    );
+                                    setFieldValue(`eventPriceCategories.${props.blockIndex}.eventPrices`, updatedEventPrices);
                                 }}
                                 id={`eventPriceCategories.${props.blockIndex}.eventPrices.${props.index}.defaultPrice`}
                             />
                         </Typography>
-
                     </div>
                 );
-            }
-
+            },
         },
     ],
 };
-export const EventsPriceForm = ({
-    dataPath = 'eventPriceCategories',
-    values,
-    touched,
-    errors,
-    handleChange,
-    handleBlur,
-    blockIndex,
-    fields,
-    ...props
-}) => {
-
+export const EventsPriceForm = ({ dataPath = 'eventPriceCategories', values, touched, errors, handleChange, handleBlur, blockIndex, fields, ...props }) => {
     // Helper function to access dynamic paths in values
     const getNestedValue = (path, object) => {
         return path.split('.').reduce((acc, part) => acc?.[part], object);
@@ -120,7 +105,8 @@ export const EventsPriceForm = ({
     const handleString = (inputString) => {
         if (inputString.endsWith('eventPriceCategories')) {
             let res = inputString.slice(0, inputString.lastIndexOf('eventPriceCategories')).replace(/\.$/, '');
-            if (res !== "" && res[res.length - 1] !== ".") // Correct way to check the last character
+            if (res !== '' && res[res.length - 1] !== '.')
+                // Correct way to check the last character
                 res += '.';
             return res;
         }
@@ -139,7 +125,6 @@ export const EventsPriceForm = ({
                     <Grid container spacing={6}>
                         {/* Loop over eventPrices */}
                         {eventPrices.map((item, index) => {
-
                             return (
                                 <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
                                     <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
@@ -163,7 +148,7 @@ export const EventsPriceForm = ({
                                             <Component.DeleteBlockFabButton
                                                 size="small"
                                                 onClick={() => {
-                                                    remove(index);  // Remove the eventPrice from the array
+                                                    remove(index); // Remove the eventPrice from the array
                                                 }}
                                             >
                                                 <DeleteIcon />
@@ -176,7 +161,6 @@ export const EventsPriceForm = ({
                     </Grid>
 
                     <Box className="flex row-end padding-top-4 padding-left-4">
-
                         <Component.AddBlockButton
                             size="small"
                             color="primary"

@@ -314,6 +314,7 @@ export const CategoriesList = ({ listCrud = Crud?.categories?.list, ...props }) 
                             setDeleteDialog={setDeleteDialog}
                             path={path}
                             handleResetFilters={handleResetFilters}
+                            category={category}
                             {...props}
                         />
                     );

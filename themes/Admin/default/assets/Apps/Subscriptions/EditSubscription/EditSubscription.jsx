@@ -60,6 +60,8 @@ export const EditSubscription = () => {
                 NotificationManager.success('La saison a bien été modifié.', 'Succès', Constant.REDIRECTION_TIME);
                 dispatch(getSubscriptionsAction());
                 navigate(Constant.SUBSCRIPTIONS_BASE_PATH);
+            } else if (result?.error?.httpcode >= 400 && result?.error?.httpcode <= 500) {
+                NotificationManager.error(result?.error?.message, 'Erreur', Constant.REDIRECTION_TIME);
             }
         });
     };

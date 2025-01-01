@@ -60,9 +60,5 @@ export const CreateVoucher = () => {
         });
     };
 
-    if (categories.length < 1) {
-        return <></>;
-    }
-
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} eventCategoriesList={eventCategories} productCategories={productCategories} formCrud={Crud?.vouchers?.add} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} eventCategoriesList={eventCategories} productCategoriesList={productCategories} formCrud={Crud?.vouchers?.add} />;
 };
