@@ -99,6 +99,23 @@ class NotificationManager extends AbstractManager
         $this->em->flush();
     }
 
+    public function createUpdatableAddonNotification(string $title, string $description, string $type): void
+    {
+        $users = $this->em->getRepository(User::class)->findAllByRoleForAdmin('ROLE_ADDON_VERSION_UPDATE');
+        foreach ($users as $user) {
+            $notification = new Notification();
+            $notification->setTitle($title);
+            $notification->setDescription($description);
+            $notification->setType($type);
+            $notification->setObjectId(null);
+            $notification->setUser($user);
+
+            $this->em->persist($notification);
+        }
+
+        $this->em->flush();
+    }
+
     public function createNewNotification(array $notificationData): void
     {
         if (isset($notificationData['role'])) {

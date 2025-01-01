@@ -4,6 +4,7 @@ namespace App\Entity\Product;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
+use App\Entity\Order\Voucher;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\ProductCategoryRepository;
 
@@ -107,11 +108,15 @@ class ProductCategory extends Datable
     #[JMS\Groups(['a_product_category_all', 'a_product_category_one'])]
     public $frontUrl;
 
+    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'productCategories')]
+    private Collection $vouchers;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->mainProducts = new ArrayCollection();
         $this->products = new ArrayCollection();
+        $this->vouchers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -359,6 +364,33 @@ class ProductCategory extends Datable
     public function setLang(?Language $lang): self
     {
         $this->lang = $lang;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Voucher>
+     */
+    public function getVouchers(): Collection
+    {
+        return $this->vouchers;
+    }
+
+    public function addVoucher(Voucher $voucher): static
+    {
+        if (!$this->vouchers->contains($voucher)) {
+            $this->vouchers->add($voucher);
+            $voucher->addProductCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoucher(Voucher $voucher): static
+    {
+        if ($this->vouchers->removeElement($voucher)) {
+            $voucher->removeProductCategory($this);
+        }
 
         return $this;
     }
