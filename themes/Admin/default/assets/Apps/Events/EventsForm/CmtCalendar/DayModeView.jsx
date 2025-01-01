@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { Paper, Typography, Table, TableBody, TableCell, Tooltip, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Component } from '@/AdminService/Component';
+import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
 import { StyledTableCell, StyledTableContainer, SlotDiv, DayModeStyledCell } from './sc.DayModeView';
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
@@ -32,6 +33,7 @@ const DayModeView = ({ values, columns, rows, options, setFieldValue, setGenerat
                 state: 'valid',
                 reportDate: '',
                 index: itemIndex,
+                eventDateUuid: uuidv4(),
             });
         }
 

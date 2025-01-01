@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Paper, Typography, Table, TableBody, TableCell, Tooltip, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Paper, Typography, Table, TableBody, TableCell, Tooltip, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
 import { StyledTableContainer, StyledTableCell, DayModeStyledCell, SlotDiv } from './sc.WeekModeView';
 import { Component } from '@/AdminService/Component';
@@ -38,6 +39,7 @@ const WeekModeView = (props) => {
                 state: 'valid',
                 reportDate: '',
                 index: itemIndex,
+                eventDateUuid: uuidv4(),
             });
         }
 

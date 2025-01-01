@@ -43,6 +43,8 @@ class EventDate
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
+    private string $eventDateUuid;
+
     #[Assert\GreaterThan(value: "1970-01-01", message: 'Vous devez renseigner une date valide.')]
     #[Assert\NotBlank(message: 'La date doit être renseignée.')]
     #[JMS\Expose()]
@@ -107,6 +109,17 @@ class EventDate
     {
         $this->languageGroup = $languageGroup;
 
+        return $this;
+    }
+    
+    public function getEventDateUuid(): string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 

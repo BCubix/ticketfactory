@@ -9,6 +9,7 @@ import { Button, ButtonGroup, Card, CardContent, FormControl, Grid, InputLabel, 
 
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import { v4 as uuidv4 } from 'uuid';
 
 import EventAddSpecialPricing from './EventAddSpecialPricing';
 
@@ -57,7 +58,7 @@ export const eventsDateFormFields = {
             keyId: 'input-date-state',
             style: { xs: 12 },
             component: ({ touched, errors, index, item, handleBlur, setFieldValue, states }) => (
-                <FormControl fullWidth error={Boolean(getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index), index, 'state'))}>
+                <FormControl fullWidth error={Boolean(getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state'))}>
                     <InputLabel id={`eventDates-${index}-stateLabel`} required size="small">
                         Status
                     </InputLabel>
@@ -84,9 +85,9 @@ export const eventsDateFormFields = {
                             </MenuItem>
                         ))}
                     </Select>
-                    {getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index), index, 'state') && (
+                    {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state') && (
                         <FormHelperText error id={`eventDates-${index}-state-helper-text`}>
-                            {getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index), index, 'state')}
+                            {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state')}
                         </FormHelperText>
                     )}
                 </FormControl>
@@ -103,7 +104,7 @@ export const eventsDateFormFields = {
                           inputType: 'dateTime',
                           disablePast: true,
                           value: item.reportDate,
-                          error: ({ errors, touched }) => getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index)?.eventDate, index, 'reportDate'),
+                          error: ({ errors, touched }) => getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index)?.eventDate, index, 'reportDate'),
                           setValue: (value, setFieldValue) => setFieldValue(`eventDates.${index}.reportDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : ''),
                       }
                     : null,
@@ -160,8 +161,8 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
     const [visionMode, setVisionMode] = useState(getDefaultMode());
 
     useEffect(() => {
-        if (values.eventDate && values.eventDates.length > 0) {
-            setFieldValue('eventDate ', [values.eventDate]);
+        if (values.eventDates && values.eventDates.length > 0) {
+            setFieldValue('eventDates', [values.eventDates]);
         }
     }, []);
 
@@ -173,7 +174,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
     ];
 
     return (
-        <FieldArray name={`eventDate`}>
+        <FieldArray name={`eventDates`}>
             {({ remove, push }) => (
                 <Box className="padding-2">
                     <Box>
@@ -283,9 +284,9 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                     )}
 
                     <Box className="flex row-end padding-top-4 padding-left-4">
-                        {errors?.eventDate && typeof errors?.eventDate === 'string' && (
+                        {errors?.eventDates && typeof errors?.eventDates === 'string' && (
                             <FormHelperText error id="eventDateBlocks-helper-text">
-                                {errors.eventDate}
+                                {errors.eventDates}
                             </FormHelperText>
                         )}
                     </Box>
@@ -303,6 +304,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                     state: 'valid',
                                     reportDate: '',
                                     index: index.current,
+                                    eventDateUuid: uuidv4(),
                                 });
 
                                 index.current = index.current + 1;

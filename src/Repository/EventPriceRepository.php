@@ -33,7 +33,7 @@ class EventPriceRepository extends CrudRepository
         return $this->createQueryBuilder("ep")
             ->addSelect('epc')
             ->addSelect('e')
-            ->innerjoin('ep.eventPriceCategory', 'epc')
+            ->innerJoin('ep.eventPriceCategory', 'epc')
             ->innerjoin('epc.event', 'e')
             ->where('e.id = :eventId')
             ->setParameter("eventId", $eventId)
@@ -44,7 +44,7 @@ class EventPriceRepository extends CrudRepository
     {
         return $this->findAllByEventForWebsiteOption($eventId)
             ->getQuery()
-            ->getResult();;
+            ->getResult();
     }
 
     public function findSmallestPriceForWebsite(int $eventId)

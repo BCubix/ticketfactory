@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import * as Yup from 'yup';
+import { v4 as uuidv4 } from 'uuid';
 
 import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
 import { eventMainPartForm } from './EventMainPartForm';
@@ -69,6 +70,7 @@ export const eventsInitialSchema = {
         return (
             initValues?.eventDates?.map((el, index) => ({
                 ...el,
+                eventDateUuid: uuidv4(),
                 lang: el?.lang?.id || '',
                 index: index,
             })) || [{ lang: initValues?.lang?.id || '' }]
@@ -79,7 +81,12 @@ export const eventsInitialSchema = {
         initValues?.eventPriceCategories?.map((el, blockIndex) => ({
             ...el,
             lang: el?.lang?.id || '',
-            eventPrices: el?.eventPrices?.map((price, index) => ({ ...price, lang: price?.lang?.id || '', index })) || defaultPrices,
+            eventPrices:
+                el?.eventPrices?.map((price, index) => ({
+                    ...price,
+                    lang: price?.lang?.id || '',
+                    index,
+                })) || defaultPrices,
             index: blockIndex,
         })) || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
@@ -90,7 +97,7 @@ export const eventsInitialSchema = {
     tags: (initValues) => (initValues?.tags ? initValues?.tags?.map((el) => el.id) : []),
     mainCategory: (initValues, { categoriesList }) => initValues?.mainCategory?.id || categoriesList?.id,
     multiplePriceCategory: (initValues) => initValues?.eventPriceCategories?.length > 1 || false,
-    multipleDate: (initValues) => initValues?.eventDate?.length > 1 || false,
+    multipleDate: (initValues) => initValues?.eventDates?.length > 1 || false,
     eventMedias: (initValues) =>
         initValues?.eventMedias?.map((el) => ({
             position: el.position,
@@ -154,6 +161,7 @@ export const eventsForm = {
                             formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
                         },
                     },
+                    eventDateUuid: { type: 'string' },
                     annotation: { type: 'string' },
                     state: { type: 'string' },
                     lang: { type: 'string' },
@@ -172,6 +180,7 @@ export const eventsForm = {
                 subFields: {
                     name: { type: 'string' },
                     lang: { type: 'string' },
+                    eventDateUuid: { type: 'string' },
                     languageGroup: { type: 'string' },
                     eventPrices: {
                         type: 'array',
@@ -182,6 +191,25 @@ export const eventsForm = {
                             defaultPrice: { type: 'boolean' },
                             lang: { type: 'string' },
                             languageGroup: { type: 'string' },
+                        },
+                    },
+
+                    eventDate: {
+                        eventDate: {
+                            function: ({ values, formData, baseName }) => {
+                                formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
+                            },
+                        },
+                        annotation: { type: 'string' },
+                        state: { type: 'string' },
+                        lang: { type: 'string' },
+                        languageGroup: { type: 'string' },
+                        reportDate: {
+                            function: ({ values, formData, baseName }) => {
+                                if (values.reportDate) {
+                                    formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
+                                }
+                            },
                         },
                     },
                 },

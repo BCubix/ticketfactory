@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { format, parse, isValid, isSameMonth, addMinutes } from 'date-fns';
 import { Component } from '@/AdminService/Component';
 import CloseIcon from '@mui/icons-material/Close';
@@ -67,16 +68,18 @@ const MonthModeView = (props) => {
         setDialogOpen(true);
     };
 
-    const handleCloseDialog = () => {
-        if (creatingItem && dialogItemIndex !== null) {
-            const updatedEventDate = [...values.eventDates];
-            updatedEventDate.splice(dialogItemIndex, 1);
-            setFieldValue('eventDates', updatedEventDate);
-        }
-        setCreatingItem(false);
-        setDialogOpen(false);
-        setDialogItemIndex(null);
-    };
+    setDialogItemIndex(index);
+    setFieldValue(`eventDates.${index}`, {
+      eventDate: '',
+      annotation: '',
+      state: 'valid',
+      reportDate: '',
+      index: index,
+      eventDateUuid: uuidv4(),
+    });
+    setCreatingItem(true);
+    setDialogOpen(true);
+  };
 
     const handleSubmitForm = () => {
         setCreatingItem(false);

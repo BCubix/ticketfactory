@@ -16,6 +16,31 @@ class EventHook extends Hook
         $iObject = $event->getParam('iObject');
         $sObject = $event->getParam('sObject');
 
+        // Adding the link between eventPriceCategory and eventDate if there
+        $sObject = $event->getParam('sObject');
+        $eventPriceCategories = $sObject->getEventPriceCategories();
+        $eventDates = $sObject->getEventDate();
+        
+        foreach($eventPriceCategories as $eventPriceCategory)
+        {
+            $uuid = $eventPriceCategory->getEventDateUuid();
+            if ($uuid)
+            {
+                foreach($eventDates as $eventDate)
+                {
+                    $uuidEventDate = $eventDate->getEventDateUuid();
+                    if ($uuidEventDate === $uuid)
+                    {
+                        $eventPriceCategory->setEventDate($eventDate);
+                        $this->em->persist($eventPriceCategory);
+                        break;
+                    }
+                }
+            }
+        }
+
+        $this->em->flush();
+
         $this->mf->get('seo')->completeSeoEvent($sObject);
 
         $this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
