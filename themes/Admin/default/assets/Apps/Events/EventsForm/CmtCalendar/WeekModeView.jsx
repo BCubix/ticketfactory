@@ -73,7 +73,6 @@ const WeekModeView = (props) => {
         setCreatingItem(false);
         setDialogOpen(false);
     };
-    console.log(rows);
 
     return (
         <>

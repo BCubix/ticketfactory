@@ -1,13 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import {
-    Drawer,
-    IconButton,
-    List,
-    ListItemText,
-    Typography,
-} from '@mui/material';
+import { Drawer, IconButton, List, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -96,7 +90,6 @@ export const ContentsList = () => {
     const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= theme.breakpoints.values.md);
 
     useEffect(() => {
-        console.log('ok');
         if (!contentData && !contentDataLoading && !contentDataError) {
             dispatch(getAllContentDataAction());
             return;
@@ -151,13 +144,7 @@ export const ContentsList = () => {
     }, [Crud.contents.list.contentTypes, contentTypeKey]);
 
     if (!loaded) {
-        return (
-            <Component.CmtSkeletonContentList
-                theme={theme}
-                contentMargin={contentMargin}
-                sidebarOpen={sidebarOpen}
-            />
-        );
+        return <Component.CmtSkeletonContentList theme={theme} contentMargin={contentMargin} sidebarOpen={sidebarOpen} />;
     }
 
     return (

@@ -111,7 +111,7 @@ class EventDate
 
         return $this;
     }
-    
+
     public function getEventDateUuid(): string
     {
         return $this->eventDateUuid;

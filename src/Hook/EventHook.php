@@ -19,7 +19,7 @@ class EventHook extends Hook
         // Adding the link between eventPriceCategory and eventDate if there
         $sObject = $event->getParam('sObject');
         $eventPriceCategories = $sObject->getEventPriceCategories();
-        $eventDates = $sObject->getEventDate();
+        $eventDates = $sObject->getEventDates();
         
         foreach($eventPriceCategories as $eventPriceCategory)
         {

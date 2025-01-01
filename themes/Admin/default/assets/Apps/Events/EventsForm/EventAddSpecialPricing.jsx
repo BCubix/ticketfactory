@@ -18,6 +18,7 @@ function EventAddSpecialPricing({
     fields,
     defaultPriceCategoryName,
     defaultPrices,
+    initValues,
     ...props
 }) {
     const getNumberExistingCategories = (selectedDate) => {
@@ -39,7 +40,7 @@ function EventAddSpecialPricing({
             return;
         }
 
-        const eventPriceCategoriesWithoutEventDate = values?.eventPriceCategories?.filter((category) => category.eventDate === '');
+        const eventPriceCategoriesWithoutEventDate = values?.eventPriceCategories?.filter((category) => !category.eventDate);
 
         const filteredEventPriceCategories = eventPriceCategoriesWithoutEventDate?.map((category) => ({
             eventDate: selectedDate,

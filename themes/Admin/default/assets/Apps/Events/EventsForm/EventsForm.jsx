@@ -1,6 +1,6 @@
 import React from 'react';
-import moment from 'moment';
 import * as Yup from 'yup';
+import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
 import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
@@ -73,7 +73,7 @@ export const eventsInitialSchema = {
                 eventDateUuid: uuidv4(),
                 lang: el?.lang?.id || '',
                 index: index,
-            })) || [{ lang: initValues?.lang?.id || '' }]
+            })) || []
         );
     },
 

@@ -160,12 +160,6 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
 
     const [visionMode, setVisionMode] = useState(getDefaultMode());
 
-    useEffect(() => {
-        if (values.eventDates && values.eventDates.length > 0) {
-            setFieldValue('eventDates', [values.eventDates]);
-        }
-    }, []);
-
     const STATES = [
         { label: 'Valide', value: 'valid', color: theme.palette.dateStatus.valid },
         { label: 'Reporté', value: 'delayed', color: theme.palette.dateStatus.reported },
