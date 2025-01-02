@@ -255,7 +255,7 @@ class ProductCategory extends Datable
     public function addChild(self $child): self
     {
         if (!$this->children->contains($child)) {
-            $this->children->add($child);
+            $this->children[] = $child;
             $child->setParent($this);
         }
 
@@ -299,7 +299,7 @@ class ProductCategory extends Datable
     public function addMainProduct(Product $mainProduct): self
     {
         if (!$this->mainProducts->contains($mainProduct)) {
-            $this->mainProducts->add($mainProduct);
+            $this->mainProducts[] = $mainProduct;
             $mainProduct->setMainCategory($this);
         }
 
@@ -336,7 +336,8 @@ class ProductCategory extends Datable
     public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
-            $this->products->add($product);
+            $this->products[] = $product;
+            $product->addProductCategory($this);
         }
 
         return $this;

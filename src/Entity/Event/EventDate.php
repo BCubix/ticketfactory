@@ -43,7 +43,7 @@ class EventDate
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
-    private string $eventDateUuid;
+    private ?string $eventDateUuid = null;
 
     #[Assert\GreaterThan(value: "1970-01-01", message: 'Vous devez renseigner une date valide.')]
     #[Assert\NotBlank(message: 'La date doit être renseignée.')]
