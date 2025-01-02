@@ -228,7 +228,9 @@ export const CmtDisplayMediaInfos = ({
                                     <Typography fontSize={10} variant="body2">
                                         Titre
                                     </Typography>
-                                    <Typography variant="body1">{selectedMedia?.title}</Typography>
+                                    <Typography variant="body1" className="word-break-all">
+                                        {selectedMedia?.title}
+                                    </Typography>
                                 </Box>
                             )}
 
