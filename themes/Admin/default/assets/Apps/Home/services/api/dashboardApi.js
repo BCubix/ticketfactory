@@ -16,26 +16,30 @@ const dashboardApi = {
             const result = await axios.get(
                 `/dashboard?beginDate=${beginDate}&endDate${endDate}&tab=${tab}`
             );
-
+            
             return { result: true, dashboard: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
 
-    updateNote: async (value) => {
+    updateNote: async (noteData) => {
         try {
             let formData = new FormData();
 
-            formData.append('note', value);
+            for (const key in noteData) {
+                formData.append(key, noteData[key]);
+            }
+            
+            const result = await axios.post('/api/note', noteData);
+               
 
-            const result = await axios.post(`/dashboard/note`, formData);
-
-            return { result: true, dashboard: result.data };
+            return { result: true, note: result.data };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }
     },
+
 };
 
 export default dashboardApi;

@@ -16,7 +16,14 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { Navigate } from 'react-router-dom';
 
 import dashboardReducer from './redux/dashboard/dashboardSlice';
+import notesReducer from './Notes/redux/notesSlice';
+import toDoTasksReducer from  './ToDoList/redux/toDoTasksSlice';
+import generalStatsReducer from './GeneralStats/redux/generalStatsSlice';
+
 import dashboardApi from './services/api/dashboardApi';
+import notesApi from './Notes/services/api/notesApi';
+import toDoTasksApi from './ToDoList/services/api/toDoTasksApi';
+import generalStatsApi from './GeneralStats/services/api/generalStatsApi';
 
 export const initConstant = () => {
     setConstant('HOME_PATH', '/admin');
@@ -34,6 +41,9 @@ export const initComponent = () => {
 
 export const initApi = () => {
     setApi('dashboardApi', dashboardApi);
+    setApi('notesApi', notesApi);
+    setApi('toDoTasksApi', toDoTasksApi);
+    setApi('generalStatsApi', generalStatsApi);
 };
 
 export const initAuthenticatedRoutes = () => {
@@ -42,4 +52,7 @@ export const initAuthenticatedRoutes = () => {
 
 export const initReducer = () => {
     setReducer('dashboard', dashboardReducer);
+    setReducer('notes', notesReducer);
+    setReducer('toDoTasks', toDoTasksReducer);
+    setReducer('generalStats', generalStatsReducer);
 };

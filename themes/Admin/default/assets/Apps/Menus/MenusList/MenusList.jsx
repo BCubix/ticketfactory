@@ -382,30 +382,6 @@ const InitForm = ({
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }) => (
                 <>
-                <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
-                    <Component.CmtDisplayComponents
-                        list={formCrud?.headerComponents}
-                        {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }}
-                        {...{
-                            languageList,
-                            changeFormikInitialValues,
-                            translationInitialValues,
-                            setTranslationInitialValues,
-                            handleDelete,
-                            updateMenu,
-                            menus,
-                            initialValues,
-                            setInitialValues,
-                            deserializeChildrenData,
-                            formCrud,
-                            translateDialog,
-                            setTranslateDialog,
-                            deleteDialog,
-                            setDeleteDialog,
-                        }}
-                        {...rest}
-                    />
-
                     <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
                         
                         {loading ? (

@@ -215,7 +215,7 @@ class AddonVersionManager extends AbstractManager
     {
         // We get the marketpace token from the request
         $token = $this->rs->getMainRequest()->get('marketplaceToken');
-        if (null === $token) {
+        if (null !== $token) {
             return [];
         }
 
@@ -225,7 +225,7 @@ class AddonVersionManager extends AbstractManager
                 'Authorization' => "Bearer $token",
             ],
         ]);
-
+        
         if ($response->getStatusCode() !== 200) {
             return [];
         }

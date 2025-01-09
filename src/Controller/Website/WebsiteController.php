@@ -84,7 +84,7 @@ abstract class WebsiteController extends AbstractFOSRestController
     {
         $overrideModulePath = $this->mf->get('parameter')->getCoreParameter('main_theme') . '/module/' . $moduleName . '/templates/' . $path;
 
-        if (file_exists($this->sf->get('pathGetter')->getThemesDir() . '/' .  $overrideModulePath)) {
+        if (file_exists($this->sf->get('pathGetter')->getThemesDir() . '/' . $overrideModulePath)) {
             $path = 'Website/' . $overrideModulePath;
         } else {
             $path = ('@modules/' . $moduleName . '/templates/' . $path);
@@ -158,7 +158,7 @@ abstract class WebsiteController extends AbstractFOSRestController
         $userPass = $this->getRequest()->get('t');
         $user = null;
 
-        if (null  !== $userAddress && null !== $userPass) {
+        if (null !== $userAddress && null !== $userPass) {
             $user = $this->em->getRepository(User::class)->getUserByTokenForWebsite($userAddress, $userPass);
         }
 

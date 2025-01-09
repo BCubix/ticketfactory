@@ -14,6 +14,8 @@ import { Constant } from '@/AdminService/Constant';
 
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
+import {GeneralStats} from './GeneralStats/GeneralStats';
+
 export const SecondCardDashboard = ({ data }) => {
     const theme = useTheme();
     const colorProps = theme.palette.primary.main;
@@ -46,6 +48,8 @@ export const SecondCardDashboard = ({ data }) => {
 
     return (
         <>
+            
+            {/*
             <Component.CmtCard sx={{ marginBottom: 4 }}>
                 <Component.CmtCardHeader title="Période sélectionnée" />
 
@@ -110,7 +114,7 @@ export const SecondCardDashboard = ({ data }) => {
                     })}
                 </Grid>
                 <CardContent>
-                    <Box display="flex" flexDirection="column" alignItems="center">
+                    }<Box display="flex" flexDirection="column" alignItems="center">
                         {graph?.values && (
                             <Box sx={{ width: '100%' }}>
                                 <Component.GraphChildrenDashboard values={graph.values} />
@@ -119,6 +123,9 @@ export const SecondCardDashboard = ({ data }) => {
                     </Box>
                 </CardContent>
             </Component.CmtCard>
+            */}
+            
+            <GeneralStats data={data}></GeneralStats>
         </>
     );
 };

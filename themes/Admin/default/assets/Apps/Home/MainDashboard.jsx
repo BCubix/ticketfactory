@@ -22,8 +22,6 @@ export const MainDashboard = () => {
     const [updateCoreDialog, setUpdateCoreDialog] = useState({ open: false, backupDatabase: false });
     const dispatch = useDispatch();
 
-    console.log('addon version is ', addonVersions);
-    
     useEffect(() => {
         checkMarketplaceConnection();
 
@@ -49,8 +47,6 @@ export const MainDashboard = () => {
         return false;
     }, [parameters, addonVersions]);
 
-    console.log(isCoreUpdatable);
-    
     const handleUpdateCore = async (backupDatabase) => {
         const result = await Api.addonVersionsApi.updateCore(backupDatabase);
         if (result?.result) {
