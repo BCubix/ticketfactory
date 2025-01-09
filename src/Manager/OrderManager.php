@@ -7,7 +7,6 @@ use App\Entity\Order\Order;
 use App\Entity\Order\OrderStatus;
 use App\Entity\Order\Cart;
 use App\Entity\Order\EventRow;
-use App\Entity\Order\ProductRow;
 use App\Entity\Subscription\SubscriptionUsage;
 use App\Kernel;
 use App\Service\ServiceFactory;
@@ -51,35 +50,9 @@ class OrderManager extends AbstractManager
         $this->em->persist($order);
 
         $eventRows = $this->em->getRepository(EventRow::class)->findBy(['cart' => $cart]);
-        $productRows = $this->em->getRepository(ProductRow::class)->findBy(['cart' => $cart]);
-
-        $ticketingGroupedEvents = [];
-
-        // Group events by their ticketing class
         foreach ($eventRows as $row) {
             $event = $row->getEvent();
             $ticketing = $event->getTicketing();
-
-            if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
-                continue;
-            }
-
-            // Get the ticketing class
-            $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
-            $className = get_class($class);  // use name to be able to store as key
-
-            // Add event to the ticketing class group
-            if (!isset($ticketingGroupedEvents[$className])) {
-                $ticketingGroupedEvents[$className] = [];
-            }
-            $ticketingGroupedEvents[$className][] = $row;
-        }
-
-        //Group products by their ticketing class
-        foreach ($productRows as $row) {
-            $product = $row->getProduct();
-            $ticketing = $product->getTicketing();
-
             if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
                 continue;
             }
