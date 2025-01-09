@@ -100,6 +100,7 @@ class OrderController extends WebsiteController
     {
         $page = $this->mf->get("page")->getByKeyword('order-payment');
 
+        dd($page);
         return $this->websiteRender("Order/payment.html.twig", [
             'page'      => $page,
             'orderStep' => 3,

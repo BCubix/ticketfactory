@@ -147,7 +147,7 @@ class EventManager extends AbstractRouterManager
         foreach ($eventPrices as $eventPrice) {
             $defaultPrices[] = [
                 "eventPrice" => $eventPrice,
-                "quantity"   => 0,
+                "quantity" => 0,
             ];
         }
         return $defaultPrices;
@@ -321,7 +321,7 @@ class EventManager extends AbstractRouterManager
 
     public function getEventDatesFromEvent(Event $event): ?array
     {
-        return $this->em->getRepository(EventDate::class)->findAllByEventForWebsiteOption($event->getId());
+        return $this->em->getRepository(EventDate::class)->findAllByEventForWebsite($event->getId());
     }
 
     public function getEventPriceCategoriesFromEvent(Event $event): ?array
@@ -385,13 +385,13 @@ class EventManager extends AbstractRouterManager
     public function getFilterParams(array $contents)
     {
         return [
-            'beginDateFilter'        => $this->mf->get("parameter")->getCoreParameter('event_begin_date_filter'),
-            'endDateFilter'          => $this->mf->get("parameter")->getCoreParameter('event_end_date_filter'),
-            'seasonFilter'           => isset($contents['Season']) ? false : $this->mf->get("parameter")->getCoreParameter('event_season_filter'),
-            'roomFilter'             => isset($contents['Room']) ? false : $this->mf->get("parameter")->getCoreParameter('event_room_filter'),
-            'eventCategoryFilter'    => isset($contents['EventCategory']) ? false : $this->mf->get("parameter")->getCoreParameter('event_category_filter'),
-            'tagFilter'              => isset($contents['Tag']) ? false : $this->mf->get("parameter")->getCoreParameter('event_tag_filter'),
-            'eventTypeFilter'        => isset($contents['EventType']) ? false : $this->mf->get("parameter")->getCoreParameter('event_type_filter')
+            'beginDateFilter' => $this->mf->get("parameter")->getCoreParameter('event_begin_date_filter'),
+            'endDateFilter' => $this->mf->get("parameter")->getCoreParameter('event_end_date_filter'),
+            'seasonFilter' => isset($contents['Season']) ? false : $this->mf->get("parameter")->getCoreParameter('event_season_filter'),
+            'roomFilter' => isset($contents['Room']) ? false : $this->mf->get("parameter")->getCoreParameter('event_room_filter'),
+            'eventCategoryFilter' => isset($contents['EventCategory']) ? false : $this->mf->get("parameter")->getCoreParameter('event_category_filter'),
+            'tagFilter' => isset($contents['Tag']) ? false : $this->mf->get("parameter")->getCoreParameter('event_tag_filter'),
+            'eventTypeFilter' => isset($contents['EventType']) ? false : $this->mf->get("parameter")->getCoreParameter('event_type_filter')
         ];
     }
 
