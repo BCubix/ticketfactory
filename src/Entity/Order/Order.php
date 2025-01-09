@@ -3,9 +3,13 @@
 namespace App\Entity\Order;
 
 use App\Entity\Customer\Customer;
+use App\Entity\Subscription\SubscriptionUsage;
 use App\Repository\OrderRepository;
 use App\Entity\Datable;
+use App\Entity\Product\ProductStockMovement;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,7 +26,7 @@ class Order extends Datable
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_order_all', 'a_order_one', 'a_cart_one', 'a_product_one', 'a_product_stock_movement_all'])]
     #[ORM\Column(length: 32)]
     private ?string $reference = null;
 
@@ -53,6 +57,25 @@ class Order extends Datable
     #[JMS\Groups(['a_order_all', 'a_order_one'])]
     #[ORM\Column(type: 'bigint', nullable: true)]
     private ?int $ticketingReference = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_order_one'])]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: ProductStockMovement::class, orphanRemoval: true)]
+    private Collection $productStockMovements;
+
+    /**
+     * @var Collection<int, SubscriptionUsage>
+     */
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_order_one', 'a_cart_one'])]
+    #[ORM\OneToMany(mappedBy: 'linkedOrder', targetEntity: SubscriptionUsage::class, orphanRemoval: true)]
+    private Collection $subscriptionUsages;
+
+    public function __construct()
+    {
+        $this->productStockMovements = new ArrayCollection();
+        $this->subscriptionUsages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -127,6 +150,56 @@ class Order extends Datable
     public function setTicketingReference(?int $ticketingReference): self
     {
         $this->ticketingReference = $ticketingReference;
+
+        return $this;
+    }
+
+    public function addProductStockMovement(ProductStockMovement $productStockMovement): static
+    {
+        if (!$this->productStockMovements->contains($productStockMovement)) {
+            $this->productStockMovements->add($productStockMovement);
+        }
+
+        return $this;
+    }
+
+    public function removeProductStockMovement(ProductStockMovement $productStockMovement): static
+    {
+        if ($this->productStockMovements->removeElement($productStockMovement)) {
+            if ($productStockMovement->getProduct() === $this) {
+                $productStockMovement->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SubscriptionUsage>
+     */
+    public function getSubscriptionUsages(): Collection
+    {
+        return $this->subscriptionUsages;
+    }
+
+    public function addSubscriptionUsage(SubscriptionUsage $subscriptionUsage): static
+    {
+        if (!$this->subscriptionUsages->contains($subscriptionUsage)) {
+            $this->subscriptionUsages->add($subscriptionUsage);
+            $subscriptionUsage->setLinkedOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscriptionUsage(SubscriptionUsage $subscriptionUsage): static
+    {
+        if ($this->subscriptionUsages->removeElement($subscriptionUsage)) {
+            // set the owning side to null (unless already changed)
+            if ($subscriptionUsage->getLinkedOrder() === $this) {
+                $subscriptionUsage->setLinkedOrder(null);
+            }
+        }
 
         return $this;
     }

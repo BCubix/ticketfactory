@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,8 @@ import { Box, CardContent, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const DEFAULT_CRUD_LIST_COMPONENTS = {
     wrapperComponent: (props) => <Component.CmtCrudList {...props} />,
@@ -99,7 +102,21 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
+    const { user } = useSelector(userProfileSelector);
     const objectData = useSelector(listCrud.dataSelector);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const [accessUserCreate, accessUserEdit, accessUserDelete] = useMemo(() => {
+        return [
+            !listCrud.checkUserAccess?.new || listCrud.checkUserAccess?.new(userRoles),
+            !listCrud.checkUserAccess?.edit || listCrud.checkUserAccess?.edit(userRoles),
+            !listCrud.checkUserAccess?.delete || listCrud.checkUserAccess?.delete(userRoles),
+        ];
+    }, [userRoles]);
+    
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -153,6 +170,9 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                             dispatch={dispatch}
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
+                            accessUserCreate={accessUserCreate}
+                            accessUserEdit={accessUserEdit}
+                            accessUserDelete={accessUserDelete}
                             {...props}
                         />
                     );
@@ -162,20 +182,25 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                     <Component.CmtCardHeader
                         title={
                             <Box className="list-header">
-                                    <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
-                                        {listCrud?.listTitle}{' '}
-                                        {listCrud?.pagination &&
-                                            listCrud?.dataList(objectData) &&
-                                            `(${((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + 1} - ${
-                                                ((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + listCrud?.dataList(objectData)?.length
-                                            } sur ${objectData?.total})`}
-                                        {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
-                                    </Typography>
-                                {(listCrud?.new || listCrud?.links?.new) && (
+                                <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
+                                    {listCrud?.listTitle}{' '}
+                                    {listCrud?.pagination &&
+                                        listCrud?.dataList(objectData) &&
+                                        `(${((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + 1} - ${
+                                            ((objectData?.filters?.page || 1) - 1) * (objectData?.filters?.limit || 0) + listCrud?.dataList(objectData)?.length
+                                        } sur ${objectData?.total})`}
+                                    {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
+                                </Typography>
+                                
+                                {listCrud?.headerAction && <listCrud.headerAction listCrud navigate={navigate} {...props} />}
+
+                                {accessUserCreate && (listCrud?.new || listCrud?.links?.new) && (
                                     <Component.CreateButton
                                         variant="contained"
                                         onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
-                                    >Nouveau</Component.CreateButton>
+                                    >
+                                        Nouveau
+                                    </Component.CreateButton>
                                 )}
                             </Box>
                         }
@@ -202,6 +227,9 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                                         dispatch={dispatch}
                                         handleDuplicate={handleDuplicate}
                                         setDeleteDialog={setDeleteDialog}
+                                        accessUserCreate={accessUserCreate}
+                                        accessUserEdit={accessUserEdit}
+                                        accessUserDelete={accessUserDelete}
                                         {...props}
                                     />
                                 );
@@ -226,6 +254,9 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                             dispatch={dispatch}
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
+                            accessUserCreate={accessUserCreate}
+                            accessUserEdit={accessUserEdit}
+                            accessUserDelete={accessUserDelete}
                             {...props}
                         />
                     );

@@ -49,6 +49,7 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                 NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
                 return;
             }
+
             setMedias(result?.medias);
             setMediasTotal(result.total);
         });
@@ -85,6 +86,33 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
             let newList = medias;
             newList[lIndex] = newValues;
             setMedias(newList);
+        }
+    };
+
+    const handleSelectMedia = (selectedMedia, setFieldValue) => {
+        let newValue = values.eventMedias;
+
+        if (newValue.map((el) => el.id).includes(selectedMedia?.id)) {
+            newValue = newValue.filter((el) => el.id !== selectedMedia?.id);
+        } else {
+            newValue.push({ id: selectedMedia?.id, position: newValue?.length + 1, media: selectedMedia });
+        }
+        setFieldValue(name, newValue);
+    };
+
+    const handleAddedNewMedias = (addedMedias, setFieldValue) => {
+        getMedias();
+
+        for (const addedMedia of addedMedias) {
+            let jsonAddedMedia = JSON.parse(addedMedia);
+
+            if (jsonAddedMedia?.id) {
+                Api.mediasApi.getOneMedia(jsonAddedMedia.id).then((result) => {
+                    if (result?.result) {
+                        handleSelectMedia(result.media, setFieldValue);
+                    }
+                });
+            }
         }
     };
 
@@ -183,16 +211,9 @@ export const EventMediaPartForm = ({ values, handleChange, touched, errors, setF
                 media={values.eventMedias}
                 setFieldValue={setFieldValue}
                 name={name}
-                onAddNewMedia={getMedias}
+                onAddNewMedia={(addedMedias) => handleAddedNewMedias(addedMedias, setFieldValue)}
                 onClick={(selectedMedia) => {
-                    let newValue = values.eventMedias;
-
-                    if (newValue.map((el) => el.id).includes(selectedMedia?.id)) {
-                        newValue = newValue.filter((el) => el.id !== selectedMedia?.id);
-                    } else {
-                        newValue.push({ id: selectedMedia?.id, position: newValue?.length + 1, media: selectedMedia });
-                    }
-                    setFieldValue(name, newValue);
+                    handleSelectMedia(selectedMedia, setFieldValue);
                 }}
                 AddMediaLabel="Ajouter"
                 RemoveMediaLabel="Retirer"

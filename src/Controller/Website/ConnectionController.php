@@ -52,6 +52,8 @@ class ConnectionController extends WebsiteController
                 $this->mf->get("customer")->upgradePassword($customer);
                 $this->em->flush();
 
+                $this->mf->get('notification')->createNewCustomerNotification($customer);
+
                 $this->addFlash('Succès',  "Votre inscription a bien été prise en compte. Veuillez confirmer votre adresse email.");
 
                 return $this->redirect($homeUrl);

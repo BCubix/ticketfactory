@@ -11,6 +11,7 @@ import SubjectIcon from '@mui/icons-material/Subject';
 import { changeContactRequestsFilters, contactRequestsSelector, getContactRequestsAction } from '../redux/contactRequests/contactRequestsSlice';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Crud } from '@/AdminService/Crud';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const contactRequestsListCrud = {
     title: 'Demandes de contact',
@@ -58,6 +59,11 @@ export const contactRequestsListCrud = {
     dataList: (selector) => selector.contactRequests,
     duplicate: (props) => Api.contactRequestsApi.duplicateContactRequest(props),
     delete: (props) => Api.contactRequestsApi.deleteContactRequest(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTACT_REQUEST_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTACT_REQUEST_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTACT_REQUEST_DELETE'),
+    },
     links: {
         new: () => `${Constant.CONTACT_REQUEST_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.CONTACT_REQUEST_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

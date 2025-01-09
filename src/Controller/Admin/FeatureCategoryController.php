@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class FeatureCategoryController extends CrudController
@@ -27,6 +28,7 @@ class FeatureCategoryController extends CrudController
     }
 
     #[Rest\Get('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_CATEGORY_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function getOne(Request $request, int $categoryId): View
     {
@@ -34,6 +36,7 @@ class FeatureCategoryController extends CrudController
     }
 
     #[Rest\Post('/features-categories')]
+    #[IsGranted('ROLE_FEATURE_CATEGORY_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class FeatureCategoryController extends CrudController
     }
 
     #[Rest\Post('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_CATEGORY_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function edit(Request $request, int $categoryId): View
     {
@@ -48,6 +52,7 @@ class FeatureCategoryController extends CrudController
     }
 
     #[Rest\Post('/features-categories/{categoryId}/duplicate', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_CATEGORY_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function duplicate(Request $request, int $categoryId): View
     {
@@ -55,6 +60,7 @@ class FeatureCategoryController extends CrudController
     }
 
     #[Rest\Delete('/features-categories/{categoryId}', requirements: ['categoryId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_CATEGORY_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function delete(Request $request, int $categoryId): View
     {
@@ -62,6 +68,7 @@ class FeatureCategoryController extends CrudController
     }
 
     #[Rest\Get('/features-categories/{categoryId}/translated/{languageId}', requirements: ['categoryId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_CATEGORY_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function getTranslated(Request $request, int $categoryId, int $languageId): View
     {

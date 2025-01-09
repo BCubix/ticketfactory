@@ -3,7 +3,7 @@
 namespace App\Entity\Order;
 
 use App\Entity\Product\Product;
-use App\Repository\Order\ProductRowRepository;
+use App\Repository\ProductRowRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -49,7 +49,6 @@ class ProductRow
     #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToMany(targetEntity: Voucher::class)]
     private Collection $vouchers;
-
 
 
     public function __construct()

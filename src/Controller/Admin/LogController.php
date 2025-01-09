@@ -9,12 +9,14 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class LogController extends AdminController
 {
     #[Rest\Get('/logs')]
-    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[IsGranted('ROLE_LOG_READ')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_log_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher, Logger $logger): View
     {

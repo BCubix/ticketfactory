@@ -4,7 +4,6 @@ namespace App\Entity\Content;
 
 use App\Entity\Datable;
 use App\Entity\Language\Language;
-use App\Entity\Page\Page;
 use App\Entity\SEOAble\SEOAble;
 use App\Repository\ContentRepository;
 
@@ -23,6 +22,13 @@ class Content extends Datable
     /*** < Trait ***/
 
     use SEOAble;
+
+    public const STATUS_PUBLISHED = "PUBLISHED";
+    public const PUBLICATION_STATUS = [
+        'PUBLISHED'   => 'Publié',
+        'TO_VALIDATE' => 'À valider',
+        'DRAFT' => 'Brouillon'
+    ];
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -43,6 +49,12 @@ class Content extends Datable
     #[JMS\Groups(['a_content_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
+
+    #[Assert\Choice(callback: 'getPublicationStatusKeys', message: 'Vous devez choisir un status valide.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_content_all', 'a_content_one'])]
+    #[ORM\Column(length: 255)]
+    private ?string $publicationStatus = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -65,11 +77,6 @@ class Content extends Datable
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_content_all', 'a_content_one'])]
-    #[ORM\ManyToOne(inversedBy: 'contents')]
-    private ?Page $page = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one'])]
@@ -101,6 +108,18 @@ class Content extends Datable
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPublicationStatus(): ?string
+    {
+        return $this->publicationStatus;
+    }
+
+    public function setPublicationStatus(string $publicationStatus): static
+    {
+        $this->publicationStatus = $publicationStatus;
 
         return $this;
     }
@@ -159,15 +178,8 @@ class Content extends Datable
         $this->completeFields($this->getTitle());
     }
 
-    public function getPage(): ?Page
+    public function getPublicationStatusKeys()
     {
-        return $this->page;
-    }
-
-    public function setPage(?Page $page): self
-    {
-        $this->page = $page;
-
-        return $this;
+        return array_keys(self::PUBLICATION_STATUS);
     }
 }

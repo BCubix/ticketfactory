@@ -11,8 +11,13 @@ class ProductHook extends Hook
     public function hookProductSaved(HookEvent $event)
     {
         $sObject = $event->getParam('sObject');
+        $iObject = $event->getParam('iObject');
 
         $this->mf->get('seo')->completeSeoProduct($sObject);
+
+        if ($iObject->getStock() !== $sObject->getStock()) {
+            $this->mf->get('productStockMovement')->newMovement($sObject, $sObject->getStock() - $iObject->getStock(), null);
+        }
     }
 
     public function hookProductValidated(HookEvent $event)

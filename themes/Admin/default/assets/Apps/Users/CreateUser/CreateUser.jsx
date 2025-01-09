@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { createUsersInitialSchema, createUsersValidationSchema, createUsersForm } from '../UserForm/CreateUserForm';
+
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
+import { Crud } from '@/AdminService/Crud';
 import { getUsersAction } from '@Apps/Users/redux/users/usersSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { createUsersInitialSchema, createUsersValidationSchema, createUsersForm } from '../UserForm/CreateUserForm';
-import { Crud } from '@/AdminService/Crud';
 
 export const usersCreateCrud = {
     form: {
@@ -23,6 +24,19 @@ export const usersCreateCrud = {
 export const CreateUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [profilesData, setProfilesData] = useState(null);
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.profilesApi.getAllProfiles();
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue', 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.USER_BASE_PATH);
+            }
+
+            setProfilesData(result);
+        });
+    }, []);
 
     const handleSubmit = async (values) => {
         apiMiddleware(dispatch, async () => {
@@ -35,5 +49,5 @@ export const CreateUser = () => {
         });
     };
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.users?.add} />;
+    return <Component.CmtCrudForm handleSubmit={handleSubmit} formCrud={Crud?.users?.add} profilesList={profilesData?.profiles || []} />;
 };

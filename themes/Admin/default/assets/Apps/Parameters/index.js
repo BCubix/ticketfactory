@@ -18,6 +18,9 @@ import { setCrud } from '@/AdminService/Crud';
 import { insertSubMenu } from '@/AdminService/Menu';
 import { setReducer } from '@/AdminService/Reducer';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_EDIT = 'ROLE_EVENT_EDIT';
 
 export const initConstant = () => {
     setConstant('PARAMETERS_BASE_PATH', '/admin/parametres');
@@ -36,7 +39,11 @@ export const initApi = () => {
     setApi('parametersApi', parametersApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_EDIT)) {
+        return;
+    }
+
     setAuthenticatedRoute(`${Constant.PARAMETERS_BASE_PATH}/modules/:id`, Component.ParametersModuleMenu);
     setAuthenticatedRoute(`${Constant.PARAMETERS_BASE_PATH}/themes/:id`, Component.ParametersThemeMenu);
     setAuthenticatedRoute(Constant.PARAMETERS_BASE_PATH, Component.CmtAppMenu, {
@@ -45,7 +52,11 @@ export const initAuthenticatedRoutes = () => {
     });
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_EDIT)) {
+        return;
+    }
+
     insertSubMenu(1, 'PARAMETRER', 'Paramètres', Constant.PARAMETERS_BASE_PATH, <SettingsIcon />);
 };
 
@@ -53,7 +64,11 @@ export const initReducer = () => {
     setReducer('parameters', parametersReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_EDIT)) {
+        return;
+    }
+
     addTabElements('parametersTabList', [{ label: 'Paramètres', component: <Component.ParametersMenu />, path: Constant.PARAMETERS_BASE_PATH }]);
 };
 

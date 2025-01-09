@@ -4,10 +4,9 @@ namespace App\Form\Admin\Page;
 
 use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Page\PageColumn;
-use App\Entity\Media\Media;
-
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Manager\FormManager;
+use App\Manager\PageManager;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,10 +16,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PageColumnType extends AdminBaseFormType
 {
+    protected $pm;
+
+    public function __construct(PageManager $pm, FormManager $fm)
+    {
+        parent::__construct($fm);
+
+        $this->pm = $pm;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('content',              null,                       [])
             ->add('class',                TextType::class,            ['required' => false, 'empty_data' => ''])
+            ->add('type',                 ChoiceType::class,          [
+                'choices' => array_flip($this->pm->getFieldsSelect())
+            ])
             ->add('xs',                   IntegerType::class,         [])
             ->add('s',                    IntegerType::class,         [])
             ->add('m',                    IntegerType::class,         [])
@@ -35,30 +47,45 @@ class PageColumnType extends AdminBaseFormType
         );
 
         $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            [$this, 'onSubmit']
+            FormEvents::PRE_SET_DATA,
+            [$this, 'onPreSetData']
         );
 
         $builder->addEventListener(
-            FormEvents::SUBMIT,
-            [$this, 'onSubmit']
+            FormEvents::PRE_SUBMIT,
+            [$this, 'onPreSubmit']
         );
     }
 
-    public function onSubmit(FormEvent $event): void
-    {
-        $form = $event->getForm();
-        $data = $form->getParent()->getParent()->getData();
+    public function onPreSetData (FormEvent $event) {
+        $data = $event->getData();
 
-        if (isset($data) && $data->getBlockType() == 1) { // Block slider
-            $form->add('content',                  EntityType::class,          [
-                'class'         => Media::class,
-                'choice_label'  => 'title',
-                'multiple'      => false
-            ]);
-        } else {
-            $form->add('content',                  TextareaType::class,        []);
+        if (null === $data) {
+            return;
         }
+
+        $data->setContent(null);
+        $event->setData($data);
+    }
+
+    public function onPreSubmit(FormEvent $event): void
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+
+        if (!isset($data['type']) || null === $data['type']) {
+            return;
+        }
+
+        $type = $data['type'];
+        $component = $this->pm->getPageColumnFieldFromType($type);
+        $options = $this->pm->getPageColumnInstanceFromType($type)->getFormOptions();
+
+        $form->add(
+            'content',
+            $component,
+            $options
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

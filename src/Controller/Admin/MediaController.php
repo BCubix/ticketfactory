@@ -12,6 +12,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class MediaController extends CrudController
@@ -20,6 +21,7 @@ class MediaController extends CrudController
     protected const TYPE_CLASS = MediaType::class;
 
     #[Rest\Get('/medias')]
+    #[IsGranted('ROLE_MEDIA_READ')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -36,6 +38,7 @@ class MediaController extends CrudController
     }
 
     #[Rest\Get('/medias/{mediaId}', requirements: ['mediaId' => '\d+'])]
+    #[IsGranted('ROLE_MEDIA_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function getOne(Request $request, int $mediaId): View
     {
@@ -43,6 +46,7 @@ class MediaController extends CrudController
     }
 
     #[Rest\Post('/medias')]
+    #[IsGranted('ROLE_MEDIA_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function add(Request $request): View
     {
@@ -50,6 +54,7 @@ class MediaController extends CrudController
     }
 
     #[Rest\Post('/medias/{mediaId}', requirements: ['mediaId' => '\d+'])]
+    #[IsGranted('ROLE_MEDIA_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function edit(Request $request, int $mediaId): View
     {
@@ -57,6 +62,7 @@ class MediaController extends CrudController
     }
 
     #[Rest\Delete('/medias/{mediaId}', requirements: ['mediaId' => '\d+'])]
+    #[IsGranted('ROLE_MEDIA_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_media_one'])]
     public function delete(Request $request, int $mediaId): View
     {

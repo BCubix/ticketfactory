@@ -5,7 +5,7 @@ export const copyData = (data) => {
         newData = [...data.map((el) => copyData(el))];
     } else if (typeof data === 'function') {
         return data;
-    } else {
+    } else if (data !== null && typeof data === 'object') {
         Object.entries(data).forEach(([key, value]) => {
             if (value !== null && Array.isArray(value)) {
                 let arr = value.map((el) => copyData(el));
@@ -18,6 +18,8 @@ export const copyData = (data) => {
                 newData[key] = value !== null ? value : '';
             }
         });
+    } else {
+        return data;
     }
 
     return newData;

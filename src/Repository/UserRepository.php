@@ -17,7 +17,6 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
         ['email', 'o.email', 'search'],
         ['firstName', 'o.firstName', 'search'],
         ['lastName', 'o.lastName', 'search'],
-        ['role', 'o.roles', 'search'],
     ];
 
     protected const SORTS = [
@@ -26,7 +25,6 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
         'email' => 'o.email',
         'firstName' => 'o.firstName',
         'lastName' => 'o.lastName',
-        'role' => 'o.roles',
     ];
 
     public function __construct(ManagerRegistry $registry)
@@ -51,11 +49,15 @@ class UserRepository extends CrudRepository implements UserLoaderInterface
         return $this->loadUserByIdentifier($email);
     }
 
-    public function findAdminUsersForAdmin(): array
+    public function findAllByRoleForAdmin(string $role): array
     {
         return $this->createQueryBuilder('u')
-            ->where('u.roles LIKE :adminRole')
-            ->setParameter('adminRole', 'ROLE_ADMIN')
+            ->addSelect('p')
+            ->addSelect('r')
+            ->innerJoin('u.profiles', 'p')
+            ->innerJoin('p.roles', 'r')
+            ->where('r.name LIKE :role')
+            ->setParameter('role', $role)
             ->getQuery()
             ->getResult();
     }

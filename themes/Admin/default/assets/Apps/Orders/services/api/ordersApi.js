@@ -61,6 +61,29 @@ const ordersApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+
+    exportOrders: async () => {
+        try {
+            const response = await axios.get(`${DEFAULT_PATH}/exports`, {
+                responseType: 'blob',
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Commandes.xlsx');
+
+            document.body.appendChild(link);
+            link.click();
+
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
 };
 
 export default ordersApi;

@@ -51,8 +51,8 @@ export const productCategoriesForm = {
     fields: [
         {
             type: 'tabs',
-            keyId: 'voucher',
-            label: 'Réduction',
+            keyId: 'productCategory',
+            label: 'Catégorie de produit',
             fields: [
                 {
                     type: 'block',
@@ -91,7 +91,7 @@ export const productCategoriesForm = {
                             component: (props) => <Component.CmtKeywordInput {...props} name="keyword" />,
                         },
                         {
-                            keyId: 'input-unit',
+                            keyId: 'input-parent-category',
                             style: { xs: 12 },
                             component: ({ values, productCategoriesList, setFieldValue, touched, errors }) => {
                                 {

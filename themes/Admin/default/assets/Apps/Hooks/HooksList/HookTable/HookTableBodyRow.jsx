@@ -8,7 +8,7 @@ import { Box } from '@mui/system';
 
 import { Component } from '@/AdminService/Component';
 
-export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) => {
+export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog, accessUserDelete }) => {
     return (
         <Draggable key={index} draggableId={index.toString()} index={index} isCombineEnabled ignoreContainerClipping>
             {(provided, snapshot) => (
@@ -33,20 +33,22 @@ export const HookTableBodyRow = ({ hookName, module, index, setDeleteDialog }) =
                     <TableCell className="hook-table-description">
                         <Typography>{module.description}</Typography>
                     </TableCell>
-                    <TableCell className="hook-table-button">
-                        <Component.ActionFabButton
-                            sx={{ marginInline: 1 }}
-                            color="primary"
-                            size="small"
-                            aria-label="Action"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setDeleteDialog([hookName, module.name]);
-                            }}
-                        >
-                            <UnpublishedIcon />
-                        </Component.ActionFabButton>
-                    </TableCell>
+                    {accessUserDelete && (
+                        <TableCell className="hook-table-button">
+                            <Component.ActionFabButton
+                                sx={{ marginInline: 1 }}
+                                color="primary"
+                                size="small"
+                                aria-label="Action"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteDialog([hookName, module.name]);
+                                }}
+                            >
+                                <UnpublishedIcon />
+                            </Component.ActionFabButton>
+                        </TableCell>
+                    )}
                 </TableRow>
             )}
         </Draggable>

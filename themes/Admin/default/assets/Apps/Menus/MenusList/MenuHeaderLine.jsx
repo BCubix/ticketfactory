@@ -32,7 +32,7 @@ const SelectMenu = ({ selectedMenu, list, handleChange }) => {
     );
 };
 
-export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
+export const MenuHeaderLine = ({ selectedMenu, list, handleChange, accessUserCreate }) => {
     const navigate = useNavigate();
 
     return (
@@ -45,9 +45,11 @@ export const MenuHeaderLine = ({ selectedMenu, list, handleChange }) => {
                         </>
                     )}
 
-                    <Component.CreateButton sx={{ marginLeft: 'auto' }} variant="contained" onClick={() => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}`)}>
-                        Nouveau
-                    </Component.CreateButton>
+                    {accessUserCreate && (
+                        <Component.CreateButton sx={{ marginLeft: 'auto' }} variant="contained" onClick={() => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}`)}>
+                            Nouveau
+                        </Component.CreateButton>
+                    )}
                 </Typography>
             </CardContent>
         </Component.CmtCard>

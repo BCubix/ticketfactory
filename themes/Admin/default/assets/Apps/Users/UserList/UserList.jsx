@@ -11,6 +11,7 @@ import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudLis
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const usersListCrud = {
     title: 'Utilisateurs',
@@ -54,6 +55,11 @@ export const usersListCrud = {
     dataSelector: usersSelector,
     dataList: (selector) => selector.users,
     delete: (props) => Api.usersApi.deleteUser(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_USER_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_USER_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_USER_DELETE'),
+    },
     links: {
         new: () => `${Constant.USER_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.USER_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

@@ -26,12 +26,21 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_READ = 'ROLE_EVENT_READ';
+const ROLE_CREATE = 'ROLE_EVENT_CREATE';
+const ROLE_EDIT = 'ROLE_EVENT_EDIT';
 
 export const initConstant = () => {
     setConstant('EVENTS_BASE_PATH', '/admin/evenements');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setComponent('CreateEvent', CreateEvent);
     setComponent('EditEvent', EditEvent);
     setComponent('DisplayEventMediaElement', DisplayEventMediaElement);
@@ -52,23 +61,38 @@ export const initApi = () => {
     setApi('eventsApi', eventsApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.EVENTS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
         tabPathValue: Constant.EVENTS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.EVENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateEvent);
-    setAuthenticatedRoute(`${Constant.EVENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEvent);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.EVENTS_BASE_PATH + Constant.CREATE_PATH, Component.CreateEvent);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.EVENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEvent);
+    }
 };
 
 export const initReducer = () => {
     setReducer('events', eventsReducer);
 };
 
-export default async function ({ parameters }) {
-    const eventName = parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
 
-    insertSubMenu(1, 'PROGRAMMATION', eventName, Constant.EVENTS_BASE_PATH, <ConfirmationNumberIcon />, { relatedLinks: [Constant.CATEGORIES_BASE_PATH, Constant.TAGS_BASE_PATH] });
+    const eventName = parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
+    insertSubMenu(1, 'PROGRAMMATION', eventName, Constant.EVENTS_BASE_PATH, <ConfirmationNumberIcon />, {
+        relatedLinks: [Constant.CATEGORIES_BASE_PATH, Constant.TAGS_BASE_PATH],
+    });
 
     addTabElements('eventTabList', [{ label: eventName, component: <Component.EventsList />, path: Constant.EVENTS_BASE_PATH }]);
 

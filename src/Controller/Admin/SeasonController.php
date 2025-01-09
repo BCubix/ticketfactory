@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class SeasonController extends CrudController
@@ -27,6 +28,7 @@ class SeasonController extends CrudController
     }
 
     #[Rest\Get('/seasons/{seasonId}', requirements: ['seasonId' => '\d+'])]
+    #[IsGranted('ROLE_SEASON_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_season_one'])]
     public function getOne(Request $request, int $seasonId): View
     {
@@ -34,6 +36,7 @@ class SeasonController extends CrudController
     }
 
     #[Rest\Post('/seasons')]
+    #[IsGranted('ROLE_SEASON_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_season_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class SeasonController extends CrudController
     }
 
     #[Rest\Post('/seasons/{seasonId}', requirements: ['seasonId' => '\d+'])]
+    #[IsGranted('ROLE_SEASON_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_season_one'])]
     public function edit(Request $request, int $seasonId): View
     {
@@ -48,6 +52,7 @@ class SeasonController extends CrudController
     }
 
     #[Rest\Post('/seasons/{seasonId}/duplicate', requirements: ['seasonId' => '\d+'])]
+    #[IsGranted('ROLE_SEASON_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_season_one'])]
     public function duplicate(Request $request, int $seasonId): View
     {
@@ -55,6 +60,7 @@ class SeasonController extends CrudController
     }
 
     #[Rest\Delete('/seasons/{seasonId}', requirements: ['seasonId' => '\d+'])]
+    #[IsGranted('ROLE_SEASON_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_season_one'])]
     public function delete(Request $request, int $seasonId): View
     {
@@ -62,6 +68,7 @@ class SeasonController extends CrudController
     }
 
     #[Rest\Get('/seasons/{seasonId}/translated/{languageId}', requirements: ['seasonId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_SEASON_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_season_one'])]
     public function getTranslated(Request $request, int $seasonId, int $languageId): View
     {

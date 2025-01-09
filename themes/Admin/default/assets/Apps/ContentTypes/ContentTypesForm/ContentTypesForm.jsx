@@ -27,7 +27,6 @@ export const contentTypesInitialSchema = {
     pageParent: (initValues) => initValues?.pageParent?.id || '',
     maxObjectNb: (initValues) => initValues?.maxObjectNb || '',
     keyword: (initValues) => initValues?.keyword || '',
-    pageType: (initValues) => initValues?.pageType || false,
 };
 
 export const contentTypesValidationSchema = {
@@ -68,8 +67,6 @@ export const contentTypesForm = {
         dataFields: {
             active: { type: 'boolean' },
             name: { type: 'string' },
-            pageType: { type: 'boolean' },
-            displayBlocks: { type: 'boolean' },
             maxObjectNb: { type: 'string' },
             keyword: { type: 'string' },
             pageParent: { type: 'string' },
@@ -86,8 +83,8 @@ export const contentTypesForm = {
     fields: [
         {
             type: 'tabs',
-            keyId: 'season',
-            label: 'Saison',
+            keyId: 'contentType',
+            label: 'Type de contenu',
             fields: [
                 {
                     type: 'block',

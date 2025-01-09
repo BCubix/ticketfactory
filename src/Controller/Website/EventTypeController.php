@@ -38,15 +38,6 @@ class EventTypeController extends EventAbleController
 
         $eventTypes = $this->em->getRepository(EventType::class)->findAllForWebsite($this->getLanguageId());
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'EventType/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -55,7 +46,6 @@ class EventTypeController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'eventTypes'         => $eventTypes,
-            'pageContent'        => $pageContent,
         ]);
     }
 }

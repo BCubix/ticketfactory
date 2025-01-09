@@ -6,11 +6,13 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api/marketplace')]
 class MarketplaceController extends AdminController
 {
     #[Rest\Post('/sign-in')]
+    #[IsGranted('ROLE_MARKETPLACE_CONNECT')]
     public function marketplaceLogin(Request $request): View
     {
         // We get the username and password from the request to connect to the marketplace as a customer
@@ -24,6 +26,7 @@ class MarketplaceController extends AdminController
     }
 
     #[Rest\Post('/refresh-token')]
+    #[IsGranted('ROLE_MARKETPLACE_CONNECT')]
     public function marketplaceRefreshToken(Request $request): View
     {
         // We get the refresh_token from the request

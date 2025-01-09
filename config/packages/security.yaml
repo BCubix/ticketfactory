@@ -71,7 +71,7 @@ security:
         - { path: ^/admin/api/themes/theme-image/*, roles: PUBLIC_ACCESS }
         - { path: ^/admin/api/forgot-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin/api/reset-password, roles: PUBLIC_ACCESS }
-        - { path: ^/admin/api, roles: ROLE_ADMIN }
+        - { path: ^/admin/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/mon-compte/(login|logout|connexion), roles: PUBLIC_ACCESS }
         - { path: ^/mon-compte, roles: ROLE_CUSTOMER }
         - { path: ^/commande/(login|logout|connexion), roles: PUBLIC_ACCESS }

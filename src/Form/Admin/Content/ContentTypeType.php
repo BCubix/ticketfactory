@@ -26,8 +26,6 @@ class ContentTypeType extends AdminBaseFormType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('name',                 TextType::class,            [])
-            ->add('pageType',             CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
-            ->add('displayBlocks',        CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('maxObjectNb',          IntegerType::class,         [])
             ->add('keyword',              TextType::class,            [])
             ->add('pageParent',           EntityType::class,          [

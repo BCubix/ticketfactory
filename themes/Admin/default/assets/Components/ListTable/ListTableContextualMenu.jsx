@@ -24,6 +24,8 @@ export const ListTableContextualMenu = ({
     contextualClickLabel = null,
     onContextualClick = null,
     disableDeleteFunction,
+    accessUserCreate,
+    accessUserDelete,
 }) => {
     const theme = useTheme();
     const open = Boolean(anchorEl);
@@ -34,20 +36,23 @@ export const ListTableContextualMenu = ({
 
     return (
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-            <MenuItem
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(selectedMenuItem.id);
-                    setSelectedMenuItem(null);
-                    setAnchorEl(null);
-                }}
-                id={`deleteButton-${selectedMenuItem?.id}`}
-                sx={{ color: theme.palette.error.main }}
-                disabled={Boolean(disableDeleteFunction ? disableDeleteFunction(selectedMenuItem) : false)}
-            >
-                <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
-            </MenuItem>
-            {null !== onTranslate && languageList?.length > 0 && (
+            {accessUserDelete && (
+                <MenuItem
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(selectedMenuItem.id);
+                        setSelectedMenuItem(null);
+                        setAnchorEl(null);
+                    }}
+                    id={`deleteButton-${selectedMenuItem?.id}`}
+                    sx={{ color: theme.palette.error.main }}
+                    disabled={Boolean(disableDeleteFunction ? disableDeleteFunction(selectedMenuItem) : false)}
+                >
+                    <DeleteIcon sx={{ marginRight: 2 }} /> Supprimer
+                </MenuItem>
+            )}
+
+            {accessUserCreate && null !== onTranslate && languageList?.length > 0 && (
                 <MenuItem
                     onClick={(e) => {
                         e.stopPropagation();
@@ -61,7 +66,8 @@ export const ListTableContextualMenu = ({
                     <TranslateIcon sx={{ marginRight: 2 }} /> Traduire
                 </MenuItem>
             )}
-            {onDuplicate && (
+
+            {accessUserCreate && onDuplicate && (
                 <MenuItem
                     sx={{
                         color: '#1b5e20',
@@ -81,6 +87,7 @@ export const ListTableContextualMenu = ({
                     Dupliquer
                 </MenuItem>
             )}
+
             {onPreview && (
                 <MenuItem
                     id={`previewButton-${selectedMenuItem?.id}`}

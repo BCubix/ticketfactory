@@ -1,11 +1,15 @@
 import React from 'react';
+import { NotificationManager } from 'react-notifications';
 import { Chip, Typography } from '@mui/material';
 
 import { ordersSelector, getOrdersAction, changeOrdersFilters } from '@Apps/Orders/redux/orders/ordersSlice';
+
+import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
 
 export const ordersListCrud = {
     title: 'Commandes',
@@ -59,6 +63,22 @@ export const ordersListCrud = {
             renderFunction: (item) => <Chip sx={{ backgroundColor: item.status.color }} label={item.status.name} />,
         },
     ],
+    headerAction: ({ dispatch }) => {
+        const handleExportOrders = async () => {
+            apiMiddleware(dispatch, async () => {
+                const result = await Api.ordersApi.exportOrders();
+                if (result?.result) {
+                    NotificationManager.success('Les commandes ont bien été exportées.', 'Succès', Constant.REDIRECTION_TIME);
+                }
+            });
+        };
+
+        return (
+            <Component.ActionButton variant="contained" onClick={handleExportOrders} className="margin-right-3">
+                Exporter la liste des commandes
+            </Component.ActionButton>
+        );
+    },
     loadDataAction: () => getOrdersAction(),
     changeFiltersActions: (props, page) => changeOrdersFilters(props, page),
     dataSelector: ordersSelector,

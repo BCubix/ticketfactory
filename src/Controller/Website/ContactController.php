@@ -14,13 +14,6 @@ class ContactController extends WebsiteController
     {
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
-        $pageTypeBlocks = [];
-        foreach ($page->getContents() as $content) {
-            foreach ($content->getFields() as $key => $field) {
-                $pageTypeBlocks[$key] = $field;
-            }
-        }
-
         $object = new ContactRequest();
         $object->setActive(false);
 
@@ -32,10 +25,11 @@ class ContactController extends WebsiteController
                 'vObject' => $object,
             ]);
 
-            $this->sf->get('mailer')->sendContactRequestEmail($object);
-
             $this->em->persist($object);
             $this->em->flush();
+
+            $this->mf->get('notification')->createNewContactRequestNotification($object);
+            $this->sf->get('mailer')->sendContactRequestEmail($object);
 
             $this->addFlash('contact-success', "Votre message à bien été envoyé");
 
@@ -46,7 +40,6 @@ class ContactController extends WebsiteController
             'breadcrumbs'    => $breadcrumbs,
             'page'           => $page,
             'contact'        => $object,
-            'pageTypeBlocks' => $pageTypeBlocks,
             'form'           => $form->createView()
         ]);
     }

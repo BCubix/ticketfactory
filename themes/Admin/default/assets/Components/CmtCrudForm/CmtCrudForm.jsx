@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -6,6 +6,8 @@ import { Formik } from 'formik';
 import { Component } from '@/AdminService/Component';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const DEFAULT_CRUD_FORM_COMPONENTS = {
     wrapperComponent: (props) => <Component.CmtCrudForm {...props} />,
@@ -53,6 +55,7 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
     const initValues = translateInitialValues || initialValues;
     const validationSchema = Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }));
     const { parameters } = useSelector(parametersSelector);
+    const { user } = useSelector(userProfileSelector);
     const [tabValue, setTabValue] = useState(0);
 
     const checkFormErrors = () => {
@@ -65,17 +68,17 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
         }
     };
 
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
     return (
         <>
             {formLoading ? (
                 <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />
             ) : (
                 <Formik
-                    initialValues={constructInitialValues(
-                        formCrud.form.initialSchema,
-                        initValues,
-                        { ...props }
-                    )}
+                    initialValues={constructInitialValues(formCrud.form.initialSchema, initValues, { ...props, userRoles })}
                     validationSchema={validationSchema}
                     translateInitialValues={translateInitialValues}
                     onSubmit={(values, { setSubmitting }) => {
@@ -125,6 +128,7 @@ export const CmtCrudForm = ({ formCrud, initialValues, translateInitialValues, h
                                 validateForm={validateForm}
                                 submitForm={submitForm}
                                 parameters={parameters}
+                                userRoles={userRoles}
                                 {...props}
                             />
                         </Component.CmtPageWrapper>

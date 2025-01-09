@@ -13,6 +13,7 @@ import { Component } from '@/AdminService/Component';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getMediaType } from '@Services/utils/getMediaType';
 
 const EditValidateIcon = ({ editMode, name, handleSubmit, handleSetEditMode, setFieldValue }) => {
     return (
@@ -36,15 +37,16 @@ export const CmtDisplayMediaInfos = ({
     selectedMedia,
     displayImage = false,
     displayMeta = false,
-    displaySelectButton = false,
+    displaySelectButton = true,
     startUpdatingMedia = null,
     endUpdatingMedia = null,
     updatedMedia = null,
+    onClickDisplayFullImage = null,
     imageFormatList,
     isSelected,
-    setFieldValue,
     name,
     onClick,
+    setFieldValue,
     AddMediaLabel,
     RemoveMediaLabel,
     wrapperClasses = 'padding-inline-5 padding-bottom-5',
@@ -119,7 +121,7 @@ export const CmtDisplayMediaInfos = ({
             }}
             enableReinitialize
         >
-            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue: setMediaFieldValue }) => (
                 <Box className={wrapperClasses}>
                     <Component.CmtMediaInfoBlock>
                         <Box>
@@ -136,7 +138,7 @@ export const CmtDisplayMediaInfos = ({
                                     list={imageFormatList || []}
                                     getValue={(item) => item?.id}
                                     getName={(item) => item?.name}
-                                    setFieldValue={setFieldValue}
+                                    setFieldValue={setMediaFieldValue}
                                     errors={touched.imageFormats && errors.imageFormats}
                                 />
                             ) : (
@@ -150,7 +152,7 @@ export const CmtDisplayMediaInfos = ({
                                 name="imageFormats"
                                 handleSubmit={handleSubmit}
                                 handleSetEditMode={handleSetEditMode}
-                                setFieldValue={setFieldValue}
+                                setFieldValue={setMediaFieldValue}
                             />
                         </Box>
 
@@ -184,7 +186,21 @@ export const CmtDisplayMediaInfos = ({
                                 <Typography variant="h3">Aperçu</Typography>
                             </Box>
                             <Box display="flex" justifyContent={'center'}>
-                                <Box mb={5} mt={5} maxWidth={'100%'} maxHeight={'300px'} display="flex" justifyContent="center" position={'relative'}>
+                                <Box
+                                    mb={5}
+                                    mt={5}
+                                    maxWidth={'100%'}
+                                    maxHeight={'300px'}
+                                    display="flex"
+                                    justifyContent="center"
+                                    position={'relative'}
+                                    onClick={() => {
+                                        if (getMediaType(selectedMedia?.documentType) === 'image' && onClickDisplayFullImage) {
+                                            onClickDisplayFullImage(selectedMedia);
+                                        }
+                                    }}
+                                    className={getMediaType(selectedMedia?.documentType) === 'image' && onClickDisplayFullImage ? 'image-fullscreen-trigger-container' : ''}
+                                >
                                     <Component.CmtDisplayMediaType media={selectedMedia} maxWidth={'100%'} maxHeight={'300px'} />
                                 </Box>
                             </Box>
@@ -221,7 +237,7 @@ export const CmtDisplayMediaInfos = ({
                                 name="title"
                                 handleSubmit={handleSubmit}
                                 handleSetEditMode={handleSetEditMode}
-                                setFieldValue={setFieldValue}
+                                setFieldValue={setMediaFieldValue}
                             />
                         </Box>
 
@@ -250,7 +266,7 @@ export const CmtDisplayMediaInfos = ({
                                     name="alt"
                                     handleSubmit={handleSubmit}
                                     handleSetEditMode={handleSetEditMode}
-                                    setFieldValue={setFieldValue}
+                                    setFieldValue={setMediaFieldValue}
                                 />
                             </Box>
                         )}
@@ -279,7 +295,7 @@ export const CmtDisplayMediaInfos = ({
                                 name="legend"
                                 handleSubmit={handleSubmit}
                                 handleSetEditMode={handleSetEditMode}
-                                setFieldValue={setFieldValue}
+                                setFieldValue={setMediaFieldValue}
                             />
                         </Box>
                     </Component.CmtMediaInfoBlock>

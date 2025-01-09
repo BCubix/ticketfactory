@@ -2,7 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import SettingsIcon from '@mui/icons-material/Settings';
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { Box } from '@mui/system';
 import {
@@ -28,17 +31,20 @@ import { TableColumn } from '@/AdminService/TableColumn';
 
 import { getModulesAction, modulesSelector } from '@Apps/Modules/redux/modules/modulesSlice';
 import { getAddonVersionsAction, addonVersionsSelector } from '@Apps/AddonVersions/redux/addonVersions/addonVersionsSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure, userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 const ACTION_DISABLE = 'Désactiver';
 const ACTION_UNINSTALL = 'Désinstaller';
 const ACTION_UNINSTALL_DELETE = 'Désinstaller & Supprimer';
 
 export const ModulesList = () => {
-    const { loading, modules, error } = useSelector(modulesSelector);
-    const { addonVersionsLoading, addonVersions, addonVersionsError } = useSelector(addonVersionsSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { loading, modules, error } = useSelector(modulesSelector);
+    const { addonVersionsLoading, addonVersions, addonVersionsError } = useSelector(addonVersionsSelector);
+    const { user } = useSelector(userProfileSelector);
     const [isMarketplaceConnected, setMarketplaceConnected] = useState(false);
     const [marketplaceDialog, setMarketplaceDialog] = useState(false);
     const [updateModuleDialog, setUpdateModuleDialog] = useState({ open: false, addon: null, backupDatabase: false });
@@ -47,6 +53,19 @@ export const ModulesList = () => {
     const [removeDialog, setRemoveDialog] = useState(null);
     const [actionDelete, setActionDelete] = useState(ACTION_DISABLE);
     const [loadingDialog, setLoadingDialog] = useState(null);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const [accessUserCreate, accessUserEdit, accessUserDelete, accessUserParameterEdit] = useMemo(() => {
+        return [
+            checkUserAccess(userRoles, 'ROLE_MODULE_CREATE'),
+            checkUserAccess(userRoles, 'ROLE_MODULE_EDIT'),
+            checkUserAccess(userRoles, 'ROLE_MODULE_DELETE'),
+            checkUserAccess(userRoles, 'ROLE_PARAMETER_EDIT'),
+        ];
+    }, [userRoles]);
 
     useEffect(() => {
         if (!loading && !modules && !error) {
@@ -174,7 +193,7 @@ export const ModulesList = () => {
             <Component.CmtPageWrapper
                 title={'Modules'}
                 actionButton={
-                    !isMarketplaceConnected ? (
+                    accessUserEdit && !isMarketplaceConnected ? (
                         <Component.ActionButton variant="contained" onClick={() => setMarketplaceDialog(true)}>
                             Connexion à la marketplace
                         </Component.ActionButton>
@@ -190,7 +209,7 @@ export const ModulesList = () => {
                                 </Typography>
 
                                 <Box className="flex">
-                                    {Object.values(updateList)?.some(Boolean) && (
+                                    {accessUserEdit && Object.values(updateList)?.some(Boolean) && (
                                         <Component.ActionButton
                                             variant="contained"
                                             onClick={(e) => {
@@ -203,26 +222,59 @@ export const ModulesList = () => {
                                         </Component.ActionButton>
                                     )}
 
-                                    <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
-                                        Upload
-                                    </Component.CreateButton>
+                                    {accessUserCreate && (
+                                        <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                            Upload
+                                        </Component.CreateButton>
+                                    )}
                                 </Box>
                             </Box>
                         }
                     />
                     <CardContent>
-                        {loading? (<Component.CmtSkeletonList></Component.CmtSkeletonList>): 
+                    {loading? (<Component.CmtSkeletonList></Component.CmtSkeletonList>): 
                             (<Component.ListTable
                                 table={TableColumn.ModulesList}
                                 list={modules}
                                 onActive={(name) => handleActive(name)}
                                 onDisable={(name) => setDeleteDialog(name)}
-                                onRemove={(name) => setRemoveDialog(name)}
+                                onRemove={accessUserDelete ? (name) => setRemoveDialog(name) : null}
                                 onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
-                                displayParameter={(moduleItem) => Boolean(moduleItem.id)}
+                                displayParameter={accessUserEdit && accessUserParameterEdit ? (moduleItem) => Boolean(moduleItem.id) : null}
                                 additionnalOptions={[
                                     ({ item }) => {
-                                        return updateList[item.name] ? (
+                                        return accessUserEdit ? (
+                                            <Component.ActionFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="primary"
+                                                size="small"
+                                                aria-label="Action"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    item.active ? setDeleteDialog(item.name) : handleActive(item.name);
+                                                }}
+                                            >
+                                                {item.active ? <UnpublishedIcon /> : <CheckCircleIcon />}
+                                            </Component.ActionFabButton>
+                                        ) : null;
+                                    },
+                                    ({ item }) => {
+                                        return accessUserEdit && accessUserParameterEdit && Boolean(item.id) ? (
+                                            <Component.EditFabButton
+                                                sx={{ marginInline: 1 }}
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${item.id}`);
+                                                }}
+                                            >
+                                                <SettingsIcon />
+                                            </Component.EditFabButton>
+                                        ) : null;
+                                    },
+                                    ({ item }) => {
+                                        return accessUserEdit && updateList[item.name] ? (
                                             <Component.ActionFabButton
                                                 sx={{ marginInline: 1 }}
                                                 color="primary"
@@ -238,11 +290,13 @@ export const ModulesList = () => {
                                         ) : null;
                                     },
                                 ]}
-                            />)
+                            />
+    )
                         }
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
+
             <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
@@ -260,8 +314,13 @@ export const ModulesList = () => {
                     />
                 </DialogContent>
             </Dialog>
+
             <Dialog open={!!deleteDialog} onClose={() => setDeleteDialog(null)}>
-                <DialogTitle sx={{ fontSize: 20 }}>Désactivation, désinstallation et/ou suppression</DialogTitle>
+                <DialogTitle sx={{ fontSize: 20 }}>
+                    {accessUserEdit && 'Désactivation'}
+                    {accessUserDelete && `, désinstallation et/ou suppression`}
+                </DialogTitle>
+
                 <DialogContent dividers>
                     <Box textAlign="left">
                         <FormControl>
@@ -272,18 +331,24 @@ export const ModulesList = () => {
                                         ' ' +
                                         'Le paramétrage et les données saisies sont conservées pour une réactivation ultérieure.'}
                                 </Typography>
-                                <FormControlLabel value={ACTION_UNINSTALL} control={<Radio />} label={ACTION_UNINSTALL} />
-                                <Typography variant="h5">
-                                    {'Désactivation du module et suppression de son paramétrage ainsi que des données saisies.' +
-                                        ' ' +
-                                        'Le module reste présent sur le serveur et pourra être réinstallé ultérieurement, mais il devra être configuré à nouveau.'}
-                                </Typography>
-                                <FormControlLabel value={ACTION_UNINSTALL_DELETE} control={<Radio />} label={ACTION_UNINSTALL_DELETE} />
-                                <Typography variant="h5">
-                                    {'Désinstallation du module et suppression de son dossier du serveur.' +
-                                        ' ' +
-                                        "Pour utiliser le module ultérieurement, vous devrez le télécharger, l'installer et le configurer à nouveau."}
-                                </Typography>
+
+                                {accessUserDelete && (
+                                    <>
+                                        <FormControlLabel value={ACTION_UNINSTALL} control={<Radio />} label={ACTION_UNINSTALL} />
+                                        <Typography variant="h5">
+                                            {'Désactivation du module et suppression de son paramétrage ainsi que des données saisies.' +
+                                                ' ' +
+                                                'Le module reste présent sur le serveur et pourra être réinstallé ultérieurement, mais il devra être configuré à nouveau.'}
+                                        </Typography>
+
+                                        <FormControlLabel value={ACTION_UNINSTALL_DELETE} control={<Radio />} label={ACTION_UNINSTALL_DELETE} />
+                                        <Typography variant="h5">
+                                            {'Désinstallation du module et suppression de son dossier du serveur.' +
+                                                ' ' +
+                                                "Pour utiliser le module ultérieurement, vous devrez le télécharger, l'installer et le configurer à nouveau."}
+                                        </Typography>
+                                    </>
+                                )}
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -300,6 +365,7 @@ export const ModulesList = () => {
                     </Box>
                 </DialogActions>
             </Dialog>
+
             <Component.DeleteDialog open={!!removeDialog} onCancel={() => setRemoveDialog(null)} onDelete={() => handleDisable(removeDialog, ACTION_UNINSTALL_DELETE)}>
                 <Box textAlign="center" py={3}>
                     <Typography>Êtes-vous sûr de vouloir supprimer ce module ?</Typography>
@@ -307,6 +373,7 @@ export const ModulesList = () => {
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
+
             <Dialog fullWidth open={loadingDialog !== null} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DialogTitle sx={{ fontSize: 17 }}>{loadingDialog}</DialogTitle>
                 <DialogContent>

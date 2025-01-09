@@ -100,6 +100,7 @@ export const languagesForm = {
                                 label: 'Date & Heure',
                                 inputType: 'textField',
                                 required: true,
+                                helper: 'Ex: dd/MM/yyyy - HH:mm',
                             },
                         },
                         {
@@ -110,6 +111,7 @@ export const languagesForm = {
                                 label: 'Date',
                                 inputType: 'textField',
                                 required: true,
+                                helper: 'Ex: EEEE d MMMM',
                             },
                         },
                         {
@@ -120,6 +122,7 @@ export const languagesForm = {
                                 label: 'Heure',
                                 inputType: 'textField',
                                 required: true,
+                                helper: 'Ex: HH:mm',
                             },
                         },
                     ],

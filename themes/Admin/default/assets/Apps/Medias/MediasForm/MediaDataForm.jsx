@@ -103,7 +103,7 @@ const Categories = ({ values, setFieldValue, errors, touched, mediaCategoriesLis
     </Grid>
 );
 
-export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, imageFormatList }) => {
+export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, imageFormatList, userDeleteRight }) => {
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du fichier'),
     });
@@ -165,10 +165,14 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                             },
                         ]}
                     />
+
                     <Box display="flex" sx={{ mb: 5, mt: 4 }}>
-                        <Button id="deleteButton" color="error" onClick={deleteElement}>
-                            Supprimer l'element
-                        </Button>
+                        {userDeleteRight && (
+                            <Button id="deleteButton" color="error" onClick={deleteElement}>
+                                Supprimer l'element
+                            </Button>
+                        )}
+
                         <Box display={'flex'} sx={{ pb: 3, pt: 5, ml: 'auto' }} alignItems="center">
                             <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />
                             <Button id="submitForm" type="submit" variant="contained" sx={{ ml: 3 }} disabled={isSubmitting}>

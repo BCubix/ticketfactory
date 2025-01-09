@@ -20,6 +20,7 @@ use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class TicketingController extends CrudController
@@ -55,6 +56,7 @@ class TicketingController extends CrudController
     }
 
     #[Rest\Get('/ticketing/{ticketingId}', requirements: ['ticketingId' => '\d+'])]
+    #[IsGranted('ROLE_TICKETING_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function getOne(Request $request, int $ticketingId): View
     {
@@ -62,6 +64,7 @@ class TicketingController extends CrudController
     }
 
     #[Rest\Post('/ticketing')]
+    #[IsGranted('ROLE_TICKETING_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function add(Request $request): View
     {
@@ -69,6 +72,7 @@ class TicketingController extends CrudController
     }
 
     #[Rest\Post('/ticketing/{ticketingId}', requirements: ['ticketingId' => '\d+'])]
+    #[IsGranted('ROLE_TICKETING_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function edit(Request $request, int $ticketingId): View
     {
@@ -76,6 +80,7 @@ class TicketingController extends CrudController
     }
 
     #[Rest\Delete('/ticketing/{ticketingId}', requirements: ['ticketingId' => '\d+'])]
+    #[IsGranted('ROLE_TICKETING_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function delete(Request $request, int $ticketingId): View
     {
@@ -83,6 +88,7 @@ class TicketingController extends CrudController
     }
 
     #[Rest\Post('/ticketing/{ticketingId}/set-default-ticketing', requirements: ['ticketingId' => '\d+'])]
+    #[IsGranted('ROLE_TICKETING_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function setDefaultTicketing(Request $request, int $ticketingId): View
     {
@@ -120,6 +126,7 @@ class TicketingController extends CrudController
     }
 
     #[Rest\Get('/ticketing/{ticketingId}/synchronize-catalog', requirements: ['ticketingId' => '\d+'])]
+    #[IsGranted('ROLE_TICKETING_SYNCHRONIZE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_ticketing_one'])]
     public function synchronizeCatalog(Request $request, int $ticketingId): View
     {

@@ -39,15 +39,6 @@ class ProductCategoryController extends EventAbleController
 
         $productCategories = $this->em->getRepository(ProductCategory::class)->findAllForWebsite($this->getLanguageId());
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'ProductCategory/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -56,22 +47,12 @@ class ProductCategoryController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'productCategories'  => $productCategories,
-            'pageContent'        => $pageContent,
         ]);
     }
 
     public function detail(Page $page, array $contents, array $breadcrumbs)
     {
         $request = $this->getRequest();
-
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
 
         $filters = ['topCategory' => [$contents['ProductCategory']->getId()]];
         $filterForm = $this->createForm(ProductFilterType::class, null, ['productCategory' => $contents['ProductCategory']->getId()]);
@@ -82,7 +63,7 @@ class ProductCategoryController extends EventAbleController
             $filters['topCategory'] = $contents['ProductCategory']->getId();
         }
 
-        list($products, $pagination) = $this->em->getRepository(Product::class)->findAllForWebsite($this->getLanguageId(), $filters);
+        list($products, $pagination) = $this->mf->get('product')->getProducts($this->getLanguageId(), $filters);
         $topCategories = $this->mf->get('productCategory')->getTopCategories();
 
         $template = 'Product/';
@@ -94,7 +75,6 @@ class ProductCategoryController extends EventAbleController
             "page"               => $page,
             "productCategory"    => $contents['ProductCategory'],
             'products'           => $products,
-            'pageContent'        => $pageContent,
             'filterForm'         => $filterForm->createView(),
             'pagination'         => $pagination,
             'topCategories'      => $topCategories,

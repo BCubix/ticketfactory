@@ -55,7 +55,7 @@ export const OrdersDetail = () => {
             <Grid container spacing={4}>
                 <Component.CustomerOrderPart customer={order?.customer} />
                 <Component.OrderPart order={order} />
-                <Component.CartOrderPart cart={order?.cart} />
+                <Component.CartPart cart={{ ...order?.cart, linkedOrder: order }} />
             </Grid>
         </Component.CmtPageWrapper>
     );

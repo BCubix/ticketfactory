@@ -22,6 +22,7 @@ import { changeContentsFilters, contentsSelector, getAllContentDataAction, getCo
 
 import { useTheme } from '@emotion/react';
 import { useSelector } from 'react-redux';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const contentsListCrud = {
     title: 'Contenus',
@@ -70,6 +71,11 @@ export const contentsListCrud = {
     dataList: (selector) => selector.contents,
     duplicate: (props) => Api.contentsApi.duplicateContent(props),
     delete: (props) => Api.contentsApi.deleteContent(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_DELETE'),
+    },
     links: {
         edit: (id) => `${Constant.CONTENTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
         translate: (id, languageId) => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentId=${id}&languageId=${languageId}`,

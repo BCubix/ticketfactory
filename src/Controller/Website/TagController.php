@@ -42,15 +42,6 @@ class TagController extends EventAbleController
 
         $tags = $this->em->getRepository(Tag::class)->findAllForWebsite($this->getLanguageId());
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'Tag/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -59,7 +50,6 @@ class TagController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'tags'               => $tags,
-            'pageContent'        => $pageContent,
         ]);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Entity\Page;
 
-use App\Entity\Content\Content;
 use App\Entity\Content\ContentType;
 use App\Entity\Datable;
 use App\Entity\SEOAble\SEOAble;
@@ -28,8 +27,15 @@ class Page extends Datable
 
     use SEOAble;
 
+    public const STATUS_PUBLISHED = "PUBLISHED";
+    public const PUBLICATION_STATUS = [
+        'PUBLISHED'   => 'Publié',
+        'TO_VALIDATE' => 'À valider',
+        'DRAFT' => 'Brouillon'
+    ];
+
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one', 'a_parameter_all'])]
+    #[JMS\Groups(['a_content_type_one', 'a_page_all', 'a_page_one', 'a_content_one', 'a_parameter_all', 'a_url_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -58,6 +64,12 @@ class Page extends Datable
     #[ORM\Column(length: 123, nullable: true)]
     private ?string $keyword = null;
 
+    #[Assert\Choice(callback: 'getPublicationStatusKeys', message: 'Vous devez choisir un status valide.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_all', 'a_page_one'])]
+    #[ORM\Column(length: 255)]
+    private ?string $publicationStatus = null;
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\Column(length: 255, nullable: true)]
@@ -80,9 +92,6 @@ class Page extends Datable
     #[ORM\OneToMany(mappedBy: 'pageParent', targetEntity: ContentType::class, orphanRemoval: true)]
     private $contentTypes;
 
-    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Content::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private Collection $contents;
-
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_all', 'a_page_one'])]
     #[ORM\ManyToOne(targetEntity: Language::class)]
@@ -104,7 +113,6 @@ class Page extends Datable
         $this->pageBlocks = new ArrayCollection();
         $this->pages = new ArrayCollection();
         $this->contentTypes = new ArrayCollection();
-        $this->contents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,6 +164,18 @@ class Page extends Datable
     public function setKeyword(?string $keyword): self
     {
         $this->keyword = $keyword;
+
+        return $this;
+    }
+
+    public function getPublicationStatus(): ?string
+    {
+        return $this->publicationStatus;
+    }
+
+    public function setPublicationStatus(string $publicationStatus): static
+    {
+        $this->publicationStatus = $publicationStatus;
 
         return $this;
     }
@@ -270,43 +290,6 @@ class Page extends Datable
         return $this;
     }
 
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function completeSeo()
-    {
-        $this->completeFields($this->getTitle());
-    }
-
-    /**
-     * @return Collection<int, Content>
-     */
-    public function getContents(): Collection
-    {
-        return $this->contents;
-    }
-
-    public function addContent(Content $content): self
-    {
-        if (!$this->contents->contains($content)) {
-            $this->contents->add($content);
-            $content->setPage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContent(Content $content): self
-    {
-        if ($this->contents->removeElement($content)) {
-            // set the owning side to null (unless already changed)
-            if ($content->getPage() === $this) {
-                $content->setPage(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getLang(): ?Language
     {
         return $this->lang;
@@ -329,5 +312,17 @@ class Page extends Datable
         $this->parent = $parent;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function completeSeo()
+    {
+        $this->completeFields($this->getTitle());
+    }
+
+    public function getPublicationStatusKeys()
+    {
+        return array_keys(self::PUBLICATION_STATUS);
     }
 }

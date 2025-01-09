@@ -53,24 +53,14 @@ class ContentRepository extends CrudRepository
             ->getSingleScalarResult();
     }
 
-    public function findContentByPageIdForAdmin(int $pageId)
-    {
-        return $this->createQueryBuilder('c')
-            ->leftJoin('c.page', 'p')
-            ->leftJoin('c.contentType', 'ct')
-            ->where('ct.pageType = 1')
-            ->andWhere('p.id = :pageId')
-            ->setParameter("pageId", $pageId)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
     public function findOneBySlugForWebsite(string $slug)
     {
         return $this->createQueryBuilder('c')
             ->where("c.active = 1")
+            ->andWhere('p.publicationStatus = :publicationStatus')
             ->andWhere('c.slug = :slug')
             ->setParameter("slug", $slug)
+            ->setParameter('publicationStatus', Content::STATUS_PUBLISHED)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -81,8 +71,10 @@ class ContentRepository extends CrudRepository
             ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('c.contentType', 't')
             ->where("c.active = 1")
+            ->andWhere('p.publicationStatus = :publicationStatus')
             ->andWhere('t.keyword = :keyword')
             ->setParameter("languageId", $languageId)
+            ->setParameter('publicationStatus', Content::STATUS_PUBLISHED)
             ->setParameter("keyword", $keyword)
             ->getQuery()
             ->getResult();
@@ -94,8 +86,10 @@ class ContentRepository extends CrudRepository
             ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('c.contentType', 't')
             ->where("c.active = 1")
+            ->andWhere('p.publicationStatus = :publicationStatus')
             ->andWhere('t.id = :id')
             ->setParameter("languageId", $languageId)
+            ->setParameter('publicationStatus', Content::STATUS_PUBLISHED)
             ->setParameter("id", $id)
             ->getQuery()
             ->getResult();
@@ -104,13 +98,16 @@ class ContentRepository extends CrudRepository
     public function findBySlugForWebsite(int $languageId, string $slug, bool $activeFilter = true): ?Content
     {
         $result = $this->createQueryBuilder('c')
-            ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId');
+            ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->where('c.slug = :slug');
 
         if ($activeFilter) {
-            $result = $result->where('c.active = 1');
+            $result = $result->andWhere('c.active = 1')
+            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->setParameter('publicationStatus', Content::STATUS_PUBLISHED);
         }
 
-        return $result->andWhere('c.slug = :slug')
+        return $result
             ->setParameter('languageId', $languageId)
             ->setParameter('slug', $slug)
             ->getQuery()

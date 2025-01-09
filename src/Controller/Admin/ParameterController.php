@@ -15,12 +15,14 @@ use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
 use App\Service\ServiceFactory;
+
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ParameterController extends AdminController
@@ -63,6 +65,7 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres')]
+    #[IsGranted('ROLE_PARAMETER_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
     public function editParameter(Request $request, ParameterManager $pm): View
     {
@@ -127,6 +130,7 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres/generer/seo')]
+    #[IsGranted('ROLE_PARAMETER_EXECUTE')]
     public function generateRobotFile(Request $request): View
     {
         $this->mf->get('parameter')->createRobotFile($request->getScheme() . "://" . $request->getHost());
@@ -136,6 +140,7 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres/email-test')]
+    #[IsGranted('ROLE_PARAMETER_EXECUTE')]
     public function sendTestEmail(): View
     {
         $testEmailAddress = $this->mf->get('parameter')->getCoreParameter('test_email_address');

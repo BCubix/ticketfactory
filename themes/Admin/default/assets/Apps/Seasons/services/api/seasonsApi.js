@@ -6,6 +6,8 @@ import { sortTranslatedObject } from '@Services/utils/translationUtils';
 import { constructFormData } from '@Services/utils/constructFormData';
 import { Crud } from '@/AdminService/Crud';
 
+const DEFAULT_PATH = '/seasons';
+
 var controller = null;
 
 const seasonsApi = {
@@ -21,7 +23,7 @@ const seasonsApi = {
 
             controller = new AbortController();
 
-            const result = await axios.get('/seasons', {
+            const result = await axios.get(DEFAULT_PATH, {
                 params: params,
                 signal: controller.signal,
             });
@@ -48,7 +50,7 @@ const seasonsApi = {
                 params['filters[lang]'] = filters?.lang;
             }
 
-            const result = await axios.get('/seasons', { params: params });
+            const result = await axios.get(DEFAULT_PATH, { params: params });
 
             return { result: true, seasons: result.data?.results, total: result?.data?.total };
         } catch (error) {
@@ -58,7 +60,7 @@ const seasonsApi = {
 
     getOneSeason: async (id) => {
         try {
-            const result = await axios.get(`/seasons/${id}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}`);
 
             return { result: true, season: result.data };
         } catch (error) {
@@ -68,7 +70,7 @@ const seasonsApi = {
 
     createSeason: async (values) => {
         try {
-            const result = await axios.post('/seasons', constructFormData({ values, dataFields: Crud?.seasons?.add?.api?.dataFields }));
+            const result = await axios.post(DEFAULT_PATH, constructFormData({ values, dataFields: Crud?.seasons?.add?.api?.dataFields }));
 
             return { result: true, season: result.data };
         } catch (error) {
@@ -78,7 +80,7 @@ const seasonsApi = {
 
     editSeason: async (id, values) => {
         try {
-            const result = await axios.post(`/seasons/${id}`, constructFormData({ values, dataFields: Crud?.seasons?.edit?.api?.dataFields }));
+            const result = await axios.post(`${DEFAULT_PATH}/${id}`, constructFormData({ values, dataFields: Crud?.seasons?.edit?.api?.dataFields }));
 
             return { result: true, season: result.data };
         } catch (error) {
@@ -88,7 +90,7 @@ const seasonsApi = {
 
     deleteSeason: async (id) => {
         try {
-            await axios.delete(`/seasons/${id}`);
+            await axios.delete(`${DEFAULT_PATH}/${id}`);
 
             return { result: true };
         } catch (error) {
@@ -98,7 +100,7 @@ const seasonsApi = {
 
     duplicateSeason: async (id) => {
         try {
-            await axios.post(`/seasons/${id}/duplicate`);
+            await axios.post(`${DEFAULT_PATH}/${id}/duplicate`);
 
             return { result: true };
         } catch (error) {
@@ -108,7 +110,7 @@ const seasonsApi = {
 
     getTranslated: async (id, languageId) => {
         try {
-            const result = await axios.get(`/seasons/${id}/translated/${languageId}`);
+            const result = await axios.get(`${DEFAULT_PATH}/${id}/translated/${languageId}`);
             const data = copyData(result?.data);
 
             return { result: true, season: data };

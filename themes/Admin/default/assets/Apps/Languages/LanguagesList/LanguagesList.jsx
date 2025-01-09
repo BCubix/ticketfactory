@@ -7,6 +7,7 @@ import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudLis
 
 import { getLanguagesAction, languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { Crud } from '@/AdminService/Crud';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const languagesListCrud = {
     title: 'Langues',
@@ -22,6 +23,11 @@ export const languagesListCrud = {
     dataList: (selector) => selector.languages,
     delete: (props) => Api.languagesApi.deleteLanguage(props),
     disableDeleteFunction: (item) => item.isDefault,
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_LANGUAGE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_LANGUAGE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_LANGUAGE_DELETE'),
+    },
     links: {
         new: () => `${Constant.LANGUAGES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.LANGUAGES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

@@ -1,10 +1,13 @@
 import React from 'react';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { CreateUser, usersCreateCrud } from '@Apps/Users/CreateUser/CreateUser';
 import { EditUser, usersEditCrud } from '@Apps/Users/EditUser/EditUser';
-import { EditProfile } from '@Apps/Users/EditProfile/EditProfile';
-import { EditProfileForm } from '@Apps/Users/ProfileForm/EditProfileForm';
+import { EditUserProfile } from '@Apps/Users/EditUserProfile/EditUserProfile';
+import { EditUserProfileForm } from '@Apps/Users/UserProfileForm/EditUserProfileForm';
 import { UserList, usersListCrud } from '@Apps/Users/UserList/UserList';
+import usersReducer from '@Apps/Users/redux/users/usersSlice';
+import usersApi from '@Apps/Users/services/api/usersApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -14,42 +17,59 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
-import usersReducer from '@Apps/Users/redux/users/usersSlice';
-import profileApi from '@Apps/Users/services/api/profileApi';
-import usersApi from '@Apps/Users/services/api/usersApi';
-import PersonIcon from '@mui/icons-material/Person';
+const ROLE_READ = 'ROLE_USER_READ';
+const ROLE_CREATE = 'ROLE_USER_CREATE';
+const ROLE_EDIT = 'ROLE_USER_EDIT';
 
 export const initConstant = () => {
     setConstant('USER_BASE_PATH', '/admin/utilisateurs');
-    setConstant('PROFILE_BASE_PATH', '/admin/profil');
+    setConstant('USER_PROFILE_BASE_PATH', '/admin/profil-utilisateur');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setComponent('CreateUser', CreateUser);
     setComponent('EditUser', EditUser);
-    setComponent('EditProfile', EditProfile);
-    setComponent('EditProfileForm', EditProfileForm);
+    setComponent('EditUserProfile', EditUserProfile);
+    setComponent('EditUserProfileForm', EditUserProfileForm);
     setComponent('UserList', UserList);
 };
 
 export const initApi = () => {
-    setApi('profileApi', profileApi);
     setApi('usersApi', usersApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.USER_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'usersTabList',
         tabPathValue: Constant.USER_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.USER_BASE_PATH + Constant.CREATE_PATH, Component.CreateUser);
-    setAuthenticatedRoute(`${Constant.USER_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUser);
 
-    setAuthenticatedRoute(`${Constant.PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, Component.EditProfile);
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.USER_BASE_PATH + Constant.CREATE_PATH, Component.CreateUser);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.USER_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditUser);
+    }
+
+    setAuthenticatedRoute(`${Constant.USER_PROFILE_BASE_PATH}${Constant.EDIT_PATH}`, Component.EditUserProfile);
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     insertSubMenu(2, 'ADMINISTRER', 'Utilisateurs', Constant.USER_BASE_PATH, <PersonIcon />);
 };
 
@@ -57,11 +77,19 @@ export const initReducer = () => {
     setReducer('users', usersReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     addTabElements('usersTabList', [{ label: 'Utilisateurs', component: <Component.UserList />, path: Constant.USER_BASE_PATH }]);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     const crud = {
         list: usersListCrud,
         add: usersCreateCrud,

@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
-import { CardContent, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { CardContent, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
 
 export const CartPart = ({ cart }) => {
+    const subscriptionUsageDiscount = useMemo(
+        () => cart?.linkedOrder?.subscriptionUsages?.reduce((total, subscriptionUsage) => total + subscriptionUsage?.eventSeat?.eventPrice?.price, 0)?.toFixed(2),
+        []
+    );
+
+    const generalTotal = useMemo(() => {
+        let total = (cart.total || 0) - subscriptionUsageDiscount;
+
+        return total >= 0 ? total : 0;
+    }, []);
+
     const calculateTotal = (price, discount, unit) => {
         if (!discount || !unit) {
             return price;
@@ -36,67 +45,20 @@ export const CartPart = ({ cart }) => {
             <Component.CmtCard sx={{ position: 'relative' }} overflow="hidden">
                 <Component.CmtCardHeader title="Contenu du panier" />
                 <CardContent sx={{ position: 'relative' }}>
+                    {cart.eventRows?.length > 0 && (
+                        <Component.CartEventPart
+                            cart={cart}
+                            calculateDiscount={calculateDiscount}
+                            calculateTotal={calculateTotal}
+                            subscriptionUsageDiscount={subscriptionUsageDiscount}
+                        />
+                    )}
+                    {cart.productRows?.length > 0 && <Component.CartProductPart cart={cart} calculateDiscount={calculateDiscount} calculateTotal={calculateTotal} />}
+                    {cart.subscriptionRows?.length > 0 && <Component.CartSubscriptionPart cart={cart} calculateDiscount={calculateDiscount} calculateTotal={calculateTotal} />}
+
                     <TableContainer>
-                        <Table sx={{ minWidth: 650, marginTop: 5, transition: '.3s' }}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell width="25%">Evènement</TableCell>
-                                    <TableCell width="25%">Placement</TableCell>
-                                    <TableCell width="20%">Date</TableCell>
-                                    <TableCell width="10%">Prix unitaire</TableCell>
-                                    <TableCell width="10%">Réductions</TableCell>
-                                    <TableCell width="10%">Total</TableCell>
-                                </TableRow>
-                            </TableHead>
+                        <Table sx={{ minWidth: 650, marginTop: 10, transition: '.3s' }}>
                             <TableBody>
-                                {cart?.eventRows?.map((item, index) => {
-                                    return item.eventSeats?.map((seat, ind) => (
-                                        <TableRow key={ind}>
-                                            <TableCell component="td" scope="row">
-                                                <Link to={`${Constant.EVENTS_BASE_PATH}/${item?.eventId?.id}${Constant.EDIT_PATH}`} target="_blank">
-                                                    <Typography className="link" color="primary">
-                                                        {item?.event?.name}
-                                                    </Typography>
-                                                </Link>
-                                            </TableCell>
-                                            <TableCell component="td" scope="row">
-                                                <Typography>{seat.eventPrice.name}</Typography>
-                                            </TableCell>
-                                            <TableCell component="td" scope="row">
-                                                {item?.eventDate?.eventDate}
-                                            </TableCell>
-                                            <TableCell component="td" scope="row">
-                                                {seat?.eventPrice?.price?.toFixed(2)} €
-                                            </TableCell>
-                                            <TableCell component="td" scope="row">
-                                                {seat?.voucher
-                                                    ? `${seat?.voucher?.discount?.toFixed(2)} ${seat?.voucher?.unitPrice} (${calculateDiscount(
-                                                          seat?.eventPrice?.total,
-                                                          seat?.voucher?.discount,
-                                                          seat?.voucher?.unitPrice
-                                                      )})`
-                                                    : '---'}
-                                            </TableCell>
-                                            <TableCell component="td" scope="row">
-                                                {calculateTotal(seat?.eventPrice?.price, seat?.voucher?.discount, seat?.voucher?.unitPrice).toFixed(2)} €
-                                            </TableCell>
-                                        </TableRow>
-                                    ));
-                                })}
-
-                                <TableRow sx={{ backgroundColor: (theme) => theme.palette.primary.light }}>
-                                    <TableCell component="td" scope="row" colSpan={5}>
-                                        <Typography component="span" fontWeight={500}>
-                                            Sous-total
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell component="td" scope="row" width="10%">
-                                        <Typography component="span" fontWeight={500}>
-                                            {cart?.eventRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €
-                                        </Typography>
-                                    </TableCell>
-                                </TableRow>
-
                                 {cart?.vouchers.map((voucher, voucherIndex) => (
                                     <TableRow key={voucherIndex}>
                                         <TableCell component="td" scope="row" colSpan={5}>
@@ -109,14 +71,14 @@ export const CartPart = ({ cart }) => {
                                 ))}
 
                                 <TableRow sx={{ backgroundColor: (theme) => theme.palette.primary.light }}>
-                                    <TableCell component="td" scope="row" colSpan={5}>
+                                    <TableCell component="td" scope="row" with="90%">
                                         <Typography component="span" fontWeight={500}>
                                             Total général
                                         </Typography>
                                     </TableCell>
-                                    <TableCell component="td" scope="row">
+                                    <TableCell component="td" scope="row" width="10%">
                                         <Typography component="span" fontWeight={500}>
-                                            {cart?.total?.toFixed(2)} €
+                                            {generalTotal.toFixed(2)} €
                                         </Typography>
                                     </TableCell>
                                 </TableRow>

@@ -2,7 +2,6 @@
 
 namespace App\Hook;
 
-use App\Entity\Content\ContentType;
 use App\Entity\Url\Url;
 use App\Event\HookEvent;
 use App\Service\Addon\Hook;
@@ -30,10 +29,6 @@ class ContentTypeHook extends Hook
     {
         $sObject = $event->getParam('sObject');
         $state = $event->getParam('state');
-
-        if ($sObject->isPageType()) {
-            return;
-        }
 
         if ($state !== 'add') {
             $url = $this->mf->get('url')->findOneByKeywordForAdmin("content_" . $sObject->getId());

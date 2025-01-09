@@ -65,6 +65,7 @@ export const initDropzoneElement = ({ element, logFail, onSuccess, id, setImageC
                 formatId: -1,
                 deleteOldThumbnails: true,
             };
+
             createUploadImageArray(response.media);
         }
     });

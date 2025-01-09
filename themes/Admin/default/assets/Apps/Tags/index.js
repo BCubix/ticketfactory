@@ -13,12 +13,21 @@ import { setCrud } from '@/AdminService/Crud';
 import tagsReducer from '@Apps/Tags/redux/tags/tagsSlice';
 import tagsApi from '@Apps/Tags/services/api/tagsApi';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_READ = 'ROLE_TAG_READ';
+const ROLE_CREATE = 'ROLE_TAG_CREATE';
+const ROLE_EDIT = 'ROLE_TAG_EDIT';
 
 export const initConstant = () => {
     setConstant('TAGS_BASE_PATH', '/admin/tags');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setComponent('CreateTag', CreateTag);
     setComponent('EditTag', EditTag);
     setComponent('TagsList', TagsList);
@@ -28,24 +37,42 @@ export const initApi = () => {
     setApi('tagsApi', tagsApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.TAGS_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'eventTabList',
         tabPathValue: Constant.TAGS_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, Component.CreateTag);
-    setAuthenticatedRoute(`${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTag);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.TAGS_BASE_PATH + Constant.CREATE_PATH, Component.CreateTag);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.TAGS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTag);
+    }
 };
 
 export const initReducer = () => {
     setReducer('tags', tagsReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     addTabElements('eventTabList', [{ label: 'Tags', component: <Component.TagsList />, path: Constant.TAGS_BASE_PATH }], 3);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     const crud = {
         list: tagsListCrud,
         add: tagsCreateCrud,

@@ -44,14 +44,26 @@
 
     &-right {
         display: flex;
+        align-items: center;
     }
 
-    &-button-label {
-        padding-left: 12px;
-        display: none;
+    &-button {
+        width: 30px;
+        height: 30px;
+        min-width: 30px !important;
 
         @include for-size('md') {
-            display: block;
+            width: unset;
+            height: 100%;
+        }
+
+        &-label {
+            padding-left: 12px;
+            display: none;
+
+            @include for-size('md') {
+                display: block;
+            }
         }
     }
 
@@ -61,6 +73,20 @@
 
         @include for-size('md') {
             margin-left: 80px;
+        }
+    }
+
+    &-profile {
+        &-button {
+            min-height: 25px !important;
+            height: 25px !important;
+            width: 25px !important;
+
+            @include for-size('md') {
+                min-height: 40px !important;
+                height: 40px !important;
+                width: 40px !important;
+            }
         }
     }
 

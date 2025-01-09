@@ -13,6 +13,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ContentController extends CrudController
@@ -23,6 +24,7 @@ class ContentController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Ce contenu n'existe pas.";
 
     #[Rest\Get('/contents')]
+    #[IsGranted('ROLE_CONTENT_READ')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -31,6 +33,7 @@ class ContentController extends CrudController
     }
 
     #[Rest\Get('/contents/{contentId}', requirements: ['contentId' => '\d+'])]
+    #[IsGranted('ROLE_CONTENT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function getOne(Request $request, int $contentId): View
     {
@@ -38,6 +41,7 @@ class ContentController extends CrudController
     }
 
     #[Rest\Post('/contents/{contentTypeId}/create', requirements: ['contentTypeId' => '\d+'])]
+    #[IsGranted('ROLE_CONTENT_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function addContent(Request $request, ContentTypeManager $ctm): View
     {
@@ -84,6 +88,7 @@ class ContentController extends CrudController
     }
 
     #[Rest\Post('/contents/{contentId}/edit', requirements: ['contentId' => '\d+'])]
+    #[IsGranted('ROLE_CONTENT_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function edit(Request $request, int $contentId): View
     {
@@ -124,6 +129,7 @@ class ContentController extends CrudController
     }
 
     #[Rest\Delete('/contents/{contentId}', requirements: ['contentId' => '\d+'])]
+    #[IsGranted('ROLE_CONTENT_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function delete(Request $request, int $contentId): View
     {
@@ -131,6 +137,7 @@ class ContentController extends CrudController
     }
 
     #[Rest\Get('/contents/{contentId}/translated/{languageId}', requirements: ['contentId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_CONTENT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
     public function getTranslated(Request $request, int $contentId, int $languageId): View
     {
@@ -138,20 +145,12 @@ class ContentController extends CrudController
     }
 
     #[Rest\Get('/contents/{contentTypeId}/availableContent', requirements: ['contentTypeId' => '\d+'])]
+    #[IsGranted('ROLE_CONTENT_READ')]
     #[Rest\View(serializerGroups: ['a_all'])]
     public function getAvailableContent(Request $request, int $contentTypeId): View
     {
         $count = $this->em->getRepository($this->entityClass)->findNumberOfContentForAdmin($contentTypeId);
 
         return $this->view($count, Response::HTTP_OK);
-    }
-
-    #[Rest\Get('/contents/{pageId}/page', requirements: ['pageId' => '\d+'])]
-    #[Rest\View(serializerGroups: ['a_all', 'a_content_one'])]
-    public function getContentFromPageId(Request $request, int $pageId): View
-    {
-        $object = $this->em->getRepository($this->entityClass)->findContentByPageIdForAdmin($pageId);
-
-        return $this->view($object, Response::HTTP_OK);
     }
 }

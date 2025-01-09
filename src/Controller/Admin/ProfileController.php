@@ -2,50 +2,62 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User\User;
-use App\Exception\ApiException;
-use App\Form\Admin\User\UserProfileType;
+use App\Entity\User\Profile;
+use App\Form\Admin\Profile\ProfileType;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
-class ProfileController extends AdminController
+class ProfileController extends CrudController
 {
+    protected const ENTITY_CLASS = Profile::class;
+    protected const TYPE_CLASS = ProfileType::class;
+
+    protected const NOT_FOUND_MESSAGE = "Ce profile n'existe pas.";
     protected const FORM_ERROR_MESSAGE = "Il y a des erreurs dans le formulaire.";
 
-    #[Rest\Get('/profile')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
-    public function getOne(Request $request): View
+    #[Rest\Get('/profiles')]
+    #[IsGranted('ROLE_PROFILE_READ')]
+    #[Rest\QueryParam(map:true, name:'filters', default:'')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_profile_all'])]
+    public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
-        $user = $this->getUser();
-
-        return $this->view($user, Response::HTTP_OK);
+        return parent::getAll($request, $paramFetcher);
     }
 
-    #[Rest\Post('/profile')]
-    #[Rest\View(serializerGroups: ['a_all', 'a_user_one'])]
-    public function edit(Request $request): View
+    #[Rest\Get('/profiles/{profileId}', requirements: ['profileId' => '\d+'])]
+    #[IsGranted('ROLE_PROFILE_READ')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
+    public function getOne(Request $request, int $profileId): View
     {
-        $user = $this->getUser();
+        return parent::getOne($request, $profileId);
+    }
 
-        $form = $this->createForm(UserProfileType::class, $user);
-        $fields = array_replace_recursive($request->request->all(), $request->files->all());
-        $form->submit($fields);
+    #[Rest\Post('/profiles')]
+    #[IsGranted('ROLE_PROFILE_CREATE')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
+    public function add(Request $request): View
+    {
+        return parent::add($request);
+    }
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
-            $errors = $this->fec->getErrorsFromForm($form);
+    #[Rest\Post('/profiles/{profileId}', requirements: ['profileId' => '\d+'])]
+    #[IsGranted('ROLE_PROFILE_EDIT')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
+    public function edit(Request $request, int $profileId): View
+    {
+        return parent::edit($request, $profileId);
+    }
 
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1000, self::FORM_ERROR_MESSAGE, $errors);
-        }
-
-        $this->em->persist($user);
-        $this->em->flush();
-
-        $this->log->log(0, 0, 'Updated object.', User::class, $user->getId());
-
-        return $this->view($user, Response::HTTP_OK);
+    #[Rest\Delete('/profiles/{profileId}', requirements: ['profileId' => '\d+'])]
+    #[IsGranted('ROLE_PROFILE_DELETE')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_profile_one'])]
+    public function delete(Request $request, int $profileId): View
+    {
+        return parent::delete($request, $profileId);
     }
 }

@@ -40,15 +40,6 @@ class ContentController extends EventAbleController
             $contents = array_merge($contents, $this->mf->get('content')->getAllByTypeIdForWebsite($this->getLanguageId(), $contentType->getId()));
         }
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'Content/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -57,7 +48,6 @@ class ContentController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'contents'           => $contents,
-            'pageContent'        => $pageContent,
         ]);
     }
 
@@ -66,20 +56,10 @@ class ContentController extends EventAbleController
         $content = $contents['Content'];
         $page = $content->getContentType()->getPageParent();
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $pageContentElement) {
-                foreach ($pageContentElement->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         return $this->websiteRender('Content/detail.html.twig', [
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'content'            => $content,
-            'pageContent'        => $pageContent,
         ]);
     }
 }
