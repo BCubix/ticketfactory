@@ -76,6 +76,8 @@ class EventPriceCategory
     #[ORM\JoinColumn(nullable: true)]
     private ?EventDate $eventDate = null;
 
+    private ?string $eventDateUuid = null;
+
     public function __construct()
     {
         $this->eventPrices = new ArrayCollection();
@@ -195,6 +197,17 @@ class EventPriceCategory
     {
         $this->eventDate = $eventDate;
 
+        return $this;
+    }
+
+    public function getEventDateUuid(): ?string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 

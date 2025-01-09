@@ -20,7 +20,7 @@ class EventHook extends Hook
         $sObject = $event->getParam('sObject');
         $eventPriceCategories = $sObject->getEventPriceCategories();
         $eventDates = $sObject->getEventDates();
-        
+
         foreach($eventPriceCategories as $eventPriceCategory)
         {
             $uuid = $eventPriceCategory->getEventDateUuid();

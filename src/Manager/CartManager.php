@@ -542,6 +542,7 @@ class CartManager extends AbstractManager
         }
 
         $this->calculateRowsDiscount($cart);
+        $cart->discount = $this->calculateDiscount($cart);
 
         return $cart;
     }

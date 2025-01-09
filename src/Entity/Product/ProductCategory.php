@@ -336,7 +336,7 @@ class ProductCategory extends Datable
     public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
-            $this->products[] = $product;
+            $this->products->add($product);
             $product->addProductCategory($this);
         }
 

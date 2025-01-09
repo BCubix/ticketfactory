@@ -32,7 +32,7 @@ class FeatureValue
     private ?bool $custom = null;
 
     #[ORM\ManyToOne(inversedBy: 'featureValues')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Feature $feature = null;
 
     #[ORM\OneToMany(mappedBy: 'featureValue', targetEntity: FeatureLink::class, orphanRemoval: true)]

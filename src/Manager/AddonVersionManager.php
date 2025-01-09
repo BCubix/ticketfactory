@@ -215,7 +215,7 @@ class AddonVersionManager extends AbstractManager
     {
         $modules = $this->mf->get('module')->getAll();
         $themes = $this->mf->get('theme')->getAll();
-        $addonNames = [];
+        $addonNames = ["TicketFactory"];
 
         foreach ($modules['results'] as $module) {
             $addonNames[] = $module['name'];
@@ -243,7 +243,7 @@ class AddonVersionManager extends AbstractManager
     {
         $lastCheckDate = $this->mf->get('parameter')->getCoreParameter('last_checked_addon_versions');
         $now = new \DateTime();
-        
+
         if (null !== $lastCheckDate) {
             $lastCheckDate = (new \DateTime())->setTimestamp($lastCheckDate);
             $interval = $now->diff($lastCheckDate);
@@ -276,7 +276,7 @@ class AddonVersionManager extends AbstractManager
         if ($updatableModules) {
             $this->mf->get('notification')->createUpdatableAddonNotification("Nouvelle version de module disponible", "Une nouvelle version de module est disponible. Veuillez la télécharger pour bénéficier des dernières fonctionnalités.", 'Module');
         }
-        
+
         if ($updatableThemes) {
             $this->mf->get('notification')->createUpdatableAddonNotification("Nouvelle version de thème disponible", "Une nouvelle version de thème est disponible. Veuillez la télécharger pour bénéficier des dernières fonctionnalités.", 'Theme');
         }
