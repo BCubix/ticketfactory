@@ -15,6 +15,9 @@ import { Constant } from '@/AdminService/Constant';
 import { getDashboardAction } from '@Apps/Home/redux/dashboard/dashboardSlice';
 import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
 
+import { NotesList } from './Notes/NotesList';
+import { ToDoList } from './ToDoList/ToDoList';
+
 export const ThirdCardDashboard = ({ data }) => {
     const dispatch = useDispatch();
     const [editNote, setEditNote] = useState(false);
@@ -104,10 +107,20 @@ export const ThirdCardDashboard = ({ data }) => {
                                 }}
                             >
                                 {editNote ? 'Enregistrer' : 'Modifier'}
+
+                                {editNote ? <Component.NotesList></Component.NotesList> : <></>}
                             </Button>
                         </Box>
                     </Box>
                 )}
+            </Component.CmtCard>
+
+            <Component.CmtCard sx={{ marginTop: 4 }}>
+                <NotesList></NotesList>
+            </Component.CmtCard>
+            
+            <Component.CmtCard sx={{ marginTop: 4 }}>
+                <ToDoList></ToDoList>
             </Component.CmtCard>
         </>
     );

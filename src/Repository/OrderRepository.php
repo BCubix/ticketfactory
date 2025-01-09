@@ -39,4 +39,14 @@ class OrderRepository extends CrudRepository
     {
         parent::__construct($registry, Order::class);
     }
+
+    public function findValidatedOrders(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.status', 'os')
+            ->where('os.keyword = :keyword')
+            ->setParameter('keyword', 'validated')
+            ->getQuery()
+            ->getResult();
+    }
 }

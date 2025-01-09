@@ -11,6 +11,8 @@ import { dashboardSelector, getDashboardAction } from '@Apps/Home/redux/dashboar
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { addonVersionsSelector, getAddonVersionsAction } from '@Apps/AddonVersions/redux/addonVersions/addonVersionsSlice';
 
+import { UpdatesList } from './UpdatesList/UpdatesList';
+
 export const MainDashboard = () => {
     const { loading, dashboard, error } = useSelector(dashboardSelector);
     const { addonVersionsLoading, addonVersions, addonVersionsError } = useSelector(addonVersionsSelector);
@@ -20,6 +22,8 @@ export const MainDashboard = () => {
     const [updateCoreDialog, setUpdateCoreDialog] = useState({ open: false, backupDatabase: false });
     const dispatch = useDispatch();
 
+    console.log('addon version is ', addonVersions);
+    
     useEffect(() => {
         checkMarketplaceConnection();
 
@@ -45,6 +49,8 @@ export const MainDashboard = () => {
         return false;
     }, [parameters, addonVersions]);
 
+    console.log(isCoreUpdatable);
+    
     const handleUpdateCore = async (backupDatabase) => {
         const result = await Api.addonVersionsApi.updateCore(backupDatabase);
         if (result?.result) {
@@ -93,6 +99,13 @@ export const MainDashboard = () => {
                                 </CardContent>
                             </Component.CmtCard>
                         )}
+                        <Component.FirstCardDashboard data={dashboard.col1} />
+                    </Grid>
+                    <Grid item xs={12} md={8} lg={7}>
+                        <Component.SecondCardDashboard data={dashboard.col2} />
+                    </Grid>
+                    <Grid item xs={12} md={2} lg={2}>
+                        <Component.ThirdCardDashboard data={dashboard.col3} />
                     </Grid>
                 </Grid>
             )}
