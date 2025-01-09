@@ -8,7 +8,7 @@ import { PagesForm } from '@Apps/Pages/PagesForm/PagesForm';
 import { PagesList, pagesListCrud } from '@Apps/Pages/PagesList/PagesList';
 import { ImportPageBlock } from '@Apps/Pages/PagesForm/ImportPageBlock';
 import { PageBlockContentPart } from '@Apps/Pages/PagesForm/PageBlockContentPart';
-import { PageHistory } from '@Apps/Pages/PageHistory/PageHistory';
+import { PageHistory, pageHistoryCrud } from '@Apps/Pages/PageHistory/PageHistory';
 import pagesApi from '@Apps/Pages/services/api/pagesApi';
 import pageHistoryApi from '@Apps/Pages/services/api/pageHistoryApi';
 import pagesReducer from '@Apps/Pages/redux/pages/pagesSlice';
@@ -101,6 +101,7 @@ export const initCrud = ({ userRoles }) => {
         list: pagesListCrud,
         add: pagesCreateCrud,
         edit: pagesEditCrud,
+        history: pageHistoryCrud,
     };
 
     setCrud('pages', crud);

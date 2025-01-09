@@ -25,8 +25,8 @@ class EventDate
     /*** < Trait ***/
 
     const STATES = [
-        'valid' => 'Valide',
-        'delayed' => 'Reporté',
+        'valid'    => 'Valide',
+        'delayed'  => 'Reporté',
         'canceled' => 'Annulé',
         'new_date' => 'Nouvelle date'
     ];
@@ -42,8 +42,6 @@ class EventDate
     #[JMS\Groups(['a_event_one'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
-    
-    private string $eventDateUuid;
 
     #[Assert\GreaterThan(value: "1970-01-01", message: 'Vous devez renseigner une date valide.')]
     #[Assert\NotBlank(message: 'La date doit être renseignée.')]
@@ -69,7 +67,7 @@ class EventDate
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
 
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventDate')]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventDates')]
     #[ORM\JoinColumn(nullable: false)]
     private $event;
 
@@ -88,6 +86,9 @@ class EventDate
     #[JMS\Groups(['a_event_one'])]
     #[ORM\OneToMany(mappedBy: 'eventDate', targetEntity: EventPriceCategory::class, cascade: ['persist', 'remove'])]
     private Collection $eventPriceCategories;
+
+    private ?string $eventDateUuid = null;
+
 
     public function __construct()
     {
@@ -109,17 +110,6 @@ class EventDate
     {
         $this->languageGroup = $languageGroup;
 
-        return $this;
-    }
-    
-    public function getEventDateUuid(): string
-    {
-        return $this->eventDateUuid;
-    }
-
-    public function setEventDateUuid(string $eventDateUuid): self
-    {
-        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 
@@ -250,6 +240,58 @@ class EventDate
         if ($this->eventPriceCategories->removeElement($eventPriceCategory)) {
             if ($eventPriceCategory->getEventDate() === $this) {
                 $eventPriceCategory->setEventDate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEventDateUuid(): string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
+        return $this;
+    }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'eventDate'             => $this->eventDate ? $this->eventDate->format('Y-m-d H:i:s') : null,
+            'state'                 => $this->state,
+            'reportDate'            => $this->reportDate ? $this->reportDate->format('Y-m-d H:i:s') : null,
+            'annotation'            => $this->annotation,
+            'eventPriceCategories'  => []
+        ];
+
+        foreach($this->eventPriceCategories as $eventPriceCategory) {
+            $result['eventPriceCategories'][] = $eventPriceCategory->toStringToCompare();
+        }
+
+        return $result;
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        $simpleFields = [
+            'state', 'annotation',
+        ];
+        foreach ($simpleFields as $field) {
+            if (isset($fields[$field])) {
+                $this->$field = $fields[$field];
+            }
+        }
+
+        $dateFields = [
+            'eventDate' => 'eventDate',
+            'reportDate' => 'reportDate',
+        ];
+        foreach ($dateFields as $field => $property) {
+            if (isset($fields[$field]) && $fields[$field] !== null) {
+                $this->$property = \DateTime::createFromFormat('Y-m-d H:i:s', $fields[$field]);
             }
         }
 

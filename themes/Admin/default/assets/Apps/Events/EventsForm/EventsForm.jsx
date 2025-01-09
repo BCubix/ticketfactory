@@ -1,15 +1,17 @@
 import React from 'react';
 import * as Yup from 'yup';
-import { Component } from '@/AdminService/Component';
-import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
-import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 
+import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
 import { eventMainPartForm } from './EventMainPartForm';
 import { eventFeaturesPartForm } from './EventFeaturesPartForm';
 import { eventsPriceFormFields } from './EventsPriceForm';
 import { eventsDateFormFields } from './EventsDateForm';
+
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 
 export const eventsValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
@@ -17,7 +19,7 @@ export const eventsValidationSchema = {
     eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
     mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
     description: Yup.string().required('Veuillez renseigner une description.'),
-    eventDate: Yup.array()
+    eventDates: Yup.array()
         .of(
             Yup.object().shape({
                 eventDate: Yup.string().required('Veuillez renseigner la date.'),
@@ -64,14 +66,14 @@ export const eventsInitialSchema = {
     chapo: (initValues) => initValues?.chapo || '',
     description: (initValues) => initValues?.description || '',
     eventLength: (initValues) => initValues?.eventLength || '',
-    eventDate: (initValues) => {
+    eventDates: (initValues) => {
         return (
-            initValues?.eventDate?.map((el, index) => ({
+            initValues?.eventDates?.map((el, index) => ({
                 ...el,
                 eventDateUuid: uuidv4(),
                 lang: el?.lang?.id || '',
                 index: index,
-            })) || [{ lang: initValues?.lang?.id || '' }]
+            })) || []
         );
     },
 
@@ -79,14 +81,14 @@ export const eventsInitialSchema = {
         initValues?.eventPriceCategories?.map((el, blockIndex) => ({
             ...el,
             lang: el?.lang?.id || '',
-            eventPrices: el?.eventPrices?.map((price, index) => (
-                {
-                    ...price, lang: price?.lang?.id || '', index
-
+            eventPrices:
+                el?.eventPrices?.map((price, index) => ({
+                    ...price,
+                    lang: price?.lang?.id || '',
+                    index,
                 })) || defaultPrices,
             index: blockIndex,
-        }))
-        || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
+        })) || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues, { roomsList }) => initValues?.room?.id || (roomsList?.length === 1 ? roomsList[0]?.id : ''),
     seatingPlan: (initValues) => initValues?.seatingPlan?.id || '',
@@ -95,7 +97,7 @@ export const eventsInitialSchema = {
     tags: (initValues) => (initValues?.tags ? initValues?.tags?.map((el) => el.id) : []),
     mainCategory: (initValues, { categoriesList }) => initValues?.mainCategory?.id || categoriesList?.id,
     multiplePriceCategory: (initValues) => initValues?.eventPriceCategories?.length > 1 || false,
-    multipleDate: (initValues) => initValues?.eventDate?.length > 1 || false,
+    multipleDate: (initValues) => initValues?.eventDates?.length > 1 || false,
     eventMedias: (initValues) =>
         initValues?.eventMedias?.map((el) => ({
             position: el.position,
@@ -112,15 +114,16 @@ export const eventsInitialSchema = {
     displayBookingButton: (initValues) => (initValues?.displayBookingButton || initValues?.displayBookingButton === false ? initValues?.displayBookingButton : true),
     featureLinks: (initValues) =>
         initValues?.featureLinks
-            ? initValues?.featureLinks?.map((el) => ({
-                ...el,
-                event: el?.event?.id,
-                product: el?.product?.id,
-                feature: el?.feature?.id,
-                featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
-                featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
-                featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
-            }))
+            ? initValues?.featureLinks?.map((el, index) => ({
+                  ...el,
+                  event: el?.event?.id,
+                  product: el?.product?.id,
+                  feature: el?.feature?.id,
+                  featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
+                  featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
+                  featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
+                  index: index,
+              }))
             : [],
     seo: SeoInitialValues,
 };
@@ -151,7 +154,7 @@ export const eventsForm = {
             ticketingReference: { type: 'string' },
             displayBookingButton: { type: 'boolean' },
             eventLength: { type: 'string' },
-            eventDate: {
+            eventDates: {
                 type: 'array',
                 subFields: {
                     eventDate: {
@@ -159,7 +162,7 @@ export const eventsForm = {
                             formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
                         },
                     },
-                    eventDateUuid: {type : 'string'},
+                    eventDateUuid: { type: 'string' },
                     annotation: { type: 'string' },
                     state: { type: 'string' },
                     lang: { type: 'string' },
@@ -178,7 +181,7 @@ export const eventsForm = {
                 subFields: {
                     name: { type: 'string' },
                     lang: { type: 'string' },
-                    eventDateUuid: {type : 'string'},
+                    eventDateUuid: { type: 'string' },
                     languageGroup: { type: 'string' },
                     eventPrices: {
                         type: 'array',
@@ -191,7 +194,6 @@ export const eventsForm = {
                             languageGroup: { type: 'string' },
                         },
                     },
-                    
                     eventDate: {
                         eventDate: {
                             function: ({ values, formData, baseName }) => {
@@ -209,7 +211,7 @@ export const eventsForm = {
                                 }
                             },
                         },
-                    }
+                    },
                 },
             },
             eventCategories: {
@@ -282,5 +284,14 @@ export const eventsForm = {
             component: (props) => <Component.EventMediaPartForm {...props} />,
         },
     ],
+    actionButton: ({ initialValues, navigate }) => {
+        return (
+            initialValues && (
+                <Component.ActionButton variant="contained" sx={{ marginLeft: 'auto' }} onClick={() => navigate(Constant.EVENT_HISTORY_BASE_PATH + `/${initialValues?.id}`)}>
+                    Historique de l'événement
+                </Component.ActionButton>
+            )
+        );
+    },
     ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

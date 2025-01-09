@@ -100,4 +100,30 @@ class FeatureLink
 
         return $this;
     }
+
+    public function toStringToCompare(): array
+    {
+        return [
+            'feature' => $this->feature->getId(),
+            'featureValue' => $this->featureValue->getId(),
+            'featureValueRaw' => $this->featureValueRaw,
+        ];
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['feature'])) {
+            $this->feature = $fields['feature'];
+        }
+
+        if (isset($fields['featureValue'])) {
+            $this->featureValue = $fields['featureValue'];
+        }
+
+        if (isset($fields['featureValueRaw'])) {
+            $this->featureValueRaw = $fields['featureValueRaw'];
+        }
+
+        return $this;
+    }
 }

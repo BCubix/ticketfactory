@@ -37,7 +37,11 @@ class PageHook extends Hook
             }
         }
 
-        //$this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
+        foreach ($iObject->getPageBlocks() as &$pageBlock) {
+            $this->sf->get('pageBlockSerializer')->serializePageBlock($pageBlock);
+        }
+
+        $this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
     }
 
     public function hookPageInstantiated(HookEvent $event)

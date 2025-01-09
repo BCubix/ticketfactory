@@ -138,4 +138,18 @@ class PageColumn
 
         return $this;
     }
+
+    public static function toStringToCompare(array $pageColumn): array
+    {
+        return [
+            'content'   => $pageColumn['content'],
+            'xs'        => $pageColumn['xs'],
+            's'         => $pageColumn['s'],
+            'm'         => $pageColumn['m'],
+            'l'         => $pageColumn['l'],
+            'xl'        => $pageColumn['xl'],
+            'class'     => $pageColumn['class'],
+            'type'      => $pageColumn['type'],
+        ];
+    }
 }

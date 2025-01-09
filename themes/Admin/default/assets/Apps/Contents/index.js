@@ -8,9 +8,11 @@ import { ContentsList, contentsListCrud } from '@Apps/Contents/ContentsList/Cont
 import { ContentMenuButton, ContentMenuTitle } from '@Apps/Contents/ContentsList/sc.ContentMenuButton';
 import { CreateContent, contentsCreateCrud } from '@Apps/Contents/CreateContent/CreateContent';
 import { EditContent, contentsEditCrud } from '@Apps/Contents/EditContent/EditContent';
+import { ContentHistory, contentHistoryCrud } from '@Apps/Contents/ContentsHistory/ContentHistory';
 import { ContentCrudList } from './ContentsList/ContentCrudList';
 import contentsReducer from './redux/contents/contentsSlice';
 import contentsApi from './services/api/contentsApi';
+import contentHistoryApi from './services/api/contentHistoryApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { insertSubMenu } from '@/AdminService/Menu';
@@ -27,6 +29,7 @@ const ROLE_EDIT = 'ROLE_CONTENT_EDIT';
 
 export const initConstant = () => {
     setConstant('CONTENTS_BASE_PATH', '/admin/contenus');
+    setConstant('CONTENT_HISTORY_BASE_PATH', '/admin/historique-de-contenu');
 };
 
 export const initComponent = ({ userRoles }) => {
@@ -43,10 +46,12 @@ export const initComponent = ({ userRoles }) => {
     setComponent('ContentMenuButton', ContentMenuButton);
     setComponent('ContentMenuTitle', ContentMenuTitle);
     setComponent('ContentCrudList', ContentCrudList);
+    setComponent('ContentHistory', ContentHistory);
 };
 
 export const initApi = () => {
     setApi('contentsApi', contentsApi);
+    setApi('contentHistoryApi', contentHistoryApi);
 };
 
 export const initAuthenticatedRoutes = ({ userRoles }) => {
@@ -62,6 +67,7 @@ export const initAuthenticatedRoutes = ({ userRoles }) => {
 
     if (checkUserAccess(userRoles, ROLE_EDIT)) {
         setAuthenticatedRoute(`${Constant.CONTENTS_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditContent);
+        setAuthenticatedRoute(`${Constant.CONTENT_HISTORY_BASE_PATH}/:id`, Component.ContentHistory);
     }
 };
 
@@ -82,6 +88,7 @@ export const initCrud = () => {
         list: contentsListCrud,
         add: contentsCreateCrud,
         edit: contentsEditCrud,
+        history: contentHistoryCrud,
     };
 
     setCrud('contents', crud);

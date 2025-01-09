@@ -42,8 +42,6 @@ class EventPriceCategory
     #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
-    
-    private ?string $eventDateUuid = null;
 
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
@@ -66,7 +64,7 @@ class EventPriceCategory
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
-    #[ORM\ManyToOne(targetEntity: SeatingPlan::class, inversedBy: 'eventPriceCategory')]
+    #[ORM\ManyToOne(targetEntity: SeatingPlan::class, inversedBy: 'eventPriceCategories')]
     #[ORM\JoinColumn(nullable: true)]
     private $seatingPlan;
 
@@ -75,6 +73,8 @@ class EventPriceCategory
     #[ORM\ManyToOne(targetEntity: EventDate::class, inversedBy: 'eventPriceCategories', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?EventDate $eventDate = null;
+
+    private ?string $eventDateUuid = null;
 
     public function __construct()
     {
@@ -107,17 +107,6 @@ class EventPriceCategory
     {
         $this->languageGroup = $languageGroup;
 
-        return $this;
-    }
-    
-    public function getEventDateUuid(): ?string
-    {
-        return $this->eventDateUuid;
-    }
-
-    public function setEventDateUuid(string $eventDateUuid): self
-    {
-        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 
@@ -194,6 +183,48 @@ class EventPriceCategory
     public function setEventDate(?EventDate $eventDate): self
     {
         $this->eventDate = $eventDate;
+
+        return $this;
+    }
+
+    public function getEventDateUuid(): ?string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
+        return $this;
+    }
+
+    public function toStringToCompare(): array
+    {
+        $result =  [
+            'name' => $this->name,
+            'eventPrices' => []
+        ];
+
+        foreach ($this->eventPrices as $eventPrice) {
+            $result['eventPrices'][] = $eventPrice->toStringToCompare();
+        }
+
+        return $result;
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['name'])) {
+            $this->name = $fields['name'];
+        }
+
+        if (isset($fields['eventPrices'])) {
+            foreach ($fields['eventPrices'] as $key => $value) {
+                if (isset($this->eventPrices[$key])) {
+                    $this->eventPrices[$key] = $this->eventPrices[$key]->restoreHistory($value);
+                }
+            }
+        }
 
         return $this;
     }

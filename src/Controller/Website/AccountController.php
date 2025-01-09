@@ -73,6 +73,9 @@ class AccountController extends WebsiteController
         $customer = $this->getUser();
 
         $orders = $this->getUser()->getOrders();
+        foreach($orders as $order) {
+            $order->setCart($this->mf->get("cart")->formatCart($order->getCart()));
+        }
 
         return $this->websiteRender('Account/orders.html.twig', [
             'page'     => $page,

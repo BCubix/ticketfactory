@@ -40,8 +40,7 @@ class EventPriceCategoryType extends AdminBaseFormType
                 }
             ])
             ->add('languageGroup',        UuidType::class,            [])
-            
-            ->add('eventDateUuid', UuidType::class, [
+            ->add('eventDateUuid',        UuidType::class, [
                 'required' => false,
             ]);
 

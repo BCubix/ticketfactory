@@ -3,7 +3,6 @@
 namespace App\Controller\Website;
 
 use App\Entity\Customer\Customer;
-use App\Entity\Order\OrderStatus;
 use App\Form\Website\Customer\CustomerType;
 use App\Form\Website\Customer\AddressType;
 
@@ -53,6 +52,7 @@ class OrderController extends WebsiteController
         }
 
         $cart = $this->mf->get("cart")->getCart();
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
 
         return $this->websiteRender('Connection/index.html.twig', [
@@ -63,6 +63,7 @@ class OrderController extends WebsiteController
             'signinPath'         => $this->generateUrl('tf_website_order_login'),
             'orderStep'          => 1,
             "cart"               => $cart,
+            "vouchers"           => $vouchers,
             "discount"           => $discount,
         ]);
     }
@@ -113,6 +114,7 @@ class OrderController extends WebsiteController
         }
 
         $cart = $this->mf->get("cart")->getCart();
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
         $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
@@ -122,6 +124,7 @@ class OrderController extends WebsiteController
             'addressForm'           => $addressForm->createView(),
             'orderStep'             => 2,
             "cart"                  => $cart,
+            "vouchers"              => $vouchers,
             "discount"              => $discount,
             "subscriptionDiscount"  => $subscriptionDiscount
         ]);
@@ -133,6 +136,7 @@ class OrderController extends WebsiteController
         $page = $this->mf->get("page")->getByKeyword('order-payment');
 
         $cart = $this->mf->get("cart")->getCart();
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
         $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
@@ -140,6 +144,7 @@ class OrderController extends WebsiteController
             'page'                  => $page,
             'orderStep'             => 3,
             "cart"                  => $cart,
+            "vouchers"              => $vouchers,
             "discount"              => $discount,
             "subscriptionDiscount"  => $subscriptionDiscount
         ]);
@@ -148,53 +153,25 @@ class OrderController extends WebsiteController
     #[Route("/commande/commande-validee", name: "tf_website_order_validated", priority: 1)]
     public function orderValidated(Request $request)
     {
+        $customer = $this->getUser();
+        $orderId = $request->get('orderId');
+        $order = null === $orderId || null === $customer ? null : $this->mf->get("order")->getOrderForWebsite($orderId, $customer->getId());
         $page = $this->mf->get("page")->getByKeyword('order-validated');
 
-        $cart = $this->mf->get("cart")->getCart();
-        if (null === $cart) {
-            $this->addFlash('Erreur',  "Vous n'avez pas de panier.");
-
-            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
-        }
-
-        $status = $this->em->getRepository(OrderStatus::class)->findOneByKeywordForWebsite("waiting");
-        if (null === $status) {
+        if (null === $customer || null === $order) {
             $this->addFlash('Erreur',  "Une erreur est survenue.");
 
             return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
         }
-
-        $customer = $this->getUser();
-        if (null === $customer) {
-            $this->addFlash('Erreur',  "Une erreur est survenue.");
-
-            return $this->redirect($this->sf->get('urlService')->keywordPath('cart'));
-        }
-
-        $order = $cart->getLinkedOrder();
-        if (null === $order) {
-            $order = $this->mf->get('order')->createNewOrder($customer, $status, $cart);
-
-            $this->mf->get('hook')->exec("actionOrderCreated", [
-                'cObject' => $order,
-            ]);
-        }
-
-        // call to the validatedOrder hook
-        $this->mf->get('hook')->exec('OrderCompleted', [
-            'cart' => $cart,
-        ]);
-
-        $this->mf->get('cart')->createNewCart();
-        $this->em->flush();
 
         return $this->websiteRender("Order/validated.html.twig", [
             'page'      => $page,
+            'order'     => $order,
             'orderStep' => 3,
         ]);
     }
 
-    #[Route("/commande/facture/{orderId}", name: "tf_website_order_invoice", requirements: ['eventId' => '\d+'], priority: 1)]
+    #[Route("/commande/facture/{orderId}", name: "tf_website_order_invoice", requirements: ['orderId' => '\d+'], priority: 1)]
     public function orderInvoice(Request $request, int $orderId)
     {
         // Get Customer object and check for null.

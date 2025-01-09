@@ -64,7 +64,7 @@ class ProductController extends EventAbleController
 
     public function detail(Page $page, array $contents, array $breadcrumbs)
     {
-        return $this->websiteRender('Website/Product/detail.html.twig', [
+        return $this->websiteRender('Product/detail.html.twig', [
             'breadcrumbs'        => $breadcrumbs,
             "page"               => $page,
             "product"            => $contents['Product'],

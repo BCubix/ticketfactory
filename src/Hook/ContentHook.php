@@ -47,6 +47,7 @@ class ContentHook extends Hook
             }
         }
 
+        $this->sf->get('contentSerializer')->serializeContent($iObject);
         $this->mf->get('versionnedEntity')->checkVersionnedEntity($sObject, $iObject);
     }
 }

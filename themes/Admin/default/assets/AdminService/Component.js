@@ -85,12 +85,13 @@ import { CmtMediaPartForm } from '../Components/CmtMediaPart/CmtMediaPartForm';
 import { CmtMoveMedias } from '../Components/CmtMediaPart/CmtMoveMedias';
 import { CmtFeaturesTypeValues } from '@Components/CmtFeaturesTypeValues/CmtFeaturesTypeValues';
 import { CmtFeaturesInputField } from '@Components/CmtFeaturesInputField/CmtFeaturesInputField';
+import { FeatureDroppableBox } from '@Components/CmtFeaturesInputField/sc.FeatureDroppableBox';
 import { TRow } from '@Components/CmtDragAndDrop/sc.TRow';
 import { TBody } from '@Components/CmtDragAndDrop/sc.TBody';
 
 import { CmtSkeletonList } from '@Components/CmtSkeleton/CmtSkeletonList';
 import { CmtSkeletonForm } from '@Components/CmtSkeleton/CmtSkeletonForm';
-import {CmtSkeletonContentList} from '@Components/CmtSkeleton/CmtSkeletonContentList';
+import { CmtSkeletonContentList } from '@Components/CmtSkeleton/CmtSkeletonContentList';
 import { CmtSkeletonOrderDetails } from '@Components/CmtSkeleton/CmtSkeletonOrderDetails';
 import { CmtSkeletonMenus } from '@Components/CmtSkeleton/CmtSkeletonMenus';
 
@@ -133,6 +134,7 @@ const ComponentObj = {
     CmtSelect: CmtSelect,
     CmtFeaturesTypeValues: CmtFeaturesTypeValues,
     CmtFeaturesInputField: CmtFeaturesInputField,
+    FeatureDroppableBox: FeatureDroppableBox,
 
     CmtBooleanFilters: CmtBooleanFilters,
     CmtCategoriesFilters: CmtCategoriesFilters,

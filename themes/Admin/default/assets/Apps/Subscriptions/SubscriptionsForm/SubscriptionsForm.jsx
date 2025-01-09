@@ -166,7 +166,6 @@ export const subscriptionsForm = {
                                 listName: 'eventsList',
                                 getName: (item) => item?.name,
                                 getValue: (item) => item?.id,
-                                required: true,
                                 multiple: true,
                             },
                         },

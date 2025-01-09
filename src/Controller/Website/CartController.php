@@ -18,6 +18,7 @@ class CartController extends WebsiteController
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
         $cart = $this->mf->get("cart")->getCart();
         $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
 
         $this->mf->get("cart")->checkForOldCart();
@@ -26,6 +27,7 @@ class CartController extends WebsiteController
             "breadcrumbs" => $breadcrumbs,
             "cart" => $cart,
             "discount" => $discount,
+            "vouchers" => $vouchers,
             "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
@@ -53,12 +55,14 @@ class CartController extends WebsiteController
         }
 
         $cart = $this->mf->get("cart")->getCart();
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
         $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
         return $this->websiteRender('Cart/_index.html.twig', [
             "cart" => $cart,
             "discount" => $discount,
+            "vouchers" => $vouchers,
             "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
@@ -84,12 +88,14 @@ class CartController extends WebsiteController
         }
 
         $cart = $this->mf->get("cart")->getCart();
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
         $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
         return $this->websiteRender('Cart/_index.html.twig', [
             "cart" => $cart,
             "discount" => $discount,
+            "vouchers" => $vouchers,
             "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
@@ -107,12 +113,14 @@ class CartController extends WebsiteController
         $this->mf->get("cart")->deleteEventSeats(['eventRowId' => $eventRowId, 'eventPriceId' => $eventPriceId]);
 
         $cart = $this->mf->get("cart")->getCart();
+        $vouchers = $this->mf->get("cart")->getVouchers($cart);
         $discount = $this->mf->get("cart")->calculateDiscount($cart);
         $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
         return $this->websiteRender('Cart/_index.html.twig', [
             "cart" => $cart,
             "discount" => $discount,
+            "vouchers" => $vouchers,
             "subscriptionDiscount" => $subscriptionDiscount
         ]);
     }
@@ -132,12 +140,14 @@ class CartController extends WebsiteController
             $this->mf->get("cart")->addVoucher($cart, $code);
 
             $cart = $this->mf->get("cart")->getCart();
+            $vouchers = $this->mf->get("cart")->getVouchers($cart);
             $discount = $this->mf->get("cart")->calculateDiscount($cart);
             $subscriptionDiscount = $this->mf->get("subscription")->findSubscriptionForCart($cart);
 
             return $this->websiteRender('Cart/_index.html.twig', [
                 "cart" => $cart,
                 "discount" => $discount,
+                "vouchers" => $vouchers,
                 "subscriptionDiscount" => $subscriptionDiscount
             ]);
         }

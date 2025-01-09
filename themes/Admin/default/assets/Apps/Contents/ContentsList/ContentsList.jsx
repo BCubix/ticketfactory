@@ -1,13 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import {
-    Drawer,
-    IconButton,
-    List,
-    ListItemText,
-    Typography,
-} from '@mui/material';
+import { Drawer, IconButton, List, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -65,7 +59,7 @@ export const contentsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     contentTypes: {},
-    loadDataAction: () => getContentsAction(),
+    loadDataAction: (contentTypeKey, filters) => getContentsAction(contentTypeKey, filters),
     changeFiltersActions: (objectData, props, page) => changeContentsFilters(objectData, props, page),
     dataSelector: contentsSelector,
     dataList: (selector) => selector.contents,
@@ -150,13 +144,7 @@ export const ContentsList = () => {
     }, [Crud.contents.list.contentTypes, contentTypeKey]);
 
     if (!loaded) {
-        return (
-            <Component.CmtSkeletonContentList
-                theme={theme}
-                contentMargin={contentMargin}
-                sidebarOpen={sidebarOpen}
-            />
-        );
+        return <Component.CmtSkeletonContentList theme={theme} contentMargin={contentMargin} sidebarOpen={sidebarOpen} />;
     }
 
     return (
@@ -193,6 +181,7 @@ export const ContentsList = () => {
                                 },
                             }}
                             objectData={contentData[contentTypeKey] || {}}
+                            contentTypeKey={contentTypeKey}
                         />
                     </Box>
                 )}

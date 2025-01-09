@@ -191,4 +191,53 @@ class PageBlock extends Datable
 
         return $this;
     }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'name'          => $this->name,
+            'saveAsModel'   => $this->saveAsModel,
+            'class'         => $this->class,
+            'pageBlockType' => null !== $this->pageBlockType ? $this->pageBlockType->toStringToCompare() : null,
+            'fields'        => $this->fields,
+            'columns'       => [],
+        ];
+
+        foreach ($this->columns as $column) {
+            $result['columns'][] = PageColumn::toStringToCompare($column);
+        }
+
+        return $result;
+    }
+
+    public function __clone()
+    {
+        $this->columns = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->columns);
+        $this->fields = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->fields);
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['name'])) {
+            $this->name = $fields['name'];
+        }
+
+        if (isset($fields['saveAsModel'])) {
+            $this->saveAsModel = $fields['saveAsModel'];
+        }
+
+        if (isset($fields['class'])) {
+            $this->class = $fields['class'];
+        }
+
+        if (isset($fields['fields'])) {
+            $this->fields = array_replace_recursive($this->fields, $fields['fields']);
+        }
+
+        if (isset($fields['columns'])) {
+            $this->columns = array_replace_recursive($this->columns, $fields['columns']);
+        }
+
+        return $this;
+    }
 }

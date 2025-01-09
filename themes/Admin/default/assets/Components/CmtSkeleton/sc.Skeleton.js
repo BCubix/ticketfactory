@@ -19,9 +19,11 @@ export const StyledBox = styled(Box)(({ mt, mb, ml, mr, p, display, flex, flexDi
     borderRadius: borderRadius || 0,
 }));
 
-export const ColoredSkeleton = styled(Skeleton)(({ theme, color }) => ({
+export const ColoredSkeleton = styled(Skeleton, {
+    shouldForwardProp: (prop) => prop !== 'color',
+})(({ theme, color }) => ({
     backgroundColor: typeof color === 'function' ? color(theme) : color,
-}))
+}));
 
 //Content List
 export const ContentListBox = styled(Box)(({ contentMargin }) => ({

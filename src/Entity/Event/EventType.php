@@ -15,7 +15,7 @@ use Symfony\Component\Uid\Uuid;
 class EventType extends Datable
 {
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_type_all', 'a_event_type_one', 'a_event_all', 'a_event_one'])]
+    #[JMS\Groups(['a_event_type_all', 'a_event_type_one', 'a_event_all', 'a_event_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

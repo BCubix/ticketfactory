@@ -3,12 +3,12 @@
 namespace App\Manager;
 
 use App\Entity\Content\Content;
+use App\Entity\Content\ContentType;
 use App\Entity\Event\Event;
 use App\Entity\Page\Page;
 use App\Entity\VersionnedEntity\VersionnedEntity;
 use App\Exception\ApiException;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,8 +17,8 @@ class VersionnedEntityManager extends AbstractManager
     public const SERVICE_NAME = 'versionnedEntity';
 
     private const SUPPORTED_TYPES = [
-        'content' => Content::class,
         'event'   => Event::class,
+        'content' => Content::class,
         'page'    => Page::class
     ];
 
@@ -30,7 +30,10 @@ class VersionnedEntityManager extends AbstractManager
             return;
         }
 
-        $changeSet = $this->compareObjects($newEntity, $oldEntity);
+        $oldEntityCompareArray = $oldEntity->toStringToCompare();
+        $newEntityCompareArray = $newEntity->toStringToCompare();
+
+        $changeSet = $this->compareObjects($newEntityCompareArray, $oldEntityCompareArray);
         if (isset($changeSet['createdAt'])) {
             unset($changeSet['createdAt']);
         }
@@ -61,7 +64,12 @@ class VersionnedEntityManager extends AbstractManager
 
     public function getEntityVersions(string $entityKeyword, int $entityId): array
     {
-        return $this->em->getRepository(VersionnedEntity::class)->findEntityVersionsForAdmin($entityKeyword, $entityId);
+        $versions = $this->em->getRepository(VersionnedEntity::class)->findEntityVersionsForAdmin($entityKeyword, $entityId);
+        foreach ($versions as &$version) {
+            $version = $this->deSerializeVersionnedEntity($version);
+        }
+
+        return $versions;
     }
 
     public function restoreEntityVersion(string $entityKeyword, int $versionId): ?Object
@@ -75,6 +83,8 @@ class VersionnedEntityManager extends AbstractManager
         $object = $this->em->getRepository($keyword)->findOneForAdmin($version->getEntityId());
 
         $this->restoreFieldsVersion($object, $version->getFields());
+
+        return $object;
     }
 
     public function getKeyword(?Object $entity): ?string
@@ -100,93 +110,59 @@ class VersionnedEntityManager extends AbstractManager
         return self::SUPPORTED_TYPES[$keyword];
     }
 
-    protected function compareObjects(Object $newEntity, Object $oldEntity): array
+    public function deSerializeVersionnedEntity(VersionnedEntity $entity)
     {
-        if (property_exists($newEntity, 'id')) {
-            $key = $this->getKeyword($newEntity) . '-' . $newEntity->getId();
-            if (false !== array_search($key, $this->parsedObjects)) {
-                return [];
-            }
-
-            $this->parsedObjects[] = $key;
+        if ($entity->getEntityKeyword() === "event") {
+            $entity->setFields($this->mf->get('eventHistory')->deSerializeEventHistoryFields($entity->getFields()));
+            return $entity;
         }
 
-        $changeSet = [];
-
-        $reflectionObj = new \ReflectionClass($newEntity);
-        $properties = $reflectionObj->getProperties();
-        $className = $reflectionObj->getName();
-
-        foreach ($properties as $property) {
-            $propertyName = $property->getName();
-            if ($propertyName == 'id') {
-                continue;
-            }
-
-            $reflectionProperty = new \ReflectionProperty($className, $propertyName);
-            $reflectionProperty->setAccessible(true);
-
-            $oldValue = $reflectionProperty->getValue($oldEntity);
-            $newValue = $reflectionProperty->getValue($newEntity);
-
-            if (is_object($newValue)) {
-                if ($newValue instanceof Collection) {
-                    $childChangeSet = $this->compareCollections($newValue, $oldValue);
-                } else {
-                    $childChangeSet = $this->compareObjects($newValue, $oldValue);
-                }
-
-                if (count($childChangeSet) > 0) {
-                    $changeSet[$propertyName] = $childChangeSet;
-                }
-            } elseif ($oldValue !== $newValue) {
-                $changeSet[$propertyName] = ['before' => $oldValue, 'after' => $newValue];
-            }
+        if ($entity->getEntityKeyword() === "page") {
+            return $this->deSerializePageVersion($entity);
         }
 
-        return $changeSet;
+        if ($entity->getEntityKeyword() === "content") {
+            return $this->deSerializeContentVersion($entity);
+        }
     }
 
-    protected function compareCollections(Collection $newCollection, Collection $oldCollection): array
+    protected function compareObjects($newObject, $oldObject): mixed
     {
         $changeSet = [];
 
-        $refCollection = $newCollection;
-        $othCollection = $oldCollection;
-        $refIsNew = true;
-
-        if (count($refCollection) < count($othCollection)) {
-            $refCollection = $oldCollection;
-            $othCollection = $newCollection;
-            $refIsNew = false;
+        if (!is_array($newObject) || !is_array($oldObject)) {
+            return $newObject !== $oldObject ? $oldObject : [];
         }
 
-        foreach ($refCollection as $key => $refElement) {
-            $othElement = $othCollection->get($key);
-            $newElement = ($refIsNew ? $refElement : $othElement);
-            $oldElement = ($refIsNew ? $othElement : $refElement);
-
-            if (gettype($oldElement) != gettype($newElement)) {
-                $changeSet[] = ['before' => $oldElement, 'after' => $newElement];
-                break;
+        foreach ($oldObject as $key => $oldObjectElement) {
+            if (!array_key_exists($key, $newObject)) {
+                $changeSet[$key] = $oldObjectElement;
             }
 
-            if (is_object($newElement)) {
-                if ($newElement instanceof Collection) {
-                    $childChangeSet = $this->compareCollections($newElement, $oldElement);
+            if (is_array($newObject[$key]) || is_array($oldObject[$key])) {
+                if (is_array($newObject[$key]) && is_array($oldObject[$key])) {
+                    foreach ($oldObject[$key] as $oldObjectKeyIndex => $oldObjectKeyElement) {
+                        if (!array_key_exists($oldObjectKeyIndex, $newObject[$key])) {
+                            $changeSet[$key][$oldObjectKeyIndex] = $oldObjectKeyElement;
+                        } else {
+                            $result = $this->compareObjects($newObject[$key][$oldObjectKeyIndex], $oldObjectKeyElement);
+                            if (!empty($result)) {
+                                $changeSet[$key][$oldObjectKeyIndex] = $result;
+                            }
+                        }
+                    }
                 } else {
-                    $childChangeSet = $this->compareObjects($newElement, $oldElement);
+                    $changeSet[$key] = $oldObject[$key];
                 }
-
-                if (count($childChangeSet) > 0) {
-                    $changeSet[] = $childChangeSet;
+            } else if (is_object($newObject[$key]) && is_object($oldObject[$key])) {
+                $result = $this->compareObjects($newObject[$key], $oldObject[$key]);
+                if (!empty($result)) {
+                    $changeSet[$key] = $result;
                 }
-                break;
-            }
-
-            if ($newElement != $oldElement) {
-                $changeSet[] = ['before' => $newElement, 'after' => $oldElement];
-                break;
+            } else {
+                if ($newObject[$key] !== $oldObject[$key]) {
+                    $changeSet[$key] = $oldObject[$key];
+                }
             }
         }
 
@@ -195,24 +171,109 @@ class VersionnedEntityManager extends AbstractManager
 
     private function restoreFieldsVersion(Object &$object, array $fields): void
     {
-        foreach ($fields as $fName => $fValues) {
-            $reflectionProperty = new \ReflectionProperty(ClassUtils::getClass($object), $fName);
-            $reflectionProperty->setAccessible(true);
+        if ($this->getKeyword($object) === "event") {
+            $fields = $this->mf->get('eventHistory')->deSerializeEventHistoryFields($fields);
+        }
 
-            // Simple element
-            if (isset($fValues['after'])) {
-                $reflectionProperty->setValue($object, $fValues['after']);
+        $object->restoreHistory($fields);
+
+        $this->em->persist($object);
+        $this->em->flush();
+    }
+
+    private function deSerializePageVersion(VersionnedEntity $entity)
+    {
+        $page = $this->em->getRepository(Page::class)->find($entity->getEntityId());
+        if (null === $page || !isset($entity->getFields()['pageBlocks'])) {
+            return $entity;
+        }
+
+        $pagePageBlocks = $page->getPageBlocks()->toArray();
+        $fields = $entity->getFields();
+        foreach ($fields['pageBlocks'] as $key => &$pageBlock) {
+            if (isset($pageBlock['fields']) && isset($pagePageBlocks[$key]) && null !== $pagePageBlocks[$key]->getPageBlockType()) {
+                $pageBlockType = $pagePageBlocks[$key]->getPageBlockType();
+
+                foreach ($pageBlock['fields'] as $contentFieldName => &$contentField) {
+                    foreach ($pageBlockType->getFields() as $pageBlockTypeField) {
+                        if ($contentFieldName == $pageBlockTypeField->getName()) {
+                            $component = $this->mf->get('contentType')->getContentTypeInstanceFromType($pageBlockTypeField->getType());
+
+                            if (method_exists($component, "jsonContentDeserialize")) {
+                                $contentField = $component->jsonContentDeserialize($contentField, $pageBlockTypeField);
+                            } else {
+                                $contentField = $contentField;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
                 continue;
             }
 
-            // Collection element
-            $getMethod = 'get' . ucfirst(substr($fName, 0, -1)) . 's';
-            foreach ($object->$getMethod() as &$childObject) {
-                foreach ($fValues as $fValue) {
-                    $this->restoreFieldsVersion($childObject, $fValue);
+            if (!isset($pageBlock['columns'])) {
+                continue;
+            }
+
+            $pagePageColumns = [];
+            if (isset($pagePageBlocks[$key])) {
+                $pagePageColumns = $pagePageBlocks[$key]->getColumns() ?? [];
+            }
+
+            foreach ($pageBlock['columns'] as $columnKey => &$column) {
+                if (isset($column['content']) && isset($pagePageColumns[$columnKey])) {
+                    $typeInstance = $this->mf->get('page')->getPageColumnInstanceFromType($pagePageColumns[$columnKey]->getType());
+                    if (method_exists($typeInstance, "jsonContentDeserialize")) {
+                        $column['content'] = $typeInstance->jsonContentDeserialize($column['content']);
+                    }
+                }
+            }
+        }
+
+        $entity->setFields($fields);
+
+        return $entity;
+    }
+
+    private function deSerializeContentVersion(VersionnedEntity $entity)
+    {
+        $content = $this->em->getRepository(Content::class)->find($entity->getEntityId());
+        if (null === $content) {
+            return $entity;
+        }
+
+        $fields = $entity->getFields();
+        $contentType = $content->getContentType();
+        if (!isset($fields['fields'])) {
+            return $entity;
+        }
+
+        foreach ($fields['fields'] as $contentFieldName => &$contentField) {
+            $contentTypeFields = $contentType->getFields();
+            if ((count($contentTypeFields) > 0) && is_array($contentTypeFields[0])) {
+                $contentType = ContentType::jsonDeserialize($contentType);
+                $contentTypeFields = $contentType->getFields();
+            }
+
+            foreach ($contentType->getFields() as $contentTypeField) {
+                if ($contentFieldName == $contentTypeField->getName()) {
+                    $component = $this->mf->get('contentType')->getContentTypeInstanceFromType($contentTypeField->getType());
+
+                    if (method_exists($component, "jsonContentDeserialize")) {
+                        $contentField = $component->jsonContentDeserialize($contentField, $contentTypeField);
+                    } else {
+                        $contentField = $contentField;
+                    }
+
                     break;
                 }
             }
         }
+
+        $entity->setFields($fields);
+
+        return $entity;
     }
 }

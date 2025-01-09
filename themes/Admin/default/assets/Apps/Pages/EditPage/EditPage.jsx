@@ -1,20 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { pagesInitialSchema, pagesValidationSchema, pagesForm } from '../PagesForm/PagesForm';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
+
+import { Crud } from '@/AdminService/Crud';
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getPagesAction } from '@Apps/Pages/redux/pages/pagesSlice';
-import { pagesInitialSchema, pagesValidationSchema, pagesForm } from '../PagesForm/PagesForm';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import { Crud } from '@/AdminService/Crud';
 import { getUserRoles } from '@Services/utils/getUserRoles';
 import { checkUserAccess } from '@Services/utils/checkUserAccess';
-import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
-import { useSelector } from 'react-redux';
 
 const ROLE_PAGE_PUBLISH = 'ROLE_PAGE_PUBLISH';
 

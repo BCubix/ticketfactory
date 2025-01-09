@@ -11,6 +11,7 @@ import EventIcon from '@mui/icons-material/Event';
 import { Component } from '@/AdminService/Component';
 import { format, parse } from 'date-fns';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import moment from 'moment';
 
 export const EventsPriceCategoryForm = ({
     dataPath = 'eventPriceCategories',
@@ -31,6 +32,7 @@ export const EventsPriceCategoryForm = ({
     const getNestedValue = (path, object) => {
         return path.split('.').reduce((acc, key) => acc?.[key], object);
     };
+
     const getBlockError = (index) => {
         const err = getNestedFormikError(getNestedValue(dataPath, touched), getNestedValue(dataPath, errors), index, 'eventPrices');
         if (typeof err === 'string') {
@@ -39,11 +41,7 @@ export const EventsPriceCategoryForm = ({
 
         return '';
     };
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const parsedDate = parse(dateString, 'yyyy-MM-dd HH:mm:ss', new Date());
-        return format(parsedDate, 'dd/MM/yyyy');
-    };
+
     // End of helper functions
 
     const [deleteMultiple, setDeleteMultiple] = useState(false);
@@ -108,68 +106,64 @@ export const EventsPriceCategoryForm = ({
                             )}
                         </Box>
                         {eventPriceCategories?.map((item, index) => {
-                            if (selectedDate !== null && item.eventDate?.eventDate !== selectedDate?.eventDate)
-                                {
-                                    return null;
-                                }
+                            if (selectedDate !== null && item.eventDate?.eventDate !== selectedDate?.eventDate) {
+                                return null;
+                            }
 
-                            return <Component.CmtFormBlock title={values?.multiplePriceCategory ? '' : item?.name} marginBlock={7} key={index}>
-                                {values?.multiplePriceCategory && (
-                                    <Box className="block-title">
-                                        <Component.CmtTextField
-                                            value={item.name}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            required
-                                            label="Nom"
-                                            name={`${dataPath}.${index}.name`}
-                                            error={getNestedFormikError(touched?.eventPriceCategories, errors?.eventPriceCategories, index, 'name')}
-                                        />
-                                    </Box>
-                                )}
-                                <Component.EventsPriceForm
-                                    dataPath={dataPath}
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                    setFieldTouched={setFieldTouched}
-                                    touched={touched?.eventPriceCategories && touched.eventPriceCategories[index]}
-                                    errors={errors?.eventPriceCategories && errors.eventPriceCategories[index]}
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    blockIndex={index}
-                                    fields={fields}
-                                />
-                                
-                                {item?.eventDate && item?.eventDate !== "" && selectedDate === null &&
-                                    <Box className="block-notification">
-                                        <EventIcon className="block-notification__icon"/>
-                                        
-                                        <Typography>
-                                            {formatDate(item?.eventDate?.eventDate)}
-                                        </Typography>
-                                    </Box>
-                                
-                                }
+                            return (
+                                <Component.CmtFormBlock title={values?.multiplePriceCategory ? '' : item?.name} marginBlock={7} key={index}>
+                                    {values?.multiplePriceCategory && (
+                                        <Box className="block-title">
+                                            <Component.CmtTextField
+                                                value={item.name}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                required
+                                                label="Nom"
+                                                name={`${dataPath}.${index}.name`}
+                                                error={getNestedFormikError(touched?.eventPriceCategories, errors?.eventPriceCategories, index, 'name')}
+                                            />
+                                        </Box>
+                                    )}
+                                    <Component.EventsPriceForm
+                                        dataPath={dataPath}
+                                        values={values}
+                                        setFieldValue={setFieldValue}
+                                        setFieldTouched={setFieldTouched}
+                                        touched={touched?.eventPriceCategories && touched.eventPriceCategories[index]}
+                                        errors={errors?.eventPriceCategories && errors.eventPriceCategories[index]}
+                                        handleBlur={handleBlur}
+                                        handleChange={handleChange}
+                                        blockIndex={index}
+                                        fields={fields}
+                                    />
 
-                                {getBlockError(index) && (
-                                    <FormHelperText error id={`${dataPath}-${index}-helper-text`}>
-                                        {getBlockError(index)}
-                                    </FormHelperText>
-                                )}
+                                    {item?.eventDate && item?.eventDate !== '' && selectedDate === null && (
+                                        <Box className="block-notification">
+                                            <EventIcon className="block-notification__icon" />
 
-                                {values.multiplePriceCategory && (
-                                    <Component.DeleteBlockFabButton
-                                        size="small"
-                                        onClick={() => {
-                                            remove(index);
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </Component.DeleteBlockFabButton>
-                                )}
+                                            <Typography>{moment(item.eventDate.eventDate).format('d/MM/yyyy HH:mm')}</Typography>
+                                        </Box>
+                                    )}
 
-                            </Component.CmtFormBlock>
+                                    {getBlockError(index) && (
+                                        <FormHelperText error id={`${dataPath}-${index}-helper-text`}>
+                                            {getBlockError(index)}
+                                        </FormHelperText>
+                                    )}
 
+                                    {values.multiplePriceCategory && (
+                                        <Component.DeleteBlockFabButton
+                                            size="small"
+                                            onClick={() => {
+                                                remove(index);
+                                            }}
+                                        >
+                                            <DeleteIcon />
+                                        </Component.DeleteBlockFabButton>
+                                    )}
+                                </Component.CmtFormBlock>
+                            );
                         })}
                     </Box>
                 )}

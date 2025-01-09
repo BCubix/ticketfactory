@@ -182,4 +182,37 @@ class Content extends Datable
     {
         return array_keys(self::PUBLICATION_STATUS);
     }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'title'       => $this->title,
+            'slug'        => $this->slug,
+            'fields'      => $this->fields,
+        ];
+
+        return $result;
+    }
+
+    public function __clone()
+    {
+        $this->fields = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->fields);
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['title'])) {
+            $this->title = $fields['title'];
+        }
+
+        if (isset($fields['slug'])) {
+            $this->slug = $fields['slug'];
+        }
+
+        if (isset($fields['fields'])) {
+            $this->fields = array_replace_recursive($this->fields, $fields['fields']);
+        }
+
+        return $this;
+    }
 }

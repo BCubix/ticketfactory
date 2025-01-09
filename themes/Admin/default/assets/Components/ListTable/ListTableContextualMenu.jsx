@@ -36,7 +36,7 @@ export const ListTableContextualMenu = ({
 
     return (
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-            {accessUserDelete && (
+            {accessUserDelete !== false && (
                 <MenuItem
                     onClick={(e) => {
                         e.stopPropagation();
@@ -52,7 +52,7 @@ export const ListTableContextualMenu = ({
                 </MenuItem>
             )}
 
-            {accessUserCreate && null !== onTranslate && languageList?.length > 0 && (
+            {accessUserCreate !== false && null !== onTranslate && languageList?.length > 0 && (
                 <MenuItem
                     onClick={(e) => {
                         e.stopPropagation();
@@ -67,7 +67,7 @@ export const ListTableContextualMenu = ({
                 </MenuItem>
             )}
 
-            {accessUserCreate && onDuplicate && (
+            {accessUserCreate !== false && onDuplicate && (
                 <MenuItem
                     sx={{
                         color: '#1b5e20',

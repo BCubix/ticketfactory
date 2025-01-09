@@ -37,7 +37,8 @@ class OrderManager extends AbstractManager
 
     public function createNewOrder(Customer $customer, OrderStatus $status, Cart $cart): ?Order
     {
-        $order = new order();
+        $order = new Order();
+        $order->setActive(true);
         $order->setStatus($status);
         $order->setCustomer($customer);
         $order->setCart($cart);
@@ -57,8 +58,24 @@ class OrderManager extends AbstractManager
             }
 
             $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
-            if (method_exists($class, "createNewOrder")) {
-                $class->createNewOrder($event, $cart, $order);
+            $className = get_class($class);  // use name to be able to store as key
+
+            // Add product to the ticketing class group
+            if (!isset($ticketingGroupedEvents[$className])) {
+                $ticketingGroupedEvents[$className] = [];
+            }
+            $ticketingGroupedEvents[$className][] = $row;
+        }
+
+        // Call createNewOrder once per ticketing class
+        foreach ($ticketingGroupedEvents as $className => $events) {
+            $ticketing = $events[0]->getEvent()->getTicketing();
+            $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
+
+            if (method_exists($class, 'createNewOrder')) {
+                if (!$class->createNewOrder($events, $cart, $order)) {
+                    return null;
+                }
             }
         }
 
@@ -307,7 +324,14 @@ class OrderManager extends AbstractManager
 
     public function getOrderForWebsite(int $orderId, int $customerId): ?Order
     {
-        return $this->em->getRepository(Order::class)->findOneForWebsite($orderId, $customerId);
+        $order = $this->em->getRepository(Order::class)->findOneForWebsite($orderId, $customerId);
+        if (null === $order) {
+            return null;
+        }
+
+        $order->setCart($this->mf->get('cart')->formatCart($order->getCart()));
+
+        return $order;
     }
 
     public function getInvoiceFile(Order $order)

@@ -30,14 +30,14 @@ export const eventsDateFormFields = {
                         value={item.eventDate}
                         disablePast
                         label="Date"
-                        id={`eventDate-${index}-eventDate`}
+                        id={`eventDates-${index}-eventDate`}
                         required
-                        name={`eventDate.${index}.eventDate`}
+                        name={`eventDates.${index}.eventDate`}
                         setValue={(value) => {
-                            setFieldValue(`eventDate.${index}.eventDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : '');
+                            setFieldValue(`eventDates.${index}.eventDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : '');
                         }}
                         onTouched={setFieldTouched}
-                        error={getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index)?.eventDate, index, 'eventDate')}
+                        error={getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index)?.eventDate, index, 'eventDate')}
                     />
                 </>
             ),
@@ -47,7 +47,7 @@ export const eventsDateFormFields = {
             style: { xs: 12 },
             input: ({ index, item }) => {
                 return {
-                    name: `eventDate.${index}.annotation`,
+                    name: `eventDates.${index}.annotation`,
                     label: 'Annotation',
                     inputType: 'textField',
                     value: item.annotation,
@@ -58,24 +58,21 @@ export const eventsDateFormFields = {
             keyId: 'input-date-state',
             style: { xs: 12 },
             component: ({ touched, errors, index, item, handleBlur, setFieldValue, states }) => (
-                <FormControl
-                    fullWidth
-                    error={Boolean(getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index), index, 'state'))}
-                >
-                    <InputLabel id={`eventDate-${index}-stateLabel`} required size="small">
+                <FormControl fullWidth error={Boolean(getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state'))}>
+                    <InputLabel id={`eventDates-${index}-stateLabel`} required size="small">
                         Status
                     </InputLabel>
                     <Select
-                        labelId={`eventDate-${index}-stateLabel`}
-                        id={`eventDate-${index}-state`}
+                        labelId={`eventDates-${index}-stateLabel`}
+                        id={`eventDates-${index}-state`}
                         size="small"
                         value={item.state}
                         onBlur={handleBlur}
-                        name={`eventDate.${index}.state`}
+                        name={`eventDates.${index}.state`}
                         variant="standard"
                         label="Status"
                         onChange={(e) => {
-                            setFieldValue(`eventDate.${index}.state`, e.target.value);
+                            setFieldValue(`eventDates.${index}.state`, e.target.value);
                         }}
                     >
                         {states?.map((item, index) => (
@@ -88,9 +85,9 @@ export const eventsDateFormFields = {
                             </MenuItem>
                         ))}
                     </Select>
-                    {getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index), index, 'state') && (
-                        <FormHelperText error id={`eventDate-${index}-state-helper-text`}>
-                            {getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index), index, 'state')}
+                    {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state') && (
+                        <FormHelperText error id={`eventDates-${index}-state-helper-text`}>
+                            {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state')}
                         </FormHelperText>
                     )}
                 </FormControl>
@@ -102,15 +99,13 @@ export const eventsDateFormFields = {
             input: ({ index, item }) =>
                 item?.state === 'delayed'
                     ? {
-                          name: `eventDate.${index}.reportDate`,
+                          name: `eventDates.${index}.reportDate`,
                           label: 'Date de report',
                           inputType: 'dateTime',
                           disablePast: true,
                           value: item.reportDate,
-                          error: ({ errors, touched }) =>
-                              getNestedFormikError(touched?.eventDate?.at(index), errors?.eventDate?.at(index)?.eventDate, index, 'reportDate'),
-                          setValue: (value, setFieldValue) =>
-                              setFieldValue(`eventDate.${index}.reportDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : ''),
+                          error: ({ errors, touched }) => getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index)?.eventDate, index, 'reportDate'),
+                          setValue: (value, setFieldValue) => setFieldValue(`eventDates.${index}.reportDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : ''),
                       }
                     : null,
         },
@@ -147,36 +142,23 @@ const DisplayBadge = ({ item }) => {
 };
 
 export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...props }) => {
-    
     const theme = useTheme();
     const [generateDate, setGenerateDate] = useState(null);
-    const index = useRef(values?.eventDate?.length || 0);
-    const blockIndex = useRef(values?.eventDateBlocks?.length || 0);
+    const index = useRef(values?.eventDates?.length || 0);
 
     const getDefaultMode = () => {
-        const eventType =  props.parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
-        if (eventType === 'Pièces' || eventType === 'Evénements')
-        {
+        const eventType = props.parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
+        if (eventType === 'Pièces' || eventType === 'Evénements') {
             return 'card';
-        }
-        else if (eventType === 'Films' || eventType === 'Expositions')
-        {
+        } else if (eventType === 'Films' || eventType === 'Expositions') {
             return 'week';
-        }
-        else if (eventType === 'Concerts' || eventType === 'Ballets')
-        {
+        } else if (eventType === 'Concerts' || eventType === 'Ballets') {
             return 'month';
         }
         return 'day';
-    }
+    };
 
     const [visionMode, setVisionMode] = useState(getDefaultMode());
-
-    useEffect(() => {
-        if (values.eventDate && values.eventDate.length > 0) {
-            setFieldValue('eventDate ', [values.eventDate]);
-        }
-    }, []);
 
     const STATES = [
         { label: 'Valide', value: 'valid', color: theme.palette.dateStatus.valid },
@@ -186,45 +168,41 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
     ];
 
     return (
-        
-        <FieldArray name={`eventDate`}>
+        <FieldArray name={`eventDates`}>
             {({ remove, push }) => (
-                
                 <Box className="padding-2">
                     <Box>
                         <Box className="block-head">
-                        <ButtonGroup variant="contained" color="primary">
-                            <Component.ActionButton
-                                size="small"
-                                color="primary"
-                                variant={visionMode === 'card' ? 'outlined' : 'contained'}
-                                onClick={() => setVisionMode('card')}
-                            >
-                                Carte
-                            </Component.ActionButton>
-                            <Component.ActionButton
-                                size="small"
-                                color="primary"
-                                variant={visionMode === 'month' ? 'outlined' : 'contained'}
-                                onClick={() => setVisionMode('month')}
-                            >
-                                Calendrier
-                            </Component.ActionButton>
+                            <ButtonGroup variant="contained" color="primary">
+                                <Component.ActionButton
+                                    size="small"
+                                    color="primary"
+                                    variant={visionMode === 'card' ? 'outlined' : 'contained'}
+                                    onClick={() => setVisionMode('card')}
+                                >
+                                    Carte
+                                </Component.ActionButton>
+                                <Component.ActionButton
+                                    size="small"
+                                    color="primary"
+                                    variant={visionMode === 'month' ? 'outlined' : 'contained'}
+                                    onClick={() => setVisionMode('month')}
+                                >
+                                    Calendrier
+                                </Component.ActionButton>
                             </ButtonGroup>
                         </Box>
-
                     </Box>
-                   
+
                     {visionMode === 'card' && (
                         <Grid container spacing={6}>
-                            {values?.eventDate?.map((item, index) => (
+                            {values?.eventDates?.map((item, index) => (
                                 <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
                                     <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
                                         <CardContent sx={{ position: 'relative' }}>
                                             <Grid container spacing={4}>
                                                 <Component.CmtDisplayFields
                                                     values={values}
-                                                    blockIndex={blockIndex}
                                                     setGenerateDate={setGenerateDate}
                                                     setFieldValue={setFieldValue}
                                                     item={item}
@@ -257,7 +235,6 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                                 </Component.DeleteBlockFabButton>
                                             )}
 
-
                                             {/* Dialog Button to add special pricing */}
                                             <EventAddSpecialPricing
                                                 values={values}
@@ -267,7 +244,6 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                                 selectedDate={item}
                                                 {...props}
                                             />
-
                                         </CardContent>
                                     </Card>
                                 </Grid>
@@ -277,36 +253,36 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
 
                     {/* Google calendar layout */}
                     {visionMode !== 'card' && (
-                    <Grid>
-                        <Component.CmtCalendar
-                            values={values}
-                            setFieldValue={setFieldValue}
-                            setGenerateDate={setGenerateDate}
-                            options={{
-                                startWeekOn: "mon",
-                                defaultMode: visionMode,
-                                minWidth: 540,
-                                maxWidth: 540,
-                                minHeight: 540,
-                                maxHeight: 540
-                              }}
-                            toolbarProps={{
-                                showSearchBar: true,
-                                showSwitchModeButtons: true,
-                                showDatePicker: true
-                              }}
-                            STATES={STATES}
-                            {...props}
+                        <Grid>
+                            <Component.CmtCalendar
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setGenerateDate={setGenerateDate}
+                                options={{
+                                    startWeekOn: 'mon',
+                                    defaultMode: visionMode,
+                                    minWidth: 540,
+                                    maxWidth: 540,
+                                    minHeight: 540,
+                                    maxHeight: 540,
+                                }}
+                                toolbarProps={{
+                                    showSearchBar: true,
+                                    showSwitchModeButtons: true,
+                                    showDatePicker: true,
+                                }}
+                                STATES={STATES}
+                                {...props}
                             />
-                    </Grid>
-                )}
+                        </Grid>
+                    )}
 
                     <Box className="flex row-end padding-top-4 padding-left-4">
-                        {errors?.eventDate && typeof errors?.eventDate === 'string' && (
-                                <FormHelperText error id="eventDateBlocks-helper-text">
-                                    {errors.eventDate}
-                                </FormHelperText>
-                            )}
+                        {errors?.eventDates && typeof errors?.eventDates === 'string' && (
+                            <FormHelperText error id="eventDateBlocks-helper-text">
+                                {errors.eventDates}
+                            </FormHelperText>
+                        )}
                     </Box>
 
                     <Box className="flex row-end padding-top-4 padding-left-4">
@@ -353,17 +329,14 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                     console.error('submitDateRange expects an array of dates');
                                     return;
                                 }
-                                newDates.forEach(newDate => {
-                                    setFieldValue(`eventDate.${newDate?.index}`, newDate);
+                                newDates.forEach((newDate) => {
+                                    setFieldValue(`eventDates.${newDate?.index}`, newDate);
                                 });
                             }}
                         />
-
-                        
                     </Box>
                 </Box>
             )}
-            
         </FieldArray>
     );
 };

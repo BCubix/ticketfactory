@@ -255,7 +255,7 @@ class EventManager extends AbstractRouterManager
             $format = $this->tr->trans('global.datetime-format');
         }
 
-        $datesNb = $event->getEventDate()->count();
+        $datesNb = $event->getEventDates()->count();
 
         switch ($datesNb) {
             case 0:
@@ -465,7 +465,7 @@ class EventManager extends AbstractRouterManager
         return null;
     }
 
-    public function getCalendarData(?string $slug, Event $event, array $eventDate): mixed
+    public function getCalendarData(?string $slug, Event $event, array $eventDates): mixed
     {
         if (null === $slug) {
             $slug = (new \DateTime())->format('y-m');
@@ -475,7 +475,7 @@ class EventManager extends AbstractRouterManager
         [$beginDate, $endDate] = $this->getPeriodDates($firstDayOfMonth);
         [$prevLink, $nextLink] = $this->generateLinks($firstDayOfMonth, $event->getId());
 
-        $dates = $this->getEventArray($beginDate, $endDate, $eventDate);
+        $dates = $this->getEventArray($beginDate, $endDate, $eventDates);
         return [$firstDayOfMonth, $beginDate, $endDate, $prevLink, $nextLink, $dates];
     }
 

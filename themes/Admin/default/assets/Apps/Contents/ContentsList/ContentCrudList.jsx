@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -101,7 +101,7 @@ export const DEFAULT_CONTENT_CRUD_LIST_COMPONENTS = {
     ],
 };
 
-export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
+export const ContentCrudList = ({ listCrud, objectData, contentTypeKey, ...props }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useSelector(userProfileSelector);
@@ -155,7 +155,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
         }
 
         if (result?.result) {
-            dispatch(listCrud?.loadDataAction());
+            dispatch(listCrud?.loadDataAction(contentTypeKey));
         }
 
         setDeleteDialog(null);
@@ -166,7 +166,7 @@ export const ContentCrudList = ({ listCrud, objectData, ...props }) => {
             const result = await listCrud?.duplicate(id);
             if (result?.result) {
                 NotificationManager.success(listCrud?.messages?.duplicateValidation || "L'objet à bien été dupliqué.", 'Succès', Constant.REDIRECTION_TIME);
-                dispatch(listCrud?.loadDataAction());
+                dispatch(listCrud?.loadDataAction(contentTypeKey));
             } else {
                 NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
             }

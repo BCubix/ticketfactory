@@ -35,6 +35,7 @@ export const MainDashboard = () => {
     }, []);
 
     const isCoreUpdatable = useMemo(() => {
+        return true;
         if (!parameters || !addonVersions || addonVersions?.length === 0) {
             return false;
         }
@@ -96,6 +97,9 @@ export const MainDashboard = () => {
                             </Component.CmtCard>
                         )}
                         <Component.FirstCardDashboard data={dashboard.col1} />
+                    </Grid>
+                    <Grid>
+                        <UpdatesList></UpdatesList>
                     </Grid>
                     <Grid item xs={12} md={8} lg={7}>
                         <Component.SecondCardDashboard data={dashboard.col2} />

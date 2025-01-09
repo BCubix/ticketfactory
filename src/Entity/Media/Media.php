@@ -24,7 +24,7 @@ class Media extends Datable
     /*** < Trait ***/
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_edit'])]
+    #[JMS\Groups(['a_all', 'a_edit', 'a_version_all', 'a_version_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

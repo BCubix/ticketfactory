@@ -41,7 +41,7 @@ class EventSorterManager extends AbstractManager
 
     public function getReferenceDate($event, $firstLastDate = self::FIRST_DATE, $objectString = self::OBJECT_DATE): mixed
     {
-        $dates = $event->getEventDate();
+        $dates = $event->getEventDates();
 
         if (count($dates) == 0) {
             return null;

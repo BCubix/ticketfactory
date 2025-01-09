@@ -26,7 +26,7 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
 
         while (beginDate.isSameOrBefore(endDate, 'day')) {
             if (values.days.indexOf(beginDate.format('dddd').toLowerCase()) !== -1) {
-                values.hours.forEach(hour => {
+                values.hours.forEach((hour) => {
                     let eventDate = moment(beginDate).hour(hour.split(':')[0]).minute(hour.split(':')[1]);
                     generatedList.push({
                         eventDate: eventDate.format('YYYY-MM-DD HH:mm'),
@@ -141,16 +141,11 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
                                 />
 
                                 <Typography marginInline={5}> inclus à </Typography>
-
-                                
-
-                                
                             </Box>
 
                             <Box className="flex wrap align-center margin-top-5">
-                            {values.hours.map((hour, index) => (
-                                    <Box key={index} className="flex align-center margin-top-5"
-                                    sx={{ position: 'relative', paddingLeft: '20px',}}>
+                                {values.hours.map((hour, index) => (
+                                    <Box key={index} className="flex align-center margin-top-5" sx={{ position: 'relative', paddingLeft: '20px' }}>
                                         <Component.CmtTimePicker
                                             fullWidth
                                             maxWidth={50}
@@ -170,25 +165,21 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
                                             size="small"
                                             sx={{
                                                 position: 'absolute',
-                                                top: '2px',      // Adjusts the button position
-                                                right: '2px',    // Places button in top-right corner
+                                                top: '2px', // Adjusts the button position
+                                                right: '2px', // Places button in top-right corner
                                                 minWidth: '24px', // Smaller button size
-                                                minHeight: '24px', 
-                                                padding: '2px', 
+                                                minHeight: '24px',
+                                                padding: '2px',
                                             }}
                                             onClick={() => {
                                                 const newHours = values.hours.filter((_, i) => i !== index);
                                                 setFieldValue('hours', newHours);
                                             }}
                                         >
-                                            <DeleteIcon fontSize="small"/>
+                                            <DeleteIcon fontSize="small" />
                                         </Component.DeleteBlockFabButton>
-                                            
                                     </Box>
                                 ))}
-
-
-                           
                             </Box>
 
                             <Box className="flex row-end">
@@ -201,10 +192,7 @@ export const EventDateRange = ({ open, setOpen, index, submitDateRange }) => {
                                     Ajouter une heure
                                 </Button>
                             </Box>
-                            
                         </DialogContent>
-                        
-                        
 
                         <DialogActions>
                             <Box className="flex row-between align-center fullwidth">

@@ -1,9 +1,6 @@
 import React from 'react';
-import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Box } from '@mui/material';
 import { Component } from '@/AdminService/Component';
-import { Tab } from '@/AdminService/Tab';
 import { SeoInitialValues, SeoInitialFormInputs, SeoApiDataFields } from '@Apps/SEO/Form/SEOForm';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
@@ -33,7 +30,7 @@ export const productsInitialSchema = {
     displayBuyingButton: (initValues) => (initValues?.displayBuyingButton || initValues?.displayBuyingButton === false ? initValues?.displayBuyingButton : true),
     featureLinks: (initValues) =>
         initValues?.featureLinks
-            ? initValues?.featureLinks?.map((el) => ({
+            ? initValues?.featureLinks?.map((el, index) => ({
                   ...el,
                   event: el?.event?.id,
                   product: el?.product?.id,
@@ -41,6 +38,7 @@ export const productsInitialSchema = {
                   featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
                   featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
                   featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
+                  index: index,
               }))
             : [],
     seo: SeoInitialValues,

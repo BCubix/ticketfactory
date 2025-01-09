@@ -8,6 +8,9 @@ import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@
 import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { useNavigate } from 'react-router-dom';
+import { Constant } from '@/AdminService/Constant';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 const ROLE_CONTENT_PUBLISH = 'ROLE_CONTENT_PUBLISH';
 
@@ -214,6 +217,7 @@ export const contentsForm = {
 };
 
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType, translateInitialValues = null, formCrud, ...props }) => {
+    const navigate = useNavigate();
     const [initValue, setInitValue] = useState(null);
 
     const getContentModules = useMemo(() => {
@@ -260,7 +264,22 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             )}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, submitForm, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}>
+                <Component.CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}
+                    actionButton={
+                        initialValues && (
+                            <Component.ActionButton
+                                variant="contained"
+                                sx={{ marginLeft: 'auto' }}
+                                onClick={() => navigate(Constant.CONTENT_HISTORY_BASE_PATH + `/${initialValues?.id}`)}
+                            >
+                                Historique du contenu
+                            </Component.ActionButton>
+                        )
+                    }
+                >
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}
                         list={formCrud.components}

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -23,16 +26,29 @@ export const vouchersEditCrud = {
 export const EditVoucher = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const languagesData = useSelector(languagesSelector);
     const { id } = useParams();
     const [voucher, setVoucher] = useState(null);
-    const [categories, setCategories] = useState([]);
+    const [eventCategories, setEventCategories] = useState([]);
+    const [productCategories, setProductCategories] = useState([]);
 
     useEffect(() => {
+        const defaultLanguageId = languagesData?.languages?.find((el) => el.isDefault)?.id;
+
         apiMiddleware(dispatch, async () => {
-            const categories = await Api.categoriesApi.getCategories();
-            if (categories.result) {
-                setCategories(categories?.categories);
+            const [eventCategoriesResult, productCategoriesResult] = await Promise.all([
+                Api.categoriesApi.getCategories({ lang: defaultLanguageId }),
+                Api.productCategoriesApi.getProductCategories({ lang: defaultLanguageId }),
+            ]);
+
+            if (!eventCategoriesResult.result || !productCategoriesResult.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+                navigate(Constant.VOUCHERS_BASE_PATH);
+                return;
             }
+
+            setEventCategories(eventCategoriesResult?.categories);
+            setProductCategories(productCategoriesResult?.productCategories);
         });
     }, []);
 
@@ -69,9 +85,17 @@ export const EditVoucher = () => {
         });
     };
 
-    if (!voucher || categories.length < 1) {
+    if (!voucher) {
         return <></>;
     }
 
-    return <Component.CmtCrudForm handleSubmit={handleSubmit} initialValues={voucher} eventCategoriesList={categories} formCrud={Crud?.vouchers?.edit} />;
+    return (
+        <Component.CmtCrudForm
+            handleSubmit={handleSubmit}
+            initialValues={voucher}
+            eventCategoriesList={eventCategories}
+            productCategoriesList={productCategories}
+            formCrud={Crud?.vouchers?.edit}
+        />
+    );
 };
