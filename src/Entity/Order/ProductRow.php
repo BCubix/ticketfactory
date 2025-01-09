@@ -42,14 +42,14 @@ class ProductRow
     #[ORM\JoinColumn(nullable: false)]
     private ?Cart $cart = null;
 
-    /**
-     * @var Collection<int, Voucher>
-     */
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\ManyToMany(targetEntity: Voucher::class)]
+    #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'productRows')]
     private Collection $vouchers;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
+    public $discount = 0;
 
     public function __construct()
     {
@@ -117,18 +117,21 @@ class ProductRow
         return $this->vouchers;
     }
 
-    public function addVoucher(Voucher $voucher): static
+    public function addVoucher(Voucher $voucher): self
     {
         if (!$this->vouchers->contains($voucher)) {
             $this->vouchers->add($voucher);
+            $voucher->addProductRow($this);
         }
 
         return $this;
     }
 
-    public function removeVoucher(Voucher $voucher): static
+    public function removeVoucher(Voucher $voucher): self
     {
-        $this->vouchers->removeElement($voucher);
+        if ($this->vouchers->removeElement($voucher)) {
+            $voucher->removeProductRow($this);
+        }
 
         return $this;
     }

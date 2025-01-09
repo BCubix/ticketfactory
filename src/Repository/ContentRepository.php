@@ -57,7 +57,7 @@ class ContentRepository extends CrudRepository
     {
         return $this->createQueryBuilder('c')
             ->where("c.active = 1")
-            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('c.publicationStatus = :publicationStatus')
             ->andWhere('c.slug = :slug')
             ->setParameter("slug", $slug)
             ->setParameter('publicationStatus', Content::STATUS_PUBLISHED)
@@ -71,7 +71,7 @@ class ContentRepository extends CrudRepository
             ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('c.contentType', 't')
             ->where("c.active = 1")
-            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('c.publicationStatus = :publicationStatus')
             ->andWhere('t.keyword = :keyword')
             ->setParameter("languageId", $languageId)
             ->setParameter('publicationStatus', Content::STATUS_PUBLISHED)
@@ -86,7 +86,7 @@ class ContentRepository extends CrudRepository
             ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
             ->innerJoin('c.contentType', 't')
             ->where("c.active = 1")
-            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('c.publicationStatus = :publicationStatus')
             ->andWhere('t.id = :id')
             ->setParameter("languageId", $languageId)
             ->setParameter('publicationStatus', Content::STATUS_PUBLISHED)
@@ -103,7 +103,7 @@ class ContentRepository extends CrudRepository
 
         if ($activeFilter) {
             $result = $result->andWhere('c.active = 1')
-            ->andWhere('p.publicationStatus = :publicationStatus')
+            ->andWhere('c.publicationStatus = :publicationStatus')
             ->setParameter('publicationStatus', Content::STATUS_PUBLISHED);
         }
 

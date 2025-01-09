@@ -58,13 +58,15 @@ class ParameterManager extends AbstractManager
             return $this->checkAppEnv();
         });
 
-        $lastCheckDate = (new \DateTime())->setTimestamp($appEnvLastTimestamp);
         $now = new \DateTime();
+        $lastCheckDate = (new \DateTime())->setTimestamp($appEnvLastTimestamp);
         $interval = $now->diff($lastCheckDate);
 
         if ($interval->days > 0 || ($interval->days == 0 && $interval->h >= 24)) {
             $this->checkAppEnv();
         }
+
+        $this->mf->get('addonVersion')->checkAddonVersions();
 
         return $parameters;
     }

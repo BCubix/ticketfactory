@@ -81,6 +81,9 @@ class Cart extends Datable
     #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'carts')]
     private Collection $vouchers;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
+    public $discount = 0;
 
     public function __construct()
     {

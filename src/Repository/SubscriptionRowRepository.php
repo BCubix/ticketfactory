@@ -67,4 +67,15 @@ class SubscriptionRowRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function countBySubscriptionId(int $subscriptionId): int
+    {
+        return $this->createQueryBuilder('sr')
+            ->select('COUNT(sr.id)')
+            ->join('sr.subscription', 's')
+            ->where('s.id = :subscriptionId')
+            ->setParameter('subscriptionId', $subscriptionId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

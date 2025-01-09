@@ -255,14 +255,14 @@ class CartManager extends AbstractManager
                     $this->em->persist($customer);
                     $this->em->flush();
 
-                    return $cart;
+                    return $this->formatCart($cart);
                 }
 
                 if (null === $sessionUpdatedAt) {
                     $session->set("cartId", $customerCart->getId());
                     $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
 
-                    return $customerCart;
+                    return $this->formatCart($customerCart);
                 }
 
                 $sessionUpdatedAt = $sessionUpdatedAt;
@@ -273,26 +273,26 @@ class CartManager extends AbstractManager
                     $this->em->persist($cart);
                     $this->em->flush();
 
-                    return $cart;
+                    return $this->formatCart($cart);
                 } else {
                     $session->set("cartId", $customerCart->getId());
                     $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
 
-                    return $customerCart;
+                    return $this->formatCart($customerCart);
                 }
             } else {
                 if (null !== $customerCart) {
                     $session->set("cartId", $customerCart->getId());
                     $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
 
-                    return $customerCart;
+                    return $this->formatCart($customerCart);
                 }
 
                 return null;
             }
         }
 
-        return $cart;
+        return $this->formatCart($cart);
     }
 
     public function getEventSeatsGrouped($eventRow): ?array
@@ -535,6 +535,49 @@ class CartManager extends AbstractManager
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
     }
 
+    public function formatCart(?Cart $cart): ?Cart
+    {
+        if (null === $cart) {
+            return null;
+        }
+
+        $this->calculateRowsDiscount($cart);
+        $cart->discount = $this->calculateDiscount($cart);
+
+        return $cart;
+    }
+
+    public function calculateRowsDiscount(?Cart &$cart): Cart
+    {
+        foreach ($cart->getEventRows() as &$row) {
+            $discount = 0;
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
+                }
+            }
+
+            $row->discount = $discount;
+        }
+
+        foreach ($cart->getProductRows() as &$row) {
+            $discount = 0;
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
+                }
+            }
+
+            $row->discount = $discount;
+        }
+
+        return $cart;
+    }
+
     public function calculateDiscount(?Cart $cart): int
     {
         $discount = 0;
@@ -543,24 +586,54 @@ class CartManager extends AbstractManager
             return $discount;
         }
 
-        $vouchers = $this->em->getRepository(Voucher::class)->findAllByCartForWebsite($cart->getId());
-        if (count($vouchers) === 0) {
-            return $discount;
+        foreach ($cart->getEventRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
+                }
+            }
         }
 
-        foreach ($vouchers as $voucher) {
-            foreach ($cart->getEventRows() as $row) {
-                if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
-                    if ($voucher->getUnit() === "%") {
-                        $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
-                    } else {
-                        $discount += $voucher->getDiscount();
-                    }
+        foreach ($cart->getProductRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
                 }
             }
         }
 
         return $discount;
+    }
+
+    public function getVouchers(?Cart $cart): array
+    {
+        $vouchers = [];
+
+        if (null === $cart) {
+            return $vouchers;
+        }
+
+        foreach ($cart->getEventRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!in_array($voucher, $vouchers, true)) {
+                    $vouchers[] = $voucher;
+                }
+            }
+        }
+
+        foreach ($cart->getProductRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!in_array($voucher, $vouchers, true)) {
+                    $vouchers[] = $voucher;
+                }
+            }
+        }
+
+        return $vouchers;
     }
 
     public function checkVoucherForEventCategory(Voucher $voucher, int $eventId): bool
@@ -572,7 +645,22 @@ class CartManager extends AbstractManager
         }
 
         $result = $this->em->getRepository(Event::class)->findOneByCategoriesForWebsite($eventCategoriesId, $eventId);
+        if (null === $result) {
+            return false;
+        }
 
+        return true;
+    }
+
+    public function checkVoucherForProductCategory(Voucher $voucher, int $productId): bool
+    {
+        $productCategoriesId = [];
+
+        foreach ($voucher->getProductCategories() as $category) {
+            $productCategoriesId[] = $category->getId();
+        }
+
+        $result = $this->em->getRepository(Product::class)->findOneByCategoriesForWebsite($productCategoriesId, $productId);
         if (null === $result) {
             return false;
         }
@@ -588,18 +676,21 @@ class CartManager extends AbstractManager
             return;
         }
 
-        foreach ($vouchers as $voucher) {
-            $checked = false;
-            foreach ($cart->getEventRows() as $row) {
-                if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
-                    $checked = true;
-                    break;
+        foreach ($cart->getEventRows() as &$row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!$this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
+                    $row->removeVoucher($voucher);
+                    $this->em->persist($row);
                 }
             }
+        }
 
-            if (!$checked) {
-                $voucher->removeCart($cart);
-                $this->em->persist($voucher);
+        foreach ($cart->getProductRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!$this->checkVoucherForEventCategory($voucher, $row->getProduct()->getId())) {
+                    $row->removeVoucher($voucher);
+                    $this->em->persist($row);
+                }
             }
         }
 
@@ -609,20 +700,32 @@ class CartManager extends AbstractManager
     public function addVoucher(Cart $cart, string $code): bool
     {
         $voucher = $this->em->getRepository(Voucher::class)->findOneByCodeForWebsite($code);
-
         if (null === $voucher) {
             return false;
         }
 
-        foreach ($cart->getEventRows() as $row) {
+        $addedVoucher = false;
+        foreach ($cart->getEventRows() as &$row) {
             if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
-                $cart->addVoucher($voucher);
+                $voucher->addEventRow($row);
+                $this->em->persist($voucher);
 
-                $this->em->persist($cart);
-                $this->em->flush();
-
-                return true;
+                $addedVoucher = true;
             }
+        }
+
+        foreach ($cart->getProductRows() as &$row) {
+            if ($this->checkVoucherForProductCategory($voucher, $row->getProduct()->getId())) {
+                $voucher->addProductRow($row);
+                $this->em->persist($voucher);
+
+                $addedVoucher = true;
+            }
+        }
+
+        if ($addedVoucher) {
+            $this->em->flush();
+            return true;
         }
 
         return false;

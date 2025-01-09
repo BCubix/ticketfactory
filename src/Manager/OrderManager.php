@@ -39,6 +39,7 @@ class OrderManager extends AbstractManager
     public function createNewOrder(Customer $customer, OrderStatus $status, Cart $cart): ?Order
     {
         $order = new Order();
+        $order->setActive(true);
         $order->setStatus($status);
         $order->setCustomer($customer);
         $order->setCart($cart);
@@ -99,7 +100,7 @@ class OrderManager extends AbstractManager
             $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
 
             if (method_exists($class, 'createNewOrder')) {
-                if (! $class->createNewOrder($events, $cart, $order)) {
+                if (!$class->createNewOrder($events, $cart, $order)) {
                     return null;
                 }
             }
@@ -350,7 +351,14 @@ class OrderManager extends AbstractManager
 
     public function getOrderForWebsite(int $orderId, int $customerId): ?Order
     {
-        return $this->em->getRepository(Order::class)->findOneForWebsite($orderId, $customerId);
+        $order = $this->em->getRepository(Order::class)->findOneForWebsite($orderId, $customerId);
+        if (null === $order) {
+            return null;
+        }
+
+        $order->setCart($this->mf->get('cart')->formatCart($order->getCart()));
+
+        return $order;
     }
 
     public function getInvoiceFile(Order $order)

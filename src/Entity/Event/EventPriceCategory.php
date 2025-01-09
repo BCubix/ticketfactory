@@ -46,7 +46,7 @@ class EventPriceCategory
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_one', 'a_room_one',  'a_room_all'])]
+    #[JMS\Groups(['a_event_one', 'a_room_one', 'a_room_all'])]
     #[ORM\OneToMany(mappedBy: 'eventPriceCategory', targetEntity: EventPrice::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
     private $eventPrices;
 
@@ -73,6 +73,8 @@ class EventPriceCategory
     #[ORM\ManyToOne(targetEntity: EventDate::class, inversedBy: 'eventPriceCategories', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?EventDate $eventDate = null;
+
+    private ?string $eventDateUuid = null;
 
     public function __construct()
     {
@@ -182,6 +184,17 @@ class EventPriceCategory
     {
         $this->eventDate = $eventDate;
 
+        return $this;
+    }
+
+    public function getEventDateUuid(): ?string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 

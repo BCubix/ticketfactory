@@ -87,6 +87,9 @@ class EventDate
     #[ORM\OneToMany(mappedBy: 'eventDate', targetEntity: EventPriceCategory::class, cascade: ['persist', 'remove'])]
     private Collection $eventPriceCategories;
 
+    private ?string $eventDateUuid = null;
+
+
     public function __construct()
     {
         $this->eventRows = new ArrayCollection();
@@ -240,6 +243,17 @@ class EventDate
             }
         }
 
+        return $this;
+    }
+
+    public function getEventDateUuid(): string
+    {
+        return $this->eventDateUuid;
+    }
+
+    public function setEventDateUuid(string $eventDateUuid): self
+    {
+        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 
