@@ -98,7 +98,7 @@ export const menusEditCrud = {
         {
             type: 'tabs',
             keyId: 'menu',
-            label: 'Saison',
+            label: 'Menu',
             fields: [
                 {
                     component: ({ translationInitialValues, values, setFieldValue, accessUserCreate }) =>
@@ -431,6 +431,7 @@ const InitForm = ({
                                             deleteDialog,
                                             setDeleteDialog,
                                         }}
+                                        {...rest}
                                     />
                                 </Grid>
                             )}

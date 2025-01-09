@@ -114,7 +114,7 @@ export const eventsInitialSchema = {
     displayBookingButton: (initValues) => (initValues?.displayBookingButton || initValues?.displayBookingButton === false ? initValues?.displayBookingButton : true),
     featureLinks: (initValues) =>
         initValues?.featureLinks
-            ? initValues?.featureLinks?.map((el) => ({
+            ? initValues?.featureLinks?.map((el, index) => ({
                   ...el,
                   event: el?.event?.id,
                   product: el?.product?.id,
@@ -122,6 +122,7 @@ export const eventsInitialSchema = {
                   featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
                   featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
                   featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
+                  index: index,
               }))
             : [],
     seo: SeoInitialValues,

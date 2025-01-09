@@ -2,7 +2,7 @@ import React from 'react';
 import { CardContent } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 
-export const CmtFormBlock = ({ title, children, paddingContent = null, marginBlock = 3, ...rest }) => {
+export const CmtFormBlock = ({ title, children, paddingContent = null, marginBlock = 5, ...rest }) => {
     return (
         <Component.CmtCard sx={{ marginBlock: marginBlock, position: 'relative' }} elevation={3} {...rest}>
             {title && <Component.CmtCardHeader title={title} />}

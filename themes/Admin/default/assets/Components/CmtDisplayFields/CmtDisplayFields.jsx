@@ -181,7 +181,6 @@ const getName = ({ name, ...props }) => {
 };
 
 export const CmtDisplayFields = ({ fields, ...inheritedProps }) => {
-    
     return (
         <>
             {fields.map((field, index) => {

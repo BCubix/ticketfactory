@@ -141,7 +141,7 @@ export const MenuStructure = ({
 
             <Box sx={{ marginTop: 3 }}>
                 <Box id={'menus-portal'} />
-                <DragDropContext onDragEnd={null}>
+                <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
                     <Box>
                         <Droppable droppableId="menus" type="menus" isCombineEnabled ignoreContainerClipping>
                             {(provided, snapshot) => (

@@ -319,14 +319,15 @@ export const CmtDisplayMediaMeta = ({ selectedMedia }) => {
                 <Typography variant="body1">{moment(selectedMedia?.createdAt).format('DD-MM-YYYY')}</Typography>
             </Grid>
 
-            {selectedMedia?.updatedAt && (
-                <Grid item xs={12} sm={6} sx={{ mb: 3 }}>
-                    <Typography fontSize={10} variant="body2">
-                        Mis à jour le
-                    </Typography>
-                    <Typography variant="body1">{moment(selectedMedia?.updatedAt).format('DD-MM-YYYY')}</Typography>
-                </Grid>
-            )}
+            <Grid item xs={12} sm={6} sx={{ mb: 3 }}>
+                <Typography fontSize={10} variant="body2">
+                    Url du média
+                </Typography>
+                <Typography variant="body1">
+                    {Constant.FRONT_URL}
+                    {selectedMedia.documentUrl}
+                </Typography>
+            </Grid>
 
             <Grid item xs={12} sm={6} sx={{ mb: 3 }}>
                 <Typography fontSize={10} variant="body2">

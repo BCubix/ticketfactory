@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Grid, InputLabel } from '@mui/material';
+import { Button, Grid, InputLabel, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getMediaType } from '@Services/utils/getMediaType';
@@ -11,7 +11,7 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
         <Grid item xs={12} sm={6} md={4} container spacing={4}>
             <Grid item xs={12}>
                 <InputLabel sx={{ fontSize: 12 }}>Aperçu</InputLabel>
-                <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', maxHeight: 300 }}>
                     <Component.CmtDisplayMediaType media={media} width={'auto'} height={'auto'} maxHeight="250px" maxWidth="100%" />
                     {mediaType === 'image' && (
                         <Component.SpecialActionButton variant="contained" sx={{ mt: 5 }} onClick={() => setEditImage(true)}>
@@ -63,6 +63,10 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                     error={touched.legend && errors.legend}
                     sx={{ mt: 3 }}
                 />
+            </Grid>
+
+            <Grid item xs={12}>
+                <Component.CmtDisplayMediaMeta selectedMedia={media} />
             </Grid>
         </Grid>
     </Grid>

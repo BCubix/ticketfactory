@@ -5,7 +5,7 @@ export const imageFormatsInitialSchema = {
     name: (initValues) => initValues?.name || '',
     active: (initValues) => initValues?.active || false,
     slug: (initValues) => initValues?.slug || '',
-    imageToCrop: (initValues) => initValues?.imageToCrop || true,
+    imageToCrop: (initValues) => (initValues?.imageToCrop === false ? false : true),
     width: (initValues) => initValues?.width || '',
     height: (initValues) => initValues?.height || '',
     themeUse: (initValues) => initValues?.themeUse || '',
