@@ -43,8 +43,6 @@ class EventPriceCategory
     #[ORM\Column(type: 'uuid')]
     private ?Uuid $languageGroup = null;
 
-    private ?string $eventDateUuid = null;
-
     #[Assert\Valid]
     #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un tarif.')]
     #[JMS\Expose()]
@@ -109,17 +107,6 @@ class EventPriceCategory
     {
         $this->languageGroup = $languageGroup;
 
-        return $this;
-    }
-
-    public function getEventDateUuid(): ?string
-    {
-        return $this->eventDateUuid;
-    }
-
-    public function setEventDateUuid(string $eventDateUuid): self
-    {
-        $this->eventDateUuid = $eventDateUuid;
         return $this;
     }
 
