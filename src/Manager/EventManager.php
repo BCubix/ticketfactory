@@ -320,7 +320,7 @@ class EventManager extends AbstractRouterManager
 
     public function getEventDatesFromEvent(Event $event): ?array
     {
-        return $this->em->getRepository(EventDate::class)->findAllByEventForWebsiteOption($event->getId());
+        return $this->em->getRepository(EventDate::class)->findAllByEventForWebsite($event->getId());
     }
 
     public function getEventPriceCategoriesFromEvent(Event $event): ?array
