@@ -107,16 +107,16 @@ class HookManager extends AbstractManager
             $moduleName = $module->getName();
 
             // Search config of the module
-            $moduleConfigArray = array_filter($modules['results'], function ($moduleInfos) use ($moduleName) {
+            $moduleConfigArray = array_values(array_filter($modules['results'], function ($moduleInfos) use ($moduleName) {
                 return $moduleInfos['name'] === $moduleName;
-            });
+            }));
 
             // Add module in the hook list
             // (Must be count($r) === 1 so we can use array_pop)
+            $config = !empty($moduleConfigArray) ? array_pop($moduleConfigArray) : [];
             $result[$indexResult]['modules'][] = [
-                ...array_pop($moduleConfigArray),
-                // all module config (name, displayName, ...)
-                'position' => $hook->getPosition() // position of the module in the hook
+                ...$config,
+                'position' => $hook->getPosition(), // position of the module in the hook
             ];
         }
 

@@ -9,6 +9,9 @@ use Doctrine\Persistence\ManagerRegistry;
 class EventRepository extends CrudRepository
 {
     /*** > Trait ***/
+    /*** > Module: EventCategory ***/
+    use \TicketFactory\Module\EventCategory\Repository\Override\EventRepository;
+    /*** < Module: EventCategory ***/
     /*** > Module: HomeEvent ***/
     use \TicketFactory\Module\HomeEvent\Repository\Override\EventRepository;
     /*** < Module: HomeEvent ***/

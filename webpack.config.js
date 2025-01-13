@@ -48,13 +48,18 @@ if (adminThemeName) {
 }
 
 if (websiteThemeName) {
-    Encore.addEntry('app', `./themes/Website/${websiteThemeName}/assets/index.js`).addAliases({
-        '@Website': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets`),
-        '@WApps': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/Apps`),
-        '@WComponents': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/Components`),
-        '@WServices': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/services`),
-        '@WStyle': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/Style`),
-    });
+    Encore.addEntry('app', `./themes/Website/${websiteThemeName}/assets/index.js`)
+        .addAliases({
+            '@Website': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets`),
+            '@WApps': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/Apps`),
+            '@WComponents': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/Components`),
+            '@WServices': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/services`),
+            '@WStyle': path.resolve(__dirname, `themes/Website/${websiteThemeName}/assets/Style`),
+        })
+        .copyFiles({
+            from: `themes/Website/${websiteThemeName}/assets/img`,
+            to: 'website/img/[path][name].[ext]',
+        });
 }
 
 Encore
