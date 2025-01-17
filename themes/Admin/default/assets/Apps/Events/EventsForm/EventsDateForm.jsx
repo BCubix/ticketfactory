@@ -1,11 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { FieldArray } from 'formik';
 import moment from 'moment';
 import { useTheme } from '@emotion/react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import { Button, ButtonGroup, Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography, Tooltip } from '@mui/material';
+import { ButtonGroup, Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography, Tooltip } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
@@ -122,14 +122,33 @@ const DAYS_WEEK = [
     { label: 'D', color: '#b71c1c', value: 'dimanche' },
 ];
 
-const DisplayBadge = ({ item }) => {
-    if (!item?.eventDate) {
-        return <></>;
+const getDefaultMode = (parameters) => {
+    const eventType = parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
+    const list = [
+        { mode: 'card', eventTypes: ['Pièces', 'Evénements'] },
+        { mode: 'week', eventTypes: ['Films', 'Expositions'] },
+        { mode: 'month', eventTypes: ['Concerts', 'Ballets'] },
+    ];
+
+    const result = list.find((item) => item.eventTypes.includes(eventType));
+    if (result) {
+        return result.mode;
     }
 
-    const day = DAYS_WEEK.find((el) => el.value === moment(item.eventDate).format('dddd'));
+    return 'day';
+};
+
+const DisplayBadge = React.memo(({ item }) => {
+    const day = useMemo(() => {
+        if (!item?.eventDate) {
+            return null;
+        }
+
+        return DAYS_WEEK.find((el) => el.value === moment(item.eventDate).format('dddd'));
+    }, [item?.eventDate]);
+
     if (!day) {
-        return <></>;
+        return null;
     }
 
     return (
@@ -139,33 +158,52 @@ const DisplayBadge = ({ item }) => {
             </Typography>
         </Box>
     );
-};
+});
 
 export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...props }) => {
     const theme = useTheme();
     const [generateDate, setGenerateDate] = useState(null);
+    const [visionMode, setVisionMode] = useState(getDefaultMode(props.parameters));
     const index = useRef(values?.eventDates?.length || 0);
 
-    const getDefaultMode = () => {
-        const eventType = props.parameters?.find((el) => el.paramKey === 'core_default_events_type')?.paramValue || 'Evénements';
-        if (eventType === 'Pièces' || eventType === 'Evénements') {
-            return 'card';
-        } else if (eventType === 'Films' || eventType === 'Expositions') {
-            return 'week';
-        } else if (eventType === 'Concerts' || eventType === 'Ballets') {
-            return 'month';
-        }
-        return 'day';
+    const STATES = useMemo(
+        () => [
+            { label: 'Valide', value: 'valid', color: theme.palette.dateStatus.valid },
+            { label: 'Reporté', value: 'delayed', color: theme.palette.dateStatus.reported },
+            { label: 'Annulé', value: 'canceled', color: theme.palette.dateStatus.canceled },
+            { label: 'Nouvelle date', value: 'new_date', color: theme.palette.dateStatus.newDate },
+        ],
+        []
+    );
+
+    const handleCardViewClick = () => setVisionMode('card');
+    const handleMonthViewClick = () => setVisionMode('month');
+
+    const handleAddDate = (push) => {
+        push({
+            eventDate: '',
+            annotation: '',
+            state: 'valid',
+            reportDate: '',
+            index: index.current,
+            eventDateUuid: uuidv4(),
+        });
+
+        index.current += 1;
     };
 
-    const [visionMode, setVisionMode] = useState(getDefaultMode());
-
-    const STATES = [
-        { label: 'Valide', value: 'valid', color: theme.palette.dateStatus.valid },
-        { label: 'Reporté', value: 'delayed', color: theme.palette.dateStatus.reported },
-        { label: 'Annulé', value: 'canceled', color: theme.palette.dateStatus.canceled },
-        { label: 'Nouvelle date', value: 'new_date', color: theme.palette.dateStatus.newDate },
-    ];
+    const handleSubmitDateRange = useCallback(
+        (newDates) => {
+            if (!Array.isArray(newDates)) {
+                console.error('submitDateRange expects an array of dates');
+                return;
+            }
+            newDates.forEach((newDate) => {
+                setFieldValue(`eventDates.${newDate?.index}`, newDate);
+            });
+        },
+        [setFieldValue]
+    );
 
     return (
         <FieldArray name={`eventDates`}>
@@ -174,27 +212,17 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                     <Box>
                         <Box className="block-head">
                             <ButtonGroup variant="contained" color="primary">
-                                <Component.ActionButton
-                                    size="small"
-                                    color="primary"
-                                    variant={visionMode === 'card' ? 'outlined' : 'contained'}
-                                    onClick={() => setVisionMode('card')}
-                                >
+                                <Component.ActionButton size="small" color="primary" variant={visionMode === 'card' ? 'outlined' : 'contained'} onClick={handleCardViewClick}>
                                     Carte
                                 </Component.ActionButton>
-                                <Component.ActionButton
-                                    size="small"
-                                    color="primary"
-                                    variant={visionMode === 'month' ? 'outlined' : 'contained'}
-                                    onClick={() => setVisionMode('month')}
-                                >
+                                <Component.ActionButton size="small" color="primary" variant={visionMode === 'month' ? 'outlined' : 'contained'} onClick={handleMonthViewClick}>
                                     Calendrier
                                 </Component.ActionButton>
                             </ButtonGroup>
                         </Box>
                     </Box>
 
-                    {visionMode === 'card' && (
+                    {visionMode === 'card' ? (
                         <Grid container spacing={6}>
                             {values?.eventDates?.map((item, index) => (
                                 <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
@@ -249,10 +277,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                 </Grid>
                             ))}
                         </Grid>
-                    )}
-
-                    {/* Google calendar layout */}
-                    {visionMode !== 'card' && (
+                    ) : (
                         <Grid>
                             <Component.CmtCalendar
                                 values={values}
@@ -286,24 +311,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                     </Box>
 
                     <Box className="flex row-end padding-top-4 padding-left-4">
-                        <Component.AddBlockButton
-                            size="small"
-                            color="primary"
-                            variant="outlined"
-                            id="addDateButton"
-                            onClick={() => {
-                                push({
-                                    eventDate: '',
-                                    annotation: '',
-                                    state: 'valid',
-                                    reportDate: '',
-                                    index: index.current,
-                                    eventDateUuid: uuidv4(),
-                                });
-
-                                index.current = index.current + 1;
-                            }}
-                        >
+                        <Component.AddBlockButton size="small" color="primary" variant="outlined" id="addDateButton" onClick={() => handleAddDate(push)}>
                             <AddIcon /> Ajouter
                         </Component.AddBlockButton>
 
@@ -324,15 +332,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                             open={Boolean(generateDate !== null)}
                             setOpen={setGenerateDate}
                             index={generateDate?.index}
-                            submitDateRange={(newDates) => {
-                                if (!Array.isArray(newDates)) {
-                                    console.error('submitDateRange expects an array of dates');
-                                    return;
-                                }
-                                newDates.forEach((newDate) => {
-                                    setFieldValue(`eventDates.${newDate?.index}`, newDate);
-                                });
-                            }}
+                            submitDateRange={(newDates) => handleSubmitDateRange(newDates)}
                         />
                     </Box>
                 </Box>
