@@ -160,6 +160,59 @@ const DisplayBadge = React.memo(({ item }) => {
     );
 });
 
+export const DisplayEventDateFormCard = React.memo(
+    ({ index, item, values, setGenerateDate, setFieldValue, remove, touched, errors, STATES, ...props }) => {
+        return (
+            <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
+                <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
+                    <CardContent sx={{ position: 'relative' }}>
+                        <Grid container spacing={4}>
+                            <Component.CmtDisplayFields
+                                values={values}
+                                setGenerateDate={setGenerateDate}
+                                setFieldValue={setFieldValue}
+                                item={item}
+                                index={index}
+                                states={STATES}
+                                {...props}
+                            />
+                        </Grid>
+
+                        {item?.eventRows?.length > 0 ? (
+                            <Tooltip
+                                title={
+                                    item?.eventRows?.length > 0
+                                        ? "Vous ne pouvez pas supprimer cette représentation car des billets ont été vendus. Utilisez la fonction d'annulation."
+                                        : ''
+                                }
+                            >
+                                <Component.DisabledBlockFabButton>
+                                    <DeleteIcon />
+                                </Component.DisabledBlockFabButton>
+                            </Tooltip>
+                        ) : (
+                            <Component.DeleteBlockFabButton
+                                size="small"
+                                onClick={() => {
+                                    remove(index);
+                                }}
+                            >
+                                <DeleteIcon />
+                            </Component.DeleteBlockFabButton>
+                        )}
+
+                        {/* Dialog Button to add special pricing */}
+                        <EventAddSpecialPricing values={values} setFieldValue={setFieldValue} touched={touched} errors={errors} selectedDate={item} {...props} />
+                    </CardContent>
+                </Card>
+            </Grid>
+        );
+    },
+    (prevProps, nextProps) => {
+        return prevProps.item === nextProps.item;
+    }
+);
+
 export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...props }) => {
     const theme = useTheme();
     const [generateDate, setGenerateDate] = useState(null);
@@ -198,13 +251,13 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                 console.error('submitDateRange expects an array of dates');
                 return;
             }
-            newDates.forEach((newDate) => {
-                setFieldValue(`eventDates.${newDate?.index}`, newDate);
-            });
+
+            setFieldValue('eventDates', [...(values.eventDates || []), ...newDates]);
         },
-        [setFieldValue]
+        [setFieldValue, values]
     );
 
+    console.log(values);
     return (
         <FieldArray name={`eventDates`}>
             {({ remove, push }) => (
@@ -225,56 +278,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                     {visionMode === 'card' ? (
                         <Grid container spacing={6}>
                             {values?.eventDates?.map((item, index) => (
-                                <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
-                                    <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
-                                        <CardContent sx={{ position: 'relative' }}>
-                                            <Grid container spacing={4}>
-                                                <Component.CmtDisplayFields
-                                                    values={values}
-                                                    setGenerateDate={setGenerateDate}
-                                                    setFieldValue={setFieldValue}
-                                                    item={item}
-                                                    index={index}
-                                                    states={STATES}
-                                                    {...props}
-                                                />
-                                            </Grid>
-
-                                            {item?.eventRows?.length > 0 ? (
-                                                <Tooltip
-                                                    title={
-                                                        item?.eventRows?.length > 0
-                                                            ? "Vous ne pouvez pas supprimer cette représentation car des billets ont été vendus. Utilisez la fonction d'annulation."
-                                                            : ''
-                                                    }
-                                                >
-                                                    <Component.DisabledBlockFabButton>
-                                                        <DeleteIcon />
-                                                    </Component.DisabledBlockFabButton>
-                                                </Tooltip>
-                                            ) : (
-                                                <Component.DeleteBlockFabButton
-                                                    size="small"
-                                                    onClick={() => {
-                                                        remove(index);
-                                                    }}
-                                                >
-                                                    <DeleteIcon />
-                                                </Component.DeleteBlockFabButton>
-                                            )}
-
-                                            {/* Dialog Button to add special pricing */}
-                                            <EventAddSpecialPricing
-                                                values={values}
-                                                setFieldValue={setFieldValue}
-                                                touched={touched}
-                                                errors={errors}
-                                                selectedDate={item}
-                                                {...props}
-                                            />
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
+                                <DisplayEventDateFormCard {...{ item, index, values, setGenerateDate, setFieldValue, remove, touched, errors, STATES, ...props }} />
                             ))}
                         </Grid>
                     ) : (
@@ -332,7 +336,7 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                             open={Boolean(generateDate !== null)}
                             setOpen={setGenerateDate}
                             index={generateDate?.index}
-                            submitDateRange={(newDates) => handleSubmitDateRange(newDates)}
+                            submitDateRange={handleSubmitDateRange}
                         />
                     </Box>
                 </Box>
