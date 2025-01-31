@@ -254,7 +254,8 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                     {/* Google calendar layout */}
                     {visionMode !== 'card' && (
                         <Grid>
-                            <Component.CmtCalendar
+                            <Component.CmtCalendarForm
+                                editable={true}
                                 values={values}
                                 setFieldValue={setFieldValue}
                                 setGenerateDate={setGenerateDate}

@@ -1,37 +1,19 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import moment from 'moment';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@emotion/react';
 
-import { Button, CardContent, Grid } from '@mui/material';
-import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { CardContent, Grid } from '@mui/material';
+import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Box } from '@mui/system';
 
 import { getGeneralStatsData } from '@Apps/Home/GeneralStats/redux/generalStatsSlice';
 import { Component } from '@/AdminService/Component';
 
-export const GeneralStats = () => {
-    const DEFAULT_TAB = 'visitors';
-    const DATE_FORMAT = 'YYYY-MM-DD';
+export const GeneralStats = ({DATE_FORMAT, generalStats, beginDate, endDate, setBeginDate, setEndDate}) => {
 
     const dispatch = useDispatch();
-
-    const generalStats = useSelector(state => state?.generalStats?.generalStats || {});
-    const loading = useSelector(state => state?.generalStats?.loading);
-
-    const [beginDate, setBeginDate] = useState(
-        moment(generalStats?.params?.beginDate || moment().subtract(7, 'days')).format(DATE_FORMAT)
-    );
-    const [endDate, setEndDate] = useState(
-        moment(generalStats?.params?.endDate || moment()).format(DATE_FORMAT)
-    );
-
-    const [tab, setTab] = useState(DEFAULT_TAB);
-
-    useEffect(() => {
-        dispatch(getGeneralStatsData(null, null));
-    }, [dispatch]);
 
     useEffect(() => {
         if (!beginDate || !endDate) return;
@@ -39,11 +21,22 @@ export const GeneralStats = () => {
     }, [dispatch, beginDate, endDate]);
 
     const graph = useMemo(() => {
-        return generalStats.graph?.[tab] || [];
-    }, [generalStats, tab]);
+        const subscriptions = generalStats.graph?.subscriptions || [];
+        const visitors = generalStats.graph?.visitors || [];
+        const traffic = generalStats.graph?.traffic || [];
+
+        // Merge the data
+        const mergedData = subscriptions.map((sub, index) => ({
+            ...sub,
+            Abonnés: subscriptions[index]?.['subscriptions'] || 0,
+            Traffic: traffic[index]?.['traffic'] || 0,
+            Visiteurs: visitors[index]?.['visitors'] || 0
+        }));
+
+        return mergedData;
+    }, [generalStats]);
 
     const theme = useTheme();
-    const colorProps = theme.palette.primary.main;
 
     const disableEndDateAfterBeginDate = (date) => {
         return endDate && date.isAfter(moment(endDate));
@@ -52,69 +45,37 @@ export const GeneralStats = () => {
     const disableBeginDateBeforeEndDate = (date) => {
         return beginDate && date.isBefore(moment(beginDate));
     };
-    
-
-    if (loading || !generalStats.graph) {
-        return <div>Chargement...</div>;
-    }
 
     return (
         <>
-            <Component.CmtCard sx={{ marginBottom: 4 }}>
-                <Component.CmtCardHeader title="Période sélectionnée" />
-                <CardContent>
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} sm={6}>
-                            <Component.CmtDatePicker
-                                fullWidth
-                                value={beginDate}
-                                setValue={(newValue) => setBeginDate(moment(newValue).format(DATE_FORMAT))}
-                                name={beginDate}
-                                label={'Filtrer du'}
-                                inputSize="small"
-                                shouldDisableDate={disableEndDateAfterBeginDate}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Component.CmtDatePicker
-                                fullWidth
-                                value={endDate}
-                                setValue={(newValue) => setEndDate(moment(newValue).format(DATE_FORMAT))}
-                                name={endDate}
-                                label={'Au'}
-                                inputSize="small"
-                                shouldDisableDate={disableBeginDateBeforeEndDate}
-                            />
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Component.CmtCard>
-
             <Component.CmtCard>
-                <Grid container spacing={0} sx={{ backgroundColor: '#F7F7F7', paddingTop: -15 }}>
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        {Object.entries(generalStats.numbers).map(([tabName, val], index) => (
-                            <Button
-                                key={index}
-                                variant="text"
-                                onClick={() => setTab(tabName)}
-                                fullWidth
-                                color="secondary"
-                                sx={{
-                                    borderBottomRightRadius: tab === tabName && 0,
-                                    borderBottomLeftRadius: tab === tabName && 0,
-                                    borderBottom: (theme) =>
-                                        tab === tabName ? `1px solid ${theme.palette.tertiary.main}` : 'none',
-                                    color: (theme) => (tab === tabName ? theme.palette.tertiary.main : colorProps),
-                                }}
-                            >
-                                <Box>
-                                    <Component.GraphTabTitle variant="h6">{val.label}</Component.GraphTabTitle>
-                                </Box>
-                            </Button>
-                        ))}
+                <Component.CmtCardHeader title="Statistiques générales" />
+
+                <Grid container spacing={4} sx={{ padding: '10px' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Component.CmtDatePicker
+                            fullWidth
+                            value={beginDate}
+                            setValue={(newValue) => setBeginDate(moment(newValue).format(DATE_FORMAT))}
+                            name={beginDate}
+                            label={'Filtrer du'}
+                            inputSize="small"
+                            shouldDisableDate={disableEndDateAfterBeginDate}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Component.CmtDatePicker
+                            fullWidth
+                            value={endDate}
+                            setValue={(newValue) => setEndDate(moment(newValue).format(DATE_FORMAT))}
+                            name={endDate}
+                            label={'Au'}
+                            inputSize="small"
+                            shouldDisableDate={disableBeginDateBeforeEndDate}
+                        />
                     </Grid>
                 </Grid>
+
                 <CardContent sx={{ padding: 0 }}>
                     <Box display="flex" flexDirection="column" alignItems="center" width="100%" height={300}>
                         <ResponsiveContainer width="100%" height="100%">
@@ -124,15 +85,26 @@ export const GeneralStats = () => {
                                         <stop offset="1%" stopColor={theme.palette.primary.main} stopOpacity={0.4} />
                                         <stop offset="99%" stopColor={theme.palette.primary.main} stopOpacity={0} />
                                     </linearGradient>
+                                    <linearGradient id="colorSub" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="1%" stopColor={theme.palette.secondary.main} stopOpacity={0.4} />
+                                        <stop offset="99%" stopColor={theme.palette.secondary.main} stopOpacity={0} />
+                                    </linearGradient>
+                                    <linearGradient id="colorTra" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="1%" stopColor={theme.palette.tertiary.main} stopOpacity={0.4} />
+                                        <stop offset="99%" stopColor={theme.palette.tertiary.main} stopOpacity={0} />
+                                    </linearGradient>
                                 </defs>
                                 <XAxis
                                     dataKey="name"
-                                    interval={0} 
+                                    interval={0}
                                     tick={{ fill: theme.palette.primary.main, ...theme.typography.body2 }}
                                 />
                                 <CartesianGrid vertical={false} />
                                 <Tooltip />
-                                <Area type="monotone" dataKey="nombre de visiteurs" strokeWidth={2} stroke={theme.palette.primary.main} fillOpacity={1} fill="url(#colorUv)" />
+                                <Legend wrapperStyle={{...theme.typography.h5 }} />
+                                    <Area type="monotone" dataKey="Abonnés" strokeWidth={2} stroke={theme.palette.primary.main} fillOpacity={1} fill="url(#colorUv)" />
+                                    <Area type="monotone" dataKey="Visiteurs" strokeWidth={2} stroke={theme.palette.secondary.main} fillOpacity={1} fill="url(#colorSub)" />
+                                    <Area type="monotone" dataKey="Traffic" stokeWidth={2} stroke={theme.palette.tertiary.main} fillOpacity={1} fill="url(#colorTra)" />
                             </AreaChart>
                         </ResponsiveContainer>
                     </Box>
@@ -141,3 +113,5 @@ export const GeneralStats = () => {
         </>
     );
 };
+
+export default GeneralStats;

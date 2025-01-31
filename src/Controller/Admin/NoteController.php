@@ -23,7 +23,17 @@ class NoteController extends AdminController
     #[Rest\View(serializerGroups: ['a_all', 'a_note_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
-        $notes = $this->em->getRepository(Note::class)->findAll();
+        $userId = $this->getUser()->getId(); 
+        $notes = $this->em->getRepository(Note::class)->findByUserId($userId);
+        if (!$notes) {
+            $newNote = new Note();
+            $newNote->setUser( $this->getUser());
+            $newNote->setMessage('Entrez votre note ici.');
+            
+            $this->em->persist($newNote);
+            $this->em->flush();
+            return $this->view($newNote);
+        }
         return $this->view($notes);
     }
 

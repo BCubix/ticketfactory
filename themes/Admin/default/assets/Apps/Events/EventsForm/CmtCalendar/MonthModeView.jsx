@@ -8,12 +8,12 @@ import { CustomTableCell, CustomTableContainer, DayLabel, SelectedTimeBox, Custo
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
 
 const MonthModeView = (props) => {
-    const { values, setFieldValue, setGenerateDate, rows, columns, errors, touched, options, STATES, ...restProps } = props;
+    const { editable, values, setFieldValue, setGenerateDate, rows, columns, errors, touched, options, STATES, ...restProps } = props;
 
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
 
-    const [dialogOpen, setDialogOpen] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogItemIndex, setDialogItemIndex] = useState(null);
     const [creatingItem, setCreatingItem] = useState(false);
 
@@ -54,6 +54,8 @@ const MonthModeView = (props) => {
     }, [creatingItem]);
 
     const handleAddDateClick = () => {
+        if (!editable) return;
+        
         const index = values.eventDates.length;
 
         setDialogItemIndex(index);
@@ -97,11 +99,15 @@ const MonthModeView = (props) => {
     };
 
     const handleCellClick = (day, rowId) => {
+        if (!editable) return;
+        
         setSelectedDay({ ...day, rowId });
         setSelectedTime(null);
     };
 
     const handleTimeClick = (time, item) => {
+        if (!editable) return;
+        
         setSelectedTime(item);
 
         const index = item?.index;
@@ -179,57 +185,60 @@ const MonthModeView = (props) => {
                 <Button onClick={handleAddDateClick}>Ajouter une date</Button>
             </CustomPaper>
 
-            <Dialog
-                open={dialogOpen}
-                onClose={handleCloseDialog}
-                sx={{
-                    '& .MuiDialog-paper': {
-                        overflow: 'visible',
-                    },
-                }}
-            >
-                <DialogTitle>{creatingItem ? 'Ajouter un evenement' : 'Modifier un evenement'}</DialogTitle>
-                <Component.DeleteBlockFabButton
-                    size="small"
-                    onClick={() => {
-                        handleCloseDialog();
+            {editable && (
+                <Dialog
+                    open={dialogOpen}
+                    onClose={handleCloseDialog}
+                    sx={{
+                        '& .MuiDialog-paper': {
+                            overflow: 'visible',
+                        },
                     }}
                 >
-                    <CloseIcon />
-                </Component.DeleteBlockFabButton>
+                    <DialogTitle>{creatingItem ? 'Ajouter un evenement' : 'Modifier un evenement'}</DialogTitle>
+                    <Component.DeleteBlockFabButton
+                        size="small"
+                        onClick={() => {
+                            handleCloseDialog();
+                        }}
+                    >
+                        <CloseIcon />
+                    </Component.DeleteBlockFabButton>
 
-                <DialogContent>
-                    {dialogItemIndex !== null && (
-                        <Component.CmtDisplayFields
+                    <DialogContent>
+                        {dialogItemIndex !== null && (
+                            <Component.CmtDisplayFields
+                                values={values}
+                                setGenerateDate={setGenerateDate}
+                                setFieldValue={setFieldValue}
+                                item={values.eventDates[dialogItemIndex]}
+                                index={dialogItemIndex}
+                                states={STATES}
+                                {...restProps}
+                            />
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <EventAddSpecialPricing
                             values={values}
-                            setGenerateDate={setGenerateDate}
                             setFieldValue={setFieldValue}
-                            item={values.eventDates[dialogItemIndex]}
-                            index={dialogItemIndex}
-                            states={STATES}
-                            {...restProps}
+                            touched={touched}
+                            errors={errors}
+                            selectedDate={values.eventDates[dialogItemIndex]}
+                            {...props}
                         />
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <EventAddSpecialPricing
-                        values={values}
-                        setFieldValue={setFieldValue}
-                        touched={touched}
-                        errors={errors}
-                        selectedDate={values.eventDates[dialogItemIndex]}
-                        {...props}
-                    />
-                    {!creatingItem && (
-                        <Button onClick={handleDeleteItem} color="error">
-                            Supprimer
+                        {!creatingItem && (
+                            <Button onClick={handleDeleteItem} color="error">
+                                Supprimer
+                            </Button>
+                        )}
+                        <Button onClick={handleSubmitForm} color="primary">
+                            Enregistrer
                         </Button>
-                    )}
-                    <Button onClick={handleSubmitForm} color="primary">
-                        Enregistrer
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    </DialogActions>
+                </Dialog>
+)}
+
         </Box>
     );
 };

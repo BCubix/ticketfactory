@@ -20,5 +20,14 @@ class NoteRepository extends CrudRepository
     {
         parent::__construct($registry, Note::class);
     }
+    
+    public function findByUserId(int $userId): ?Note
+    {
+        return $this->createQueryBuilder('n')
+            ->andWhere('n.user = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
 }

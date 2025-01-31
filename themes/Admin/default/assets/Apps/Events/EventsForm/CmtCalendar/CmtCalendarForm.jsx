@@ -58,7 +58,8 @@ const calculateHour = (eventDate, endTime, hour, totalHours) => {
 };
 // End helper functions
 
-export const CmtCalendar = ({ values, setFieldValue, setGenerateDate, options, toolbarProps, STATES, ...restProps }) => {
+export const CmtCalendarForm = ({ editable=false, values, setFieldValue=null, setGenerateDate=null, options,toolbarProps, STATES, ...restProps }) => {
+    
     const today = new Date();
 
     const [selectedDay, setSelectedDay] = useState(today);
@@ -238,7 +239,7 @@ export const CmtCalendar = ({ values, setFieldValue, setGenerateDate, options, t
         let data = [];
         let dayStartHour = startOfDay(selectedDay);
 
-        for (let i = 0; i <= HOURS; i++) {
+        for (let i = 1; i <= HOURS; i++) {
             let id = `line_${i}`;
             let label = format(dayStartHour, 'HH:mm aaa');
 
@@ -316,6 +317,7 @@ export const CmtCalendar = ({ values, setFieldValue, setGenerateDate, options, t
                     <Zoom in>
                         <Grid item xs={12}>
                             <MonthModeView
+                                editable={editable}
                                 values={values}
                                 setFieldValue={setFieldValue}
                                 setGenerateDate={setGenerateDate}
@@ -332,6 +334,7 @@ export const CmtCalendar = ({ values, setFieldValue, setGenerateDate, options, t
                     <Zoom in>
                         <Grid item xs={12}>
                             <WeekModeView
+                                editable={editable}
                                 values={values}
                                 setFieldValue={setFieldValue}
                                 setGenerateDate={setGenerateDate}
@@ -348,6 +351,7 @@ export const CmtCalendar = ({ values, setFieldValue, setGenerateDate, options, t
                     <Zoom in>
                         <Grid item xs={12}>
                             <DayModeView
+                                editable={editable}
                                 values={values}
                                 setFieldValue={setFieldValue}
                                 setGenerateDate={setGenerateDate}

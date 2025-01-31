@@ -38,6 +38,23 @@ class ToDoTaskController extends AdminController
         return $this->view($toDoTask);
     }
 
+    #[Rest\Post('/toDoTask/switch/{toDoTaskId}', requirements: ['toDoTaskId' => '\d+'])]
+    #[Rest\View(serializerGroups: ['a_all', 'a_to_do_task_one'])]
+    public function switch(Request $request, int $toDoTaskId): View
+    {
+        $toDoTask = $this->em->getRepository(ToDoTask::class)->find($toDoTaskId);
+
+        if (!$toDoTask) {
+            throw new NotFoundHttpException(self::NOT_FOUND_MESSAGE);
+        }
+
+        $toDoTask->setFinished(!$toDoTask->getFinished());
+
+        $this->em->flush();
+
+        return $this->view($toDoTask);
+    }
+    
     #[Rest\Post('/toDoTask/{toDoTaskId}', requirements: ['toDoTaskId' => '\d+'])]
     #[Rest\View(serializerGroups: ['a_all', 'a_to_do_task_one'])]
     public function edit(Request $request, int $toDoTaskId): View

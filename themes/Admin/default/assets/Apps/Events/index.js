@@ -18,7 +18,7 @@ import { EventHistory } from '@Apps/Events/EventHistory/EventHistory';
 import eventsReducer from '@Apps/Events/redux/events/eventsSlice';
 import eventsApi from '@Apps/Events/services/api/eventsApi';
 import eventHistoryApi from '@Apps/Events/services/api/eventHistoryApi';
-import { CmtCalendar } from '@Apps/Events/EventsForm/CmtCalendar/CmtCalendar';
+import { CmtCalendarForm } from '@Apps/Events/EventsForm/CmtCalendar/CmtCalendarForm';
 import { eventHistoryCrud } from './EventHistory/EventHistory';
 import { DisplayEventHistoryBlock } from './EventHistory/DisplayEventHistoryBlock';
 
@@ -61,7 +61,7 @@ export const initComponent = ({ userRoles }) => {
     setComponent('EventsPriceForm', EventsPriceForm);
     setComponent('EventsList', EventsList);
     setComponent('EventHistory', EventHistory);
-    setComponent('CmtCalendar', CmtCalendar);
+    setComponent('CmtCalendarForm', CmtCalendarForm);
     setComponent('DisplayEventHistoryBlock', DisplayEventHistoryBlock);
     setComponent('DisplayEventHistoryFields', DisplayEventHistoryFields);
 };

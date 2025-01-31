@@ -4,9 +4,9 @@ import { Api } from '@/AdminService/Api';
 export const toDoTasksSlice = createSlice({
     name: 'toDoTasks',
     initialState: {
-        toDoTasks: [],
-        loading: false,
-        error: null,
+        toDoTasks: null,
+        loadingToDo: false,
+        errorToDo: null,
     },
     reducers: {
         setToDoTasks: (state, action) => {
@@ -25,22 +25,13 @@ export const toDoTasksSlice = createSlice({
             state.toDoTasks = state.toDoTasks.filter(toDoTask => toDoTask.id !== action.payload.id);
         },
         setLoading: (state, action) => {
-            state.loading = action.payload;
+            state.loadingToDo = action.payload;
         },
         setError: (state, action) => {
-            state.error = action.payload;
+            state.errorToDo = action.payload;
         },
     },
 });
-
-export const {
-    setToDoTasks,
-    addToDoTask,
-    updateToDoTask,
-    removeToDoTask,
-    setLoading,
-    setError,
-} = toDoTasksSlice.actions;
 
 export const fetchToDoTasks = () => async dispatch => {
     dispatch(setLoading(true));
@@ -81,4 +72,22 @@ export const deleteToDoTask = (toDoTaskId) => async dispatch => {
     }
 };
 
+export const switchState = (toDoTaskId ) => async (dispatch) => {
+    try {
+        const response = await Api.toDoTasksApi.switchToDoTask(toDoTaskId);
+        dispatch(updateToDoTask(response.data));
+    } catch (error) {
+        dispatch(setError(error.message));
+    }
+};
+
+export const {
+    setToDoTasks,
+    addToDoTask,
+    updateToDoTask,
+    removeToDoTask,
+    setLoading,
+    setError,
+} = toDoTasksSlice.actions;
+export const toDoTasksSelector = (state) => state.toDoTasks;
 export default toDoTasksSlice.reducer;

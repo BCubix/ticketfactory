@@ -4,43 +4,25 @@ import { Api } from '@/AdminService/Api';
 export const notesSlice = createSlice({
     name: 'notes',
     initialState: {
-        notes: [],
-        loading: false,
-        error: null,
+        notes: null,
+        loadingNotes: false,
+        errorNotes: null,
     },
     reducers: {
         setNotes: (state, action) => {
             state.notes = action.payload;
         },
-        addNote: (state, action) => {
-            state.notes.push(action.payload);
-        },
         updateNote: (state, action) => {
-            const index = state.notes.findIndex(note => note.id === action.payload.id);
-            if (index !== -1) {
-                state.notes[index] = action.payload;
-            }
-        },
-        removeNote: (state, action) => {
-            state.notes = state.notes.filter(note => note.id !== action.payload.id);
+            state.notes = action.payload;
         },
         setLoading: (state, action) => {
-            state.loading = action.payload;
+            state.loadingNotes = action.payload;
         },
         setError: (state, action) => {
-            state.error = action.payload;
+            state.errorNotes = action.payload;
         },
     },
 });
-
-export const {
-    setNotes,
-    addNote,
-    updateNote,
-    removeNote,
-    setLoading,
-    setError,
-} = notesSlice.actions;
 
 export const fetchNotes = () => async dispatch => {
     dispatch(setLoading(true));
@@ -54,15 +36,6 @@ export const fetchNotes = () => async dispatch => {
     }
 };
 
-export const createNote = (noteData) => async dispatch => {
-    try {
-        const response = await Api.notesApi.createNote(noteData);
-        dispatch(addNote(response.data));
-    } catch (error) {
-        dispatch(setError(error.message));
-    }
-};
-
 export const editNote = (noteId, noteData) => async dispatch => {
     try {
         const response = await Api.notesApi.editNote(noteId, noteData);
@@ -72,13 +45,11 @@ export const editNote = (noteId, noteData) => async dispatch => {
     }
 };
 
-export const deleteNote = (noteId) => async dispatch => {
-    try {
-        await Api.notesApi.deleteNote(noteId);
-        dispatch(removeNote({ id: noteId }));  // Use 'removeNote' here
-    } catch (error) {
-        dispatch(setError(error.message));
-    }
-};
-
+export const {
+    setNotes,
+    updateNote,
+    setLoading,
+    setError,
+} = notesSlice.actions;
+export const notesSelector = (state) => state.notes;
 export default notesSlice.reducer;

@@ -1,104 +1,72 @@
 import React, { useState, useEffect } from 'react';
-
+import { Component } from '@/AdminService/Component';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchNotes, deleteNote, updateNote } from '@Apps/Home/Notes/redux/notesSlice';
-
+import { editNote } from '@Apps/Home/Notes/redux/notesSlice';
 import { Api } from '@/AdminService/Api';
+import { Button, Box, TextField, Typography } from '@mui/material';
 
-import { Button, IconButton, TextField, List, ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-
-
-export const NotesList = () => {
-    const dispatch = useDispatch();
+export const NotesList = ({note, error, loading}) => {
+    const [noteContent, setNoteContent] = useState('');
 
     useEffect(() => {
-        dispatch(fetchNotes());
-    }, [dispatch]);
-
-    const notes = useSelector(state => state?.notes?.notes || []);
-    const loading = useSelector(state => state?.notes?.loading);
-    const error = useSelector(state => state?.notes?.error);
-
-    const [newNote, setNewNote] = useState('');
-    const [editingNoteId, setEditingNoteId] = useState(null);
-    const [editedMessage, setEditedMessage] = useState('');
-
-    const handleDeleteNote = (id) => {
-        dispatch(deleteNote(id));
-    };
-
-    const handleEditNote = (id, message) => {
-        setEditingNoteId(id);
-        setEditedMessage(message);
-    };
-
-    const handleSaveEdit = () => {
-        if (editedMessage.trim()) {
-            dispatch(updateNote({ id: editingNoteId, message: editedMessage }));
-            setEditingNoteId(null);
-            setEditedMessage('');
+        if (note !== null) {
+            setNoteContent(note?.message || '');
         }
-    };
-
-    const handleAddNote = async () => {
-        if (newNote.trim() === '') {
+    }, [note]);
+    
+    const handleSaveNote = async () => {
+        if (noteContent.trim() === '') {
             return;
         }
-    
-        const result = await Api.notesApi.createNote(newNote);
-        
-        // ensure synchronization
-        dispatch(fetchNotes());
-    
-        setNewNote('');
+
+        const noteId = note?.id || null;
+        dispatch(editNote(noteId, { id: noteId, message: noteContent }));
     };
-    
-    if (loading) return <div>Chargement...</div>;
-    if (error) return <div>Erreur: {error}</div>;
 
     return (
-        <div>
-            <h2>Notes</h2>
-            <List>
-                {notes.map(note => (
-                    <ListItem key={note.id}>
-                        {editingNoteId === note.id ? (
-                            <>
-                                <TextField
-                                    value={editedMessage}
-                                    onChange={(e) => setEditedMessage(e.target.value)}
-                                    label="Edit Note"
-                                    fullWidth
-                                />
-                                <Button onClick={handleSaveEdit}>Enregistrer</Button>
-                            </>
-                        ) : (
-                            <>
-                                <ListItemText primary={note.message} />
-                                <ListItemSecondaryAction>
-                                    <IconButton edge="end" onClick={() => handleEditNote(note.id, note.message)}>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton edge="end" onClick={() => handleDeleteNote(note.id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction>
-                            </>
-                        )}
-                    </ListItem>
-                ))}
-            </List>
-            <div>
+        <Component.CmtCard
+            sx={{
+                height: '65vh',
+                maxWidth: '800px',
+                display: 'flex',
+                flexDirection: 'column',
+                margin: 'auto',
+            }}
+        >
+            <Component.CmtCardHeader title="Notes" />
+            <Box>
+                <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', padding: "10px" }}>
+                    Ceci est un espace dans lequel vous pouvez saisir vos notes pour ne rien oublier.
+                </Typography>
+            </Box>
+            <Box flexGrow={1} display="flex" flexDirection="column" sx={{ padding: '10px', overflow: 'auto' }}>
                 <TextField
-                    value={newNote}
-                    onChange={(e) => setNewNote(e.target.value)}
-                    label="Ajout"
+                    variant="outlined"
+                    value={noteContent}
+                    onChange={(e) => setNoteContent(e.target.value)}
+                    label="Votre note"
                     fullWidth
+                    multiline
+                    sx={{
+                        flexGrow: 1,
+                        '& .MuiInputBase-root': {
+                            height: '100%',
+                            alignItems: 'flex-start',
+                        },
+                        '& .MuiInputBase-input': {
+                            height: '100%',
+                        },
+                    }}
+                    InputProps={{
+                        style: { height: '100%' },
+                    }}
                 />
-                <Button onClick={handleAddNote}>Ajouter une note</Button>
-            </div>
-        </div>
+            </Box>
+            <Box display="flex" justifyContent="center" sx={{ paddingBottom: 4, marginTop: '10px' }}>
+                <Button variant="contained" onClick={handleSaveNote} sx={{ padding: "5px" }}>
+                    Enregistrer
+                </Button>
+            </Box>
+        </Component.CmtCard>
     );
 };

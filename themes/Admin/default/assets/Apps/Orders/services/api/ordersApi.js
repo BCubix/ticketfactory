@@ -37,6 +37,19 @@ const ordersApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+    
+    getLatestOrders: async () => {
+        try {
+            const result = await axios.get(DEFAULT_PATH + '/latest');
+            return { result: true, latestOrders: result.data };
+        } catch (error) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, orders: [] };
+            }
+
+            return { result: false, error: error?.response?.data };
+        }
+    },
 
     getAllOrders: async (filters) => {
         try {

@@ -9,12 +9,17 @@ const toDoTasksApi = {
     },
     
     createToDoTask: async (toDoTaskData) => {
-        const result = await axios.post(TO_DO_TASKS_BASE_PATH, toDoTaskData);
+        const result = await axios.post(TO_DO_TASKS_BASE_PATH, toDoTaskData.message);
         return result;
     },
 
     editToDoTask: async (toDoTaskId, toDoTaskData) => {
         const result = await axios.post(`${TO_DO_TASKS_BASE_PATH}/${toDoTaskId}`, toDoTaskData);
+        return result;
+    },
+    
+    switchToDoTask: async (toDoTaskId) => {
+        const result = await axios.post(`${TO_DO_TASKS_BASE_PATH}/switch/${toDoTaskId}`);
         return result;
     },
 

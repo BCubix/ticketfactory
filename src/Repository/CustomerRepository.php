@@ -77,7 +77,7 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
     {
         $qb = $this->createQueryBuilder('c')
             ->select('COUNT(c.id)')
-            ->where('c.createdAt BETWEEN :startDate AND :endDate')
+            ->where('c.updatedAt BETWEEN :startDate AND :endDate')
             ->setParameter('startDate', $startDate->format('Y-m-d H:i:s'))
             ->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
 

@@ -5,12 +5,12 @@ const generalStatsApi = {
         let result;
         if (endDate === null && beginDate == null)
         {
-            result = await axios.get(`/clientVisit`);
+            result = await axios.get(`/generalStats`);
         }
         else
         {
             result = await axios.get(
-                `/clientVisit?beginDate=${beginDate}&endDate=${endDate}`
+                `/generalStats?beginDate=${beginDate}&endDate=${endDate}`
             );
         }
         

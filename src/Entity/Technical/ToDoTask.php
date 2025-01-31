@@ -35,6 +35,10 @@ class ToDoTask extends Datable
     #[ORM\ManyToOne(targetEntity: User::class)]
     private $user;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_to_do_task_all', 'a_to_do_task_one'])]
+    #[ORM\Column(type: 'boolean')]
+    private $finished = false;
 
     public function getId(): ?int
     {
@@ -49,6 +53,18 @@ class ToDoTask extends Datable
     public function setMessage(string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+    
+    public function getFinished(): ?bool
+    {
+        return $this->finished;
+    }
+
+    public function setFinished(bool $finished): self
+    {
+        $this->finished = $finished;
 
         return $this;
     }

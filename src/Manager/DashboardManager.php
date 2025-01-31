@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Technical\RequestsLog;
+use App\Entity\Order\Order;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -75,7 +76,7 @@ class DashboardManager extends AbstractManager
             
             $data[] = [
                 "name" => $this->generateTagName($beginDate, $adding),
-                "nombre de visiteurs" => $logs
+                "visitors" => $logs
             ];
 
             $beginDate = $aux;
@@ -97,11 +98,35 @@ class DashboardManager extends AbstractManager
             
             $data[] = [
                 "name" => $this->generateTagName($beginDate, $adding),
-                "nombre de visiteurs" => $logs
+                "subscriptions" => $logs
             ];
 
             $beginDate = $aux;
         }
+        
+        return [$data, $total];
+    }
+    
+    public function getTrafficOnSite(\DateTime $beginDate, \DateTime $endDate, string $adding) : array
+    {
+        $data = [];
+        $total = 0;
+        
+        while ($beginDate < $endDate) {
+            $aux = clone $beginDate;
+            $aux->modify($adding);
+
+            $logs = $this->em->getRepository(RequestsLog::class)->findBetweenDatesNonUnique($beginDate, $aux);
+            $total += $logs;
+            
+            $data[] = [
+                "name" => $this->generateTagName($beginDate, $adding),
+                "traffic" => $logs
+            ];
+
+            $beginDate = $aux;
+        }
+        
         return [$data, $total];
     }
     
@@ -124,6 +149,8 @@ class DashboardManager extends AbstractManager
         
         $clientVisits = $this->getClientVisits($beginDate, $endDate, $adding);
         $clientSubcriptions = $this->getSubscriptions($beginDate, $endDate, $adding);
+        $trafficNumber = $this->getTrafficOnSite($beginDate, $endDate, $adding);
+        
         $data =[ 
                 'params' => [
                     'beginDate' => '2024-08-01',
@@ -142,7 +169,88 @@ class DashboardManager extends AbstractManager
                 ],
                 'graph' => [ 'visitors' => $clientVisits[0],
                              'subscriptions' => $clientSubcriptions[0],
-    ]];
+                             'traffic' => $trafficNumber[0],
+        ]];
+        return $data;
+    }
+    
+    private function getSalesData(\DateTime $beginDate, \DateTime $endDate, string $adding) : array
+    {
+        $data =[
+           'numbers' => [
+                'sales' => [
+                    'label' => 'Ventes',
+                ],
+                'orders' => [
+                    'label' => 'Commandes',
+                ],
+                'averageCart' => [
+                    'label' => 'Panier Moyen',
+                ],
+            ],
+            'graph' => [ 'sales' => [],
+                         'orders' => [],
+                         'averageCart' => [],
+        ]];
+        $total = 0;
+        
+        while ($beginDate < $endDate) {
+            $aux = clone $beginDate;
+            $aux->modify($adding);
+
+            $orders = $this->em->getRepository(Order::class)->findBetweenDates($beginDate, $aux);
+            
+            $salesAmounts = 0;
+            foreach($orders as $order)
+            {
+                $cart = $order->getCart();
+                $salesAmounts += $cart->getTotal();
+            }
+            $ordersAmount = count($orders);
+            $averageCartAmount = 0;
+            if ($ordersAmount != 0)
+            {
+                $averageCartAmount = $salesAmounts / ($ordersAmount);
+            }
+            
+            $name = $this->generateTagName($beginDate, $adding);
+            $data['graph']['sales'][] = [
+                "name" => $name,
+                "sales" => $salesAmounts,
+            ];
+            $data['graph']['orders'][] = [
+                "name" => $name,
+                "orders" => $ordersAmount,
+            ];
+            $data['graph']['averageCart'][] = [
+                "name" => $name,
+                "averageCart" => $averageCartAmount,
+            ];
+
+            $beginDate = $aux;
+        }
+        
+        return $data;
+    }
+    
+    public function getSalesStats(string $beginDate, string $endDate) : array
+    {
+        if (null == $beginDate) {
+            $beginDate = new \DateTime();
+        } else {   
+            $beginDate = new \DateTime($beginDate);
+        }
+
+        if (null == $endDate) {
+            $endDate = new \DateTime();
+            $endDate->sub(new \DateInterval('P1M'));
+        } else {
+            $endDate = new \DateTime($endDate);
+        }
+        
+        $adding = $this->getAddingFormat($beginDate, $endDate);
+        
+        $data = $this->getSalesData($beginDate, $endDate, $adding);
         return $data;
     }
 }

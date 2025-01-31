@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { Api } from '@/AdminService/Api';
 
 const initialState = {
-    loading: false,
-    error: null,
-    generalStats: [],
+    generalStatsLoading: false,
+    generalStatsError: null,
+    generalStats: null,
 };
 
 const generalStatsSlice = createSlice({
@@ -16,10 +16,10 @@ const generalStatsSlice = createSlice({
         },
 
         setLoading: (state, action) => {
-            state.loading = action.payload;
+            state.generalStatsLoading = action.payload;
         },
         setError: (state, action) => {
-            state.error = action.payload;
+            state.generalStatsError = action.payload;
         },
     },
 });
@@ -41,4 +41,5 @@ export const {
     setLoading,
     setError,
 } = generalStatsSlice.actions;
+export const generalStatsSelector = (state) => state.generalStats;
 export default generalStatsSlice.reducer;

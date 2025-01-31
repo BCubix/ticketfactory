@@ -67,4 +67,23 @@ class RequestsLogRepository extends AbstractRepository
         ->getSingleScalarResult();
     }
     
+    public function findBetweenDatesNonUnique(\DateTime $beginDate, \DateTime $endDate): int
+    {
+        if (is_string($beginDate)) {
+            $beginDate = new \DateTime($beginDate);
+        }
+    
+        if (is_string($endDate)) {
+            $endDate = new \DateTime($endDate);
+        }
+        
+        return (int) $this->createQueryBuilder('rl')
+        ->select('COUNT(rl.id)')
+        ->where('rl.updatedAt BETWEEN :beginDate AND :endDate')
+        ->setParameter('beginDate', $beginDate)
+        ->setParameter('endDate', $endDate)
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
+    
 }
