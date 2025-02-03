@@ -3,6 +3,7 @@
 namespace App\Entity\Parameter;
 
 use App\Repository\ParameterRepository;
+use Doctrine\DBAL\Types\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -69,8 +70,18 @@ class Parameter
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $helper = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column]
     private ?bool $generalParameter = false;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
+    #[ORM\Column]
+    private ?bool $translatedParameter = false;
 
 
     public function getId(): int
@@ -186,6 +197,18 @@ class Parameter
         return $this;
     }
 
+    public function getHelper(): ?string
+    {
+        return $this->helper;
+    }
+
+    public function setHelper(?string $helper): static
+    {
+        $this->helper = $helper;
+
+        return $this;
+    }
+
     public function isGeneralParameter(): ?bool
     {
         return $this->generalParameter;
@@ -194,6 +217,18 @@ class Parameter
     public function setGeneralParameter(bool $generalParameter): static
     {
         $this->generalParameter = $generalParameter;
+
+        return $this;
+    }
+
+    public function isTranslatedParameter(): ?bool
+    {
+        return $this->translatedParameter;
+    }
+
+    public function setTranslatedParameter(bool $translatedParameter): static
+    {
+        $this->translatedParameter = $translatedParameter;
 
         return $this;
     }

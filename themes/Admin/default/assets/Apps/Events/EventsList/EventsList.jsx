@@ -1,13 +1,13 @@
 import React from 'react';
 
+import { getEventsAction, changeEventsFilters, eventsSelector } from '@Apps/Events/redux/events/eventsSlice';
+
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getEventsAction, changeEventsFilters, eventsSelector } from '@Apps/Events/redux/events/eventsSlice';
-
-import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Crud } from '@/AdminService/Crud';
+import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const eventsListCrud = ({ eventName }) => ({
     title: eventName,
@@ -71,14 +71,14 @@ export const eventsListCrud = ({ eventName }) => ({
     pagination: true,
     tableContextualMenu: true,
     tableList: [
-        { name: 'id', label: 'ID', width: '5%', sortable: true },
-        { name: 'active', label: 'Activé ?', type: 'bool', width: '10%', sortable: true },
-        { name: 'name', label: 'Nom', width: '20%', sortable: true },
-        { name: 'mainCategory.name', label: 'Catégorie', width: '10%', sortable: true },
-        { name: 'room.name', label: 'Salle', width: '10%', sortable: true },
-        { name: 'season.name', label: 'Saison', width: '10%', sortable: true },
-        { name: 'tags.0.name', label: 'Tags', width: '10%', sortable: true },
-        { name: 'lang.isoCode', label: 'Langue', width: '10%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
+        { name: 'id', label: 'ID', width: '70px', sortable: true },
+        { name: 'active', label: 'Activé ?', type: 'bool', width: '100px', sortable: true },
+        { name: 'name', label: 'Nom', width: '400px', sortable: true },
+        { name: 'mainCategory.name', label: 'Catégorie', width: '120px', sortable: true },
+        { name: 'room.name', label: 'Salle', width: '180px', sortable: true },
+        { name: 'season.name', label: 'Saison', width: '180px', sortable: true },
+        { name: 'tags.0.name', label: 'Tags', width: '120px', sortable: true },
+        { name: 'lang.isoCode', label: 'Langue', width: '84px', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     loadDataAction: () => getEventsAction(),
     changeFiltersActions: (props, page) => changeEventsFilters(props, page),
@@ -91,6 +91,11 @@ export const eventsListCrud = ({ eventName }) => ({
             return;
         }
         window.open(el.frontUrl, '_blank').focus();
+    },
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_EVENT_DELETE'),
     },
     links: {
         new: () => `${Constant.EVENTS_BASE_PATH}${Constant.CREATE_PATH}`,

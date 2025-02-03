@@ -6,9 +6,11 @@ import { Box } from '@mui/system';
 import { Constant } from '@/AdminService/Constant';
 import { Component } from '@/AdminService/Component';
 import { Menu } from '@/AdminService/Menu';
+import { useTheme } from '@emotion/react';
 
-export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
+export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight, closeSidebar }) => {
     const { pathname } = useLocation();
+    const theme = useTheme();
 
     const checkPath = (path, relatedLinks) => {
         let p = pathname?.split('/')?.at(2);
@@ -44,13 +46,18 @@ export const SideMenu = ({ sidebarWidth, sidebarOpen, headerHeight }) => {
             ModalProps={{
                 keepMounted: true,
             }}
+            onClick={() => {
+                if (innerWidth < theme.breakpoints.values.sm) {
+                    closeSidebar();
+                }
+            }}
         >
             <Box sx={{ overflow: 'auto', height: '100%' }}>
                 <List disablePadding sx={{ mr: 2, pb: 2 }}>
                     {Menu.filter((el) => el.menu.length > 0).map((menu, index) => (
                         <Box key={index}>
                             <Component.MenuTitle component="li" disableSticky>
-                                <Typography variant="h2" fontSize={12}>
+                                <Typography variant="h2" fontSize={12} className="menus-title">
                                     {menu.title}
                                 </Typography>
                             </Component.MenuTitle>

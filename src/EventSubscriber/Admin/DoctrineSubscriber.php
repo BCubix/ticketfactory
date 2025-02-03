@@ -13,6 +13,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class DoctrineSubscriber implements EventSubscriber
 {
@@ -20,13 +21,15 @@ class DoctrineSubscriber implements EventSubscriber
     private $lm;
     private $cs;
     private $pbs;
+    private $rs;
 
-    public function __construct(EntityManagerInterface $em, LanguageManager $lm, ContentSerializer $cs, PageBlockSerializer $pbs)
+    public function __construct(EntityManagerInterface $em, LanguageManager $lm, ContentSerializer $cs, PageBlockSerializer $pbs, RequestStack $rs)
     {
         $this->em = $em;
         $this->lm = $lm;
         $this->cs = $cs;
         $this->pbs = $pbs;
+        $this->rs = $rs;
     }
 
     public function getSubscribedEvents()
@@ -47,11 +50,11 @@ class DoctrineSubscriber implements EventSubscriber
             $entity->jsonSerialize();
         }
 
-        if (ClassUtils::getClass($entity) == Content::class) {
+        if (ClassUtils::getClass($entity) == Content::class && !$this->isExcludedRoute()) {
             $this->cs->serializeContent($entity);
         }
 
-        if (ClassUtils::getClass($entity) == PageBlock::class) {
+        if (ClassUtils::getClass($entity) == PageBlock::class && !$this->isExcludedRoute()) {
             $this->pbs->serializePageBlock($entity);
         }
 
@@ -65,11 +68,11 @@ class DoctrineSubscriber implements EventSubscriber
             $entity->jsonSerialize();
         }
 
-        if (ClassUtils::getClass($entity) == Content::class) {
+        if (ClassUtils::getClass($entity) == Content::class && !$this->isExcludedRoute()) {
             $this->cs->serializeContent($entity);
         }
 
-        if (ClassUtils::getClass($entity) == PageBlock::class) {
+        if (ClassUtils::getClass($entity) == PageBlock::class && !$this->isExcludedRoute()) {
             $this->pbs->serializePageBlock($entity);
         }
 
@@ -84,12 +87,27 @@ class DoctrineSubscriber implements EventSubscriber
             $className::jsonDeserialize($entity);
         }
 
-        if (ClassUtils::getClass($entity) == Content::class) {
+        if (ClassUtils::getClass($entity) == Content::class && !$this->isExcludedRoute()) {
             $this->cs->deSerializeContent($entity);
         }
 
-        if (ClassUtils::getClass($entity) == PageBlock::class) {
+        if (ClassUtils::getClass($entity) == PageBlock::class && !$this->isExcludedRoute()) {
             $this->pbs->deSerializePageBlock($entity);
         }
+    }
+
+    private function isExcludedRoute(): bool
+    {
+        $currentRequest = $this->rs->getCurrentRequest();
+        if (!$currentRequest) {
+            return false;
+        }
+
+        $controller = $currentRequest->attributes->get('_controller');
+        if (str_contains($controller, 'App\\Controller\\Admin\\VersionnedEntityController::restoreVersion')) {
+            return true;
+        }
+
+        return false;
     }
 }

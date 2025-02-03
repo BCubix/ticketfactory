@@ -27,7 +27,9 @@ export const ListTableBodyLine = ({
     handleClick,
     expendElementTranslation,
     setExpendElementTranslation,
+    additionnalOptions,
     isTranslated = false,
+    ...rest
 }) => {
     return (
         <>
@@ -68,6 +70,8 @@ export const ListTableBodyLine = ({
                     handleClick={handleClick}
                     expendElementTranslation={expendElementTranslation}
                     setExpendElementTranslation={setExpendElementTranslation}
+                    additionnalOptions={additionnalOptions}
+                    {...rest}
                 />
             </Component.CmtDragAndDropTableBodyRow>
 
@@ -96,7 +100,9 @@ export const ListTableBodyLine = ({
                         handleClick={handleClick}
                         expendElementTranslation={expendElementTranslation}
                         setExpendElementTranslation={setExpendElementTranslation}
+                        additionnalOptions={additionnalOptions}
                         isTranslated
+                        {...rest}
                     />
                 ))}
         </>

@@ -1,35 +1,61 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box } from '@mui/system';
 import { CardActions, CardContent, CardMedia, CircularProgress, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 
+import { addonVersionsSelector, getAddonVersionsAction } from '@Apps/AddonVersions/redux/addonVersions/addonVersionsSlice';
+import { getThemesAction, themesSelector } from '@Apps/Themes/redux/themes/themesSlice';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getThemesAction, themesSelector } from '@Apps/Themes/redux/themes/themesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const ThemesList = () => {
-    const { loading, themes, error } = useSelector(themesSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { loading, themes, error } = useSelector(themesSelector);
+    const { addonVersionsLoading, addonVersions, addonVersionsError } = useSelector(addonVersionsSelector);
+    const { user } = useSelector(userProfileSelector);
+    const [isMarketplaceConnected, setMarketplaceConnected] = useState(false);
+    const [marketplaceDialog, setMarketplaceDialog] = useState(false);
     const [createDialog, setCreateDialog] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(null);
     const [loadingDialog, setLoadingDialog] = useState(null);
-
     const [themeName, setThemeName] = useState(null);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const [accessUserCreate, accessUserEdit, accessUserDelete, accessUserParameterEdit] = useMemo(() => {
+        return [
+            checkUserAccess(userRoles, 'ROLE_THEME_CREATE'),
+            checkUserAccess(userRoles, 'ROLE_THEME_EDIT'),
+            checkUserAccess(userRoles, 'ROLE_THEME_DELETE'),
+            checkUserAccess(userRoles, 'ROLE_PARAMETER_EDIT'),
+        ];
+    }, [userRoles]);
 
     useEffect(() => {
         if (!loading && !themes && !error) {
             dispatch(getThemesAction());
         }
+
+        if (!addonVersionsLoading && !addonVersions && !addonVersionsError) {
+            dispatch(getAddonVersionsAction());
+        }
+
+        checkMarketplaceConnection();
 
         apiMiddleware(dispatch, async () => {
             const result = await Api.parametersApi.getParameterValueByKey('core_main_theme');
@@ -41,6 +67,19 @@ export const ThemesList = () => {
             setThemeName(result.paramValue);
         });
     }, []);
+
+    const updateList = useMemo(() => {
+        if (!addonVersions || addonVersions?.length === 0 || !themes || themes.length === 0) {
+            return {};
+        }
+
+        let result = {};
+        themes.forEach((e) => {
+            result[e.name] = addonVersions[e.name]?.version > e.version;
+        });
+
+        return result;
+    }, [themes, addonVersions]);
 
     const handleSubmit = () => {
         setLoadingDialog(null);
@@ -83,31 +122,58 @@ export const ThemesList = () => {
         });
     };
 
+    const checkMarketplaceConnection = async () => {
+        const result = await Api.marketplaceApi.checkIsAuth();
+        if (result?.result) {
+            setMarketplaceDialog(false);
+            setMarketplaceConnected(true);
+        }
+    };
+
+    const handleUpdateTheme = async (theme) => {
+        const result = await Api.addonVersionsApi.updateTheme(theme.name);
+        if (result?.result) {
+            NotificationManager.success('Le thème à bien été mis à jour', 'Succès', Constant.REDIRECTION_TIME);
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    };
+
     if (!themes) {
         return <></>;
     }
 
     return (
         <>
-            <Component.CmtPageWrapper title={'Themes'}>
+            <Component.CmtPageWrapper
+                title={'Themes'}
+                actionButton={
+                    accessUserEdit && !isMarketplaceConnected ? (
+                        <Component.ActionButton variant="contained" onClick={() => setMarketplaceDialog(true)}>
+                            Connexion à la marketplace
+                        </Component.ActionButton>
+                    ) : null
+                }
+            >
                 <Component.CmtCard sx={{ width: '100%', mt: 5 }}>
                     <Component.CmtCardHeader
                         title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Box className="list-header">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     Liste des thèmes
                                 </Typography>
-                                <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
-                                    Upload
-                                </Component.CreateButton>
+                                {accessUserCreate && (
+                                    <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)}>
+                                        Upload
+                                    </Component.CreateButton>
+                                )}
                             </Box>
                         }
                     />
                     <CardContent>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 5 }}>
+                        <Box className="flex wrap margin-top-5">
                             {themes.map((theme, index) => (
                                 <Component.CmtCard
-                                    sx={{ width: 300, marginInline: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }}
+                                    sx={{ width: 300, margin: 3, ...(themeName === theme.name && { border: 2, borderColor: 'green' }) }}
                                     overflow="hidden"
                                     key={index}
                                 >
@@ -129,34 +195,39 @@ export const ThemesList = () => {
                                     <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
                                         {theme.name !== themeName && (
                                             <>
-                                                <Component.ActionFabButton
-                                                    sx={{ marginInline: 1 }}
-                                                    color="primary"
-                                                    size="small"
-                                                    aria-label="Selection"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleSelect(theme.name);
-                                                    }}
-                                                >
-                                                    <CheckCircleIcon />
-                                                </Component.ActionFabButton>
-                                                <Component.DeleteFabButton
-                                                    sx={{ marginInline: 1 }}
-                                                    color="error"
-                                                    size="small"
-                                                    aria-label="Supprimer"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setDeleteDialog(theme.name);
-                                                    }}
-                                                >
-                                                    <DeleteIcon />
-                                                </Component.DeleteFabButton>
+                                                {accessUserEdit && (
+                                                    <Component.ActionFabButton
+                                                        sx={{ marginInline: 1 }}
+                                                        color="primary"
+                                                        size="small"
+                                                        aria-label="Selection"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleSelect(theme.name);
+                                                        }}
+                                                    >
+                                                        <CheckCircleIcon />
+                                                    </Component.ActionFabButton>
+                                                )}
+
+                                                {accessUserDelete && (
+                                                    <Component.DeleteFabButton
+                                                        sx={{ marginInline: 1 }}
+                                                        color="error"
+                                                        size="small"
+                                                        aria-label="Supprimer"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setDeleteDialog(theme.name);
+                                                        }}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </Component.DeleteFabButton>
+                                                )}
                                             </>
                                         )}
 
-                                        {theme.name === themeName && (
+                                        {theme.name === themeName && accessUserEdit && accessUserParameterEdit && (
                                             <Component.EditFabButton
                                                 sx={{ marginInline: 1 }}
                                                 size="small"
@@ -169,6 +240,26 @@ export const ThemesList = () => {
                                                 <SettingsIcon />
                                             </Component.EditFabButton>
                                         )}
+
+                                        {accessUserEdit && updateList[theme.name] && (
+                                            <Component.ActionFabButton
+                                                sx={{ marginInline: 1 }}
+                                                color="primary"
+                                                size="small"
+                                                aria-label="Selection"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+
+                                                    if (!isMarketplaceConnected) {
+                                                        setMarketplaceDialog(true);
+                                                    }
+
+                                                    handleUpdateTheme(theme);
+                                                }}
+                                            >
+                                                <SystemUpdateAltIcon />
+                                            </Component.ActionFabButton>
+                                        )}
                                     </CardActions>
                                 </Component.CmtCard>
                             ))}
@@ -176,6 +267,7 @@ export const ThemesList = () => {
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
+
             <Dialog fullWidth maxWidth="md" open={createDialog} onClose={() => setCreateDialog(false)}>
                 <DialogTitle sx={{ fontSize: 20 }}>Ajouter un zip</DialogTitle>
                 <DialogContent>
@@ -192,6 +284,7 @@ export const ThemesList = () => {
                     />
                 </DialogContent>
             </Dialog>
+
             <Component.DeleteDialog open={!!deleteDialog} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                 <Box textAlign="center" py={3}>
                     <Typography>Êtes-vous sûr de vouloir supprimer ce thème ?</Typography>
@@ -199,6 +292,7 @@ export const ThemesList = () => {
                     <Typography>Cette action est irréversible.</Typography>
                 </Box>
             </Component.DeleteDialog>
+
             <Dialog fullWidth open={loadingDialog !== null} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <DialogTitle sx={{ fontSize: 20 }}>{loadingDialog}</DialogTitle>
                 <DialogContent>
@@ -207,6 +301,22 @@ export const ThemesList = () => {
                     </Box>
                 </DialogContent>
             </Dialog>
+
+            {!isMarketplaceConnected && (
+                <Component.MarketplaceConnectionDialog
+                    open={marketplaceDialog}
+                    onCancel={() => {
+                        setMarketplaceDialog(false);
+                        setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false });
+                    }}
+                    onConnected={() => {
+                        setMarketplaceDialog(false);
+                        setMarketplaceConnected(true);
+
+                        dispatch(getAddonVersionsAction());
+                    }}
+                />
+            )}
         </>
     );
 };

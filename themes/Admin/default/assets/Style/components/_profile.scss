@@ -1,0 +1,12 @@
+.profile {
+    &_rights {
+        &_group {
+            margin-bottom: 30px;
+
+            &_name {
+                font-weight: 500 !important;
+                text-transform: uppercase;
+            }
+        }
+    }
+}

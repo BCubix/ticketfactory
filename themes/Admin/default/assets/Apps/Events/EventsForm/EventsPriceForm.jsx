@@ -1,12 +1,11 @@
 import React, { useRef } from 'react';
+
 import { FieldArray } from 'formik';
-
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Card, CardContent, Grid } from '@mui/material';
-
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import { Box, Card, CardContent, Grid, Radio, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const eventsPriceFormFields = {
     fields: [
@@ -18,7 +17,7 @@ export const eventsPriceFormFields = {
             },
             input: (props) => {
                 return {
-                    name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.name`,
+                    name: `eventPriceCategories.${props.blockIndex}.eventPrices.${props.index}.name`,
                     label: 'Nom',
                     inputType: 'textField',
                     required: true,
@@ -36,7 +35,7 @@ export const eventsPriceFormFields = {
             },
             input: (props) => {
                 return {
-                    name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.price`,
+                    name: `eventPriceCategories.${props.blockIndex}.eventPrices.${props.index}.price`,
                     label: 'Prix',
                     inputType: 'textField',
                     type: 'number',
@@ -54,7 +53,7 @@ export const eventsPriceFormFields = {
             },
             input: (props) => {
                 return {
-                    name: `eventPriceBlocks.${props.blockIndex}.eventPrices.${props.index}.annotation`,
+                    name: `eventPriceCategories.${props.blockIndex}.eventPrices.${props.index}.annotation`,
                     label: 'Annotation',
                     inputType: 'textField',
                     sx: { marginInline: 1 },
@@ -63,57 +62,118 @@ export const eventsPriceFormFields = {
                 };
             },
         },
+        {
+            keyId: 'input-price-default',
+            style: {
+                xs: 12,
+            },
+            component: ({ values, setFieldValue, ...props }) => {
+                const eventPrices = values?.eventPriceCategories?.[props.blockIndex]?.eventPrices || [];
+                const isDefaultPrice = eventPrices[props.index]?.defaultPrice;
+
+                return (
+                    <div>
+                        <Typography>
+                            {' '}
+                            Tarif par défaut :
+                            <Radio
+                                checked={isDefaultPrice}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+
+                                    const updatedEventPrices = eventPrices.map((price, index) => ({
+                                        ...price,
+                                        defaultPrice: index === props.index,
+                                    }));
+
+                                    setFieldValue(`eventPriceCategories.${props.blockIndex}.eventPrices`, updatedEventPrices);
+                                }}
+                                id={`eventPriceCategories.${props.blockIndex}.eventPrices.${props.index}.defaultPrice`}
+                            />
+                        </Typography>
+                    </div>
+                );
+            },
+        },
     ],
 };
+export const EventsPriceForm = ({ dataPath = 'eventPriceCategories', values, touched, errors, handleChange, handleBlur, blockIndex, fields, ...props }) => {
+    // Helper function to access dynamic paths in values
+    const getNestedValue = (path, object) => {
+        return path.split('.').reduce((acc, part) => acc?.[part], object);
+    };
+    const handleString = (inputString) => {
+        if (inputString.endsWith('eventPriceCategories')) {
+            let res = inputString.slice(0, inputString.lastIndexOf('eventPriceCategories')).replace(/\.$/, '');
+            if (res !== '' && res[res.length - 1] !== '.')
+                // Correct way to check the last character
+                res += '.';
+            return res;
+        }
+        return inputString;
+    };
 
-export const EventsPriceForm = ({ values, touched, errors, handleChange, handleBlur, blockIndex, fields }) => {
-    const index = useRef(values?.eventPriceBlocks[blockIndex]?.eventPrices?.length || 0);
+    const eventPriceCategories = getNestedValue(dataPath, values) || [];
+    const eventPrices = eventPriceCategories[blockIndex]?.eventPrices || [];
+
+    const index = useRef(eventPrices.length || 0);
 
     return (
-        <FieldArray name={`eventPriceBlocks[${blockIndex}].eventPrices`}>
+        <FieldArray name={`${dataPath}[${blockIndex}].eventPrices`}>
             {({ remove, push }) => (
-                <Box sx={{ padding: 2 }}>
+                <Box className="padding-2">
                     <Grid container spacing={6}>
-                        {values?.eventPriceBlocks[blockIndex]?.eventPrices?.map((item, index) => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
-                                    <CardContent sx={{ position: 'relative' }}>
-                                        <Grid container spacing={4}>
-                                            <Component.CmtDisplayFields
-                                                fields={fields}
-                                                values={values}
-                                                touched={touched}
-                                                errors={errors}
-                                                handleChange={handleChange}
-                                                handleBlur={handleBlur}
-                                                blockIndex={blockIndex}
-                                                item={item}
-                                                index={index}
-                                            />
-                                        </Grid>
+                        {/* Loop over eventPrices */}
+                        {eventPrices.map((item, index) => {
+                            return (
+                                <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
+                                    <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
+                                        <CardContent sx={{ position: 'relative' }}>
+                                            <Grid container spacing={4}>
+                                                <Component.CmtDisplayFields
+                                                    fields={fields}
+                                                    values={values}
+                                                    touched={touched}
+                                                    errors={errors}
+                                                    handleChange={handleChange}
+                                                    handleBlur={handleBlur}
+                                                    blockIndex={blockIndex}
+                                                    item={item}
+                                                    index={index}
+                                                    baseName={handleString(dataPath)}
+                                                    {...props}
+                                                />
+                                            </Grid>
 
-                                        <Component.DeleteBlockFabButton
-                                            size="small"
-                                            onClick={() => {
-                                                remove(index);
-                                            }}
-                                        >
-                                            <DeleteIcon />
-                                        </Component.DeleteBlockFabButton>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        ))}
+                                            <Component.DeleteBlockFabButton
+                                                size="small"
+                                                onClick={() => {
+                                                    remove(index); // Remove the eventPrice from the array
+                                                }}
+                                            >
+                                                <DeleteIcon />
+                                            </Component.DeleteBlockFabButton>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            );
+                        })}
                     </Grid>
 
-                    <Box pt={4} pl={4} display="flex" justifyContent={'flex-end'}>
+                    <Box className="flex row-end padding-top-4 padding-left-4">
                         <Component.AddBlockButton
                             size="small"
                             color="primary"
                             variant="outlined"
                             id="addPriceButton"
                             onClick={() => {
-                                push({ name: '', annotation: '', price: '', index: index.current });
+                                push({
+                                    name: '',
+                                    annotation: '',
+                                    price: '',
+                                    defaultPrice: index.current === 0,
+                                    index: index.current,
+                                });
                                 index.current = index.current + 1;
                             }}
                         >

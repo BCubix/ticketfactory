@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
+import { ClickAwayListener, Dialog, DialogContent, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
@@ -30,9 +31,11 @@ export const CmtMediaModal = ({
     updatedMedia = null,
     imageFormatList,
 }) => {
+    const updateRequestNb = useRef(0);
     const [createDialog, setCreateDialog] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
     const [multipleSelect, setMultipleSelect] = useState([]);
+    const [displayFullsizeImage, setDisplayFullsizeImage] = useState(false);
 
     const multiple = useMemo(() => {
         return Array.isArray(media);
@@ -46,9 +49,9 @@ export const CmtMediaModal = ({
         setSelectedMedia(null);
     }, [open]);
 
-    const handleSubmit = () => {
+    const handleSubmit = async (addedMedias) => {
         setCreateDialog(false);
-        onAddNewMedia();
+        onAddNewMedia(addedMedias);
         NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
     };
 
@@ -103,7 +106,16 @@ export const CmtMediaModal = ({
     };
 
     return (
-        <Dialog open={open} onClose={onClose} fullScreen TransitionComponent={Transition}>
+        <Dialog
+            open={open}
+            onClose={() => {
+                if (updateRequestNb.current <= 0) {
+                    onClose();
+                }
+            }}
+            fullScreen
+            TransitionComponent={Transition}
+        >
             <DialogTitle sx={{ borderBottom: '1px solid #d3d3d3' }}>
                 <Box display="flex" justifyContent="space-between">
                     <Typography component="h1" variant="h5" fontSize={20}>
@@ -112,7 +124,11 @@ export const CmtMediaModal = ({
 
                     <IconButton
                         aria-label="close"
-                        onClick={onClose}
+                        onClick={() => {
+                            if (updateRequestNb.current <= 0) {
+                                onClose();
+                            }
+                        }}
                         id="close-media-modal"
                         sx={{
                             position: 'absolute',
@@ -126,7 +142,7 @@ export const CmtMediaModal = ({
                 </Box>
             </DialogTitle>
             <Box height="100%" width={'100%'} sx={{ padding: 0 }}>
-                <Grid container sx={{ height: '100%' }}>
+                <Grid container className="min-height">
                     <Grid item xs={12} md={9} px={5} py={5}>
                         <Component.CreateButton variant="contained" sx={{ marginLeft: 2 }} onClick={() => setCreateDialog(true)}>
                             Créer un nouveau média
@@ -197,7 +213,7 @@ export const CmtMediaModal = ({
                             </Box>
                         )}
                     </Grid>
-                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', height: '100%', marginTop: 3 }}>
+                    <Grid item xs={12} md={3} sx={{ borderLeft: '1px solid #d3d3d3', marginTop: 3 }}>
                         <Component.CmtMediaModalInfos
                             media={media}
                             selectedMedia={selectedMedia}
@@ -207,6 +223,12 @@ export const CmtMediaModal = ({
                             onClick={onClick}
                             AddMediaLabel={AddMediaLabel}
                             RemoveMediaLabel={RemoveMediaLabel}
+                            startUpdatingMedia={() => {
+                                updateRequestNb.current += 1;
+                            }}
+                            endUpdatingMedia={() => {
+                                updateRequestNb.current -= 1;
+                            }}
                             updatedMedia={(newMedia) => {
                                 if (selectedMedia?.id === newMedia?.id) {
                                     setSelectedMedia(newMedia);
@@ -224,6 +246,7 @@ export const CmtMediaModal = ({
                                 }
                             }}
                             imageFormatList={imageFormatList}
+                            onClickDisplayFullImage={() => setDisplayFullsizeImage(true)}
                         />
                     </Grid>
                 </Grid>
@@ -234,6 +257,15 @@ export const CmtMediaModal = ({
                     <Component.CreateMedia handleSubmit={handleSubmit} />
                 </DialogContent>
             </Dialog>
+
+            {displayFullsizeImage && (
+                <Box className="image-fullscreen-wrapper">
+                    <CloseIcon className="image-fullscreen-close" onClick={() => setDisplayFullsizeImage(false)} />
+                    <ClickAwayListener onClickAway={() => setDisplayFullsizeImage(false)}>
+                        <Box component="img" className="image-fullscreen" src={Constant.MEDIA_FILE_BASE_URL + selectedMedia?.documentUrl} alt={selectedMedia.alt} />
+                    </ClickAwayListener>
+                </Box>
+            )}
         </Dialog>
     );
 };

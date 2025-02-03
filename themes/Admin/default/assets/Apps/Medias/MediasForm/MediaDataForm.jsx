@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Grid, InputLabel } from '@mui/material';
+import { Button, Grid, InputLabel, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 import { getMediaType } from '@Services/utils/getMediaType';
@@ -11,7 +11,7 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
         <Grid item xs={12} sm={6} md={4} container spacing={4}>
             <Grid item xs={12}>
                 <InputLabel sx={{ fontSize: 12 }}>Aperçu</InputLabel>
-                <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Box sx={{ marginTop: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', maxHeight: 300 }}>
                     <Component.CmtDisplayMediaType media={media} width={'auto'} height={'auto'} maxHeight="250px" maxWidth="100%" />
                     {mediaType === 'image' && (
                         <Component.SpecialActionButton variant="contained" sx={{ mt: 5 }} onClick={() => setEditImage(true)}>
@@ -64,6 +64,10 @@ const GeneralInformation = ({ values, media, handleChange, setFieldValue, errors
                     sx={{ mt: 3 }}
                 />
             </Grid>
+
+            <Grid item xs={12}>
+                <Component.CmtDisplayMediaMeta selectedMedia={media} />
+            </Grid>
         </Grid>
     </Grid>
 );
@@ -73,7 +77,7 @@ const Formats = ({ values, setFieldValue, touched, errors, imageFormatList }) =>
         <Grid container spacing={4} sx={{ marginTop: 3 }}>
             <Grid item xs={12}>
                 <Component.CmtSelectField
-                    label="Formats"
+                    label="Emplacements"
                     multiple
                     name={`imageFormats`}
                     value={values.imageFormats}
@@ -103,7 +107,7 @@ const Categories = ({ values, setFieldValue, errors, touched, mediaCategoriesLis
     </Grid>
 );
 
-export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, mediaParameterList, setMediaFormatList, imageFormatList }) => {
+export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategoriesList, mediaType, setEditImage, imageFormatList, userDeleteRight }) => {
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du fichier'),
     });
@@ -158,16 +162,21 @@ export const MediaDataForm = ({ media, handleSubmit, deleteElement, mediaCategor
                                 component: <Categories values={values} setFieldValue={setFieldValue} errors={errors} touched={touched} mediaCategoriesList={mediaCategoriesList} />,
                             },
                             {
-                                label: 'Formats',
-                                id: 'formats',
+                                label: 'Emplacements',
+                                id: 'locations',
                                 component: <Formats values={values} setFieldValue={setFieldValue} touched={touched} errors={errors} imageFormatList={imageFormatList} />,
+                                hidden: !['image', 'audio', 'video'].includes(media?.realType),
                             },
                         ]}
                     />
+
                     <Box display="flex" sx={{ mb: 5, mt: 4 }}>
-                        <Button id="deleteButton" color="error" onClick={deleteElement}>
-                            Supprimer l'element
-                        </Button>
+                        {userDeleteRight && (
+                            <Button id="deleteButton" color="error" onClick={deleteElement}>
+                                Supprimer l'element
+                            </Button>
+                        )}
+
                         <Box display={'flex'} sx={{ pb: 3, pt: 5, ml: 'auto' }} alignItems="center">
                             <Component.CmtActiveField values={values} setFieldValue={setFieldValue} text="Média actif ?" mr={0} />
                             <Button id="submitForm" type="submit" variant="contained" sx={{ ml: 3 }} disabled={isSubmitting}>

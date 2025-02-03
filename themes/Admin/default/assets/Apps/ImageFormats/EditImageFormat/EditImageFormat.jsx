@@ -8,13 +8,13 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getImageFormatsAction } from '@Apps/ImageFormats/redux/imageFormats/imageFormatSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { Crud } from '@/AdminService/Crud';
 import { imageFormatsInitialSchema, imageFormatsValidationSchema, imageFormatsForm } from '../ImageFormatsForm/ImageFormatsForm';
 
 export const imageFormatsEditCrud = {
     form: {
-        title: "Modification d'un format d'image",
+        title: "Modification d'un emplacement de média",
         initialSchema: imageFormatsInitialSchema,
         validationSchema: imageFormatsValidationSchema,
     },
@@ -62,7 +62,7 @@ export const EditImageFormat = () => {
         const result = await Api.imageFormatsApi.editImageFormat(id, values);
 
         if (result.result) {
-            NotificationManager.success('Le format a bien été modifié. Pensez à regénérer les miniatures ici-dessous !', 'Succès', Constant.REDIRECTION_TIME);
+            NotificationManager.success("L'emplacement a bien été modifié. Pensez à regénérer les miniatures ici-dessous !", 'Succès', Constant.REDIRECTION_TIME);
 
             dispatch(getImageFormatsAction());
 

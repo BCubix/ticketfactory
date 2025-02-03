@@ -11,6 +11,9 @@ import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { copyData } from '@Services/utils/copyData';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const urlListCrud = {
     title: 'Url',
@@ -27,11 +30,30 @@ export const urlListCrud = {
         { name: 'page.slug', label: 'Page', width: '20%', sortable: false },
         { name: 'slug', label: 'PermaLink', width: '20%', sortable: false },
     ],
-    parameterList: ['core_index_site', 'core_generate_seo', 'core_use_ssl', 'core_use_cache'],
+    parameterList: [
+        'core_index_site',
+        'core_generate_seo',
+        'core_use_ssl',
+        'core_use_cache',
+        'core_seo_event_title',
+        'core_seo_event_description',
+        'core_seo_event_category_title',
+        'core_seo_event_category_description',
+        'core_seo_product_title',
+        'core_seo_product_description',
+        'core_seo_product_category_title',
+        'core_seo_product_category_description',
+        'core_default_social_network_image',
+    ],
     loadDataAction: () => getUrlAction(),
     changeFiltersActions: (props, page) => changeUrlFilters(props, page),
     dataSelector: urlSelector,
     dataList: (selector) => selector.url,
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_URL_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_URL_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_URL_DELETE'),
+    },
     links: {
         edit: (id) => `${Constant.URL_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
     },
@@ -40,8 +62,17 @@ export const urlListCrud = {
 };
 
 export const UrlList = ({ listCrud = Crud.url.list }) => {
-    const objectData = useSelector(listCrud.dataSelector);
     const dispatch = useDispatch();
+    const objectData = useSelector(listCrud.dataSelector);
+    const { user } = useSelector(userProfileSelector);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const accessUserEdit = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_URL_EDIT');
+    }, [userRoles]);
 
     const isFiltered = useMemo(() => {
         let filtered = false;
@@ -85,5 +116,5 @@ export const UrlList = ({ listCrud = Crud.url.list }) => {
         });
     };
 
-    return <Component.CmtCrudList listCrud={listCrud} onDragEnd={isFiltered ? null : handleDragEnd} />;
+    return <Component.CmtCrudList listCrud={listCrud} onDragEnd={!accessUserEdit || isFiltered ? null : handleDragEnd} />;
 };

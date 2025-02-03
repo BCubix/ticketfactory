@@ -62,7 +62,7 @@ export function setMenu(position, title, menu = []) {
 export function getMenu(title) {
     checkString(title);
 
-    return MenuObj?.find((item) => item?.title === title);
+    return MenuObj?.find((item) => item()?.title === title);
 }
 
 export function getSubMenu(title, name = null) {

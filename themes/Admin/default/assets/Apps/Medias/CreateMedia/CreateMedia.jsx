@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
 import { intitializeDropzone } from '@Apps/Medias/services/utils/dropzone';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
 import { useSelector } from 'react-redux';
 

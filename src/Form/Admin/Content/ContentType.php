@@ -5,14 +5,13 @@ namespace App\Form\Admin\Content;
 use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Content\Content;
 use App\Entity\Language\Language;
-use App\Entity\Page\Page;
 use App\Repository\LanguageRepository;
-use App\Repository\PageRepository;
 use App\Form\Admin\SEOAble\SEOAbleType;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormEvent;
@@ -28,7 +27,12 @@ class ContentType extends AdminBaseFormType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0']])
             ->add('title',                TextType::class,            [])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
+            ->add('publicationStatus',    ChoiceType::class,          [
+                'choices'  => array_flip(Content::PUBLICATION_STATUS)
+            ])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,
                 'choice_label'  => 'name',
@@ -42,16 +46,6 @@ class ContentType extends AdminBaseFormType
             ->add('languageGroup',        UuidType::class,            [])
             ->add('seo',                  SEOAbleType::class,         [
                 'data_class' => Content::class,
-            ])
-            ->add('page',                 EntityType::class,          [
-                'class'         => Page::class,
-                'choice_label'  => 'title',
-                'multiple'      => false,
-                'query_builder' => function (PageRepository $pr) {
-                    return $pr
-                        ->createQueryBuilder('p')
-                        ->orderBy('p.title', 'ASC');
-                }
             ]);
 
         $builder->addEventListener(

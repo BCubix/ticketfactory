@@ -285,7 +285,7 @@ export const MediaCategoriesList = ({ listCrud = Crud?.mediaCategories?.list, ..
                 <Component.CmtCard sx={{ width: '100%', mt: 2 }}>
                     <Component.CmtCardHeader
                         title={
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                            <Box className="list-header">
                                 <Typography component="h2" variant="h5" sx={{ color: (theme) => theme.palette.primary.dark }}>
                                     Liste des catégories de média
                                 </Typography>

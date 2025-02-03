@@ -11,6 +11,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class CustomerController extends CrudController
@@ -21,6 +22,7 @@ class CustomerController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Ce client n'existe pas.";
 
     #[Rest\Get('/customers')]
+    #[IsGranted('ROLE_CUSTOMER_READ')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_customer_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -33,6 +35,7 @@ class CustomerController extends CrudController
     }
 
     #[Rest\Get('/customers/{customerId}', requirements: ['customerId' => '\d+'])]
+    #[IsGranted('ROLE_CUSTOMER_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_customer_one'])]
     public function getOne(Request $request, int $customerId): View
     {
@@ -44,6 +47,7 @@ class CustomerController extends CrudController
     }
 
     #[Rest\Post('/customers')]
+    #[IsGranted('ROLE_CUSTOMER_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_customer_one'])]
     public function add(Request $request): View
     {
@@ -55,6 +59,7 @@ class CustomerController extends CrudController
     }
 
     #[Rest\Post('/customers/{customerId}', requirements: ['customerId' => '\d+'])]
+    #[IsGranted('ROLE_CUSTOMER_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_customer_one'])]
     public function edit(Request $request, int $customerId): View
     {
@@ -66,6 +71,7 @@ class CustomerController extends CrudController
     }
 
     #[Rest\Delete('/customers/{customerId}', requirements: ['customerId' => '\d+'])]
+    #[IsGranted('ROLE_CUSTOMER_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_customer_one'])]
     public function delete(Request $request, int $customerId): View
     {

@@ -26,6 +26,7 @@ export const vouchersInitialSchema = {
     endDate: (initValues) => initValues?.endDate || '',
     active: (initValues) => initValues?.active || false,
     eventCategories: (initValues) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : []),
+    productCategories: (initValues) => (initValues?.productCategories ? initValues?.productCategories?.map((el) => el.id) : []),
 };
 
 export const vouchersValidationSchema = {
@@ -53,6 +54,13 @@ export const vouchersForm = {
                 function: ({ values, formData }) => {
                     values?.eventCategories.forEach((element, index) => {
                         formData.append(`eventCategories[${index}]`, element);
+                    });
+                },
+            },
+            productCategories: {
+                function: ({ values, formData }) => {
+                    values?.productCategories.forEach((element, index) => {
+                        formData.append(`productCategories[${index}]`, element);
                     });
                 },
             },
@@ -148,7 +156,7 @@ export const vouchersForm = {
                             },
                         },
                         {
-                            keyId: 'input-unit',
+                            keyId: 'input-event-category',
                             style: { xs: 12 },
                             component: ({ initialValues, values, eventCategoriesList, setFieldValue, touched, errors }) => {
                                 const defaultExpend = useMemo(() => {
@@ -164,7 +172,7 @@ export const vouchersForm = {
                                 return (
                                     <>
                                         <Box display="flex" justifyContent={'space-between'}>
-                                            <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
+                                            <Typography variant="body1" sx={{ mt: 2 }}>
                                                 Catégories d'évènements rattachées
                                             </Typography>
                                         </Box>
@@ -177,11 +185,52 @@ export const vouchersForm = {
                                             defaultExpandIcon={<ChevronRightIcon />}
                                             sx={{ flexGrow: 1, overflowY: 'auto' }}
                                         >
-                                            {displayCategoriesOptions(eventCategoriesList, values, setFieldValue)}
+                                            {displayCategoriesOptions(eventCategoriesList, values, setFieldValue, 'eventCategories')}
                                         </TreeView>
                                         {touched?.eventCategories && errors?.eventCategories && (
                                             <Typography sx={{ fontSize: 12 }} color="error" id="eventCategories-helper-text">
                                                 {touched?.eventCategories && errors?.eventCategories}
+                                            </Typography>
+                                        )}
+                                    </>
+                                );
+                            },
+                        },
+                        {
+                            keyId: 'input-product-category',
+                            style: { xs: 12 },
+                            component: ({ initialValues, values, productCategoriesList, setFieldValue, touched, errors }) => {
+                                const defaultExpend = useMemo(() => {
+                                    let list = [];
+
+                                    initialValues?.productCategories?.forEach((el) => {
+                                        list.push(...getDefaultParentPath(productCategoriesList, el));
+                                    });
+
+                                    return list;
+                                }, []);
+
+                                return (
+                                    <>
+                                        <Box display="flex" justifyContent={'space-between'}>
+                                            <Typography variant="body1" sx={{ mt: 2 }}>
+                                                Catégories de produits rattachées
+                                            </Typography>
+                                        </Box>
+                                        <TreeView
+                                            size="small"
+                                            id="productCategories"
+                                            label="Catégories"
+                                            defaultCollapseIcon={<ExpandMoreIcon />}
+                                            defaultExpanded={[productCategoriesList.id?.toString(), ...defaultExpend]}
+                                            defaultExpandIcon={<ChevronRightIcon />}
+                                            sx={{ flexGrow: 1, overflowY: 'auto' }}
+                                        >
+                                            {displayCategoriesOptions(productCategoriesList, values, setFieldValue, 'productCategories')}
+                                        </TreeView>
+                                        {touched?.productCategories && errors?.productCategories && (
+                                            <Typography sx={{ fontSize: 12 }} color="error" id="productCategories-helper-text">
+                                                {touched?.productCategories && errors?.productCategories}
                                             </Typography>
                                         )}
                                     </>
@@ -221,21 +270,21 @@ export const vouchersForm = {
     ...DEFAULT_CRUD_FORM_COMPONENTS,
 };
 
-const displayCategoriesOptions = (list, values, setFieldValue) => {
+const displayCategoriesOptions = (list, values, setFieldValue, name) => {
     if (!list || list?.length === 0) {
         return <></>;
     }
 
     const handleCheckCategory = (id) => {
-        let categories = [...values?.eventCategories];
+        let categories = [...values[name]];
         const check = categories?.includes(id);
 
         if (check) {
             categories = categories?.filter((el) => el !== id);
-            setFieldValue('eventCategories', categories);
+            setFieldValue(name, categories);
         } else {
             categories.push(id);
-            setFieldValue('eventCategories', categories);
+            setFieldValue(name, categories);
         }
     };
 
@@ -246,8 +295,8 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
             label={
                 <Box display="flex" alignItems={'center'}>
                     <Checkbox
-                        checked={values?.eventCategories?.includes(list.id)}
-                        id={`eventCategoriesValue-${list.id}`}
+                        checked={values[name].includes(list.id)}
+                        id={`${name}Value-${list.id}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             handleCheckCategory(list.id);
@@ -257,7 +306,7 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                 </Box>
             }
         >
-            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setFieldValue))}
+            {Array.isArray(list?.children) && list?.children?.map((item) => displayCategoriesOptions(item, values, setFieldValue, name))}
         </TreeItem>
     );
 };

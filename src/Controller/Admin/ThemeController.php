@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ThemeController extends AdminController
@@ -52,6 +53,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Get('/themes/{themeId}', requirements: ['themeId' => '\d+'])]
+    #[IsGranted('ROLE_THEME_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
     public function getOne(Request $request, int $themeId): View
     {
@@ -64,6 +66,7 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Post('/themes/{themeName}/active', requirements: ['themeName' => '.+'])]
+    #[IsGranted('ROLE_THEME_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
     public function active(Request $request, string $themeName): View
     {
@@ -81,8 +84,9 @@ class ThemeController extends AdminController
     }
 
     #[Rest\Delete('/themes/{themeName}', requirements: ['themeName' => '.+'])]
+    #[IsGranted('ROLE_THEME_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_theme_one'])]
-    public function delete(Request $request, string $themeName): View
+    public function deleteTheme(Request $request, string $themeName): View
     {
         $this->em->getConnection()->beginTransaction();
 

@@ -64,14 +64,15 @@ export const urlForm = {
                         {
                             keyId: 'input-slug',
                             style: { xs: 12, sm: 4 },
-                            inputs: [
-                                {
-                                    name: 'slug',
-                                    label: 'Slug',
-                                    inputType: 'textField',
-                                    required: true,
+                            input: {
+                                name: 'slug',
+                                label: 'Slug',
+                                inputType: 'textField',
+                                required: true,
+                                custom: {
+                                    helper: ({ initialValues }) => initialValues?.helper || '',
                                 },
-                            ],
+                            },
                         },
                     ],
                 },

@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Event\Event;
 use App\Entity\Event\EventDate;
 use App\Kernel;
 use App\Service\Formatter\DateTimeFormatter;
@@ -77,5 +78,29 @@ class EventDateManager extends AbstractManager
         }
 
         return $months;
+    }
+
+    public function getFormattedEventDatesStr(Event $event, string $parameterValue): string
+    {
+        $beginDate = $this->mf->get('eventSorter')->getBeginDate($event);
+        $endDate = $this->mf->get('eventSorter')->getEndDate($event);
+
+        $formattedString = preg_replace_callback(
+            "/%beginDate\(([^)]+)\)%/",
+            function ($matches) use ($beginDate) {
+                return DateTimeFormatter::formatDate($beginDate, $this->getLocale(), $matches[1]);
+            },
+            $parameterValue
+        );
+
+        $formattedString = preg_replace_callback(
+            "/%endDate\(([^)]+)\)%/",
+            function ($matches) use ($endDate) {
+                return DateTimeFormatter::formatDate($endDate, $this->getLocale(), $matches[1]);
+            },
+            $formattedString
+        );
+
+        return $formattedString;
     }
 }

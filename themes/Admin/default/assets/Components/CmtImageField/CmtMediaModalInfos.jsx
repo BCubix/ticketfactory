@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
-export const CmtMediaModalInfos = ({ media, selectedMedia, setFieldValue, name, onClick, AddMediaLabel, RemoveMediaLabel, updatedMedia, imageFormatList }) => {
+export const CmtMediaModalInfos = ({ media, selectedMedia, ...rest }) => {
     const isSelected = Array.isArray(media) ? media?.includes(selectedMedia?.id) : media?.id === selectedMedia?.id;
 
     if (!selectedMedia) {
@@ -14,30 +14,5 @@ export const CmtMediaModalInfos = ({ media, selectedMedia, setFieldValue, name, 
         );
     }
 
-    return (
-        <Box position="relative" px={10}>
-            <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} displayImage displayMeta updatedMedia={updatedMedia} imageFormatList={imageFormatList} />
-
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                    variant={isSelected ? 'outlined' : 'contained'}
-                    color={isSelected ? 'error' : 'primary'}
-                    id="add-remove-media"
-                    onClick={() => {
-                        if (null !== onClick) {
-                            onClick(selectedMedia);
-                        } else {
-                            if (isSelected) {
-                                setFieldValue(name, null);
-                            } else {
-                                setFieldValue(name, selectedMedia);
-                            }
-                        }
-                    }}
-                >
-                    {isSelected ? RemoveMediaLabel : AddMediaLabel} le média
-                </Button>
-            </Box>
-        </Box>
-    );
+    return <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} isSelected={isSelected} displayImage displayMeta {...rest} />;
 };

@@ -36,6 +36,7 @@ class MimeTypeMapping
         "application/pdf"                                                                             => 'PDF',
         "text/plain"                                                                                  => 'Texte',
         "application/zip"                                                                             => 'Archive',
+        "application/x-zip-compressed"                                                                => 'Archive',
         "application/x-tar"                                                                           => 'Archive',
         "application/json"                                                                            => 'Autre'
     ];

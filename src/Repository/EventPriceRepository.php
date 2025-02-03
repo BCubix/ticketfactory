@@ -18,10 +18,10 @@ class EventPriceRepository extends CrudRepository
     public function findOneByIdForWebsite(int $id)
     {
         return $this->createQueryBuilder("ep")
-            ->addSelect("epb")
+            ->addSelect("epc")
             ->addSelect("e")
-            ->innerJoin("ep.eventPriceBlock", "epb")
-            ->innerJoin("epb.event", "e", 'WITH', "e.active = 1")
+            ->innerJoin("ep.eventPriceCategory", "epc")
+            ->innerJoin("epc.event", "e", 'WITH', "e.active = 1")
             ->where("ep.id = :eventPriceId")
             ->setParameter("eventPriceId", $id)
             ->getQuery()
@@ -31,10 +31,10 @@ class EventPriceRepository extends CrudRepository
     public function findAllByEventForWebsiteOption(int $eventId)
     {
         return $this->createQueryBuilder("ep")
-            ->addSelect('epb')
+            ->addSelect('epc')
             ->addSelect('e')
-            ->innerjoin('ep.eventPriceBlock', 'epb')
-            ->innerjoin('epb.event', 'e')
+            ->innerJoin('ep.eventPriceCategory', 'epc')
+            ->innerjoin('epc.event', 'e')
             ->where('e.id = :eventId')
             ->setParameter("eventId", $eventId)
             ->orderBy("ep.price", 'ASC');
@@ -44,16 +44,16 @@ class EventPriceRepository extends CrudRepository
     {
         return $this->findAllByEventForWebsiteOption($eventId)
             ->getQuery()
-            ->getResult();;
+            ->getResult();
     }
 
     public function findSmallestPriceForWebsite(int $eventId)
     {
         return $this->createQueryBuilder("ep")
-            ->addSelect('epb')
+            ->addSelect('epc')
             ->addSelect('e')
-            ->innerjoin('ep.eventPriceBlock', 'epb')
-            ->innerjoin('epb.event', 'e')
+            ->innerjoin('ep.eventPriceCategory', 'epc')
+            ->innerjoin('epc.event', 'e')
             ->where('e.id = :eventId')
             ->setParameter("eventId", $eventId)
             ->orderBy("ep.price", 'ASC')

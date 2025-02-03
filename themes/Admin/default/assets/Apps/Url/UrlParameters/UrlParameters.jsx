@@ -12,10 +12,22 @@ import { Api } from '@/AdminService/Api';
 import { getDeserializationApiValue } from '@Apps/Parameters/services/config/deserializationApi';
 
 import { parametersSelector, getParametersAction } from '@Apps/Parameters/redux/parameters/parametersSlice';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const UrlParameters = ({ parametersNameList = Crud.url.list.parameterList, formCrud = Crud.parameters.edit }) => {
-    const { parameters } = useSelector(parametersSelector);
     const dispatch = useDispatch();
+    const { parameters } = useSelector(parametersSelector);
+    const { user } = useSelector(userProfileSelector);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const accessUserParameterEdit = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_PARAMETER_EDIT');
+    }, [userRoles]);
 
     const urlParameters = useMemo(() => {
         return parameters?.filter((item) => parametersNameList?.includes(item?.paramKey));
@@ -30,7 +42,7 @@ export const UrlParameters = ({ parametersNameList = Crud.url.list.parameterList
             }
 
             const indexTab = tabs.findIndex((tab) => tab.tabName === parameter.tabName);
-            parameter = { ...parameter, paramValue: getDeserializationApiValue(parameter.type, parameter.paramValue) };
+            parameter = { ...parameter, paramValue: getDeserializationApiValue(parameter) };
 
             if (indexTab === -1) {
                 tabs.push({
@@ -72,7 +84,7 @@ export const UrlParameters = ({ parametersNameList = Crud.url.list.parameterList
         });
     }
 
-    if (!parameters) {
+    if (!accessUserParameterEdit || !parameters) {
         return <></>;
     }
 
@@ -116,8 +128,8 @@ export const UrlParameters = ({ parametersNameList = Crud.url.list.parameterList
                             };
                         })}
                     />
-                    <Box display="flex" justifyContent="flex-end">
-                        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }} disabled={isSubmitting}>
+                    <Box className="block-active">
+                        <Button type="submit" variant="contained" disabled={isSubmitting}>
                             Enregistrer
                         </Button>
                     </Box>

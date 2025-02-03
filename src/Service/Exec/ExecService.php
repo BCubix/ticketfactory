@@ -14,6 +14,16 @@ class ExecService
 {
     public const SERVICE_NAME = 'execService';
 
+
+    public static function execUpdateCommands(bool $install) {
+        if ($install) {
+            self::execComposerInstall();
+            self::execYarnInstall();
+        }
+
+        self::execEncore();
+        self::execClearCache();
+    }
     /**
      * Executes the clear cache command
      *
@@ -31,7 +41,7 @@ class ExecService
      *
      * @param string $migrationclass
      * @param bool $up
-     * 
+     *
      * @return array
      */
     public static function execMigrationUpdate(string $migrationClass, bool $up): array
@@ -47,6 +57,23 @@ class ExecService
     }
 
     /**
+     * Executes the composer install command
+     */
+    public static function execComposerInstall(): void
+    {
+        static::execFree('composer install --no-interaction');
+    }
+
+    /**
+     * Executes the yarn install command
+     */
+    public static function execYarnInstall(): void
+    {
+        static::execFree('yarn');
+    }
+
+
+    /**
      * Executes the yarn encore command
      */
     public static function execEncore(): void
@@ -54,11 +81,23 @@ class ExecService
         static::execFree('yarn run encore production');
     }
 
+
+    /**
+     * Executes the backup database command
+     */
+    public static function execBackupDatabase(string $path): array
+    {
+        return static::exec([
+            'command'          => 'ticketfactory:backup-database',
+            'path'         => $path,
+        ]);
+    }
+
     /**
      * Executes a command through Symfony context
      *
      * @param array $command
-     * 
+     *
      * @return array
      */
     protected static function exec(array $command): array

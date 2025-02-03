@@ -4,16 +4,17 @@ namespace App\Form\Admin\Product;
 
 use App\Entity\Product\ProductMedia;
 use App\Entity\Media\Media;
+use App\Form\Admin\AdminBaseFormType;
 use App\Repository\MediaRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductMediaType extends AbstractType
+class ProductMediaType extends AdminBaseFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -29,6 +30,13 @@ class ProductMediaType extends AbstractType
                 }
             ])
             ->add('position',               NumberType::class,          []);
+
+            $builder->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) {
+                    $this->fm->onPreSetData($event);
+                }
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

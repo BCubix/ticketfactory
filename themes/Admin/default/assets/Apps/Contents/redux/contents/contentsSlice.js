@@ -85,7 +85,7 @@ export function getContentsAction(contentTypeKey, filters = null) {
             dispatch(getContents());
 
             apiMiddleware(dispatch, async () => {
-                const contentData = getState().contents.contentData[contentTypeKey];
+                const contentData = getState().contents?.contentData ? getState().contents.contentData[contentTypeKey] : null;
                 if (!contentData || !contentData.contentType) {
                     return;
                 }

@@ -1,5 +1,5 @@
-import { Card } from "@mui/material";
-import { styled } from "@mui/system";
+import { Card } from '@mui/material';
+import { styled } from '@mui/system';
 
 export const CmtImageCard = styled(Card)`
     width: ${(props) => (props.width ? props.width : '50%')};
@@ -21,7 +21,9 @@ export const CmtImageCard = styled(Card)`
         align-items: center;
         color: ${(props) => props.theme.palette.crud.create.backgroundColor};
         & > .MuiSvgIcon-root {
-            font-size: 70px;
+            height: 100px;
+            width: 100px;
+            font-size: 80px;
         }
     }
 `;

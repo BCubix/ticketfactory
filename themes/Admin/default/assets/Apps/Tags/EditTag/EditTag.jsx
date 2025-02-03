@@ -7,7 +7,7 @@ import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { getTagsAction } from '@Apps/Tags/redux/tags/tagsSlice';
 
 import { tagsInitialSchema, tagsValidationSchema, tagsForm } from '@Apps/Tags/TagsForm/TagsForm';

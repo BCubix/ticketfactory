@@ -29,11 +29,6 @@ class Datable
     private $active = false;
 
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;

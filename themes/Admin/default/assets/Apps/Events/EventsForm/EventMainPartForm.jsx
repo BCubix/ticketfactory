@@ -68,7 +68,8 @@ export const eventMainPartForm = {
                         id: 'description',
                     },
                 },
-                ({ roomsList }) => {
+
+                ({ roomsList, setFieldValue, defaultPriceCategoryName, defaultPrices, initValues}) => {
                     if (roomsList.length === 0) {
                         return null;
                     }
@@ -84,11 +85,63 @@ export const eventMainPartForm = {
                             label: 'Salle',
                             inputType: 'selectField',
                             listName: 'roomsList',
+                            setFieldValue: (name, value) => {
+                                setFieldValue(name, value);
+
+                                setFieldValue('eventPriceCategories', [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }]);
+                                setFieldValue('seatingPlan', "");
+                                
+                            },
                             getName: (item) => item.name,
                             getValue: (item) => item.id,
                         },
                     };
                 },
+                {
+                    keyId: 'input-seatingPlan',
+                    style: {
+                        xs: 12,
+                        sm: 6,
+                        md: 4,
+                    },
+                    component: ({ roomsList, values, touched, errors, setFieldValue, filterTypesList, defaultPriceCategoryName, defaultPrices, initValues, ...props }) => {
+
+                        const defaultSeatingPlan = roomsList.flatMap(room => room?.seatingPlans || []);
+                        const seatingPlansAssociated = values?.room ? roomsList.find((item) => item.id === values?.room)?.seatingPlans : defaultSeatingPlan;
+
+                        return (
+                            <Component.CmtSelectField
+                                {...props}
+                                label={'Plan de salle'}
+                                value={values?.seatingPlan}
+                                errors={touched?.seatingPlan && errors?.seatingPlan}
+                                list={seatingPlansAssociated}
+                                name={'seatingPlan'}
+                                setFieldValue={(name, value) => {
+                                    setFieldValue(name, value);
+                                    if (!value) {
+                                        setFieldValue('eventPriceCategories', [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }])
+                                        return;
+                                    }
+
+                                    let seatingPlan = seatingPlansAssociated?.find(it => it.id === value);
+                                    if (seatingPlan) {
+
+                                        const roomToChange = roomsList.find((item) => item?.seatingPlans.includes(seatingPlan));
+                                        if (roomToChange)
+                                            setFieldValue("room", roomToChange.id);
+    
+                                        setFieldValue("eventPriceCategories", seatingPlan.eventPriceCategories);
+                                    }
+                                }}
+                                filterTypesList={filterTypesList}
+                                getValue={(item) => item.id}
+                                getName={(item) => item.name}
+                            />
+                        );
+                    },
+                },
+
                 ({ seasonsList }) => {
                     if (seasonsList.length === 0) {
                         return null;
@@ -120,7 +173,7 @@ export const eventMainPartForm = {
                         keyId: 'input-event-type',
                         style: {
                             xs: 12,
-                            sm: 6,
+                            md: 6,
                         },
                         input: {
                             name: 'eventType',
@@ -144,7 +197,8 @@ export const eventMainPartForm = {
                     keyId: 'input-ticketing',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     input: {
                         name: 'ticketing',
@@ -159,7 +213,8 @@ export const eventMainPartForm = {
                     keyId: 'input-ticketing',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     component: (props) => (
                         <Component.CmtKeywordInput
@@ -169,6 +224,7 @@ export const eventMainPartForm = {
                             disabled={!Boolean(props.values?.ticketing)}
                             warningMessage="Ce champ est utilisé pour identifier votre évènement auprès de votre billetterie."
                             editName="ticketingReferenceEditMode"
+                            useSluggable={false}
                         />
                     ),
                 },
@@ -176,7 +232,8 @@ export const eventMainPartForm = {
                     keyId: 'input-display-booking-button',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     input: {
                         name: 'displayBookingButton',
@@ -189,12 +246,14 @@ export const eventMainPartForm = {
                     keyId: 'input-event-length',
                     style: {
                         xs: 12,
-                        sm: 4,
+                        sm: 6,
+                        md: 4,
                     },
                     input: {
                         name: 'eventLength',
-                        label: "Durée de l'évènement",
+                        label: "Durée de l'évènement (en minutes)",
                         inputType: 'textField',
+                        type: 'number',
                     },
                 },
             ],

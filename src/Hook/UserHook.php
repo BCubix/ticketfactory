@@ -13,17 +13,28 @@ class UserHook extends Hook
     public function hookUserInstantiated(HookEvent $event)
     {
         $user = $event->getParam('object');
-        $admins = $this->mf->get('user')->getAdminUsers();
+        $state = $event->getParam('state');
 
-        if (count($admins) == 1 && $admins[0]->getId() == $user->getId()) {
-            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer le dernier compte administrateur.');
+        if ($state === 'delete') {
+            $check = $this->mf->get('user')->validateCriticalUsers($user, true);
+            if (!$check) {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'Impossible de supprimer le dernier compte administrateur.');
+            }
         }
     }
 
     public function hookUserValidated(HookEvent $event)
     {
         $user = $event->getParam('vObject');
+        $state = $event->getParam('state');
 
         $this->mf->get('user')->upgradePassword($user);
+
+        if ($state === 'edit') {
+            $check = $this->mf->get('user')->validateCriticalUsers($user, false);
+            if (!$check) {
+                throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Vous devez avoir au moins un utilisateur ayant les droits nécessaires à la gestion des profils.");
+            }
+        }
     }
 }

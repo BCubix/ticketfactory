@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Customer\Customer;
 use App\Kernel;
 use App\Service\ServiceFactory;
 use App\Entity\Event\Event;
@@ -9,8 +10,12 @@ use App\Entity\Event\EventDate;
 use App\Entity\Event\EventPrice;
 use App\Entity\Order\Cart;
 use App\Entity\Order\Voucher;
-use App\Entity\Order\CartRow;
-use App\Entity\Order\CartSeat;
+use App\Entity\Order\EventRow;
+use App\Entity\Order\EventSeat;
+use App\Entity\Order\ProductRow;
+use App\Entity\Order\SubscriptionRow;
+use App\Entity\Product\Product;
+use App\Entity\Subscription\Subscription;
 use App\Exception\ApiException;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,72 +42,149 @@ class CartManager extends AbstractManager
         parent::__construct($kl, $mf, $sf, $em, $rs);
     }
 
-    public function createNewCart(): Cart
+    public function createNewCart(?Customer $customer = null): Cart
     {
         $cart = new Cart();
         $cart->setActive(true);
         $cart->setTotal(0);
 
+        if (null !== $customer) {
+            $cart->setCustomer($customer);
+        }
+
         $this->em->persist($cart);
         $this->em->flush();
 
-        $this->rs->getSession()->set("cartId", $cart->getId());
-        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+        $session = $this->rs->getSession();
+        if (null !== $session) {
+            $this->rs->getSession()->set("cartId", $cart->getId());
+            $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+        }
 
         return $cart;
     }
 
-    public function createNewCartRow(Cart $cart, Event $event, EventDate $eventDate): CartRow
+    public function createNewEventRow(Cart $cart, Event $event, EventDate $eventDate): EventRow
     {
-        $cartRow = new CartRow();
-        $cartRow->setEvent($event);
-        $cartRow->setEventDate($eventDate);
-        $cartRow->setTotal(0);
+        $eventRow = new EventRow();
+        $eventRow->setEvent($event);
+        $eventRow->setEventDate($eventDate);
+        $eventRow->setTotal(0);
 
-        $cart->addCartRow($cartRow);
+        $cart->addEventRow($eventRow);
 
-        $this->em->persist($cartRow);
+        $this->em->persist($eventRow);
         $this->em->flush();
 
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
-        return $cartRow;
+        return $eventRow;
     }
 
-    public function addNewCartSeats(CartRow $cartRow, EventPrice $eventPrice, int $quantity): CartRow
+    public function createNewProductRow(Cart $cart, Product $product, int $quantity): ProductRow
+    {
+        $productRow = new ProductRow();
+        $productRow->setProduct($product);
+        $productRow->setQuantity($quantity);
+        $productRow->setTotal(0);
+
+        $cart->addProductRow($productRow);
+
+        $this->em->persist($productRow);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        return $productRow;
+    }
+
+    public function createNewSubscriptionRow(Cart $cart, Subscription $subscription, int $quantity): SubscriptionRow
+    {
+        $subscriptionRow = new SubscriptionRow();
+        $subscriptionRow->setSubscription($subscription);
+        $subscriptionRow->setQuantity($quantity);
+        $subscriptionRow->setTotal($quantity * $subscription->getPrice());
+
+        $cart->addSubscriptionRow($subscriptionRow);
+
+        $this->em->persist($subscriptionRow);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        return $subscriptionRow;
+    }
+
+    public function addNewEventSeats(EventRow $eventRow, EventPrice $eventPrice, int $quantity): EventRow
     {
         foreach (range(1, $quantity) as $index) {
-            $seat = new CartSeat();
+            $seat = new EventSeat();
             $seat->setEventPrice($eventPrice);
 
-            $cartRow->addCartSeat($seat);
+            $eventRow->addEventSeat($seat);
         }
 
-        return $this->calculateCartRowTotal($cartRow);
+        return $this->calculateEventRowTotal($eventRow);
     }
 
-    public function calculateCartRowTotal(CartRow $cartRow): CartRow
+    public function calculateEventRowTotal(EventRow $eventRow): EventRow
     {
         $total = 0;
 
-        foreach ($cartRow->getCartSeats() as $seat) {
+        foreach ($eventRow->getEventSeats() as $seat) {
             $total += $seat->getEventPrice()->getPrice();
         }
 
-        $cartRow->setTotal($total);
+        $eventRow->setTotal($total);
 
-        return $cartRow;
+        return $eventRow;
+    }
+
+    public function calculateProductRowTotal(ProductRow $productRow): ProductRow
+    {
+        $productRow->setTotal($productRow->getProduct()->getPrice() * $productRow->getQuantity());
+
+        return $productRow;
+    }
+
+    public function calculateSubscriptionRowTotal(SubscriptionRow $subscriptionRow): SubscriptionRow
+    {
+        $subscriptionRow->setTotal($subscriptionRow->getSubscription()->getPrice() * $subscriptionRow->getQuantity());
+
+        return $subscriptionRow;
+    }
+
+    public function calculateDeliveryPrice(Cart $cart): void
+    {
+        // If there is no delivery mode attached to the cart, we set deliveryPrice to null
+        if (null === $cart->getDeliveryMode()) {
+            $cart->setDeliveryPrice(null);
+
+            return;
+        }
+
+        // We calculate the deliveryPrice from the module
+        $this->mf->get($cart->getDeliveryMode()->getManager())->calculateDeliveryPrice($cart);
     }
 
     public function calculateCartTotal(Cart $cart): Cart
     {
         $total = 0;
 
-        foreach ($cart->getCartRows() as $row) {
-            $total += $this->calculateCartRowTotal($row)->getTotal();
+        foreach ($cart->getEventRows() as $row) {
+            $total += $this->calculateEventRowTotal($row)->getTotal();
+        }
+
+        foreach ($cart->getProductRows() as $row) {
+            $total += $this->calculateProductRowTotal($row)->getTotal();
+        }
+
+        foreach ($cart->getSubscriptionRows() as $row) {
+            $total += $this->calculateSubscriptionRowTotal($row)->getTotal();
         }
 
         $cart->setTotal($total);
+        $this->calculateDeliveryPrice($cart);
 
         return $cart;
     }
@@ -124,14 +206,14 @@ class CartManager extends AbstractManager
             $cart = $this->createNewCart();
         }
 
-        $cartRow = null === $cartId ? null : $this->em->getRepository(CartRow::class)->findOneCartRowByCartForWebsite($cart->getId(), $eventDate->getId());
-        if (null === $cartRow) {
-            $cartRow = $this->createNewCartRow($cart, $event, $eventDate);
+        $eventRow = null === $cartId ? null : $this->em->getRepository(EventRow::class)->findOneEventRowByCartForWebsite($cart->getId(), $eventDate->getId());
+        if (null === $eventRow) {
+            $eventRow = $this->createNewEventRow($cart, $event, $eventDate);
         }
 
         foreach ($eventPrices as $eventPrice) {
             if ($eventPrice['quantity'] > 0) {
-                $this->addNewCartSeats($cartRow, $eventPrice["eventPrice"], $eventPrice['quantity']);
+                $this->addNewEventSeats($eventRow, $eventPrice["eventPrice"], $eventPrice['quantity']);
             }
         }
 
@@ -173,14 +255,14 @@ class CartManager extends AbstractManager
                     $this->em->persist($customer);
                     $this->em->flush();
 
-                    return $cart;
+                    return $this->formatCart($cart);
                 }
 
                 if (null === $sessionUpdatedAt) {
                     $session->set("cartId", $customerCart->getId());
                     $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
 
-                    return $customerCart;
+                    return $this->formatCart($customerCart);
                 }
 
                 $sessionUpdatedAt = $sessionUpdatedAt;
@@ -191,35 +273,35 @@ class CartManager extends AbstractManager
                     $this->em->persist($cart);
                     $this->em->flush();
 
-                    return $cart;
+                    return $this->formatCart($cart);
                 } else {
                     $session->set("cartId", $customerCart->getId());
                     $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
 
-                    return $customerCart;
+                    return $this->formatCart($customerCart);
                 }
             } else {
                 if (null !== $customerCart) {
                     $session->set("cartId", $customerCart->getId());
                     $session->set("cartUpdatedAt", $customerCart->getUpdatedAt());
 
-                    return $customerCart;
+                    return $this->formatCart($customerCart);
                 }
 
                 return null;
             }
         }
 
-        return $cart;
+        return $this->formatCart($cart);
     }
 
-    public function getCartSeatsGrouped($cartRow): ?array
+    public function getEventSeatsGrouped($eventRow): ?array
     {
-        $cartSeats = $this->em->getRepository(CartSeat::class)->findGroupedCartSeatsForWebsite($cartRow->getId());
+        $eventSeats = $this->em->getRepository(EventSeat::class)->findGroupedEventSeatsForWebsite($eventRow->getId());
         $groupedSeats = [];
 
-        foreach ($cartSeats as $cartSeat) {
-            $eventPrice = $cartSeat->getEventPrice();
+        foreach ($eventSeats as $eventSeat) {
+            $eventPrice = $eventSeat->getEventPrice();
             $eventPriceId = $eventPrice->getId();
             if (!isset($groupedSeats[$eventPriceId])) {
                 $groupedSeats[$eventPriceId] = [
@@ -236,44 +318,44 @@ class CartManager extends AbstractManager
         return $groupedSeats;
     }
 
-    public function updateQuantity(array $element, int $quantityChange): ?CartRow
+    public function updateQuantity(array $element, int $quantityChange): ?EventRow
     {
-        $cartRow = $this->em->getRepository(CartRow::class)->findOneByIdForWebsite($element['cartRowId']);
+        $eventRow = $this->em->getRepository(EventRow::class)->findOneByIdForWebsite($element['eventRowId']);
         $eventPrice = $this->em->getRepository(EventPrice::class)->findOneByIdForWebsite($element["eventPriceId"]);
 
-        if (null === $cartRow) {
+        if (null === $eventRow) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
         }
 
         if ($quantityChange === 0) {
-            return $cartRow;
+            return $eventRow;
         }
 
-        $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($element["cartRowId"], $element["eventPriceId"]);
-        $count = count($cartSeats);
+        $eventSeats = $this->em->getRepository(EventSeat::class)->findAllByEventPriceForWebsite($element["eventRowId"], $element["eventPriceId"]);
+        $count = count($eventSeats);
 
         if ($quantityChange < 0) {
             if ($count + $quantityChange < 1) {
-                return $cartRow;
+                return $eventRow;
             }
 
             foreach (range(0, ($quantityChange * (-1)) - 1) as $index) {
-                $cartRow->removeCartSeat($cartSeats[$index]);
+                $eventRow->removeEventSeat($eventSeats[$index]);
             }
         } else {
-            $cartRow = $this->addNewCartSeats($cartRow, $eventPrice, $quantityChange);
+            $eventRow = $this->addNewEventSeats($eventRow, $eventPrice, $quantityChange);
         }
 
-        $cart = $this->calculateCartTotal($cartRow->getCart());
+        $cart = $this->calculateCartTotal($eventRow->getCart());
         $this->em->persist($cart);
         $this->em->flush();
 
         $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
 
-        $event = $cartRow->getEvent();
+        $event = $eventRow->getEvent();
         $ticketing = $event->getTicketing();
         if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
-            return $cartRow;
+            return $eventRow;
         }
 
         $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
@@ -281,22 +363,67 @@ class CartManager extends AbstractManager
             $class->synchronizeCartInfo($event, $cart);
         }
 
-        return $cartRow;
+        return $eventRow;
     }
 
-    public function deleteCartRow(int $cartRowId): void
+    public function updateProductQuantity(array $element, int $quantityChange): ?ProductRow
     {
-        $cartRow = $this->em->getRepository(CartRow::class)->findOneByIdForWebsite($cartRowId);
-
-        if (null === $cartRow) {
+        $productRow = $this->em->getRepository(ProductRow::class)->findOneByIdForWebsite($element['productRowId']);
+        if (null === $productRow) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
         }
 
-        $cart = $cartRow->getCart();
-        $event = $cartRow->getEvent();
+        if ($quantityChange === 0 || ($quantityChange < 0 && $productRow->getQuantity() + $quantityChange < 1)) {
+            return $productRow;
+        }
 
-        $cartRow->setEventDate(null);
-        $this->em->remove($cartRow);
+        $productRow->setQuantity($productRow->getQuantity() + $quantityChange);
+        $this->changeStock($productRow->getProduct(), (-1) * $quantityChange);
+
+        $cart = $this->calculateCartTotal($productRow->getCart());
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        return $productRow;
+    }
+
+    public function updateSubscriptionQuantity(array $element, int $quantityChange): ?SubscriptionRow
+    {
+        $subscriptionRow = $this->em->getRepository(SubscriptionRow::class)->findOneByIdForWebsite($element['subscriptionRowId']);
+        if (null === $subscriptionRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        if ($quantityChange === 0 || ($quantityChange < 0 && $subscriptionRow->getQuantity() + $quantityChange < 1)) {
+            return $subscriptionRow;
+        }
+
+        $subscriptionRow->setQuantity($subscriptionRow->getQuantity() + $quantityChange);
+
+        $cart = $this->calculateCartTotal($subscriptionRow->getCart());
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+
+        return $subscriptionRow;
+    }
+
+    public function deleteEventRow(int $eventRowId): void
+    {
+        $eventRow = $this->em->getRepository(EventRow::class)->findOneByIdForWebsite($eventRowId);
+
+        if (null === $eventRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        $cart = $eventRow->getCart();
+        $event = $eventRow->getEvent();
+
+        $eventRow->setEventDate(null);
+        $this->em->remove($eventRow);
         $this->em->flush();
 
         $this->checkVoucherForCart($cart);
@@ -318,27 +445,51 @@ class CartManager extends AbstractManager
         }
     }
 
-    public function deleteCartSeats(array $data): ?CartRow
+    public function deleteProductRow(int $productRowId): void
     {
-        $cartRow = $this->em->getRepository(CartRow::class)->findOneByIdForWebsite($data['cartRowId']);
-        if (null === $cartRow) {
+        $productRow = $this->em->getRepository(ProductRow::class)->findOneByIdForWebsite($productRowId);
+
+        if (null === $productRow) {
             throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
         }
 
-        $cart = $cartRow->getCart();
-        $event = $cartRow->getEvent();
+        $this->changeStock($productRow->getProduct(), $productRow->getQuantity());
 
-        $cartSeats = $this->em->getRepository(CartSeat::class)->findAllByEventPriceForWebsite($data["cartRowId"], $data["eventPriceId"]);
-        foreach ($cartSeats as $seat) {
-            $cartRow->removeCartSeat($seat);
+        $cart = $productRow->getCart();
+
+        $this->em->remove($productRow);
+        $this->em->flush();
+
+        $this->checkVoucherForCart($cart);
+        $cart = $this->calculateCartTotal($cart);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+    }
+
+    public function deleteEventSeats(array $data): ?EventRow
+    {
+        $eventRow = $this->em->getRepository(EventRow::class)->findOneByIdForWebsite($data['eventRowId']);
+        if (null === $eventRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        $cart = $eventRow->getCart();
+        $event = $eventRow->getEvent();
+
+        $eventSeats = $this->em->getRepository(EventSeat::class)->findAllByEventPriceForWebsite($data["eventRowId"], $data["eventPriceId"]);
+        foreach ($eventSeats as $seat) {
+            $eventRow->removeEventSeat($seat);
             $this->em->remove($seat);
         }
 
-        if (count($cartRow->getCartSeats()) === 0) {
+        if (count($eventRow->getEventSeats()) === 0) {
             $this->checkVoucherForCart($cart);
-            $cartRow->setEventDate(null);
-            $this->em->remove($cartRow);
-            $cartRow = null;
+            $eventRow->setEventDate(null);
+            $this->em->remove($eventRow);
+            $eventRow = null;
         }
 
         $this->em->flush();
@@ -351,7 +502,7 @@ class CartManager extends AbstractManager
 
         $ticketing = $event->getTicketing();
         if (null === $ticketing || null === $ticketing->getModule() || $ticketing->getType() !== "api" || !$ticketing->isOrderTunnel()) {
-            return $cartRow;
+            return $eventRow;
         }
 
         $class = $this->sf->get('ticketing')->getTicketingClass($ticketing->getModule());
@@ -359,7 +510,72 @@ class CartManager extends AbstractManager
             $class->synchronizeCartInfo($event, $cart);
         }
 
-        return $cartRow;
+        return $eventRow;
+    }
+
+    public function deleteSubscriptionRow(int $subscriptionRowId)
+    {
+        $subscriptionRow = $this->em->getRepository(SubscriptionRow::class)->findOneByIdForWebsite($subscriptionRowId);
+
+        if (null === $subscriptionRow) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'élément n'a pas été trouvé.");
+        }
+
+        $cart = $subscriptionRow->getCart();
+
+        $this->em->remove($subscriptionRow);
+        $this->em->flush();
+
+        $this->checkVoucherForCart($cart);
+        $cart = $this->calculateCartTotal($cart);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->rs->getSession()->set("cartUpdatedAt", $cart->getUpdatedAt());
+    }
+
+    public function formatCart(?Cart $cart): ?Cart
+    {
+        if (null === $cart) {
+            return null;
+        }
+
+        $this->calculateRowsDiscount($cart);
+        $cart->discount = $this->calculateDiscount($cart);
+
+        return $cart;
+    }
+
+    public function calculateRowsDiscount(?Cart &$cart): Cart
+    {
+        foreach ($cart->getEventRows() as &$row) {
+            $discount = 0;
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
+                }
+            }
+
+            $row->discount = $discount;
+        }
+
+        foreach ($cart->getProductRows() as &$row) {
+            $discount = 0;
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
+                }
+            }
+
+            $row->discount = $discount;
+        }
+
+        return $cart;
     }
 
     public function calculateDiscount(?Cart $cart): int
@@ -370,24 +586,54 @@ class CartManager extends AbstractManager
             return $discount;
         }
 
-        $vouchers = $this->em->getRepository(Voucher::class)->findAllByCartForWebsite($cart->getId());
-        if (count($vouchers) === 0) {
-            return $discount;
+        foreach ($cart->getEventRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
+                }
+            }
         }
 
-        foreach ($vouchers as $voucher) {
-            foreach ($cart->getCartRows() as $row) {
-                if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
-                    if ($voucher->getUnit() === "%") {
-                        $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
-                    } else {
-                        $discount += $voucher->getDiscount();
-                    }
+        foreach ($cart->getProductRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if ($voucher->getUnit() === "%") {
+                    $discount += ($row->getTotal() * $voucher->getDiscount()) / 100;
+                } else {
+                    $discount += $voucher->getDiscount();
                 }
             }
         }
 
         return $discount;
+    }
+
+    public function getVouchers(?Cart $cart): array
+    {
+        $vouchers = [];
+
+        if (null === $cart) {
+            return $vouchers;
+        }
+
+        foreach ($cart->getEventRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!in_array($voucher, $vouchers, true)) {
+                    $vouchers[] = $voucher;
+                }
+            }
+        }
+
+        foreach ($cart->getProductRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!in_array($voucher, $vouchers, true)) {
+                    $vouchers[] = $voucher;
+                }
+            }
+        }
+
+        return $vouchers;
     }
 
     public function checkVoucherForEventCategory(Voucher $voucher, int $eventId): bool
@@ -399,7 +645,22 @@ class CartManager extends AbstractManager
         }
 
         $result = $this->em->getRepository(Event::class)->findOneByCategoriesForWebsite($eventCategoriesId, $eventId);
+        if (null === $result) {
+            return false;
+        }
 
+        return true;
+    }
+
+    public function checkVoucherForProductCategory(Voucher $voucher, int $productId): bool
+    {
+        $productCategoriesId = [];
+
+        foreach ($voucher->getProductCategories() as $category) {
+            $productCategoriesId[] = $category->getId();
+        }
+
+        $result = $this->em->getRepository(Product::class)->findOneByCategoriesForWebsite($productCategoriesId, $productId);
         if (null === $result) {
             return false;
         }
@@ -415,18 +676,21 @@ class CartManager extends AbstractManager
             return;
         }
 
-        foreach ($vouchers as $voucher) {
-            $checked = false;
-            foreach ($cart->getCartRows() as $row) {
-                if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
-                    $checked = true;
-                    break;
+        foreach ($cart->getEventRows() as &$row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!$this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
+                    $row->removeVoucher($voucher);
+                    $this->em->persist($row);
                 }
             }
+        }
 
-            if (!$checked) {
-                $voucher->removeCart($cart);
-                $this->em->persist($voucher);
+        foreach ($cart->getProductRows() as $row) {
+            foreach ($row->getVouchers() as $voucher) {
+                if (!$this->checkVoucherForEventCategory($voucher, $row->getProduct()->getId())) {
+                    $row->removeVoucher($voucher);
+                    $this->em->persist($row);
+                }
             }
         }
 
@@ -436,22 +700,123 @@ class CartManager extends AbstractManager
     public function addVoucher(Cart $cart, string $code): bool
     {
         $voucher = $this->em->getRepository(Voucher::class)->findOneByCodeForWebsite($code);
-
         if (null === $voucher) {
             return false;
         }
 
-        foreach ($cart->getCartRows() as $row) {
+        $addedVoucher = false;
+        foreach ($cart->getEventRows() as &$row) {
             if ($this->checkVoucherForEventCategory($voucher, $row->getEvent()->getId())) {
-                $cart->addVoucher($voucher);
+                $voucher->addEventRow($row);
+                $this->em->persist($voucher);
 
-                $this->em->persist($cart);
-                $this->em->flush();
-
-                return true;
+                $addedVoucher = true;
             }
         }
 
+        foreach ($cart->getProductRows() as &$row) {
+            if ($this->checkVoucherForProductCategory($voucher, $row->getProduct()->getId())) {
+                $voucher->addProductRow($row);
+                $this->em->persist($voucher);
+
+                $addedVoucher = true;
+            }
+        }
+
+        if ($addedVoucher) {
+            $this->em->flush();
+            return true;
+        }
+
         return false;
+    }
+
+    public function addProductToCart(?Product $product, int $quantity): void
+    {
+        $session = $this->rs->getSession();
+
+        if (null === $product) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "Le produit n'existe pas.");
+        }
+
+        $cartId = $session->get("cartId", null);
+        $cart = $cartId ? $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId) : $this->createNewCart();
+
+        $this->changeStock($product, (-1) * $quantity);
+
+        $productRow = null === $cartId ? null : $this->em->getRepository(ProductRow::class)->findOneProductRowByCartForWebsite($cart->getId(), $product->getId());
+        if (null === $productRow) {
+            $this->createNewProductRow($cart, $product, $quantity);
+        } else {
+            $productRow->setQuantity($productRow->getQuantity() + $quantity);
+            $this->em->persist($productRow);
+        }
+
+        $cart = $this->calculateCartTotal($cart);
+        $this->em->persist($cart);
+        $this->em->flush();
+    }
+
+    public function addSubscriptionToCart(?Subscription $subscription, int $quantity)
+    {
+        $session = $this->rs->getSession();
+
+        if (null === $subscription) {
+            throw new ApiException(Response::HTTP_BAD_REQUEST, 1400, "L'abonnement n'existe pas.");
+        }
+
+        $cartId = $session->get("cartId", null);
+        $cart = $cartId ? $this->em->getRepository(Cart::class)->findOneByIdForWebsite($cartId) : $this->createNewCart();
+
+        $subscriptionRow = null === $cartId ? null : $this->em->getRepository(SubscriptionRow::class)->findOneSubscriptionRowByCartForWebsite($cart->getId(), $subscription->getId());
+        if (null === $subscriptionRow) {
+            $this->createNewSubscriptionRow($cart, $subscription, $quantity);
+        } else {
+            $subscriptionRow->setQuantity($subscriptionRow->getQuantity() + $quantity);
+            $subscriptionRow = $this->calculateSubscriptionRowTotal($subscriptionRow);
+
+            $this->em->persist($subscriptionRow);
+        }
+
+        $cart = $this->calculateCartTotal($cart);
+        $this->em->persist($cart);
+        $this->em->flush();
+    }
+
+    public function changeStock(Product $product, int $quantity): void
+    {
+        $newStock = $product->getStock() + $quantity;
+        $product->setStock($newStock);
+
+        // if stock is equal to zero we warn by mail the admin that a product is out of stock
+        if ($newStock === 0) {
+            $sendEmail =  $this->mf->get('parameter')->getCoreParameter("product_out_of_stock");
+
+            if (null !== $sendEmail) {
+                $customerEmailAddress =  $this->mf->get('parameter')->getCoreParameter("product_out_of_stock_email");
+                if (null !== $customerEmailAddress) {
+                    $this->sf->get('mailer')->sendEmailProductOutOfStock($product);
+                }
+            }
+        }
+    }
+
+    public function checkForOldCart(): void
+    {
+        $inactiveCarts = $this->em->getRepository(Cart::class)->findInactiveRecentCarts();
+
+
+        // Resetting the cart to empty for each inactive cart
+        foreach ($inactiveCarts as $cart) {
+            $productRows = $cart->getProductRows();
+            $eventRows = $cart->getEventRows();
+
+            foreach ($productRows as $productRow) {
+                $this->deleteProductRow($productRow->getId());
+            }
+            foreach ($eventRows as $eventRow) {
+                $this->deleteEventRow($eventRow->getId());
+            }
+        }
     }
 }

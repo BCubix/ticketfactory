@@ -8,13 +8,13 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
 import { getImageFormatsAction } from '@Apps/ImageFormats/redux/imageFormats/imageFormatSlice';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 import { Crud } from '@/AdminService/Crud';
 import { imageFormatsInitialSchema, imageFormatsValidationSchema, imageFormatsForm } from '../ImageFormatsForm/ImageFormatsForm';
 
 export const imageFormatsCreateCrud = {
     form: {
-        title: "Creation d'un format d'image",
+        title: "Creation d'un emplacement de média",
         initialSchema: imageFormatsInitialSchema,
         validationSchema: imageFormatsValidationSchema,
     },
@@ -36,7 +36,7 @@ export const CreateImageFormat = () => {
         const result = await Api.imageFormatsApi.createImageFormat(values);
 
         if (result.result) {
-            NotificationManager.success('Le format a bien été créé. Pensez à générer les miniatures ici-dessous !', 'Succès', Constant.REDIRECTION_TIME);
+            NotificationManager.success("L'emplacement a bien été créé. Pensez à générer les miniatures ici-dessous !", 'Succès', Constant.REDIRECTION_TIME);
             dispatch(getImageFormatsAction());
             navigate(Constant.IMAGE_FORMATS_BASE_PATH);
         }

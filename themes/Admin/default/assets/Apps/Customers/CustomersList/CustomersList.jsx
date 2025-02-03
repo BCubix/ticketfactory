@@ -9,6 +9,7 @@ import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudLis
 
 import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const customersListCrud = {
     title: 'Clients',
@@ -50,6 +51,11 @@ export const customersListCrud = {
     dataSelector: customersSelector,
     dataList: (selector) => selector.customers,
     delete: (props) => Api.customersApi.deleteCustomer(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CUSTOMER_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CUSTOMER_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CUSTOMER_DELETE'),
+    },
     links: {
         new: () => `${Constant.CUSTOMERS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.CUSTOMERS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

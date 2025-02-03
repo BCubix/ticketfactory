@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class LanguageController extends CrudController
@@ -27,6 +28,7 @@ class LanguageController extends CrudController
     }
 
     #[Rest\Get('/languages/{languageId}', requirements: ['languageId' => '\d+'])]
+    #[IsGranted('ROLE_LANGUAGE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function getOne(Request $request, int $languageId): View
     {
@@ -34,6 +36,7 @@ class LanguageController extends CrudController
     }
 
     #[Rest\Post('/languages')]
+    #[IsGranted('ROLE_LANGUAGE_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class LanguageController extends CrudController
     }
 
     #[Rest\Post('/languages/{languageId}', requirements: ['languageId' => '\d+'])]
+    #[IsGranted('ROLE_LANGUAGE_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function edit(Request $request, int $languageId): View
     {
@@ -48,6 +52,7 @@ class LanguageController extends CrudController
     }
 
     #[Rest\Delete('/languages/{languageId}', requirements: ['languageId' => '\d+'])]
+    #[IsGranted('ROLE_LANGUAGE_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_language_one'])]
     public function delete(Request $request, int $languageId): View
     {

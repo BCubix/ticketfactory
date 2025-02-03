@@ -11,6 +11,7 @@ use App\Repository\PageRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -38,7 +39,12 @@ class PageType extends AdminBaseFormType
                         ->orderBy('p.title', 'ASC');
                 }
             ])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
+            ->add('publicationStatus',    ChoiceType::class,          [
+                'choices'  => array_flip(Page::PUBLICATION_STATUS)
+            ])
             ->add('pageBlocks',           CollectionType::class,      [
                 'entry_type'   => PageBlockType::class,
                 'allow_add'    => true,

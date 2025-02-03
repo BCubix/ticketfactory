@@ -5,6 +5,7 @@ export const createFilterParams = (values, filterList, params) => {
 
     filterList.forEach((element) => {
         let filter = null;
+
         if (typeof element === 'object') {
             filter = values[element.key];
 

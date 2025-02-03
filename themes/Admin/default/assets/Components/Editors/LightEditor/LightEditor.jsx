@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
 // TinyMCE so the global var exists
@@ -52,42 +52,156 @@ import 'tinymce/plugins/emoticons/js/emojis';
 /* eslint import/no-webpack-loader-syntax: off */
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
+import { useDispatch } from 'react-redux';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { Api } from '@/AdminService/Api';
+import { NotificationManager } from 'react-notifications';
+import { Component } from '@/AdminService/Component';
 
 export const LightEditor = ({ value, onChange, className, ...rest }) => {
-    return (
-        <Editor
-            value={value}
-            onEditorChange={(newValue) => onChange(newValue)}
-            className={className}
-            init={{
-                height: 300,
-                menubar: true,
-                entity_encoding: 'raw',
-                plugins: [
-                    'autolink',
-                    'link',
-                    'lists',
-                    'image',
-                    'charmap',
-                    'anchor',
-                    'searchreplace',
-                    'wordcount',
-                    'fullscreen',
-                    'nonbreaking',
-                    'media',
-                    'save',
-                    'table',
-                    'directionality',
-                    'code',
-                ],
-                toolbar:
-                    'code | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | forecolor backcolor | customArrow customText',
-                content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
+    const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
+    const [filePickerCallback, setFilePickerCallback] = useState(null);
 
-                relative_urls: false,
-                image_caption: true,
-            }}
-            {...rest}
+    const handleFileSelection = (media) => {
+        if (filePickerCallback) {
+            filePickerCallback(media.documentUrl);
+            setFilePickerCallback(null);
+        }
+        setIsMediaLibraryOpen(false);
+    };
+
+    const getFileManager = (callback, value, meta) => {
+        setFilePickerCallback(() => (fileUrl) => {
+            callback(fileUrl, { title: fileUrl });
+        });
+        setIsMediaLibraryOpen(true);
+    };
+
+    return (
+        <>
+            <Editor
+                value={value}
+                onEditorChange={(newValue) => onChange(newValue)}
+                className={className}
+                init={{
+                    height: 300,
+                    menubar: true,
+                    entity_encoding: 'raw',
+                    plugins: [
+                        'autolink',
+                        'link',
+                        'lists',
+                        'image',
+                        'charmap',
+                        'anchor',
+                        'searchreplace',
+                        'wordcount',
+                        'fullscreen',
+                        'nonbreaking',
+                        'media',
+                        'save',
+                        'table',
+                        'directionality',
+                        'code',
+                    ],
+                    toolbar:
+                        'code | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | forecolor backcolor | customArrow customText',
+                    content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
+
+                    file_picker_callback: getFileManager,
+                    relative_urls: false,
+                    image_caption: true,
+                }}
+                {...rest}
+            />
+            {isMediaLibraryOpen && (
+                <ImageSelector
+                    handleSelect={handleFileSelection}
+                    handleClose={() => {
+                        setFilePickerCallback(null);
+                        setIsMediaLibraryOpen(false);
+                    }}
+                />
+            )}
+        </>
+    );
+};
+
+const ImageSelector = ({ handleSelect, handleClose }) => {
+    const dispatch = useDispatch();
+    const [imagesList, setImagesList] = useState(null);
+    const [imageMediasTotal, setImageMediasTotal] = useState(null);
+    const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
+    const [imageFormatList, setImageFormatList] = useState([]);
+    const [mediaFilters, setMediaFilters] = useState({
+        title: '',
+        active: null,
+        iframe: null,
+        sort: 'id DESC',
+        page: 1,
+        limit: 20,
+        type: '',
+        category: '',
+    });
+
+    useEffect(() => {
+        getImages();
+    }, [mediaFilters]);
+
+    const getImages = async () => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediasApi.getMediasList(mediaFilters);
+            if (!result?.result) {
+                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
+            }
+
+            setImagesList(result?.medias);
+            setImageMediasTotal(result.total);
+        });
+    };
+
+    const updatedMedia = (newValues) => {
+        const lIndex = imagesList?.findIndex((el) => el.id === newValues.id);
+        if (lIndex > -1) {
+            let newList = imagesList;
+            newList[lIndex] = newValues;
+            setImagesList(newList);
+        }
+    };
+
+    useEffect(() => {
+        apiMiddleware(dispatch, async () => {
+            const result = await Api.mediaCategoriesApi.getAllMediaCategories();
+            if (!result.result) {
+                NotificationManager.error("Une erreur s'est produite", 'Erreur', Constant.REDIRECTION_TIME);
+            }
+
+            setMediaCategoriesList(result.mediaCategories);
+
+            Api.imageFormatsApi.getAllImageFormat({ active: true }).then((result) => {
+                if (result.result) {
+                    setImageFormatList(result.imageFormats);
+                } else {
+                    NotificationManager.error("Une erreur s'est produite", 'Erreur');
+                }
+            });
+        });
+    }, []);
+
+    return (
+        <Component.CmtMediaModal
+            title={`Selectionner l'image §§§`}
+            open={true}
+            onClose={handleClose}
+            mediasList={imagesList}
+            setFieldValue={(_, value) => handleSelect(value)}
+            onAddNewMedia={getImages}
+            mediaFilters={mediaFilters}
+            setMediaFilters={setMediaFilters}
+            total={imageMediasTotal}
+            categoriesList={mediaCategoriesList}
+            updatedMedia={updatedMedia}
+            imageFormatList={imageFormatList}
         />
     );
 };

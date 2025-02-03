@@ -30,11 +30,6 @@ class UserManager extends AbstractManager
         $this->ph = $ph;
     }
 
-    public function getAdminUsers(): array
-    {
-        return $this->em->getRepository(User::class)->findAdminUsersForAdmin();
-    }
-
     public function upgradePassword(PasswordAuthenticatedUserInterface $user): void
     {
         if (null === $user->getPlainPassword() || strlen($user->getPlainPassword()) == 0) {
@@ -48,5 +43,32 @@ class UserManager extends AbstractManager
         $user->setPassword($hashedPassword);
 
         $this->em->persist($user);
+    }
+
+    public function validateCriticalUsers(User $user, bool $isDeleteAction)
+    {
+        $criticalRoles = [
+            'ROLE_PROFILE_READ',
+            'ROLE_PROFILE_EDIT',
+            'ROLE_PROFILE_CREATE',
+            'ROLE_PROFILE_DELETE',
+        ];
+
+        $users = $this->em->getRepository(User::class)->findAll();
+        foreach ($users as $currentUser) {
+            if ($currentUser->getId() === $user->getId()) {
+                if ($isDeleteAction) {
+                    continue;
+                }
+
+                $currentUser = $user;
+            }
+
+            if (array_intersect($criticalRoles, $currentUser->getRoles()) === $criticalRoles) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

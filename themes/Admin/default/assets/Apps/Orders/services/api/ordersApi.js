@@ -37,6 +37,19 @@ const ordersApi = {
             return { result: false, error: error?.response?.data };
         }
     },
+    
+    getLatestOrders: async () => {
+        try {
+            const result = await axios.get(DEFAULT_PATH + '/latest');
+            return { result: true, latestOrders: result.data };
+        } catch (error) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, orders: [] };
+            }
+
+            return { result: false, error: error?.response?.data };
+        }
+    },
 
     getAllOrders: async (filters) => {
         try {
@@ -57,6 +70,29 @@ const ordersApi = {
             const result = await axios.get(`${DEFAULT_PATH}/${id}`);
 
             return { result: true, order: result.data };
+        } catch (error) {
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
+    exportOrders: async () => {
+        try {
+            const response = await axios.get(`${DEFAULT_PATH}/exports`, {
+                responseType: 'blob',
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Commandes.xlsx');
+
+            document.body.appendChild(link);
+            link.click();
+
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            return { result: true };
         } catch (error) {
             return { result: false, error: error?.response?.data };
         }

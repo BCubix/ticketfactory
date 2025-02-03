@@ -1,0 +1,52 @@
+@import '../base/breakpoints';
+
+.menus {
+    &-header {
+        width: 100%;
+        margin-top: 20px;
+
+        &-content {
+            display: flex;
+
+            @include for-size('xs') {
+                flex-direction: column;
+            }
+            @include for-size('sm') {
+                align-items: center;
+            }
+        }
+    }
+
+    &-title {
+        @include for-size('md') {
+            font-size: 16px !important;
+        }
+
+        @include for-size('xl') {
+            font-size: 18px !important;
+        }
+    }
+
+    &-footer {
+        display: flex;
+        margin-top: 12px;
+        margin-bottom: 8px;
+        gap: 8px;
+
+        @include for-size('xs') {
+            flex-direction: column;
+        }
+
+        @include for-size('sm') {
+            justify-content: space-between;
+        }
+    }
+}
+
+#menus {
+    width: 100%;
+
+    @include for-size('md') {
+        width: 400px;
+    }
+}

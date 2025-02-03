@@ -4,7 +4,6 @@ namespace App\Entity\SEOAble;
 
 use App\Entity\Media\Media;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -36,16 +35,6 @@ trait SEOAble
     #[JMS\Groups(['a_all'])]
     #[ORM\Column(type: Types::STRING, length: 511, nullable: true)]
     private $fbDescription;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private $twTitle;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
-    #[ORM\Column(type: Types::STRING, length: 511, nullable: true)]
-    private $twDescription;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_all'])]
@@ -112,30 +101,6 @@ trait SEOAble
         return $this;
     }
 
-    public function getTwTitle(): ?string
-    {
-        return $this->twTitle;
-    }
-
-    public function setTwTitle(?string $twTitle): self
-    {
-        $this->twTitle = $twTitle;
-
-        return $this;
-    }
-
-    public function getTwDescription(): ?string
-    {
-        return $this->twDescription;
-    }
-
-    public function setTwDescription(?string $twDescription): self
-    {
-        $this->twDescription = $twDescription;
-
-        return $this;
-    }
-
     public function isIndexed(): ?bool
     {
         return $this->indexed;
@@ -158,23 +123,15 @@ trait SEOAble
             if (null === $this->getFbTitle()) {
                 $this->setFbTitle($title);
             }
-
-            if (null === $this->getTwTitle()) {
-                $this->setTwTitle($title);
-            }
         }
 
         if (null !== $description) {
             if (null === $this->getMetaDescription()) {
-                $this->setMetaDescription(substr($description, 0, 500));
+                $this->setMetaDescription(mb_substr($description, 0, 500, 'UTF-8'));
             }
 
             if (null === $this->getFbDescription()) {
-                $this->setFbDescription(substr($description, 0, 500));
-            }
-
-            if (null === $this->getTwDescription()) {
-                $this->setTwDescription(substr($description, 0, 500));
+                $this->setFbDescription(mb_substr($description, 0, 500, 'UTF-8'));
             }
         }
     }

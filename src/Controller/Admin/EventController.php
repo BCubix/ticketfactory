@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class EventController extends CrudController
@@ -27,6 +28,7 @@ class EventController extends CrudController
     }
 
     #[Rest\Get('/events/{eventId}', requirements: ['eventId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_one'])]
     public function getOne(Request $request, int $eventId): View
     {
@@ -34,6 +36,7 @@ class EventController extends CrudController
     }
 
     #[Rest\Post('/events')]
+    #[IsGranted('ROLE_EVENT_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class EventController extends CrudController
     }
 
     #[Rest\Post('/events/{eventId}', requirements: ['eventId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_one'])]
     public function edit(Request $request, int $eventId): View
     {
@@ -48,6 +52,7 @@ class EventController extends CrudController
     }
 
     #[Rest\Post('/events/{eventId}/duplicate', requirements: ['eventId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_one'])]
     public function duplicate(Request $request, int $eventId): View
     {
@@ -55,6 +60,7 @@ class EventController extends CrudController
     }
 
     #[Rest\Delete('/events/{eventId}', requirements: ['eventId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_one'])]
     public function delete(Request $request, int $eventId): View
     {
@@ -62,6 +68,7 @@ class EventController extends CrudController
     }
 
     #[Rest\Get('/events/{eventId}/translated/{languageId}', requirements: ['eventId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_one'])]
     public function getTranslated(Request $request, int $eventId, int $languageId): View
     {

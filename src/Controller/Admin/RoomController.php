@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class RoomController extends CrudController
@@ -19,7 +20,7 @@ class RoomController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Cette salle n'existe pas.";
 
     #[Rest\Get('/rooms')]
-    #[Rest\QueryParam(name:'filters', default:'')]
+    #[Rest\QueryParam(name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
     {
@@ -27,6 +28,7 @@ class RoomController extends CrudController
     }
 
     #[Rest\Get('/rooms/{roomId}', requirements: ['roomId' => '\d+'])]
+    #[IsGranted('ROLE_ROOM_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_one'])]
     public function getOne(Request $request, int $roomId): View
     {
@@ -34,6 +36,7 @@ class RoomController extends CrudController
     }
 
     #[Rest\Post('/rooms')]
+    #[IsGranted('ROLE_ROOM_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class RoomController extends CrudController
     }
 
     #[Rest\Post('/rooms/{roomId}', requirements: ['roomId' => '\d+'])]
+    #[IsGranted('ROLE_ROOM_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_one'])]
     public function edit(Request $request, int $roomId): View
     {
@@ -48,6 +52,7 @@ class RoomController extends CrudController
     }
 
     #[Rest\Post('/rooms/{roomId}/duplicate', requirements: ['roomId' => '\d+'])]
+    #[IsGranted('ROLE_ROOM_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_one'])]
     public function duplicate(Request $request, int $roomId): View
     {
@@ -55,6 +60,7 @@ class RoomController extends CrudController
     }
 
     #[Rest\Delete('/rooms/{roomId}', requirements: ['roomId' => '\d+'])]
+    #[IsGranted('ROLE_ROOM_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_one'])]
     public function delete(Request $request, int $roomId): View
     {
@@ -62,6 +68,7 @@ class RoomController extends CrudController
     }
 
     #[Rest\Get('/rooms/{roomId}/translated/{languageId}', requirements: ['roomId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_ROOM_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_room_one'])]
     public function getTranslated(Request $request, int $roomId, int $languageId): View
     {

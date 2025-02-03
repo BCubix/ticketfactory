@@ -41,12 +41,7 @@ class EventSorterManager extends AbstractManager
 
     public function getReferenceDate($event, $firstLastDate = self::FIRST_DATE, $objectString = self::OBJECT_DATE): mixed
     {
-        $dates = [];
-        foreach ($event->getEventDateBlocks() as $dateBlock) {
-            foreach ($dateBlock->getEventDates() as $eventDate) {
-                $dates[] = $eventDate;
-            }
-        }
+        $dates = $event->getEventDates();
 
         if (count($dates) == 0) {
             return null;
@@ -111,8 +106,8 @@ class EventSorterManager extends AbstractManager
 
         $page = $page ?? 1;
         return [
-            'total'     => count($events),
-            'events'    => array_slice($events, ($page - 1) * $limit, $limit),
+            'total' => count($events),
+            'events' => array_slice($events, ($page - 1) * $limit, $limit),
         ];
     }
 
@@ -171,13 +166,15 @@ class EventSorterManager extends AbstractManager
     private function getSortList(): array
     {
         return [
-            'name' => [fn ($element) => $element->getName()],
-            'beginDate' => [fn ($element) => $this->getBeginDate($element)],
-            'hour' => [function ($element) {
-                $date = clone $this->getBeginDate($element);
-                $date->setDate(1970, 1, 1);
-                return $date;
-            }]
+            'name' => [fn($element) => $element->getName()],
+            'beginDate' => [fn($element) => $this->getBeginDate($element)],
+            'hour' => [
+                function ($element) {
+                    $date = clone $this->getBeginDate($element);
+                    $date->setDate(1970, 1, 1);
+                    return $date;
+                }
+            ]
         ];
     }
 

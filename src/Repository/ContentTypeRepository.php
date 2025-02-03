@@ -14,7 +14,6 @@ class ContentTypeRepository extends CrudRepository
     protected const FILTERS = [
         ['active', 'o.active', 'equals'],
         ['name', 'o.name', 'search'],
-        ['pageType', 'o.pageType', 'equals'],
     ];
 
     protected const SORTS = [

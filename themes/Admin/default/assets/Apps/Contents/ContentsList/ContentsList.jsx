@@ -1,26 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Drawer,
-    FormControl,
-    InputLabel,
-    List,
-    ListItem,
-    ListItemText,
-    MenuItem,
-    Select,
-    Skeleton,
-    Typography,
-} from '@mui/material';
+import { Drawer, IconButton, List, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
@@ -30,9 +14,9 @@ import { DEFAULT_CONTENT_CRUD_LIST_COMPONENTS } from '@Apps/Contents/ContentsLis
 
 import { changeContentsFilters, contentsSelector, getAllContentDataAction, getContentsAction, setContentTypeKey } from '@Apps/Contents/redux/contents/contentsSlice';
 
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useTheme } from '@emotion/react';
 import { useSelector } from 'react-redux';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const contentsListCrud = {
     title: 'Contenus',
@@ -75,12 +59,17 @@ export const contentsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     contentTypes: {},
-    loadDataAction: () => getContentsAction(),
+    loadDataAction: (contentTypeKey, filters) => getContentsAction(contentTypeKey, filters),
     changeFiltersActions: (objectData, props, page) => changeContentsFilters(objectData, props, page),
     dataSelector: contentsSelector,
     dataList: (selector) => selector.contents,
     duplicate: (props) => Api.contentsApi.duplicateContent(props),
     delete: (props) => Api.contentsApi.deleteContent(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_DELETE'),
+    },
     links: {
         edit: (id) => `${Constant.CONTENTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
         translate: (id, languageId) => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentId=${id}&languageId=${languageId}`,
@@ -98,7 +87,7 @@ export const ContentsList = () => {
     const theme = useTheme();
     const { contentData, contentDataLoading, contentDataError, contentTypeKey } = useSelector(contentsSelector);
     const [loaded, setLoaded] = useState(false);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= theme.breakpoints.values.md);
 
     useEffect(() => {
         if (!contentData && !contentDataLoading && !contentDataError) {
@@ -155,37 +144,46 @@ export const ContentsList = () => {
     }, [Crud.contents.list.contentTypes, contentTypeKey]);
 
     if (!loaded) {
-        return (
-            <>
-                <Box marginRight={`${contentMargin}px`} padding={8} height="100%">
-                    <Skeleton variant="rounded" height="40px" width="30%" />
-                    <Skeleton variant="rounded" height="90%" width="100%" sx={{ marginTop: 4 }} />
-                </Box>
-                {sidebarOpen && (
-                    <Box position="absolute" right={0} top={`${theme.layout.header.height}px`} bottom={0} width={contentMargin}>
-                        <Skeleton variant="rectangular" height="100%" width="100%" />
-                    </Box>
-                )}
-            </>
-        );
+        return <Component.CmtSkeletonContentList theme={theme} contentMargin={contentMargin} sidebarOpen={sidebarOpen} />;
     }
 
     return (
         <>
-            <Box marginRight={`${contentMargin}px`}>
+            <Box marginRight={{ xs: 0, md: `${contentMargin}px` }}>
                 {getContentTypeItem && getContentTypeItem?.component && <getContentTypeItem.component />}
                 {getContentTypeItem && getContentTypeItem?.type === 'contentType' && !getContentTypeItem?.component && (
-                    <Component.ContentCrudList
-                        listCrud={{
-                            ...Crud?.contents?.list,
-                            dataList: () => contentData[contentTypeKey]?.contents,
-                            links: {
-                                ...Crud?.contents?.list.links,
-                                new: () => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentType=${contentData[contentTypeKey]?.contentType?.id}`,
-                            },
-                        }}
-                        objectData={contentData[contentTypeKey] || {}}
-                    />
+                    <Box>
+                        <IconButton
+                            edge="start"
+                            color="primary"
+                            aria-label="open right drawer"
+                            sx={{
+                                position: 'absolute',
+                                top: `${theme.layout.header.height}px`,
+                                right: 0,
+                                zIndex: 3,
+                                margin: 2,
+                            }}
+                            onClick={() => {
+                                setSidebarOpen(!sidebarOpen);
+                            }}
+                        >
+                            {sidebarOpen ? <MenuOpenIcon /> : <MenuIcon />}
+                        </IconButton>
+
+                        <Component.ContentCrudList
+                            listCrud={{
+                                ...Crud?.contents?.list,
+                                dataList: () => contentData[contentTypeKey]?.contents,
+                                links: {
+                                    ...Crud?.contents?.list.links,
+                                    new: () => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentType=${contentData[contentTypeKey]?.contentType?.id}`,
+                                },
+                            }}
+                            objectData={contentData[contentTypeKey] || {}}
+                            contentTypeKey={contentTypeKey}
+                        />
+                    </Box>
                 )}
             </Box>
 
@@ -201,6 +199,7 @@ export const ContentsList = () => {
                         height: `calc(100% - ${theme.layout.header.height}px)`,
                         marginTop: `${theme.layout.header.height}px`,
                     },
+                    zIndex: 2,
                 }}
                 anchor="right"
                 variant="permanent"

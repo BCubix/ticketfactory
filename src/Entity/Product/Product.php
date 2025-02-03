@@ -5,6 +5,7 @@ namespace App\Entity\Product;
 use App\Entity\Datable;
 use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
+use App\Entity\Product\ProductStockMovement;
 use App\Entity\SEOAble\SEOAble;
 use App\Entity\Ticketing\Ticketing;
 use App\Repository\ProductRepository;
@@ -38,11 +39,11 @@ class Product extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_tag_all', 'a_tag_one', 'a_order_one', 'a_cart_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_all', 'a_product_one', 'a_cart_one'])]
     #[ORM\Column(length: 123)]
@@ -75,19 +76,15 @@ class Product extends Datable
     private ?bool $displayBuyingButton = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[JMS\Groups(['a_product_all', 'a_product_one', 'a_cart_one', 'a_order_one'])]
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
-    #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'mainProducts')]
-    private ?ProductCategory $mainCategory = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_product_one'])]
-    #[ORM\ManyToMany(targetEntity: ProductCategory::class, inversedBy: 'products')]
-    private Collection $productCategories;
+    #[ORM\Column(nullable: true)]
+    #[Assert\PositiveOrZero(message: 'La quantité doit être un nombre positif ou zéro.')]
+    private ?int $stock = null;
 
     #[Assert\NotNull(message: 'La catégorie principale du produit doit être renseignée.')]
     #[JMS\Expose()]
@@ -97,29 +94,46 @@ class Product extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private Collection $featureLinks;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_one'])]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductStockMovement::class, orphanRemoval: false)]
+    private Collection $productStockMovements;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'mainProducts')]
+    private ?ProductCategory $mainCategory = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_product_all', 'a_product_one'])]
-    public $frontUrl;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_product_all', 'a_product_one'])]
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: FeatureLink::class, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private Collection $featureLinks;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_product_all', 'a_product_one'])]
     #[ORM\ManyToOne]
     private ?Ticketing $ticketing = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_one'])]
+    #[ORM\ManyToMany(targetEntity: ProductCategory::class, inversedBy: 'products')]
+    private Collection $productCategories;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_product_all', 'a_product_one'])]
+    public $frontUrl;
+
 
     public function __construct()
     {
         $this->productCategories = new ArrayCollection();
         $this->productMedias = new ArrayCollection();
         $this->featureLinks = new ArrayCollection();
+        $this->productStockMovements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -223,42 +237,14 @@ class Product extends Datable
         return $this;
     }
 
-    public function getMainCategory(): ?ProductCategory
+    public function getStock(): ?int
     {
-        return $this->mainCategory;
+        return $this->stock;
     }
 
-    public function setMainCategory(?ProductCategory $mainCategory): self
+    public function setStock(?int $stock): static
     {
-        $this->mainCategory = $mainCategory;
-        $this->addProductCategory($mainCategory);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ProductCategory>
-     */
-    public function getProductCategories(): Collection
-    {
-        return $this->productCategories;
-    }
-
-    public function addProductCategory(ProductCategory $productCategory): self
-    {
-        if (!$this->productCategories->contains($productCategory)) {
-            $this->productCategories->add($productCategory);
-            $productCategory->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductCategory(ProductCategory $productCategory): self
-    {
-        if ($this->productCategories->removeElement($productCategory)) {
-            $productCategory->removeProduct($this);
-        }
+        $this->stock = $stock;
 
         return $this;
     }
@@ -293,25 +279,6 @@ class Product extends Datable
         return $this;
     }
 
-    public function getLang(): ?Language
-    {
-        return $this->lang;
-    }
-
-    public function setLang(?Language $lang): self
-    {
-        $this->lang = $lang;
-
-        return $this;
-    }
-
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function completeSeo()
-    {
-        $this->completeFields($this->getName());
-    }
-
     /**
      * @return Collection<int, FeatureLink>
      */
@@ -342,6 +309,63 @@ class Product extends Datable
         return $this;
     }
 
+    /**
+     * @return Collection<int, ProductStockMovement>
+     */
+    public function getProductStockMovements(): Collection
+    {
+        return $this->productStockMovements;
+    }
+
+    public function addProductStockMovement(ProductStockMovement $productStockMovement): static
+    {
+        if (!$this->productStockMovements->contains($productStockMovement)) {
+            $this->productStockMovements->add($productStockMovement);
+            $productStockMovement->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductStockMovement(ProductStockMovement $productStockMovement): static
+    {
+        if ($this->productStockMovements->removeElement($productStockMovement)) {
+            // set the owning side to null (unless already changed)
+            if ($productStockMovement->getProduct() === $this) {
+                $productStockMovement->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMainCategory(): ?ProductCategory
+    {
+        return $this->mainCategory;
+    }
+
+    public function setMainCategory(?ProductCategory $mainCategory): self
+    {
+        $this->mainCategory = $mainCategory;
+        if (null !== $mainCategory) {
+            $this->addProductCategory($mainCategory);
+        }
+
+        return $this;
+    }
+
+    public function getLang(): ?Language
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?Language $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
     public function getTicketing(): ?Ticketing
     {
         return $this->ticketing;
@@ -350,6 +374,33 @@ class Product extends Datable
     public function setTicketing(?Ticketing $ticketing): static
     {
         $this->ticketing = $ticketing;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductCategory>
+     */
+    public function getProductCategories(): Collection
+    {
+        return $this->productCategories;
+    }
+
+    public function addProductCategory(ProductCategory $productCategory): self
+    {
+        if (!$this->productCategories->contains($productCategory)) {
+            $this->productCategories->add($productCategory);
+            $productCategory->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductCategory(ProductCategory $productCategory): self
+    {
+        if ($this->productCategories->removeElement($productCategory)) {
+            $productCategory->removeProduct($this);
+        }
 
         return $this;
     }

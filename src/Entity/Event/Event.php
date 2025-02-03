@@ -6,6 +6,7 @@ use App\Entity\Datable;
 use App\Entity\Feature\FeatureLink;
 use App\Entity\Language\Language;
 use App\Entity\SEOAble\SEOAble;
+use App\Entity\Subscription\Subscription;
 use App\Entity\Ticketing\Ticketing;
 use App\Repository\EventRepository;
 
@@ -32,7 +33,7 @@ class Event extends Datable
     use SEOAble;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_page_one', 'a_page_block_all', 'a_page_block_one', 'a_subscription_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -41,11 +42,11 @@ class Event extends Datable
     #[Assert\Length(max: 250, maxMessage: 'Le nom de l\'événement doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom de l\'événement doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one'])]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_tag_all', 'a_tag_one', 'a_cart_one', 'a_content_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one', 'a_cart_one'])]
     #[ORM\Column(length: 123, unique: true)]
@@ -79,22 +80,22 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $eventLength = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $eventLength = null;
 
     #[Assert\Valid]
-    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de dates.')]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins une dates.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDateBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private $eventDateBlocks;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventDate::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private $eventDates;
 
     #[Assert\Valid]
-    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins un bloc de tarifs.')]
+    #[Assert\Count(min: 1, minMessage: 'Vous devez renseigner au moins une catégorie de tarifs.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_one'])]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceBlock::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
-    private $eventPriceBlocks;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventPriceCategory::class, orphanRemoval: true, cascade: ['persist', 'remove', 'detach', 'merge'])]
+    private $eventPriceCategories;
 
     #[Assert\NotNull(message: 'La catégorie principale de l\'événement doit être renseignée.')]
     #[JMS\Expose()]
@@ -150,11 +151,22 @@ class Event extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
+    #[ORM\ManyToOne]
+    private ?SeatingPlan $seatingPlan = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontBookingButton = true;
+
+    /**
+     * @var Collection<int, Subscription>
+     */
+    #[ORM\ManyToMany(targetEntity: Subscription::class, mappedBy: 'events')]
+    private Collection $subscriptions;
 
     public function __construct()
     {
@@ -162,11 +174,12 @@ class Event extends Datable
         $this->eventArticles = new ArrayCollection();
         /*** < Module: EventArticle ***/
         $this->eventCategories  = new ArrayCollection();
-        $this->eventDateBlocks  = new ArrayCollection();
-        $this->eventPriceBlocks = new ArrayCollection();
+        $this->eventDates       = new ArrayCollection();
+        $this->eventPriceCategories = new ArrayCollection();
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
-        $this->featureLinks = new ArrayCollection();
+        $this->featureLinks     = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
 
@@ -271,30 +284,26 @@ class Event extends Datable
         return $this;
     }
 
-    /**
-     * @return Collection<int, EventDateBlock>
-     */
-    public function getEventDateBlocks(): Collection
+    public function getEventDates(): Collection
     {
-        return $this->eventDateBlocks;
+        return $this->eventDates;
     }
 
-    public function addEventDateBlock(EventDateBlock $eventDateBlock): self
+    public function addEventDate(EventDate $eventDate): self
     {
-        if (!$this->eventDateBlocks->contains($eventDateBlock)) {
-            $this->eventDateBlocks[] = $eventDateBlock;
-            $eventDateBlock->setEvent($this);
+        if (!$this->eventDates->contains($eventDate)) {
+            $this->eventDates[] = $eventDate;
+            $eventDate->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeEventDateBlock(EventDateBlock $eventDateBlock): self
+    public function removeEventDate(EventDate $eventDate): self
     {
-        if ($this->eventDateBlocks->removeElement($eventDateBlock)) {
-            // set the owning side to null (unless already changed)
-            if ($eventDateBlock->getEvent() === $this) {
-                $eventDateBlock->setEvent(null);
+        if ($this->eventDates->removeElement($eventDate)) {
+            if ($eventDate->getEvent() === $this) {
+                $eventDate->setEvent(null);
             }
         }
 
@@ -302,29 +311,29 @@ class Event extends Datable
     }
 
     /**
-     * @return Collection<int, EventPriceBlock>
+     * @return Collection<int, EventPriceCategory>
      */
-    public function getEventPriceBlocks(): Collection
+    public function getEventPriceCategories(): Collection
     {
-        return $this->eventPriceBlocks;
+        return $this->eventPriceCategories;
     }
 
-    public function addEventPriceBlock(EventPriceBlock $eventPriceBlock): self
+    public function addEventPriceCategory(EventPriceCategory $eventPriceCategory): self
     {
-        if (!$this->eventPriceBlocks->contains($eventPriceBlock)) {
-            $this->eventPriceBlocks[] = $eventPriceBlock;
-            $eventPriceBlock->setEvent($this);
+        if (!$this->eventPriceCategories->contains($eventPriceCategory)) {
+            $this->eventPriceCategories[] = $eventPriceCategory;
+            $eventPriceCategory->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeEventPriceBlock(EventPriceBlock $eventPriceBlock): self
+    public function removeEventPriceCategory(EventPriceCategory $eventPriceCategory): self
     {
-        if ($this->eventPriceBlocks->removeElement($eventPriceBlock)) {
+        if ($this->eventPriceCategories->removeElement($eventPriceCategory)) {
             // set the owning side to null (unless already changed)
-            if ($eventPriceBlock->getEvent() === $this) {
-                $eventPriceBlock->setEvent(null);
+            if ($eventPriceCategory->getEvent() === $this) {
+                $eventPriceCategory->setEvent(null);
             }
         }
 
@@ -461,13 +470,6 @@ class Event extends Datable
         return $this;
     }
 
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function completeSeo()
-    {
-        $this->completeFields($this->getName(), $this->getChapo());
-    }
-
     /**
      * @return Collection<int, FeatureLink>
      */
@@ -518,6 +520,147 @@ class Event extends Datable
     public function setEventType(?EventType $eventType): static
     {
         $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    public function getSeatingPlan(): ?SeatingPlan
+    {
+        return $this->seatingPlan;
+    }
+
+    public function setSeatingPlan(?SeatingPlan $seatingPlan): static
+    {
+        $this->seatingPlan = $seatingPlan;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subscription>
+     */
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addSubscription(Subscription $subscription): static
+    {
+        if (!$this->subscriptions->contains($subscription)) {
+            $this->subscriptions->add($subscription);
+            $subscription->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscription(Subscription $subscription): static
+    {
+        if ($this->subscriptions->removeElement($subscription)) {
+            $subscription->removeEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'name'                  => $this->name,
+            'slug'                  => $this->slug,
+            'chapo'                 => $this->chapo,
+            'description'           => $this->description,
+            'ticketingReference'    => $this->ticketingReference,
+            'displayBookingButton'  => $this->displayBookingButton,
+            'eventLength'           => $this->eventLength,
+            'eventDates'             => [],
+            'eventPriceCategories'  => [],
+            'eventMedias'           => [],
+            'mainCategory'          => null !== $this->mainCategory ? $this->mainCategory->getId() : null,
+            'eventCategories'       => [],
+            'room'                  => null !== $this->room ? $this->room->getId() : null,
+            'season'                => null !== $this->season ? $this->season->getId() : null,
+            'tags'                  => [],
+            'featureLinks'          => [],
+            'ticketing'             => null !== $this->ticketing ? $this->ticketing->getId() : null,
+            'eventType'             => null !== $this->eventType ? $this->eventType->getId() : null,
+            'seatingPlan'           => null !== $this->seatingPlan ? $this->seatingPlan->getId() : null,
+        ];
+
+        foreach ($this->eventDates as $eventDate) {
+            $result['eventDates'][] = $eventDate->toStringToCompare();
+        }
+
+        foreach ($this->eventPriceCategories as $eventPriceCategory) {
+            $result['eventPriceCategories'][] = $eventPriceCategory->toStringToCompare();
+        }
+
+        foreach ($this->eventMedias as $eventMedia) {
+            $result['eventMedias'][] = $eventMedia->toStringToCompare();
+        }
+
+        foreach ($this->eventCategories as $eventCategory) {
+            $result['eventCategories'][] = $eventCategory->getId();
+        }
+
+        foreach ($this->tags as $tag) {
+            $result['tags'][] = $tag->getId();
+        }
+
+        foreach ($this->featureLinks as $featureLink) {
+            $result['featureLinks'][] = $featureLink->toStringToCompare();
+        }
+
+        return $result;
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        $simpleFields = [
+            'name', 'slug', 'chapo', 'description',
+            'ticketingReference', 'displayBookingButton',
+            'eventLength'
+        ];
+        foreach ($simpleFields as $field) {
+            if (array_key_exists($field, $fields)) {
+                $this->$field = $fields[$field];
+            }
+        }
+
+        $objectFields = [
+            'mainCategory' => 'mainCategory',
+            'room' => 'room',
+            'season' => 'season',
+            'ticketing' => 'ticketing',
+            'eventType' => 'eventType',
+            'seatingPlan' => 'seatingPlan',
+        ];
+        foreach ($objectFields as $field => $property) {
+            if (array_key_exists($field, $fields)) {
+                $this->$property = $fields[$field];
+            }
+        }
+
+        $collections = [
+            'eventDates' => 'eventDates',
+            'eventPriceCategories' => 'eventPriceCategories',
+            'eventMedias' => 'eventMedias',
+            'eventCategories' => 'eventCategories',
+            'tags' => 'tags',
+            'featureLinks' => 'featureLinks',
+        ];
+        foreach ($collections as $field => $property) {
+            if (array_key_exists($field, $fields)) {
+                $this->$property = [];
+                foreach ($fields[$field] as $key => $value) {
+                    if (is_object($value) && method_exists($value, 'restoreHistory')) {
+                        $this->$property[$key] = $value->restoreHistory($value);
+                    } else {
+                        $this->$property[$key] = $value;
+                    }
+                }
+            }
+        }
 
         return $this;
     }

@@ -162,33 +162,30 @@ const Categories = ({ values, setFieldValue, errors, touched, mediaCategoriesLis
     );
 };
 
-export const IframeMediaForm = ({ handleSubmit, onCancel, id = null, deleteElement = null }) => {
+const Formats = ({ values, setFieldValue, touched, errors, imageFormatList }) => {
+    return (
+        <Grid container spacing={4} sx={{ marginTop: 3 }}>
+            <Grid item xs={12}>
+                <Component.CmtSelectField
+                    label="Emplacements"
+                    multiple
+                    name={`imageFormats`}
+                    value={values.imageFormats}
+                    list={imageFormatList}
+                    getValue={(item) => item?.id}
+                    getName={(item) => item?.name}
+                    setFieldValue={setFieldValue}
+                    errors={touched.imageFormats && errors.imageFormats}
+                />
+            </Grid>
+        </Grid>
+    );
+};
+
+export const IframeMediaForm = ({ handleSubmit, onCancel, imageFormatList = [], id = null, deleteElement = null }) => {
     const dispatch = useDispatch();
     const [media, setMedia] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
-
-    const [mediasList, setMediasList] = useState(null);
-    const [mediasFilters, setMediasFilters] = useState({
-        title: '',
-        active: null,
-        iframe: null,
-        type: '',
-        category: '',
-        sort: 'id DESC',
-        page: 1,
-        limit: 20,
-    });
-
-    const getMediasList = () => {
-        apiMiddleware(dispatch, async () => {
-            const result = await Api.mediasApi.getMediasList({ ...mediasFilters });
-            if (!result?.result) {
-                NotificationManager.error('Une erreur est survenue, essayez de rafraichir la page.', 'Erreur', Constant.REDIRECTION_TIME);
-                return;
-            }
-            setMediasList(result);
-        });
-    };
 
     const getMedia = async () => {
         apiMiddleware(dispatch, async () => {
@@ -225,10 +222,6 @@ export const IframeMediaForm = ({ handleSubmit, onCancel, id = null, deleteEleme
         });
     }, []);
 
-    useEffect(() => {
-        getMediasList();
-    }, [mediasFilters]);
-
     const mediaSchema = Yup.object().shape({
         title: Yup.string().required('Veuillez renseigner le titre du média'),
         documentUrl: Yup.string().required("Veuillez renseigner l'url du média"),
@@ -254,6 +247,7 @@ export const IframeMediaForm = ({ handleSubmit, onCancel, id = null, deleteEleme
                 documentType: media?.documentType || '',
                 thumbnail: media?.thumbnail || null,
                 realThumbnail: media?.realThumbnail || '',
+                imageFormats: media?.imageFormats ? media?.imageFormats?.map((el) => el.id) : [],
                 iframe: true,
             }}
             validationSchema={mediaSchema}
@@ -290,6 +284,11 @@ export const IframeMediaForm = ({ handleSubmit, onCancel, id = null, deleteEleme
                                 label: 'Catégories',
                                 id: 'categories',
                                 component: <Categories values={values} setFieldValue={setFieldValue} errors={errors} touched={touched} mediaCategoriesList={mediaCategoriesList} />,
+                            },
+                            {
+                                label: 'Emplacements',
+                                id: 'locations',
+                                component: <Formats values={values} setFieldValue={setFieldValue} touched={touched} errors={errors} imageFormatList={imageFormatList} />,
                             },
                         ]}
                     />

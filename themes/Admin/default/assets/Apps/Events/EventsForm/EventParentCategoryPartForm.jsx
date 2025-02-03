@@ -33,7 +33,7 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
             key={list.id}
             nodeId={list?.id?.toString()}
             label={
-                <Box display="flex" alignItems={'center'}>
+                <Box className="flex align-center">
                     <Checkbox
                         checked={values?.eventCategories?.includes(list.id)}
                         id={`eventCategoriesValue-${list.id}`}
@@ -43,7 +43,7 @@ const displayCategoriesOptions = (list, values, setFieldValue) => {
                         }}
                     />
                     {list?.name}
-                    <Box component="span" sx={{ ml: 'auto' }}>
+                    <Box component="span" className='margin-left-auto'>
                         <Radio
                             checked={values?.mainCategory === list.id}
                             id={`mainCategoryValue-${list.id}`}
@@ -81,11 +81,11 @@ export const EventParentCategoryPartForm = ({ values, categoriesList, setFieldVa
 
     return (
         <>
-            <Box display="flex" justifyContent={'space-between'}>
-                <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
+            <Box className="flex row-between">
+                <Typography variant="body1" className="required-input margin-top-2">
                     Catégories
                 </Typography>
-                <Typography variant="body1" sx={{ mt: 2 }} className="required-input">
+                <Typography variant="body1" className="required-input margin-top-2">
                     Catégorie principale
                 </Typography>
             </Box>
@@ -96,7 +96,7 @@ export const EventParentCategoryPartForm = ({ values, categoriesList, setFieldVa
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpanded={[categoriesList.id?.toString(), ...defaultExpend]}
                 defaultExpandIcon={<ChevronRightIcon />}
-                sx={{ flexGrow: 1, overflowY: 'auto' }}
+                className='flex-grow overflow-y'
             >
                 {displayCategoriesOptions(categoriesList, values, setFieldValue)}
             </TreeView>

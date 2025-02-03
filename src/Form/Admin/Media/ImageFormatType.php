@@ -19,7 +19,10 @@ class ImageFormatType extends AdminBaseFormType
     {
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
+            ->add('imageToCrop',          CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('name',                 TextType::class,            [])
             ->add('width',                IntegerType::class,         [])
             ->add('height',               IntegerType::class,         [])

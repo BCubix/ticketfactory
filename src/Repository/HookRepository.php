@@ -28,6 +28,7 @@ class HookRepository extends CrudRepository
     {
         return $this->createQueryBuilder('u')
             ->where('u.name = :name')
+            ->andWhere('u.module is NULL')
             ->setParameter('name', $name)
             ->getQuery()
             ->getOneOrNullResult();

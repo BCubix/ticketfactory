@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Api } from '@/AdminService/Api';
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 const initialState = {
     loading: false,

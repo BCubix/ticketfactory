@@ -2,7 +2,8 @@
 
 namespace App\Twig;
 
-use App\Entity\Order\CartRow;
+use App\Entity\Order\Cart;
+use App\Entity\Order\EventRow;
 use App\Manager\CartManager;
 
 use Twig\Extension\AbstractExtension;
@@ -20,12 +21,24 @@ class TwigCartExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('getCartSeatsGrouped', [$this, 'getCartSeatsGrouped']),
+            new TwigFunction('getEventSeatsGrouped', [$this, 'getEventSeatsGrouped']),
+            new TwigFunction('getCart', [$this, 'getCart']),
+            new TwigFunction('getDiscount', [$this, 'getDiscount']),
         ];
     }
 
-    public function getCartSeatsGrouped(CartRow $cartRow): ?array
+    public function getEventSeatsGrouped(EventRow $eventRow): ?array
     {
-        return $this->cm->getCartSeatsGrouped($cartRow);
+        return $this->cm->getEventSeatsGrouped($eventRow);
+    }
+
+    public function getCart(): ?Cart
+    {
+        return $this->cm->getCart();
+    }
+
+    public function getDiscount(): ?int
+    {
+        return $this->cm->calculateDiscount($this->getCart());
     }
 }

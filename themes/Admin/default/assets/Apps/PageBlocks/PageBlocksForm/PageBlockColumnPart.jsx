@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, IconButton, Typography } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Grid, IconButton, ListSubheader, MenuItem, Select, Typography } from '@mui/material';
 import { FieldArray } from 'formik';
 import { Component } from '@/AdminService/Component';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SettingsIcon from '@mui/icons-material/Settings';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
 import { Box } from '@mui/system';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setFieldTouched, remove, baseName }) => {
+const PageBlockColumnElem = ({ column, index, values, errors, touched, media, setFieldValue, setFieldTouched, remove, baseName, pageColumnTypeModules }) => {
     const [size, setSize] = useState(column[media]);
+    const [showClass, setShowClass] = useState(false);
 
     useEffect(() => {
         setSize(column[media]);
@@ -45,6 +47,41 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
         setFieldTouched(`${baseName}columns.${index}.${media}`, true, false);
     };
 
+    const getSelectEntryList = useMemo(() => {
+        let moduleSelectList = Object.entries(pageColumnTypeModules)?.map(([key, item]) => item?.getSelectEntry());
+
+        let selectList = {};
+
+        moduleSelectList.map((item) => {
+            if (!selectList[item.groupName]) {
+                selectList[item.groupName] = [];
+            }
+
+            selectList[item.groupName].push({ label: item.label, name: item.name });
+        });
+
+        let sortList = [];
+
+        Object.entries(selectList).forEach(([key, value]) => {
+            const sortValue = [...value];
+            sortValue.sort((a, b) => a.label > b.label);
+            sortList.push({ groupName: key, contentTypes: [...sortValue] });
+        });
+
+        sortList.sort((a, b) => a.groupName > b.groupName);
+
+        let sList = [];
+
+        sortList.forEach((element) => {
+            sList.push({ label: element.groupName });
+            element.contentTypes?.forEach((it) => {
+                sList.push(it);
+            });
+        });
+
+        return sList;
+    }, []);
+
     const isNewLine = checkIsNewLine();
     return (
         <Draggable key={`columns.${index}`} draggableId={`columns.${index}`} index={index}>
@@ -52,7 +89,8 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                 <Grid
                     item
                     key={index}
-                    xs={column[media]}
+                    xs={12}
+                    md={column[media]}
                     sx={{ minHeight: 150, marginTop: 4, display: 'flex', overflowX: 'hidden' }}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -117,32 +155,115 @@ const PageBlockColumnElem = ({ column, index, values, media, setFieldValue, setF
                                 </Typography>
                             </Box>
 
-                            <Component.DeleteFabButton
-                                size="small"
-                                id={`${baseName.replaceAll('.', '-')}-columns-${index}-remove`}
-                                sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0 }}
-                                onClick={() => {
-                                    remove(index);
+                            <Select
+                                labelId={`${baseName}columns-${index}-typeLabel`}
+                                label="Type de champs"
+                                variant="standard"
+                                id={`${baseName}columns-${index}-typeSelect`}
+                                value={values?.columns?.at(index)?.type}
+                                name={`${baseName}columns.${index}.type`}
+                                onBlur={() => setFieldTouched(`${baseName}columns.${index}.type`, true, false)}
+                                onChange={(e) => {
+                                    setFieldValue(`${baseName}columns.${index}.type`, e.target.value);
+                                    setFieldValue(`${baseName}columns.${index}.content`, '');
                                 }}
+                                sx={{ minWidth: 200 }}
                             >
-                                <DeleteIcon />
-                            </Component.DeleteFabButton>
-                        </Box>
-                        <Component.LightEditorFormControl className="pageBlockEditor" id={`${baseName.replaceAll('.', '-')}columns-${index}-contentControl`}>
-                            <Component.LightEditor
-                                labelId={`${baseName}columns-${index}-content-label`}
-                                value={values?.columns?.at(index)?.content}
-                                onBlur={() => setFieldTouched(`${baseName}columns.${index}.content`, true, false)}
-                                onChange={(val) => {
-                                    setFieldValue(`${baseName}columns.${index}.content`, val);
+                                {getSelectEntryList?.map((typeList, typeIndex) =>
+                                    typeList?.name ? (
+                                        <MenuItem key={typeIndex} value={typeList?.name}>
+                                            {typeList?.label}
+                                        </MenuItem>
+                                    ) : (
+                                        <ListSubheader key={typeIndex} sx={{ marginBottom: 1 }}>
+                                            {typeList?.label}
+                                        </ListSubheader>
+                                    )
+                                )}
+                            </Select>
+
+                            <Component.CmtTextField
+                                value={column?.class}
+                                onBlur={() => setFieldTouched(`${baseName}columns.${index}.class`, true, false)}
+                                onChange={(e) => {
+                                    setFieldValue(`${baseName}columns.${index}.class`, e.target.value);
+                                }}
+                                label="Classe de la colonne"
+                                name={`${baseName}columns.${index}.class`}
+                                sx={{
+                                    display: showClass ? 'inline-flex' : 'none',
+                                    marginInline: 3,
+                                    width: 150,
+                                    marginBlock: 0,
+                                    '& input': {
+                                        padding: 0,
+                                        fontSize: 14,
+                                    },
                                 }}
                             />
-                        </Component.LightEditorFormControl>
+
+                            <Box display="flex" gap={2}>
+                                <Component.EditFabButton
+                                    size="small"
+                                    id={`${baseName.replaceAll('.', '-')}-columns-${index}-more`}
+                                    sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0 }}
+                                    onClick={() => {
+                                        setShowClass(!showClass);
+                                    }}
+                                >
+                                    <SettingsIcon />
+                                </Component.EditFabButton>
+                                <Component.DeleteFabButton
+                                    size="small"
+                                    id={`${baseName.replaceAll('.', '-')}-columns-${index}-remove`}
+                                    sx={{ height: 30, width: 30, minHeight: 0, minWidth: 0 }}
+                                    onClick={() => {
+                                        remove(index);
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </Component.DeleteFabButton>
+                            </Box>
+                        </Box>
+
+                        <DisplayField
+                            values={values}
+                            errors={errors}
+                            touched={touched}
+                            index={index}
+                            baseName={baseName}
+                            setFieldTouched={setFieldTouched}
+                            setFieldValue={setFieldValue}
+                            pageColumnTypeModules={pageColumnTypeModules}
+                        />
                     </Component.CmtCard>
                     <AddContentBox index={index} values={values} setFieldValue={setFieldValue} baseName={baseName} />
                 </Grid>
             )}
         </Draggable>
+    );
+};
+
+const DisplayField = ({ values, errors, touched, index, baseName, setFieldTouched, setFieldValue, pageColumnTypeModules }) => {
+    const field = (pageColumnTypeModules && pageColumnTypeModules[`${values?.columns?.at(index)?.type}`]) || null;
+    const entry = field?.getSelectEntry();
+    const FormComponent = field?.FormComponent;
+
+    if (!FormComponent) {
+        return <>Ce composant n'existe pas</>;
+    }
+
+    return (
+        <FormComponent
+            value={values?.columns?.at(index)?.content}
+            errors={errors?.columns?.at(index)}
+            touched={touched?.columns?.at(index)}
+            name={`${baseName}columns.${index}.content`}
+            label={entry?.label}
+            setFieldTouched={setFieldTouched}
+            setFieldValue={setFieldValue}
+            languageId={values?.lang}
+        />
     );
 };
 
@@ -164,6 +285,7 @@ const AddContentBox = ({ index, values, setFieldValue, baseName }) => {
         let newColumns = values.columns;
         newColumns.splice(index + 1, 0, {
             content: '',
+            type: 'text',
             xs: 12,
             s: 12,
             m: 12,
@@ -198,7 +320,7 @@ const AddContentBox = ({ index, values, setFieldValue, baseName }) => {
     );
 };
 
-export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouched, baseName = '' }) => {
+export const PageBlockColumnPart = ({ values, errors, touched, media, setFieldValue, setFieldTouched, baseName = '', pageColumnTypeModules }) => {
     const handleDragEnd = (result) => {
         if (!result.destination) {
             return;
@@ -226,10 +348,13 @@ export const PageBlockColumnPart = ({ values, media, setFieldValue, setFieldTouc
                                         column={column}
                                         key={index}
                                         values={values}
+                                        errors={errors}
+                                        touched={touched}
                                         setFieldValue={setFieldValue}
                                         setFieldTouched={setFieldTouched}
                                         remove={remove}
                                         baseName={baseName}
+                                        pageColumnTypeModules={pageColumnTypeModules}
                                     />
                                 ))}
                                 {provided.placeholder}

@@ -78,4 +78,20 @@ class EventMedia
 
         return $this;
     }
+
+    public function toStringToCompare(): array
+    {
+        return [
+            'media' => $this->media ? $this->media->getId() : null,
+        ];
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['media'])) {
+            $this->media = $fields['media'];
+        }
+
+        return $this;
+    }
 }

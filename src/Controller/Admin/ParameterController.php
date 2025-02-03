@@ -15,12 +15,14 @@ use App\Service\Error\FormErrorsCollector;
 use App\Service\Log\Logger;
 use App\Service\Object\CloneObject;
 use App\Service\ServiceFactory;
+
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ParameterController extends AdminController
@@ -52,7 +54,7 @@ class ParameterController extends AdminController
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_all'])]
     public function getAll(Request $request, ParameterManager $pm): View
     {
-        return $this->view($pm->getAll(), Response::HTTP_OK);
+        return $this->view($pm->getAllForAdmin(), Response::HTTP_OK);
     }
 
     #[Rest\Get('/parametres/{parameterKey}', requirements: ['parameterKey' => '.+'])]
@@ -63,8 +65,9 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres')]
+    #[IsGranted('ROLE_PARAMETER_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_parameter_one'])]
-    public function edit(Request $request, ParameterManager $pm): View
+    public function editParameter(Request $request, ParameterManager $pm): View
     {
         $parameters = $request->request->all();
         if (!isset($parameters['parameters'])) {
@@ -127,6 +130,7 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres/generer/seo')]
+    #[IsGranted('ROLE_PARAMETER_EXECUTE')]
     public function generateRobotFile(Request $request): View
     {
         $this->mf->get('parameter')->createRobotFile($request->getScheme() . "://" . $request->getHost());
@@ -136,6 +140,7 @@ class ParameterController extends AdminController
     }
 
     #[Rest\Post('/parametres/email-test')]
+    #[IsGranted('ROLE_PARAMETER_EXECUTE')]
     public function sendTestEmail(): View
     {
         $testEmailAddress = $this->mf->get('parameter')->getCoreParameter('test_email_address');

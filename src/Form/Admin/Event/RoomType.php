@@ -25,7 +25,9 @@ class RoomType extends AdminBaseFormType
         $builder
             ->add('active',               CheckboxType::class,        ['false_values' => ['0', 'null', 'false']])
             ->add('name',                 TextType::class,            [])
-            ->add('slug',                 TextType::class,            [])
+            ->add('slug',                 TextType::class,            [
+                'empty_data' => '',
+            ])
             ->add('seatsNb',              IntegerType::class,         [])
             ->add('area',                 IntegerType::class,         [])
             ->add('seatingPlans',         CollectionType::class,      [

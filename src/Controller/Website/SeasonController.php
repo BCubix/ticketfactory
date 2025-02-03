@@ -43,15 +43,6 @@ class SeasonController extends EventAbleController
 
         $seasons = $this->em->getRepository(Season::class)->findAllForWebsite($this->getLanguageId());
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'Season/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -60,7 +51,6 @@ class SeasonController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'seasons'            => $seasons,
-            'pageContent'        => $pageContent,
         ]);
     }
 }

@@ -51,10 +51,11 @@ class ProductFilterType extends AbstractType
                     if (null !== $productCategory) {
                         $results = $results
                             ->andWhere('p.id = :productCategory')
+                            ->setParameter('productCategory', $productCategory)
                             ->orderBy('pc.position', 'ASC');
                     }
 
-                    return $results->setParameter('productCategory', $productCategory);
+                    return $results;
                 }
             ])
             ->add('page',                  HiddenType::class,         [

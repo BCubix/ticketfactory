@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 
@@ -13,9 +12,13 @@ import { Api } from '@/AdminService/Api';
 import { getHooksAction, hooksSelector, setHooks, updateHooksAction } from '@Apps/Hooks/redux/hooks/hooksSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { copyData } from '@Services/utils/copyData';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const HooksList = () => {
     const { loading, hooks, error } = useSelector(hooksSelector);
+    const { user } = useSelector(userProfileSelector);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
@@ -25,6 +28,18 @@ export const HooksList = () => {
             dispatch(getHooksAction());
         }
     }, []);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const accessUserCreate = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_HOOK_CREATE');
+    }, [userRoles]);
+
+    const accessUserDelete = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_HOOK_DELETE');
+    }, [userRoles]);
 
     const handleDragEnd = async (result) => {
         if (!result.destination) {
@@ -65,18 +80,27 @@ export const HooksList = () => {
     return (
         <>
             <Component.PageWrapper>
-                <Box display="flex" justifyContent="space-between">
+                <Box className="flex row-between">
                     <Component.CmtPageTitle>Hooks</Component.CmtPageTitle>
-                    <Component.CreateButton variant="contained" onClick={() => navigate(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH)}>
-                        Nouveau
-                    </Component.CreateButton>
+                    {accessUserCreate && (
+                        <Component.CreateButton variant="contained" onClick={() => navigate(Constant.HOOKS_BASE_PATH + Constant.CREATE_PATH)}>
+                            Nouveau
+                        </Component.CreateButton>
+                    )}
                 </Box>
                 {hooks.map(({ name, modules }, indexHook) => (
-                    <Component.HookTable hookName={name} modules={modules} setDeleteDialog={setDeleteDialog} handleDragEnd={handleDragEnd} key={indexHook} />
+                    <Component.HookTable
+                        hookName={name}
+                        modules={modules}
+                        setDeleteDialog={setDeleteDialog}
+                        handleDragEnd={handleDragEnd}
+                        key={indexHook}
+                        accessUserDelete={accessUserDelete}
+                    />
                 ))}
             </Component.PageWrapper>
             <Component.DeleteDialog open={deleteDialog !== null} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDisable(...deleteDialog)} deleteText="Désactiver">
-                <Box textAlign="center" py={3}>
+                <Box className="block-delete">
                     <Typography>Êtes-vous sûr de vouloir désactiver ce hook ?</Typography>
 
                     <Typography>Cette action est irréversible.</Typography>

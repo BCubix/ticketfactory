@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 
 export const ActiveFieldBlock = styled(Box)`
     margin-right: ${(props) => (null !== props.mr ? props.mr : '10px')};
-    height: 36px;
+    min-height: 36px;
     display: flex;
     align-items: center;
     padding-inline: 10px;

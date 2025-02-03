@@ -197,7 +197,7 @@ abstract class AddonManager extends AbstractManager
      *
      * @param string $objectName
      *
-     * @return void
+     * @return array
      * @throws \Exception
      */
     public function install(string $objectName): array
@@ -273,34 +273,37 @@ abstract class AddonManager extends AbstractManager
 
         foreach ($parameters as $key => $parameter) {
             $parameterKey = $type . '_' . $moduleName . '_' . $key;
+            if (null !== $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($parameterKey)) {
+                continue;
+            }
 
-            if (null === $this->em->getRepository(Parameter::class)->findOneByKeyForAdmin($parameterKey)) {
-                $newParameter = new Parameter();
-                $newParameter->setName($parameter['displayName']);
-                $newParameter->setType($parameter['type']);
-                $newParameter->setParamKey($parameterKey);
-                $newParameter->setParamValue($parameter['defaultValue']);
-                $newParameter->setTabName($parameter['tabName'] ?? null);
-                $newParameter->setBlockName($parameter['blockName'] ?? null);
-                $newParameter->setBreakpointsValue($parameter['breakpointValue']);
+            $newParameter = new Parameter();
+            $newParameter->setName($parameter['displayName']);
+            $newParameter->setType($parameter['type']);
+            $newParameter->setParamKey($parameterKey);
+            $newParameter->setParamValue($parameter['defaultValue']);
+            $newParameter->setTabName($parameter['tabName'] ?? null);
+            $newParameter->setBlockName($parameter['blockName'] ?? null);
+            $newParameter->setBreakpointsValue($parameter['breakpointValue']);
+            $newParameter->setTranslatedParameter($parameter['translatedParameter'] ?? false);
+            $newParameter->setHelper($parameter['helper'] ?? null);
 
-                if (isset($parameter['availableValue']) && count($parameter['availableValue']) > 0) {
-                    $availableValue = [];
+            if (isset($parameter['availableValue']) && count($parameter['availableValue']) > 0) {
+                $availableValue = [];
 
-                    foreach ($parameter['availableValue'] as $k => $avValue) {
-                        $availableValue[] = [
-                            'id'    => $k,
-                            'name'  => $avValue,
-                        ];
-                    }
-
-                    if (count($availableValue) > 0) {
-                        $newParameter->setAvailableValue($availableValue);
-                    }
+                foreach ($parameter['availableValue'] as $k => $avValue) {
+                    $availableValue[] = [
+                        'id'    => $k,
+                        'name'  => $avValue,
+                    ];
                 }
 
-                $this->em->persist($newParameter);
+                if (count($availableValue) > 0) {
+                    $newParameter->setAvailableValue($availableValue);
+                }
             }
+
+            $this->em->persist($newParameter);
         }
 
         $this->em->flush();

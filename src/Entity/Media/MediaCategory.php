@@ -42,7 +42,7 @@ class MediaCategory extends Datable
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $shortDescription = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_article_one', 'a_media_one', 'a_media_category_all', 'a_media_category_one'])]
     #[ORM\Column(type: Types::STRING, length: 123, unique: true)]

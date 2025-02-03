@@ -37,22 +37,12 @@ class ContentType extends Datable implements JsonDoctrineSerializable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
-    #[ORM\Column]
-    private ?bool $pageType = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
-    #[ORM\Column]
-    private ?bool $displayBlocks = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
     #[ORM\Column(nullable: true)]
     private ?int $maxObjectNb = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_content_all', 'a_content_one', 'a_content_type_all', 'a_content_type_one'])]
-    #[ORM\Column(length: 191, nullable: true, unique: true)]
+    #[ORM\Column(length: 123, nullable: true, unique: true)]
     private ?string $keyword = null;
 
     #[JMS\Expose()]
@@ -72,7 +62,6 @@ class ContentType extends Datable implements JsonDoctrineSerializable
 
     public function __construct()
     {
-        $this->active   = true;
         $this->contents = new ArrayCollection();
     }
 
@@ -90,30 +79,6 @@ class ContentType extends Datable implements JsonDoctrineSerializable
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function isPageType(): ?bool
-    {
-        return $this->pageType;
-    }
-
-    public function setPageType(bool $pageType): self
-    {
-        $this->pageType = $pageType;
-
-        return $this;
-    }
-
-    public function isDisplayBlocks(): ?bool
-    {
-        return $this->displayBlocks;
-    }
-
-    public function setDisplayBlocks(bool $displayBlocks): self
-    {
-        $this->displayBlocks = $displayBlocks;
 
         return $this;
     }

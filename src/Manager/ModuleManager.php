@@ -3,6 +3,8 @@
 namespace App\Manager;
 
 use App\Entity\Addon\Module as ModuleEntity;
+use App\Entity\Order\DeliveryMode;
+use App\Entity\User\Role;
 use App\Exception\ApiException;
 use App\Service\Addon\Module;
 
@@ -38,6 +40,7 @@ class ModuleManager extends AddonManager
         if (file_exists($this->sf->get('pathGetter')->getModulesDir() . '/' . $objectName . "/logo.png")) {
             return new BinaryFileResponse($this->sf->get('pathGetter')->getModulesDir() . '/' . $objectName . "/logo.png");
         }
+
         return null;
     }
 
@@ -94,10 +97,7 @@ class ModuleManager extends AddonManager
     {
         $result = parent::install($objectName);
 
-        $originFile = $this->getDir() . "/$objectName/config/migrations/Version$objectName.php";
-        if (is_file($originFile)) {
-            $this->sf->get("file")->copy($originFile, $this->getMigrationFile($objectName));
-        }
+        $this->addMigrations($objectName);
 
         return $result;
     }
@@ -149,34 +149,23 @@ class ModuleManager extends AddonManager
             switch ($action) {
                 case ModuleEntity::ACTION_INSTALL:
                 case ModuleEntity::ACTION_DISABLE:
+                    // We set the new status of the module in the database
                     $module->setActive($action == ModuleEntity::ACTION_INSTALL);
-
                     $this->em->persist($module);
                     $this->em->flush();
-
-                    $this->callConfig($moduleName, "trait", [$action == ModuleEntity::ACTION_DISABLE]);
-
-                    ($action == ModuleEntity::ACTION_INSTALL ? $this->enableHooks($module) : $this->disableHooks($module));
 
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is true
                     if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {
                         $this->em->getConnection()->commit();
                     }
 
-                    $settings = $this->getConfiguration($moduleName)['settings'];
-                    if ($action == ModuleEntity::ACTION_INSTALL) {
-                        if (isset($settings["parameters"])) {
-                            $this->addParameters('module', $moduleName, $settings["parameters"]);
-                        }
+                    // we add the traits to be installed with the module or remove them if we disable the module
+                    $this->callConfig($moduleName, "trait", [$action == ModuleEntity::ACTION_DISABLE]);
 
-                        if (isset($settings["url"])) {
-                            $this->addUrl($settings["url"]);
-                        }
-                    } else {
-                        if (isset($settings['url'])) {
-                            $this->removeUrl($settings['url']);
-                        }
-                    }
+                    ($action == ModuleEntity::ACTION_INSTALL ? $this->enableHooks($module) : $this->disableHooks($module));
+
+                    // we execute this function to add the configuration to be installed with the module.
+                    $this->executeConfiguration($moduleName, $action, $module);
 
                     break;
 
@@ -184,24 +173,24 @@ class ModuleManager extends AddonManager
                 case ModuleEntity::ACTION_UNINSTALL_DELETE:
                     $this->disableHooks($module);
 
+                    // We remove the module from the table in the database
                     $this->em->remove($module);
                     $this->em->flush();
+                    $module = null;
 
+                    // We remove traits added by the module
                     $this->callConfig($moduleName, "trait", [true]);
 
-                    $settings = $this->getConfiguration($moduleName)['settings'];
-                    if (isset($settings["parameters"])) {
-                        $this->removeParameters('module', $moduleName, $settings["parameters"]);
-                    }
-
-                    if (isset($settings['url'])) {
-                        $this->removeUrl($settings['url']);
-                    }
+                    // We execute this function to remove the configuration installed with the module.
+                    $this->executeConfiguration($moduleName, $action);
 
                     // We commit transaction only if the function is not called from ThemeManager ; in this case, clearAssets is false
                     if ($clearAssets && $this->em->getConnection()->isTransactionActive()) {
                         $this->em->getConnection()->commit();
                     }
+
+                    // We make a doctrine:migrations:execute --down for all migration files of the module
+                    $this->removeMigrations($moduleName);
 
                     if ($action === ModuleEntity::ACTION_UNINSTALL_DELETE) {
                         $this->delete($moduleName);
@@ -221,11 +210,6 @@ class ModuleManager extends AddonManager
 
     public function delete(string $objectName): void
     {
-        $migrationFile = $this->getMigrationFile($objectName);
-        if (is_file($migrationFile)) {
-            $this->sf->get('file')->remove($migrationFile);
-        }
-
         parent::delete($objectName);
     }
 
@@ -274,12 +258,28 @@ class ModuleManager extends AddonManager
         return null;
     }
 
-    protected function getMigrationFile(string $objectName): string
+    protected function getMigrationFileNames(string $migrationFolder, string $objectName): array
     {
-        $migrationFile = 'Version' . $objectName . '.php';
-        $migrationFile = $this->sf->get('pathGetter')->getMigrationsDir() . '/' . $migrationFile;
+        // We check if migrations folder exists in the module
+        if (!is_dir($migrationFolder)) {
+            return [];
+        }
 
-        return $migrationFile;
+        // We open the migrations folder to get file infos
+        $folder = new \DirectoryIterator($migrationFolder);
+        $files = [];
+
+        // We add files to the list if their name matches
+        foreach ($folder as $file) {
+            if (preg_match('/^' . preg_quote("Version$objectName", '/') . ".*\.php$/", $file->getFilename())) {
+                $files[] = [
+                    'filename' => $file->getFilename(),
+                    'path' => $file->getPath(),
+                ];
+            }
+        }
+
+        return $files;
     }
 
     protected function enableHooks(ModuleEntity $module): void
@@ -322,7 +322,6 @@ class ModuleManager extends AddonManager
     public function callConfig(string $name, string $functionName, array $args = []): mixed
     {
         $moduleConfig = $this->importModuleInstance($name);
-
         if (!$moduleConfig) {
             throw new ApiException(
                 Response::HTTP_BAD_REQUEST,
@@ -340,5 +339,177 @@ class ModuleManager extends AddonManager
         }
 
         return $moduleConfig->{$functionName}(...$args);
+    }
+
+    public function addMigrations(string $objectName): void
+    {
+        $migrationDestFolder = $this->sf->get('pathGetter')->getMigrationsDir();
+
+        // we get the list of migration files
+        $migrationFiles = $this->getMigrationFileNames($this->getDir() . "/$objectName/config/migrations", $objectName);
+
+        // We sort the files alphabetically (by version)
+        usort($migrationFiles, function($a, $b) {
+            return (($a["filename"] < $b["filename"]) ? -1 : (($a["filename"] > $b["filename"]) ? 1 : 0));
+        });
+
+        // For each file, if it is not in the migration folder, we copy and run it
+        foreach ($migrationFiles as $migrationFile) {
+            if (is_file($migrationDestFolder . "/" . $migrationFile['filename'])) {
+                continue;
+            }
+
+            $this->sf->get('file')->copy($migrationFile['path'] . '/' . $migrationFile['filename'], $migrationDestFolder . "/" . $migrationFile["filename"]);
+            $this->sf->get('execService')->execMigrationUpdate("DoctrineMigrations\\" . pathinfo($migrationFile['filename'], PATHINFO_FILENAME), true);
+        }
+    }
+
+    public function removeMigrations(string $objectName): void
+    {
+        // We get the migration files that were added during install
+        $migrationFolder = $this->sf->get('pathGetter')->getMigrationsDir();
+        $migrationFiles = $this->getMigrationFileNames($migrationFolder, $objectName);
+
+        //We sort the files in reverse alphabetical order (by version)
+        usort($migrationFiles, function($a, $b) {
+            return (($a["filename"] > $b["filename"]) ? -1 : (($a["filename"] < $b["filename"]) ? 1 : 0));
+        });
+
+        // For each file, we execute a down migration
+        foreach ($migrationFiles as $migrationFile) {
+            $this->sf->get('execService')->execMigrationUpdate("DoctrineMigrations\\" . pathinfo($migrationFile['filename'], PATHINFO_FILENAME), false);
+            $this->sf->get('file')->remove($migrationFile['path'] . '/' . $migrationFile['filename']);
+        }
+    }
+
+    public function executeConfiguration(string $objectName, int $action, ?ModuleEntity $module = null): void
+    {
+        $settings = $this->getConfiguration($objectName)['settings'];
+        if ($action == ModuleEntity::ACTION_INSTALL) {
+            // If there are parameters defined by the module configuration, we add them to the database
+            if (isset($settings['parameters'])) {
+                $this->addParameters('module', $objectName, $settings["parameters"]);
+            }
+
+            // If there are URLs defined by the module configuration, we add them to the database
+            if (isset($settings['url'])) {
+                $this->addUrl($settings["url"]);
+            }
+
+            if (isset($settings['deliveryModes'])) {
+                $this->addDeliveryModes($module, $objectName, $settings['deliveryModes']);
+            }
+
+            if (isset($settings['roles'])) {
+                $this->addRoles($module, $objectName, $settings['roles']);
+            }
+        } else if ($action == ModuleEntity::ACTION_DISABLE) {
+            // If there are URLs defined by the module configuration, we remove them
+            if (isset($settings['url'])) {
+                $this->removeUrl($settings['url']);
+            }
+
+            if (isset($settings['deliveryModes'])) {
+                $this->removeDeliveryModes($module, $objectName, $settings['deliveryModes']);
+            }
+        } else {
+            // If there are parameters defined by the module configuration, we remove them
+            if (isset($settings["parameters"])) {
+                $this->removeParameters('module', $objectName, $settings["parameters"]);
+            }
+
+            // If there are URLs defined by the module configuration, we remove them
+            if (isset($settings['url'])) {
+                $this->removeUrl($settings['url']);
+            }
+
+            if (isset($settings['roles'])) {
+                $this->removeRoles($module, $objectName);
+            }
+        }
+    }
+
+    public function isModuleActive(string $name): bool
+    {
+        $module = $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($name);
+        if (null === $module) {
+            return false;
+        }
+
+        return $module->isActive();
+    }
+
+    private function addDeliveryModes(?ModuleEntity $module, string $objectName, array $deliveryModes): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+        foreach ($deliveryModes as $name => $mode) {
+            $newDeliveryMode = new DeliveryMode();
+
+            $newDeliveryMode->setName($name);
+            $newDeliveryMode->setModule($module);
+            $newDeliveryMode->setManager($mode['manager']);
+            $newDeliveryMode->setDescription($mode['description']);
+            $newDeliveryMode->setActive(true);
+
+            $this->em->persist($newDeliveryMode);
+        }
+
+        $this->em->flush();
+    }
+
+    private function removeDeliveryModes(?ModuleEntity $module, string $objectName): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+
+        foreach ($module->getDeliveryModes() as $mode) {
+            $module->removeDeliveryMode($mode);
+        }
+
+        $this->em->persist($module);
+        $this->em->flush();
+    }
+
+    private function addRoles (?ModuleEntity $module, string $objectName, array $roles): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+        foreach ($roles as $name => $role) {
+            $newRole = new Role();
+
+            $newRole->setName($name);
+            $newRole->setModule($module);
+            $newRole->setLabel($role['label']);
+            $newRole->setGroupName($role['groupName']);
+            $newRole->setDescription($role['description'] ?? null);
+
+            $this->em->persist($newRole);
+        }
+
+        $this->em->flush();
+    }
+
+    private function removeRoles(?ModuleEntity $module, string $objectName): void
+    {
+        $module = $module ?? $this->em->getRepository(ModuleEntity::class)->findOneByNameForAdmin($objectName);
+        if (null === $module) {
+            return;
+        }
+
+        foreach ($module->getRoles() as $role) {
+            $module->removeRole($role);
+        }
+
+        $this->em->flush();
     }
 }

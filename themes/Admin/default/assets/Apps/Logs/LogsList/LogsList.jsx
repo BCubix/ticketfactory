@@ -12,7 +12,7 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 
-import { loginFailure } from '@Apps/Auth/redux/profile/profileSlice';
+import { loginFailure } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 export const logsListCrud = {
     title: 'Logs',

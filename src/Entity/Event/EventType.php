@@ -15,20 +15,20 @@ use Symfony\Component\Uid\Uuid;
 class EventType extends Datable
 {
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_event_type_all', 'a_event_type_one', 'a_event_all', 'a_event_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_event_type_all', 'a_event_type_one', 'a_event_all', 'a_event_one'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all'])]
+    #[JMS\Groups(['a_event_type_all', 'a_event_type_one', 'a_event_all', 'a_event_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
@@ -42,7 +42,7 @@ class EventType extends Datable
     #[ORM\ManyToOne(targetEntity: Language::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Language $lang = null;
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -83,7 +83,7 @@ class EventType extends Datable
 
         return $this;
     }
-    
+
     public function getLang(): ?Language
     {
         return $this->lang;

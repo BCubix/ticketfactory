@@ -43,6 +43,26 @@ const productsApi = {
         }
     },
 
+    getAllProducts: async (filters) => {
+        try {
+            let params = { 'filters[page]': 0 };
+
+            createFilterParams(filters, Crud?.events?.list?.filtersData, params);
+
+            const result = await axios.get(DEFAULT_PATH, {
+                params: params,
+            });
+
+            return { result: true, products: result.data?.results, total: result?.data?.total };
+        } catch (error) {
+            if (error?.code === Constant.CANCELED_REQUEST_ERROR_CODE) {
+                return { result: true, products: [], total: 0 };
+            }
+
+            return { result: false, error: error?.response?.data };
+        }
+    },
+
     getOneProduct: async (id) => {
         try {
             const result = await axios.get(`${DEFAULT_PATH}/${id}`);

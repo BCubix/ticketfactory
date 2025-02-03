@@ -34,3 +34,6 @@ public/logo-*
 
 ###< backup ###
 /tools
+
+###< Update folder ###
+/AddonUpdates

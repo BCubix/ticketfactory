@@ -46,6 +46,7 @@ export const ListTable = ({
     contextualMenu = false,
     disableDeleteFunction = null,
     onDragEnd = null,
+    additionnalOptions = [],
     ...rest
 }) => {
     const languagesData = useSelector(languagesSelector);
@@ -85,13 +86,18 @@ export const ListTable = ({
 
     return (
         <TableContainer>
-            <Table sx={{ minWidth: 650, marginTop: 5, transition: '.3s' }}>
+            <Table className="list-table">
                 <Component.ListTableHead
                     table={table}
                     filters={filters}
                     changeFilters={changeFilters}
                     displayAction={Boolean(
-                        onDelete !== null || onEdit !== null || (onRemove !== null && onSelect !== null) || (onActive !== null && onDisable !== null) || onPreview
+                        onDelete !== null ||
+                            onEdit !== null ||
+                            (onRemove !== null && onSelect !== null) ||
+                            (onActive !== null && onDisable !== null) ||
+                            onPreview ||
+                            additionnalOptions?.length > 0
                     )}
                     onDragEnd={onDragEnd}
                 />
@@ -109,6 +115,7 @@ export const ListTable = ({
                             onSelect={onSelect}
                             onActive={onActive}
                             onDisable={onDisable}
+                            onDuplicate={onDuplicate}
                             onPreview={onPreview}
                             onParameter={onParameter}
                             displayParameter={displayParameter}
@@ -119,6 +126,9 @@ export const ListTable = ({
                             handleClick={handleClick}
                             expendElementTranslation={expendElementTranslation}
                             setExpendElementTranslation={setExpendElementTranslation}
+                            additionnalOptions={additionnalOptions}
+                            languageList={languageList}
+                            onTranslate={defaultLanguage?.id === selectedMenuItem?.lang?.id ? onTranslate : null}
                             {...rest}
                         />
                     ))}

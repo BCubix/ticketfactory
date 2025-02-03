@@ -1,0 +1,21 @@
+.version-list {
+    margin: 1em;
+}
+.version-comparer {
+    display: flex;
+    gap: 1em;
+}
+.version {
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.restore-button {
+    margin-top: 1em;
+    background-color: #ff5050;
+    color: white;
+    padding: 0.5em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

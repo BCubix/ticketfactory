@@ -132,16 +132,6 @@ const contentsApi = {
             return { result: false, error: error?.response?.data };
         }
     },
-
-    getContentByPageId: async (id) => {
-        try {
-            const result = await axios.get(`/contents/${id}/page`);
-
-            return { result: true, content: result.data };
-        } catch (error) {
-            return { result: false, error: error?.response?.data };
-        }
-    },
 };
 
 export default contentsApi;

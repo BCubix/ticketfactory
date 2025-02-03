@@ -10,6 +10,7 @@ import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudLis
 
 import { changeVouchersFilters, getVouchersAction, vouchersSelector } from '@Apps/Vouchers/redux/vouchers/vouchersSlice';
 import moment from 'moment';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const vouchersListCrud = {
     title: 'Réductions',
@@ -63,6 +64,11 @@ export const vouchersListCrud = {
     dataSelector: vouchersSelector,
     dataList: (selector) => selector.vouchers,
     delete: (props) => Api.vouchersApi.deleteVoucher(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_VOUCHER_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_VOUCHER_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_VOUCHER_DELETE'),
+    },
     links: {
         new: () => `${Constant.VOUCHERS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.VOUCHERS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

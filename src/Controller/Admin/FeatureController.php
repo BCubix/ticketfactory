@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class FeatureController extends CrudController
@@ -27,6 +28,7 @@ class FeatureController extends CrudController
     }
 
     #[Rest\Get('/features/{featureId}', requirements: ['featureId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function getOne(Request $request, int $featureId): View
     {
@@ -34,6 +36,7 @@ class FeatureController extends CrudController
     }
 
     #[Rest\Post('/features')]
+    #[IsGranted('ROLE_FEATURE_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function add(Request $request): View
     {
@@ -41,6 +44,7 @@ class FeatureController extends CrudController
     }
 
     #[Rest\Post('/features/{featureId}', requirements: ['featureId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function edit(Request $request, int $featureId): View
     {
@@ -48,6 +52,7 @@ class FeatureController extends CrudController
     }
 
     #[Rest\Delete('/features/{featureId}', requirements: ['featureId' => '\d+'])]
+    #[IsGranted('ROLE_FEATURE_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_feature_category_one'])]
     public function delete(Request $request, int $featureId): View
     {

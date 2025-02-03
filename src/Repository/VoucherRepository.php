@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Order\Voucher;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class VoucherRepository extends CrudRepository

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { Button, Dialog, DialogContent, DialogTitle, Grid } from '@mui/material';
 import { Box } from '@mui/system';
@@ -6,8 +6,19 @@ import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
 export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, setFieldValue, name, updatedMedia, imageFormatList }) => {
+    const updateRequestNb = useRef(0);
+
     return (
-        <Dialog fullWidth maxWidth="lg" open={open} onClose={closeModal}>
+        <Dialog
+            fullWidth
+            maxWidth="lg"
+            open={open}
+            onClose={() => {
+                if (updateRequestNb.current <= 0) {
+                    closeModal();
+                }
+            }}
+        >
             <DialogTitle sx={{ fontSize: 20 }}>Détails de l'élément média</DialogTitle>
             {open && (
                 <DialogContent dividers>
@@ -18,7 +29,19 @@ export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, s
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
-                            <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} updatedMedia={updatedMedia} imageFormatList={imageFormatList} />
+                            <Component.CmtDisplayMediaInfos
+                                displaySelectButton={false}
+                                selectedMedia={selectedMedia}
+                                updatedMedia={updatedMedia}
+                                imageFormatList={imageFormatList}
+                                startUpdatingMedia={() => {
+                                    updateRequestNb.current += 1;
+                                }}
+                                endUpdatingMedia={() => {
+                                    updateRequestNb.current -= 1;
+                                }}
+                                wrapperClasses=""
+                            />
 
                             <Box display="flex" my={5}>
                                 <Button

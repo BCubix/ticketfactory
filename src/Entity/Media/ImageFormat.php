@@ -34,24 +34,27 @@ class ImageFormat extends Datable
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name = null;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[JMS\Expose()]
     #[JMS\Groups(['a_image_format_one'])]
     #[ORM\Column(length: 123, unique: true)]
     private ?string $slug = null;
 
-    #[Assert\PositiveOrZero(message: 'La hauteur de l\'image doit être un nombre supérieur ou égal à 0.')]
-    #[Assert\NotBlank(message: 'La hauteur de l\'image doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
+    private ?bool $imageToCrop = null;
+
+    #[Assert\PositiveOrZero(message: 'La hauteur de l\'image doit être un nombre supérieur ou égal à 0.')]
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $height = null;
 
     #[Assert\PositiveOrZero(message: 'La largeur de l\'image doit être un nombre supérieur ou égal à 0.')]
-    #[Assert\NotBlank(message: 'La largeur de l\'image doit être renseignée.')]
     #[JMS\Expose()]
     #[JMS\Groups(['a_image_format_all', 'a_image_format_one'])]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $width = null;
 
     #[JMS\Expose()]
@@ -63,6 +66,7 @@ class ImageFormat extends Datable
     #[JMS\Groups(['a_image_format_one'])]
     #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'imageFormats')]
     private Collection $medias;
+
 
     public function __construct()
     {
@@ -98,12 +102,24 @@ class ImageFormat extends Datable
         return $this;
     }
 
+    public function isImageToCrop(): ?bool
+    {
+        return $this->imageToCrop;
+    }
+
+    public function setImageToCrop(bool $imageToCrop): static
+    {
+        $this->imageToCrop = $imageToCrop;
+
+        return $this;
+    }
+
     public function getHeight(): ?int
     {
         return $this->height;
     }
 
-    public function setHeight(int $height): self
+    public function setHeight(?int $height): self
     {
         $this->height = $height;
 
@@ -115,7 +131,7 @@ class ImageFormat extends Datable
         return $this->width;
     }
 
-    public function setWidth(int $width): self
+    public function setWidth(?int $width): self
     {
         $this->width = $width;
 

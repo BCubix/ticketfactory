@@ -1,0 +1,62 @@
+@import '../base/breakpoints';
+
+.block {
+    &-head {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 8px;
+    }
+
+    &-title {
+        margin-bottom: 16px;
+    }
+
+    &-delete {
+        text-align: center;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    &-active {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 12px;
+        padding-bottom: 8px;
+
+        &field {
+            padding-top: 4px;
+            flex-direction: column;
+
+            @include for-size('sm') {
+                padding-top: 0;
+                flex-direction: row;
+            }
+        }
+    }
+
+    &-notification {
+        position: absolute;
+        background-color: #FFDE99;
+        color: #874811;
+        padding: 8px 5px;
+        border-radius: 6px;
+        width: 25%;
+        height: 9%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin: auto;
+        font-size: 12px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        margin-right: auto;
+        margin-top: 0px; 
+        bottom:29px;
+        left: 29px;
+
+        &__icon {
+          margin-right: 15px;
+        }
+
+      }
+}

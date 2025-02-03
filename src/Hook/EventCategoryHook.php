@@ -48,14 +48,16 @@ class EventCategoryHook extends Hook
 
         $this->em->persist($eventCategory);
         $this->em->flush();
+
+        $this->mf->get('seo')->completeSeoEventCategory($eventCategory);
     }
 
     public function hookEventCategoryValidated(HookEvent $event)
     {
-        $eventCategory = $event->getParam('vObject');
-        $eventCategoryId = $eventCategory->getId();
+        $vObject = $event->getParam('vObject');
+        $eventCategoryId = $vObject->getId();
 
-        $eventCategory = $eventCategory->getParent();
+        $eventCategory = $vObject->getParent();
         while (null !== $eventCategory) {
             if ($eventCategory->getId() === $eventCategoryId) {
                 throw  new ApiException(Response::HTTP_BAD_REQUEST, 1400, 'La catégorie courante ne peut être située à plusieurs endroits dans l\'arborescence.');

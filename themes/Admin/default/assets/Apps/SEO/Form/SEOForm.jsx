@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { Component } from '@/AdminService/Component';
+import { themeBreakpointsVariables } from '@Services/themes/variables/themeVariables';
 
 export const SeoInitialValues = {
     metaTitle: (initValues) => initValues?.metaTitle || '',
@@ -9,8 +10,6 @@ export const SeoInitialValues = {
     socialImage: (initValues) => initValues?.socialImage || null,
     fbTitle: (initValues) => initValues?.fbTitle || '',
     fbDescription: (initValues) => initValues?.fbDescription || '',
-    twTitle: (initValues) => initValues?.twTitle || '',
-    twDescription: (initValues) => initValues?.twDescription || '',
     indexed: (initValues) => (initValues?.indexed || initValues?.indexed === false ? initValues?.indexed : true),
 };
 
@@ -22,8 +21,6 @@ export const SeoApiDataFields = {
         metaDescription: { type: 'string' },
         fbTitle: { type: 'string' },
         fbDescription: { type: 'string' },
-        twTitle: { type: 'string' },
-        twDescription: { type: 'string' },
         indexed: { type: 'boolean' },
     },
 };
@@ -52,7 +49,9 @@ export const SeoInitialFormInputs = {
                 name: 'seo.socialImage',
                 label: 'Social Image',
                 inputType: 'cmtImage',
-                width: '25%',
+                sx: {
+                    width: { xs: '100%', sm: '50%', md: '33%', lg: '25%' },
+                },
             },
         },
         {
@@ -147,52 +146,6 @@ export const SeoInitialFormInputs = {
                 },
             },
         },
-        {
-            keyId: 'input-seo-twTitle',
-            style: { xs: 12, sm: 6 },
-            input: {
-                name: 'seo.twTitle',
-                label: 'Titre Twitter',
-                inputType: 'textField',
-                inputProps: {
-                    maxLength: 60,
-                },
-                custom: {
-                    helperText: ({ touched, values }) => {
-                        return touched?.seo?.twTitle ? (
-                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Typography component="span">{values?.seo?.twTitle?.length} / 60</Typography>
-                            </Box>
-                        ) : (
-                            <></>
-                        );
-                    },
-                },
-            },
-        },
-        {
-            keyId: 'input-seo-twDescription',
-            style: { xs: 12, sm: 6 },
-            input: {
-                name: 'seo.twDescription',
-                label: 'Description Twitter',
-                inputType: 'textField',
-                inputProps: {
-                    maxLength: 142,
-                },
-                custom: {
-                    helperText: ({ touched, values }) => {
-                        return touched?.seo?.twDescription ? (
-                            <Box component="span" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Typography component="span">{values?.seo?.twDescription?.length} / 142</Typography>
-                            </Box>
-                        ) : (
-                            <></>
-                        );
-                    },
-                },
-            },
-        },
     ],
 };
 
@@ -202,7 +155,7 @@ export const IndexSeoInitialFormInputs = {
         ...SeoInitialFormInputs.fields,
         {
             keyId: 'input-indexed',
-            style: { xs: 12, sm: 4, md: 2, sx: { display: 'flex', alignItems: 'center' } },
+            style: { xs: 12, md: 4, lg: 2, sx: { display: 'flex', alignItems: 'center' } },
             input: ({ formCrud }) => {
                 return {
                     name: 'seo.indexed',
@@ -316,48 +269,6 @@ export const SEOForm = ({ values, setFieldValue, handleChange, handleBlur, touch
                             touched?.seo?.fbDescription && (
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     <Typography>{values?.seo?.fbDescription?.length} / 160</Typography>
-                                </Box>
-                            )
-                        }
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Component.CmtTextField
-                        label="Titre Twitter"
-                        name={`seo.twTitle`}
-                        value={values.seo?.twTitle}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        onFocus={handleBlur}
-                        error={touched?.seo?.twTitle && errors?.seo?.twTitle}
-                        inputProps={{
-                            maxLength: 60,
-                        }}
-                        helperText={
-                            touched?.seo?.twTitle && (
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <Typography>{values?.seo?.twTitle?.length} / 60</Typography>
-                                </Box>
-                            )
-                        }
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Component.CmtTextField
-                        label="Description Twitter"
-                        name={`seo.twDescription`}
-                        value={values.seo?.twDescription}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        onFocus={handleBlur}
-                        error={touched?.seo?.twDescription && errors?.seo?.twDescription}
-                        inputProps={{
-                            maxLength: 142,
-                        }}
-                        helperText={
-                            touched?.seo?.twDescription && (
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <Typography>{values?.seo?.twDescription?.length} / 142</Typography>
                                 </Box>
                             )
                         }

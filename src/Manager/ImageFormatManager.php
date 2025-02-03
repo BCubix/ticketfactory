@@ -59,10 +59,8 @@ class ImageFormatManager extends AbstractManager
                 foreach ($formats['results'] as $format) {
                     $sourceFile = $mediaFile->getRealPath();
                     $destinationFile = $this->mm->getFilePathFromFormat($mediaFile, $format);
-                    $destW = $format->getWidth();
-                    $destH = $format->getHeight();
 
-                    if (!$this->formatImage($sourceFile, $destinationFile, $destW, $destH)) {
+                    if (!$this->formatImage($format, $sourceFile, $destinationFile)) {
                         $success = false;
                     }
                 }
@@ -104,7 +102,7 @@ class ImageFormatManager extends AbstractManager
         return $success;
     }
 
-    public function formatImage(string $sourceFile, string $destinationFile, int $canvW, int $canvH): ?bool
+    public function formatImage(ImageFormat $format, string $sourceFile, string $destinationFile): ?bool
     {
         // Access file informations
         clearstatcache(true, $sourceFile);
@@ -124,10 +122,26 @@ class ImageFormatManager extends AbstractManager
             $newType = $srcType;
         }
 
+        if (!$format->isImageToCrop()) {
+            // Get image content and rotate if needed
+            $srcImage = $this->createImg($srcType, $sourceFile);
+            if ($rotate) {
+                $srcImage = imagerotate($srcImage, $rotate, 0);
+            }
+
+            $newFile = $this->write($newType, $srcImage, $destinationFile);
+            @imagedestroy($srcImage);
+
+            return $newFile;
+        }
+
         // Check if image must be cropped
         $crop = $this->pm->getCoreParameter('image_to_crop');
 
         // New dimensions initialisation
+        $canvW = $format->getWidth();
+        $canvH = $format->getHeight();
+
         $srcX = 0;
         $srcY = 0;
         $srcW = $originW;

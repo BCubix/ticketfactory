@@ -22,11 +22,11 @@ export const ImageFormatsGenerateForm = ({ imageFormats, handleSubmit }) => {
                 <Component.CmtFormBlock title="Génération des miniatures" sx={{ mt: 5 }}>
                     <FormControl fullWidth sx={{ mt: 3 }}>
                         <InputLabel id="imageFormat-label" size="small" required>
-                            Format d'image
+                            Emplacement de média
                         </InputLabel>
                         <Select
                             id="selectImageFormat"
-                            label="Format d'image"
+                            label="Emplacement de média"
                             labelId="imageFormat-label"
                             variant="standard"
                             size="small"

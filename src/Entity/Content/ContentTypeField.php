@@ -16,33 +16,33 @@ class ContentTypeField implements JsonDoctrineSerializable
     #[Assert\Length(max: 250, maxMessage: 'Le titre du champ doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le titre du champ doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?string $title = null;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom du champ doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom du champ doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?string $name = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?string $helper = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?string $type = null;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?array $options = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?array $validations = [];
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_content_one', 'a_content_type_one'])]
+    #[JMS\Groups(['a_content_one', 'a_content_type_one', 'a_page_block_type_all', 'a_page_block_type_one', 'a_page_block_all', 'a_page_block_one', 'a_page_all', 'a_page_one'])]
     private ?array $parameters = [];
 
     public function getTitle(): ?string

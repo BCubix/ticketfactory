@@ -8,6 +8,7 @@ use App\Entity\Url\Url;
 use App\Form\Website\Product\ProductFilterType;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends EventAbleController
 {
@@ -31,18 +32,10 @@ class ProductController extends EventAbleController
         return $this->detail($page, $contents, $breadcrumbs);
     }
 
-    public function list(Page $page) {
+    public function list(Page $page)
+    {
         $request = $this->getRequest();
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
-
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
 
         $filters = [];
         $filterForm = $this->createForm(ProductFilterType::class, null);
@@ -63,7 +56,6 @@ class ProductController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'products'           => $products,
-            'pageContent'        => $pageContent,
             'filterForm'         => $filterForm->createView(),
             'pagination'         => $pagination,
             'topCategories'      => $topCategories,
@@ -72,20 +64,43 @@ class ProductController extends EventAbleController
 
     public function detail(Page $page, array $contents, array $breadcrumbs)
     {
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
-        return $this->websiteRender('Website/Product/detail.html.twig', [
+        return $this->websiteRender('Product/detail.html.twig', [
             'breadcrumbs'        => $breadcrumbs,
             "page"               => $page,
             "product"            => $contents['Product'],
-            'pageContent'        => $pageContent,
         ]);
+    }
+
+    #[Route("/products/add-product-to-cart", name: "tf_website_cart_add_product", priority: 1)]
+    public function addProduct()
+    {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_purchase') || $this->mf->get("parameter")->getCoreParameter('catalog_mode')) {
+            return new Response(null, 404);
+        }
+
+        $quantity = $this->getRequest()->get('quantity') ?? 1;
+        $productId = $this->getRequest()->get('productId');
+        if (null === $productId) {
+            return new Response(null, 400);
+        }
+
+        $product = $this->em->getRepository(Product::class)->findOneByIdForWebsite($productId);
+        $stock = $product->getStock();
+
+        // if not enough stock we render an error
+        if ($stock - $quantity < 0) {
+            $notif = [
+                'title' => 'Erreur',
+                'message' => "Impossible d'ajouter au panier. La quantité demandée dépasse le stock disponible."
+            ];
+        } else {
+            $this->mf->get('cart')->addProductToCart($product, $quantity);
+            $notif = [
+                'title' => 'Succès',
+                'message' => "Votre produit à été ajouté au panier."
+            ];
+        }
+
+        return $this->websiteRender("_partials/_notification.html.twig", $notif);
     }
 }

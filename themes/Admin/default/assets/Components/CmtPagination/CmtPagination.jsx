@@ -6,7 +6,7 @@ export const CmtPagination = ({ page, total, limit, setPage, setLimit, length = 
     const nbPage = Math.floor(total / limit) + (total % limit > 0 ? 1 : 0);
 
     return (
-        <Box display={'flex'} justifyContent="space-between" alignItems="center" mt={5}>
+        <Box className="list-pagination">
             <Typography>
                 {(page - 1) * limit + 1} - {(page - 1) * limit + length} sur {total} (page {page} / {nbPage})
             </Typography>
@@ -20,7 +20,7 @@ export const CmtPagination = ({ page, total, limit, setPage, setLimit, length = 
                 }}
             />
 
-            <Box display="flex">
+            <Box className="flex">
                 <Select variant="standard" size="small" value={limit} onChange={(e) => setLimit(e.target.value)} sx={{ marginInline: 2 }}>
                     <MenuItem value={20}>20</MenuItem>
                     <MenuItem value={50}>50</MenuItem>

@@ -54,7 +54,7 @@ export const cartsListCrud = {
             renderFunction: (item) => (
                 <Chip
                     sx={{ backgroundColor: '#FFFFFF', color: (theme) => theme.palette.success.main }}
-                    label={`${item?.cartRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €`}
+                    label={`${item?.eventRows?.reduce((partialSum, a) => partialSum + a.total, 0)?.toFixed(2)} €`}
                 />
             ),
         },

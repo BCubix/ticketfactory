@@ -22,7 +22,7 @@ class ImageFormatHook extends Hook
         $result = $this->mf->get('imageFormat')->deleteThumbnails([ 'results' => [ $imageFormat] ]);
         if (!$result) {
             throw new ApiException(Response::HTTP_INTERNAL_SERVER_ERROR, 1500,
-                "Une erreur s'est produite lors de la suppression du format d'images : " . $imageFormat->getName());
+                "Une erreur s'est produite lors de la suppression de l'emplacement de média : " . $imageFormat->getName());
         }
     }
 }

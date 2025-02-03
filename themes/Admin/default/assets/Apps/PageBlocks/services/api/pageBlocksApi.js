@@ -11,9 +11,9 @@ var controller = null;
 const pageBlocksApi = {
     getPageBlocks: async (filters) => {
         try {
-            let params = {};
+            let params = { 'filters[saveAsModel]': 1 };
 
-            createFilterParams(filters, Crud?.redirections?.list?.filtersData, params);
+            createFilterParams(filters, Crud?.pageBlocks?.list?.filtersData, params);
 
             if (null !== controller) {
                 controller.abort();

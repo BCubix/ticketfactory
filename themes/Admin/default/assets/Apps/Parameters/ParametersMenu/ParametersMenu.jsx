@@ -34,7 +34,7 @@ export const ParametersMenu = ({
     async function handleSubmit(values) {
         apiMiddleware(dispatch, async () => {
             const result = await Api.parametersApi.editParameters(values);
-            if (result.result) {
+            if (result?.result) {
                 NotificationManager.success('Les paramètres ont bien été modifiés.', 'Succès', Constant.REDIRECTION_TIME);
 
                 CHECK_RELOAD_PARAMETERS.forEach((el) => {
