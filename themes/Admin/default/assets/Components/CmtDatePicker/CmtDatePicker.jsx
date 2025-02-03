@@ -18,6 +18,7 @@ export const CmtDatePicker = ({
     disablePast = false,
     required = false,
     maxWidth = '100%',
+    shouldDisableDate = null,
 }) => {
     const [open, setOpen] = useState(false);
 
@@ -57,6 +58,7 @@ export const CmtDatePicker = ({
 
                         onTouched(name, true, false);
                     }}
+                    shouldDisableDate={shouldDisableDate}
                     renderInput={(params) => {
                         params.error = Boolean(error);
                         params.label = label;
@@ -78,6 +80,10 @@ export const CmtDatePicker = ({
                                 type="date"
                                 color="primary"
                                 id={id}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    readOnly: true,
+                                }}
                             />
                         );
                     }}

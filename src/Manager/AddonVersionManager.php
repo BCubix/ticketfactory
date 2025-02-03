@@ -226,12 +226,12 @@ class AddonVersionManager extends AbstractManager
         }
 
         // We get the latest downloadable versions
-        $response = $this->client->request('GET', $this->baseUrl . '/versions', [
+        $response = $this->client->request('GET', "https://www.ticketfactory.fr/admin/api/marketplace/addon/versions", [
             'query' => [
                 'filters[addonNames]' => $addonNames
             ]
         ]);
-
+        
         if ($response->getStatusCode() !== 200) {
             return [];
         }

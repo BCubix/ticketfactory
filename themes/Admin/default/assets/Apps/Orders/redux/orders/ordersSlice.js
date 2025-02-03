@@ -7,6 +7,7 @@ const initialState = {
     loading: false,
     error: null,
     orders: null,
+    latestOrders: null,
     total: null,
     filters: {
         active: getBooleanFromString(sessionStorage.getItem('ordersActiveFilter')),
@@ -22,6 +23,16 @@ const ordersSlice = createSlice({
     reducers: {
         getOrders: (state) => {
             state.loading = true;
+        },
+        
+        getLatestOrders: (state) => {
+            state.loading = true;
+        },
+        
+        getLatestOrdersSuccess: (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.latestOrders = action.payload.latestOrders;
         },
 
         getOrdersSuccess: (state, action) => {
@@ -71,6 +82,29 @@ export function getOrdersAction(filters) {
     };
 }
 
+export function getLatestOrdersAction(filters) {
+    return async (dispatch) => {
+        try {
+            dispatch(getLatestOrders());
+            
+            apiMiddleware(dispatch, async () => {
+
+                const orders = await Api.ordersApi.getLatestOrders();
+
+                if (!orders.latestOrders) {
+                    dispatch(getOrdersFailure({ error: orders.error }));
+
+                    return;
+                }
+    
+                dispatch(getLatestOrdersSuccess({ latestOrders: orders.latestOrders }));
+            });
+        } catch (error) {
+            dispatch(getOrdersFailure({ error: error.message || error }));
+        }
+    };
+}
+
 export function changeOrdersFilters(filters, page = 1) {
     return async (dispatch) => {
         sessionStorage.setItem('ordersActiveFilter', filters?.active);
@@ -83,6 +117,6 @@ export function changeOrdersFilters(filters, page = 1) {
     };
 }
 
-export const { getOrders, getOrdersSuccess, getOrdersFailure, resetOrders, updateOrdersFilters } = ordersSlice.actions;
+export const { getOrders, getLatestOrdersSuccess, getLatestOrders, getOrdersSuccess, getOrdersFailure, resetOrders, updateOrdersFilters } = ordersSlice.actions;
 export const ordersSelector = (state) => state.orders;
 export default ordersSlice.reducer;

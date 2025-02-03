@@ -214,11 +214,6 @@ export const ModulesList = () => {
                                             variant="contained"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-
-                                                if (!isMarketplaceConnected) {
-                                                    setMarketplaceDialog(true);
-                                                }
-
                                                 setUpdateModuleDialog({ open: true, addon: null, backupDatabase: false });
                                             }}
                                             sx={{ mr: 3 }}
@@ -237,12 +232,13 @@ export const ModulesList = () => {
                         }
                     />
                     <CardContent>
-                        {loading ? (
-                            <Component.CmtSkeletonList></Component.CmtSkeletonList>
-                        ) : (
-                            <Component.ListTable
+                    {loading? (<Component.CmtSkeletonList></Component.CmtSkeletonList>): 
+                            (<Component.ListTable
                                 table={TableColumn.ModulesList}
                                 list={modules}
+                                onActive={(name) => handleActive(name)}
+                                onDisable={(name) => setDeleteDialog(name)}
+                                onRemove={accessUserDelete ? (name) => setRemoveDialog(name) : null}
                                 onParameter={(moduleItem) => navigate(`${Constant.PARAMETERS_BASE_PATH}/modules/${moduleItem.id}`)}
                                 displayParameter={accessUserEdit && accessUserParameterEdit ? (moduleItem) => Boolean(moduleItem.id) : null}
                                 additionnalOptions={[
@@ -286,11 +282,6 @@ export const ModulesList = () => {
                                                 aria-label="Selection"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-
-                                                    if (!isMarketplaceConnected) {
-                                                        setMarketplaceDialog(true);
-                                                    }
-
                                                     setUpdateModuleDialog({ open: true, addon: item, backupDatabase: false });
                                                 }}
                                             >
@@ -300,7 +291,8 @@ export const ModulesList = () => {
                                     },
                                 ]}
                             />
-                        )}
+    )
+                        }
                     </CardContent>
                 </Component.CmtCard>
             </Component.CmtPageWrapper>
@@ -393,7 +385,7 @@ export const ModulesList = () => {
 
             <Dialog
                 fullWidth
-                open={isMarketplaceConnected && !marketplaceDialog && updateModuleDialog?.open}
+                open={updateModuleDialog?.open}
                 onClose={() => setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false })}
                 sx={{ display: 'flex', justifyContent: 'center' }}
             >
@@ -448,10 +440,7 @@ export const ModulesList = () => {
             {!isMarketplaceConnected && (
                 <Component.MarketplaceConnectionDialog
                     open={marketplaceDialog}
-                    onCancel={() => {
-                        setMarketplaceDialog(false);
-                        setUpdateModuleDialog({ open: false, addon: null, backupDatabase: false });
-                    }}
+                    onCancel={() => setMarketplaceDialog(false)}
                     onConnected={() => {
                         setMarketplaceDialog(false);
                         setMarketplaceConnected(true);

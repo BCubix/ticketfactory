@@ -146,7 +146,7 @@ class EventManager extends AbstractRouterManager
         foreach ($eventPrices as $eventPrice) {
             $defaultPrices[] = [
                 "eventPrice" => $eventPrice,
-                "quantity"   => 0,
+                "quantity" => 0,
             ];
         }
         return $defaultPrices;
@@ -537,6 +537,13 @@ class EventManager extends AbstractRouterManager
 
     private function getEventArray(\DateTime $beginDate, \DateTime $endDate, array $eventDates): array
     {
+        $eventDates = [];
+        foreach ($eventDateBlocks as $eventDateBlock) {
+            foreach($eventDateBlock->getEventDates() as $eventDate) {
+                $eventDates[] = $eventDate;
+            }
+        }
+        
         $datesTab = [];
         $currentDate = clone $beginDate;
         while ($currentDate <= $endDate) {

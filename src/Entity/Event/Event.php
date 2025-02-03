@@ -151,12 +151,6 @@ class Event extends Datable
     #[ORM\ManyToOne]
     private ?SeatingPlan $seatingPlan = null;
 
-    /**
-     * @var Collection<int, Subscription>
-     */
-    #[ORM\ManyToMany(targetEntity: Subscription::class, mappedBy: 'events')]
-    private Collection $subscriptions;
-
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
@@ -165,6 +159,14 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontBookingButton = true;
 
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    private ?Subscription $subscription = null;
+
+    /**
+     * @var Collection<int, Subscription>
+     */
+    #[ORM\ManyToMany(targetEntity: Subscription::class, mappedBy: 'events')]
+    private Collection $subscriptions;
 
     public function __construct()
     {
@@ -174,7 +176,7 @@ class Event extends Datable
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
         $this->featureLinks     = new ArrayCollection();
-        $this->subscriptions    = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
 
@@ -554,10 +556,10 @@ class Event extends Datable
         if ($this->subscriptions->removeElement($subscription)) {
             $subscription->removeEvent($this);
         }
-
+        
         return $this;
     }
-
+    
     public function toStringToCompare(): array
     {
         $result = [

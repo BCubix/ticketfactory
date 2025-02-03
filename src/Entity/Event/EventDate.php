@@ -67,6 +67,8 @@ class EventDate
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $annotation;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_one'])]
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'eventDates')]
     #[ORM\JoinColumn(nullable: false)]
     private $event;

@@ -50,4 +50,40 @@ class OrderRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findValidatedOrders(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.status', 'os')
+            ->where('os.keyword = :keyword')
+            ->setParameter('keyword', 'validated')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findLatestOrders(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('o')
+        ->leftJoin('o.status', 'os')
+        ->leftJoin('o.customer', 'ocu')
+        ->leftJoin('o.cart', 'oca')
+        ->addSelect('os', 'ocu', 'oca')
+        ->where('os.keyword = :keyword')
+        ->setParameter('keyword', 'validated')
+        ->orderBy('o.updatedAt', 'DESC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+    }
+    
+    public function findBetweenDates(\DateTime $beginDate, \DateTime $endDate): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.createdAt >= :beginDate')
+            ->andWhere('o.createdAt <= :endDate')
+            ->setParameter('beginDate', $beginDate)
+            ->setParameter('endDate', $endDate)
+            ->getQuery()
+            ->getResult();
+    }
 }

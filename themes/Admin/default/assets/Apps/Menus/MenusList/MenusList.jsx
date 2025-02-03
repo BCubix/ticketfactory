@@ -98,7 +98,7 @@ export const menusEditCrud = {
         {
             type: 'tabs',
             keyId: 'menu',
-            label: 'Menu',
+            label: 'Saison',
             fields: [
                 {
                     component: ({ translationInitialValues, values, setFieldValue, accessUserCreate }) =>
@@ -344,10 +344,10 @@ export const MenusList = () => {
             translateDialog={translateDialog}
             setTranslateDialog={setTranslateDialog}
             navigate={navigate}
+            loading={loadingForm}
             accessUserCreate={accessUserCreate}
             accessUserEdit={accessUserEdit}
             accessUserDelete={accessUserDelete}
-            loading={loadingForm}
         />
     );
 };
@@ -381,12 +381,14 @@ const InitForm = ({
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }) => (
-                <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
-                    {loading ? (
-                        <Component.CmtSkeletonMenus formCrud={formCrud} handleSubmit={handleSubmit} />
-                    ) : (
-                        <>
-                            <Component.CmtDisplayComponents
+                <>
+                    <Component.CmtPageWrapper title={'Menus'} component="form" onSubmit={handleSubmit}>
+                        
+                        {loading ? (
+                            <Component.CmtSkeletonMenus formCrud={formCrud} handleSubmit={handleSubmit}/>
+                            ) : (
+                            <>
+                                <Component.CmtDisplayComponents
                                 list={formCrud?.headerComponents}
                                 {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, submitForm, isSubmitting }}
                                 {...{
@@ -414,7 +416,7 @@ const InitForm = ({
                                     <DisplayFormTabs
                                         tabs={formCrud?.fields}
                                         {...{ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, isSubmitting }}
-                                        {...{
+                                    {...{
                                             languageList,
                                             changeFormikInitialValues,
                                             translationInitialValues,
@@ -434,7 +436,7 @@ const InitForm = ({
                                         {...rest}
                                     />
                                 </Grid>
-                            )}
+                                )}
 
                             <Component.DeleteDialog open={deleteDialog} onCancel={() => setDeleteDialog(null)} onDelete={() => handleDelete(deleteDialog)}>
                                 <Box textAlign="center" py={3}>
@@ -448,11 +450,16 @@ const InitForm = ({
                                 isOpen={translateDialog}
                                 onClose={() => setTranslateDialog(false)}
                                 languageList={languageList}
-                                onTranslate={(id, languageId) => navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)}
+                                onTranslate={(id, languageId) =>
+                                    navigate(`${Constant.MENUS_BASE_PATH}${Constant.CREATE_PATH}?menuId=${id}&languageId=${languageId}`)
+                                }
                             />
-                        </>
-                    )}
-                </Component.CmtPageWrapper>
+                            </>
+                        )}
+                        
+                    </Component.CmtPageWrapper>
+
+                </>
             )}
         </Formik>
     );

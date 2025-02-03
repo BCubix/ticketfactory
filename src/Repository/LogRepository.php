@@ -71,4 +71,13 @@ class LogRepository extends AbstractRepository
             'total' => count($results)
         ];
     }
+    
+    public function findLogsWithoutSeverityZero(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.severity != :severity')
+            ->setParameter('severity', 0)
+            ->getQuery()
+            ->getResult();
+    }
 }

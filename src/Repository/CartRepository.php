@@ -55,4 +55,13 @@ class CartRepository extends CrudRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getAllActiveCarts(): array
+    {
+        return $this->createQueryBuilder("c")
+            ->where("c.active = 1")
+            ->orderBy("c.updatedAt", "DESC")
+            ->getQuery()
+            ->getResult();
+    }
 }

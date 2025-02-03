@@ -66,4 +66,14 @@ class OrderController extends CrudController
 
         return $response;
     }
+    
+    #[Rest\Get('/orders/latest')]
+    #[Rest\QueryParam(map: true, name: 'filters', default: '')]
+    #[Rest\View(serializerGroups: ['a_all', 'a_order_all'])]
+    public function getLatestOrders(Request $request, ParamFetcher $paramFetcher): View
+    {
+        $object = $this->em->getRepository(Order::class)->findLatestOrders(6);
+
+        return $this->view($object, Response::HTTP_OK);
+    }
 }
