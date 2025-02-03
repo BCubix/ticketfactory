@@ -25,6 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Event extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: EventArticle ***/
+    use \TicketFactory\Module\EventArticle\Entity\Event\Override\EventTrait;
+    /*** < Module: EventArticle ***/
     /*** < Trait ***/
 
     use SEOAble;
@@ -159,9 +162,6 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontBookingButton = true;
 
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?Subscription $subscription = null;
-
     /**
      * @var Collection<int, Subscription>
      */
@@ -170,6 +170,9 @@ class Event extends Datable
 
     public function __construct()
     {
+        /*** > Module: EventArticle ***/
+        $this->eventArticles = new ArrayCollection();
+        /*** < Module: EventArticle ***/
         $this->eventCategories  = new ArrayCollection();
         $this->eventDates       = new ArrayCollection();
         $this->eventPriceCategories = new ArrayCollection();
@@ -556,10 +559,10 @@ class Event extends Datable
         if ($this->subscriptions->removeElement($subscription)) {
             $subscription->removeEvent($this);
         }
-        
+
         return $this;
     }
-    
+
     public function toStringToCompare(): array
     {
         $result = [

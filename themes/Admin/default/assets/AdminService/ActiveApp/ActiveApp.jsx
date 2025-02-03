@@ -54,9 +54,19 @@ export const ActiveApp = () => {
         listKeys.map(async (item) => {
             const func = list(item)?.default;
             if (func) {
-                func({ parameters: parametersData?.parameters, dispatch, userRoles });
+                await func({ parameters: parametersData?.parameters, dispatch, userRoles });
             }
         });
+    };
+
+    const loadApp = async () => {
+        setLoading(true);
+
+        await initApp();
+        await initAppDefaultFunctions();
+
+        setLoaded(true);
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -70,13 +80,7 @@ export const ActiveApp = () => {
             return;
         }
 
-        setLoading(true);
-
-        initApp();
-        initAppDefaultFunctions();
-
-        setLoading(false);
-        setLoaded(true);
+        loadApp();
     }, [connected]);
 
     if (loaded === null) {
