@@ -146,7 +146,7 @@ class EventManager extends AbstractRouterManager
         foreach ($eventPrices as $eventPrice) {
             $defaultPrices[] = [
                 "eventPrice" => $eventPrice,
-                "quantity"   => 0,
+                "quantity" => 0,
             ];
         }
         return $defaultPrices;

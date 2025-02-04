@@ -40,6 +40,11 @@ class EventCategory extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one', 'a_tag_one', 'a_version_all', 'a_version_one'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
+    
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_event_all', 'a_event_one', 'a_event_category_all', 'a_event_category_one', 'a_tag_one', 'a_version_all', 'a_version_one'])]
+    #[ORM\Column(type: 'string', length: 7)]
+    private $color;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_category_all', 'a_event_category_one'])]
@@ -133,6 +138,18 @@ class EventCategory extends Datable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+    
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }

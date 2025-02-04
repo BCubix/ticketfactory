@@ -283,7 +283,8 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                         </Grid>
                     ) : (
                         <Grid>
-                            <Component.CmtCalendar
+                            <Component.CmtCalendarForm
+                                editable={true}
                                 values={values}
                                 setFieldValue={setFieldValue}
                                 setGenerateDate={setGenerateDate}

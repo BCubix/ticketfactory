@@ -66,7 +66,7 @@ class ParameterManager extends AbstractManager
             $this->checkAppEnv();
         }
 
-        $this->mf->get('addonVersion')->checkAddonVersions();
+        //$this->mf->get('addonVersion')->checkAddonVersions();
 
         return $parameters;
     }

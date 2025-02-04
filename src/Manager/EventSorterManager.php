@@ -106,8 +106,8 @@ class EventSorterManager extends AbstractManager
 
         $page = $page ?? 1;
         return [
-            'total'     => count($events),
-            'events'    => array_slice($events, ($page - 1) * $limit, $limit),
+            'total' => count($events),
+            'events' => array_slice($events, ($page - 1) * $limit, $limit),
         ];
     }
 
@@ -168,11 +168,13 @@ class EventSorterManager extends AbstractManager
         return [
             'name' => [fn($element) => $element->getName()],
             'beginDate' => [fn($element) => $this->getBeginDate($element)],
-            'hour' => [function ($element) {
-                $date = clone $this->getBeginDate($element);
-                $date->setDate(1970, 1, 1);
-                return $date;
-            }]
+            'hour' => [
+                function ($element) {
+                    $date = clone $this->getBeginDate($element);
+                    $date->setDate(1970, 1, 1);
+                    return $date;
+                }
+            ]
         ];
     }
 

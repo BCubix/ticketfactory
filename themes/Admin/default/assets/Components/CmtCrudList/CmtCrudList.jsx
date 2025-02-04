@@ -110,7 +110,6 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     const [deleteDialog, setDeleteDialog] = useState(null);
     const { user } = useSelector(userProfileSelector);
     const objectData = useSelector(listCrud.dataSelector);
-    const [loading, setLoading] = useState(true);
 
     const userRoles = useMemo(() => {
         return getUserRoles(user);
@@ -123,6 +122,8 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
             !listCrud.checkUserAccess?.delete || listCrud.checkUserAccess?.delete(userRoles),
         ];
     }, [userRoles]);
+    
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!objectData?.loading && !listCrud?.dataList(objectData) && !objectData?.error) {
@@ -200,7 +201,7 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                                         } sur ${objectData?.total})`}
                                     {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
                                 </Typography>
-
+                                
                                 {listCrud?.headerAction && <listCrud.headerAction listCrud navigate={navigate} {...props} />}
 
                                 {accessUserCreate && (listCrud?.new || listCrud?.links?.new) && (

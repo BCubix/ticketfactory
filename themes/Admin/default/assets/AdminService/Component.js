@@ -68,6 +68,8 @@ import { CmtImage } from '@Components/CmtImage/CmtImage';
 import { CmtDisplayFlag } from '@Components/CmtDisplayFlag/CmtDisplayFlag';
 import { checkComponent, checkString } from '@Services/utils/check';
 import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
+import { CmtCalendar } from '@Components/CmtCalendar/CmtCalendar';
+import { CmtColorPicker } from '@Components/CmtColorPicker/CmtColorPicker';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
 
 import { AppProvider } from '@/Config/AppProvider';
@@ -94,6 +96,10 @@ import { CmtSkeletonForm } from '@Components/CmtSkeleton/CmtSkeletonForm';
 import { CmtSkeletonContentList } from '@Components/CmtSkeleton/CmtSkeletonContentList';
 import { CmtSkeletonOrderDetails } from '@Components/CmtSkeleton/CmtSkeletonOrderDetails';
 import { CmtSkeletonMenus } from '@Components/CmtSkeleton/CmtSkeletonMenus';
+import { CmtSkeletonDashboard } from '@Components/CmtSkeleton/CmtSkeletonDashboard';
+
+import { CmtImageCarousel } from '@Components/CmtImageCarousel/CmtImageCarousel';
+
 
 const ComponentObj = {
     App: App,
@@ -204,6 +210,11 @@ const ComponentObj = {
     CmtSkeletonContentList: CmtSkeletonContentList,
     CmtSkeletonOrderDetails: CmtSkeletonOrderDetails,
     CmtSkeletonMenus: CmtSkeletonMenus,
+    CmtSkeletonDashboard: CmtSkeletonDashboard,
+    
+    CmtImageCarousel: CmtImageCarousel,
+    CmtCalendar: CmtCalendar,
+    CmtColorPicker: CmtColorPicker,
 };
 
 /**

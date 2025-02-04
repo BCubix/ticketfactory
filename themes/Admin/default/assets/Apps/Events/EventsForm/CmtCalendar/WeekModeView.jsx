@@ -9,7 +9,7 @@ import { Component } from '@/AdminService/Component';
 import { format } from 'date-fns';
 
 const WeekModeView = (props) => {
-    const { values, setFieldValue, setGenerateDate, columns, rows, options, STATES, errors, touched, ...restProps } = props;
+    const { editable, values, setFieldValue, setGenerateDate, columns, rows, options, STATES, errors, touched, ...restProps } = props;
     const theme = useTheme();
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -23,6 +23,8 @@ const WeekModeView = (props) => {
     }, [creatingItem]);
 
     const handleCellClick = (rowIndex, dayIndex) => {
+        if (!editable) return;
+        
         const dayData = rows[rowIndex].days[dayIndex].data;
         const itemIndex = dayData?.[0]?.index ?? values.eventDates.length;
 
@@ -122,58 +124,61 @@ const WeekModeView = (props) => {
                 </Table>
             </StyledTableContainer>
 
-            <Dialog
-                open={dialogOpen}
-                onClose={handleCloseDialog}
-                sx={{
-                    '& .MuiDialog-paper': {
-                        overflow: 'visible',
-                    },
-                }}
-            >
-                <DialogTitle>{creatingItem ? 'Ajouter un evenement' : 'Modifier un evenement'}</DialogTitle>
-
-                <Component.DeleteBlockFabButton
-                    size="small"
-                    onClick={() => {
-                        handleCloseDialog();
+            {editable && (
+                <Dialog
+                    open={dialogOpen}
+                    onClose={handleCloseDialog}
+                    sx={{
+                        '& .MuiDialog-paper': {
+                            overflow: 'visible',
+                        },
                     }}
                 >
-                    <CloseIcon />
-                </Component.DeleteBlockFabButton>
+                    <DialogTitle>{creatingItem ? 'Ajouter un evenement' : 'Modifier un evenement'}</DialogTitle>
 
-                <DialogContent>
-                    {dialogItemIndex !== null && (
-                        <Component.CmtDisplayFields
+                    <Component.DeleteBlockFabButton
+                        size="small"
+                        onClick={() => {
+                            handleCloseDialog();
+                        }}
+                    >
+                        <CloseIcon />
+                    </Component.DeleteBlockFabButton>
+
+                    <DialogContent>
+                        {dialogItemIndex !== null && (
+                            <Component.CmtDisplayFields
+                                values={values}
+                                setGenerateDate={setGenerateDate}
+                                setFieldValue={setFieldValue}
+                                item={values?.eventDates[dialogItemIndex]}
+                                index={dialogItemIndex}
+                                states={STATES}
+                                {...restProps}
+                            />
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <EventAddSpecialPricing
                             values={values}
-                            setGenerateDate={setGenerateDate}
                             setFieldValue={setFieldValue}
-                            item={values?.eventDates[dialogItemIndex]}
-                            index={dialogItemIndex}
-                            states={STATES}
-                            {...restProps}
+                            touched={touched}
+                            errors={errors}
+                            selectedDate={values.eventDates[dialogItemIndex]}
+                            {...props}
                         />
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <EventAddSpecialPricing
-                        values={values}
-                        setFieldValue={setFieldValue}
-                        touched={touched}
-                        errors={errors}
-                        selectedDate={values.eventDates[dialogItemIndex]}
-                        {...props}
-                    />
-                    {!creatingItem && (
-                        <Button onClick={handleDeleteItem} color="error">
-                            Supprimer
+                        {!creatingItem && (
+                            <Button onClick={handleDeleteItem} color="error">
+                                Supprimer
+                            </Button>
+                        )}
+                        <Button onClick={handleSubmitForm} color="primary">
+                            Enregistrer
                         </Button>
-                    )}
-                    <Button onClick={handleSubmitForm} color="primary">
-                        Enregistrer
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    </DialogActions>
+                </Dialog>
+            )}
+
         </>
     );
 };

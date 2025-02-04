@@ -14,7 +14,6 @@ class AddonVersionController extends AdminController
     public function getAddonVersions(): View
     {
         $results = $this->mf->get('addonVersion')->getAddonVersions();
-
         return $this->view($results, Response::HTTP_OK);
     }
 

@@ -72,4 +72,15 @@ class CustomerRepository extends CrudRepository implements UserLoaderInterface
             ->getQuery()
             ->getOneOrNullResult();
     }
+    
+    public function findBetweenDates(\DateTime $startDate, \DateTime $endDate): int
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.updatedAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate->format('Y-m-d H:i:s'))
+            ->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
 }

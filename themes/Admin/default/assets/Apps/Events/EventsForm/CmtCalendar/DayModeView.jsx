@@ -1,14 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Paper, Typography, Table, TableBody, TableCell, Tooltip, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { format, addMinutes, getDaysInMonth, getDay, sub, startOfMonth, parse, add, startOfDay, startOfWeek, getWeeksInMonth, isSameDay } from 'date-fns';
+
+import { Paper, Typography, Table, TableBody, TableCell, Tooltip, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Component } from '@/AdminService/Component';
 import { v4 as uuidv4 } from 'uuid';
-import { format } from 'date-fns';
-import { StyledTableCell, StyledTableContainer, SlotDiv, DayModeStyledCell } from './sc.DayModeView';
+import { StyledTableCell, StyledTableContainer, DayModeStyledCell, SlotDiv } from './sc.DayModeView';
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
+    
+const calculateHour = (eventDate, endTime, hour, totalHours) => {
+    return Array(4)
+        .fill(0)
+        .map((_, quarter) => {
+            const quarterStart = 15 * quarter;
+            const quarterEnd = 15 * (quarter + 1);
 
-const DayModeView = ({ values, columns, rows, options, setFieldValue, setGenerateDate, STATES, touched, errors, ...restProps }) => {
+            if (eventDate.getHours() === endTime.getHours()) {
+                return eventDate.getMinutes() <= quarterStart && endTime.getMinutes() >= quarterEnd ? 1 : 0;
+            }
+
+            if (eventDate.getHours() === (hour - 1) % totalHours && eventDate.getMinutes() <= quarterStart) return 1;
+            if (endTime.getHours() === (hour - 1) % totalHours && endTime.getMinutes() >= quarterEnd) return quarter === 3 && endTime.getMinutes() < 59 ? 0 : 1;
+            if (eventDate.getHours() < (hour - 1) % totalHours && endTime.getHours() > (hour - 1) % totalHours) return 1;
+
+            return 0;
+        });
+};
+// SlotDiv Component
+
+const DayModeView = ({ editable, values, columns, rows, options, setFieldValue, setGenerateDate, STATES, touched, errors, ...restProps }) => {
     const theme = useTheme();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogItemIndex, setDialogItemIndex] = useState(null);
@@ -18,7 +39,21 @@ const DayModeView = ({ values, columns, rows, options, setFieldValue, setGenerat
         if (!creatingItem) handleCloseDialog();
     }, [creatingItem]);
 
+    const filterEventsForDate = (date) => {
+        return values?.eventDates?.filter((event) => {
+            let eventDate = parse(event?.eventDate, 'yyyy-MM-dd HH:mm:ss', new Date());
+            if (isNaN(eventDate.getTime())) {
+                eventDate = parse(event?.eventDate, 'yyyy-MM-dd HH:mm', new Date());
+            }
+
+            return isSameDay(date, eventDate);
+        });
+    };
+    
     const handleCellClick = (rowIndex, dayIndex) => {
+        if (!editable) {
+            return;
+        }
         const dayData = rows[rowIndex].days[dayIndex].data;
         const itemIndex = dayData?.[0]?.index ?? values.eventDates.length;
 
@@ -64,7 +99,7 @@ const DayModeView = ({ values, columns, rows, options, setFieldValue, setGenerat
     };
 
     const handleSubmitForm = () => setCreatingItem(false);
-
+    
     return (
         <>
             <StyledTableContainer component={Paper} sx={{ maxHeight: options?.maxHeight || 540 }}>
@@ -110,43 +145,45 @@ const DayModeView = ({ values, columns, rows, options, setFieldValue, setGenerat
                 </Table>
             </StyledTableContainer>
 
-            <Dialog open={dialogOpen} onClose={handleCloseDialog} sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}>
-                <Component.DeleteBlockFabButton size="small" onClick={handleCloseDialog}>
-                    <CloseIcon />
-                </Component.DeleteBlockFabButton>
-                <DialogTitle>{creatingItem ? 'Ajouter un evenement' : 'Modifier un evenement'}</DialogTitle>
-                <DialogContent>
-                    {dialogItemIndex !== null && (
-                        <Component.CmtDisplayFields
+            {editable && (
+                <Dialog open={dialogOpen} onClose={handleCloseDialog} sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}>
+                    <Component.DeleteBlockFabButton size="small" onClick={handleCloseDialog}>
+                        <CloseIcon />
+                    </Component.DeleteBlockFabButton>
+                    <DialogTitle>{creatingItem ? 'Ajouter un evenement' : 'Modifier un evenement'}</DialogTitle>
+                    <DialogContent>
+                        {dialogItemIndex !== null && (
+                            <Component.CmtDisplayFields
+                                values={values}
+                                setGenerateDate={setGenerateDate}
+                                setFieldValue={setFieldValue}
+                                item={values.eventDates[dialogItemIndex]}
+                                index={dialogItemIndex}
+                                states={STATES}
+                                {...restProps}
+                            />
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <EventAddSpecialPricing
                             values={values}
-                            setGenerateDate={setGenerateDate}
                             setFieldValue={setFieldValue}
-                            item={values.eventDates[dialogItemIndex]}
-                            index={dialogItemIndex}
-                            states={STATES}
+                            touched={touched}
+                            errors={errors}
+                            selectedDate={values.eventDates[dialogItemIndex]}
                             {...restProps}
                         />
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <EventAddSpecialPricing
-                        values={values}
-                        setFieldValue={setFieldValue}
-                        touched={touched}
-                        errors={errors}
-                        selectedDate={values.eventDates[dialogItemIndex]}
-                        {...restProps}
-                    />
-                    {!creatingItem && (
-                        <Button onClick={handleDeleteItem} color="error">
-                            Supprimer
+                        {!creatingItem && (
+                            <Button onClick={handleDeleteItem} color="error">
+                                Supprimer
+                            </Button>
+                        )}
+                        <Button onClick={handleSubmitForm} color="primary">
+                            Enregistrer
                         </Button>
-                    )}
-                    <Button onClick={handleSubmitForm} color="primary">
-                        Enregistrer
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    </DialogActions>
+                </Dialog>
+            )}
         </>
     );
 };

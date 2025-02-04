@@ -25,6 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Event extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: EventArticle ***/
+    use \TicketFactory\Module\EventArticle\Entity\Event\Override\EventTrait;
+    /*** < Module: EventArticle ***/
     /*** < Trait ***/
 
     use SEOAble;
@@ -151,12 +154,6 @@ class Event extends Datable
     #[ORM\ManyToOne]
     private ?SeatingPlan $seatingPlan = null;
 
-    /**
-     * @var Collection<int, Subscription>
-     */
-    #[ORM\ManyToMany(targetEntity: Subscription::class, mappedBy: 'events')]
-    private Collection $subscriptions;
-
     #[JMS\Expose()]
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontUrl;
@@ -165,16 +162,24 @@ class Event extends Datable
     #[JMS\Groups(['a_event_all', 'a_event_one'])]
     public $frontBookingButton = true;
 
+    /**
+     * @var Collection<int, Subscription>
+     */
+    #[ORM\ManyToMany(targetEntity: Subscription::class, mappedBy: 'events')]
+    private Collection $subscriptions;
 
     public function __construct()
     {
+        /*** > Module: EventArticle ***/
+        $this->eventArticles = new ArrayCollection();
+        /*** < Module: EventArticle ***/
         $this->eventCategories  = new ArrayCollection();
         $this->eventDates       = new ArrayCollection();
         $this->eventPriceCategories = new ArrayCollection();
         $this->eventMedias      = new ArrayCollection();
         $this->tags             = new ArrayCollection();
         $this->featureLinks     = new ArrayCollection();
-        $this->subscriptions    = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
 
