@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { format, parse, isValid, isSameMonth, addMinutes } from 'date-fns';
-import { Paper, Table, TableBody, TableCell, TableHead, Box } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableHead, Box, TableRow } from '@mui/material';
 import { CustomTableCell, CustomTableContainer, DayLabel, CustomPaper } from './sc.MonthModeView';
 import { MonthTooltip } from './CalenderHelper.js';
 
@@ -103,19 +103,12 @@ const MonthModeView = (props) => {
                             const isSelectedTime = selectedTime === time;
 
                             return (
-                                <MonthTooltip
-                                    key={`selected-time-${index}`}
-                                    item={{ ...item, time, endTime }}
-                                    tooltip={tooltip}
-                                    isSelectedTime={isSelectedTime}
-                                    index={index}
-                                />
+                                <MonthTooltip key={`selected-time-${index}`} item={{ ...item, time, endTime }} tooltip={tooltip} isSelectedTime={isSelectedTime} index={index} />
                             );
                         })}
                     </Box>
                 )}
             </CustomPaper>
-
         </Box>
     );
 };

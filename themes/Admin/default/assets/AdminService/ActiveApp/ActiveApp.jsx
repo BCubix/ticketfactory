@@ -57,6 +57,9 @@ export const ActiveApp = () => {
                 await func({ parameters: parametersData?.parameters, dispatch, userRoles });
             }
         });
+
+        setLoaded(true);
+        setLoading(false);
     };
 
     const loadApp = async () => {
@@ -64,9 +67,6 @@ export const ActiveApp = () => {
 
         await initApp();
         await initAppDefaultFunctions();
-
-        setLoaded(true);
-        setLoading(false);
     };
 
     useEffect(() => {
