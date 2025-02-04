@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { EventsPriceCategoryForm } from './EventPriceCategoryForm';
@@ -21,18 +21,40 @@ function EventAddSpecialPricing({
     initValues,
     ...props
 }) {
-    const getNumberExistingCategories = (selectedDate) => {
-        const matchingCategories = values?.eventPriceCategories?.filter((category) => category.eventDate === selectedDate);
+    const [open, setOpen] = useState(false);
 
-        const totalEventPrices = matchingCategories?.reduce((total, category) => total + (category.eventPrices?.length || 0), 0);
+    const getNumberExistingCategories = useCallback(
+        (selectedDate) => {
+            const matchingCategories = values?.eventPriceCategories?.filter((category) => category.eventDate === selectedDate);
+            const totalEventPrices = matchingCategories?.reduce((total, category) => total + (category.eventPrices?.length || 0), 0);
 
-        return totalEventPrices || 0;
-    };
+            return totalEventPrices || 0;
+        },
+        [values]
+    );
 
     // Use useMemo to optimize calculation
     const numberOfCategories = useMemo(() => getNumberExistingCategories(selectedDate), [values, selectedDate]);
 
-    const duplicateValue = () => {
+    const filteredEventPriceCategories = useMemo(() => {
+        return values?.eventPriceCategories
+            ?.filter((category) => !category.eventDate)
+            ?.map((category) => ({
+                eventDate: selectedDate || null,
+                name: category?.name,
+                lang: category?.lang?.id || category?.lang,
+                eventDateUuid: selectedDate?.eventDateUuid || null,
+                eventPrices: category?.eventPrices?.map((price) => ({
+                    name: price?.name,
+                    annotation: price?.annotation,
+                    price: price?.price,
+                    index: price?.index,
+                    defaultPrice: price?.defaultPrice,
+                })),
+            }));
+    }, [values, selectedDate]);
+
+    const duplicateValue = useCallback(() => {
         const isDateAlreadyPresent = values?.eventPriceCategories?.some((category) => category.eventDate === selectedDate);
 
         // If a matching date exists, exit early
@@ -40,40 +62,22 @@ function EventAddSpecialPricing({
             return;
         }
 
-        const eventPriceCategoriesWithoutEventDate = values?.eventPriceCategories?.filter((category) => !category.eventDate);
-
-        const filteredEventPriceCategories = eventPriceCategoriesWithoutEventDate?.map((category) => ({
-            eventDate: selectedDate,
-            name: category?.name,
-            lang: category?.lang?.id || category?.lang,
-            eventDateUuid: selectedDate.eventDateUuid,
-            eventPrices: category?.eventPrices?.map((price) => ({
-                name: price?.name,
-                annotation: price?.annotation,
-                price: price?.price,
-                index: price?.index,
-                defaultPrice: price?.defaultPrice,
-            })),
-        }));
-
         setFieldValue('eventPriceCategories', [
             ...(values?.eventPriceCategories || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }]),
             ...filteredEventPriceCategories,
         ]);
-    };
+    }, [values, selectedDate, setFieldValue, defaultPriceCategoryName, defaultPrices, initValues]);
 
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
+    const handleClickOpen = useCallback(() => {
         duplicateValue();
         setOpen(true);
-    };
+    }, [duplicateValue]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setOpen(false);
-    };
+    }, [duplicateValue]);
 
-    const handleDelete = () => {
+    const handleDelete = useCallback(() => {
         // Remove the eventPriceCategories associated with the selectedDate
         const updatedCategories = values?.eventPriceCategories?.filter((category) => category.eventDate !== selectedDate);
 
@@ -82,7 +86,7 @@ function EventAddSpecialPricing({
 
         // Close the dialog
         setOpen(false);
-    };
+    }, [values, selectedDate, setFieldValue]);
 
     return (
         <div>

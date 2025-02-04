@@ -225,18 +225,22 @@ class AddonVersionManager extends AbstractManager
             $addonNames[] = $theme['name'];
         }
 
-        // We get the latest downloadable versions
-        $response = $this->client->request('GET', "https://www.ticketfactory.fr/admin/api/marketplace/addon/versions", [
-            'query' => [
-                'filters[addonNames]' => $addonNames
-            ]
-        ]);
-        
-        if ($response->getStatusCode() !== 200) {
+        try {
+            // We get the latest downloadable versions
+            $response = $this->client->request('GET', $this->baseUrl . '/versions', [
+                'query' => [
+                    'filters[addonNames]' => $addonNames
+                ]
+            ]);
+
+            if ($response->getStatusCode() !== 200) {
+                return [];
+            }
+
+            return $response->toArray() ?? [];
+        } catch (\Throwable $th) {
             return [];
         }
-
-        return $response->toArray() ?? [];
     }
 
     public function checkAddonVersions(): void

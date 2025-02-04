@@ -86,7 +86,7 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                             });
                             return !empty($filters);
                         })
-                        ->thenInvalid('required version in float (example: 1.0.0.0)')
+                        ->thenInvalid('required version in float (example: 1.0.0)')
                     ->end()
                 ->end()
             ->end();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import moment from 'moment';
@@ -6,9 +6,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Component } from '@/AdminService/Component';
 
-
-export const EventDateAdd = ({ open, setOpen, index, submitDateRange, currentDate, data  }) => {
-
+export const EventDateAdd = React.memo(({ open, setOpen, index, submitDateRange, currentDate, data }) => {
     const generateSchema = Yup.object().shape({
         eventDate: Yup.string().required('Veuillez renseigner la date.'),
         state: Yup.string().required('Veuillez renseigner le status de cette date.'),
@@ -20,6 +18,17 @@ export const EventDateAdd = ({ open, setOpen, index, submitDateRange, currentDat
             }
         }),
     });
+
+    const handleDateChange = useCallback((newValue, setFieldValue) => {
+        setFieldValue('eventDate', moment(newValue).format('YYYY-MM-DD HH:mm'));
+    }, []);
+
+    const handleAddHour = useCallback(
+        (setFieldValue) => {
+            setFieldValue('hours', [...values.hours, moment().format('HH:mm')]);
+        },
+        [values]
+    );
 
     return (
         <Dialog maxWidth="sm" fullWidth open={open} onClose={() => setOpen(null)}>
@@ -44,16 +53,13 @@ export const EventDateAdd = ({ open, setOpen, index, submitDateRange, currentDat
                             </Typography>
 
                             <Box className="flex wrap align-center margin-top-5">
-
                                 <Typography marginInline={5}> Le </Typography>
 
                                 <Component.CmtDatePicker
                                     fullWidth
                                     maxWidth={100}
                                     value={values.eventDate}
-                                    setValue={(newValue) => {
-                                        setFieldValue('eventDate', moment(newValue).format('YYYY-MM-DD HH:mm'));
-                                    }}
+                                    setValue={(newValue) => handleDateChange(newValue, setFieldValue)}
                                     name="eventDate"
                                     onTouched={setFieldTouched}
                                     required
@@ -62,23 +68,14 @@ export const EventDateAdd = ({ open, setOpen, index, submitDateRange, currentDat
                                 />
 
                                 <Typography marginInline={5}> inclus à </Typography>
-                                
                             </Box>
 
                             <Box className="flex row-end">
-                                <Button
-                                    color="primary"
-                                    onClick={() => {
-                                        setFieldValue('hours', [...values.hours, moment().format('HH:mm')]);
-                                    }}
-                                >
+                                <Button color="primary" onClick={() => handleAddHour(setFieldValue)}>
                                     Ajouter une heure
                                 </Button>
                             </Box>
-                            
                         </DialogContent>
-                        
-                        
 
                         <DialogActions>
                             <Box className="flex row-between align-center fullwidth">
@@ -95,4 +92,4 @@ export const EventDateAdd = ({ open, setOpen, index, submitDateRange, currentDat
             </Formik>
         </Dialog>
     );
-};
+});
