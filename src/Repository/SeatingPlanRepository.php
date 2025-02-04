@@ -11,12 +11,23 @@ class SeatingPlanRepository extends CrudRepository
     /*** > Trait ***/
     /*** < Trait ***/
 
+    protected const SELECTS = [
+        'ec' => null,
+    ];
+
+    protected const JOINS = [
+        ['leftJoin', 'o.eventCategories', 'ec'],
+    ];
+
     protected const FILTERS = [
-        ['name', 'o.name', 'search']
+
+        ['category', 'ec.id', 'in'],
+        ['name', 'o.name', 'search'],
     ];
 
     protected const SORTS = [
         'id' => 'o.id',
+        'category' => 'ec.name',
         'name' => 'o.name'
     ];
 

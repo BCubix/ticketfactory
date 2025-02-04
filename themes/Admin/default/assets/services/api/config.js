@@ -7,7 +7,7 @@ import axiosRetry from 'axios-retry';
 import { Api } from '@/AdminService/Api';
 import { Constant } from '@/AdminService/Constant';
 
-import { logoutAction } from '@Apps/Auth/redux/profile/profileSlice';
+import { logoutAction } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 let api_count = 0;
 

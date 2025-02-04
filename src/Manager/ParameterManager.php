@@ -54,17 +54,19 @@ class ParameterManager extends AbstractManager
     {
         $parameters = $this->getAll();
 
-        $appEnvLastTimestamp = $this->mf->get('cache')->getValue("app_env_last_timestamp" , function () {
+        $appEnvLastTimestamp = $this->mf->get('cache')->getValue("app_env_last_timestamp", function () {
             return $this->checkAppEnv();
         });
 
-        $lastCheckDate = (new \DateTime())->setTimestamp($appEnvLastTimestamp);
         $now = new \DateTime();
+        $lastCheckDate = (new \DateTime())->setTimestamp($appEnvLastTimestamp);
         $interval = $now->diff($lastCheckDate);
 
         if ($interval->days > 0 || ($interval->days == 0 && $interval->h >= 24)) {
             $this->checkAppEnv();
         }
+
+        //$this->mf->get('addonVersion')->checkAddonVersions();
 
         return $parameters;
     }
@@ -76,7 +78,7 @@ class ParameterManager extends AbstractManager
 
     public function getModuleParameter(string $objectName, string $key): mixed
     {
-        return $this->mf->get('cache')->getValue('parameter_module_' . $objectName . '_' . $key , function () use ($objectName, $key) {
+        return $this->mf->get('cache')->getValue('parameter_module_' . $objectName . '_' . $key, function () use ($objectName, $key) {
             return $this->getParameterValue($this->getParameter('module_' . $objectName . '_' . $key));
         });
     }
@@ -87,14 +89,14 @@ class ParameterManager extends AbstractManager
             $objectName = $this->getCoreParameter('main_theme');
         }
 
-        return $this->mf->get('cache')->getValue('parameter_theme_' . $objectName . '_' . $key , function () use ($objectName, $key) {
+        return $this->mf->get('cache')->getValue('parameter_theme_' . $objectName . '_' . $key, function () use ($objectName, $key) {
             return $this->getParameterValue($this->getParameter('theme_' . $objectName . '_' . $key));
         });
     }
 
     public function getCoreParameter(string $key): mixed
     {
-        return $this->mf->get('cache')->getValue('parameter_core_' . $key , function () use ($key) {
+        return $this->mf->get('cache')->getValue('parameter_core_' . $key, function () use ($key) {
             return $this->getParameterValue($this->getParameter('core_' . $key));
         });
     }
@@ -152,18 +154,18 @@ class ParameterManager extends AbstractManager
         }
 
         $typeListFunctions = [
-            'int'           => fn ($value) => intval($value),
-            'float'         => fn ($value) => floatval($value),
-            'bool'          => fn ($value) => boolval($value),
-            'prices'        => fn ($value) => $this->se->deserialize($value, 'array', 'json'),
-            'openingHours'  => fn ($value) => $this->se->deserialize($value, 'array', 'json'),
-            'upload'        => fn ($value) => ('/uploads/parameter/' . $value),
-            'Page'          => fn ($value) => $this->em->getRepository(Page::class)->findOneForAdmin($value),
-            'Season'        => fn ($value) => $this->em->getRepository(Season::class)->findOneForAdmin($value),
-            'Room'          => fn ($value) => $this->em->getRepository(Room::class)->findOneForAdmin($value),
-            'EventCategory' => fn ($value) => $this->em->getRepository(EventCategory::class)->findOneForAdmin($value),
-            'MediaCategory' => fn ($value) => $this->em->getRepository(MediaCategory::class)->findOneForAdmin($value),
-            'string'        => fn ($value) => $value,
+            'int'           => fn($value) => intval($value),
+            'float'         => fn($value) => floatval($value),
+            'bool'          => fn($value) => boolval($value),
+            'prices'        => fn($value) => $this->se->deserialize($value, 'array', 'json'),
+            'openingHours'  => fn($value) => $this->se->deserialize($value, 'array', 'json'),
+            'upload'        => fn($value) => ('/uploads/parameter/' . $value),
+            'Page'          => fn($value) => $this->em->getRepository(Page::class)->findOneForAdmin($value),
+            'Season'        => fn($value) => $this->em->getRepository(Season::class)->findOneForAdmin($value),
+            'Room'          => fn($value) => $this->em->getRepository(Room::class)->findOneForAdmin($value),
+            'EventCategory' => fn($value) => $this->em->getRepository(EventCategory::class)->findOneForAdmin($value),
+            'MediaCategory' => fn($value) => $this->em->getRepository(MediaCategory::class)->findOneForAdmin($value),
+            'string'        => fn($value) => $value,
         ];
 
         if (!$parameter->isTranslatedParameter()) {
@@ -266,13 +268,14 @@ class ParameterManager extends AbstractManager
         return $editedParameters;
     }
 
-    public function handleEditedValue($newParameters, $editedParameter) {
+    public function handleEditedValue($newParameters, $editedParameter)
+    {
         if ($editedParameter->getType() === 'font' && null !== $editedParameter->getParamValue()) {
             $this->handleFont($editedParameter);
         }
     }
 
-    private function searchParamByKey ($params, $key): ?Parameter
+    private function searchParamByKey($params, $key): ?Parameter
     {
         foreach ($params as $param) {
             if ($param->getParamKey() === $key) {
@@ -283,7 +286,8 @@ class ParameterManager extends AbstractManager
         return null;
     }
 
-    private function handleFont($editedParameter): void {
+    private function handleFont($editedParameter): void
+    {
         $fileName = explode('.', $editedParameter->getParamValue())[0];
         $fontFilePath = $this->sf->get('pathGetter')->getPublicDir() . "/uploads/parameter/" . $editedParameter->getParamValue();
         $destFileFolder = $this->sf->get('pathGetter')->getPublicDir() . "/uploads/parameter/" . $fileName . '/';
@@ -302,8 +306,6 @@ class ParameterManager extends AbstractManager
         // $font->open($destFileFolder . 'fontfile.subset.ttf', BinaryStream::modeReadWrite);
         // $font->encode(array("OS/2"));
         // $font->close();
-
-        //dd($fileName, $fontFilePath, $font);
     }
 
     private function checkAppEnv()

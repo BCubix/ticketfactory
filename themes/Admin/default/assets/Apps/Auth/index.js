@@ -3,14 +3,9 @@ import { LoginBackgroundWrapper, LoginComponentWrapper, LoginPageWrapper } from 
 import { ForgotPassword } from '@Apps/Auth/ForgotPassword/ForgotPassword';
 import { ChangePassword } from '@Apps/Auth/ChangePassword/ChangePassword';
 
-import { setReducer } from '@/AdminService/Reducer';
-import { setApi } from '@/AdminService/Api';
 import { Constant, setConstant } from '@/AdminService/Constant';
 import { Component, setComponent } from '@/AdminService/Component';
 import { setNonAuthenticatedRoute } from '@/AdminService/NonAuthenticatedRoute';
-
-import profileReducer from './redux/profile/profileSlice';
-import authApi from './services/api/authApi';
 
 export const initConstant = () => {
     setConstant('LOGIN_PATH', '/admin/connexion');
@@ -27,10 +22,6 @@ export const initComponent = () => {
     setComponent('ForgotPassword', ForgotPassword);
 
     setComponent('ChangePassword', ChangePassword);
-};
-
-export const initApi = () => {
-    setApi('authApi', authApi);
 };
 
 export const initNonAuthenticatedRoutes = () => {

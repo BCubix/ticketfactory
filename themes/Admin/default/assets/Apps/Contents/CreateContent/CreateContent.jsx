@@ -8,11 +8,16 @@ import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 
-import { getAllContentDataAction, getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
+import { getContentsAction } from '@Apps/Contents/redux/contents/contentsSlice';
 import { contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { languagesSelector } from '@Apps/Languages/redux/languages/languagesSlice';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { contentsInitialSchema, contentsValidationSchema, contentsForm } from '../ContentsForm/ContentsForm';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+
+const ROLE_CONTENT_PUBLISH = 'ROLE_CONTENT_PUBLISH';
 
 export const contentsCreateCrud = {
     form: {
@@ -26,6 +31,7 @@ export const contentsCreateCrud = {
 export const CreateContent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useSelector(userProfileSelector);
     const languagesData = useSelector(languagesSelector);
     const { loading, contentTypes, error } = useSelector(contentTypesSelector);
     const [selectedContentType, setSelectedContentType] = useState(null);
@@ -48,6 +54,14 @@ export const CreateContent = () => {
             }
         });
     };
+
+    const publicationStatusList = useMemo(() => {
+        if (checkUserAccess(getUserRoles(user), ROLE_CONTENT_PUBLISH)) {
+            return Crud.contents.add.publicationStatusList;
+        }
+
+        return Crud.contents.add.publicationStatusList?.filter((item) => item.value !== 'PUBLISHED');
+    }, []);
 
     useEffect(() => {
         apiMiddleware(dispatch, async () => {
@@ -119,6 +133,7 @@ export const CreateContent = () => {
             translateInitialValues={initialValues}
             formCrud={Crud?.contents?.add}
             languageId={languageId || languagesData?.languages?.find((el) => el.isDefault)?.id}
+            publicationStatusList={publicationStatusList}
         />
     );
 };

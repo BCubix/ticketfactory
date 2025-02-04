@@ -42,4 +42,26 @@ class CartRepository extends CrudRepository
             ->getquery()
             ->getOneOrNullResult();
     }
+
+    public function findInactiveRecentCarts(): array
+    {
+        $dateThreshold = new \DateTime();
+        $dateThreshold->modify('-30 minutes');
+
+        return $this->createQueryBuilder("c")
+            ->where("c.active = 1")
+            ->andWhere("c.updatedAt < :dateThreshold")
+            ->setParameter("dateThreshold", $dateThreshold)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAllActiveCarts(): array
+    {
+        return $this->createQueryBuilder("c")
+            ->where("c.active = 1")
+            ->orderBy("c.updatedAt", "DESC")
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,47 +1,54 @@
 @font-face {
-    font-family: "Anton";
-    src: url("../fonts/Anton-Regular.ttf");
-    src: url("../fonts/Anton-Regular.ttf") format("truetype");
+    font-family: 'Anton';
+    src: url('../fonts/Anton-Regular.ttf');
+    src: url('../fonts/Anton-Regular.ttf') format('truetype');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Rubik";
-    src: url("../fonts/Rubik-Light.ttf");
-    src: url("../fonts/Rubik-Light.ttf") format("truetype");
+    font-family: 'Rubik';
+    src: url('../fonts/Rubik-Light.ttf');
+    src: url('../fonts/Rubik-Light.ttf') format('truetype');
     font-weight: 300;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Rubik";
-    src: url("../fonts/Rubik-Regular.ttf");
-    src: url("../fonts/Rubik-Regular.ttf") format("truetype");
+    font-family: 'Rubik';
+    src: url('../fonts/Rubik-Regular.ttf');
+    src: url('../fonts/Rubik-Regular.ttf') format('truetype');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Rubik";
-    src: url("../fonts/Rubik-Medium.ttf");
-    src: url("../fonts/Rubik-Medium.ttf") format("truetype");
+    font-family: 'Rubik';
+    src: url('../fonts/Rubik-Medium.ttf');
+    src: url('../fonts/Rubik-Medium.ttf') format('truetype');
     font-weight: 500;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Rubik";
-    src: url("../fonts/Rubik-SemiBold.ttf");
-    src: url("../fonts/Rubik-SemiBold.ttf") format("truetype");
+    font-family: 'Rubik';
+    src: url('../fonts/Rubik-SemiBold.ttf');
+    src: url('../fonts/Rubik-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Rubik";
-    src: url("../fonts/Rubik-Bold.ttf");
-    src: url("../fonts/Rubik-Bold.ttf") format("truetype");
+    font-family: 'Rubik';
+    src: url('../fonts/Rubik-Bold.ttf');
+    src: url('../fonts/Rubik-Bold.ttf') format('truetype');
     font-weight: 700;
     font-display: swap;
 }
+
+$primary-color-main: #2e71b3;
+$primary-color-light: #ebf1ff;
+
+$secondary-color-main: #ffc828;
+$secondary-color-dark: #225486;
+$secondary-color-light: #fff3e5;

@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
+import { ClickAwayListener, Dialog, DialogContent, DialogTitle, Grid, IconButton, Slide, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 
@@ -34,6 +35,7 @@ export const CmtMediaModal = ({
     const [createDialog, setCreateDialog] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
     const [multipleSelect, setMultipleSelect] = useState([]);
+    const [displayFullsizeImage, setDisplayFullsizeImage] = useState(false);
 
     const multiple = useMemo(() => {
         return Array.isArray(media);
@@ -47,9 +49,9 @@ export const CmtMediaModal = ({
         setSelectedMedia(null);
     }, [open]);
 
-    const handleSubmit = () => {
+    const handleSubmit = async (addedMedias) => {
         setCreateDialog(false);
-        onAddNewMedia();
+        onAddNewMedia(addedMedias);
         NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
     };
 
@@ -244,6 +246,7 @@ export const CmtMediaModal = ({
                                 }
                             }}
                             imageFormatList={imageFormatList}
+                            onClickDisplayFullImage={() => setDisplayFullsizeImage(true)}
                         />
                     </Grid>
                 </Grid>
@@ -254,6 +257,15 @@ export const CmtMediaModal = ({
                     <Component.CreateMedia handleSubmit={handleSubmit} />
                 </DialogContent>
             </Dialog>
+
+            {displayFullsizeImage && (
+                <Box className="image-fullscreen-wrapper">
+                    <CloseIcon className="image-fullscreen-close" onClick={() => setDisplayFullsizeImage(false)} />
+                    <ClickAwayListener onClickAway={() => setDisplayFullsizeImage(false)}>
+                        <Box component="img" className="image-fullscreen" src={Constant.MEDIA_FILE_BASE_URL + selectedMedia?.documentUrl} alt={selectedMedia.alt} />
+                    </ClickAwayListener>
+                </Box>
+            )}
         </Dialog>
     );
 };

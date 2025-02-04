@@ -10,6 +10,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class UrlController extends CrudController
@@ -28,6 +29,7 @@ class UrlController extends CrudController
     }
 
     #[Rest\Get('/url/{urlId}', requirements: ['urlId' => '\d+'])]
+    #[IsGranted('ROLE_URL_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_url_one'])]
     public function getOne(Request $request, int $urlId): View
     {
@@ -35,6 +37,7 @@ class UrlController extends CrudController
     }
 
     #[Rest\Post('/url/{urlId}', requirements: ['urlId' => '\d+'])]
+    #[IsGranted('ROLE_URL_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_url_one'])]
     public function edit(Request $request, int $urlId): View
     {
@@ -42,6 +45,7 @@ class UrlController extends CrudController
     }
 
     #[Rest\Post('/url/{urlId}/order', requirements: ['urlId' => '\d+'])]
+    #[IsGranted('ROLE_URL_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_url_one'])]
     public function order(Request $request, int $urlId): View
     {

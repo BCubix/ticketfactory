@@ -152,4 +152,27 @@ class ProductRepository extends CrudRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneByIdForWebsite(int $productId):?Product
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.active = 1')
+            ->andWhere('p.id = :productId')
+            ->setParameter('productId', $productId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findOneByCategoriesForWebsite(array $categories, int $productId): ?Product
+    {
+        return $this->createQueryBuilder('p')
+            ->addSelect("pc")
+            ->innerJoin("p.productCategories", "pc", 'WITH', 'pc.id IN (:productCategories)')
+            ->where("p.id = :productId")
+            ->andWhere("p.active = 1")
+            ->setParameter("productId", $productId)
+            ->setParameter("productCategories", $categories)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

@@ -60,6 +60,7 @@ export const DisplayParameters = ({ parameters, indexTab, indexBlock, handleChan
                 paramValue={parameter.paramValue}
                 paramAvailableValue={parameter.availableValue}
                 validations={parameter.validations}
+                helper={parameter.helper}
                 paramBreakpoints={paramBreakpoints}
                 setFieldValue={setFieldValue}
                 indexTab={indexTab}

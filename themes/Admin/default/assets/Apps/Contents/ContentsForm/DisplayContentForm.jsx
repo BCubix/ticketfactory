@@ -7,7 +7,7 @@ export const DisplayContentForm = ({ contentType, ...props }) => {
         return <></>;
     }
     return contentType?.fields?.map((item, index) => (
-        <Box sx={{ marginBlock: 4 }} key={index}>
+        <Box sx={{ marginBlock: 5 }} key={index}>
             <Component.DisplayContentField {...props} field={item} key={index} index={index} />
         </Box>
     ));

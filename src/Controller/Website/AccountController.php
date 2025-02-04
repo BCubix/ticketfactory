@@ -4,6 +4,7 @@ namespace App\Controller\Website;
 
 use App\Entity\Customer\Address;
 use App\Entity\Customer\Customer;
+use App\Entity\Order\SubscriptionRow;
 use App\Entity\Order\Voucher;
 use App\Form\Website\Customer\CustomerAddressType;
 use App\Form\Website\Customer\CustomerProfileType;
@@ -72,11 +73,33 @@ class AccountController extends WebsiteController
         $customer = $this->getUser();
 
         $orders = $this->getUser()->getOrders();
+        foreach($orders as $order) {
+            $order->setCart($this->mf->get("cart")->formatCart($order->getCart()));
+        }
 
         return $this->websiteRender('Account/orders.html.twig', [
             'page'     => $page,
             'customer' => $customer,
             'orders'   => $orders
+        ]);
+    }
+
+    #[Route('/mon-compte/abonnements', name: 'tf_website_subscriptions', priority: 1)]
+    public function subscriptions(): Response
+    {
+        if (!$this->mf->get("parameter")->getCoreParameter('use_subscriptions') || $this->mf->get("parameter")->getCoreParameter('catalog_mode')) {
+            return new Response(null, 404);
+        }
+
+        $page = $this->mf->get('page')->getByKeyword('subscriptions');
+        $customer = $this->getUser();
+
+        $subscriptionRows = $this->em->getRepository(SubscriptionRow::class)->findAllSubscriptionRowsByCustomerForWebsite($customer->getId());
+
+        return $this->websiteRender('Account/subscriptions.html.twig', [
+            'page'            => $page,
+            'customer'        => $customer,
+            'subscriptionRows'   => $subscriptionRows
         ]);
     }
 

@@ -1,3 +1,5 @@
+@import 'base/backgroundDot';
+@import 'base/breakpoints';
 @import 'base/ckEditor';
 @import 'base/reboot';
 @import 'base/links';
@@ -7,15 +9,21 @@
 @import 'base/flex';
 @import 'base/spacing';
 @import 'base/sizing';
+@import 'base/txt';
 @import 'base/variable';
-@import 'base/backgroundDot';
-@import 'base/breakpoints';
 
 @import 'components/media';
 @import 'components/badge';
 @import 'components/blocks';
 @import 'components/box';
+@import 'components/cart';
+@import 'components/history';
+@import 'components/image';
 @import 'components/listTable';
 @import 'components/hookTable';
 @import 'components/layout';
 @import 'components/menus';
+@import 'components/notification';
+@import 'components/pageBlock';
+@import 'components/page-history';
+@import 'components/profile';

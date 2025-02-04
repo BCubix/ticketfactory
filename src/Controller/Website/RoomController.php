@@ -43,15 +43,6 @@ class RoomController extends EventAbleController
 
         $rooms = $this->em->getRepository(Room::class)->findAllForWebsite($this->getLanguageId());
 
-        $pageContent = [];
-        if (null !== $page) {
-            foreach ($page->getContents() as $content) {
-                foreach ($content->getFields() as $key => $field) {
-                    $pageContent[$key] = $field;
-                }
-            }
-        }
-
         $template = 'Room/';
         $template .= ($request->isXmlHttpRequest() ? '_' : '');
         $template .= 'list.html.twig';
@@ -60,7 +51,6 @@ class RoomController extends EventAbleController
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
             'rooms'              => $rooms,
-            'pageContent'        => $pageContent,
         ]);
     }
 }

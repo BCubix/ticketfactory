@@ -11,13 +11,6 @@ class PageController extends WebsiteController
     {
         $this->checkAccessPage($page);
 
-        $pageTypeBlocks = [];
-        foreach ($page->getContents() as $content) {
-            foreach ($content->getFields() as $key => $field) {
-                $pageTypeBlocks[$key] = $field;
-            }
-        }
-
         $contentTypeBlocks = [];
         foreach ($page->getContentTypes() as $contentTypes) {
             if (null !== $contentTypes->getKeyword()) {
@@ -30,7 +23,6 @@ class PageController extends WebsiteController
         return $this->websiteRender('Page/index.html.twig', [
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
-            'pageTypeBlocks'     => $pageTypeBlocks,
             'contentTypeBlocks'  => $contentTypeBlocks
         ]);
     }
@@ -40,17 +32,9 @@ class PageController extends WebsiteController
         $this->checkAccessPage($page);
         $breadcrumbs = $this->mf->get('page')->generatePageBreadCrumbs($page);
 
-        $pageContents = [];
-        foreach ($page->getContents() as $content) {
-            foreach ($content->getFields() as $key => $field) {
-                $pageContents[$key] = $field;
-            }
-        }
-
         return $this->websiteRender('Page/history.html.twig', [
             'breadcrumbs'        => $breadcrumbs,
             'page'               => $page,
-            'pageContents'       => $pageContents
         ]);
     }
 

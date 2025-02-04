@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardContent, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
@@ -12,6 +12,9 @@ import { changeMediasFilters, getMediasAction, mediasSelector } from '@Apps/Medi
 import CategoryIcon from '@mui/icons-material/Category';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { Crud } from '@/AdminService/Crud';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 const LIST_TYPE = [
     { label: 'Image', value: 'Image' },
@@ -111,11 +114,17 @@ export const mediasListCrud = {
             ),
         },
     ],
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_MEDIA_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_MEDIA_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_MEDIA_DELETE'),
+    },
 };
 
 export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
-    const { loading, medias, filters, total, error } = useSelector(mediasSelector);
     const dispatch = useDispatch();
+    const { loading, medias, filters, total, error } = useSelector(mediasSelector);
+    const { user } = useSelector(userProfileSelector);
     const [createDialog, setCreateDialog] = useState(false);
     const [addIframeDialog, setAddIframeDialog] = useState(false);
     const [editIframeDialog, setEditIframeDialog] = useState(false);
@@ -133,6 +142,10 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
             dispatch(getMediasAction());
         }
     }, []);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
 
     const handleEditMultiple = () => {
         const updatedArray = imageUploads.filter((item) => item.id !== idImageSidebar.current);
@@ -154,8 +167,11 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
         dispatch(getMediasAction());
         const parsedImageArray = imageArray.map((imgStr) => JSON.parse(imgStr));
 
-        if (parsedImageArray.length > 1) NotificationManager.success('Vos éléments ont bien été ajoutés.', 'Succès', Constant.REDIRECTION_TIME);
-        else NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
+        if (parsedImageArray.length > 1) {
+            NotificationManager.success('Vos éléments ont bien été ajoutés.', 'Succès', Constant.REDIRECTION_TIME);
+        } else {
+            NotificationManager.success('Votre élément a bien été ajouté.', 'Succès', Constant.REDIRECTION_TIME);
+        }
 
         setImageUploads(parsedImageArray);
         idImageSidebar.current = parsedImageArray[0]?.id;
@@ -233,14 +249,16 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                                 {listCrud?.title}
                                 {medias && `(${(filters.page - 1) * filters.limit + 1} - ${(filters.page - 1) * filters.limit + medias.length} sur ${total})`}
                             </Typography>
-                            <Box className="flex margin-left-auto">
-                                <Component.CreateButton variant="contained" onClick={() => setAddIframeDialog(true)} id="addIframeMediaButton" sx={{ marginRight: 3 }}>
-                                    Ajouter un iframe
-                                </Component.CreateButton>
-                                <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createMediaButton">
-                                    Nouveau
-                                </Component.CreateButton>
-                            </Box>
+                            {listCrud.checkUserAccess.new(userRoles) && (
+                                <Box className="flex margin-left-auto">
+                                    <Component.CreateButton variant="contained" onClick={() => setAddIframeDialog(true)} id="addIframeMediaButton" sx={{ marginRight: 3 }}>
+                                        Ajouter un iframe
+                                    </Component.CreateButton>
+                                    <Component.CreateButton variant="contained" onClick={() => setCreateDialog(true)} id="createMediaButton">
+                                        Nouveau
+                                    </Component.CreateButton>
+                                </Box>
+                            )}
                         </Box>
                     }
                 />
@@ -258,6 +276,10 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                                 id={`mediaItem-${item.id}`}
                                 key={index}
                                 onClick={() => {
+                                    if (!listCrud.checkUserAccess.edit(userRoles)) {
+                                        return;
+                                    }
+
                                     item.iframe ? setEditIframeDialog(item.id) : setEditDialog(item.id);
                                 }}
                             >
@@ -339,6 +361,7 @@ export const MediasList = ({ listCrud = Crud?.medias?.list }) => {
                         }}
                         deleteElement={(id) => setDeleteDialog(id)}
                         imageFormatList={imageFormatList}
+                        userDeleteRight={listCrud.checkUserAccess.delete}
                     />
                 </DialogContent>
             </Dialog>

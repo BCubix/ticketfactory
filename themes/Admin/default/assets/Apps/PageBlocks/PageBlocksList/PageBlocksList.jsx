@@ -7,6 +7,7 @@ import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changePageBlocksFilters, getPageBlocksAction, pageBlocksSelector } from '@Apps/PageBlocks/redux/pageBlocks/pageBlocksSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const pageBlocksListCrud = {
     title: 'Blocs',
@@ -40,6 +41,11 @@ export const pageBlocksListCrud = {
     dataList: (selector) => selector.pageBlocks,
     duplicate: (props) => Api.pageBlocksApi.duplicatePageBlock(props),
     delete: (props) => Api.pageBlocksApi.deletePageBlock(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_PAGE_BLOCK_DELETE'),
+    },
     links: {
         new: () => `${Constant.PAGE_BLOCKS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.PAGE_BLOCKS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

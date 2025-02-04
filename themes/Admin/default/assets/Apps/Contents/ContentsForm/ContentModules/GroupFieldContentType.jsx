@@ -1,15 +1,29 @@
 import React from 'react';
 import * as Yup from 'yup';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 
 const TYPE = 'group';
 
-const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setFieldValue, name, errors, field, label, touched, contentModules, ...props }) => {
-    return (
-        <>
-            <Component.CmtFormBlock title={label}>
+const FormComponent = ({
+    values,
+    handleChange,
+    handleBlur,
+    setFieldTouched,
+    setFieldValue,
+    name,
+    errors,
+    field,
+    label,
+    touched,
+    contentModules,
+    displayGroupLabel = true,
+    ...props
+}) => {
+    if (!displayGroupLabel) {
+        return (
+            <>
                 <Component.DisplayContentForm
                     {...props}
                     values={(values && values[field.name]) || {}}
@@ -23,14 +37,37 @@ const FormComponent = ({ values, handleChange, handleBlur, setFieldTouched, setF
                     contentModules={contentModules}
                     prefixName={`${name}.`}
                 />
-
                 {field.helper && (
                     <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
                         {field.helper}
                     </Typography>
                 )}
-            </Component.CmtFormBlock>
-        </>
+            </>
+        );
+    }
+
+    return (
+        <Component.CmtFormBlock title={label}>
+            <Component.DisplayContentForm
+                {...props}
+                values={(values && values[field.name]) || {}}
+                errors={(errors && errors[field.name]?.parameters) || {}}
+                touched={(touched && touched[field.name]?.parameters) || {}}
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                setFieldTouched={setFieldTouched}
+                setFieldValue={setFieldValue}
+                contentType={field?.parameters}
+                contentModules={contentModules}
+                prefixName={`${name}.`}
+            />
+
+            {field.helper && (
+                <Typography component="p" variant="body2" sx={{ fontSize: 10 }}>
+                    {field.helper}
+                </Typography>
+            )}
+        </Component.CmtFormBlock>
     );
 };
 

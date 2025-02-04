@@ -7,6 +7,7 @@ import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeFeatureCategoriesFilters, getFeatureCategoriesAction, featureCategoriesSelector } from '@Apps/FeatureCategories/redux/featureCategories/featureCategoriesSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const featureCategoriesListCrud = {
     title: "Catégories d'Attributs",
@@ -48,6 +49,11 @@ export const featureCategoriesListCrud = {
     dataList: (selector) => selector.featureCategories,
     duplicate: (props) => Api.featureCategoriesApi.duplicateFeatureCategory(props),
     delete: (props) => Api.featureCategoriesApi.deleteFeatureCategory(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_FEATURE_CATEGORY_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_FEATURE_CATEGORY_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_FEATURE_CATEGORY_DELETE'),
+    },
     links: {
         new: () => `${Constant.FEATURE_CATEGORIES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.FEATURE_CATEGORIES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

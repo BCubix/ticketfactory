@@ -2,6 +2,7 @@
 
 namespace App\Entity\Order;
 
+use App\Entity\Customer\Address;
 use App\Entity\Customer\Customer;
 use App\Entity\Datable;
 use App\Repository\CartRepository;
@@ -32,8 +33,23 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\ManyToOne(inversedBy: 'carts')]
-    private ?Customer $customer = null;
+    #[ORM\Column(nullable: true)]
+    private ?float $deliveryPrice = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $ticketingReference = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one'])]
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist'])]
+    private ?Order $linkedOrder = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one'])]
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
@@ -47,25 +63,34 @@ class Cart extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: SubscriptionRow::class, orphanRemoval: true)]
+    private Collection $subscriptionRows;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\ManyToOne(inversedBy: 'carts')]
+    private ?Customer $customer = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one'])]
+    #[ORM\ManyToOne]
+    private ?DeliveryMode $deliveryMode = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToMany(targetEntity: Voucher::class, mappedBy: 'carts')]
     private Collection $vouchers;
 
     #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_one'])]
-    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
-    private ?Order $linkedOrder = null;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_cart_all', 'a_cart_one', 'a_order_all', 'a_order_one'])]
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $ticketingReference = null;
-
+    #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
+    public $discount = 0;
 
     public function __construct()
     {
         $this->eventRows = new ArrayCollection();
         $this->vouchers = new ArrayCollection();
         $this->productRows = new ArrayCollection();
+        $this->subscriptionRows = new ArrayCollection();
     }
 
 
@@ -86,14 +111,65 @@ class Cart extends Datable
         return $this;
     }
 
-    public function getCustomer(): ?Customer
+    public function getDeliveryPrice(): ?float
     {
-        return $this->customer;
+        return $this->deliveryPrice;
     }
 
-    public function setCustomer(?Customer $customer): self
+    public function setDeliveryPrice(?float $deliveryPrice): static
     {
-        $this->customer = $customer;
+        $this->deliveryPrice = $deliveryPrice;
+
+        return $this;
+    }
+
+    public function getTicketingReference(): ?int
+    {
+        return $this->ticketingReference;
+    }
+
+    public function setTicketingReference(?int $ticketingReference): self
+    {
+        $this->ticketingReference = $ticketingReference;
+
+        return $this;
+    }
+
+    public function getLinkedOrder(): ?Order
+    {
+        return $this->linkedOrder;
+    }
+
+    public function setLinkedOrder(Order $linkedOrder): self
+    {
+        // set the owning side of the relation if necessary
+        if ($linkedOrder->getCart() !== $this) {
+            $linkedOrder->setCart($this);
+        }
+
+        $this->linkedOrder = $linkedOrder;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($address === null && $this->address !== null) {
+            $this->address->setCart(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($address !== null && $address->getCart() !== $this) {
+            $address->setCart($this);
+        }
+
+        $this->address = $address;
 
         return $this;
     }
@@ -159,6 +235,60 @@ class Cart extends Datable
     }
 
     /**
+     * @return Collection<int, SubscriptionRow>
+     */
+    public function getSubscriptionRows(): Collection
+    {
+        return $this->subscriptionRows;
+    }
+
+    public function addSubscriptionRow(SubscriptionRow $subscriptionRow): static
+    {
+        if (!$this->subscriptionRows->contains($subscriptionRow)) {
+            $this->subscriptionRows->add($subscriptionRow);
+            $subscriptionRow->setCart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscriptionRow(SubscriptionRow $subscriptionRow): static
+    {
+        if ($this->subscriptionRows->removeElement($subscriptionRow)) {
+            // set the owning side to null (unless already changed)
+            if ($subscriptionRow->getCart() === $this) {
+                $subscriptionRow->setCart(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getDeliveryMode(): ?DeliveryMode
+    {
+        return $this->deliveryMode;
+    }
+
+    public function setDeliveryMode(?DeliveryMode $deliveryMode): static
+    {
+        $this->deliveryMode = $deliveryMode;
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Voucher>
      */
     public function getVouchers(): Collection
@@ -181,35 +311,6 @@ class Cart extends Datable
         if ($this->vouchers->removeElement($voucher)) {
             $voucher->removeCart($this);
         }
-
-        return $this;
-    }
-
-    public function getLinkedOrder(): ?Order
-    {
-        return $this->linkedOrder;
-    }
-
-    public function setLinkedOrder(Order $linkedOrder): self
-    {
-        // set the owning side of the relation if necessary
-        if ($linkedOrder->getCart() !== $this) {
-            $linkedOrder->setCart($this);
-        }
-
-        $this->linkedOrder = $linkedOrder;
-
-        return $this;
-    }
-
-    public function getTicketingReference(): ?int
-    {
-        return $this->ticketingReference;
-    }
-
-    public function setTicketingReference(?int $ticketingReference): self
-    {
-        $this->ticketingReference = $ticketingReference;
 
         return $this;
     }

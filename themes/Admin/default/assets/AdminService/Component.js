@@ -68,6 +68,8 @@ import { CmtImage } from '@Components/CmtImage/CmtImage';
 import { CmtDisplayFlag } from '@Components/CmtDisplayFlag/CmtDisplayFlag';
 import { checkComponent, checkString } from '@Services/utils/check';
 import { CmtActiveField } from '@Components/CmtActiveField/CmtActiveField';
+import { CmtCalendar } from '@Components/CmtCalendar/CmtCalendar';
+import { CmtColorPicker } from '@Components/CmtColorPicker/CmtColorPicker';
 import { ActiveFieldBlock, SwitchActiveLabel, SwitchTextLabel } from '@Components/CmtActiveField/sc.ActiveFieldBlock';
 
 import { AppProvider } from '@/Config/AppProvider';
@@ -85,8 +87,19 @@ import { CmtMediaPartForm } from '../Components/CmtMediaPart/CmtMediaPartForm';
 import { CmtMoveMedias } from '../Components/CmtMediaPart/CmtMoveMedias';
 import { CmtFeaturesTypeValues } from '@Components/CmtFeaturesTypeValues/CmtFeaturesTypeValues';
 import { CmtFeaturesInputField } from '@Components/CmtFeaturesInputField/CmtFeaturesInputField';
+import { FeatureDroppableBox } from '@Components/CmtFeaturesInputField/sc.FeatureDroppableBox';
 import { TRow } from '@Components/CmtDragAndDrop/sc.TRow';
 import { TBody } from '@Components/CmtDragAndDrop/sc.TBody';
+
+import { CmtSkeletonList } from '@Components/CmtSkeleton/CmtSkeletonList';
+import { CmtSkeletonForm } from '@Components/CmtSkeleton/CmtSkeletonForm';
+import { CmtSkeletonContentList } from '@Components/CmtSkeleton/CmtSkeletonContentList';
+import { CmtSkeletonOrderDetails } from '@Components/CmtSkeleton/CmtSkeletonOrderDetails';
+import { CmtSkeletonMenus } from '@Components/CmtSkeleton/CmtSkeletonMenus';
+import { CmtSkeletonDashboard } from '@Components/CmtSkeleton/CmtSkeletonDashboard';
+
+import { CmtImageCarousel } from '@Components/CmtImageCarousel/CmtImageCarousel';
+
 
 const ComponentObj = {
     App: App,
@@ -127,6 +140,7 @@ const ComponentObj = {
     CmtSelect: CmtSelect,
     CmtFeaturesTypeValues: CmtFeaturesTypeValues,
     CmtFeaturesInputField: CmtFeaturesInputField,
+    FeatureDroppableBox: FeatureDroppableBox,
 
     CmtBooleanFilters: CmtBooleanFilters,
     CmtCategoriesFilters: CmtCategoriesFilters,
@@ -190,6 +204,17 @@ const ComponentObj = {
     CmtEditMediaModal: CmtEditMediaModal,
     CmtMediaPartForm: CmtMediaPartForm,
     CmtMoveMedias: CmtMoveMedias,
+
+    CmtSkeletonList: CmtSkeletonList,
+    CmtSkeletonForm: CmtSkeletonForm,
+    CmtSkeletonContentList: CmtSkeletonContentList,
+    CmtSkeletonOrderDetails: CmtSkeletonOrderDetails,
+    CmtSkeletonMenus: CmtSkeletonMenus,
+    CmtSkeletonDashboard: CmtSkeletonDashboard,
+    
+    CmtImageCarousel: CmtImageCarousel,
+    CmtCalendar: CmtCalendar,
+    CmtColorPicker: CmtColorPicker,
 };
 
 /**

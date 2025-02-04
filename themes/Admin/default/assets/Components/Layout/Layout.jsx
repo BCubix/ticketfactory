@@ -12,17 +12,18 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
+import { logoutAction, userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
+import { ProfileButton } from './sc.ProfileButton';
+
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import useAppContext from '@/Config/useAppContext';
-import { logoutAction, profileSelector } from '@Apps/Auth/redux/profile/profileSlice';
-import { parametersSelector } from '@Apps/Parameters/redux/parameters/parametersSlice';
-import { ProfileButton } from './sc.ProfileButton';
 
 export const Layout = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user } = useSelector(profileSelector);
+    const { user } = useSelector(userProfileSelector);
     const { parameters } = useSelector(parametersSelector);
     const appContext = useAppContext();
     const theme = useTheme();
@@ -101,33 +102,56 @@ export const Layout = ({ children }) => {
                             color="primary"
                             href="/"
                             target="_blank"
+                            className="toolbar-button"
                         >
                             <VisibilityIcon fontSize="small" />
                             <Typography className="toolbar-button-label">Voir le site</Typography>
                         </Button>
 
                         {debugParameter && (
-                            <Button size="small" sx={{ marginLeft: 3 }} variant="text" color="error" onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}>
+                            <Button
+                                size="small"
+                                sx={{ marginLeft: 3 }}
+                                variant="text"
+                                color="error"
+                                onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}
+                                className="toolbar-button"
+                            >
                                 <PestControlIcon fontSize="small" />
                                 <Typography className="toolbar-button-label">Mode débug</Typography>
                             </Button>
                         )}
 
                         {maintenanceParameter && (
-                            <Button size="small" sx={{ marginLeft: 3 }} variant="text" color="warning" onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}>
+                            <Button
+                                size="small"
+                                sx={{ marginLeft: 3 }}
+                                variant="text"
+                                color="warning"
+                                onClick={() => navigate(Constant.PARAMETERS_BASE_PATH)}
+                                className="toolbar-button"
+                            >
                                 <EngineeringIcon fontSize="small" />
                                 <Typography className="toolbar-button-label">Mode maintenance</Typography>
                             </Button>
                         )}
 
-                        <Box className="toolbar-profile">
+                        <Box className="toolbar-userProfile">
+                            <Component.NotificationsList />
+
                             {user && (
-                                <ProfileButton size="small" sx={{ marginLeft: 3 }} component={RouterLink} to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}>
+                                <ProfileButton
+                                    size="small"
+                                    sx={{ marginLeft: 3 }}
+                                    component={RouterLink}
+                                    to={`${Constant.USER_BASE_PATH}/${user?.id}${Constant.EDIT_PATH}`}
+                                    className="toolbar-profile-button"
+                                >
                                     <PersonIcon />
                                 </ProfileButton>
                             )}
 
-                            <ProfileButton size="small" sx={{ marginLeft: 3 }} onClick={handleLogout}>
+                            <ProfileButton size="small" sx={{ marginLeft: 3 }} onClick={handleLogout} className="toolbar-profile-button">
                                 <LogoutIcon color="primary" />
                             </ProfileButton>
                         </Box>

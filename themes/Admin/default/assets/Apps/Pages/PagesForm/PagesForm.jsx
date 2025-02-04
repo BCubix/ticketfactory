@@ -1,16 +1,52 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { FormHelperText } from '@mui/material';
 import { Formik } from 'formik';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+
+import { CONTENT_FIELDS } from '@Apps/Contents/services/config/getContentFields';
+import { PAGE_COLUMN_TYPE_FIELDS } from '@Apps/PageBlocks/services/config/getPageColumnTypeFields';
+import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
 
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-import { CONTENT_FIELDS } from '@Apps/Contents/services/config/getContentFields';
-import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@Apps/SEO/Form/SEOForm';
 import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
+
+const ROLE_PAGE_PUBLISH = 'ROLE_PAGE_PUBLISH';
+
+const getInitPublishedStatus = (initValues, userRoles) => {
+    if (initValues?.publicationStatus !== 'PUBLISHED' || checkUserAccess(userRoles, ROLE_PAGE_PUBLISH)) {
+        return initValues?.publicationStatus || 'DRAFT';
+    }
+
+    return 'DRAFT';
+};
+
+const serializeData = (element, name, formData) => {
+    if (null !== element && typeof element !== 'object') {
+        formData.append(name, element);
+
+        return;
+    }
+
+    Object.entries(element).map(([key, value]) => {
+        if (null !== value && typeof value === 'object') {
+            serializeData(value, `${name}[${key}]`, formData);
+        } else if (null !== value && Array.isArray(value)) {
+            value.forEach((el, index) => {
+                serializeData(el, `${name}[${key}][${index}]`, formData);
+            });
+        } else {
+            formData.append(`${name}[${key}]`, value !== null ? value : '');
+        }
+    });
+};
 
 const getValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
@@ -56,9 +92,11 @@ export const pagesInitialSchema = {
         initValues?.pageBlocks?.map((pageBlock) => ({
             name: pageBlock.name,
             class: pageBlock.class || '',
-            blockType: pageBlock?.blockType || 0,
             saveAsModel: false,
+            pageBlockType: pageBlock?.pageBlockType?.id || '',
+            fields: pageBlock?.fields || {},
             columns: pageBlock?.columns?.map((column) => ({
+                ...column,
                 content: column?.content,
                 class: column?.class || '',
                 xs: column?.xs || 12,
@@ -66,11 +104,13 @@ export const pagesInitialSchema = {
                 m: column?.m || 12,
                 l: column?.l || 12,
                 xl: column?.xl || 12,
+                type: column?.type || 'text',
             })),
             lang: pageBlock?.lang?.id || initValues?.lang?.id || '',
             languageGroup: pageBlock?.languageGroup || '',
         })) || [],
     slug: (initValues) => initValues?.slug || '',
+    publicationStatus: (initValues, { userRoles }) => getInitPublishedStatus(initValues, userRoles),
     editSlug: false,
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
@@ -82,11 +122,28 @@ export const pagesInitialSchema = {
 export const pagesValidationSchema = {
     title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
     fields: ({ initValues, contentType }) => getFieldsValidation(initValues?.contentType || contentType),
-    pageBlocks: Yup.array().of(
-        Yup.object().shape({
-            name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
-        })
-    ),
+    pageBlocks: ({ getPageColumnTypeModules }) =>
+        Yup.array().of(
+            Yup.object().shape({
+                name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
+                columns: Yup.array().of(
+                    Yup.object().shape({
+                        type: Yup.string().required('Veuillez renseigner le type de votre champ'),
+                        content: Yup.object().when('type', (type) => {
+                            if (!type) {
+                                return Yup.object().nullable();
+                            }
+                            // if (getPageColumnTypeModules[`${type}`]?.getValidation) {
+                            //     return Yup.object().shape({
+                            //         ...getPageColumnTypeModules[`${type}`].getValidation(),
+                            //     });
+                            // }
+                            return Yup.object().nullable();
+                        }),
+                    })
+                ),
+            })
+        ),
 };
 
 export const pagesForm = {
@@ -104,6 +161,7 @@ export const pagesForm = {
             parent: { type: 'string' },
             subtitle: { type: 'string' },
             slug: { type: 'slug' },
+            publicationStatus: { type: 'string' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
             pageBlocks: {
@@ -114,16 +172,21 @@ export const pagesForm = {
                         formData.append(`pageBlocks[${index}][saveAsModel]`, block.saveAsModel ? 1 : 0);
                         formData.append(`pageBlocks[${index}][lang]`, block.lang || '');
                         formData.append(`pageBlocks[${index}][languageGroup]`, block.languageGroup || '');
-                        formData.append(`pageBlocks[${index}][blockType]`, block.blockType || 0);
+                        formData.append(`pageBlocks[${index}][pageBlockType]`, block.pageBlockType || '');
+
+                        Object.entries(block.fields)?.map(([key, value]) => {
+                            serializeData(value, `pageBlocks[${index}][fields][${key}]`, formData);
+                        });
 
                         block.columns.forEach((column, columnIndex) => {
-                            formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, block?.blockType === 1 ? column?.content?.id || '' : column.content || '');
+                            formData.append(`pageBlocks[${index}][columns][${columnIndex}][content]`, column.content);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][class]`, column?.class || '');
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][xs]`, column.xs);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][s]`, column.s);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][m]`, column.m);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][l]`, column.l);
                             formData.append(`pageBlocks[${index}][columns][${columnIndex}][xl]`, column.xl);
+                            formData.append(`pageBlocks[${index}][columns][${columnIndex}][type]`, column?.type);
                         });
                     });
                 },
@@ -131,7 +194,13 @@ export const pagesForm = {
             seo: SeoApiDataFields,
         },
     },
+    pageColumnTypeFields: PAGE_COLUMN_TYPE_FIELDS,
     contentFields: CONTENT_FIELDS,
+    publicationStatusList: [
+        { value: 'PUBLISHED', label: 'Publié' },
+        { value: 'TO_VALIDATE', label: 'À valider' },
+        { value: 'DRAFT', label: 'Brouillon' },
+    ],
     fields: [
         {
             type: 'tabs',
@@ -145,7 +214,7 @@ export const pagesForm = {
                     fields: [
                         {
                             keyId: 'input-title',
-                            style: { xs: 12, sm: 8 },
+                            style: { xs: 12, sm: 4 },
                             inputs: [
                                 {
                                     name: 'title',
@@ -185,6 +254,22 @@ export const pagesForm = {
                             },
                         },
                         {
+                            keyId: 'input-publicationStatus',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: {
+                                name: 'publicationStatus',
+                                label: 'Status de publication',
+                                inputType: 'selectField',
+                                listName: 'publicationStatusList',
+                                getName: (item) => item.label,
+                                getValue: (item) => item.value,
+                                required: true,
+                            },
+                        },
+                        {
                             keyId: 'input-subtitle',
                             style: { xs: 12 },
                             input: {
@@ -197,34 +282,21 @@ export const pagesForm = {
                 },
                 {
                     type: 'block',
-                    title: 'Champs',
-                    keyId: 'block-fields',
-                    component: ({ values, errors, touched, handleBlur, handleChange, setFieldTouched, setFieldValue, contentType, getContentModules }) => {
-                        return contentType ? (
-                            <Component.CmtFormBlock title="Champs">
-                                <Component.DisplayContentForm
-                                    values={values.fields}
-                                    errors={errors}
-                                    touched={touched}
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    setFieldTouched={setFieldTouched}
-                                    setFieldValue={setFieldValue}
-                                    contentType={contentType}
-                                    contentModules={getContentModules}
-                                    prefixName="fields."
-                                />
-                            </Component.CmtFormBlock>
-                        ) : (
-                            <></>
-                        );
-                    },
-                },
-                {
-                    type: 'block',
                     title: 'Blocs',
                     keyId: 'block-blocks',
-                    component: ({ initValue, values, errors, touched, handleBlur, handleChange, setFieldTouched, setFieldValue, contentType }) => {
+                    component: ({
+                        initValue,
+                        values,
+                        errors,
+                        touched,
+                        handleBlur,
+                        handleChange,
+                        setFieldTouched,
+                        setFieldValue,
+                        contentType,
+                        getPageColumnTypeModules,
+                        ...rest
+                    }) => {
                         return !contentType || contentType?.displayBlocks ? (
                             <Component.CmtFormBlock title="Blocs">
                                 <Component.PagesBlocksPart
@@ -236,6 +308,8 @@ export const pagesForm = {
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}
                                     initValue={initValue}
+                                    pageColumnTypeModules={getPageColumnTypeModules}
+                                    {...rest}
                                 />
 
                                 {errors?.pageBlocks && typeof errors?.pageBlocks === 'string' && <FormHelperText error>{errors.pageBlocks}</FormHelperText>}
@@ -253,41 +327,31 @@ export const pagesForm = {
 };
 
 export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null, formCrud, ...props }) => {
-    const [initValue, setInitValue] = useState(null);
     const navigate = useNavigate();
+    const { user } = useSelector(userProfileSelector);
 
     const getContentModules = useMemo(() => {
         return formCrud.contentFields;
     }, []);
 
-    useEffect(() => {
-        let initVal = translateInitialValues || initialValues;
-
-        if (initVal) {
-            setInitValue(constructInitialValues(formCrud.form.initialSchema, initVal, { pagesList, contentType, ...props }));
-
-            return;
-        }
-
-        const formModules = getContentModules;
-
-        let fields = {};
-
-        contentType?.fields?.forEach((el) => {
-            fields[el.name] = formModules[el.type]?.getInitialValue(el, getContentModules) || '';
-        });
-
-        setInitValue(constructInitialValues(formCrud.form.initialSchema, { fields }, { pagesList, contentType, ...props }));
+    const getPageColumnTypeModules = useMemo(() => {
+        return formCrud.pageColumnTypeFields;
     }, []);
 
-    if (!initValue) {
-        return <></>;
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    if (!initialValues && !translateInitialValues) {
+        return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
     }
 
     return (
         <Formik
-            initialValues={initValue}
-            validationSchema={Yup.object().shape(initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, ...props }))}
+            initialValues={constructInitialValues(formCrud.form.initialSchema, translateInitialValues || initialValues, { pagesList, userRoles, ...props })}
+            validationSchema={Yup.object().shape(
+                initYup(formCrud.form.validationSchema, { formCrud, initialValues, translateInitialValues, handleSubmit, getPageColumnTypeModules, ...props })
+            )}
             onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
@@ -298,7 +362,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                     component="form"
                     onSubmit={handleSubmit}
                     title={formCrud?.form?.title}
-                    /*actionButton={
+                    actionButton={
                         initialValues && (
                             <Component.ActionButton
                                 variant="contained"
@@ -308,7 +372,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                                 Historique de la page
                             </Component.ActionButton>
                         )
-                    }*/
+                    }
                 >
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}
@@ -326,6 +390,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
                         pagesList={pagesList}
                         contentType={contentType}
                         getContentModules={getContentModules}
+                        getPageColumnTypeModules={getPageColumnTypeModules}
                         submitForm={submitForm}
                         {...props}
                     />

@@ -7,13 +7,13 @@ import { Constant } from '@/AdminService/Constant';
 import { changeContentTypesFilters, contentTypesSelector, getContentTypesAction } from '@Apps/ContentTypes/redux/contentTypes/contentTypesSlice';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const contentTypesListCrud = {
     title: 'Types de contenus',
     listTitle: 'Liste des types de contenus',
     filtersData: [
         { key: 'active', type: 'boolean' },
-        { key: 'pageType', type: 'boolean' },
         'name',
         'page',
         'limit',
@@ -42,6 +42,11 @@ export const contentTypesListCrud = {
     dataSelector: contentTypesSelector,
     dataList: (selector) => selector.contentTypes,
     delete: (props) => Api.contentTypesApi.deleteContentType(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_TYPE_DELETE'),
+    },
     links: {
         new: () => `${Constant.CONTENT_TYPES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.CONTENT_TYPES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

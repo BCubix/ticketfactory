@@ -24,6 +24,7 @@ export const MenuStructure = ({
     changeLanguage,
     selectedMenu,
     formCrud,
+    accessUserEdit,
 }) => {
     const [selectedLanguage, setSelectedLanguage] = useState(translationSelectedMenu?.lang);
 
@@ -71,7 +72,7 @@ export const MenuStructure = ({
     };
 
     const handleDragEnd = (result) => {
-        if (!result.destination) {
+        if (!result.destination || !accessUserEdit) {
             return;
         }
 
@@ -129,7 +130,7 @@ export const MenuStructure = ({
                     </FormControl>
                 )}
 
-                {languageList?.length > 0 && (
+                {accessUserEdit && languageList?.length > 0 && (
                     <Component.ActionButton variant="contained" size="small" color="action" onClick={openTranslateDialog}>
                         Traduire
                     </Component.ActionButton>
@@ -158,7 +159,7 @@ export const MenuStructure = ({
                                     isDraggingOver={snapshot.isDraggingOver}
                                 >
                                     {values?.children?.map((item, index) => (
-                                        <Draggable key={`children.${index}`} draggableId={`children.${index}`} index={index}>
+                                        <Draggable key={`children.${index}`} draggableId={`children.${index}`} index={index} isDragDisabled={!accessUserEdit}>
                                             {(provided2, snapshot2) => (
                                                 <Component.RenderElement provided={provided2} snapshot={snapshot2}>
                                                     <Component.DisplayMenuElement
@@ -174,6 +175,7 @@ export const MenuStructure = ({
                                                         menuEntryModule={menuEntryModule}
                                                         language={language}
                                                         errors={errors?.children?.at(index) || null}
+                                                        accessUserEdit={accessUserEdit}
                                                     />
                                                 </Component.RenderElement>
                                             )}

@@ -67,12 +67,12 @@ class SeoManager extends AbstractManager
     {
         $eventDateStart = null;
         $eventDateEnd = null;
-        if (0 !== count($event->getEventDateBlocks())) {
-            $dates = $event->getEventDateBlocks()[0]->getEventDates();
+        if (0 !== count($event->getEventDates())) {
+            $dates = $event->getEventDates();
 
             if (0 !== count($dates)) {
-                $date_start = $dates[0]->getEventDate();
-                $date_end = $dates[0]->getEventDate();
+                $date_start = $dates->first()->getEventDate();
+                $date_end = $dates->first()->getEventDate();
 
                 foreach ($dates as $date) {
                     if ($date->getEventDate() < $date_start) {
@@ -89,9 +89,12 @@ class SeoManager extends AbstractManager
         }
 
         $eventPrice = null;
-        if (0 !== count($event->getEventPriceBlocks())) {
-            $prices = $event->getEventPriceBlocks()[0]->getEventPrices();
+        if (0 !== count($event->getEventPriceCategories())) {
+            $prices = [];
 
+            foreach ($event->getEventPriceCategories() as $eventPriceCategory) {
+                $prices = array_merge($prices, $eventPriceCategory->getEventPrices()->toArray());
+            }
             if (0 !== count($prices)) {
                 $min_price = $prices[0]->getPrice();
 

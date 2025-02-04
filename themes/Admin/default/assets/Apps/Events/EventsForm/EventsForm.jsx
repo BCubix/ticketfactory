@@ -1,13 +1,17 @@
 import React from 'react';
 import * as Yup from 'yup';
-import { Component } from '@/AdminService/Component';
-import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
-import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+
+import { SeoApiDataFields, SeoInitialValues } from '@Apps/SEO/Form/SEOForm';
 import { eventMainPartForm } from './EventMainPartForm';
 import { eventFeaturesPartForm } from './EventFeaturesPartForm';
 import { eventsPriceFormFields } from './EventsPriceForm';
 import { eventsDateFormFields } from './EventsDateForm';
+
+import { Component } from '@/AdminService/Component';
+import { Constant } from '@/AdminService/Constant';
+import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 
 export const eventsValidationSchema = {
     name: Yup.string().required("Veuillez renseigner le nom de l'évènement.").max(250, "Le nom de l'évènement est trop long"),
@@ -15,29 +19,22 @@ export const eventsValidationSchema = {
     eventCategories: Yup.array().min(1, 'Veuillez renseigner au moins une catégorie.'),
     mainCategory: Yup.string().required('Veuillez renseigner la catégorie principale.'),
     description: Yup.string().required('Veuillez renseigner une description.'),
-    eventDateBlocks: Yup.array()
+    eventDates: Yup.array()
         .of(
             Yup.object().shape({
-                name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom du bloc est trop long'),
-                eventDates: Yup.array()
-                    .of(
-                        Yup.object().shape({
-                            eventDate: Yup.string().required('Veuillez renseigner la date.'),
-                            state: Yup.string().required('Veuillez renseigner le status de cette date.'),
-                            reportDate: Yup.string().when('state', (state) => {
-                                if (state === 'delayed') {
-                                    return Yup.string().required('Veuillez renseigner la nouvelle date.');
-                                } else {
-                                    return Yup.string().nullable();
-                                }
-                            }),
-                        })
-                    )
-                    .min(1, 'Veuillez renseigner au moins une date.'),
+                eventDate: Yup.string().required('Veuillez renseigner la date.'),
+                state: Yup.string().required('Veuillez renseigner le status de cette date.'),
+                reportDate: Yup.string().when('state', (state) => {
+                    if (state === 'delayed') {
+                        return Yup.string().required('Veuillez renseigner la nouvelle date.');
+                    } else {
+                        return Yup.string().nullable();
+                    }
+                }),
             })
         )
-        .min(1, 'Veuillez renseigner au moins un bloc de dates.'),
-    eventPriceBlocks: Yup.array().of(
+        .min(1, 'Veuillez renseigner au moins une date.'),
+    eventPriceCategories: Yup.array().of(
         Yup.object().shape({
             name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom du bloc est trop long'),
             eventPrices: Yup.array()
@@ -45,6 +42,7 @@ export const eventsValidationSchema = {
                     Yup.object().shape({
                         name: Yup.string().required('Veuillez renseigner le nom du tarif.'),
                         price: Yup.number().required('Veuillez renseigner le prix').min(0, 'Veuillez renseigner un prix valide.'),
+                        defaultPrice: Yup.boolean().required('Veuillez indiquer si ce tarif est le tarif par défaut.'),
                     })
                 )
                 .min(1, 'Veuillez renseigner au moins un prix.'),
@@ -68,28 +66,38 @@ export const eventsInitialSchema = {
     chapo: (initValues) => initValues?.chapo || '',
     description: (initValues) => initValues?.description || '',
     eventLength: (initValues) => initValues?.eventLength || '',
-    eventDateBlocks: (initValues, { defaultDateBlockName }) =>
-        initValues?.eventDateBlocks?.map((el, blockIndex) => ({
+    eventDates: (initValues) => {
+        return (
+            initValues?.eventDates?.map((el, index) => ({
+                ...el,
+                eventDateUuid: uuidv4(),
+                lang: el?.lang?.id || '',
+                index: index,
+            })) || []
+        );
+    },
+
+    eventPriceCategories: (initValues, { defaultPriceCategoryName, defaultPrices }) =>
+        initValues?.eventPriceCategories?.map((el, blockIndex) => ({
             ...el,
             lang: el?.lang?.id || '',
-            eventDates: el.eventDates?.map((date, index) => ({ ...date, lang: date.lang.id || '', index: index })),
+            eventPrices:
+                el?.eventPrices?.map((price, index) => ({
+                    ...price,
+                    lang: price?.lang?.id || '',
+                    index,
+                })) || defaultPrices,
             index: blockIndex,
-        })) || [{ name: defaultDateBlockName || 'Dates', eventDates: [], lang: initValues?.lang?.id || '' }],
-    eventPriceBlocks: (initValues, { defaultPriceBlockName, defaultPrices }) =>
-        initValues?.eventPriceBlocks?.map((el, blockIndex) => ({
-            ...el,
-            lang: el?.lang?.id || '',
-            eventPrices: el?.eventPrices?.map((price, index) => ({ ...price, lang: price?.lang?.id || '', index })),
-            index: blockIndex,
-        })) || [{ name: defaultPriceBlockName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
+        })) || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }],
     eventCategories: (initValues, { categoriesList }) => (initValues?.eventCategories ? initValues?.eventCategories?.map((el) => el.id) : [categoriesList?.id]),
     room: (initValues, { roomsList }) => initValues?.room?.id || (roomsList?.length === 1 ? roomsList[0]?.id : ''),
+    seatingPlan: (initValues) => initValues?.seatingPlan?.id || '',
     season: (initValues, { seasonsList }) => initValues?.season?.id || (seasonsList?.length === 1 ? seasonsList[0]?.id : ''),
     eventType: (initValues, { eventTypesList }) => initValues?.eventType?.id || (eventTypesList?.length === 1 ? eventTypesList[0]?.id : ''),
     tags: (initValues) => (initValues?.tags ? initValues?.tags?.map((el) => el.id) : []),
     mainCategory: (initValues, { categoriesList }) => initValues?.mainCategory?.id || categoriesList?.id,
-    multiplePriceBlock: (initValues) => initValues?.eventPriceBlocks?.length > 1 || false,
-    multipleDateBlock: (initValues) => initValues?.eventDateBlocks?.length > 1 || false,
+    multiplePriceCategory: (initValues) => initValues?.eventPriceCategories?.length > 1 || false,
+    multipleDate: (initValues) => initValues?.eventDates?.length > 1 || false,
     eventMedias: (initValues) =>
         initValues?.eventMedias?.map((el) => ({
             position: el.position,
@@ -106,7 +114,7 @@ export const eventsInitialSchema = {
     displayBookingButton: (initValues) => (initValues?.displayBookingButton || initValues?.displayBookingButton === false ? initValues?.displayBookingButton : true),
     featureLinks: (initValues) =>
         initValues?.featureLinks
-            ? initValues?.featureLinks?.map((el) => ({
+            ? initValues?.featureLinks?.map((el, index) => ({
                   ...el,
                   event: el?.event?.id,
                   product: el?.product?.id,
@@ -114,6 +122,7 @@ export const eventsInitialSchema = {
                   featureValue: el?.featureValue?.custom ? '' : el?.featureValue?.id,
                   featureValueRaw: el?.featureValue?.custom ? el?.featureValue?.value : '',
                   featureValueRawId: el?.featureValue?.custom ? el?.featureValue?.id : '',
+                  index: index,
               }))
             : [],
     seo: SeoInitialValues,
@@ -134,6 +143,7 @@ export const eventsForm = {
             chapo: { type: 'string' },
             description: { type: 'string' },
             room: { type: 'string' },
+            seatingPlan: { type: 'string' },
             eventType: { type: 'string' },
             season: { type: 'string' },
             mainCategory: { type: 'string' },
@@ -144,40 +154,34 @@ export const eventsForm = {
             ticketingReference: { type: 'string' },
             displayBookingButton: { type: 'boolean' },
             eventLength: { type: 'string' },
-            eventDateBlocks: {
+            eventDates: {
                 type: 'array',
                 subFields: {
-                    name: { type: 'string' },
+                    eventDate: {
+                        function: ({ values, formData, baseName }) => {
+                            formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
+                        },
+                    },
+                    eventDateUuid: { type: 'string' },
+                    annotation: { type: 'string' },
+                    state: { type: 'string' },
                     lang: { type: 'string' },
                     languageGroup: { type: 'string' },
-                    eventDates: {
-                        type: 'array',
-                        subFields: {
-                            eventDate: {
-                                function: ({ values, formData, baseName }) => {
-                                    formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
-                                },
-                            },
-                            annotation: { type: 'string' },
-                            state: { type: 'string' },
-                            lang: { type: 'string' },
-                            languageGroup: { type: 'string' },
-                            reportDate: {
-                                function: ({ values, formData, baseName }) => {
-                                    if (values.reportDate) {
-                                        formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
-                                    }
-                                },
-                            },
+                    reportDate: {
+                        function: ({ values, formData, baseName }) => {
+                            if (values.reportDate) {
+                                formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
+                            }
                         },
                     },
                 },
             },
-            eventPriceBlocks: {
+            eventPriceCategories: {
                 type: 'array',
                 subFields: {
                     name: { type: 'string' },
                     lang: { type: 'string' },
+                    eventDateUuid: { type: 'string' },
                     languageGroup: { type: 'string' },
                     eventPrices: {
                         type: 'array',
@@ -185,8 +189,27 @@ export const eventsForm = {
                             name: { type: 'string' },
                             annotation: { type: 'string' },
                             price: { type: 'string' },
+                            defaultPrice: { type: 'boolean' },
                             lang: { type: 'string' },
                             languageGroup: { type: 'string' },
+                        },
+                    },
+                    eventDate: {
+                        eventDate: {
+                            function: ({ values, formData, baseName }) => {
+                                formData.append(`${baseName || ''}[eventDate]`, moment(values.eventDate).format('YYYY-MM-DD HH:mm'));
+                            },
+                        },
+                        annotation: { type: 'string' },
+                        state: { type: 'string' },
+                        lang: { type: 'string' },
+                        languageGroup: { type: 'string' },
+                        reportDate: {
+                            function: ({ values, formData, baseName }) => {
+                                if (values.reportDate) {
+                                    formData.append(`${baseName || ''}[reportDate]`, values.reportDate);
+                                }
+                            },
                         },
                     },
                 },
@@ -238,14 +261,14 @@ export const eventsForm = {
             type: 'tabs',
             keyId: 'dates',
             label: 'Dates',
-            component: (props) => <Component.EventsDateBlockForm {...props} />,
+            component: (props) => <Component.EventsDateForm {...props} setFieldValue={props.setFieldValue} />,
             fields: eventsDateFormFields.fields,
         },
         {
             type: 'tabs',
             keyId: 'prices',
             label: 'Tarifs',
-            component: (props) => <Component.EventsPriceBlockForm {...props} />,
+            component: (props) => <Component.EventsPriceCategoryForm {...props} />,
             fields: eventsPriceFormFields.fields,
         },
         {
@@ -261,5 +284,14 @@ export const eventsForm = {
             component: (props) => <Component.EventMediaPartForm {...props} />,
         },
     ],
+    actionButton: ({ initialValues, navigate }) => {
+        return (
+            initialValues && (
+                <Component.ActionButton variant="contained" sx={{ marginLeft: 'auto' }} onClick={() => navigate(Constant.EVENT_HISTORY_BASE_PATH + `/${initialValues?.id}`)}>
+                    Historique de l'événement
+                </Component.ActionButton>
+            )
+        );
+    },
     ...DEFAULT_CRUD_FORM_COMPONENTS,
 };

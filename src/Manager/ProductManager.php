@@ -100,4 +100,39 @@ class ProductManager extends AbstractRouterManager
 
         return $formatedMedias;
     }
+
+    public function getProducts(int $languageId, array $filters = []): array
+    {
+        list($products, $pagination) = $this->em->getRepository(Product::class)->findAllForWebsite($languageId, $filters);
+
+        $results = [];
+        foreach ($products as $product) {
+            $product->frontBuyingButton = $this->getDisplayBookingButton($product);
+
+            $results[] = $product;
+        }
+
+        return [$results, $pagination];
+    }
+
+    public function getDisplayBookingButton(Product $product): bool
+    {
+        if (!$product->isDisplayBuyingButton()) {
+            return false;
+        }
+
+        if (null === $product->getTicketingReference()) {
+            return false;
+        }
+
+        if ($product->getStock() <= 0) {
+            return false;
+        }
+
+        if (null === $product->getTicketing() || !$product->getTicketing()->isActive()) {
+            return false;
+        }
+
+        return true;
+    }
 }

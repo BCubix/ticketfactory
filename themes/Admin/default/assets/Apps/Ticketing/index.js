@@ -6,6 +6,8 @@ import ticketingReducer from '@Apps/Ticketing/redux/ticketing/ticketingSlice';
 import { TicketingList, ticketingListCrud } from '@Apps/Ticketing/TicketingList/TicketingList';
 import { CreateTicketing, ticketingCreateCrud } from '@Apps/Ticketing/CreateTicketing/CreateTicketing';
 import { EditTicketing, ticketingEditCrud } from '@Apps/Ticketing/EditTicketing/EditTicketing';
+import { TicketingForm } from './TicketingForm/TicketingForm';
+import { TicketingModulePartForm } from './TicketingForm/TicketingModulePartForm';
 
 import { setApi } from '@/AdminService/Api';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
@@ -14,14 +16,21 @@ import { Constant, setConstant } from '@/AdminService/Constant';
 import { setCrud } from '@/AdminService/Crud';
 import { insertSubMenu } from '@/AdminService/Menu';
 import { setReducer } from '@/AdminService/Reducer';
-import { TicketingForm } from './TicketingForm/TicketingForm';
-import { TicketingModulePartForm } from './TicketingForm/TicketingModulePartForm';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_READ = 'ROLE_TICKETING_READ';
+const ROLE_CREATE = 'ROLE_TICKETING_CREATE';
+const ROLE_EDIT = 'ROLE_TICKETING_EDIT';
 
 export const initConstant = () => {
     setConstant('TICKETING_BASE_PATH', '/admin/billetteries');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setComponent('TicketingList', TicketingList);
     setComponent('CreateTicketing', CreateTicketing);
     setComponent('EditTicketing', EditTicketing);
@@ -37,22 +46,40 @@ export const initReducer = () => {
     setReducer('ticketing', ticketingReducer);
 };
 
-export const initMenu = () => {
+export const initMenu = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     insertSubMenu(3, 'ADMINISTRER', 'Billetteries', Constant.TICKETING_BASE_PATH, <ConfirmationNumberIcon />);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.TICKETING_BASE_PATH, Component.TicketingList);
-    setAuthenticatedRoute(Constant.TICKETING_BASE_PATH + Constant.CREATE_PATH, Component.CreateTicketing);
-    setAuthenticatedRoute(`${Constant.TICKETING_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTicketing);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.TICKETING_BASE_PATH + Constant.CREATE_PATH, Component.CreateTicketing);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.TICKETING_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditTicketing);
+    }
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     const crud = {
         list: ticketingListCrud,
-        add: { ...ticketingCreateCrud },
-        edit: { ...ticketingEditCrud },
+        add: ticketingCreateCrud,
+        edit: ticketingEditCrud,
     };
 
-    setCrud('ticketing', { ...crud });
+    setCrud('ticketing', crud);
 };

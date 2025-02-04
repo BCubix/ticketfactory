@@ -5,8 +5,9 @@ namespace App\Form\Admin\Order;
 use App\Form\Admin\AdminBaseFormType;
 use App\Entity\Order\Voucher;
 use App\Entity\Event\EventCategory;
+use App\Entity\Product\ProductCategory;
 use App\Repository\EventCategoryRepository;
-
+use App\Repository\ProductCategoryRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -54,6 +55,16 @@ class VoucherType extends AdminBaseFormType
                     return $ecr
                         ->createQueryBuilder('ec')
                         ->orderBy('ec.name', 'ASC');
+                }
+            ])
+            ->add('productCategories',    EntityType::class,       [
+                'class'         => ProductCategory::class,
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function (ProductCategoryRepository $pcr) {
+                    return $pcr
+                        ->createQueryBuilder('pc')
+                        ->orderBy('pc.name', 'ASC');
                 }
             ]);
 

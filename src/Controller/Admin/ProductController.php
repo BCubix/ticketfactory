@@ -10,6 +10,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ProductController extends CrudController
@@ -32,6 +33,7 @@ class ProductController extends CrudController
     }
 
     #[Rest\Get('/products/{productId}', requirements: ['productId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function getOne(Request $request, int $productId): View
     {
@@ -43,6 +45,7 @@ class ProductController extends CrudController
     }
 
     #[Rest\Post('/products')]
+    #[IsGranted('ROLE_PRODUCT_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function add(Request $request): View
     {
@@ -54,6 +57,7 @@ class ProductController extends CrudController
     }
 
     #[Rest\Post('/products/{productId}', requirements: ['productId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function edit(Request $request, int $productId): View
     {
@@ -65,6 +69,7 @@ class ProductController extends CrudController
     }
 
     #[Rest\Post('/products/{productId}/duplicate', requirements: ['productId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function duplicate(Request $request, int $productId): View
     {
@@ -76,6 +81,7 @@ class ProductController extends CrudController
     }
 
     #[Rest\Delete('/products/{productId}', requirements: ['productId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function delete(Request $request, int $productId): View
     {
@@ -87,6 +93,7 @@ class ProductController extends CrudController
     }
 
     #[Rest\Get('/products/{productId}/translated/{languageId}', requirements: ['productId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_PRODUCT_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_product_one'])]
     public function getTranslated(Request $request, int $productId, int $languageId): View
     {

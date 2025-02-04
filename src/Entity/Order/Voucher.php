@@ -4,6 +4,7 @@ namespace App\Entity\Order;
 
 use App\Entity\Datable;
 use App\Entity\Event\EventCategory;
+use App\Entity\Product\ProductCategory;
 use App\Repository\VoucherRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -73,16 +74,26 @@ class Voucher extends Datable
     #[ORM\ManyToMany(targetEntity: EventRow::class, inversedBy: 'vouchers')]
     private Collection $eventRows;
 
+    #[ORM\ManyToMany(targetEntity: ProductRow::class, inversedBy: 'vouchers')]
+    private Collection $productRows;
+
     #[JMS\Expose()]
     #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
     #[ORM\ManyToMany(targetEntity: EventCategory::class, inversedBy: 'vouchers')]
     private Collection $eventCategories;
 
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_voucher_all', 'a_voucher_one', 'a_cart_one', 'a_order_all', 'a_order_one'])]
+    #[ORM\ManyToMany(targetEntity: ProductCategory::class, inversedBy: 'vouchers')]
+    private Collection $productCategories;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->eventRows = new ArrayCollection();
+        $this->productRows = new ArrayCollection();
         $this->eventCategories = new ArrayCollection();
+        $this->productCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,6 +209,7 @@ class Voucher extends Datable
     {
         if (!$this->eventRows->contains($eventRow)) {
             $this->eventRows->add($eventRow);
+            $eventRow->addVoucher($this);
         }
 
         return $this;
@@ -205,7 +217,36 @@ class Voucher extends Datable
 
     public function removeEventRow(EventRow $eventRow): self
     {
-        $this->eventRows->removeElement($eventRow);
+        if ($this->eventRows->removeElement($eventRow)) {
+            $eventRow->removeVoucher($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductRow>
+     */
+    public function getProductRows(): Collection
+    {
+        return $this->productRows;
+    }
+
+    public function addProductRow(ProductRow $productRow): self
+    {
+        if (!$this->productRows->contains($productRow)) {
+            $this->productRows->add($productRow);
+            $productRow->addVoucher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductRow(ProductRow $productRow): self
+    {
+        if ($this->productRows->removeElement($productRow)) {
+            $productRow->removeVoucher($this);
+        }
 
         return $this;
     }
@@ -230,6 +271,27 @@ class Voucher extends Datable
     public function removeEventCategory(EventCategory $eventCategory): self
     {
         $this->eventCategories->removeElement($eventCategory);
+
+        return $this;
+    }
+
+    public function getProductCategories(): Collection
+    {
+        return $this->productCategories;
+    }
+
+    public function addProductCategory(ProductCategory $productCategory): static
+    {
+        if (!$this->productCategories->contains($productCategory)) {
+            $this->productCategories->add($productCategory);
+        }
+
+        return $this;
+    }
+
+    public function removeProductCategory(ProductCategory $productCategory): static
+    {
+        $this->productCategories->removeElement($productCategory);
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Entity\Parameter;
 
 use App\Repository\ParameterRepository;
+use Doctrine\DBAL\Types\Types;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -66,6 +67,11 @@ class Parameter
     #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $breakpointsValue;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $helper = null;
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_parameter_all', 'a_parameter_one'])]
@@ -187,6 +193,18 @@ class Parameter
     public function setBreakpointsValue(?string $breakpointsValue): self
     {
         $this->breakpointsValue = $breakpointsValue;
+
+        return $this;
+    }
+
+    public function getHelper(): ?string
+    {
+        return $this->helper;
+    }
+
+    public function setHelper(?string $helper): static
+    {
+        $this->helper = $helper;
 
         return $this;
     }

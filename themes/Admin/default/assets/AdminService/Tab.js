@@ -1,33 +1,9 @@
 import React from 'react';
 import { checkFunction, checkString } from '@Services/utils/check';
-import { Component } from '@/AdminService/Component';
 
 const keys = ['label', 'component', 'path', 'id'];
 
-const TabObj = {
-    EventsFormTabList: (props) => [
-        {
-            label: 'Evènement',
-            id: 'eventPartButton',
-            component: <Component.EventMainPartForm {...props} />,
-        },
-        {
-            label: 'Dates',
-            id: 'datesPartButton',
-            component: <Component.EventsDateBlockForm {...props} />,
-        },
-        {
-            label: 'Tarifs',
-            id: 'pricesPartButton',
-            component: <Component.EventsPriceBlockForm {...props} />,
-        },
-        {
-            label: 'Médias',
-            id: 'mediasPartButton',
-            component: <Component.EventMediaPartForm {...props} />,
-        },
-    ],
-};
+const TabObj = {};
 
 /**
  * Tab's getter.

@@ -30,6 +30,7 @@ export const EditEventMediaModal = ({ open, closeModal, selectedMedia, values, s
 
                         <Grid item xs={12} sm={6} md={5} sx={{ borderLeft: '1px solid #D3D3D3' }}>
                             <Component.CmtDisplayMediaInfos
+                                displaySelectButton={false}
                                 selectedMedia={selectedMedia}
                                 updatedMedia={updatedMedia}
                                 imageFormatList={imageFormatList}

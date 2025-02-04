@@ -7,6 +7,7 @@ import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeFeaturesFilters, getFeaturesAction, featuresSelector } from '@Apps/Features/redux/features/featuresSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const featuresListCrud = {
     title: 'Attributs',
@@ -54,6 +55,11 @@ export const featuresListCrud = {
     dataList: (selector) => selector.features,
     duplicate: (props) => Api.featuresApi.duplicateFeature(props),
     delete: (props) => Api.featuresApi.deleteFeature(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_FEATURE_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_FEATURE_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_FEATURE_DELETE'),
+    },
     links: {
         new: () => `${Constant.FEATURES_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.FEATURES_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

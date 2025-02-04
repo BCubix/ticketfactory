@@ -1,25 +1,35 @@
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Grid } from '@mui/material';
 
-import { Button, Grid } from '@mui/material';
+import { getMediasAction } from '@Apps/Medias/redux/medias/mediasSlice';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
 
 import { Api } from '@/AdminService/Api';
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
-
-import { getMediasAction } from '@Apps/Medias/redux/medias/mediasSlice';
-
 import { getMediaType } from '@Services/utils/getMediaType';
+import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const EditMedia = ({ id, editSuccess, onCancel, deleteElement, imageFormatList = [] }) => {
     const dispatch = useDispatch();
+    const { user } = useSelector(userProfileSelector);
     const [media, setMedia] = useState(null);
     const [editImage, setEditImage] = useState(false);
     const [mediaType, setMediaType] = useState(null);
     const [mediaCategoriesList, setMediaCategoriesList] = useState(null);
     const [mediaParameterList, setMediaFormatList] = useState(null);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const accessUserDelete = useMemo(() => {
+        return checkUserAccess(userRoles, 'ROLE_MEDIA_DELETE');
+    }, [userRoles]);
 
     const getMedia = async () => {
         apiMiddleware(dispatch, async () => {
@@ -99,6 +109,7 @@ export const EditMedia = ({ id, editSuccess, onCancel, deleteElement, imageForma
                     mediaParameterList={mediaParameterList}
                     setMediaFormatList={setMediaFormatList}
                     imageFormatList={imageFormatList}
+                    userDeleteRight={accessUserDelete}
                 />
             )}
         </Grid>

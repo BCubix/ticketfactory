@@ -13,7 +13,7 @@ class ProductCategoryRepository extends AbstractNestedTreeRepository
             ->innerJoin('pc.lang', 'pcl', 'WITH', 'pcl.id = :languageId')
             ->where('pc.active = 1')
             ->andWhere('pc.id IN (:ids)')
-            ->orderBy('pc.id', 'ASC')
+            ->orderBy('pc.position', 'ASC')
             ->setParameter('languageId', $languageId)
             ->setParameter('ids', $ids)
             ->getQuery()

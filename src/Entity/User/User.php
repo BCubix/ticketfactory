@@ -3,16 +3,20 @@
 namespace App\Entity\User;
 
 use App\Entity\Datable;
+use App\Entity\Notification\Notification;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[Assert\UniqueEntity(fields: 'email', message: 'Un utilisateur existe déjà avec cette adresse.')]
+#[UniqueEntity(fields: 'email', message: 'Un utilisateur existe déjà avec cette adresse.')]
 #[JMS\ExclusionPolicy('all')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,13 +25,8 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     /*** > Trait ***/
     /*** < Trait ***/
 
-    const ROLE_TYPE = [
-        "ROLE_USER" => 'Utilisateur',
-        "ROLE_ADMIN" => "Admin"
-    ];
-
     #[JMS\Expose()]
-    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -37,28 +36,23 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[Assert\NotBlank(message: 'L\'email doit être renseigné.')]
     #[Assert\Email(message: 'Vous devez renseigner une adresse email valide.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one'])]
+    #[JMS\Groups(['a_log_all', 'a_log_one', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Column(type: 'string', length: 123, unique: true)]
     private $email;
 
     #[Assert\Length(max: 250, maxMessage: 'Le prénom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le prénom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one'])]
+    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstName;
 
     #[Assert\Length(max: 250, maxMessage: 'Le nom doit être inférieur à {{ limit }} caractères.')]
     #[Assert\NotBlank(message: 'Le nom doit être renseigné.')]
     #[JMS\Expose()]
-    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one'])]
+    #[JMS\Groups(['a_all', 'a_user_all', 'a_user_one', 'a_user_profile_one'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastName;
-
-    #[JMS\Expose()]
-    #[JMS\Groups(['a_user_all', 'a_user_one'])]
-    #[ORM\Column(type: 'json')]
-    private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
@@ -69,9 +63,23 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $passwordRequestedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
+    private Collection $notifications;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_user_all', 'a_user_one'])]
+    #[ORM\ManyToMany(targetEntity: Profile::class, inversedBy: 'users')]
+    private Collection $profiles;
+
     #[Assert\Regex(pattern: '/^\S*(?=\S{10,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/', message: 'Le mot de passe ne répond pas aux exigences de sécurité.')]
     private $plainPassword;
 
+
+    public function __construct()
+    {
+        $this->profiles = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -110,25 +118,6 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
 
         return $this;
     }
@@ -182,6 +171,75 @@ class User extends Datable implements UserInterface, PasswordAuthenticatedUserIn
         $this->plainPassword = $plainPassword;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Profile>
+     */
+    public function getProfiles(): Collection
+    {
+        return $this->profiles;
+    }
+
+    public function addProfile(Profile $profile): static
+    {
+        if (!$this->profiles->contains($profile)) {
+            $this->profiles->add($profile);
+            $profile->addUser($this); // Mettez à jour le côté inverse
+        }
+
+        return $this;
+    }
+
+    public function removeProfile(Profile $profile): static
+    {
+        if ($this->profiles->removeElement($profile)) {
+            $profile->removeUser($this); // Mettez à jour le côté inverse
+        }
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = [];
+        foreach ($this->profiles as $profile) {
+            if ($profile->isActive()) {
+                $roles = array_merge($profile->getRoleNames());
+            }
+        }
+
+        return array_unique($roles);
     }
 
     /**

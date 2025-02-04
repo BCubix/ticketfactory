@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { NotificationManager } from 'react-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box, CardContent, Typography } from '@mui/material';
-
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { apiMiddleware } from '@Services/utils/apiMiddleware';
+import { userProfileSelector } from '@Apps/Auth/redux/userProfile/userProfileSlice';
+import { getUserRoles } from '@Services/utils/getUserRoles';
 
 export const DEFAULT_CRUD_LIST_COMPONENTS = {
     wrapperComponent: (props) => <Component.CmtCrudList {...props} />,
@@ -22,57 +23,63 @@ export const DEFAULT_CRUD_LIST_COMPONENTS = {
             ),
         },
         {
-            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog, ...props }) => (
-                <Component.ListTable
-                    contextualMenu={Boolean(listCrud?.tableContextualMenu)}
-                    table={listCrud?.tableList}
-                    list={listCrud?.dataList(objectData)}
-                    onEdit={
-                        listCrud?.links?.edit
-                            ? (id) => {
-                                  navigate(listCrud?.links?.edit(id));
-                              }
-                            : null
-                    }
-                    onDuplicate={
-                        listCrud?.duplicate
-                            ? (id) => {
-                                  handleDuplicate(id);
-                              }
-                            : null
-                    }
-                    onTranslate={
-                        listCrud?.links?.translate
-                            ? (id, languageId) => {
-                                  navigate(listCrud?.links?.translate(id, languageId));
-                              }
-                            : null
-                    }
-                    onClick={
-                        listCrud?.links?.detail
-                            ? (itemId) => {
-                                  navigate(listCrud?.links?.detail(itemId));
-                              }
-                            : null
-                    }
-                    onPreview={
-                        listCrud?.preview || listCrud?.links?.preview
-                            ? (item) => {
-                                  if (listCrud?.preview) {
-                                      listCrud.preview(item);
-                                  } else {
-                                      navigate(listCrud?.links?.preview(item));
+            component: ({ listCrud, objectData, navigate, handleDuplicate, dispatch, setDeleteDialog, listLoading, ...props }) => {
+                if (listLoading) {
+                    return <Component.CmtSkeletonList numberLines={10} />;
+                }
+
+                return (
+                    <Component.ListTable
+                        contextualMenu={Boolean(listCrud?.tableContextualMenu)}
+                        table={listCrud?.tableList}
+                        list={listCrud?.dataList(objectData)}
+                        onEdit={
+                            listCrud?.links?.edit
+                                ? (id) => {
+                                      navigate(listCrud?.links?.edit(id));
                                   }
-                              }
-                            : null
-                    }
-                    disableDeleteFunction={listCrud?.disableDeleteFunction}
-                    onDelete={listCrud?.delete ? (id) => setDeleteDialog(id) : null}
-                    filters={objectData?.filters}
-                    changeFilters={(newFilters) => dispatch(listCrud?.changeFiltersActions(newFilters))}
-                    {...props}
-                />
-            ),
+                                : null
+                        }
+                        onDuplicate={
+                            listCrud?.duplicate
+                                ? (id) => {
+                                      handleDuplicate(id);
+                                  }
+                                : null
+                        }
+                        onTranslate={
+                            listCrud?.links?.translate
+                                ? (id, languageId) => {
+                                      navigate(listCrud?.links?.translate(id, languageId));
+                                  }
+                                : null
+                        }
+                        onClick={
+                            listCrud?.links?.detail
+                                ? (itemId) => {
+                                      navigate(listCrud?.links?.detail(itemId));
+                                  }
+                                : null
+                        }
+                        onPreview={
+                            listCrud?.preview || listCrud?.links?.preview
+                                ? (item) => {
+                                      if (listCrud?.preview) {
+                                          listCrud.preview(item);
+                                      } else {
+                                          navigate(listCrud?.links?.preview(item));
+                                      }
+                                  }
+                                : null
+                        }
+                        disableDeleteFunction={listCrud?.disableDeleteFunction}
+                        onDelete={listCrud?.delete ? (id) => setDeleteDialog(id) : null}
+                        filters={objectData?.filters}
+                        changeFilters={(newFilters) => dispatch(listCrud?.changeFiltersActions(newFilters))}
+                        {...props}
+                    />
+                );
+            },
         },
         {
             component: ({ objectData, listCrud, dispatch }) => {
@@ -101,13 +108,33 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [deleteDialog, setDeleteDialog] = useState(null);
+    const { user } = useSelector(userProfileSelector);
     const objectData = useSelector(listCrud.dataSelector);
+
+    const userRoles = useMemo(() => {
+        return getUserRoles(user);
+    }, [user]);
+
+    const [accessUserCreate, accessUserEdit, accessUserDelete] = useMemo(() => {
+        return [
+            !listCrud.checkUserAccess?.new || listCrud.checkUserAccess?.new(userRoles),
+            !listCrud.checkUserAccess?.edit || listCrud.checkUserAccess?.edit(userRoles),
+            !listCrud.checkUserAccess?.delete || listCrud.checkUserAccess?.delete(userRoles),
+        ];
+    }, [userRoles]);
+    
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!objectData?.loading && !listCrud?.dataList(objectData) && !objectData?.error) {
             dispatch(listCrud?.loadDataAction());
         }
+        setLoading(objectData?.loading);
     }, []);
+
+    useEffect(() => {
+        setLoading(objectData?.loading);
+    }, [objectData?.loading]);
 
     const handleDelete = async (id) => {
         const result = await listCrud.delete(id);
@@ -153,6 +180,9 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                             dispatch={dispatch}
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
+                            accessUserCreate={accessUserCreate}
+                            accessUserEdit={accessUserEdit}
+                            accessUserDelete={accessUserDelete}
                             {...props}
                         />
                     );
@@ -171,7 +201,10 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                                         } sur ${objectData?.total})`}
                                     {!listCrud?.pagination && `(${listCrud?.dataList(objectData)?.length})`}
                                 </Typography>
-                                {(listCrud?.new || listCrud?.links?.new) && (
+                                
+                                {listCrud?.headerAction && <listCrud.headerAction listCrud navigate={navigate} {...props} />}
+
+                                {accessUserCreate && (listCrud?.new || listCrud?.links?.new) && (
                                     <Component.CreateButton
                                         variant="contained"
                                         onClick={() => (listCrud?.new ? listCrud?.new({ listCrud, ...props }) : navigate(listCrud.links.new()))}
@@ -199,6 +232,10 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                                     dispatch={dispatch}
                                     handleDuplicate={handleDuplicate}
                                     setDeleteDialog={setDeleteDialog}
+                                    accessUserCreate={accessUserCreate}
+                                    accessUserEdit={accessUserEdit}
+                                    accessUserDelete={accessUserDelete}
+                                    listLoading={loading}
                                     {...props}
                                 />
                             );
@@ -222,6 +259,9 @@ export const CmtCrudList = ({ listCrud, ...props }) => {
                             dispatch={dispatch}
                             handleDuplicate={handleDuplicate}
                             setDeleteDialog={setDeleteDialog}
+                            accessUserCreate={accessUserCreate}
+                            accessUserEdit={accessUserEdit}
+                            accessUserDelete={accessUserDelete}
                             {...props}
                         />
                     );

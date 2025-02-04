@@ -43,6 +43,10 @@ table {
     table-layout: fixed;
 }
 
+.relative {
+    position: relative;
+}
+
 .numberTypeField-noArrow {
     & input::-webkit-outer-spin-button,
     & input::-webkit-inner-spin-button {
@@ -72,4 +76,28 @@ table {
             transform: translate(14px, -9px) scale(0.75);
         }
     }
+}
+
+.cursor {
+    &-pointer {
+        cursor: pointer;
+    }
+}
+
+.overflow {
+    &-hidden {
+        overflow: hidden;
+    }
+
+    &-visible {
+        overflow: visible;
+    }
+
+    &-auto {
+        overflow: auto;
+    }
+}
+
+.word-break-all {
+    word-break: break-all;
 }

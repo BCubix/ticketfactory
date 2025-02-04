@@ -9,6 +9,12 @@ use Doctrine\Persistence\ManagerRegistry;
 class EventRepository extends CrudRepository
 {
     /*** > Trait ***/
+    /*** > Module: Search ***/
+    use \TicketFactory\Module\Search\Repository\Override\EventRepository;
+    /*** < Module: Search ***/
+    /*** > Module: HomeEvent ***/
+    use \TicketFactory\Module\HomeEvent\Repository\Override\EventRepository;
+    /*** < Module: HomeEvent ***/
     /*** < Trait ***/
 
     protected const SELECTS = [
@@ -18,7 +24,6 @@ class EventRepository extends CrudRepository
         'et' => null,
         'el' => null,
         'ed' => null,
-        'edb' => null,
     ];
 
     protected const JOINS = [
@@ -27,8 +32,7 @@ class EventRepository extends CrudRepository
         ['leftJoin', 'o.room', 'er'],
         ['leftJoin', 'o.tags', 'et'],
         ['leftJoin', 'o.lang', 'el'],
-        ['leftJoin', 'o.eventDateBlocks', 'edb'],
-        ['leftJoin', 'edb.eventDates', 'ed'],
+        ['leftJoin', 'o.eventDates', 'ed'],
     ];
 
     protected const FILTERS = [
@@ -73,8 +77,7 @@ class EventRepository extends CrudRepository
             ->leftJoin('e.tags', 'ta')
             ->leftJoin('e.season', 's')
             ->leftJoin('e.room', 'r')
-            ->leftJoin('e.eventDateBlocks', 'edb')
-            ->leftJoin('edb.eventDates', 'ed')
+            ->leftJoin('e.eventDates', 'ed')
             ->leftJoin('e.eventMedias', 'em')
             ->leftJoin('em.media', 'm')
             ->where('e.active = 1');

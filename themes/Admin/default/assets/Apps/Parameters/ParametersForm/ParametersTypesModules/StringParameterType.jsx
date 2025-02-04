@@ -8,13 +8,14 @@ function getType() {
     return TYPE;
 }
 
-const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFieldValue, indexTab, indexBlock, indexParam }) => {
+const getComponent = ({ paramName, paramKey, paramValue, paramBreakpoints, setFieldValue, indexTab, indexBlock, indexParam, helper }) => {
     return (
         <Grid item key={indexParam} {...paramBreakpoints}>
             <Component.CmtTextField
                 id={paramKey}
                 label={paramName}
                 value={paramValue || ''}
+                helper={helper || ''}
                 onChange={(e) => {
                     setFieldValue(`tabs[${indexTab}].blocks[${indexBlock}].parameters[${indexParam}].paramValue`, e.target.value);
                 }}

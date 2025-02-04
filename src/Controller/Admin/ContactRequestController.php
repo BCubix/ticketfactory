@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class ContactRequestController extends CrudController
@@ -20,6 +21,7 @@ class ContactRequestController extends CrudController
     protected const NOT_FOUND_MESSAGE = "Cette demande de contact n'existe pas.";
 
     #[Rest\Get('/contact-requests')]
+    #[IsGranted('ROLE_CONTACT_REQUEST_READ')]
     #[Rest\QueryParam(map:true, name:'filters', default:'')]
     #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -28,6 +30,7 @@ class ContactRequestController extends CrudController
     }
 
     #[Rest\Get('/contact-requests/{requestId}', requirements: ['requestId' => '\d+'])]
+    #[IsGranted('ROLE_CONTACT_REQUEST_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function getOne(Request $request, int $requestId): View
     {
@@ -35,6 +38,7 @@ class ContactRequestController extends CrudController
     }
 
     #[Rest\Post('/contact-requests')]
+    #[IsGranted('ROLE_CONTACT_REQUEST_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function add(Request $request): View
     {
@@ -42,6 +46,7 @@ class ContactRequestController extends CrudController
     }
 
     #[Rest\Post('/contact-requests/{requestId}', requirements: ['requestId' => '\d+'])]
+    #[IsGranted('ROLE_CONTACT_REQUEST_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function edit(Request $request, int $requestId): View
     {
@@ -49,6 +54,7 @@ class ContactRequestController extends CrudController
     }
 
     #[Rest\Delete('/contact-requests/{requestId}', requirements: ['requestId' => '\d+'])]
+    #[IsGranted('ROLE_CONTACT_REQUEST_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_contact_request_one'])]
     public function delete(Request $request, int $requestId): View
     {

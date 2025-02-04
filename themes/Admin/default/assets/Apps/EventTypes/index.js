@@ -13,12 +13,20 @@ import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
 import { getSubMenu, setSubMenu } from '@/AdminService/Menu';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_READ = 'ROLE_EVENT_TYPE_READ';
+const ROLE_EDIT = 'ROLE_EVENT_TYPE_EDIT';
 
 export const initConstant = () => {
     setConstant('EVENT_TYPES_BASE_PATH', '/admin/types-d-evenements');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setComponent('EventTypesList', EventTypesList);
     setComponent('EditEventType', EditEventType);
 };
@@ -31,7 +39,11 @@ export const initReducer = () => {
     setReducer('eventTypes', eventTypesReducer);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     const crud = {
         list: eventTypesListCrud,
         edit: eventTypesEditCrud,
@@ -40,9 +52,12 @@ export const initCrud = () => {
     setCrud('eventTypes', crud);
 };
 
-export default async function ({ parameters }) {
-    const useEventTypes = parameters?.find((el) => el.paramKey === 'core_use_event_types');
+export default async function ({ parameters, userRoles }) {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
 
+    const useEventTypes = parameters?.find((el) => el.paramKey === 'core_use_event_types');
     if (!useEventTypes?.paramValue) {
         return;
     }
@@ -51,7 +66,10 @@ export default async function ({ parameters }) {
         tabListName: 'seasonsTabList',
         tabPathValue: Constant.EVENT_TYPES_BASE_PATH,
     });
-    setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.EVENT_TYPES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditEventType);
+    }
 
     addTabElements('seasonsTabList', [{ label: "Types d'évènements", component: <Component.EventTypesList />, path: Constant.EVENT_TYPES_BASE_PATH }], 3);
 

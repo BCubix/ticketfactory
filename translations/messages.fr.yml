@@ -176,6 +176,8 @@ cookies.btn.reject-all: Tout refuser
 
 # cart
 cart.subtotal: Sous-total
+cart.vouchers: Réductions
+cart.subscriptions: Abonnements
 cart.total: Total
 cart.haveVoucher: Vous avez un code promo ?
 cart.addVoucher: Ajouter

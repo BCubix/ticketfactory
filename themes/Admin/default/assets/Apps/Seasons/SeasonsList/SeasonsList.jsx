@@ -1,11 +1,13 @@
 import React from 'react';
 
 import { changeSeasonsFilters, getSeasonsAction, seasonsSelector } from '@Apps/Seasons/redux/seasons/seasonsSlice';
+
 import { Component } from '@/AdminService/Component';
 import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Api } from '@/AdminService/Api';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const seasonsListCrud = {
     title: 'Saisons',
@@ -45,6 +47,11 @@ export const seasonsListCrud = {
     dataList: (selector) => selector.seasons,
     duplicate: (props) => Api.seasonsApi.duplicateSeason(props),
     delete: (props) => Api.seasonsApi.deleteSeason(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_SEASON_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_SEASON_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_SEASON_DELETE'),
+    },
     links: {
         new: () => `${Constant.SEASONS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.SEASONS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

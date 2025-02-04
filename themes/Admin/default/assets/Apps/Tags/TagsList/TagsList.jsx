@@ -7,6 +7,7 @@ import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 
 import { changeTagsFilters, getTagsAction, tagsSelector } from '@Apps/Tags/redux/tags/tagsSlice';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const tagsListCrud = {
     title: 'Tags',
@@ -45,6 +46,11 @@ export const tagsListCrud = {
     dataList: (selector) => selector.tags,
     duplicate: (props) => Api.tagsApi.duplicateTag(props),
     delete: (props) => Api.tagsApi.deleteTag(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_TAG_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_TAG_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_TAG_DELETE'),
+    },
     links: {
         new: () => `${Constant.TAGS_BASE_PATH}${Constant.CREATE_PATH}`,
         edit: (id) => `${Constant.TAGS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,

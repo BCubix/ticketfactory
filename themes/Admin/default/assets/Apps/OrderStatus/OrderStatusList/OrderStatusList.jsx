@@ -6,6 +6,7 @@ import { Constant } from '@/AdminService/Constant';
 import { Crud } from '@/AdminService/Crud';
 import { DEFAULT_CRUD_LIST_COMPONENTS } from '@Components/CmtCrudList/CmtCrudList';
 import { Api } from '@/AdminService/Api';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const orderStatusListCrud = {
     title: 'Étapes de commandes',
@@ -36,6 +37,9 @@ export const orderStatusListCrud = {
     dataSelector: orderStatusSelector,
     dataList: (selector) => selector.orderStatus,
     duplicate: (props) => Api.orderStatusApi.duplicateOrderStatus(props),
+    checkUserAccess: {
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_ORDER_STATUS_EDIT'),
+    },
     links: {
         edit: (id) => `${Constant.ORDER_STATUS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
     },

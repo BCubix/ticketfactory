@@ -56,10 +56,9 @@ class CloneObject
             } else if ($type === "OneToMany") {
                 $reflectionProperty->setValue($newObject, new ArrayCollection());
 
-                $methodName = 'add' . ucfirst(substr($name, 0, -1));
+                $methodName = 'add' . ucfirst(self::pluralToSingular($name));
                 if ($reflect->hasMethod($methodName)) {
                     foreach ($value as $subObj) {
-
                         $newElement = self::cloneObject($subObj);
                         $newObject->$methodName($newElement);
                     }
@@ -76,5 +75,18 @@ class CloneObject
         }
 
         return $newObject;
+    }
+
+    private static function pluralToSingular($plural)
+    {
+        if (preg_match('/children$/', $plural)) {
+            return preg_replace('/children$/', 'child', $plural);
+        } else if (preg_match('/ies$/', $plural)) {
+            return preg_replace('/ies$/', 'y', $plural);
+        } elseif (preg_match('/s$/', $plural)) {
+            return rtrim($plural, 's');
+        }
+
+        return $plural;
     }
 }

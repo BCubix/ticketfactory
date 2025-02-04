@@ -19,6 +19,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class MenuController extends CrudController
@@ -46,6 +47,7 @@ class MenuController extends CrudController
     }
 
     #[Rest\Get('/menus')]
+    #[IsGranted('ROLE_MENU_READ')]
     #[Rest\QueryParam(map: true, name: 'filters', default: '')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_all'])]
     public function getAll(Request $request, ParamFetcher $paramFetcher): View
@@ -64,6 +66,7 @@ class MenuController extends CrudController
     }
 
     #[Rest\Get('/menus/{menuId}', requirements: ['menuId' => '\d+'])]
+    #[IsGranted('ROLE_MENU_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function getOne(Request $request, int $menuId): View
     {
@@ -71,6 +74,7 @@ class MenuController extends CrudController
     }
 
     #[Rest\Post('/menus')]
+    #[IsGranted('ROLE_MENU_CREATE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function add(Request $request): View
     {
@@ -78,6 +82,7 @@ class MenuController extends CrudController
     }
 
     #[Rest\Post('/menus/{menuId}', requirements: ['menuId' => '\d+'])]
+    #[IsGranted('ROLE_MENU_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function edit(Request $request, int $menuId): View
     {
@@ -85,6 +90,7 @@ class MenuController extends CrudController
     }
 
     #[Rest\Delete('/menus/{menuId}', requirements: ['menuId' => '\d+'])]
+    #[IsGranted('ROLE_MENU_DELETE')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function delete(Request $request, int $menuId): View
     {
@@ -92,6 +98,7 @@ class MenuController extends CrudController
     }
 
     #[Rest\Get('/menus/{menusId}/translated/{languageId}', requirements: ['menusId' => '\d+', 'languageId' => '\d+'])]
+    #[IsGranted('ROLE_MENU_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_menu_one'])]
     public function getTranslated(Request $request, int $menusId, int $languageId): View
     {

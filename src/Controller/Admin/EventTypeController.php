@@ -4,10 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Entity\Event\EventType;
 use App\Form\Admin\Event\EventTypeType;
+
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Rest\Route('/api')]
 class EventTypeController extends CrudController
@@ -26,6 +28,7 @@ class EventTypeController extends CrudController
     }
 
     #[Rest\Get('/event-types/{eventTypeId}', requirements: ['eventTypeId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_TYPE_READ')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_type_one'])]
     public function getOne(Request $request, int $eventTypeId): View
     {
@@ -33,6 +36,7 @@ class EventTypeController extends CrudController
     }
 
     #[Rest\Post('/event-types/{eventTypeId}', requirements: ['eventTypeId' => '\d+'])]
+    #[IsGranted('ROLE_EVENT_TYPE_EDIT')]
     #[Rest\View(serializerGroups: ['a_all', 'a_event_type_one'])]
     public function edit(Request $request, int $eventTypeId): View
     {

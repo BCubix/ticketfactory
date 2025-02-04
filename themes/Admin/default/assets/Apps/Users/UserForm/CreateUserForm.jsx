@@ -1,12 +1,11 @@
 import * as Yup from 'yup';
-import { Constant } from '@/AdminService/Constant';
 import { DEFAULT_CRUD_FORM_COMPONENTS } from '@Components/CmtCrudForm/CmtCrudForm';
 
 export const createUsersInitialSchema = {
     firstName: '',
     lastName: '',
     email: '',
-    roles: '',
+    profiles: () => [],
     plainPassword: '',
     confirmPassword: '',
     active: false,
@@ -30,7 +29,7 @@ export const createUsersValidationSchema = {
                 .required('Veuillez confirmer le mot de passe.');
         }
     }),
-    roles: Yup.string().required('Veuillez renseigner le rôle de cet utilisateur.'),
+    profiles: Yup.array().required('Veuillez renseigner au moins un profil pour cet utilisateur.'),
 };
 
 export const createUsersForm = {
@@ -45,7 +44,13 @@ export const createUsersForm = {
             firstName: { type: 'string' },
             lastName: { type: 'string' },
             plainPassword: { type: 'string' },
-            roles: { type: 'string' },
+            profiles: {
+                function: ({ values, formData }) => {
+                    values.profiles.forEach((profile, index) => {
+                        formData.append(`profiles[${index}]`, profile);
+                    });
+                },
+            },
         },
     },
     fields: [
@@ -70,17 +75,17 @@ export const createUsersForm = {
                             },
                         },
                         {
-                            keyId: 'input-roles',
+                            keyId: 'input-profiles',
                             style: { xs: 12, sm: 6 },
                             input: {
-                                name: 'roles',
-                                label: 'Rôles',
+                                name: 'profiles',
+                                label: 'Profils',
                                 inputType: 'selectField',
-                                inputList: Constant.USER_ROLES,
-                                listName: 'inputList',
-                                getName: (item) => item.label,
-                                getValue: (item) => item.value,
+                                listName: 'profilesList',
+                                getName: (item) => item.name,
+                                getValue: (item) => item.id,
                                 required: true,
+                                multiple: true,
                             },
                         },
                         {

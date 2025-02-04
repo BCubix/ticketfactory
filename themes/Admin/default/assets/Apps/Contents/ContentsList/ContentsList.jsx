@@ -1,26 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { NotificationManager } from 'react-notifications';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Drawer,
-    FormControl,
-    IconButton,
-    InputLabel,
-    List,
-    ListItem,
-    ListItemText,
-    MenuItem,
-    Select,
-    Skeleton,
-    Typography,
-} from '@mui/material';
+import { Drawer, IconButton, List, ListItemText, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -33,9 +14,9 @@ import { DEFAULT_CONTENT_CRUD_LIST_COMPONENTS } from '@Apps/Contents/ContentsLis
 
 import { changeContentsFilters, contentsSelector, getAllContentDataAction, getContentsAction, setContentTypeKey } from '@Apps/Contents/redux/contents/contentsSlice';
 
-import { apiMiddleware } from '@Services/utils/apiMiddleware';
 import { useTheme } from '@emotion/react';
 import { useSelector } from 'react-redux';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
 export const contentsListCrud = {
     title: 'Contenus',
@@ -78,12 +59,17 @@ export const contentsListCrud = {
         { name: 'lang.isoCode', label: 'Langue', width: '15%', renderFunction: (item) => <Component.CmtDisplayFlag item={item} /> },
     ],
     contentTypes: {},
-    loadDataAction: () => getContentsAction(),
+    loadDataAction: (contentTypeKey, filters) => getContentsAction(contentTypeKey, filters),
     changeFiltersActions: (objectData, props, page) => changeContentsFilters(objectData, props, page),
     dataSelector: contentsSelector,
     dataList: (selector) => selector.contents,
     duplicate: (props) => Api.contentsApi.duplicateContent(props),
     delete: (props) => Api.contentsApi.deleteContent(props),
+    checkUserAccess: {
+        new: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_CREATE'),
+        edit: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_EDIT'),
+        delete: (userRoles) => checkUserAccess(userRoles, 'ROLE_CONTENT_DELETE'),
+    },
     links: {
         edit: (id) => `${Constant.CONTENTS_BASE_PATH}/${id}${Constant.EDIT_PATH}`,
         translate: (id, languageId) => `${Constant.CONTENTS_BASE_PATH}${Constant.CREATE_PATH}?contentId=${id}&languageId=${languageId}`,
@@ -158,19 +144,7 @@ export const ContentsList = () => {
     }, [Crud.contents.list.contentTypes, contentTypeKey]);
 
     if (!loaded) {
-        return (
-            <>
-                <Box marginRight={`${contentMargin}px`} padding={8} height="100%">
-                    <Skeleton variant="rounded" height="40px" width="30%" />
-                    <Skeleton variant="rounded" height="90%" width="100%" sx={{ marginTop: 4 }} />
-                </Box>
-                {sidebarOpen && (
-                    <Box position="absolute" right={0} top={`${theme.layout.header.height}px`} bottom={0} width={contentMargin}>
-                        <Skeleton variant="rectangular" height="100%" width="100%" />
-                    </Box>
-                )}
-            </>
-        );
+        return <Component.CmtSkeletonContentList theme={theme} contentMargin={contentMargin} sidebarOpen={sidebarOpen} />;
     }
 
     return (
@@ -207,6 +181,7 @@ export const ContentsList = () => {
                                 },
                             }}
                             objectData={contentData[contentTypeKey] || {}}
+                            contentTypeKey={contentTypeKey}
                         />
                     </Box>
                 )}

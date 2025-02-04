@@ -8,6 +8,19 @@ import { SeoInitialValues, SeoApiDataFields, IndexSeoInitialFormInputs } from '@
 import { DEFAULT_CRUD_FORM_COMPONENTS, initYup } from '@Components/CmtCrudForm/CmtCrudForm';
 import { changeSlug } from '@Services/utils/changeSlug';
 import { constructInitialValues } from '@Services/utils/constructInitialValues';
+import { useNavigate } from 'react-router-dom';
+import { Constant } from '@/AdminService/Constant';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
+
+const ROLE_CONTENT_PUBLISH = 'ROLE_CONTENT_PUBLISH';
+
+const getInitPublishedStatus = (initValues, userRoles) => {
+    if (initValues?.publicationStatus !== 'PUBLISHED' || checkUserAccess(userRoles, ROLE_CONTENT_PUBLISH)) {
+        return initValues?.publicationStatus || 'DRAFT';
+    }
+
+    return 'DRAFT';
+};
 
 const getValidation = (contentType, contentModule) => {
     if (!contentModule?.VALIDATION_TYPE || !contentModule?.VALIDATION_LIST) {
@@ -67,8 +80,8 @@ export const contentsInitialSchema = {
     lang: (initValues) => initValues?.lang?.id || '',
     languageGroup: (initValues) => initValues?.languageGroup || '',
     fields: (initValues) => initValues?.fields || {},
+    publicationStatus: (initValues, { userRoles }) => getInitPublishedStatus(initValues, userRoles),
     contentType: (initValues, { contentType }) => initValues?.contentType?.id || contentType?.id,
-    page: (initValues) => initValues?.page?.id || '',
     editSlug: false,
     seo: SeoInitialValues,
 };
@@ -76,11 +89,6 @@ export const contentsInitialSchema = {
 export const contentsValidationSchema = {
     title: Yup.string().required('Veuillez renseigner le titre de la page.').max(250, 'Le nom renseigné est trop long.'),
     fields: ({ initialValues, contentType, getContentModules }) => getFieldsValidation(initialValues?.contentType || contentType, getContentModules),
-    pageBlocks: Yup.array().of(
-        Yup.object().shape({
-            name: Yup.string().required('Veuillez renseigner le nom du bloc.').max(250, 'Le nom renseigné est trop long.'),
-        })
-    ),
 };
 
 export const contentsForm = {
@@ -95,14 +103,8 @@ export const contentsForm = {
         dataFields: {
             active: { type: 'boolean' },
             title: { type: 'string' },
-            page: {
-                function: ({ values, formData }) => {
-                    if (values.page) {
-                        formData.append('page', values.page);
-                    }
-                },
-            },
             slug: { type: 'slug' },
+            publicationStatus: { type: 'string' },
             lang: { type: 'string' },
             languageGroup: { type: 'string' },
             fields: {
@@ -116,11 +118,16 @@ export const contentsForm = {
         },
     },
     contentFields: CONTENT_FIELDS,
+    publicationStatusList: [
+        { value: 'PUBLISHED', label: 'Publié' },
+        { value: 'TO_VALIDATE', label: 'À valider' },
+        { value: 'DRAFT', label: 'Brouillon' },
+    ],
     fields: [
         {
             type: 'tabs',
-            keyId: 'page',
-            label: 'Page',
+            keyId: 'tab-general-info',
+            label: 'Informations générales',
             fields: [
                 {
                     type: 'block',
@@ -129,7 +136,7 @@ export const contentsForm = {
                     fields: [
                         {
                             keyId: 'input-title',
-                            style: { xs: 12 },
+                            style: { xs: 12, sm: 8 },
                             inputs: [
                                 {
                                     name: 'title',
@@ -153,8 +160,32 @@ export const contentsForm = {
                                 },
                             ],
                         },
+                        {
+                            keyId: 'input-publicationStatus',
+                            style: {
+                                xs: 12,
+                                sm: 4,
+                            },
+                            input: {
+                                name: 'publicationStatus',
+                                label: 'Status de publication',
+                                inputType: 'selectField',
+                                listName: 'publicationStatusList',
+                                getName: (item) => item.label,
+                                getValue: (item) => item.value,
+                                required: true,
+                            },
+                        },
                     ],
                 },
+                IndexSeoInitialFormInputs,
+            ],
+        },
+        {
+            type: 'tabs',
+            keyId: 'tab-contents',
+            label: 'Formulaire',
+            fields: [
                 {
                     type: 'block',
                     title: 'Formulaire',
@@ -179,7 +210,6 @@ export const contentsForm = {
                         );
                     },
                 },
-                IndexSeoInitialFormInputs,
             ],
         },
     ],
@@ -187,6 +217,7 @@ export const contentsForm = {
 };
 
 export const ContentsForm = ({ initialValues = null, handleSubmit, selectedContentType, translateInitialValues = null, formCrud, ...props }) => {
+    const navigate = useNavigate();
     const [initValue, setInitValue] = useState(null);
 
     const getContentModules = useMemo(() => {
@@ -195,17 +226,13 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
 
     useEffect(() => {
         let initVal = translateInitialValues || initialValues;
-
         if (initVal) {
             setInitValue(constructInitialValues(formCrud.form.initialSchema, initVal, { contentType: selectedContentType, ...props }));
-
             return;
         }
 
-        const formModules = getContentModules;
-
         let fields = {};
-
+        const formModules = getContentModules;
         selectedContentType?.fields?.forEach((el) => {
             fields[el.name] = formModules[el.type]?.getInitialValue(el, getContentModules) || '';
         });
@@ -214,7 +241,7 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
     }, []);
 
     if (!initValue) {
-        return <></>;
+        return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
     }
 
     return (
@@ -237,7 +264,22 @@ export const ContentsForm = ({ initialValues = null, handleSubmit, selectedConte
             )}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched, submitForm, isSubmitting }) => (
-                <Component.CmtPageWrapper component="form" onSubmit={handleSubmit} title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}>
+                <Component.CmtPageWrapper
+                    component="form"
+                    onSubmit={handleSubmit}
+                    title={`${initialValues ? 'Modification' : 'Création'} d'un contenu`}
+                    actionButton={
+                        initialValues && (
+                            <Component.ActionButton
+                                variant="contained"
+                                sx={{ marginLeft: 'auto' }}
+                                onClick={() => navigate(Constant.CONTENT_HISTORY_BASE_PATH + `/${initialValues?.id}`)}
+                            >
+                                Historique du contenu
+                            </Component.ActionButton>
+                        )
+                    }
+                >
                     <Component.CmtDisplayComponents
                         formCrud={formCrud}
                         list={formCrud.components}

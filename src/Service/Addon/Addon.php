@@ -193,6 +193,24 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                                             ->thenInvalid('required string')
                                         ->end()
                                     ->end()
+                                    ->scalarNode('translatedParameter')
+                                        ->defaultValue(false)
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_bool($v);
+                                            })
+                                            ->thenInvalid('required boolean')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('helper')
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                        ->defaultValue(null)
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
@@ -243,6 +261,60 @@ abstract class Addon extends Bundle implements ConfigurationInterface
                                     ->scalarNode('manager')
                                         ->isRequired()
                                         ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+
+                        ->arrayNode('deliveryModes')
+                            ->useAttributeAsKey('name')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('manager')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('description')
+                                        ->defaultValue(null)
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+
+                        ->arrayNode('roles')
+                            ->useAttributeAsKey('name')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('label')
+                                        ->isRequired()
+                                        ->cannotBeEmpty()
+                                        ->validate()
+                                            ->ifTrue(function ($v) {
+                                                return !is_string($v);
+                                            })
+                                            ->thenInvalid('required string')
+                                        ->end()
+                                    ->end()
+                                    ->scalarNode('groupName')
+                                        ->defaultValue(null)
                                         ->validate()
                                             ->ifTrue(function ($v) {
                                                 return !is_string($v);

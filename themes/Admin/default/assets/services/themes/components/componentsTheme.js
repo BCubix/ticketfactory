@@ -57,6 +57,11 @@ export const typographyTheme = {
 };
 
 export const componentsTheme = {
+    MuiInputBase: {
+        defaultProps: {
+            disableInjectingGlobalStyles: true,
+        },
+    },
     MuiTableCell: {
         styleOverrides: {
             root: {

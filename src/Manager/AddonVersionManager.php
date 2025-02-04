@@ -213,24 +213,81 @@ class AddonVersionManager extends AbstractManager
 
     public function getAddonVersions(): array
     {
-        // We get the marketpace token from the request
-        $token = $this->rs->getMainRequest()->get('marketplaceToken');
-        if (null === $token) {
-            return [];
+        $modules = $this->mf->get('module')->getAll();
+        $themes = $this->mf->get('theme')->getAll();
+        $addonNames = ["TicketFactory"];
+
+        foreach ($modules['results'] as $module) {
+            $addonNames[] = $module['name'];
+        }
+
+        foreach ($themes as $theme) {
+            $addonNames[] = $theme['name'];
         }
 
         // We get the latest downloadable versions
-        $response = $this->client->request('GET', $this->baseUrl . '/versions', [
-            'headers' => [
-                'Authorization' => "Bearer $token",
-            ],
+        $response = $this->client->request('GET', "https://www.ticketfactory.fr/admin/api/marketplace/addon/versions", [
+            'query' => [
+                'filters[addonNames]' => $addonNames
+            ]
         ]);
-
+        
         if ($response->getStatusCode() !== 200) {
             return [];
         }
 
         return $response->toArray() ?? [];
+    }
+
+    public function checkAddonVersions(): void
+    {
+        $lastCheckDate = $this->mf->get('parameter')->getCoreParameter('last_checked_addon_versions');
+        $now = new \DateTime();
+
+        if (null !== $lastCheckDate) {
+            $lastCheckDate = (new \DateTime())->setTimestamp($lastCheckDate);
+            $interval = $now->diff($lastCheckDate);
+
+            if ($interval->days == 0 && $interval->h < 24) {
+                return;
+            }
+        }
+
+        $versions = $this->getAddonVersions();
+        $modules = $this->mf->get('module')->getAll();
+        $themes = $this->mf->get('theme')->getAll();
+
+        $updatableModules = false;
+        foreach ($modules['results'] as $module) {
+            if (isset($versions[$module['name']]) && $versions[$module['name']]['version'] > $module['version']) {
+                $updatableModules = true;
+                break;
+            }
+        }
+
+        $updatableThemes = false;
+        foreach ($themes as $theme) {
+            if (isset($versions[$theme['name']]) && $versions[$theme['name']]['version'] > $theme['version']) {
+                $updatableModules = true;
+                break;
+            }
+        }
+
+        if ($updatableModules) {
+            $this->mf->get('notification')->createUpdatableAddonNotification("Nouvelle version de module disponible", "Une nouvelle version de module est disponible. Veuillez la télécharger pour bénéficier des dernières fonctionnalités.", 'Module');
+        }
+
+        if ($updatableThemes) {
+            $this->mf->get('notification')->createUpdatableAddonNotification("Nouvelle version de thème disponible", "Une nouvelle version de thème est disponible. Veuillez la télécharger pour bénéficier des dernières fonctionnalités.", 'Theme');
+        }
+
+        $coreVersion = $this->mf->get('parameter')->getCoreParameter('ticket_factory_version');
+        if (isset($versions["TicketFactory"]) && $versions["TicketFactory"]['version'] > $coreVersion) {
+            $this->mf->get('notification')->createUpdatableAddonNotification("Nouvelle version de TicketFactory disponible", "Une nouvelle version de TicketFactory est disponible. Veuillez la télécharger pour bénéficier des dernières fonctionnalités.", 'Core');
+        }
+
+        $this->mf->get('parameter')->set('core_last_checked_addon_versions', $now->getTimestamp());
+        $this->em->flush();
     }
 
     private function getAddonFile(string $addonName)

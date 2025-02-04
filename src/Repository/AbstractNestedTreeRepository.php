@@ -231,7 +231,7 @@ class AbstractNestedTreeRepository extends NestedTreeRepository
             ->innerJoin('ec.lang', 'ecl', 'WITH', 'ecl.id = :languageId')
             ->where('ec.lvl = 1')
             ->andWhere('ec.active = 1')
-            ->orderBy('ec.id', 'ASC')
+            ->orderBy('ec.position', 'ASC')
             ->setParameter('languageId', $languageId)
             ->getQuery()
             ->getResult();
@@ -247,5 +247,19 @@ class AbstractNestedTreeRepository extends NestedTreeRepository
             ->setParameter('languageId', $languageId)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findAllByParentForWebsite(int $parendId, int $languageId): array
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->innerJoin('c.lang', 'l', 'WITH', 'l.id = :languageId')
+            ->innerJoin('c.parent', 'p', 'WITH', 'p.id = :parentId')
+            ->where("o.active = 1")
+            ->setParameter('languageId', $languageId)
+            ->setParameter('parentId', $parendId)
+            ->orderBy('o.position', "ASC")
+            ->getQuery()
+            ->getResult();
     }
 }

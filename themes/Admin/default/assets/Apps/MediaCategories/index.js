@@ -4,6 +4,8 @@ import { CreateMediaCategory, mediaCategoriesCreateCrud } from '@Apps/MediaCateg
 import { EditMediaCategory, mediaCategoriesEditCrud } from '@Apps/MediaCategories/EditMediaCategory/EditMediaCategory';
 import { ParentMediaCategoryPartForm } from '@Apps/MediaCategories/MediaCategoriesForm/ParentMediaCategoryPartForm';
 import { MediaCategoriesList, mediaCategoriesListCrud } from '@Apps/MediaCategories/MediaCategoriesList/MediaCategoriesList';
+import mediaCategoriesReducer from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
+import mediaCategoriesApi from './services/api/mediaCategoriesApi';
 
 import { setReducer } from '@/AdminService/Reducer';
 import { setApi } from '@/AdminService/Api';
@@ -12,15 +14,21 @@ import { Component, setComponent } from '@/AdminService/Component';
 import { setAuthenticatedRoute } from '@/AdminService/AuthenticatedRoute';
 import { setCrud } from '@/AdminService/Crud';
 import { addTabElements } from '@/AdminService/Tab';
+import { checkUserAccess } from '@Services/utils/checkUserAccess';
 
-import mediaCategoriesReducer from '@Apps/MediaCategories/redux/mediaCategories/mediaCategoriesSlice';
-import mediaCategoriesApi from './services/api/mediaCategoriesApi';
+const ROLE_READ = 'ROLE_MEDIA_CATEGORY_READ';
+const ROLE_CREATE = 'ROLE_MEDIA_CATEGORY_CREATE';
+const ROLE_EDIT = 'ROLE_MEDIA_CATEGORY_EDIT';
 
 export const initConstant = () => {
     setConstant('MEDIA_CATEGORIES_BASE_PATH', '/admin/categories-de-media');
 };
 
-export const initComponent = () => {
+export const initComponent = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setComponent('CreateMediaCategory', CreateMediaCategory);
     setComponent('EditMediaCategory', EditMediaCategory);
     setComponent('ParentMediaCategoryPartForm', ParentMediaCategoryPartForm);
@@ -31,7 +39,11 @@ export const initApi = () => {
     setApi('mediaCategoriesApi', mediaCategoriesApi);
 };
 
-export const initAuthenticatedRoutes = () => {
+export const initAuthenticatedRoutes = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     setAuthenticatedRoute(Constant.MEDIA_CATEGORIES_BASE_PATH, Component.CmtAppMenu, {
         tabListName: 'mediasTabList',
         tabPathValue: Constant.MEDIA_CATEGORIES_BASE_PATH,
@@ -40,19 +52,33 @@ export const initAuthenticatedRoutes = () => {
         tabListName: 'mediasTabList',
         tabPathValue: Constant.MEDIA_CATEGORIES_BASE_PATH,
     });
-    setAuthenticatedRoute(Constant.MEDIA_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateMediaCategory);
-    setAuthenticatedRoute(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditMediaCategory);
+
+    if (checkUserAccess(userRoles, ROLE_CREATE)) {
+        setAuthenticatedRoute(Constant.MEDIA_CATEGORIES_BASE_PATH + Constant.CREATE_PATH, Component.CreateMediaCategory);
+    }
+
+    if (checkUserAccess(userRoles, ROLE_EDIT)) {
+        setAuthenticatedRoute(`${Constant.MEDIA_CATEGORIES_BASE_PATH}/:id${Constant.EDIT_PATH}`, Component.EditMediaCategory);
+    }
 };
 
 export const initReducer = () => {
     setReducer('mediaCategories', mediaCategoriesReducer);
 };
 
-export const initTab = () => {
+export const initTab = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     addTabElements('mediasTabList', [{ label: 'Catégories de média', component: <Component.MediaCategoriesList />, path: Constant.MEDIA_CATEGORIES_BASE_PATH }], 2);
 };
 
-export const initCrud = () => {
+export const initCrud = ({ userRoles }) => {
+    if (!checkUserAccess(userRoles, ROLE_READ)) {
+        return;
+    }
+
     const crud = {
         list: mediaCategoriesListCrud,
         add: mediaCategoriesCreateCrud,

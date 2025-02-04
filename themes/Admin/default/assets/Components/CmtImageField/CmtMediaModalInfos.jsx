@@ -1,21 +1,9 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Component } from '@/AdminService/Component';
 
-export const CmtMediaModalInfos = ({
-    media,
-    selectedMedia,
-    setFieldValue,
-    name,
-    onClick,
-    AddMediaLabel,
-    RemoveMediaLabel,
-    updatedMedia,
-    imageFormatList,
-    startUpdatingMedia = null,
-    endUpdatingMedia = null,
-}) => {
+export const CmtMediaModalInfos = ({ media, selectedMedia, ...rest }) => {
     const isSelected = Array.isArray(media) ? media?.includes(selectedMedia?.id) : media?.id === selectedMedia?.id;
 
     if (!selectedMedia) {
@@ -26,22 +14,5 @@ export const CmtMediaModalInfos = ({
         );
     }
 
-    return (
-        <Component.CmtDisplayMediaInfos
-            selectedMedia={selectedMedia}
-            displayImage
-            displayMeta
-            updatedMedia={updatedMedia}
-            imageFormatList={imageFormatList}
-            startUpdatingMedia={startUpdatingMedia}
-            endUpdatingMedia={endUpdatingMedia}
-            isSelected={isSelected}
-            setFieldValue={setFieldValue}
-            name={name}
-            onClick={onClick}
-            AddMediaLabel={AddMediaLabel}
-            RemoveMediaLabel={RemoveMediaLabel}
-            displaySelectButton={true}
-        />
-    );
+    return <Component.CmtDisplayMediaInfos selectedMedia={selectedMedia} isSelected={isSelected} displayImage displayMeta {...rest} />;
 };

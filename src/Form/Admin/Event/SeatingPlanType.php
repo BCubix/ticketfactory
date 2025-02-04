@@ -8,6 +8,8 @@ use App\Entity\Language\Language;
 use App\Repository\LanguageRepository;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,6 +23,13 @@ class SeatingPlanType extends AdminBaseFormType
     {
         $builder
             ->add('name',                 TextType::class,            [])
+            ->add('eventPriceCategories',            CollectionType::class,      [
+                'entry_type'   => EventPriceCategoryType::class,
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false
+            ])
             ->add('lang',                 EntityType::class,          [
                 'class'         => Language::class,
                 'choice_label'  => 'name',

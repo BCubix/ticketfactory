@@ -8,7 +8,6 @@ use App\Repository\PageBlockRepository;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -46,13 +45,13 @@ class PageBlock extends Datable
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
-    #[ORM\Column(type: Types::INTEGER)]
-    private $blockType;
+    #[ORM\Column(type: 'json')]
+    private array $columns = [];
 
     #[JMS\Expose()]
     #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
-    #[ORM\Column(type: 'json')]
-    private array $columns = [];
+    #[ORM\Column]
+    private array $fields = [];
 
     #[ORM\ManyToOne(targetEntity: Page::class, inversedBy: 'pageBlocks')]
     private $page;
@@ -67,6 +66,11 @@ class PageBlock extends Datable
     #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
     #[ORM\Column(length: 255)]
     private ?string $class = null;
+
+    #[JMS\Expose()]
+    #[JMS\Groups(['a_page_one', 'a_page_block_all', 'a_page_block_one'])]
+    #[ORM\ManyToOne(inversedBy: 'pageBlocks')]
+    private ?PageBlockType $pageBlockType = null;
 
 
     public function __construct()
@@ -116,18 +120,6 @@ class PageBlock extends Datable
         return $this;
     }
 
-    public function getBlockType(): ?int
-    {
-        return $this->blockType;
-    }
-
-    public function setBlockType(int $blockType): self
-    {
-        $this->blockType = $blockType;
-
-        return $this;
-    }
-
     public function getColumns(): array
     {
         return $this->columns;
@@ -136,6 +128,18 @@ class PageBlock extends Datable
     public function setColumns(array $columns): self
     {
         $this->columns = $columns;
+
+        return $this;
+    }
+
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    public function setFields(array $fields): self
+    {
+        $this->fields = $fields;
 
         return $this;
     }
@@ -172,6 +176,67 @@ class PageBlock extends Datable
     public function setClass(string $class): self
     {
         $this->class = $class;
+
+        return $this;
+    }
+
+    public function getPageBlockType(): ?PageBlockType
+    {
+        return $this->pageBlockType;
+    }
+
+    public function setPageBlockType(?PageBlockType $pageBlockType): static
+    {
+        $this->pageBlockType = $pageBlockType;
+
+        return $this;
+    }
+
+    public function toStringToCompare(): array
+    {
+        $result = [
+            'name'          => $this->name,
+            'saveAsModel'   => $this->saveAsModel,
+            'class'         => $this->class,
+            'pageBlockType' => null !== $this->pageBlockType ? $this->pageBlockType->toStringToCompare() : null,
+            'fields'        => $this->fields,
+            'columns'       => [],
+        ];
+
+        foreach ($this->columns as $column) {
+            $result['columns'][] = PageColumn::toStringToCompare($column);
+        }
+
+        return $result;
+    }
+
+    public function __clone()
+    {
+        $this->columns = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->columns);
+        $this->fields = array_map(fn($item) => is_object($item) ? clone $item : $item, $this->fields);
+    }
+
+    public function restoreHistory(array $fields): self
+    {
+        if (isset($fields['name'])) {
+            $this->name = $fields['name'];
+        }
+
+        if (isset($fields['saveAsModel'])) {
+            $this->saveAsModel = $fields['saveAsModel'];
+        }
+
+        if (isset($fields['class'])) {
+            $this->class = $fields['class'];
+        }
+
+        if (isset($fields['fields'])) {
+            $this->fields = array_replace_recursive($this->fields, $fields['fields']);
+        }
+
+        if (isset($fields['columns'])) {
+            $this->columns = array_replace_recursive($this->columns, $fields['columns']);
+        }
 
         return $this;
     }
