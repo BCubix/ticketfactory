@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { format } from 'date-fns';
 import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper, Typography, Table, TableBody, TableCell, Tooltip, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
-import EventAddSpecialPricing from './../EventAddSpecialPricing';
-import { StyledTableContainer, StyledTableCell, DayModeStyledCell, SlotDiv } from './sc.WeekModeView';
-import { Component } from '@/AdminService/Component';
-import { format } from 'date-fns';
 
-const WeekModeView = (props) => {
-    const { editable, values, setFieldValue, setGenerateDate, columns, rows, options, STATES, errors, touched, ...restProps } = props;
+import { StyledTableContainer, StyledTableCell, DayModeStyledCell, SlotDiv } from './sc.WeekModeView';
+
+import { Component } from '@/AdminService/Component';
+
+const WeekModeView = ({
+    editable,
+    values,
+    setFieldValue,
+    setGenerateDate,
+    columns,
+    rows,
+    options,
+    STATES,
+    errors,
+    touched,
+    getNumberExistingCategories,
+    handleClickOpenSpecialPricing,
+    ...restProps
+}) => {
     const theme = useTheme();
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -24,7 +38,7 @@ const WeekModeView = (props) => {
 
     const handleCellClick = (rowIndex, dayIndex) => {
         if (!editable) return;
-        
+
         const dayData = rows[rowIndex].days[dayIndex].data;
         const itemIndex = dayData?.[0]?.index ?? values.eventDates.length;
 
@@ -159,14 +173,12 @@ const WeekModeView = (props) => {
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <EventAddSpecialPricing
-                            values={values}
-                            setFieldValue={setFieldValue}
-                            touched={touched}
-                            errors={errors}
-                            selectedDate={values.eventDates[dialogItemIndex]}
-                            {...props}
-                        />
+                        <Button size="small" color="primary" onClick={() => handleClickOpenSpecialPricing(values.eventDates[dialogItemIndex])}>
+                            {`${getNumberExistingCategories(values.eventDates[dialogItemIndex])} ${
+                                getNumberExistingCategories(values.eventDates[dialogItemIndex]) === 1 ? 'Tarif spécial' : 'Tarifs spéciaux'
+                            }`}
+                        </Button>
+
                         {!creatingItem && (
                             <Button onClick={handleDeleteItem} color="error">
                                 Supprimer
@@ -178,7 +190,6 @@ const WeekModeView = (props) => {
                     </DialogActions>
                 </Dialog>
             )}
-
         </>
     );
 };

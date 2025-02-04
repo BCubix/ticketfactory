@@ -58,8 +58,7 @@ const calculateHour = (eventDate, endTime, hour, totalHours) => {
 };
 // End helper functions
 
-export const CmtCalendarForm = ({ editable=false, values, setFieldValue=null, setGenerateDate=null, options,toolbarProps, STATES, ...restProps }) => {
-    
+export const CmtCalendarForm = ({ editable = false, values, setFieldValue = null, setGenerateDate = null, options, toolbarProps, STATES, ...restProps }) => {
     const today = new Date();
 
     const [selectedDay, setSelectedDay] = useState(today);

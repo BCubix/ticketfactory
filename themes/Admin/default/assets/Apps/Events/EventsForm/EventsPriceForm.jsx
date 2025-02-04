@@ -97,11 +97,41 @@ export const eventsPriceFormFields = {
         },
     ],
 };
+
+export const EventsPriceElement = React.memo(
+    ({ values, blockIndex, index, baseName, ...props }) => {
+        return (
+            <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
+                <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
+                    <CardContent sx={{ position: 'relative' }}>
+                        <Grid container spacing={4}>
+                            <Component.CmtDisplayFields index={index} values={values} blockIndex={blockIndex} baseName={baseName} {...props} />
+                        </Grid>
+
+                        <Component.DeleteBlockFabButton
+                            size="small"
+                            onClick={() => {
+                                remove(index); // Remove the eventPrice from the array
+                            }}
+                        >
+                            <DeleteIcon />
+                        </Component.DeleteBlockFabButton>
+                    </CardContent>
+                </Card>
+            </Grid>
+        );
+    },
+    (prevProps, nextProps) => {
+        return prevProps.eventPriceCategories[prevProps.blockIndex] === nextProps.eventPriceCategories[nextProps.blockIndex];
+    }
+);
+
 export const EventsPriceForm = ({ dataPath = 'eventPriceCategories', values, touched, errors, handleChange, handleBlur, blockIndex, fields, ...props }) => {
     // Helper function to access dynamic paths in values
     const getNestedValue = (path, object) => {
         return path.split('.').reduce((acc, part) => acc?.[part], object);
     };
+
     const handleString = (inputString) => {
         if (inputString.endsWith('eventPriceCategories')) {
             let res = inputString.slice(0, inputString.lastIndexOf('eventPriceCategories')).replace(/\.$/, '');
@@ -124,40 +154,23 @@ export const EventsPriceForm = ({ dataPath = 'eventPriceCategories', values, tou
                 <Box className="padding-2">
                     <Grid container spacing={6}>
                         {/* Loop over eventPrices */}
-                        {eventPrices.map((item, index) => {
-                            return (
-                                <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
-                                    <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
-                                        <CardContent sx={{ position: 'relative' }}>
-                                            <Grid container spacing={4}>
-                                                <Component.CmtDisplayFields
-                                                    fields={fields}
-                                                    values={values}
-                                                    touched={touched}
-                                                    errors={errors}
-                                                    handleChange={handleChange}
-                                                    handleBlur={handleBlur}
-                                                    blockIndex={blockIndex}
-                                                    item={item}
-                                                    index={index}
-                                                    baseName={handleString(dataPath)}
-                                                    {...props}
-                                                />
-                                            </Grid>
-
-                                            <Component.DeleteBlockFabButton
-                                                size="small"
-                                                onClick={() => {
-                                                    remove(index); // Remove the eventPrice from the array
-                                                }}
-                                            >
-                                                <DeleteIcon />
-                                            </Component.DeleteBlockFabButton>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            );
-                        })}
+                        {eventPrices.map((item, index) => (
+                            <EventsPriceElement
+                                key={index}
+                                fields={fields}
+                                values={values}
+                                touched={touched}
+                                errors={errors}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                blockIndex={blockIndex}
+                                item={item}
+                                index={index}
+                                baseName={handleString(dataPath)}
+                                eventPriceCategories={eventPriceCategories}
+                                {...props}
+                            />
+                        ))}
                     </Grid>
 
                     <Box className="flex row-end padding-top-4 padding-left-4">

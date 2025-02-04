@@ -5,11 +5,22 @@ import { Component } from '@/AdminService/Component';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from '@mui/material';
 import { CustomTableCell, CustomTableContainer, DayLabel, SelectedTimeBox, CustomPaper } from './sc.MonthModeView';
-import EventAddSpecialPricing from './../EventAddSpecialPricing';
 
-const MonthModeView = (props) => {
-    const { editable, values, setFieldValue, setGenerateDate, rows, columns, errors, touched, options, STATES, ...restProps } = props;
-
+const MonthModeView = ({
+    editable,
+    values,
+    setFieldValue,
+    setGenerateDate,
+    rows,
+    columns,
+    errors,
+    touched,
+    options,
+    STATES,
+    getNumberExistingCategories,
+    handleClickOpenSpecialPricing,
+    ...restProps
+}) => {
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
 
@@ -55,7 +66,7 @@ const MonthModeView = (props) => {
 
     const handleAddDateClick = () => {
         if (!editable) return;
-        
+
         const index = values.eventDates.length;
 
         setDialogItemIndex(index);
@@ -100,14 +111,14 @@ const MonthModeView = (props) => {
 
     const handleCellClick = (day, rowId) => {
         if (!editable) return;
-        
+
         setSelectedDay({ ...day, rowId });
         setSelectedTime(null);
     };
 
     const handleTimeClick = (time, item) => {
         if (!editable) return;
-        
+
         setSelectedTime(item);
 
         const index = item?.index;
@@ -219,14 +230,12 @@ const MonthModeView = (props) => {
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <EventAddSpecialPricing
-                            values={values}
-                            setFieldValue={setFieldValue}
-                            touched={touched}
-                            errors={errors}
-                            selectedDate={values.eventDates[dialogItemIndex]}
-                            {...props}
-                        />
+                        <Button size="small" color="primary" onClick={() => handleClickOpenSpecialPricing(values.eventDates[dialogItemIndex])}>
+                            {`${getNumberExistingCategories(values.eventDates[dialogItemIndex])} ${
+                                getNumberExistingCategories(values.eventDates[dialogItemIndex]) === 1 ? 'Tarif spécial' : 'Tarifs spéciaux'
+                            }`}
+                        </Button>
+
                         {!creatingItem && (
                             <Button onClick={handleDeleteItem} color="error">
                                 Supprimer
@@ -237,8 +246,7 @@ const MonthModeView = (props) => {
                         </Button>
                     </DialogActions>
                 </Dialog>
-)}
-
+            )}
         </Box>
     );
 };

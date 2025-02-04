@@ -8,7 +8,7 @@ import { Component } from '@/AdminService/Component';
 import { v4 as uuidv4 } from 'uuid';
 import { StyledTableCell, StyledTableContainer, DayModeStyledCell, SlotDiv } from './sc.DayModeView';
 import EventAddSpecialPricing from './../EventAddSpecialPricing';
-    
+
 const calculateHour = (eventDate, endTime, hour, totalHours) => {
     return Array(4)
         .fill(0)
@@ -29,7 +29,21 @@ const calculateHour = (eventDate, endTime, hour, totalHours) => {
 };
 // SlotDiv Component
 
-const DayModeView = ({ editable, values, columns, rows, options, setFieldValue, setGenerateDate, STATES, touched, errors, ...restProps }) => {
+const DayModeView = ({
+    editable,
+    values,
+    columns,
+    rows,
+    options,
+    setFieldValue,
+    setGenerateDate,
+    STATES,
+    touched,
+    errors,
+    getNumberExistingCategories,
+    handleClickOpenSpecialPricing,
+    ...restProps
+}) => {
     const theme = useTheme();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogItemIndex, setDialogItemIndex] = useState(null);
@@ -49,7 +63,7 @@ const DayModeView = ({ editable, values, columns, rows, options, setFieldValue, 
             return isSameDay(date, eventDate);
         });
     };
-    
+
     const handleCellClick = (rowIndex, dayIndex) => {
         if (!editable) {
             return;
@@ -99,7 +113,7 @@ const DayModeView = ({ editable, values, columns, rows, options, setFieldValue, 
     };
 
     const handleSubmitForm = () => setCreatingItem(false);
-    
+
     return (
         <>
             <StyledTableContainer component={Paper} sx={{ maxHeight: options?.maxHeight || 540 }}>
@@ -165,14 +179,12 @@ const DayModeView = ({ editable, values, columns, rows, options, setFieldValue, 
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <EventAddSpecialPricing
-                            values={values}
-                            setFieldValue={setFieldValue}
-                            touched={touched}
-                            errors={errors}
-                            selectedDate={values.eventDates[dialogItemIndex]}
-                            {...restProps}
-                        />
+                        <Button size="small" color="primary" onClick={() => handleClickOpenSpecialPricing(values.eventDates[dialogItemIndex])}>
+                            {`${getNumberExistingCategories(values.eventDates[dialogItemIndex])} ${
+                                getNumberExistingCategories(values.eventDates[dialogItemIndex]) === 1 ? 'Tarif spécial' : 'Tarifs spéciaux'
+                            }`}
+                        </Button>
+
                         {!creatingItem && (
                             <Button onClick={handleDeleteItem} color="error">
                                 Supprimer

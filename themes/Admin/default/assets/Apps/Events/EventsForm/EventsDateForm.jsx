@@ -5,7 +5,7 @@ import { useTheme } from '@emotion/react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import { ButtonGroup, Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography, Tooltip } from '@mui/material';
+import { ButtonGroup, Card, CardContent, FormControl, Grid, InputLabel, ListItemText, Box, MenuItem, Select, FormHelperText, Typography, Tooltip, Button } from '@mui/material';
 
 import { Component } from '@/AdminService/Component';
 import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
@@ -22,24 +22,29 @@ export const eventsDateFormFields = {
                 display: 'flex',
                 alignItems: 'center',
             },
-            component: ({ index, item, touched, errors, setFieldTouched, setFieldValue }) => (
-                <>
-                    <DisplayBadge item={item} />
-                    <Component.CmtDateTimePicker
-                        fullWidth
-                        value={item.eventDate}
-                        disablePast
-                        label="Date"
-                        id={`eventDates-${index}-eventDate`}
-                        required
-                        name={`eventDates.${index}.eventDate`}
-                        setValue={(value) => {
-                            setFieldValue(`eventDates.${index}.eventDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : '');
-                        }}
-                        onTouched={setFieldTouched}
-                        error={getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index)?.eventDate, index, 'eventDate')}
-                    />
-                </>
+            component: React.memo(
+                ({ index, item, touched, errors, setFieldTouched, setFieldValue }) => (
+                    <>
+                        <DisplayBadge item={item} />
+                        <Component.CmtDateTimePicker
+                            fullWidth
+                            value={item.eventDate}
+                            disablePast
+                            label="Date"
+                            id={`eventDates-${index}-eventDate`}
+                            required
+                            name={`eventDates.${index}.eventDate`}
+                            setValue={(value) => {
+                                setFieldValue(`eventDates.${index}.eventDate`, value ? moment(value).format('YYYY-MM-DD HH:mm') : '');
+                            }}
+                            onTouched={setFieldTouched}
+                            error={getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index)?.eventDate, index, 'eventDate')}
+                        />
+                    </>
+                ),
+                (prevProps, nextProps) => {
+                    return prevProps.item === nextProps.item;
+                }
             ),
         },
         {
@@ -57,40 +62,45 @@ export const eventsDateFormFields = {
         {
             keyId: 'input-date-state',
             style: { xs: 12 },
-            component: ({ touched, errors, index, item, handleBlur, setFieldValue, states }) => (
-                <FormControl fullWidth error={Boolean(getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state'))}>
-                    <InputLabel id={`eventDates-${index}-stateLabel`} required size="small">
-                        Status
-                    </InputLabel>
-                    <Select
-                        labelId={`eventDates-${index}-stateLabel`}
-                        id={`eventDates-${index}-state`}
-                        size="small"
-                        value={item.state}
-                        onBlur={handleBlur}
-                        name={`eventDates.${index}.state`}
-                        variant="standard"
-                        label="Status"
-                        onChange={(e) => {
-                            setFieldValue(`eventDates.${index}.state`, e.target.value);
-                        }}
-                    >
-                        {states?.map((item, index) => (
-                            <MenuItem value={item.value} key={index} id={`eventDateStateValue-${item.value}`}>
-                                <ListItemText>
-                                    <Box display={'inline'} borderRadius={4} px={2} py={1} mx={1} backgroundColor={item.color}>
-                                        {item.label}
-                                    </Box>
-                                </ListItemText>
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state') && (
-                        <FormHelperText error id={`eventDates-${index}-state-helper-text`}>
-                            {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state')}
-                        </FormHelperText>
-                    )}
-                </FormControl>
+            component: React.memo(
+                ({ touched, errors, index, item, handleBlur, setFieldValue, states }) => (
+                    <FormControl fullWidth error={Boolean(getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state'))}>
+                        <InputLabel id={`eventDates-${index}-stateLabel`} required size="small">
+                            Status
+                        </InputLabel>
+                        <Select
+                            labelId={`eventDates-${index}-stateLabel`}
+                            id={`eventDates-${index}-state`}
+                            size="small"
+                            value={item.state}
+                            onBlur={handleBlur}
+                            name={`eventDates.${index}.state`}
+                            variant="standard"
+                            label="Status"
+                            onChange={(e) => {
+                                setFieldValue(`eventDates.${index}.state`, e.target.value);
+                            }}
+                        >
+                            {states?.map((item, index) => (
+                                <MenuItem value={item.value} key={index} id={`eventDateStateValue-${item.value}`}>
+                                    <ListItemText>
+                                        <Box display={'inline'} borderRadius={4} px={2} py={1} mx={1} backgroundColor={item.color}>
+                                            {item.label}
+                                        </Box>
+                                    </ListItemText>
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state') && (
+                            <FormHelperText error id={`eventDates-${index}-state-helper-text`}>
+                                {getNestedFormikError(touched?.eventDates?.at(index), errors?.eventDates?.at(index), index, 'state')}
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+                ),
+                (prevProps, nextProps) => {
+                    return prevProps.item === nextProps.item;
+                }
             ),
         },
         {
@@ -161,21 +171,13 @@ const DisplayBadge = React.memo(({ item }) => {
 });
 
 export const DisplayEventDateFormCard = React.memo(
-    ({ index, item, values, setGenerateDate, setFieldValue, remove, touched, errors, STATES, ...props }) => {
+    ({ index, item, setGenerateDate, setFieldValue, remove, touched, errors, numberOfCategories, handleClickOpenSpecialPricing, STATES, ...props }) => {
         return (
             <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
                     <CardContent sx={{ position: 'relative' }}>
                         <Grid container spacing={4}>
-                            <Component.CmtDisplayFields
-                                values={values}
-                                setGenerateDate={setGenerateDate}
-                                setFieldValue={setFieldValue}
-                                item={item}
-                                index={index}
-                                states={STATES}
-                                {...props}
-                            />
+                            <Component.CmtDisplayFields setGenerateDate={setGenerateDate} setFieldValue={setFieldValue} item={item} index={index} states={STATES} {...props} />
                         </Grid>
 
                         {item?.eventRows?.length > 0 ? (
@@ -202,21 +204,28 @@ export const DisplayEventDateFormCard = React.memo(
                         )}
 
                         {/* Dialog Button to add special pricing */}
-                        <EventAddSpecialPricing values={values} setFieldValue={setFieldValue} touched={touched} errors={errors} selectedDate={item} {...props} />
+                        <Button size="small" color="primary" onClick={() => handleClickOpenSpecialPricing(item)}>
+                            {`${numberOfCategories} ${numberOfCategories === 1 ? 'Tarif spécial' : 'Tarifs spéciaux'}`}
+                        </Button>
                     </CardContent>
                 </Card>
             </Grid>
         );
     },
     (prevProps, nextProps) => {
-        return prevProps.item === nextProps.item;
+        return (
+            prevProps.item === nextProps.item &&
+            prevProps.numberOfCategories === nextProps.numberOfCategories &&
+            prevProps.handleClickOpenSpecialPricing === nextProps.handleClickOpenSpecialPricing
+        );
     }
 );
 
-export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...props }) => {
+export const EventsDateForm = ({ values, setFieldValue, touched, errors, defaultPriceCategoryName, defaultPrices, initValues, ...props }) => {
     const theme = useTheme();
     const [generateDate, setGenerateDate] = useState(null);
     const [visionMode, setVisionMode] = useState(getDefaultMode(props.parameters));
+    const [openSpecialPricing, setOpenSpecialPricing] = useState({ open: false, selectedDate: null });
     const index = useRef(values?.eventDates?.length || 0);
 
     const STATES = useMemo(
@@ -228,6 +237,24 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
         ],
         []
     );
+
+    const getFilteredEventPriceCategories = (selectedDate) => {
+        return values?.eventPriceCategories
+            ?.filter((category) => !category.eventDate)
+            ?.map((category) => ({
+                eventDate: selectedDate || null,
+                name: category?.name,
+                lang: category?.lang?.id || category?.lang,
+                eventDateUuid: selectedDate?.eventDateUuid || null,
+                eventPrices: category?.eventPrices?.map((price) => ({
+                    name: price?.name,
+                    annotation: price?.annotation,
+                    price: price?.price,
+                    index: price?.index,
+                    defaultPrice: price?.defaultPrice,
+                })),
+            }));
+    };
 
     const handleCardViewClick = () => setVisionMode('card');
     const handleMonthViewClick = () => setVisionMode('month');
@@ -257,7 +284,38 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
         [setFieldValue, values]
     );
 
-    console.log(values);
+    const getNumberExistingCategories = useCallback(
+        (selectedDate) => {
+            const matchingCategories = values?.eventPriceCategories?.filter((category) => category.eventDate === selectedDate);
+            const totalEventPrices = matchingCategories?.reduce((total, category) => total + (category.eventPrices?.length || 0), 0);
+
+            return totalEventPrices || 0;
+        },
+        [values?.eventPriceCategories]
+    );
+
+    const handleClickOpenSpecialPricing = useCallback(
+        (selectedDate) => {
+            setOpenSpecialPricing({ open: true, selectedDate: selectedDate });
+            const isDateAlreadyPresent = values?.eventPriceCategories?.some((category) => category.eventDate === selectedDate);
+
+            // If a matching date exists, exit early
+            if (isDateAlreadyPresent) {
+                return;
+            }
+
+            setFieldValue('eventPriceCategories', [
+                ...(values?.eventPriceCategories || [{ name: defaultPriceCategoryName || 'Tarifs', eventPrices: defaultPrices || [], lang: initValues?.lang?.id || '' }]),
+                ...getFilteredEventPriceCategories(selectedDate),
+            ]);
+        },
+        [values?.eventPriceCategories]
+    );
+
+    const handleCloseSpecialPricing = useCallback(() => {
+        setOpenSpecialPricing({ open: false, selectedDate: null });
+    }, [setOpenSpecialPricing]);
+
     return (
         <FieldArray name={`eventDates`}>
             {({ remove, push }) => (
@@ -276,11 +334,18 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                     </Box>
 
                     {visionMode === 'card' ? (
-                        <Grid container spacing={6}>
-                            {values?.eventDates?.map((item, index) => (
-                                <DisplayEventDateFormCard {...{ item, index, values, setGenerateDate, setFieldValue, remove, touched, errors, STATES, ...props }} />
-                            ))}
-                        </Grid>
+                        <>
+                            <Grid container spacing={6}>
+                                {values?.eventDates?.map((item, index) => (
+                                    <DisplayEventDateFormCard
+                                        key={index}
+                                        {...{ item, index, setGenerateDate, setFieldValue, remove, touched, errors, STATES, openSpecialPricing, ...props }}
+                                        handleClickOpenSpecialPricing={handleClickOpenSpecialPricing}
+                                        numberOfCategories={getNumberExistingCategories(item)}
+                                    />
+                                ))}
+                            </Grid>
+                        </>
                     ) : (
                         <Grid>
                             <Component.CmtCalendarForm
@@ -302,6 +367,10 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                                     showDatePicker: true,
                                 }}
                                 STATES={STATES}
+                                openSpecialPricing={openSpecialPricing}
+                                handleClickOpenSpecialPricing={handleClickOpenSpecialPricing}
+                                handleCloseSpecialPricing={handleCloseSpecialPricing}
+                                getNumberExistingCategories={getNumberExistingCategories}
                                 {...props}
                             />
                         </Grid>
@@ -340,6 +409,20 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, ...prop
                             submitDateRange={handleSubmitDateRange}
                         />
                     </Box>
+
+                    <EventAddSpecialPricing
+                        values={values}
+                        setFieldValue={setFieldValue}
+                        touched={touched}
+                        errors={errors}
+                        open={openSpecialPricing?.open}
+                        selectedDate={openSpecialPricing?.selectedDate}
+                        handleClose={handleCloseSpecialPricing}
+                        defaultPriceCategoryName={defaultPriceCategoryName}
+                        defaultPrices={defaultPrices}
+                        initValues={initValues}
+                        {...props}
+                    />
                 </Box>
             )}
         </FieldArray>
