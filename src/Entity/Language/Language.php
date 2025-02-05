@@ -14,6 +14,9 @@ use JMS\Serializer\Annotation as JMS;
 class Language extends Datable
 {
     /*** > Trait ***/
+    /*** > Module: FlashInfo ***/
+    use \TicketFactory\Module\FlashInfo\Entity\Language\Override\LanguageTrait;
+    /*** < Module: FlashInfo ***/
     /*** < Trait ***/
 
     #[JMS\Expose()]
