@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
-
 import { FieldArray } from 'formik';
-import { Component } from '@/AdminService/Component';
-import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
-import { Box, Card, CardContent, Grid, Radio, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Card, CardContent, Grid, Radio, Typography } from '@mui/material';
+
+import { Component } from '@/AdminService/Component';
+import { getNestedFormikError } from '@Services/utils/getNestedFormikError';
+import { deepEqual } from '@Services/utils/deepEqual';
 
 export const eventsPriceFormFields = {
     fields: [
@@ -99,7 +100,7 @@ export const eventsPriceFormFields = {
 };
 
 export const EventsPriceElement = React.memo(
-    ({ values, blockIndex, index, baseName, ...props }) => {
+    ({ values, blockIndex, index, baseName, remove, ...props }) => {
         return (
             <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
                 <Card sx={{ marginBlock: 2, overflow: 'visible' }}>
@@ -122,7 +123,7 @@ export const EventsPriceElement = React.memo(
         );
     },
     (prevProps, nextProps) => {
-        return prevProps.eventPriceCategories[prevProps.blockIndex] === nextProps.eventPriceCategories[nextProps.blockIndex];
+        return deepEqual(prevProps.item, nextProps.item) && deepEqual(prevProps.errors, nextProps.error) && deepEqual(prevProps.touched, nextProps.touched);
     }
 );
 
@@ -168,6 +169,7 @@ export const EventsPriceForm = ({ dataPath = 'eventPriceCategories', values, tou
                                 index={index}
                                 baseName={handleString(dataPath)}
                                 eventPriceCategories={eventPriceCategories}
+                                remove={remove}
                                 {...props}
                             />
                         ))}

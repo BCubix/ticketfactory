@@ -48,8 +48,14 @@ class ProductRow
     private Collection $vouchers;
 
     #[JMS\Expose()]
+    #[JMS\Groups(['a_cart_one', 'a_order_one'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ticketingOrderReference = null;
+
+    #[JMS\Expose()]
     #[JMS\Groups(['a_cart_one', 'a_order_all', 'a_order_one'])]
     public $discount = 0;
+
 
     public function __construct()
     {
@@ -132,6 +138,18 @@ class ProductRow
         if ($this->vouchers->removeElement($voucher)) {
             $voucher->removeProductRow($this);
         }
+
+        return $this;
+    }
+
+    public function getTicketingOrderReference(): ?string
+    {
+        return $this->ticketingOrderReference;
+    }
+
+    public function setTicketingOrderReference(?string $ticketingOrderReference): static
+    {
+        $this->ticketingOrderReference = $ticketingOrderReference;
 
         return $this;
     }

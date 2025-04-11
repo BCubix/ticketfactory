@@ -93,6 +93,9 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $orders;
 
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: CustomerTicketing::class, orphanRemoval: true)]
+    private Collection $customerTicketings;
+
     #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
     private ?Address $address = null;
 
@@ -101,6 +104,7 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
     {
         $this->carts = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->customerTicketings = new ArrayCollection();
     }
 
 
@@ -330,6 +334,36 @@ class Customer extends Datable implements UserInterface, PasswordAuthenticatedUs
             // set the owning side to null (unless already changed)
             if ($order->getCustomer() === $this) {
                 $order->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CustomerTicketing>
+     */
+    public function getCustomerTicketings(): Collection
+    {
+        return $this->customerTicketings;
+    }
+
+    public function addCustomerTicketing(CustomerTicketing $customerTicketing): static
+    {
+        if (!$this->customerTicketings->contains($customerTicketing)) {
+            $this->customerTicketings->add($customerTicketing);
+            $customerTicketing->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomerTicketing(CustomerTicketing $customerTicketing): static
+    {
+        if ($this->customerTicketings->removeElement($customerTicketing)) {
+            // set the owning side to null (unless already changed)
+            if ($customerTicketing->getCustomer() === $this) {
+                $customerTicketing->setCustomer(null);
             }
         }
 

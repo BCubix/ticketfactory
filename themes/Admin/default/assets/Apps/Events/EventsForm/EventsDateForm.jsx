@@ -320,17 +320,15 @@ export const EventsDateForm = ({ values, setFieldValue, touched, errors, default
         <FieldArray name={`eventDates`}>
             {({ remove, push }) => (
                 <Box className="padding-2">
-                    <Box>
-                        <Box className="block-head">
-                            <ButtonGroup variant="contained" color="primary">
-                                <Component.ActionButton size="small" color="primary" variant={visionMode === 'card' ? 'outlined' : 'contained'} onClick={handleCardViewClick}>
-                                    Carte
-                                </Component.ActionButton>
-                                <Component.ActionButton size="small" color="primary" variant={visionMode === 'month' ? 'outlined' : 'contained'} onClick={handleMonthViewClick}>
-                                    Calendrier
-                                </Component.ActionButton>
-                            </ButtonGroup>
-                        </Box>
+                    <Box className="block-head margin-bottom-5">
+                        <ButtonGroup variant="contained" color="primary">
+                            <Component.ActionButton size="small" color="primary" variant={visionMode === 'card' ? 'outlined' : 'contained'} onClick={handleCardViewClick}>
+                                Carte
+                            </Component.ActionButton>
+                            <Component.ActionButton size="small" color="primary" variant={visionMode === 'month' ? 'outlined' : 'contained'} onClick={handleMonthViewClick}>
+                                Calendrier
+                            </Component.ActionButton>
+                        </ButtonGroup>
                     </Box>
 
                     {visionMode === 'card' ? (

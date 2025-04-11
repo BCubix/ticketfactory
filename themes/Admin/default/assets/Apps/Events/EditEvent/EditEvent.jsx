@@ -72,7 +72,7 @@ export const EditEvent = () => {
             Api.tagsApi.getAllTags({ lang: defaultLanguageId }).then((results) => setTagsData(results));
             Api.ticketingApi.getAllTicketing().then((results) => setTicketingData(results));
             Api.categoriesApi.getCategories({ lang: defaultLanguageId }).then((results) => setCategoriesData(results));
-            Api.featuresApi.getAllFeatures({ lang: defaultLanguageId }).then((results) => setFeaturesData(results));
+            Api.featuresApi.getAllFeatures({ lang: defaultLanguageId, sort: 'name ASC' }).then((results) => setFeaturesData(results));
 
             if (parameters?.find((it) => it.paramKey === 'core_use_rooms')?.paramValue) {
                 Api.roomsApi.getAllRooms({ lang: defaultLanguageId }).then((results) => setRoomsData(results));

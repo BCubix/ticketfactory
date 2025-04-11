@@ -326,7 +326,7 @@ export const pagesForm = {
     ...DEFAULT_CRUD_FORM_COMPONENTS,
 };
 
-export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null, formCrud, ...props }) => {
+export const PagesForm = ({ handleSubmit, initialValues = null, translateInitialValues = null, pagesList, contentType = null, formCrud, formCrud, ...props }) => {
     const navigate = useNavigate();
     const { user } = useSelector(userProfileSelector);
 
@@ -342,7 +342,7 @@ export const PagesForm = ({ handleSubmit, initialValues = null, translateInitial
         return getUserRoles(user);
     }, [user]);
 
-    if (!initialValues && !translateInitialValues) {
+    if (formLoading) {
         return <Component.CmtSkeletonForm formCrud={formCrud} handleSubmit={handleSubmit} />;
     }
 

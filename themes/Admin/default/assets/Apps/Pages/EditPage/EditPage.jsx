@@ -117,10 +117,6 @@ export const EditPage = () => {
         });
     }, []);
 
-    if (!page || !pagesList) {
-        return <></>;
-    }
-
     return (
         <Component.PagesForm
             handleSubmit={handleSubmit}
@@ -130,6 +126,7 @@ export const EditPage = () => {
             pageBlockTypesList={pageBlockTypesList}
             formCrud={Crud?.pages?.edit}
             publicationStatusList={publicationStatusList}
+            formLoading={!page || !pagesList}
         />
     );
 };

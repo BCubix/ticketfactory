@@ -48,6 +48,8 @@ const featuresApi = {
                 params['filters[lang]'] = filters?.lang;
             }
 
+            createFilterParams(filters, Crud?.features?.list?.filtersData, params);
+
             const result = await axios.get(DEFAULT_PATH, { params: params });
 
             return { result: true, features: result.data?.results, total: result?.data?.total };

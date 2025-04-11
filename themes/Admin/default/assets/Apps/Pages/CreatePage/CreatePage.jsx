@@ -115,10 +115,6 @@ export const CreatePage = () => {
         });
     }, []);
 
-    if (!pagesList || !pageBlockTypesList || (pageId && !initialValues)) {
-        return <></>;
-    }
-
     return (
         <Component.PagesForm
             handleSubmit={handleSubmit}
@@ -127,6 +123,7 @@ export const CreatePage = () => {
             pageBlockTypesList={pageBlockTypesList}
             formCrud={Crud?.pages?.add}
             publicationStatusList={publicationStatusList}
+            formLoading={!pagesList || !pageBlockTypesList || (pageId && !initialValues)}
         />
     );
 };
